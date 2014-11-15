@@ -1,0 +1,34 @@
+{
+    "name": "kbc-ui",
+    "version": "0.0.0",
+    "description": "Keboola Connection UI",
+    "main": "src/scripts/app.coffee",
+    "dependencies": {
+        "flux": "^2.0.0",
+        "object-assign": "^1.0.0",
+        "react": "^0.12.0"
+    },
+    "devDependencies": {
+        "browserify": "^6.2.0",
+        "envify": "^3.0.0",
+        "jest-cli": "~0.1.17",
+        "uglify-js": "~2.4.15",
+        "watchify": "^2.1.1",
+        "coffeeify": "^1.0.0"
+    },
+    "scripts": {
+        "start": "watchify -o src/scripts/bundle.js --verbose --debug .",
+        "build": "NODE_ENV=production browserify . | uglifyjs -cm > src/scripts/bundle.min.js",
+        "test": "jest"
+    },
+    "author": "Martin Halamicek",
+    "browserify": {
+        "transform": [
+            "coffeeify",
+            "envify"
+        ]
+    },
+    "jest": {
+        "rootDir": "./js"
+    }
+}
