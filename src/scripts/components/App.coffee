@@ -1,17 +1,21 @@
-React = require('react')
-Header = React.createFactory require './Header.coffee'
-_ = require 'underscore'
+React = require 'react'
 
-data = ['neco', 'druha', 'treti', 'pata']
+Header = React.createFactory(require './layout/Header.coffee')
+Sidebar = React.createFactory(require './layout/Sidebar.coffee')
+
+{div} = React.DOM
 
 App = React.createClass
-    displayName: 'App'
-    rows: ->
-      _.map(data, (name) ->
-        Header name: name
-      )
-    render: ->
-      React.DOM.div null, @rows()
+  displayName: 'App'
+  render: ->
+    React.DOM.div null,
+      Header()
+      div className: 'container-fluid',
+        div className: 'row',
+          div className: 'col-sm-3 col-md-2 kbc-sidebar',
+            Sidebar()
+          div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
+            @props.activeRouteHandler()
 
 
 module.exports = App
