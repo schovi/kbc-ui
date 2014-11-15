@@ -1,0 +1,14 @@
+
+EventEmitter = require('events').EventEmitter
+Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
+assign = require 'object-assign'
+
+_installedComponents = [{"id":"ex-db","type":"extractor","name":"Database Extractor","description":"Fetch data from MySQL or MSSQL","hasUI":true,"hasRun":true,"ico32":"","ico64":"","uri":"https:\/\/syrup.keboola.com\/ex-db","configurations":[{"id":"Academy","name":"Academy","description":"","created":"2014-05-07T09:24:57+0200","creatorToken":{"id":491,"description":"Master Token"}},{"id":"Pohoda","name":"Pohoda","description":"","created":"2014-05-07T09:25:02+0200","creatorToken":{"id":491,"description":"Master Token"}}]},{"id":"ex-gooddata","type":"extractor","name":"Gooddata","description":"Download reports from GoodData","hasUI":true,"hasRun":true,"ico32":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/gooddata32-2.png","ico64":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/gooddata64-2.png","uri":"https:\/\/syrup.keboola.com\/ex-gooddata","configurations":[{"id":"academyrevenue","name":"AcademyRevenue","description":"Pulling Partner Revenue from the Academy Admin GD project","created":"2014-11-15T01:32:40+0100","creatorToken":{"id":3677,"description":"milan@keboola.com"}},{"id":"pebblerevenue","name":"PebbleRevenue","description":"Monitoring of complete revenue for the Pebble app","created":"2014-07-10T23:51:27+0200","creatorToken":{"id":491,"description":"Master Token"}}]},{"id":"ex-google-drive","type":"extractor","name":"Google Drive","description":"Extract spreadsheet data from Google Drive","hasUI":true,"hasRun":true,"ico32":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/Google-Drive-icon-32-1.png","ico64":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/Google-Drive-icon-64-1.png","uri":"https:\/\/syrup.keboola.com\/ex-google-drive","configurations":[{"id":"account0","name":"account-0","description":"","created":"2014-01-27T17:23:55+0100","creatorToken":{"id":491,"description":"Master Token"}}]},{"id":"ex-zendesk","type":"extractor","name":"Zendesk","description":"Software for better customer service","hasUI":true,"hasRun":true,"ico32":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/zendesk-32-1.png","ico64":"https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/zendesk-64-1.png","uri":"https:\/\/syrup.keboola.com\/ex-zendesk","configurations":[{"id":"tickets","name":"tickets","description":"","created":"2014-08-14T15:02:05+0200","creatorToken":{"id":491,"description":"Master Token"}}]}];
+
+
+InstalledComponentsStore = assign {}, EventEmitter.prototype,
+
+  getAll: ->
+    _installedComponents
+
+module.exports = InstalledComponentsStore

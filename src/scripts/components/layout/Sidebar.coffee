@@ -28,7 +28,7 @@ Sidebar = React.createClass
   mixins: [ ActiveState ]
   renderLinks: ->
     _.map(_pages, (page) ->
-      isActive = @isActive(page.id, @props.params, @props.query)
+      isActive = @isActive(page.id)
       className = if isActive then 'active' else ''
       li className: className, key: page.id,
         Link to: page.id,
