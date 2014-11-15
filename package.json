@@ -1,34 +1,46 @@
 {
-    "name": "kbc-ui",
-    "version": "0.0.0",
-    "description": "Keboola Connection UI",
-    "main": "src/scripts/app.coffee",
-    "dependencies": {
-        "flux": "^2.0.0",
-        "object-assign": "^1.0.0",
-        "react": "^0.12.0"
-    },
-    "devDependencies": {
-        "browserify": "^6.2.0",
-        "envify": "^3.0.0",
-        "jest-cli": "~0.1.17",
-        "uglify-js": "~2.4.15",
-        "watchify": "^2.1.1",
-        "coffeeify": "^1.0.0"
-    },
-    "scripts": {
-        "start": "watchify -o src/scripts/bundle.js --verbose --debug .",
-        "build": "NODE_ENV=production browserify . | uglifyjs -cm > src/scripts/bundle.min.js",
-        "test": "jest"
-    },
-    "author": "Martin Halamicek",
-    "browserify": {
-        "transform": [
-            "coffeeify",
-            "envify"
-        ]
-    },
-    "jest": {
-        "rootDir": "./js"
-    }
+  "name": "kbc-ui",
+  "version": "0.0.0",
+  "description": "Keboola Connection UI",
+  "main": "src/scripts/app.coffee",
+  "dependencies": {
+    "flux": "^2.0.0",
+    "object-assign": "^1.0.0",
+    "react": "^0.12.0",
+    "underscore": "~1.7.0"
+  },
+  "devDependencies": {
+    "browserify": "^6.2.0",
+    "envify": "^3.0.0",
+    "jest-cli": "~0.1.17",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1",
+    "coffeeify": "^1.0.0",
+    "gulp": "~3.8.10",
+    "coffee-script": "~1.8.0",
+    "gulp-livereload": "~2.1.1",
+    "gulp-util": "~3.0.1",
+    "pretty-hrtime": "~0.2.2",
+    "ecstatic": "~0.5.3",
+    "chalk": "~0.5.1",
+    "vinyl-source-stream": "~1.0.0",
+    "browser-sync": "~1.6.5",
+    "gulp-uglify": "~1.0.1",
+    "vinyl-buffer": "~1.0.0"
+  },
+  "scripts": {
+    "start": "watchify -o src/scripts/bundle.js --verbose --debug .",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > src/scripts/bundle.min.js",
+    "test": "jest"
+  },
+  "author": "Martin Halamicek",
+  "browserify": {
+    "transform": [
+      "coffeeify",
+      "envify"
+    ]
+  },
+  "jest": {
+    "rootDir": "./js"
+  }
 }
