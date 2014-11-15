@@ -10,17 +10,29 @@ ecstatic   = require 'ecstatic'
 uglify     = require 'gulp-uglify'
 buffer = require 'vinyl-buffer'
 browserSync = require 'browser-sync'
-reload = browserSync.reload;
+reload = browserSync.reload
+parse = require('url').parse
+fs = require 'fs'
 
 handleError = (err) ->
   gutil.log err
   gutil.beep()
   this.emit 'end'
 
+defaultFile = "index.html"
+
 gulp.task 'server', ->
   browserSync
     server:
       baseDir: path.join(__dirname, 'src')
+      # handles pushstate rewrite
+      middleware: (req, res, next) ->
+        fileName = parse(req.url)
+        fileName = fileName.href.split(fileName.search).join("")
+        fileExists = fs.existsSync(path.join(__dirname, 'src') + fileName)
+        if !fileExists && fileName.indexOf("browser-sync-client") < 0
+          req.url = "/" + defaultFile
+        next()
 
 
 gulp.task 'watch', ->
