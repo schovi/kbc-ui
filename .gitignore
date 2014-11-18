@@ -1,2 +1,4 @@
 node_modules
 .idea
+src/scripts/bundle.js
+src/scripts/bundle.min.js

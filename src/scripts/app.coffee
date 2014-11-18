@@ -4,7 +4,7 @@ App = require './components/App.coffee'
 
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
-ExtractorsIndex = require './components/extractors/ExtractorsIndex.coffee'
+ComponentsIndex = require './components/components/ComponentsIndex.coffee'
 
 Routes = React.createFactory(Router.Routes)
 Route = React.createFactory(Router.Route)
@@ -24,7 +24,7 @@ Writers = React.createClass
 Home = React.createClass
   displayName: 'Home'
   render: ->
-    React.DOM.div null, 'Home'
+    React.DOM.div className: 'container-fluid', 'Home'
 
 NotFound = React.createClass
   displayName: 'NotFound'
@@ -45,9 +45,11 @@ routes = Routes(location: 'history',
       Route({handler: React.createFactory(OrchestrationDetail), name: 'orchestration', path: ':id'})
     )
     Route({handler: React.createFactory(Dummy), name: 'extractors'}
-      Route({handler: React.createFactory(ExtractorsIndex), name: 'extractorsIndex', isDefault :true})
+      Route({handler: React.createFactory(ComponentsIndex), mode:'extractor', name: 'extractorsIndex', isDefault :true})
     ),
-    Route({handler: React.createFactory(Writers), name: 'writers'}),
+    Route({handler: React.createFactory(Dummy), name: 'writers'}
+      Route({handler: React.createFactory(ComponentsIndex), mode:'writer', name: 'writersIndex', isDefault :true})
+    ),
     Route({handler: React.createFactory(Home), name: 'home', path: null, isDefault: true}),
     Route({handler: React.createFactory(NotFound), catchAll: true, path: null})
   )

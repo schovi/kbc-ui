@@ -6,14 +6,17 @@ InstalledComponentsStore = require '../../stores/InstalledComponentsStore.coffee
 
 {div, table, tbody, tr, td, ul, li, a, span} = React.DOM
 
-getStateFromStores = ->
-  installedComponents: InstalledComponentsStore.getAll()
+getStateFromStores = (type) ->
+  installedComponents: InstalledComponentsStore.getAllForType(type)
 
-Extractors = React.createClass
+ComponentsIndex = React.createClass
   displayName: 'InstalledComponents'
   getInitialState: ->
-    getStateFromStores()
+    getStateFromStores(@props.mode)
+  componentWillReceiveProps: (nextProps) ->
+    @setState(getStateFromStores(nextProps.mode))
   render: ->
+    console.log 'render components'
     div className: 'container-fluid',
       table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
         tbody null,
@@ -31,11 +34,11 @@ Extractors = React.createClass
   renderConfigs: (configurations) ->
     ul null,
       _.map(configurations, (config) ->
-        li null,
+        li key: config.id,
           a null,
             config.name
           span className: 'kbc-icon-arrow-right'
       )
 
 
-module.exports = Extractors
+module.exports = ComponentsIndex
