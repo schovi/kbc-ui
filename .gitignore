@@ -1,4 +1,5 @@
 node_modules
+bower_components
 .idea
 src/scripts/bundle.js
 src/scripts/bundle.min.js
