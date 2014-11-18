@@ -4,23 +4,32 @@ ActiveState = require('react-router').ActiveState
 
 _ = require 'underscore'
 
-{ul, li, a} = React.DOM
+{ul, li, a, span} = React.DOM
 
 _pages = [
     id: 'home'
     title: 'Overview'
+    icon: 'kbc-icon-overview'
   ,
     id: 'extractors'
     title: 'Extractors'
+    icon: 'kbc-icon-extractors'
   ,
     id: 'transformations'
     title: 'Transformations'
+    icon: 'kbc-icon-transformations'
   ,
     id: 'writers'
     title: 'Writers'
+    icon: 'kbc-icon-writers'
   ,
     id: 'orchestrations'
     title: 'Orchestrations'
+    icon: 'kbc-icon-orchestration'
+  ,
+    id: 'storage'
+    title: 'Storage'
+    icon: 'kbc-icon-storage'
 ]
 
 Sidebar = React.createClass
@@ -32,6 +41,7 @@ Sidebar = React.createClass
       className = if isActive then 'active' else ''
       li className: className, key: page.id,
         Link to: page.id,
+          span className: page.icon
           page.title
     , @)
   render: ->

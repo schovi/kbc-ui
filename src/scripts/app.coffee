@@ -13,7 +13,7 @@ Route = React.createFactory(Router.Route)
 Transformations = React.createClass
   displayName: 'Transformations'
   render: ->
-    React.DOM.div null, 'Transformations'
+    React.DOM.div className: 'container-fluid', 'Transformations'
 
 
 Writers = React.createClass
@@ -25,6 +25,11 @@ Home = React.createClass
   displayName: 'Home'
   render: ->
     React.DOM.div className: 'container-fluid', 'Home'
+
+Storage = React.createClass
+  displayName: 'Storage'
+  render: ->
+    React.DOM.div className: 'container-fluid', 'Storage'
 
 NotFound = React.createClass
   displayName: 'NotFound'
@@ -50,6 +55,7 @@ routes = Routes(location: 'history',
     Route({handler: React.createFactory(Dummy), name: 'writers'}
       Route({handler: React.createFactory(ComponentsIndex), mode:'writer', name: 'writersIndex', isDefault :true})
     ),
+    Route({handler: React.createFactory(Storage), name: 'storage'})
     Route({handler: React.createFactory(Home), name: 'home', path: null, isDefault: true}),
     Route({handler: React.createFactory(NotFound), catchAll: true, path: null})
   )

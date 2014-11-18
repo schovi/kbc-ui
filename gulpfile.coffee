@@ -25,12 +25,14 @@ gulp.task 'server', ->
   browserSync
     server:
       baseDir: path.join(__dirname, 'src')
+      routes:
+        "/bower_components": path.join(__dirname, 'bower_components')
       # handles pushstate rewrite
       middleware: (req, res, next) ->
         fileName = parse(req.url)
         fileName = fileName.href.split(fileName.search).join("")
         fileExists = fs.existsSync(path.join(__dirname, 'src') + fileName)
-        if !fileExists && fileName.indexOf("browser-sync-client") < 0
+        if !fileExists && fileName.indexOf("browser-sync-client") < 0 && fileName.indexOf("bower_components") < 0
           req.url = "/" + defaultFile
         next()
 
@@ -46,7 +48,6 @@ gulp.task 'watch', ->
     fullPaths: true
 
   bundle.on 'update', ->
-    console.log 'bundle on update'
     gutil.log "Starting '#{chalk.cyan 'rebundle'}'..."
     start = process.hrtime()
     build = bundle.bundle()

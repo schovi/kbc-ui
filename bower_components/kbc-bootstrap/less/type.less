@@ -1,0 +1,41 @@
+/*
+ * Typography
+ */
+
+body {
+	font-weight: 300;
+}
+
+h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+	font-weight: 400;
+}
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: @line-height-computed;
+  margin-bottom: @line-height-computed;
+}
+h4, .h4, h5, .h5, h6, .h6 {
+  margin-top: (@line-height-computed / 2);
+  margin-bottom: (@line-height-computed / 2);
+}
+
+.form-control {
+	padding: @padding-base-vertical*3.5 @padding-base-horizontal*1.3;
+	font-weight: 400;
+	.box-shadow(inset 0 3px 1px #eeeef2);
+}
+.form-horizontal {
+	@media (min-width: @screen-sm-min) {
+		.control-label {
+			padding-top: (@padding-base-vertical*1.7 + 1);
+		}
+	}
+}
+
+.panel h2 {
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+.panel p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}

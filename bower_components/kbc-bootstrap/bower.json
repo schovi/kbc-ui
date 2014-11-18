@@ -1,0 +1,20 @@
+{
+  "name": "kbc-bootstrap",
+  "version": "0.0.0",
+  "authors": [
+    "Jakub Matejka <jakub@keboola.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://connection.keboola.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.0",
+    "font-awesome": "~4.2.0"
+  }
+}

@@ -8,7 +8,8 @@ Header = React.createClass
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},
         a {href: '#'},
-          span className: "kbc-icon-keboola", 'Connection'
+          span className: "kbc-icon-keboola", null
+          'Connection'
       div {className: 'col-sm-9 col-md-10 kbc-main-header'},
         div {className: 'kbc-title'},
           a null, 'Extractors'
