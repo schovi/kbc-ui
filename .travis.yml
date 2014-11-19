@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '0.10'
+branches:
+  only:
+  - master
+install:
+- time npm install -g gulp bower
+- time npm install
+- bower --version
+- time bower install --dev
+script: gulp build
