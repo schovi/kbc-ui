@@ -1,5 +1,5 @@
 node_modules
 bower_components
+dist
+tmp
 .idea
-src/scripts/bundle.js
-src/scripts/bundle.min.js

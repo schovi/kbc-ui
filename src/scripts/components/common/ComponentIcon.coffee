@@ -34,7 +34,7 @@ ComponentIcon = React.createClass(
     return (
       span {className: "kb-sapi-component-icon"},
         (span {},
-          (img {src: component["ico#{@props.size}"], width: @props.size, height: @props.size})
+          (img {src: component["ico#{@props.size}"]})
         )
     )
 )
