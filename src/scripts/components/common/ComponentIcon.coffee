@@ -16,12 +16,12 @@ ComponentIcon = React.createClass(
     component = @props.component
     if !component
       return (span {})
-    if !component["ico#{@props.size}"]
+    if !component.get("ico#{@props.size}")
       return (
         span {className: "kb-sapi-component-icon"},
           (span {className: "kb-default"},
             (i {
-              className: "fa #{@defaultIconClass[component.type]}",
+              className: "fa #{@defaultIconClass[component.get('type')]}",
               style: {
                 "font-size": (@props.size - 5) + "px",
                 height: @props.size + "px"
@@ -34,7 +34,7 @@ ComponentIcon = React.createClass(
     return (
       span {className: "kb-sapi-component-icon"},
         (span {},
-          (img {src: component["ico#{@props.size}"]})
+          (img {src: component.get("ico#{@props.size}")})
         )
     )
 )

@@ -16,29 +16,34 @@ ComponentsIndex = React.createClass
   componentWillReceiveProps: (nextProps) ->
     @setState(getStateFromStores(nextProps.mode))
   render: ->
-    console.log 'render components'
+
+    rows =  @state.installedComponents.map((component) ->
+      console.log 'component', component.get 'id'
+      @renderComponentRow component
+    , @).toArray()
+
+    console.log 'rows', rows
+
     div className: 'container-fluid',
       table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
-        tbody null,
-        _.map(@state.installedComponents, (component) ->
-          @renderComponentRow component
-        , @)
+        tbody null, rows
+
 
   renderComponentRow: (component) ->
-    tr key: component.id,
+    tr key: component.get('id'),
       td null,
         ComponentIcon(component: component, size: '32')
-        component.name
-      td null,
-        @renderConfigs(component.configurations)
+        component.get('name')
+      td null, @renderConfigs(component.get('configurations'))
+
   renderConfigs: (configurations) ->
     ul null,
-      _.map(configurations, (config) ->
-        li key: config.id,
+      configurations.map((config) ->
+        li key: config.get('id'),
           a null,
-            config.name
+            config.get('name')
           span className: 'kbc-icon-arrow-right'
-      )
+      ).toArray()
 
 
 module.exports = ComponentsIndex
