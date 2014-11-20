@@ -4,7 +4,12 @@ FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffe
 JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
 
-{span, div, a} = React.DOM
+prettyCron = require 'prettycron'
+
+Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
+OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
+
+{span, div, a, button, i} = React.DOM
 
 Cron = React.createFactory React.createClass(
   displayName: 'Cron'
@@ -23,8 +28,11 @@ Cron = React.createFactory React.createClass(
     return ""
 
   render: ->
-    (span null, 'todo')
+    span null,
+      span null, prettyCron.toString(@props.crontabRecord),
+      span null, @cronUTCtext(@props.crontabRecord)
 )
+
 
 
 OrchestrationRow = React.createClass(
@@ -46,26 +54,43 @@ OrchestrationRow = React.createClass(
   buttons: ->
     buttons = []
 
-    buttons.push(Tooltip({tooltip: 'Delete orchestration', key: 'delete'}, button {className: 'btn btn-default btn-sm', ref: 'deleteButton', onClick: @deleteOrchestration},
-      (i {className: 'fa fa-trash-o'})
-    ))
+    # TODO: button component
+    buttons.push(OverlayTrigger
+      overlay: Tooltip null, 'Delete orchestration'
+      key: 'delete'
+      placement: 'top'
+    ,
+      button className: 'btn btn-link',
+        i className: 'fa fa-trash-o'
+    )
 
-    activateTooltip = if @props.orchestration.active then 'Disable orchestration' else 'Enable orchestration'
-    buttons.push(Tooltip({tooltip: activateTooltip, key: 'activate'}, button {className: 'btn btn-default btn-sm', ref: 'activateButton', onClick: @setOrchestrationActiveState},
-      (i {className: if @props.orchestration.active then 'fa fa-check' else 'fa fa-times'})
-    ))
 
-    buttons.push(Tooltip({tooltip: 'Run', key: 'run'}, button {className: 'btn btn-default btn-sm', ref: 'runButton', onClick: @runOrchestration},
-      (i {className: 'fa fa-play'})
-    ))
+    activateTooltip = if @props.orchestration.get('active') then 'Disable orchestration' else 'Enable orchestration'
+    buttons.push(OverlayTrigger
+      overlay: Tooltip null, activateTooltip
+      key: 'activate'
+      placement: 'top'
+    ,
+      button className: 'btn btn-link',
+        i className: if @props.orchestration.get('active') then 'fa fa-check' else 'fa fa-times'
+    )
+
+    buttons.push(OverlayTrigger
+      overlay: Tooltip null, 'Run'
+      key: 'run'
+      placement: 'top'
+    ,
+      button className: 'btn btn-link',
+        i className: 'fa fa-play'
+    )
 
     buttons
 
 
   cron: ->
-    if @props.orchestration.crontabRecord
+    if @props.orchestration.get('crontabRecord')
       (span {className: 'inline-edit crontab-record'},
-        (Cron {crontabRecord: @props.orchestration.crontabRecord})
+        (Cron {crontabRecord: @props.orchestration.get('crontabRecord')})
       )
     else
       (span {className: 'param-value pull-left'}, 'No schedule')
@@ -73,31 +98,29 @@ OrchestrationRow = React.createClass(
 
   render: ->
 
-    if @props.orchestration.lastExecutedJob?.startTime
-      duration = (DurationWithIcon {startTime: @props.orchestration.lastExecutedJob?.startTime, endTime: @props.orchestration.lastExecutedJob?.endTime})
+    lastExecutedJob = @props.orchestration.get('lastExecutedJob')
+    if lastExecutedJob && lastExecutedJob.get 'startTime'
+      duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})
     else
       duration = 'No run yet'
 
-    (Link {className: "list-group-item", to: 'orchestration', params: {id: @props.orchestration.id}},
-      (span {className: 'row'},
-        (span {className: 'col-md-4 kb-name-col'},
-          (JobStatusCircle {status: @props.orchestration.lastExecutedJob?.status}),
-          @props.orchestration.name
-        ),
-        (span {className: 'col-md-2 kb-info'},
-          (FinishedWithIcon endTime: @props.orchestration.lastExecutedJob?.endTime) if @props.orchestration.lastExecutedJob?.endTime
-        ),
-        (span {className: 'kb-info col-md-2'},
-          duration
-        ),
-        (span {className: 'kb-info col-md-2'},
-          @cron()
-        ),
-        (span {className: 'col-md-2'},
-          (span {className: 'pull-right kb-actions'}
-            # todo buttons
-          )
-        )
+    (Link {className: "tr", to: 'orchestration', params: {id: @props.orchestration.get('id')}},
+      (span {className: 'td'},
+        (JobStatusCircle {status: lastExecutedJob?.get('status')})
+        ' '
+        @props.orchestration.get('name')
+      ),
+      (span {className: 'td'},
+        (FinishedWithIcon endTime: lastExecutedJob?.get('endTime')) if lastExecutedJob?.get('endTime')
+      ),
+      (span {className: 'td'},
+        duration
+      ),
+      (span {className: 'td'},
+        @cron()
+      ),
+      (span {className: 'td text-right'},
+        @buttons()
       )
     )
 )

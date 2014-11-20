@@ -1,8 +1,8 @@
 React = require 'react'
-_ = require 'underscore'
 
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
+SearchRow = React.createFactory(require './SearchRow.coffee')
 
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getAll()
@@ -14,33 +14,34 @@ Index = React.createClass
   getInitialState: ->
     getStateFromStores()
   tableHeader: ->
-    (div {className: 'list-group-item', key: 'table-header'},
-      (span {className: 'row'},
-        (span {className: 'col-md-4 kb-info kb-name-header'},
+    (div {className: 'thead', key: 'table-header'},
+      (div {className: 'tr'},
+        (span {className: 'th'},
           (strong null, 'Name')
         ),
-        (span {className: 'col-md-2 kb-info'},
+        (span {className: 'th'},
           (strong null, 'Last Run')
         ),
-        (span {className: 'col-md-2 kb-info'},
+        (span {className: 'th'},
           (strong null, 'Duration')
         ),
-        (span {className: 'col-md-2 kb-info'},
+        (span {className: 'th'},
           (strong null, 'Schedule')
         ),
-        (span {className: 'col-md-2 kb-info'})
+        (span {className: 'th'})
       )
     )
 
   render: ->
-    childs = _.map(@state.orchestrations, (orchestration) ->
-      OrchestrationRow {orchestration: orchestration, key: orchestration.id}
-    , @)
-
-    childs.unshift(@tableHeader())
+    childs = @state.orchestrations.map((orchestration) ->
+      OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
+    , @).toArray()
 
     div {className: 'container-fluid'},
-      div className: 'list-group kb-orchestrations-nav',
-        childs
+      SearchRow()
+      div className: 'table table-striped table-hover',
+        @tableHeader()
+        div className: 'tbody',
+          childs
 
 module.exports = Index

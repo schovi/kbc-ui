@@ -18,27 +18,28 @@ OrchestrationRow = React.createFactory React.createClass(
     isActive: React.PropTypes.bool
   mixins: [ ActiveState ]
   render: ->
-    isActive = @isActive('orchestration', id: @props.orchestration.id)
+    isActive = @isActive('orchestration', id: @props.orchestration.get('id'))
     className = if isActive then 'active' else ''
 
-    if  !@props.orchestration.active
+    if  !@props.orchestration.get('active')
       disabled = (span {className: 'pull-right kb-disabled'}, 'Disabled')
     else
       disabled = ''
 
-    if @props.orchestration.lastExecutedJob?.startTime
-      duration = (DurationWithIcon {startTime: @props.orchestration.lastExecutedJob?.startTime, endTime: @props.orchestration.lastExecutedJob?.endTime})
+    lastExecutedJob = @props.orchestration.get 'lastExecutedJob'
+    if lastExecutedJob?.get('startTime')
+      duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})
     else
       duration = ''
 
-    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {id: @props.orchestration.id} },
-      (JobStatusCircle {status: @props.orchestration.lastExecutedJob?.status}),
-      (span null, @props.orchestration.name),
+    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {id: @props.orchestration.get('id')} },
+      (JobStatusCircle {status: lastExecutedJob?.get('status')}),
+      (span null, @props.orchestration.get('name')),
       disabled,
       (span {className: 'kb-info clearfix'},
         duration,
         (span {className: 'pull-right'},
-          (FinishedWithIcon endTime: @props.orchestration.lastExecutedJob?.endTime) if @props.orchestration.lastExecutedJob?.endTime
+          (FinishedWithIcon endTime: lastExecutedJob.get('endTime')) if lastExecutedJob?.get('endTime')
         )
       )
     )
@@ -56,11 +57,10 @@ OrchestrationsNav = React.createClass(
     getStateFromStores()
   render: ->
     filtered = @state.orchestrations
-    if filtered.length
-      childs = _.map(filtered, (orchestration) ->
-        OrchestrationRow {orchestration: orchestration, key: orchestration.id}
-      , @)
-
+    if filtered.size
+      childs = filtered.map((orchestration) ->
+        OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
+      , @).toArray()
     else
       childs = (div className: 'list-group-item',
         'No Orchestrations found'

@@ -14,7 +14,9 @@
     "gulp-clean": "~0.3.1",
     "gulp-rename": "~1.2.0",
     "gulp-debug": "~1.0.1",
-    "immutable": "~3.2.1"
+    "immutable": "~3.2.1",
+    "react-bootstrap": "~0.13.0",
+    "prettycron": "git+https://git@github.com/keboola/prettycron.git#fdc0a11ec63d9aa449c38ac8961c0d173e6eb920"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

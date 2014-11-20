@@ -11,6 +11,7 @@ DurationWithIcon = React.createClass
   render: ->
     span {},
       i {className: 'fa fa-clock-o'}
+      ' '
       Duration {startTime: @props.startTime, endTime: @props.endTime}
 
 

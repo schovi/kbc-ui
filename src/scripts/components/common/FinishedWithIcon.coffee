@@ -10,6 +10,7 @@ FinishedWithIcon = React.createClass
   render: ->
     span {},
       i {className: 'fa fa-calendar', title: 'Finished'}
+      ' '
       moment(@props.endTime).fromNow()
 
 
