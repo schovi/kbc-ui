@@ -56,6 +56,7 @@ routes = Routes(location: 'history',
     ),
     Route({handler: React.createFactory(Dummy), name: 'writers'}
       Route({handler: React.createFactory(ComponentsIndex), mode:'writer', name: 'writersIndex', isDefault :true})
+      Route({handler: React.createFactory(NewComponent), mode:'writer', name: 'new-writer'})
     ),
     Route({handler: React.createFactory(Storage), name: 'storage'})
     Route({handler: React.createFactory(Home), name: 'home', path: null, isDefault: true}),
