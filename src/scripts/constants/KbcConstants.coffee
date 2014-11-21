@@ -10,4 +10,6 @@ module.exports =
   ActionTypes: keyMirror(
     ORCHESTRATIONS_SET_FILTER: null
     COMPONENTS_SET_FILTER: null
+    ORCHESTRATION_ACTIVATE: null
+    ORCHESTRATION_DISABLE: null
   )

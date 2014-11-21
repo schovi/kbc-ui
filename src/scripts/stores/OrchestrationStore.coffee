@@ -12,6 +12,22 @@ _filter = ''
 
 CHANGE_EVENT = 'change'
 
+itemIndex = (id) ->
+  index = _orchestrations.findIndex((item) ->
+    item.get('id') == id
+  )
+
+  if index == -1
+    throw new Error("Cannot find item by id=" + id)
+
+  index
+
+
+updateItem = (id, payload) ->
+  _orchestrations = _orchestrations.update(itemIndex(id), (orchestration) ->
+    orchestration.merge payload
+  )
+
 
 OrchestrationStore = assign {}, EventEmitter.prototype,
 
@@ -45,6 +61,14 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.ORCHESTRATIONS_SET_FILTER
       _filter = action.query.trim()
+
+    when Constants.ActionTypes.ORCHESTRATION_ACTIVATE
+      updateItem action.orchestrationId,
+        active: true
+
+    when Constants.ActionTypes.ORCHESTRATION_DISABLE
+      updateItem action.orchestrationId,
+        active: false
 
   OrchestrationStore.emitChange()
   true
