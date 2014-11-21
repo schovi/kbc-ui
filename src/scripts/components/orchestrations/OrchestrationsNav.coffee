@@ -1,5 +1,4 @@
 React = require 'react'
-_ = require 'underscore'
 
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 
@@ -46,15 +45,23 @@ OrchestrationRow = React.createFactory React.createClass(
 )
 
 getStateFromStores = ->
-  orchestrations: OrchestrationStore.getAll()
+  orchestrations: OrchestrationStore.getFiltered()
 
 OrchestrationsNav = React.createClass(
   displayName: 'OrchestrationsNavList'
-  propTypes:
-    orchestrations: React.PropTypes.array
-    filter: React.PropTypes.string
+
   getInitialState: ->
     getStateFromStores()
+
+  componentDidMount: ->
+    OrchestrationStore.addChangeListener(@_onChange)
+
+  componentWillUnmount: ->
+    OrchestrationStore.removeChangeListener(@_onChange)
+
+  _onChange: ->
+    @setState(getStateFromStores())
+
   render: ->
     filtered = @state.orchestrations
     if filtered.size

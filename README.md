@@ -3,6 +3,7 @@
 
 User interface for Keboola Connection
 
+https://s3.amazonaws.com/kbc-uis/kbc/index.html
 
 
 ## Development

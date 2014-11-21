@@ -3,12 +3,10 @@ React = require 'react'
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
-SearchRow = React.createFactory(require '../common/SearchRow.coffee')
-
+OrchestrationsSearch = React.createFactory(require './OrchestrationsSearch.coffee')
 
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getFiltered()
-  filter: OrchestrationStore.getFilter()
 
 {div, span, strong} = React.DOM
 
@@ -16,9 +14,6 @@ Index = React.createClass
   displayName: 'OrchestrationsIndex'
   getInitialState: ->
     getStateFromStores()
-
-  handleFilterChange: (query) ->
-    OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   componentDidMount: ->
     OrchestrationStore.addChangeListener(@_onChange)
@@ -28,7 +23,7 @@ Index = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      SearchRow(onChange: @handleFilterChange, query: @state.filter)
+      OrchestrationsSearch()
       if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
 
   _renderEmptyState: ->
