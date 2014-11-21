@@ -10,6 +10,8 @@ _orchestrations = Immutable.fromJS([{"id":28213081,"name":"Weekly Orchestrator",
 
 _filter = ''
 
+_isLoading = false
+
 CHANGE_EVENT = 'change'
 
 itemIndex = (id) ->
@@ -45,6 +47,9 @@ OrchestrationStore = assign {}, EventEmitter.prototype,
   getFilter: ->
     _filter
 
+  getIsLoading: ->
+    _isLoading
+
   addChangeListener: (callback) ->
     @on(CHANGE_EVENT, callback)
 
@@ -61,16 +66,27 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.ORCHESTRATIONS_SET_FILTER
       _filter = action.query.trim()
+      OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_ACTIVATE
       updateItem action.orchestrationId,
         active: true
+      OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_DISABLE
       updateItem action.orchestrationId,
         active: false
+      OrchestrationStore.emitChange()
 
-  OrchestrationStore.emitChange()
+    when Constants.ActionTypes.ORCHESTRATIONS_LOAD
+      _isLoading = true
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
+      _isLoading = false
+      _orchestrations = Immutable.fromJS(action.orchestrations)
+      OrchestrationStore.emitChange()
+
   true
 
 module.exports = OrchestrationStore

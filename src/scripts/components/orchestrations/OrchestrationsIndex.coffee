@@ -7,6 +7,7 @@ OrchestrationsSearch = React.createFactory(require './OrchestrationsSearch.coffe
 
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getFiltered()
+  isLoading: OrchestrationStore.getIsLoading()
 
 {div, span, strong} = React.DOM
 
@@ -17,12 +18,14 @@ Index = React.createClass
 
   componentDidMount: ->
     OrchestrationStore.addChangeListener(@_onChange)
+    OrchestrationsActionCreators.loadOrchestrations()
 
   componentWillUnmount: ->
     OrchestrationStore.removeChangeListener(@_onChange)
 
   render: ->
     div {className: 'container-fluid'},
+      'Loading: ' + @state.isLoading
       OrchestrationsSearch()
       if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
 
