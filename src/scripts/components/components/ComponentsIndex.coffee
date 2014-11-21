@@ -18,11 +18,8 @@ ComponentsIndex = React.createClass
   render: ->
 
     rows =  @state.installedComponents.map((component) ->
-      console.log 'component', component.get 'id'
       @renderComponentRow component
     , @).toArray()
-
-    console.log 'rows', rows
 
     div className: 'container-fluid',
       table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',

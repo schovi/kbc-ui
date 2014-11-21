@@ -5,6 +5,7 @@ App = require './components/App.coffee'
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
 ComponentsIndex = require './components/components/ComponentsIndex.coffee'
+NewComponent = require './components/components/NewComponent.coffee'
 
 Routes = React.createFactory(Router.Routes)
 Route = React.createFactory(Router.Route)
@@ -51,6 +52,7 @@ routes = Routes(location: 'history',
     )
     Route({handler: React.createFactory(Dummy), name: 'extractors'}
       Route({handler: React.createFactory(ComponentsIndex), mode:'extractor', name: 'extractorsIndex', isDefault :true})
+      Route({handler: React.createFactory(NewComponent), mode:'extractor', name: 'new-extractor'})
     ),
     Route({handler: React.createFactory(Dummy), name: 'writers'}
       Route({handler: React.createFactory(ComponentsIndex), mode:'writer', name: 'writersIndex', isDefault :true})

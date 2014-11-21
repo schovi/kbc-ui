@@ -7,3 +7,7 @@ module.exports =
     VIEW_ACTION: null
   )
 
+  ActionTypes: keyMirror(
+    ORCHESTRATIONS_SET_FILTER: null
+    COMPONENTS_SET_FILTER: null
+  )

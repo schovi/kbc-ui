@@ -1,11 +1,14 @@
 React = require 'react'
 
+OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
-SearchRow = React.createFactory(require './SearchRow.coffee')
+SearchRow = React.createFactory(require '../common/SearchRow.coffee')
+
 
 getStateFromStores = ->
-  orchestrations: OrchestrationStore.getAll()
+  orchestrations: OrchestrationStore.getFiltered()
+  filter: OrchestrationStore.getFilter()
 
 {div, span, strong} = React.DOM
 
@@ -13,7 +16,35 @@ Index = React.createClass
   displayName: 'OrchestrationsIndex'
   getInitialState: ->
     getStateFromStores()
-  tableHeader: ->
+
+  handleFilterChange: (query) ->
+    OrchestrationsActionCreators.setOrchestrationsFilter(query)
+
+  componentDidMount: ->
+    OrchestrationStore.addChangeListener(@_onChange)
+
+  componentWillUnmount: ->
+    OrchestrationStore.removeChangeListener(@_onChange)
+
+  render: ->
+    div {className: 'container-fluid'},
+      SearchRow(onChange: @handleFilterChange, query: @state.filter)
+      if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
+
+  _renderEmptyState: ->
+    div null, 'No orchestrations found'
+
+  _renderTable: ->
+    childs = @state.orchestrations.map((orchestration) ->
+      OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
+    , @).toArray()
+
+    div className: 'table table-striped table-hover',
+      @_renderTableHeader()
+      div className: 'tbody',
+        childs
+
+  _renderTableHeader: ->
     (div {className: 'thead', key: 'table-header'},
       (div {className: 'tr'},
         (span {className: 'th'},
@@ -32,16 +63,7 @@ Index = React.createClass
       )
     )
 
-  render: ->
-    childs = @state.orchestrations.map((orchestration) ->
-      OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
-    , @).toArray()
-
-    div {className: 'container-fluid'},
-      SearchRow()
-      div className: 'table table-striped table-hover',
-        @tableHeader()
-        div className: 'tbody',
-          childs
+  _onChange: ->
+    @setState(getStateFromStores())
 
 module.exports = Index

@@ -11,3 +11,6 @@ class KbcDispatcher extends Dispatcher
       source: PayloadSources.VIEW_ACTION
       action: action
     @dispatch(payload)
+
+
+module.exports = new KbcDispatcher()

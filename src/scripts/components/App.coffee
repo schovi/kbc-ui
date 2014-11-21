@@ -9,7 +9,7 @@ App = React.createClass
   displayName: 'App'
   render: ->
     React.DOM.div null,
-      Header()
+      Header(),
       div className: 'container-fluid',
         div className: 'row',
           div className: 'col-sm-3 col-md-2 kbc-sidebar',
