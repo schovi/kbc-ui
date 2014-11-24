@@ -4,9 +4,12 @@ App = require './components/App.coffee'
 
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
-ComponentsIndex = require './components/components/ComponentsIndex.coffee'
-NewComponent = require './components/components/NewComponent.coffee'
 RouteHandler = React.createFactory(require('react-router').RouteHandler)
+
+# class factories parametrized by component type
+createComponentsIndex = require './components/components/ComponentsIndex.coffee'
+createNewComponentPage = require './components/components/NewComponent.coffee'
+
 
 Route = React.createFactory(Router.Route)
 DefaultRoute = React.createFactory(Router.DefaultRoute)
@@ -52,12 +55,12 @@ routes =
       Route({handler: OrchestrationDetail, name: 'orchestration', path: ':id'})
     )
     Route({handler: Dummy, name: 'extractors'}
-      Route({handler: ComponentsIndex, mode:'extractor', name: 'extractorsIndex', isDefault :true})
-      Route({handler: NewComponent, mode:'extractor', name: 'new-extractor'})
+      DefaultRoute({handler: createComponentsIndex('extractor'), name: 'extractorsIndex'})
+      Route({handler: createNewComponentPage('extractor'), name: 'new-extractor'})
     ),
     Route({handler: Dummy, name: 'writers'}
-      Route({handler: ComponentsIndex, mode:'writer', name: 'writersIndex', isDefault :true})
-      Route({handler: NewComponent, mode:'writer', name: 'new-writer'})
+      DefaultRoute({handler: createComponentsIndex('writer'), name: 'writersIndex', isDefault :true})
+      Route({handler: createNewComponentPage('writer'), name: 'new-writer'})
     ),
     Route({handler: Storage, name: 'storage'})
 
