@@ -1,12 +1,13 @@
 React = require 'react'
 
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
+OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 
 DurationWithIcon = React.createFactory(require '../common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffee')
 JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
-ActiveState = require('react-router').ActiveState
+State = require('react-router').State
 
 { a, span, div} = React.DOM
 
@@ -15,7 +16,7 @@ OrchestrationRow = React.createFactory React.createClass(
   propTypes:
     orchestration: React.PropTypes.object
     isActive: React.PropTypes.bool
-  mixins: [ ActiveState ]
+  mixins: [ State ]
   render: ->
     isActive = @isActive('orchestration', id: @props.orchestration.get('id'))
     className = if isActive then 'active' else ''
@@ -55,6 +56,7 @@ OrchestrationsNav = React.createClass(
 
   componentDidMount: ->
     OrchestrationStore.addChangeListener(@_onChange)
+    OrchestrationsActionCreators.loadOrchestrations()
 
   componentWillUnmount: ->
     OrchestrationStore.removeChangeListener(@_onChange)
