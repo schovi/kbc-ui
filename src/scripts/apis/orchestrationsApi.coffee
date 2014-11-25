@@ -29,6 +29,18 @@ orchestrationsApi =
       response.body
     )
 
+  getOrchestrationJobs: (id) ->
+    createRequest('GET', "orchestrations/#{id}/jobs")
+    .promise()
+    .then((response) ->
+      response.body
+    )
 
+  getJob: (id) ->
+    createRequest('GET', "jobs/#{id}")
+    .promise()
+    .then((response) ->
+      response.body
+    )
 
 module.exports = orchestrationsApi

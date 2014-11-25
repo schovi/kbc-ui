@@ -4,6 +4,8 @@ App = require './components/App.coffee'
 
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
+OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
+
 RouteHandler = React.createFactory(require('react-router').RouteHandler)
 
 # class factories parametrized by component type
@@ -52,7 +54,10 @@ routes =
 
     Route({handler: Dummy, name: 'orchestrations'},
       DefaultRoute({handler: OrchestrationsIndex, name: 'orchestrationsIndex'})
-      Route({handler: OrchestrationDetail, name: 'orchestration', path: ':id'})
+      Route({handler: Dummy, name: 'orchestration', path: ':orchestrationId'},
+        DefaultRoute({handler: OrchestrationDetail, name: 'orchestrationDetail'})
+        Route(handler: OrchestrationJobDetail, name: 'orchestrationJob', path: 'jobs/:jobId')
+      )
     )
     Route({handler: Dummy, name: 'extractors'}
       DefaultRoute({handler: createComponentsIndex('extractor'), name: 'extractorsIndex'})

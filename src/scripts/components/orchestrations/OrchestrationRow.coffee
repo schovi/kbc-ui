@@ -43,6 +43,7 @@ OrchestrationRow = React.createClass(
     orchestration: React.PropTypes.object
 
   _setOrchestrationActive: (e) ->
+    console.log 'set active'
     OrchestrationActionCreators.activateOrchestration(@props.orchestration.get('id'))
     e.stopPropagation()
     e.preventDefault()
@@ -109,7 +110,7 @@ OrchestrationRow = React.createClass(
     else
       duration = 'No run yet'
 
-    (Link {className: "tr", to: 'orchestration', params: {id: @props.orchestration.get('id')}},
+    (Link {className: "tr", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')}},
       (span {className: 'td'},
         (JobStatusCircle {status: lastExecutedJob?.get('status')})
         ' '

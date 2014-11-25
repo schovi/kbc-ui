@@ -15,7 +15,6 @@ OrchestrationRow = React.createFactory React.createClass(
   displayName: 'OrchestrationRow'
   propTypes:
     orchestration: React.PropTypes.object
-    isActive: React.PropTypes.bool
   mixins: [ State ]
   render: ->
     isActive = @isActive('orchestration', id: @props.orchestration.get('id'))
@@ -32,7 +31,7 @@ OrchestrationRow = React.createFactory React.createClass(
     else
       duration = ''
 
-    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {id: @props.orchestration.get('id')} },
+    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
       (JobStatusCircle {status: lastExecutedJob?.get('status')}),
       (span null, @props.orchestration.get('name')),
       disabled,

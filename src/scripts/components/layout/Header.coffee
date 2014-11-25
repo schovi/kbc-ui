@@ -10,6 +10,7 @@ Header = React.createClass
   render: ->
 
     breadcrumbs = []
+    currentParams = @getParams()
 
     filtered = @getRoutes().filter((route) ->
       route.path != '/' && !route.isDefault
@@ -18,7 +19,7 @@ Header = React.createClass
     filtered.forEach((route, i) ->
       name = route.name
       if i != filtered.length - 1
-        link = Link to: route.path,
+        link = Link to: route.path, params: currentParams,
           name
         breadcrumbs.push link
         breadcrumbs.push(span className: 'kbc-icon-arrow-right')

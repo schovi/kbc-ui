@@ -6,31 +6,42 @@ OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreato
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationJobsStore = require '../../stores/OrchestrationJobsStore.coffee'
 
-# React components
-OrchestrationsNav = React.createFactory(require './OrchestrationsNav.coffee')
-OrchestrationsSearch = React.createFactory(require './OrchestrationsSearch.coffee')
-JobsTable = React.createFactory(require './jobs-table/JobsTable.coffee')
+# components
+JobsNav = React.createFactory(require './OrchestrationJobsNav.coffee')
+
 
 {div} = React.DOM
 
+JobNotFound = React.createFactory(React.createClass
+  displayName: 'JobNotFound'
+  render: ->
+    div null, "Job #{@props.jobId} not found."
+)
 
-OrchestrationDetail = React.createClass
-  displayName: 'OrchestrationDetail'
+JobDetailBody = React.createFactory(React.createClass
+  displayName: 'JobDetailBody'
+  render: ->
+    div null, @props.job.id
+
+)
+
+
+OrchestrationJobDetail = React.createClass
+  displayName: 'OrchestrationJobDetail'
   mixins: [Router.State]
 
-  statics:
-    willTransitionTo: (transition, params, query) ->
-      console.log 'will trasition', transition, params, query
+  _getJobId: ->
+    # using getParams method provided by Router.State mixin
+    parseInt(@getParams().jobId)
 
   _getOrchestrationId: ->
-    # using getParams method provided by Router.State mixin
     parseInt(@getParams().orchestrationId)
 
   _getStateFromStores: ->
     orchestrationId = @_getOrchestrationId()
     return {
-      orchestration: OrchestrationStore.get orchestrationId
-      isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
+      job: OrchestrationJobsStore.getJob @_getJobId()
+      isLoading: OrchestrationJobsStore.isJobLoading @_getJobId()
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
@@ -41,13 +52,13 @@ OrchestrationDetail = React.createClass
   componentDidMount: ->
     OrchestrationStore.addChangeListener(@_onChange)
     OrchestrationJobsStore.addChangeListener(@_onChange)
-    OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+    OrchestrationsActionCreators.loadJob(@_getJobId())
 
   componentWillReceiveProps: ->
     @setState(@_getStateFromStores())
-    OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+    OrchestrationsActionCreators.loadJob(@_getJobId())
 
   componentWillUnmount: ->
     OrchestrationStore.removeChangeListener(@_onChange)
@@ -56,25 +67,22 @@ OrchestrationDetail = React.createClass
   _onChange: ->
     @setState(@_getStateFromStores())
 
+
   render: ->
-    console.log 'jobs', @state.jobs
-    if @state.isLoading
-      text = 'loading ...'
+    if @state.job
+      body = JobDetailBody(job: @state.job.toJS())
+    else if !@state.isLoading
+      body = JobNotFound(jobId: @getParams().jobId)
     else
-      if @state.orchestration
-        text = 'Orchestration ' + @state.orchestration.get('id') + ' ' + @state.orchestration.get('name')
-      else
-        text = 'Orchestration not found'
+      body = 'Loading ...'
 
     div {className: 'container-fluid'},
       div {className: 'row'},
         div {className: 'col-md-3 kb-orchestrations-sidebar'},
-          OrchestrationsSearch()
-          OrchestrationsNav()
+          JobsNav jobs: @state.jobs.toJS(), jobsLoading: @state.jobsLoading
         div {className: 'col-md-9 kb-orchestrations-main'},
           div {},
-            text,
-            JobsTable(jobs: @state.jobs.toJS())
+            body
 
 
-module.exports = OrchestrationDetail
+module.exports = OrchestrationJobDetail

@@ -8,8 +8,9 @@ ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
 
 ApplicationActionCreators.applicationDataReceived(
   sapiToken:
-    token: ''
+    token: 'your_token'
 )
 
-Router.run routes, Router.HistoryLocation, (Handler) ->
+Router.run routes, Router.HistoryLocation, (Handler, state) ->
+  console.log 'run', state
   React.render(React.createElement(Handler), document.getElementById 'react')

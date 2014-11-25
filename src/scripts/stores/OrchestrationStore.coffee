@@ -17,22 +17,14 @@ _isLoaded = false
 
 CHANGE_EVENT = 'change'
 
-itemIndex = (id) ->
-  index = _orchestrationsById.findIndex((item) ->
-    item.get('id') == id
-  )
 
-  if index == -1
-    throw new Error("Cannot find item by id=" + id)
-
-  index
-
-
-updateItem = (id, payload) ->
-  _orchestrationsById = _orchestrationsById.update(itemIndex(id), (orchestration) ->
+updateOrchestration = (id, payload) ->
+  _orchestrationsById = _orchestrationsById.update(id, (orchestration) ->
     orchestration.merge payload
   )
 
+removeOrchestrationFromLoading = (id) ->
+  _loadingOrchestrations = _loadingOrchestrations.remove(_loadingOrchestrations.indexOf(id))
 
 OrchestrationStore = assign {}, EventEmitter.prototype,
 
@@ -85,12 +77,12 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_ACTIVATE
-      updateItem action.orchestrationId,
+      updateOrchestration action.orchestrationId,
         active: true
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_DISABLE
-      updateItem action.orchestrationId,
+      updateOrchestration action.orchestrationId,
         active: false
       OrchestrationStore.emitChange()
 
@@ -113,12 +105,12 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
       console.log 'revmoe', action.orchestrationId
-      _loadingOrchestrations = _loadingOrchestrations.remove action.orchestrationId
+      removeOrchestrationFromLoading(action.orchestrationId)
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
       console.log 'success load', action.orchestration.id
-      _loadingOrchestrations = _loadingOrchestrations.remove(_loadingOrchestrations.indexOf(action.orchestration.id))
+      removeOrchestrationFromLoading(action.orchestration.id)
       console.log 'loading', _loadingOrchestrations.toJS()
       _orchestrationsById = _orchestrationsById.set action.orchestration.id, Immutable.fromJS(action.orchestration)
       OrchestrationStore.emitChange()

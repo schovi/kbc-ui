@@ -51,6 +51,53 @@ module.exports =
         )
       )
 
+  loadOrchestrationJobs: (orchestrationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD
+      orchestrationId: orchestrationId
+    )
+
+    orchestrationsApi
+    .getOrchestrationJobs(orchestrationId)
+    .then((jobs) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
+          orchestrationId: orchestrationId
+          jobs: jobs
+        )
+      )
+    .catch((error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
+          orchestrationId: orchestrationId
+          status: error.status
+          response: error.response
+        )
+      )
+
+  loadJob: (jobId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD
+      jobId: jobId
+    )
+
+    orchestrationsApi
+    .getJob(jobId)
+    .then((job) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
+          orchestrationId: job.orchestrationId
+          job: job
+        )
+      )
+    .catch((error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_ERROR
+          jobId: jobId
+          status: error.status
+          response: error.response
+        )
+      )
 
   setOrchestrationsFilter: (query) ->
     dispatcher.handleViewAction(
