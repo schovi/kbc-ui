@@ -60,8 +60,8 @@ OrchestrationRow = React.createClass(
       key: 'delete'
       placement: 'top'
     ,
-      button className: 'btn btn-link',
-        i className: 'fa fa-trash-o'
+      button className: 'btn kbc-btn-link-icon',
+        i className: 'kbc-icon-cup'
     )
 
 

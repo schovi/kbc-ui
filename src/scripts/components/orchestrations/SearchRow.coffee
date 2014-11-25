@@ -9,7 +9,7 @@ SearchRow = React.createClass
   componentDidMount: ->
     @refs.searchInput.getDOMNode().focus()
   render: ->
-    div className: 'row kbc-search-row',
+    div className: 'row kbc-search kbc-search-row',
       span className: 'kbc-icon-search'
       input type: 'text', className: 'form-control', placeholder: 'Search', ref: 'searchInput'
 
