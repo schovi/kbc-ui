@@ -9,7 +9,7 @@ JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee'
 Link = React.createFactory(require('react-router').Link)
 State = require('react-router').State
 
-{ a, span, div} = React.DOM
+{ a, span, div, strong, em} = React.DOM
 
 OrchestrationRow = React.createFactory React.createClass(
   displayName: 'OrchestrationRow'
@@ -31,13 +31,19 @@ OrchestrationRow = React.createFactory React.createClass(
     else
       duration = ''
 
-    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
-      (JobStatusCircle {status: lastExecutedJob?.get('status')}),
-      (span null, @props.orchestration.get('name')),
-      disabled,
-      (span {className: 'kb-info clearfix'},
-        duration,
-        (span {className: 'pull-right'},
+    (Link {className: "list-group-item tr #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
+      (span {className: 'td'},
+        (JobStatusCircle {status: lastExecutedJob?.get('status')})
+      ),
+      (span {className: 'td'},
+        (strong null, @props.orchestration.get('name')),
+        duration
+      ),
+      (span {className: 'td'},
+        (em null,
+          disabled
+        ),
+        (span {className: 'kb-info clearfix'},
           (FinishedWithIcon endTime: lastExecutedJob.get('endTime')) if lastExecutedJob?.get('endTime')
         )
       )
@@ -74,7 +80,7 @@ OrchestrationsNav = React.createClass(
         'No Orchestrations found'
       )
 
-    (div className: 'list-group kb-orchestrations-nav',
+    (div className: 'list-group kb-orchestrations-nav table',
       childs
     )
 )
