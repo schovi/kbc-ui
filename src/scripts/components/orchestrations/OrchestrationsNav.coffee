@@ -1,13 +1,13 @@
 React = require 'react'
-_ = require 'underscore'
 
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
+OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 
 DurationWithIcon = React.createFactory(require '../common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffee')
 JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
-ActiveState = require('react-router').ActiveState
+State = require('react-router').State
 
 { a, span, div} = React.DOM
 
@@ -15,8 +15,7 @@ OrchestrationRow = React.createFactory React.createClass(
   displayName: 'OrchestrationRow'
   propTypes:
     orchestration: React.PropTypes.object
-    isActive: React.PropTypes.bool
-  mixins: [ ActiveState ]
+  mixins: [ State ]
   render: ->
     isActive = @isActive('orchestration', id: @props.orchestration.get('id'))
     className = if isActive then 'active' else ''
@@ -32,7 +31,7 @@ OrchestrationRow = React.createFactory React.createClass(
     else
       duration = ''
 
-    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {id: @props.orchestration.get('id')} },
+    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
       (JobStatusCircle {status: lastExecutedJob?.get('status')}),
       (span null, @props.orchestration.get('name')),
       disabled,
@@ -46,15 +45,24 @@ OrchestrationRow = React.createFactory React.createClass(
 )
 
 getStateFromStores = ->
-  orchestrations: OrchestrationStore.getAll()
+  orchestrations: OrchestrationStore.getFiltered()
 
 OrchestrationsNav = React.createClass(
   displayName: 'OrchestrationsNavList'
-  propTypes:
-    orchestrations: React.PropTypes.array
-    filter: React.PropTypes.string
+
   getInitialState: ->
     getStateFromStores()
+
+  componentDidMount: ->
+    OrchestrationStore.addChangeListener(@_onChange)
+    OrchestrationsActionCreators.loadOrchestrations()
+
+  componentWillUnmount: ->
+    OrchestrationStore.removeChangeListener(@_onChange)
+
+  _onChange: ->
+    @setState(getStateFromStores())
+
   render: ->
     filtered = @state.orchestrations
     if filtered.size

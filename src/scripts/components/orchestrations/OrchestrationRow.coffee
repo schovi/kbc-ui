@@ -4,6 +4,8 @@ FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffe
 JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
 
+OrchestrationActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
+
 prettyCron = require 'prettycron'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
@@ -40,16 +42,16 @@ OrchestrationRow = React.createClass(
   propTypes:
     orchestration: React.PropTypes.object
 
-  deleteOrchestration: (event) ->
-    # todo
-    false
+  _setOrchestrationActive: (e) ->
+    console.log 'set active'
+    OrchestrationActionCreators.activateOrchestration(@props.orchestration.get('id'))
+    e.stopPropagation()
+    e.preventDefault()
 
-  setOrchestrationActiveState: ->
-    #todo
-
-  runOrchestration: ->
-    #todo
-
+  _setOrchestrationDisabled: (e) ->
+    OrchestrationActionCreators.disableOrchestration(@props.orchestration.get('id'))
+    e.stopPropagation()
+    e.preventDefault()
 
   buttons: ->
     buttons = []
@@ -60,19 +62,23 @@ OrchestrationRow = React.createClass(
       key: 'delete'
       placement: 'top'
     ,
-      button className: 'btn kbc-btn-link-icon',
-        i className: 'kbc-icon-cup'
+      button className: 'btn btn-link',
+        i className: 'fa fa-fw fa-trash-o'
     )
 
 
-    activateTooltip = if @props.orchestration.get('active') then 'Disable orchestration' else 'Enable orchestration'
+    isActive = @props.orchestration.get('active')
+    activateTooltip = if isActive then 'Disable orchestration' else 'Enable orchestration'
     buttons.push(OverlayTrigger
       overlay: Tooltip null, activateTooltip
       key: 'activate'
       placement: 'top'
     ,
-      button className: 'btn btn-link',
-        i className: if @props.orchestration.get('active') then 'fa fa-check' else 'fa fa-times'
+      button
+        className: 'btn btn-link'
+        onClick: if isActive then @_setOrchestrationDisabled else @_setOrchestrationActive
+      ,
+        i className: if isActive then 'fa fa-fw fa-check' else 'fa fa-fw fa-times'
     )
 
     buttons.push(OverlayTrigger
@@ -81,7 +87,7 @@ OrchestrationRow = React.createClass(
       placement: 'top'
     ,
       button className: 'btn btn-link',
-        i className: 'fa fa-play'
+        i className: 'fa fa-fw fa-play'
     )
 
     buttons
@@ -104,7 +110,7 @@ OrchestrationRow = React.createClass(
     else
       duration = 'No run yet'
 
-    (Link {className: "tr", to: 'orchestration', params: {id: @props.orchestration.get('id')}},
+    (Link {className: "tr", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')}},
       (span {className: 'td'},
         (JobStatusCircle {status: lastExecutedJob?.get('status')})
         ' '

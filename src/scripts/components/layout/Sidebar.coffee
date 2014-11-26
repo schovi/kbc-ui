@@ -1,6 +1,6 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
-ActiveState = require('react-router').ActiveState
+State = require('react-router').State
 
 _ = require 'underscore'
 
@@ -34,7 +34,7 @@ _pages = [
 
 Sidebar = React.createClass
   displayName: 'Sidebar'
-  mixins: [ ActiveState ]
+  mixins: [ State ]
   renderLinks: ->
     _.map(_pages, (page) ->
       isActive = @isActive(page.id)

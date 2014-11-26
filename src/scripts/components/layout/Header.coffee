@@ -1,24 +1,25 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
-ActiveState = require('react-router').ActiveState
+State = require('react-router').State
 
 {div, nav, span, a, h1} = React.DOM
 
 Header = React.createClass
   displayName: 'Header'
-  mixins: [ActiveState]
+  mixins: [State]
   render: ->
 
     breadcrumbs = []
+    currentParams = @getParams()
 
-    filtered = @getActiveRoutes().filter((route) ->
-      route.props.path != '/' && !route.props.isDefault
+    filtered = @getRoutes().filter((route) ->
+      route.path != '/' && !route.isDefault
     )
 
     filtered.forEach((route, i) ->
-      name = route.props.name
+      name = route.name
       if i != filtered.length - 1
-        link = Link to: route.props.path,
+        link = Link to: route.path, params: currentParams,
           name
         breadcrumbs.push link
         breadcrumbs.push(span className: 'kbc-icon-arrow-right')
