@@ -111,9 +111,17 @@ module.exports =
       orchestrationId: id
     )
 
+    orchestrationsApi.updateOrchestration(id,
+      active: true
+    )
+
   disableOrchestration: (id) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_DISABLE
       orchestrationId: id
+    )
+
+    orchestrationsApi.updateOrchestration(id,
+      active: false
     )
 

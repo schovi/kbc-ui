@@ -9,6 +9,7 @@ module.exports =
 
   ActionTypes: keyMirror(
     COMPONENTS_SET_FILTER: null
+    COMPONENTS_LOAD_SUCCESS: null
 
     ORCHESTRATIONS_LOAD: null
     ORCHESTRATIONS_LOAD_SUCCESS: null

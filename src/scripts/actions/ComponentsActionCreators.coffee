@@ -12,3 +12,9 @@ module.exports =
       query: query
       componentType: componentType
     )
+
+  receiveAllComponents: (componentsRaw) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.COMPONENTS_LOAD_SUCCESS
+      components: componentsRaw
+    )

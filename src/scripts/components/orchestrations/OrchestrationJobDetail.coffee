@@ -9,9 +9,12 @@ OrchestrationJobsStore = require '../../stores/OrchestrationJobsStore.coffee'
 # components
 JobsNav = React.createFactory(require './job-detail/JobsNav.coffee')
 JobTasks = React.createFactory(require './job-detail/JobTasks.coffee')
+Duration = React.createFactory(require '../common/Duration.coffee')
 
+TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
+TabPane = React.createFactory(require('react-bootstrap').TabPane)
 
-{div} = React.DOM
+{div, h2, small} = React.DOM
 
 JobNotFound = React.createFactory(React.createClass
   displayName: 'JobNotFound'
@@ -24,7 +27,17 @@ JobDetailBody = React.createFactory(React.createClass
   render: ->
     div null,
       @props.job.id,
+      h2 null,
+        'Tasks',
+        ' ',
+        @_renderTotalDurationInHeader(),
       JobTasks(tasks: @props.job.results.tasks)
+
+  _renderTotalDurationInHeader: ->
+    return '' if !@props.job.startTime
+    small null,
+      'Total Duration ',
+      Duration startTime: @props.job.startTime, endTime: @props.job.endTime
 )
 
 
@@ -71,10 +84,16 @@ OrchestrationJobDetail = React.createClass
 
 
   render: ->
+
     if @state.job
-      body = JobDetailBody(job: @state.job.toJS())
+      body = div null,
+        TabbedArea defaultActiveKey: 'overview', animation: false,
+          TabPane eventKey: 'overview', tab: 'Overview', JobDetailBody(job: @state.job.toJS())
+          TabPane eventKey: 'log', tab: 'Log', 'Todo'
+
     else if !@state.isLoading
       body = JobNotFound(jobId: @getParams().jobId)
+
     else
       body = 'Loading ...'
 
