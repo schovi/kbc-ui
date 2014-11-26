@@ -7,6 +7,24 @@ ComponentsActionCreators = require '../../actions/ComponentsActionCreators.coffe
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM
 
+ComponentBox = React.createClass
+  displayName: 'ComponentBox'
+  propTypes:
+    component: React.PropTypes.object.isRequired
+
+  shouldComponentUpdate: (nextProps) ->
+    @props.component == nextProps.component
+
+  render: ->
+    component = @props.component
+    div className: 'col-sm-4',
+      div className: 'panel',
+        div className: 'panel-body text-center',
+          ComponentIcon component: component, size: '32'
+          h2 null, component.get('name')
+          p null, component.get('description')
+          a className: 'btn btn-success btn-lg',
+            span className: 'kbc-icon-plus', 'Add'
 
 createNewComponentPage = (type) ->
 
@@ -46,17 +64,10 @@ createNewComponentPage = (type) ->
       .toArray()
 
     renderComponentsRow: (components) ->
-      div className: 'row kbc-extractors-select', components.map(@renderComponent, @).toArray()
+      div className: 'row kbc-extractors-select', components.map((component) ->
+        React.createElement ComponentBox, component: component, key: component.id
+      ).toArray()
 
-    renderComponent: (component) ->
-      div className: 'col-sm-4',
-        div className: 'panel',
-          div className: 'panel-body text-center',
-            ComponentIcon component: component, size: '32'
-            h2 null, component.get('name')
-            p null, component.get('description')
-            a className: 'btn btn-success btn-lg',
-              span className: 'kbc-icon-plus', 'Add'
 
     _onChange: ->
       @setState(getStateFromStores())
