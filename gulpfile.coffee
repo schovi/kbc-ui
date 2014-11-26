@@ -77,7 +77,7 @@ gulp.task 'watch', ->
 gulp.task 'less', ->
   gulp.src('./src/styles/app.less')
   .pipe(less())
-  .pipe(gulp.dest('./src/styles'))
+  .pipe(gulp.dest('./tmp/styles'))
 
 gulp.task 'build-styles', ->
   gulp.src('./src/styles/app.less')

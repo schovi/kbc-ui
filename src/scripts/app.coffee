@@ -8,7 +8,7 @@ ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
 
 ApplicationActionCreators.applicationDataReceived(
   sapiToken:
-    token: 'your_token'
+    token: ''
 )
 
 Router.run routes, Router.HistoryLocation, (Handler, state) ->

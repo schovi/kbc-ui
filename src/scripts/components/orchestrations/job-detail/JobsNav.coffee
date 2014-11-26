@@ -3,9 +3,9 @@ _ = require 'underscore'
 
 Router = require 'react-router'
 
-JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
-FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffee')
-DurationWithIcon = React.createFactory(require '../common/DurationWithIcon.coffee')
+JobStatusCircle = React.createFactory(require '../../common/JobStatusCircle.coffee')
+FinishedWithIcon = React.createFactory(require '../../common/FinishedWithIcon.coffee')
+DurationWithIcon = React.createFactory(require '../../common/DurationWithIcon.coffee')
 
 Link = React.createFactory(Router.Link)
 

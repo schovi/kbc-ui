@@ -7,7 +7,8 @@ OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationJobsStore = require '../../stores/OrchestrationJobsStore.coffee'
 
 # components
-JobsNav = React.createFactory(require './OrchestrationJobsNav.coffee')
+JobsNav = React.createFactory(require './job-detail/JobsNav.coffee')
+JobTasks = React.createFactory(require './job-detail/JobTasks.coffee')
 
 
 {div} = React.DOM
@@ -21,8 +22,9 @@ JobNotFound = React.createFactory(React.createClass
 JobDetailBody = React.createFactory(React.createClass
   displayName: 'JobDetailBody'
   render: ->
-    div null, @props.job.id
-
+    div null,
+      @props.job.id,
+      JobTasks(tasks: @props.job.results.tasks)
 )
 
 
