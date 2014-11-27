@@ -8,9 +8,16 @@ module.exports =
   )
 
   ActionTypes: keyMirror(
+    # Components
     COMPONENTS_SET_FILTER: null
     COMPONENTS_LOAD_SUCCESS: null
 
+    # Installed components
+    INSTALLED_COMPONENTS_LOAD: null
+    INSTALLED_COMPONENTS_LOAD_SUCCESS: null
+    INSTALLED_COMPONENTS_LOAD_ERROR: null
+
+    # Orchestrations
     ORCHESTRATIONS_LOAD: null
     ORCHESTRATIONS_LOAD_SUCCESS: null
     ORCHESTRATIONS_LOAD_ERROR: null
@@ -30,5 +37,6 @@ module.exports =
     ORCHESTRATION_JOB_LOAD_SUCCESS: null
     ORCHESTRATION_JOB_LOAD_ERROR: null
 
+    # Application state
     APPLICATION_DATA_RECEIVED: null
   )

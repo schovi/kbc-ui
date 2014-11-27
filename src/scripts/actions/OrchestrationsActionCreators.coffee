@@ -8,10 +8,7 @@ OrchestrationStore = require '../stores/OrchestrationStore.coffee'
 
 module.exports =
 
-  loadOrchestrations: ->
-    # don't load if already loaded
-    return if OrchestrationStore.getIsLoaded()
-
+  loadOrchestrationsForce: ->
     # trigger load initialized
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATIONS_LOAD
@@ -19,14 +16,21 @@ module.exports =
 
     # init load
     orchestrationsApi
-      .getOrchestrations()
-      .then((orchestrations) ->
+    .getOrchestrations()
+    .then((orchestrations) ->
         # load success
         dispatcher.handleViewAction(
           type: constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
           orchestrations: orchestrations
         )
       )
+
+
+  loadOrchestrations: ->
+    # don't load if already loaded
+    return if OrchestrationStore.getIsLoaded()
+
+    @loadOrchestrationsForce()
 
   loadOrchestration: (id) ->
     dispatcher.handleViewAction(

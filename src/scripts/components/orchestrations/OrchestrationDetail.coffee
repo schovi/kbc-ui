@@ -67,14 +67,13 @@ OrchestrationDetail = React.createClass
         text = 'Orchestration not found'
 
     div {className: 'container-fluid'},
-      div {className: 'row'},
-        div {className: 'col-md-3 kb-orchestrations-sidebar kbc-orchestrations-nav'},
-          OrchestrationsSearch()
-          OrchestrationsNav()
-        div {className: 'col-md-9 kb-orchestrations-main'},
-          div {},
-            text,
-            JobsTable(jobs: @state.jobs.toJS())
+      div {className: 'col-md-3 kb-orchestrations-sidebar kbc-orchestrations-nav'},
+        OrchestrationsSearch()
+        OrchestrationsNav()
+      div {className: 'col-md-9 kb-orchestrations-main'},
+        div {},
+          text,
+          JobsTable(jobs: @state.jobs.toJS())
 
 
 module.exports = OrchestrationDetail

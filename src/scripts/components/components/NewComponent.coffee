@@ -65,7 +65,7 @@ createNewComponentPage = (type) ->
 
     renderComponentsRow: (components) ->
       div className: 'row kbc-extractors-select', components.map((component) ->
-        React.createElement ComponentBox, component: component, key: component.id
+        React.createElement ComponentBox, component: component, key: component.get('id')
       ).toArray()
 
 

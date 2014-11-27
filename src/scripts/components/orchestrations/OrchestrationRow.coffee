@@ -1,4 +1,5 @@
 React = require 'react'
+Immutable = require 'immutable'
 DurationWithIcon = React.createFactory(require '../common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../common/FinishedWithIcon.coffee')
 JobStatusCircle = React.createFactory(require '../common/JobStatusCircle.coffee')
@@ -41,6 +42,9 @@ OrchestrationRow = React.createClass(
   displayName: 'OrchestrationRow'
   propTypes:
     orchestration: React.PropTypes.object
+
+  shouldComponentUpdate: (nextProps) ->
+    !Immutable.is(nextProps.orchestration, @props.orchestration)
 
   _setOrchestrationActive: (e) ->
     console.log 'set active'
@@ -103,7 +107,7 @@ OrchestrationRow = React.createClass(
 
 
   render: ->
-
+    console.log 'render', @props.orchestration.get('name')
     lastExecutedJob = @props.orchestration.get('lastExecutedJob')
     if lastExecutedJob && lastExecutedJob.get 'startTime'
       duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})

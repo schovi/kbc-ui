@@ -1,4 +1,5 @@
 React = require 'react'
+Immutable = require 'immutable'
 
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
@@ -13,6 +14,7 @@ getStateFromStores = ->
 
 Index = React.createClass
   displayName: 'OrchestrationsIndex'
+
   getInitialState: ->
     getStateFromStores()
 
@@ -23,9 +25,17 @@ Index = React.createClass
   componentWillUnmount: ->
     OrchestrationStore.removeChangeListener(@_onChange)
 
+  shouldComponentUpdate: (nextProps, nextState) ->
+    !Immutable.is(nextState.orchestrations, @state.orchestrations) ||
+      nextState.isLoading != @state.isLoading
+
+  _handleRefreshClick: (e) ->
+    OrchestrationsActionCreators.loadOrchestrationsForce()
+
   render: ->
     div {className: 'container-fluid'},
       'Loading: ' + @state.isLoading
+      span className: 'fa fa-refresh', onClick: @_handleRefreshClick
       OrchestrationsSearch()
       if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
 

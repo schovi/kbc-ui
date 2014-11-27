@@ -6,7 +6,9 @@ Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 fuzzy = require 'fuzzy'
 
-_orchestrationsById = Immutable.Map({})
+_store = Immutable.fromJS(
+  orchestrationsById: {}
+)
 _loadingOrchestrations = Immutable.List([])
 
 _filter = ''
@@ -19,7 +21,7 @@ CHANGE_EVENT = 'change'
 
 
 updateOrchestration = (id, payload) ->
-  _orchestrationsById = _orchestrationsById.update(id, (orchestration) ->
+  _store = _store.updateIn(['orchestrationsById', id], (orchestration) ->
     orchestration.merge payload
   )
 
@@ -29,16 +31,13 @@ removeOrchestrationFromLoading = (id) ->
 OrchestrationStore = assign {}, EventEmitter.prototype,
 
   getAll: ->
-    _orchestrationsById
+    _store.get 'orchestrationsById'
 
   get: (id) ->
-    idInt = parseInt id
-    _orchestrationsById.find((orchestration) ->
-      orchestration.get('id') == idInt
-    )
+    _store.getIn ['orchestrationsById', parseInt(id)]
 
   getFiltered: ->
-    _orchestrationsById.filter((orchestration) ->
+    _store.get('orchestrationsById').filter((orchestration) ->
       if _filter
         fuzzy.match(_filter, orchestration.get('name'))
       else
@@ -93,26 +92,24 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
       _isLoading = false
       _isLoaded = true
-      _orchestrationsById = Immutable.fromJS(action.orchestrations).toMap().mapKeys((key, orchestration) ->
+
+      _store = _store.set 'orchestrationsById', Immutable.fromJS(action.orchestrations).toMap().mapKeys((key, orchestration) ->
         orchestration.get 'id'
       )
+
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD
-      console.log 'start load', action.orchestrationId
       _loadingOrchestrations = _loadingOrchestrations.push action.orchestrationId
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
-      console.log 'revmoe', action.orchestrationId
       removeOrchestrationFromLoading(action.orchestrationId)
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
-      console.log 'success load', action.orchestration.id
       removeOrchestrationFromLoading(action.orchestration.id)
-      console.log 'loading', _loadingOrchestrations.toJS()
-      _orchestrationsById = _orchestrationsById.set action.orchestration.id, Immutable.fromJS(action.orchestration)
+      _store = _store.setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
       OrchestrationStore.emitChange()
 
   true
