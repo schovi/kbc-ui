@@ -21,6 +21,7 @@ createComponentsIndex = (type) ->
 
     componentDidMount: ->
       InstalledComponentsStore.addChangeListener(@_onChange)
+      InstalledComponentsActionCreators.loadComponents()
 
     componentWillUnmount: ->
       InstalledComponentsStore.removeChangeListener(@_onChange)

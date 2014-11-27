@@ -3,9 +3,15 @@
 dispatcher = require '../dispatcher/KbcDispatcher.coffee'
 constants = require '../constants/KbcConstants.coffee'
 
+InstalledComponentsStore = require '../stores/InstalledComponentsStore.coffee'
 installedComponentsApi = require '../apis/installedComponentsApi.coffee'
 
+
 module.exports =
+
+  loadComponents: ->
+    return if InstalledComponentsStore.getIsLoaded()
+    @loadComponentsForce()
 
 
   loadComponentsForce: ->

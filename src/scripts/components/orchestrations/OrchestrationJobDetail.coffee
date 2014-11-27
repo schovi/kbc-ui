@@ -98,12 +98,11 @@ OrchestrationJobDetail = React.createClass
       body = 'Loading ...'
 
     div {className: 'container-fluid'},
-      div {className: 'row'},
-        div {className: 'col-md-3 kb-orchestrations-sidebar'},
-          JobsNav jobs: @state.jobs.toJS(), jobsLoading: @state.jobsLoading
-        div {className: 'col-md-9 kb-orchestrations-main'},
-          div {},
-            body
+      div {className: 'col-md-3 kb-orchestrations-sidebar'},
+        JobsNav jobs: @state.jobs.toJS(), jobsLoading: @state.jobsLoading
+      div {className: 'col-md-9 kb-orchestrations-main'},
+        div {},
+          body
 
 
 module.exports = OrchestrationJobDetail
