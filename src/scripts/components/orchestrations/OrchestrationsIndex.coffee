@@ -3,8 +3,10 @@ Immutable = require 'immutable'
 
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
+
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
 SearchRow = React.createFactory(require '../common/SearchRow.coffee')
+RefreshIcon = React.createFactory(require '../common/RefreshIcon.coffee')
 
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getFiltered()
@@ -39,8 +41,7 @@ Index = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      'Loading: ' + @state.isLoading
-      span className: 'fa fa-refresh', onClick: @_handleRefreshClick
+      RefreshIcon isLoading: @state.isLoading, onClick: @_handleRefreshClick
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
       if @state.isLoaded
         if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
