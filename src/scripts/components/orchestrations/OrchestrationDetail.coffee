@@ -8,7 +8,7 @@ OrchestrationJobsStore = require '../../stores/OrchestrationJobsStore.coffee'
 
 # React components
 OrchestrationsNav = React.createFactory(require './OrchestrationsNav.coffee')
-OrchestrationsSearch = React.createFactory(require './OrchestrationsSearch.coffee')
+SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 JobsTable = React.createFactory(require './jobs-table/JobsTable.coffee')
 
 {div} = React.DOM
@@ -17,10 +17,6 @@ JobsTable = React.createFactory(require './jobs-table/JobsTable.coffee')
 OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
   mixins: [Router.State]
-
-  statics:
-    willTransitionTo: (transition, params, query) ->
-      console.log 'will trasition', transition, params, query
 
   _getOrchestrationId: ->
     # using getParams method provided by Router.State mixin
@@ -31,6 +27,7 @@ OrchestrationDetail = React.createClass
     return {
       orchestration: OrchestrationStore.get orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
+      filter: OrchestrationStore.getFilter()
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
@@ -56,6 +53,9 @@ OrchestrationDetail = React.createClass
   _onChange: ->
     @setState(@_getStateFromStores())
 
+  _handleFilterChange: (query) ->
+    OrchestrationsActionCreators.setOrchestrationsFilter(query)
+
   render: ->
     console.log 'jobs', @state.jobs
     if @state.isLoading
@@ -68,7 +68,7 @@ OrchestrationDetail = React.createClass
 
     div {className: 'container-fluid'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-orchestrations-nav'},
-        OrchestrationsSearch()
+        SearchRow(onChange: @_handleFilterChange, query: @state.filter)
         OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main'},
         div {},

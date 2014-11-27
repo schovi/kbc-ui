@@ -7,16 +7,21 @@ SearchRow = React.createClass
   propTypes:
     query: React.PropTypes.string.isRequired
     onChange: React.PropTypes.func.isRequired
+    className: React.PropTypes.string
+
   getInitialState: ->
     query: @props.query
+
   componentDidMount: ->
     @refs.searchInput.getDOMNode().focus()
+
   _onChange: (event) ->
     @setState
       query: event.target.value
     @props.onChange event.target.value
+
   render: ->
-    div className: 'row kbc-search kbc-search-row',
+    div className: 'kbc-search' + ' ' + @props.className,
       span className: 'kbc-icon-search'
       input
         type: 'text'

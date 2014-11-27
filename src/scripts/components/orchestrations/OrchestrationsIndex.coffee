@@ -4,11 +4,12 @@ Immutable = require 'immutable'
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
-OrchestrationsSearch = React.createFactory(require './OrchestrationsSearch.coffee')
+SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getFiltered()
   isLoading: OrchestrationStore.getIsLoading()
+  filter: OrchestrationStore.getFilter()
 
 {div, span, strong} = React.DOM
 
@@ -32,11 +33,14 @@ Index = React.createClass
   _handleRefreshClick: (e) ->
     OrchestrationsActionCreators.loadOrchestrationsForce()
 
+  _handleFilterChange: (query) ->
+    OrchestrationsActionCreators.setOrchestrationsFilter(query)
+
   render: ->
     div {className: 'container-fluid'},
       'Loading: ' + @state.isLoading
       span className: 'fa fa-refresh', onClick: @_handleRefreshClick
-      OrchestrationsSearch()
+      SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
       if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
 
   _renderEmptyState: ->
