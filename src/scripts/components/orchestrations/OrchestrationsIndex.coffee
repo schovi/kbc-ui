@@ -9,6 +9,7 @@ SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 getStateFromStores = ->
   orchestrations: OrchestrationStore.getFiltered()
   isLoading: OrchestrationStore.getIsLoading()
+  isLoaded: OrchestrationStore.getIsLoaded()
   filter: OrchestrationStore.getFilter()
 
 {div, span, strong} = React.DOM
@@ -41,7 +42,8 @@ Index = React.createClass
       'Loading: ' + @state.isLoading
       span className: 'fa fa-refresh', onClick: @_handleRefreshClick
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
-      if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
+      if @state.isLoaded
+        if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
 
   _renderEmptyState: ->
     div null, 'No orchestrations found'
