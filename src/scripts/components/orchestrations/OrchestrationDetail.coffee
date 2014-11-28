@@ -11,7 +11,7 @@ OrchestrationsNav = React.createFactory(require './OrchestrationsNav.coffee')
 SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 JobsTable = React.createFactory(require './jobs-table/JobsTable.coffee')
 
-{div} = React.DOM
+{div, h2} = React.DOM
 
 
 OrchestrationDetail = React.createClass
@@ -67,13 +67,17 @@ OrchestrationDetail = React.createClass
         text = 'Orchestration not found'
 
     div {className: 'container-fluid'},
-      div {className: 'col-md-3 kb-orchestrations-sidebar kbc-orchestrations-nav'},
+      div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         SearchRow(onChange: @_handleFilterChange, query: @state.filter)
         OrchestrationsNav()
-      div {className: 'col-md-9 kb-orchestrations-main'},
-        div {},
-          text,
-          JobsTable(jobs: @state.jobs.toJS())
+      div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
+        div {className: 'row kbc-header'},
+          div {className: 'kbc-title'},
+            h2 null,
+              text
+          div {className: 'kbc-buttons'},
+            ''
+        JobsTable(jobs: @state.jobs.toJS())
 
 
 module.exports = OrchestrationDetail

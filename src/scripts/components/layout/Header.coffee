@@ -34,8 +34,8 @@ Header = React.createClass
           span className: "kbc-icon-keboola", null
           'Connection'
       div {className: 'col-sm-9 col-md-10'},
-        div {className: 'kbc-main-header kbc-header-with-buttons'},
-          div {className: 'kbc-title kbc-header'},
+        div {className: 'kbc-main-header kbc-header'},
+          div {className: 'kbc-title'},
             breadcrumbs
 
 
