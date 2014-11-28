@@ -48,29 +48,66 @@ Dummy = React.createClass
   render: ->
     RouteHandler()
 
+# Routing configuration
 routes =
-  Route({handler: App, path: '/'},
-    Route({handler: Transformations, name: 'transformations'}),
+  handler: App
+  path: '/'
+  defaultRouteHandler: Home
+  defaultRouteName: 'home'
+  notFoundRouteHandler: NotFound
+  childRoutes: [
+      name: 'transformations'
+      handler: Transformations
+    ,
+      name: 'orchestrations'
+      defaultRouteHandler: OrchestrationsIndex
+      childRoutes: [
+        name: 'orchestration'
+        path: ':orchestrationId'
+        defaultRouteHandler: OrchestrationDetail
+        childRoutes: [
+          name:  'orchestrationJob'
+          path: 'jobs/:jobId'
+          handler: OrchestrationJobDetail
+        ]
+      ]
+    ,
+      name: 'extractors'
+      defaultRouteHandler: createComponentsIndex('extractor')
+      childRoutes: [
+        name: 'new-extractor'
+        handler: createNewComponentPage('extractor')
+      ]
+    ,
+      name: 'writers'
+      defaultRouteHandler: createComponentsIndex('writer')
+      childRoutes: [
+        name: 'new-writer'
+        handler: createNewComponentPage('writer')
+      ]
+    ,
+      name: 'storage'
+      handler: Storage
+  ]
 
-    Route({handler: Dummy, name: 'orchestrations'},
-      DefaultRoute({handler: OrchestrationsIndex, name: 'orchestrationsIndex'})
-      Route({handler: Dummy, name: 'orchestration', path: ':orchestrationId'},
-        DefaultRoute({handler: OrchestrationDetail, name: 'orchestrationDetail'})
-        Route(handler: OrchestrationJobDetail, name: 'orchestrationJob', path: 'jobs/:jobId')
-      )
+
+createReactRouterRoutes = (route) ->
+  handler = route.handler || Dummy
+
+  childRoutes = []
+
+  if route.defaultRouteHandler
+    childRoutes.push(DefaultRoute handler: route.defaultRouteHandler, name: route.defaultRouteName)
+
+  if route.notFoundRouteHandler
+    childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler)
+
+  if route.childRoutes
+    route.childRoutes.forEach((childRoute) ->
+      childRoutes.push(createReactRouterRoutes(childRoute))
     )
-    Route({handler: Dummy, name: 'extractors'}
-      DefaultRoute({handler: createComponentsIndex('extractor'), name: 'extractorsIndex'})
-      Route({handler: createNewComponentPage('extractor'), name: 'new-extractor'})
-    ),
-    Route({handler: Dummy, name: 'writers'}
-      DefaultRoute({handler: createComponentsIndex('writer'), name: 'writersIndex', isDefault :true})
-      Route({handler: createNewComponentPage('writer'), name: 'new-writer'})
-    ),
-    Route({handler: Storage, name: 'storage'})
 
-    DefaultRoute({handler: Home, name: 'home'})
-    NotFoundRoute({handler: NotFound})
-  )
+  Route {handler: handler, name: route.name, path: route.path}, childRoutes
 
-module.exports = routes
+
+module.exports = createReactRouterRoutes(routes)

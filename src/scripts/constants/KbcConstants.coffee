@@ -39,4 +39,7 @@ module.exports =
 
     # Application state
     APPLICATION_DATA_RECEIVED: null
+
+    # Router state
+    ROUTER_ROUTE_CHANGED: null
   )

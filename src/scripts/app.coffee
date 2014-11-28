@@ -4,6 +4,7 @@ routes = require './routes.coffee'
 
 ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
 ComponentsActionCreators = require './actions/ComponentsActionCreators.coffee'
+RouterActionCreators = require './actions/RouterActionCreators.coffee'
 
 NoTokenPage = require './components/debug/NoTokenPage.coffee'
 
@@ -29,5 +30,11 @@ ApplicationActionCreators.applicationDataReceived(
     token: token
 )
 
-Router.run routes, Router.HashLocation, (Handler) ->
+router = Router.create
+  routes: routes
+  location: Router.HashLocation
+
+router.run (Handler, state) ->
+  console.log 'route changed', state
+  RouterActionCreators.routeChange(state)
   React.render(React.createElement(Handler), document.getElementById 'react')
