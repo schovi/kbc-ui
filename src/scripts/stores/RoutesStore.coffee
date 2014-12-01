@@ -52,6 +52,7 @@ generateBreadcrumbs = (currentRoutes, currentParams) ->
       .map((route) ->
         Immutable.fromJS(
           title: getRouteTitle(route.get 'name')
+          name: route.get 'name'
           link:
             to: route.get 'name'
             params: currentParams

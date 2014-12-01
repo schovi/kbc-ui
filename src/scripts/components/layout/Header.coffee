@@ -3,7 +3,6 @@ React = require 'react'
 RoutesStore = require '../../stores/RoutesStore.coffee'
 
 Link = React.createFactory(require('react-router').Link)
-State = require('react-router').State
 
 {div, nav, span, a, h1} = React.DOM
 
@@ -13,7 +12,6 @@ getStateFromStores = ->
 
 Header = React.createClass
   displayName: 'Header'
-  mixins: [State]
 
   getInitialState: ->
     getStateFromStores()
@@ -46,13 +44,13 @@ Header = React.createClass
     breadcrumbs = []
     @state.breadcrumbs.forEach((part, i) ->
       if i != @state.breadcrumbs.size - 1
-        part = Link to: part.getIn(['link', 'to']), params: part.getIn(['link', 'params']).toJS(),
+        partElement = Link key: part.get('name'), to: part.getIn(['link', 'to']), params: part.getIn(['link', 'params']).toJS(),
           part.get 'title'
-        breadcrumbs.push part
-        breadcrumbs.push(span className: 'kbc-icon-arrow-right')
+        breadcrumbs.push partElement
+        breadcrumbs.push(span className: 'kbc-icon-arrow-right', key: 'arrow-' + part.get('name'))
       else
-        part = h1 null, part.get('title')
-        breadcrumbs.push part
+        partElement = h1 key: part.get('name'), part.get('title')
+        breadcrumbs.push partElement
     , @)
     breadcrumbs
 

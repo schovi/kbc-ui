@@ -27,23 +27,30 @@ Dummy = React.createClass
   render: ->
     RouteHandler()
 
-createReactRouterRoutes = (route) ->
-  handler = route.handler || Dummy
 
-  childRoutes = []
+createReactRouterRoutes = (rootRoute) ->
 
-  if route.defaultRouteHandler
-    childRoutes.push(DefaultRoute handler: route.defaultRouteHandler, name: route.defaultRouteName)
+    _key = 0
 
-  if route.notFoundRouteHandler
-    childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler)
+    composeRoutes = (route) ->
+      handler = route.handler || Dummy
 
-  if route.childRoutes
-    route.childRoutes.forEach((childRoute) ->
-      childRoutes.push(createReactRouterRoutes(childRoute))
-    )
+      childRoutes = []
 
-  Route {handler: handler, name: route.name, path: route.path}, childRoutes
+      if route.defaultRouteHandler
+        childRoutes.push(DefaultRoute handler: route.defaultRouteHandler, name: route.defaultRouteName, key: _key++)
+
+      if route.notFoundRouteHandler
+        childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler, key: _key++)
+
+      if route.childRoutes
+        route.childRoutes.forEach((childRoute) ->
+          childRoutes.push(composeRoutes(childRoute))
+        )
+
+      Route {handler: handler, name: route.name, path: route.path, key: _key++}, childRoutes
+
+    composeRoutes(rootRoute)
 
 
 module.exports = createReactRouterRoutes
