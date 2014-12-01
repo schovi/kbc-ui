@@ -2,17 +2,21 @@ React = require 'react'
 Router = require 'react-router'
 App = require './components/App.coffee'
 
+# orchestrations components
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
 OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
 OrchestrationsReloaderButton = require './components/orchestrations/OrchestrationsReloaderButton.coffee'
 OrchestrationStore = require './stores/OrchestrationStore.coffee'
+NewOrchestrationButton = require './components/orchestrations/NewOrchestionButton.coffee'
 
 
 
 # class factories parametrized by component type
 createComponentsIndex = require './components/components/ComponentsIndex.coffee'
 createNewComponentPage = require './components/components/NewComponent.coffee'
+createNewComponentButton = require './components/components/NewComponentButton.coffee'
+ComponentReloaderButton = require './components/components/ComponentsReloaderButton.coffee'
 
 
 Transformations = React.createClass
@@ -59,6 +63,7 @@ routes =
       title: 'Orchestrations'
       defaultRouteHandler: OrchestrationsIndex
       reloaderHandler: OrchestrationsReloaderButton
+      headerButtonsHandler: NewOrchestrationButton
       childRoutes: [
         name: 'orchestration'
         path: ':orchestrationId'
@@ -83,6 +88,8 @@ routes =
       name: 'extractors'
       title: 'Extractors'
       defaultRouteHandler: createComponentsIndex('extractor')
+      headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor')
+      reloaderHandler: ComponentReloaderButton
       childRoutes: [
         name: 'new-extractor'
         title: 'New Extractor'
@@ -92,6 +99,8 @@ routes =
       name: 'writers'
       title: 'Writers'
       defaultRouteHandler: createComponentsIndex('writer')
+      headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer')
+      reloaderHandler: ComponentReloaderButton
       childRoutes: [
         name: 'new-writer'
         title: 'New Writer'

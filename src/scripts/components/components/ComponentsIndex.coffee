@@ -38,7 +38,6 @@ createComponentsIndex = (type) ->
       , @).toArray()
 
       div className: 'container-fluid',
-        span className: 'fa fa-refresh', onClick: @_onRefresh
         table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
           tbody null, rows
 

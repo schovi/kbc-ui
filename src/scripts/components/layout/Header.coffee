@@ -39,6 +39,8 @@ Header = React.createClass
             @_renderBreadcrumbs()
             ' '
             @_renderReloader()
+          div {className: 'kbc-buttons'},
+            @_renderButtons()
 
   _renderBreadcrumbs: ->
     breadcrumbs = []
@@ -59,6 +61,12 @@ Header = React.createClass
       null
     else
       React.createElement(@state.currentRouteConfig.get 'reloaderHandler')
+
+  _renderButtons: ->
+    if !@state.currentRouteConfig?.get 'headerButtonsHandler'
+      null
+    else
+      React.createElement(@state.currentRouteConfig.get 'headerButtonsHandler')
 
 
 module.exports = Header
