@@ -2,7 +2,9 @@ gulp = require 'gulp'
 gutil      = require 'gulp-util'
 clean = require 'gulp-clean'
 browserify = require 'browserify'
+coffeeify = require 'coffeeify'
 watchify   = require 'watchify'
+envify = require 'envify/custom'
 chalk      = require 'chalk'
 source     = require 'vinyl-source-stream'
 prettyTime = require 'pretty-hrtime'
@@ -47,7 +49,7 @@ gulp.task 'dist-server', ->
       baseDir: './dist'
 
 gulp.task 'clean', ->
-  gulp.src(['./dist', './tmp'], {read: false})
+  gulp.src(['dist/*', 'tmp/*'], {read: false})
   .pipe(clean())
 
 gulp.task 'watch', ->
@@ -59,6 +61,9 @@ gulp.task 'watch', ->
     cache: {}
     packageCache: {}
     fullPaths: true
+
+  bundle.transform(coffeeify)
+  bundle.transform(envify())
 
   bundle.on 'update', ->
     gutil.log "Starting '#{chalk.cyan 'rebundle'}'..."
@@ -98,10 +103,13 @@ gulp.task 'build-scripts', ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
     extensions: ['.coffee']
-    debug: true
+    debug: false
     cache: {}
     packageCache: {}
-    fullPaths: true
+    fullPaths: false
+
+  bundler.transform(coffeeify)
+  bundler.transform(envify(NODE_ENV: 'production'))
 
   bundler.bundle()
   .pipe(source('bundle.min.js'))

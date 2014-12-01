@@ -9,7 +9,7 @@ install:
 - time npm install
 - bower --version
 - time bower install --dev
-script: gulp build
+script: NODE_ENV=production gulp build
 deploy:
   provider: s3
   access_key_id: AKIAJPIXG5FWMBKORQZA
