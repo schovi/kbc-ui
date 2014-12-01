@@ -1,6 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
 ComponentIcon = React.createFactory(require '../common/ComponentIcon.coffee')
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore.coffee'
 InstalledComponentsActionCreators = require '../../actions/InstalledComponentsActionCreators.coffee'
@@ -9,28 +10,15 @@ InstalledComponentsActionCreators = require '../../actions/InstalledComponentsAc
 
 createComponentsIndex = (type) ->
 
-
-  getStateFromStores = ->
-    installedComponents: InstalledComponentsStore.getAllForType(type)
-
   React.createClass
     displayName: 'InstalledComponents'
+    mixins: [createStoreMixin(InstalledComponentsStore)]
 
-    getInitialState: ->
-      getStateFromStores()
+    getStateFromStores: ->
+      installedComponents: InstalledComponentsStore.getAllForType(type)
 
     componentDidMount: ->
-      InstalledComponentsStore.addChangeListener(@_onChange)
       InstalledComponentsActionCreators.loadComponents()
-
-    componentWillUnmount: ->
-      InstalledComponentsStore.removeChangeListener(@_onChange)
-
-    _onChange: ->
-      @setState(getStateFromStores())
-
-    _onRefresh: ->
-      InstalledComponentsActionCreators.loadComponentsForce()
 
     render: ->
       rows =  @state.installedComponents.map((component) ->

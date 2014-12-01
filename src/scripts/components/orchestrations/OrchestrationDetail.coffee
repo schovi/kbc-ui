@@ -1,6 +1,8 @@
 React = require 'react'
 Router = require 'react-router'
 
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
+
 # actions and stores
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
@@ -16,13 +18,11 @@ JobsTable = React.createFactory(require './jobs-table/JobsTable.coffee')
 
 OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
-  mixins: [Router.State]
+  mixins: [Router.State, createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
-  _getOrchestrationId: ->
-    # using getParams method provided by Router.State mixin
-    parseInt(@getParams().orchestrationId)
 
-  _getStateFromStores: ->
+
+  getStateFromStores: ->
     orchestrationId = @_getOrchestrationId()
     return {
       orchestration: OrchestrationStore.get orchestrationId
@@ -32,32 +32,24 @@ OrchestrationDetail = React.createClass
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
 
-  getInitialState: ->
-    @_getStateFromStores()
+  _getOrchestrationId: ->
+    # using getParams method provided by Router.State mixin
+    parseInt(@getParams().orchestrationId)
+
 
   componentDidMount: ->
-    OrchestrationStore.addChangeListener(@_onChange)
-    OrchestrationJobsStore.addChangeListener(@_onChange)
     OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
 
   componentWillReceiveProps: ->
-    @setState(@_getStateFromStores())
+    @setState(@getStateFromStores())
     OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
-
-  componentWillUnmount: ->
-    OrchestrationStore.removeChangeListener(@_onChange)
-    OrchestrationJobsStore.removeChangeListener(@_onChange)
-
-  _onChange: ->
-    @setState(@_getStateFromStores())
 
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   render: ->
-    console.log 'jobs', @state.jobs
     if @state.isLoading
       text = 'loading ...'
     else

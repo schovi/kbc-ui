@@ -1,6 +1,8 @@
 React = require 'react'
 Router = require 'react-router'
 
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
+
 # actions and stores
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
@@ -43,16 +45,9 @@ JobDetailBody = React.createFactory(React.createClass
 
 OrchestrationJobDetail = React.createClass
   displayName: 'OrchestrationJobDetail'
-  mixins: [Router.State]
+  mixins: [Router.State, createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
-  _getJobId: ->
-    # using getParams method provided by Router.State mixin
-    parseInt(@getParams().jobId)
-
-  _getOrchestrationId: ->
-    parseInt(@getParams().orchestrationId)
-
-  _getStateFromStores: ->
+  getStateFromStores: ->
     orchestrationId = @_getOrchestrationId()
     return {
       job: OrchestrationJobsStore.getJob @_getJobId()
@@ -61,27 +56,21 @@ OrchestrationJobDetail = React.createClass
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
 
-  getInitialState: ->
-    @_getStateFromStores()
+  _getJobId: ->
+    # using getParams method provided by Router.State mixin
+    parseInt(@getParams().jobId)
+
+  _getOrchestrationId: ->
+    parseInt(@getParams().orchestrationId)
 
   componentDidMount: ->
-    OrchestrationStore.addChangeListener(@_onChange)
-    OrchestrationJobsStore.addChangeListener(@_onChange)
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
     OrchestrationsActionCreators.loadJob(@_getJobId())
 
   componentWillReceiveProps: ->
-    @setState(@_getStateFromStores())
+    @setState(@getStateFromStores())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
     OrchestrationsActionCreators.loadJob(@_getJobId())
-
-  componentWillUnmount: ->
-    OrchestrationStore.removeChangeListener(@_onChange)
-    OrchestrationJobsStore.removeChangeListener(@_onChange)
-
-  _onChange: ->
-    @setState(@_getStateFromStores())
-
 
   render: ->
 

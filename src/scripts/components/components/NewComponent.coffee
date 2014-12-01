@@ -1,5 +1,7 @@
 React = require 'react'
 
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
+
 ComponentIcon = React.createFactory(require '../common/ComponentIcon.coffee')
 SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 ComponentsStore = require '../../stores/ComponentsStore.coffee'
@@ -28,24 +30,16 @@ ComponentBox = React.createClass
 
 createNewComponentPage = (type) ->
 
-  getStateFromStores = ->
-    components: ComponentsStore.getFilteredForType(type)
-    filter: ComponentsStore.getFilter(type)
-
   NewComponent = React.createClass
     displayName: 'NewComponent'
+    mixins: [createStoreMixin(ComponentsStore)]
 
-    getInitialState: ->
-      getStateFromStores()
+    componentWillReceiveProps: ->
+      @setState(@getStateFromStores())
 
-    componentWillReceiveProps: () ->
-      @setState(getStateFromStores())
-
-    componentDidMount: ->
-      ComponentsStore.addChangeListener(@_onChange)
-
-    componentWillUnmount: ->
-      ComponentsStore.removeChangeListener(@_onChange)
+    getStateFromStores: ->
+      components: ComponentsStore.getFilteredForType(type)
+      filter: ComponentsStore.getFilter(type)
 
     render: ->
       div className: 'container-fluid',
@@ -67,9 +61,5 @@ createNewComponentPage = (type) ->
       div className: 'row kbc-extractors-select', components.map((component) ->
         React.createElement ComponentBox, component: component, key: component.get('id')
       ).toArray()
-
-
-    _onChange: ->
-      @setState(getStateFromStores())
 
 module.exports = createNewComponentPage
