@@ -1,10 +1,9 @@
 
-EventEmitter = require('events').EventEmitter
 Dispatcher = require '../dispatcher/KbcDispatcher.coffee'
-assign = require 'object-assign'
 Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 fuzzy = require 'fuzzy'
+StoreUtils = require '../utils/StoreUtils.coffee'
 
 _store = Immutable.fromJS(
   orchestrationsById: {}
@@ -17,8 +16,6 @@ _isLoading = false
 
 _isLoaded = false
 
-CHANGE_EVENT = 'change'
-
 
 updateOrchestration = (id, payload) ->
   _store = _store.updateIn(['orchestrationsById', id], (orchestration) ->
@@ -28,7 +25,7 @@ updateOrchestration = (id, payload) ->
 removeOrchestrationFromLoading = (id) ->
   _loadingOrchestrations = _loadingOrchestrations.remove(_loadingOrchestrations.indexOf(id))
 
-OrchestrationStore = assign {}, EventEmitter.prototype,
+OrchestrationStore = StoreUtils.createStore
 
   getAll: ->
     _store.get 'orchestrationsById'
@@ -51,20 +48,11 @@ OrchestrationStore = assign {}, EventEmitter.prototype,
     _isLoading
 
   getIsOrchestrationLoading: (id) ->
-    console.log 'is loading', id, _loadingOrchestrations.toJS()
     _loadingOrchestrations.contains id
 
   getIsLoaded: ->
     _isLoaded
 
-  addChangeListener: (callback) ->
-    @on(CHANGE_EVENT, callback)
-
-  removeChangeListener: (callback) ->
-    @removeListener(CHANGE_EVENT, callback)
-
-  emitChange: ->
-    @emit(CHANGE_EVENT)
 
 
 Dispatcher.register (payload) ->
@@ -111,7 +99,5 @@ Dispatcher.register (payload) ->
       removeOrchestrationFromLoading(action.orchestration.id)
       _store = _store.setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
       OrchestrationStore.emitChange()
-
-  true
 
 module.exports = OrchestrationStore

@@ -1,10 +1,9 @@
 
-EventEmitter = require('events').EventEmitter
 Dispatcher = require '../dispatcher/KbcDispatcher.coffee'
-assign = require 'object-assign'
 Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 fuzzy = require 'fuzzy'
+StoreUtils = require '../utils/StoreUtils.coffee'
 
 _jobsByOrchestrationId = Immutable.Map({})
 _loadingOrchestrationJobs = Immutable.List([])
@@ -16,9 +15,7 @@ removeFromLoadingOrchestrations = (orchestrationId) ->
 removeFromLoadingJobs = (jobId) ->
   _loadingJobs = _loadingJobs.remove(_loadingJobs.indexOf(jobId))
 
-CHANGE_EVENT = 'change'
-
-OrchestrationJobsStore = assign {}, EventEmitter.prototype,
+OrchestrationJobsStore = StoreUtils.createStore
 
   getOrchestrationJobs: (idOrchestration) ->
     _jobsByOrchestrationId.get(idOrchestration) || Immutable.List()
@@ -34,15 +31,6 @@ OrchestrationJobsStore = assign {}, EventEmitter.prototype,
 
   isLoading: (idOrchestration) ->
     _loadingOrchestrationJobs.contains idOrchestration
-
-  addChangeListener: (callback) ->
-    @on(CHANGE_EVENT, callback)
-
-  removeChangeListener: (callback) ->
-    @removeListener(CHANGE_EVENT, callback)
-
-  emitChange: ->
-    @emit(CHANGE_EVENT)
 
 
 Dispatcher.register (payload) ->
@@ -74,9 +62,6 @@ Dispatcher.register (payload) ->
       data[action.orchestrationId] = [action.job]
 
       _jobsByOrchestrationId = _jobsByOrchestrationId.merge Immutable.fromJS(data)
-      console.log  _jobsByOrchestrationId.toJS()
 
-
-  true
 
 module.exports = OrchestrationJobsStore

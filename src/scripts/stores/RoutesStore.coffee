@@ -1,8 +1,7 @@
 
-EventEmitter = require('events').EventEmitter
 Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
 Immutable = require 'immutable'
-assign = require 'object-assign'
+StoreUtils = require '../utils/StoreUtils.coffee'
 _ = require 'underscore'
 
 Immutable = require('immutable')
@@ -59,25 +58,13 @@ generateBreadcrumbs = (currentRoutes, currentParams) ->
         )
       )
 
-CHANGE_EVENT = 'change'
-
-RoutesStore = assign {}, EventEmitter.prototype,
+RoutesStore = StoreUtils.createStore
 
   getBreadcrumbs: ->
     generateBreadcrumbs(_routerState.get('routes'), _routerState.get('params'))
 
   getCurrentRouteConfig: ->
     _routesByName.get(getCurrentRouteName())
-
-  addChangeListener: (callback) ->
-    @on(CHANGE_EVENT, callback)
-
-  removeChangeListener: (callback) ->
-    @removeListener(CHANGE_EVENT, callback)
-
-  emitChange: ->
-    @emit(CHANGE_EVENT)
-
 
 Dispatcher.register (payload) ->
   action = payload.action
