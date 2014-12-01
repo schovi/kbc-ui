@@ -3,6 +3,7 @@ EventEmitter = require('events').EventEmitter
 Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
 Immutable = require 'immutable'
 assign = require 'object-assign'
+_ = require 'underscore'
 
 Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
@@ -23,12 +24,23 @@ nestedRoutesToByNameMap = (route) ->
   traverse(route)
   Immutable.fromJS map
 
+###
+ Returns title for route
+###
+getRouteTitle = (routeName) ->
+  title = _routesByName.getIn [routeName, 'title']
+
+  if _.isFunction title
+    title(_routerState)
+  else
+    title
+
 generateBreadcrumbs = (currentRoutes, currentParams) ->
     currentRoutes
       .shift()
       .filter((route) -> !!route.get 'name')
       .map((route, index) ->
-        title: _routesByName.getIn [route.get('name'), 'title']
+        title: getRouteTitle(route.get 'name')
         link:
           to: route.get 'name'
           params: currentParams.toJS()
@@ -57,11 +69,13 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGED
       _routerState = Immutable.fromJS(action.routerState)
-      RoutesStore.emitChange()
 
     when Constants.ActionTypes.ROUTER_ROUTES_CONFIGURATION_RECEIVE
       _routesByName = nestedRoutesToByNameMap(action.routes)
-      RoutesStore.emitChange()
+
+  # Emit change on events
+  # for example orchestration is loaed asynchronously while breadcrumbs are already rendered so it has to be rendered again
+  RoutesStore.emitChange()
 
 
 module.exports = RoutesStore

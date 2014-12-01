@@ -6,6 +6,8 @@ OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.c
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
 OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
 
+OrchestrationStore = require './stores/OrchestrationStore.coffee'
+
 
 # class factories parametrized by component type
 createComponentsIndex = require './components/components/ComponentsIndex.coffee'
@@ -58,11 +60,19 @@ routes =
       childRoutes: [
         name: 'orchestration'
         path: ':orchestrationId'
-        title: 'Orchestration'
+        title: (routerState) ->
+          orchestrationId = routerState.getIn ['params', 'orchestrationId']
+          orchestration = OrchestrationStore.get(orchestrationId)
+          if orchestration
+            "Orchestration #{orchestration.get('name')}"
+          else
+            "Orchestration #{orchestrationId}"
+
         defaultRouteHandler: OrchestrationDetail
         childRoutes: [
           name:  'orchestrationJob'
-          title: 'Job'
+          title: (routerState) ->
+            'Job ' +  routerState.getIn ['params', 'jobId']
           path: 'jobs/:jobId'
           handler: OrchestrationJobDetail
         ]
