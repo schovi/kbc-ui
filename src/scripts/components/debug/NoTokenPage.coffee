@@ -1,4 +1,4 @@
-React = require 'React'
+React = require 'react'
 
 {div, a, p, h1, input, form, button, strong} = React.DOM
 
