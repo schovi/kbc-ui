@@ -1,4 +1,4 @@
-React = require 'React'
+React = require 'react'
 
 JobStatusLabel = React.createClass(
   displayName: 'JobStatusLabel'
