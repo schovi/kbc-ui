@@ -1,32 +1,45 @@
 React = require 'react'
+
+RoutesStore = require '../../stores/RoutesStore.coffee'
+
 Link = React.createFactory(require('react-router').Link)
 State = require('react-router').State
 
 {div, nav, span, a, h1} = React.DOM
 
+getStateFromStores = ->
+  breadcrumbs: RoutesStore.getBreadcrumbs()
+
 Header = React.createClass
   displayName: 'Header'
   mixins: [State]
+
+  getInitialState: ->
+    getStateFromStores()
+
+  componentDidMount: ->
+    RoutesStore.addChangeListener(@_onChange)
+
+  componentWillUnmount: ->
+    RoutesStore.removeChangeListener(@_onChange)
+
+  _onChange: ->
+    @setState(getStateFromStores())
+
   render: ->
 
     breadcrumbs = []
-    currentParams = @getParams()
-
-    filtered = @getRoutes().filter((route) ->
-      route.path != '/' && !route.isDefault
-    )
-
-    filtered.forEach((route, i) ->
-      name = route.name
-      if i != filtered.length - 1
-        link = Link to: route.path, params: currentParams,
-          name
+    console.log @state.breadcrumbs
+    @state.breadcrumbs.forEach((link, i) ->
+      if i != @state.breadcrumbs.length - 1
+        link = Link to: link.link.to, params: link.link.params,
+          link.title
         breadcrumbs.push link
         breadcrumbs.push(span className: 'kbc-icon-arrow-right')
       else
-        link = h1 null, name
+        link = h1 null, link.title
         breadcrumbs.push link
-    )
+    , @)
 
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},

@@ -6,16 +6,11 @@ OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.c
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
 OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
 
-RouteHandler = React.createFactory(require('react-router').RouteHandler)
 
 # class factories parametrized by component type
 createComponentsIndex = require './components/components/ComponentsIndex.coffee'
 createNewComponentPage = require './components/components/NewComponent.coffee'
 
-
-Route = React.createFactory(Router.Route)
-DefaultRoute = React.createFactory(Router.DefaultRoute)
-NotFoundRoute = React.createFactory(Router.NotFoundRoute)
 
 Transformations = React.createClass
   displayName: 'Transformations'
@@ -43,36 +38,38 @@ NotFound = React.createClass
   render: ->
     React.DOM.div className: 'container-fluid', 'Page not found'
 
-Dummy = React.createClass
-  displayName: 'DummyWrapper'
-  render: ->
-    RouteHandler()
 
-# Routing configuration
+# Custom routing configuration object
 routes =
   handler: App
   path: '/'
+  title: 'Home'
   defaultRouteHandler: Home
   defaultRouteName: 'home'
   notFoundRouteHandler: NotFound
   childRoutes: [
       name: 'transformations'
+      title: 'Transformations'
       handler: Transformations
     ,
       name: 'orchestrations'
+      title: 'Orchestrations'
       defaultRouteHandler: OrchestrationsIndex
       childRoutes: [
         name: 'orchestration'
         path: ':orchestrationId'
+        title: 'Orchestration'
         defaultRouteHandler: OrchestrationDetail
         childRoutes: [
           name:  'orchestrationJob'
+          title: 'Job'
           path: 'jobs/:jobId'
           handler: OrchestrationJobDetail
         ]
       ]
     ,
       name: 'extractors'
+      title: 'Extractors'
       defaultRouteHandler: createComponentsIndex('extractor')
       childRoutes: [
         name: 'new-extractor'
@@ -80,6 +77,7 @@ routes =
       ]
     ,
       name: 'writers'
+      title: 'Writers'
       defaultRouteHandler: createComponentsIndex('writer')
       childRoutes: [
         name: 'new-writer'
@@ -87,27 +85,10 @@ routes =
       ]
     ,
       name: 'storage'
+      title: 'Storage'
       handler: Storage
   ]
 
 
-createReactRouterRoutes = (route) ->
-  handler = route.handler || Dummy
 
-  childRoutes = []
-
-  if route.defaultRouteHandler
-    childRoutes.push(DefaultRoute handler: route.defaultRouteHandler, name: route.defaultRouteName)
-
-  if route.notFoundRouteHandler
-    childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler)
-
-  if route.childRoutes
-    route.childRoutes.forEach((childRoute) ->
-      childRoutes.push(createReactRouterRoutes(childRoute))
-    )
-
-  Route {handler: handler, name: route.name, path: route.path}, childRoutes
-
-
-module.exports = createReactRouterRoutes(routes)
+module.exports = routes
