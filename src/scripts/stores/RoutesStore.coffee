@@ -35,16 +35,28 @@ getRouteTitle = (routeName) ->
   else
     title
 
+getCurrentRouteName = ->
+  routes = _routerState.get('routes')
+  route = routes.findLast((route) ->
+    !!route.get('name')
+  )
+  if route
+    route.get 'name'
+  else
+    null
+
 generateBreadcrumbs = (currentRoutes, currentParams) ->
     currentRoutes
       .shift()
       .filter((route) -> !!route.get 'name')
-      .map((route, index) ->
-        title: getRouteTitle(route.get 'name')
-        link:
-          to: route.get 'name'
-          params: currentParams.toJS()
-      ).toJS()
+      .map((route) ->
+        Immutable.fromJS(
+          title: getRouteTitle(route.get 'name')
+          link:
+            to: route.get 'name'
+            params: currentParams
+        )
+      )
 
 CHANGE_EVENT = 'change'
 
@@ -52,6 +64,9 @@ RoutesStore = assign {}, EventEmitter.prototype,
 
   getBreadcrumbs: ->
     generateBreadcrumbs(_routerState.get('routes'), _routerState.get('params'))
+
+  getCurrentRouteConfig: ->
+    _routesByName.get(getCurrentRouteName())
 
   addChangeListener: (callback) ->
     @on(CHANGE_EVENT, callback)

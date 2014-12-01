@@ -5,8 +5,9 @@ App = require './components/App.coffee'
 OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
 OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
-
+OrchestrationsReloaderButton = require './components/orchestrations/OrchestrationsReloaderButton.coffee'
 OrchestrationStore = require './stores/OrchestrationStore.coffee'
+
 
 
 # class factories parametrized by component type
@@ -57,6 +58,7 @@ routes =
       name: 'orchestrations'
       title: 'Orchestrations'
       defaultRouteHandler: OrchestrationsIndex
+      reloaderHandler: OrchestrationsReloaderButton
       childRoutes: [
         name: 'orchestration'
         path: ':orchestrationId'
@@ -83,6 +85,7 @@ routes =
       defaultRouteHandler: createComponentsIndex('extractor')
       childRoutes: [
         name: 'new-extractor'
+        title: 'New Extractor'
         handler: createNewComponentPage('extractor')
       ]
     ,
@@ -91,6 +94,7 @@ routes =
       defaultRouteHandler: createComponentsIndex('writer')
       childRoutes: [
         name: 'new-writer'
+        title: 'New Writer'
         handler: createNewComponentPage('writer')
       ]
     ,

@@ -9,6 +9,7 @@ State = require('react-router').State
 
 getStateFromStores = ->
   breadcrumbs: RoutesStore.getBreadcrumbs()
+  currentRouteConfig: RoutesStore.getCurrentRouteConfig()
 
 Header = React.createClass
   displayName: 'Header'
@@ -27,20 +28,6 @@ Header = React.createClass
     @setState(getStateFromStores())
 
   render: ->
-
-    breadcrumbs = []
-    console.log @state.breadcrumbs
-    @state.breadcrumbs.forEach((link, i) ->
-      if i != @state.breadcrumbs.length - 1
-        link = Link to: link.link.to, params: link.link.params,
-          link.title
-        breadcrumbs.push link
-        breadcrumbs.push(span className: 'kbc-icon-arrow-right')
-      else
-        link = h1 null, link.title
-        breadcrumbs.push link
-    , @)
-
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},
         Link {to: 'home'},
@@ -49,7 +36,29 @@ Header = React.createClass
       div {className: 'col-sm-9 col-md-10'},
         div {className: 'kbc-main-header kbc-header'},
           div {className: 'kbc-title'},
-            breadcrumbs
+            @_renderBreadcrumbs()
+            ' '
+            @_renderReloader()
+
+  _renderBreadcrumbs: ->
+    breadcrumbs = []
+    @state.breadcrumbs.forEach((part, i) ->
+      if i != @state.breadcrumbs.size - 1
+        part = Link to: part.getIn(['link', 'to']), params: part.getIn(['link', 'params']).toJS(),
+          part.get 'title'
+        breadcrumbs.push part
+        breadcrumbs.push(span className: 'kbc-icon-arrow-right')
+      else
+        part = h1 null, part.get('title')
+        breadcrumbs.push part
+    , @)
+    breadcrumbs
+
+  _renderReloader: ->
+    if !@state.currentRouteConfig?.get 'reloaderHandler'
+      null
+    else
+      React.createElement(@state.currentRouteConfig.get 'reloaderHandler')
 
 
 module.exports = Header

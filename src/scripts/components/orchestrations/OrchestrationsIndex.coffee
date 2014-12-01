@@ -33,15 +33,11 @@ Index = React.createClass
     !Immutable.is(nextState.orchestrations, @state.orchestrations) ||
       nextState.isLoading != @state.isLoading
 
-  _handleRefreshClick: (e) ->
-    OrchestrationsActionCreators.loadOrchestrationsForce()
-
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   render: ->
     div {className: 'container-fluid'},
-      RefreshIcon isLoading: @state.isLoading, onClick: @_handleRefreshClick
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
       if @state.isLoaded
         if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
