@@ -1,8 +1,5 @@
 
-Promise = require 'bluebird'
-request = require 'superagent'
-require 'superagent-bluebird-promise'
-
+request = require '../utils/request.coffee'
 ApplicationStore = require '../stores/ApplicationStore.coffee'
 
 createUrl = (path) ->

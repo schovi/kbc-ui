@@ -8,6 +8,9 @@ OrchestrationStore = require '../stores/OrchestrationStore.coffee'
 
 module.exports =
 
+  ###
+    Request orchestrations reload from server
+  ###
   loadOrchestrationsForce: ->
     # trigger load initialized
     dispatcher.handleViewAction(
@@ -18,20 +21,27 @@ module.exports =
     orchestrationsApi
     .getOrchestrations()
     .then((orchestrations) ->
-        # load success
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
-          orchestrations: orchestrations
-        )
+      # load success
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
+        orchestrations: orchestrations
       )
+    )
+    .catch (err) ->
+      console.log 'error', err
 
-
+  ###
+    Request orchestrations load only if not alread loaded
+  ###
   loadOrchestrations: ->
     # don't load if already loaded
     return if OrchestrationStore.getIsLoaded()
 
     @loadOrchestrationsForce()
 
+  ###
+    Request specified orchestration load from server
+  ###
   loadOrchestration: (id) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_LOAD
@@ -55,6 +65,9 @@ module.exports =
         )
       )
 
+  ###
+    Load specifed orchestration jobs from server
+  ###
   loadOrchestrationJobs: (orchestrationId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD
@@ -79,6 +92,9 @@ module.exports =
         )
       )
 
+  ###
+    Fetch single job from server
+  ###
   loadJob: (jobId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD
@@ -103,6 +119,9 @@ module.exports =
         )
       )
 
+  ###
+    Filter orchestrations
+  ###
   setOrchestrationsFilter: (query) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATIONS_SET_FILTER
