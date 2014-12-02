@@ -20,7 +20,6 @@ OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
   mixins: [Router.State, createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
-
   getStateFromStores: ->
     orchestrationId = @_getOrchestrationId()
     return {

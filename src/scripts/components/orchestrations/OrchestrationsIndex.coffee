@@ -1,6 +1,8 @@
 React = require 'react'
 Immutable = require 'immutable'
 
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
+
 OrchestrationsActionCreators = require '../../actions/OrchestrationsActionCreators.coffee'
 OrchestrationStore = require '../../stores/OrchestrationStore.coffee'
 
@@ -8,26 +10,15 @@ OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
 SearchRow = React.createFactory(require '../common/SearchRow.coffee')
 RefreshIcon = React.createFactory(require '../common/RefreshIcon.coffee')
 
-getStateFromStores = ->
-  orchestrations: OrchestrationStore.getFiltered()
-  isLoading: OrchestrationStore.getIsLoading()
-  isLoaded: OrchestrationStore.getIsLoaded()
-  filter: OrchestrationStore.getFilter()
 
 {div, span, strong} = React.DOM
 
 Index = React.createClass
   displayName: 'OrchestrationsIndex'
-
-  getInitialState: ->
-    getStateFromStores()
+  mixins: [createStoreMixin(OrchestrationStore)]
 
   componentDidMount: ->
-    OrchestrationStore.addChangeListener(@_onChange)
     OrchestrationsActionCreators.loadOrchestrations()
-
-  componentWillUnmount: ->
-    OrchestrationStore.removeChangeListener(@_onChange)
 
   shouldComponentUpdate: (nextProps, nextState) ->
     !Immutable.is(nextState.orchestrations, @state.orchestrations) ||
@@ -35,6 +26,12 @@ Index = React.createClass
 
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
+
+  getStateFromStores: ->
+    orchestrations: OrchestrationStore.getFiltered()
+    isLoading: OrchestrationStore.getIsLoading()
+    isLoaded: OrchestrationStore.getIsLoaded()
+    filter: OrchestrationStore.getFilter()
 
   render: ->
     div {className: 'container-fluid'},
@@ -73,8 +70,5 @@ Index = React.createClass
         (span {className: 'th'})
       )
     )
-
-  _onChange: ->
-    @setState(getStateFromStores())
 
 module.exports = Index
