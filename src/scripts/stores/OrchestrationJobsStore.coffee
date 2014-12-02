@@ -33,10 +33,12 @@ removeFromLoadingJobs = (store, jobId) ->
 OrchestrationJobsStore = StoreUtils.createStore
 
   ###
-    Returns all jobs for orchestration
+    Returns all jobs for orchestration sorted by id desc
   ###
   getOrchestrationJobs: (idOrchestration) ->
-    _store.getIn(['jobsByOrchestrationId', idOrchestration]) || List()
+    _store
+      .getIn(['jobsByOrchestrationId', idOrchestration], List())
+      .sortBy((job) -> -1 * job.get 'id')
 
   ###
     Returns one job by it's id
