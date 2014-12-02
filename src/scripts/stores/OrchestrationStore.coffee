@@ -9,6 +9,7 @@ StoreUtils = require '../utils/StoreUtils.coffee'
 
 _store = Map(
   orchestrationsById: Map()
+  filter: ''
   isLoading: false
   isLoaded: false
   loadingOrchestrations: List()

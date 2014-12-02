@@ -14,13 +14,13 @@ JobTask = React.createClass
 
   render: ->
     Panel React.__spread({}, @proprs, header: @_header()),
-      @props.task.startTime
+      @props.task.get('startTime')
 
   _header: ->
     if @props.component
       @props.component.get 'name'
     else
-      @props.task.componentUrl
+      @props.task.get 'componentUrl'
 
 
 JobTasks = React.createClass
@@ -35,11 +35,11 @@ JobTasks = React.createClass
     PanelGroup accordion: true, @_renderTasks()
 
   _renderTasks: ->
-    @props.tasks.map(@_renderTask, @)
+    @props.tasks.map(@_renderTask, @).toArray()
 
   _renderTask: (task) ->
-    Panel header: task.component, key: task.id, eventKey: task.id,
-      task.startTime
+    Panel header: task.get('component'), key: task.get('id'), eventKey: task.get('id'),
+      task.get('startTime')
 
 
 module.exports = JobTasks

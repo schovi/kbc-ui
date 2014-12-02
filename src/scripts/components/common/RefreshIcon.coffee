@@ -4,6 +4,8 @@ _ = require 'underscore'
 
 RefreshIcon = React.createClass
   DisplayName: 'refreshIcon'
+  propTypes:
+    isLoading: React.PropTypes.bool.isRequired
 
   render: ->
     classes = 'kbc-refresh kbc-icon-cw'

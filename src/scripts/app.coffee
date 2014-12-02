@@ -41,6 +41,5 @@ router = Router.create
   location: Router.HashLocation
 
 router.run (Handler, state) ->
-  console.log 'route changed', state
   RouterActionCreators.routeChange(state)
   React.render(React.createElement(Handler), document.getElementById 'react')

@@ -28,18 +28,20 @@ JobDetailBody = React.createFactory(React.createClass
   displayName: 'JobDetailBody'
   render: ->
     div null,
-      @props.job.id,
+      @props.job.get('id'),
       h2 null,
         'Tasks',
         ' ',
         @_renderTotalDurationInHeader(),
-      JobTasks(tasks: @props.job.results.tasks)
+      JobTasks(tasks: @props.job.getIn ['results', 'tasks'])
 
   _renderTotalDurationInHeader: ->
-    return '' if !@props.job.startTime
+    return '' if !@props.job.get('startTime')
     small null,
       'Total Duration ',
-      Duration startTime: @props.job.startTime, endTime: @props.job.endTime
+      Duration
+        startTime: @props.job.get('startTime')
+        endTime: @props.job.get('endTime')
 )
 
 
@@ -77,7 +79,7 @@ OrchestrationJobDetail = React.createClass
     if @state.job
       body = div null,
         TabbedArea defaultActiveKey: 'overview', animation: false,
-          TabPane eventKey: 'overview', tab: 'Overview', JobDetailBody(job: @state.job.toJS())
+          TabPane eventKey: 'overview', tab: 'Overview', JobDetailBody(job: @state.job)
           TabPane eventKey: 'log', tab: 'Log', 'Todo'
 
     else if !@state.isLoading
@@ -88,7 +90,7 @@ OrchestrationJobDetail = React.createClass
 
     div {className: 'container-fluid'},
       div {className: 'col-md-3 kb-orchestrations-sidebar'},
-        JobsNav jobs: @state.jobs.toJS(), jobsLoading: @state.jobsLoading
+        JobsNav jobs: @state.jobs, jobsLoading: @state.jobsLoading
       div {className: 'col-md-9 kb-orchestrations-main'},
         div {},
           body

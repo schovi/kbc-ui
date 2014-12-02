@@ -21,7 +21,6 @@ OrchestrationDetail = React.createClass
   mixins: [Router.State, createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
 
-
   getStateFromStores: ->
     orchestrationId = @_getOrchestrationId()
     return {
@@ -49,6 +48,9 @@ OrchestrationDetail = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
+  _handleJobsReload: ->
+    OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+
   render: ->
     if @state.isLoading
       text = 'loading ...'
@@ -69,7 +71,11 @@ OrchestrationDetail = React.createClass
               text
           div {className: 'kbc-buttons'},
             ''
-        JobsTable(jobs: @state.jobs.toJS())
+        JobsTable(
+          jobs: @state.jobs
+          jobsLoading: @state.jobsLoading
+          onJobsReload: @_handleJobsReload
+        )
 
 
 module.exports = OrchestrationDetail

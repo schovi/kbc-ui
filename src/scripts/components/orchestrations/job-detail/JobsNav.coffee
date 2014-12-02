@@ -18,16 +18,17 @@ JobRow = React.createClass(
     job: React.PropTypes.object
 
   render: ->
-    isActive = @isActive('orchestrationJob', {orchestrationId: @getParams().orchestrationId, jobId: @props.job.id})
+    isActive = @isActive('orchestrationJob', {orchestrationId: @getParams().orchestrationId, jobId: @props.job.get('id')})
     className = if  isActive then 'active' else ''
-    (Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @getParams().orchestrationId, jobId: @props.job.id}},
-      (JobStatusCircle {status: @props.job.status}),
-      (span null, @props.job.id),
-      (span {className: 'pull-right kb-info', title: @props.job.initiatorToken.description}, 'manually') if @props.job.initializedBy == 'manually'
+
+    (Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @getParams().orchestrationId, jobId: @props.job.get('id')}},
+      (JobStatusCircle {status: @props.job.get('status')}),
+      (span null, @props.job.get('id')),
+      (span {className: 'pull-right kb-info', title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually'
       (span {className: 'kb-info clearfix'},
-        (DurationWithIcon {startTime: @props.job.startTime, endTime: @props.job.endTime}) if @props.job.startTime
+        (DurationWithIcon {startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')}) if @props.job.get('startTime')
         (span {className: 'pull-right'},
-          (FinishedWithIcon endTime: @props.job.endTime)
+          (FinishedWithIcon endTime: @props.job.get('endTime'))
         )
       )
     )
@@ -40,9 +41,9 @@ JobsNav = React.createClass(
     jobs: React.PropTypes.array
 
   render: ->
-    rows = _.map(@props.jobs, (job) ->
-      React.createElement JobRow, {job: job, key: job.id}
-    , @)
+    rows = @props.jobs.map((job) ->
+      React.createElement JobRow, {job: job, key: job.get('id')}
+    , @).toArray()
 
     (div className: 'kb-orchestrations-nav',
       rows

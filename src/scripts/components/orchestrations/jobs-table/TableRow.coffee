@@ -2,10 +2,11 @@
 React = require 'react'
 Router = require 'react-router'
 
+Link = React.createFactory(Router.Link)
 Duration = React.createFactory(require '../../common/Duration.coffee')
 JobStatusLabel = React.createFactory(require '../../common/JobStatusLabel.coffee')
 
-{tr, td, div} = React.DOM
+{tr, td, div, span} = React.DOM
 
 JobRow = React.createClass(
   displayName: 'JobRow'
@@ -18,7 +19,7 @@ JobRow = React.createClass(
     # method provided by Router.Navigation mixin
     @transitionTo 'orchestrationJob',
       orchestrationId: @getParams().orchestrationId # current orchestration id
-      jobId: @props.job.id
+      jobId: @props.job.get('id')
 
     event.stopPropagation()
 
@@ -29,15 +30,27 @@ JobRow = React.createClass(
   render: ->
 
     actionButtons = []
-    # TODO cancel button
+    actionButtons.push(Link
+        key: 'detail'
+        to: 'orchestrationJob'
+        params:
+          orchestrationId: @getParams().orchestrationId
+          jobId: @props.job.get('id')
+        className: 'btn kbc-btn-link-icon'
+      ,
+        span className: 'fa fa-bars'
+    )
 
     (tr {onClick: @jobDetail},
-      (td {}, @props.job.id),
-      (td {}, JobStatusLabel({status: @props.job.status})),
-      (td {}, @props.job.createdTime),
-      (td {}, @props.job.initializedBy),
-      (td {}, @props.job.initiatorToken.description),
-      (td {}, (Duration {startTime: @props.job.startTime, endTime: @props.job.endTime})),
+      (td {}, @props.job.get('id')),
+      (td {}, JobStatusLabel({status: @props.job.get('status')})),
+      (td {}, @props.job.get('createdTime')),
+      (td {}, @props.job.get('initializedBy')),
+      (td {}, @props.job.getIn(['initiatorToken', 'description'])),
+      (td {}, (Duration
+        startTime: @props.job.get('startTime')
+        endTime: @props.job.get('endTime')
+      )),
       (td {}, (div {className: 'pull-right'}, actionButtons))
     )
 )
