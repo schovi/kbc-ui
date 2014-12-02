@@ -37,6 +37,8 @@ JobRow = React.createClass(
           orchestrationId: @getParams().orchestrationId
           jobId: @props.job.get('id')
         className: 'btn kbc-btn-link-icon'
+        onClick: (e) ->
+          e.stopPropagation()
       ,
         span className: 'fa fa-bars'
     )
