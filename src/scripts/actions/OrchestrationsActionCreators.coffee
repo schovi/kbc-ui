@@ -55,6 +55,7 @@ module.exports =
           type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
           orchestration: orchestration
         )
+        return
       )
       .catch((error) ->
         dispatcher.handleViewAction(

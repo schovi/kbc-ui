@@ -4,7 +4,6 @@ request = require '../utils/request.coffee'
 ApplicationStore = require '../stores/ApplicationStore.coffee'
 ComponentsStore = require '../stores/ComponentsStore.coffee'
 
-
 createUrl = (path) ->
   baseUrl = ComponentsStore.getComponent('orchestrator').get('uri')
   "#{baseUrl}/#{path}"

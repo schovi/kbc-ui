@@ -25,15 +25,42 @@ removeOrchestrationFromLoading = (store, id) ->
     loadingOrchestrations.remove(store.get('loadingOrchestrations').indexOf(id))
 
 
+orchestrationsComparator = (orchestration) ->
+
+  console.log 'cmp',  orchestration
+  return orchestration.get 'name'
+  if orchestration.lastExecutedJob?.status == 'processing'
+    return -1 * (new Date(orchestration.lastExecutedJob?.startTime))
+
+  if orchestration.lastExecutedJob
+    return -1 * (new Date(orchestration.lastExecutedJob?.endTime).getTime())
+
+  orchestration.name
+
 
 OrchestrationStore = StoreUtils.createStore
 
+  ###
+    Returns all orchestrations sorted by last execution date desc
+  ###
   getAll: ->
-    _store.get 'orchestrationsById'
+    _store
+      .get('orchestrationsById')
+      .sortBy((orchestration) -> orchestration.get('name'))
+      .sortBy((orchestration) ->
+        date = orchestration.getIn ['lastExecutedJob', 'startTime']
+        if date then -1 * (new Date(date).getTime()) else null
+      )
 
+  ###
+    Returns orchestration specified by id
+  ###
   get: (id) ->
     _store.getIn ['orchestrationsById', parseInt(id)]
 
+  ###
+    Returns all orchestrations filtered by current filter value
+  ###
   getFiltered: ->
     filter = @getFilter()
     @getAll().filter((orchestration) ->
