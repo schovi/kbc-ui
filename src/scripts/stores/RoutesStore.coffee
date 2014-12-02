@@ -1,16 +1,21 @@
 
 Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
 Immutable = require 'immutable'
+Map = Immutable.Map
 StoreUtils = require '../utils/StoreUtils.coffee'
 _ = require 'underscore'
 
 Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 
-_routerState = {}
-_routesByName = Immutable.Map()
+_store = Map(
+  routerState: Map()
+  routesByName: Map()
+)
 
-
+###
+  Converts nested routes structure to flat Map indexed by route name
+###
 nestedRoutesToByNameMap = (route) ->
   map = {}
   traverse  = (route) ->
@@ -26,16 +31,16 @@ nestedRoutesToByNameMap = (route) ->
 ###
  Returns title for route
 ###
-getRouteTitle = (routeName) ->
-  title = _routesByName.getIn [routeName, 'title']
+getRouteTitle = (store, routeName) ->
+  title = store.getIn ['routesByName', routeName, 'title']
 
   if _.isFunction title
-    title(_routerState)
+    title(store.get 'routerState')
   else
     title
 
-getCurrentRouteName = ->
-  routes = _routerState.get('routes')
+getCurrentRouteName = (store) ->
+  routes = store.getIn ['routerState', 'routes']
   route = routes.findLast((route) ->
     !!route.get('name')
   )
@@ -44,37 +49,40 @@ getCurrentRouteName = ->
   else
     null
 
-generateBreadcrumbs = (currentRoutes, currentParams) ->
-    currentRoutes
-      .shift()
-      .filter((route) -> !!route.get 'name')
-      .map((route) ->
-        Immutable.fromJS(
-          title: getRouteTitle(route.get 'name')
-          name: route.get 'name'
-          link:
-            to: route.get 'name'
-            params: currentParams
+generateBreadcrumbs = (store) ->
+  currentParams = store.getIn ['routerState', 'params']
+  store.getIn(['routerState', 'routes'])
+    .shift()
+    .filter((route) -> !!route.get 'name')
+    .map((route) ->
+      Map(
+        title: getRouteTitle(store, route.get 'name')
+        name: route.get 'name'
+        link: Map(
+          to: route.get 'name'
+          params: currentParams
         )
       )
+    )
+
 
 RoutesStore = StoreUtils.createStore
 
   getBreadcrumbs: ->
-    generateBreadcrumbs(_routerState.get('routes'), _routerState.get('params'))
+    generateBreadcrumbs(_store)
 
   getCurrentRouteConfig: ->
-    _routesByName.get(getCurrentRouteName())
+    _store.getIn ['routesByName', getCurrentRouteName(_store)]
 
 Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGED
-      _routerState = Immutable.fromJS(action.routerState)
+      _store = _store.set 'routerState', Immutable.fromJS(action.routerState)
 
     when Constants.ActionTypes.ROUTER_ROUTES_CONFIGURATION_RECEIVE
-      _routesByName = nestedRoutesToByNameMap(action.routes)
+      _store = _store.set 'routesByName', nestedRoutesToByNameMap(action.routes)
 
   # Emit change on events
   # for example orchestration is loaed asynchronously while breadcrumbs are already rendered so it has to be rendered again

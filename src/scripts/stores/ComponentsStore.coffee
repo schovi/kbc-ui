@@ -2,15 +2,14 @@
 Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
 Constants = require '../constants/KbcConstants.coffee'
 Immutable = require('immutable')
+Map = Immutable.Map
 fuzzy = require 'fuzzy'
 StoreUtils = require '../utils/StoreUtils.coffee'
 
-
-_store = Immutable.fromJS(
-  components: {}
-  filter: {}
+_store = Map(
+  components: Map()
+  filter: Map()
 )
-
 
 ComponentsStore = StoreUtils.createStore
 

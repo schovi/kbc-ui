@@ -1,14 +1,15 @@
 
 Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
 Immutable = require('immutable')
+Map = Immutable.Map
 Constants = require '../constants/KbcConstants.coffee'
 
-_sapiToken = Immutable.Map({})
+_store = Map()
 
 ApplicationStore =
 
   getSapiTokenString: ->
-    _sapiToken.get 'token'
+    _store.getIn [ 'sapiToken', 'token' ]
 
 
 Dispatcher.register (payload) ->
@@ -16,7 +17,7 @@ Dispatcher.register (payload) ->
 
   switch action.type
     when Constants.ActionTypes.APPLICATION_DATA_RECEIVED
-      _sapiToken = Immutable.Map(action.applicationData.sapiToken)
+      _store = _store.set 'sapiToken', Immutable.fromJS(action.applicationData.sapiToken)
 
 
 module.exports = ApplicationStore

@@ -1,29 +1,29 @@
 
 Dispatcher = require '../dispatcher/KbcDispatcher.coffee'
 Immutable = require('immutable')
+Map = Immutable.Map
+List = Immutable.List
 Constants = require '../constants/KbcConstants.coffee'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../utils/StoreUtils.coffee'
 
-_store = Immutable.fromJS(
-  orchestrationsById: {}
+_store = Map(
+  orchestrationsById: Map()
+  isLoading: false
+  isLoaded: false
+  loadingOrchestrations: List()
 )
-_loadingOrchestrations = Immutable.List([])
 
-_filter = ''
-
-_isLoading = false
-
-_isLoaded = false
-
-
-updateOrchestration = (id, payload) ->
-  _store = _store.updateIn(['orchestrationsById', id], (orchestration) ->
+updateOrchestration = (store, id, payload) ->
+  store.updateIn(['orchestrationsById', id], (orchestration) ->
     orchestration.merge payload
   )
 
-removeOrchestrationFromLoading = (id) ->
-  _loadingOrchestrations = _loadingOrchestrations.remove(_loadingOrchestrations.indexOf(id))
+removeOrchestrationFromLoading = (store, id) ->
+  store.update 'loadingOrchestrations', (loadingOrchestrations) ->
+    loadingOrchestrations.remove(store.get('loadingOrchestrations').indexOf(id))
+
+
 
 OrchestrationStore = StoreUtils.createStore
 
@@ -34,25 +34,25 @@ OrchestrationStore = StoreUtils.createStore
     _store.getIn ['orchestrationsById', parseInt(id)]
 
   getFiltered: ->
-    _store.get('orchestrationsById').filter((orchestration) ->
-      if _filter
-        fuzzy.match(_filter, orchestration.get('name'))
+    filter = @getFilter()
+    @getAll().filter((orchestration) ->
+      if filter
+        fuzzy.match(filter, orchestration.get('name'))
       else
         true
     )
 
   getFilter: ->
-    _filter
+    _store.get 'filter'
 
   getIsLoading: ->
-    _isLoading
+    _store.get 'isLoading'
 
   getIsOrchestrationLoading: (id) ->
-    _loadingOrchestrations.contains id
+    _store.get('loadingOrchestrations').contains id
 
   getIsLoaded: ->
-    _isLoaded
-
+    _store.get 'isLoaded'
 
 
 Dispatcher.register (payload) ->
@@ -60,44 +60,48 @@ Dispatcher.register (payload) ->
 
   switch action.type
     when Constants.ActionTypes.ORCHESTRATIONS_SET_FILTER
-      _filter = action.query.trim()
+      _store = _store.set 'filter', action.query.trim()
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_ACTIVATE
-      updateOrchestration action.orchestrationId,
+      _store = updateOrchestration _store, action.orchestrationId,
         active: true
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_DISABLE
-      updateOrchestration action.orchestrationId,
+      _store = updateOrchestration _store, action.orchestrationId,
         active: false
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD
-      _isLoading = true
+      _store = _store.set 'isLoading', true
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
-      _isLoading = false
-      _isLoaded = true
-
-      _store = _store.set 'orchestrationsById', Immutable.fromJS(action.orchestrations).toMap().mapKeys((key, orchestration) ->
-        orchestration.get 'id'
+      _store = _store.withMutations((store) ->
+        store
+          .set('isLoading', false)
+          .set('isLoaded', true)
+          .set('orchestrationsById', Immutable.fromJS(action.orchestrations).toMap().mapKeys((key, orchestration) ->
+            orchestration.get 'id'
+          ))
       )
-
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD
-      _loadingOrchestrations = _loadingOrchestrations.push action.orchestrationId
+      _store = _store.update 'loadingOrchestrations', (loadingOrchestrations) ->
+        loadingOrchestrations.push action.orchestrationId
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
-      removeOrchestrationFromLoading(action.orchestrationId)
+      _store = removeOrchestrationFromLoading(_store, action.orchestrationId)
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
-      removeOrchestrationFromLoading(action.orchestration.id)
-      _store = _store.setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
+      _store = _store.withMutations((store) ->
+        removeOrchestrationFromLoading(store, action.orchestration.id)
+        .setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
+      )
       OrchestrationStore.emitChange()
 
 module.exports = OrchestrationStore
