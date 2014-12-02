@@ -1,4 +1,5 @@
 React = require 'react'
+createStoreMixin = require '../../mixins/createStoreMixin.coffee'
 
 RoutesStore = require '../../stores/RoutesStore.coffee'
 
@@ -6,24 +7,14 @@ Link = React.createFactory(require('react-router').Link)
 
 {div, nav, span, a, h1} = React.DOM
 
-getStateFromStores = ->
-  breadcrumbs: RoutesStore.getBreadcrumbs()
-  currentRouteConfig: RoutesStore.getCurrentRouteConfig()
 
 Header = React.createClass
   displayName: 'Header'
+  mixins: [createStoreMixin(RoutesStore)]
 
-  getInitialState: ->
-    getStateFromStores()
-
-  componentDidMount: ->
-    RoutesStore.addChangeListener(@_onChange)
-
-  componentWillUnmount: ->
-    RoutesStore.removeChangeListener(@_onChange)
-
-  _onChange: ->
-    @setState(getStateFromStores())
+  getStateFromStores: ->
+    breadcrumbs: RoutesStore.getBreadcrumbs()
+    currentRouteConfig: RoutesStore.getCurrentRouteConfig()
 
   render: ->
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
