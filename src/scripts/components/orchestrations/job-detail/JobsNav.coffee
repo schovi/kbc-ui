@@ -38,7 +38,7 @@ JobsNav = React.createClass(
   displayName: 'JobsNav'
   propTypes:
     jobsLoading: React.PropTypes.bool
-    jobs: React.PropTypes.array
+    jobs: React.PropTypes.object
 
   render: ->
     rows = @props.jobs.map((job) ->

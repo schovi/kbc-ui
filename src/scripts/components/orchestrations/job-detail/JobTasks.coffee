@@ -26,7 +26,7 @@ JobTask = React.createClass
 JobTasks = React.createClass
   displayName: 'JobTasks'
   propTypes:
-    tasks: React.PropTypes.array.isRequired
+    tasks: React.PropTypes.object.isRequired
 
   getInitialState: ->
     components: ComponentsStore.getAll()
