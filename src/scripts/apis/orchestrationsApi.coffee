@@ -2,9 +2,12 @@
 request = require '../utils/request.coffee'
 
 ApplicationStore = require '../stores/ApplicationStore.coffee'
+ComponentsStore = require '../stores/ComponentsStore.coffee'
+
 
 createUrl = (path) ->
-  "https://syrup.keboola.com/orchestrator/#{path}"
+  baseUrl = ComponentsStore.getComponent('orchestrator').get('uri')
+  "#{baseUrl}/#{path}"
 
 createRequest = (method, path) ->
   request(method, createUrl(path))

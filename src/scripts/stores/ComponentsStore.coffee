@@ -14,12 +14,15 @@ _store = Map(
 ComponentsStore = StoreUtils.createStore
 
   getAll: ->
-    _store.get 'components'
+    _store.get 'componentsById'
 
   getAllForType: (type) ->
-    _store.get('components').filter((component) ->
+    _store.get('componentsById').filter((component) ->
       component.get('type') == type
     )
+
+  getComponent: (id) ->
+    _store.getIn ['componentsById', id]
 
   getFilteredForType: (type) ->
     filter = @getFilter(type)
@@ -38,7 +41,7 @@ Dispatcher.register (payload) ->
       ComponentsStore.emitChange()
 
     when Constants.ActionTypes.COMPONENTS_LOAD_SUCCESS
-      _store = _store.set 'components', Immutable.fromJS(action.components).toMap().mapKeys((key, component) ->
+      _store = _store.set 'componentsById', Immutable.fromJS(action.components).toMap().mapKeys((key, component) ->
         component.get 'id'
       )
       ComponentsStore.emitChange()

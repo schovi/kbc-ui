@@ -3,7 +3,8 @@ request = require '../utils/request.coffee'
 ApplicationStore = require '../stores/ApplicationStore.coffee'
 
 createUrl = (path) ->
-  "https://connection.keboola.com/v2/storage/#{path}"
+  baseUrl = ApplicationStore.getSapiUrl()
+  "#{baseUrl}/v2/storage/#{path}"
 
 createRequest = (method, path) ->
   request(method, createUrl(path))
