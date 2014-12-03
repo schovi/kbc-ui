@@ -41,7 +41,7 @@ createReactRouterRoutes = (rootRoute) ->
         childRoutes.push(DefaultRoute handler: route.defaultRouteHandler, name: route.defaultRouteName, key: _key++)
 
       if route.notFoundRouteHandler
-        childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler, key: _key++)
+        childRoutes.push(NotFoundRoute handler: route.notFoundRouteHandler, key: _key++, name: 'notFound')
 
       if route.childRoutes
         route.childRoutes.forEach((childRoute) ->

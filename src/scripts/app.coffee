@@ -48,7 +48,7 @@ router = Router.create
 
 Promise.longStackTraces()
 
-# render after each change
+# re-render after each route change
 router.run (Handler, state) ->
 
   # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
@@ -58,13 +58,14 @@ router.run (Handler, state) ->
       requireData(state.params)
     ).toArray()
 
+  # wait for data and trigger render
   Promise.all(promises)
     .then(->
       RouterActionCreators.routeChange(state)
       React.render(React.createElement(Handler), document.getElementById 'react')
     )
     .catch((error) ->
-      React.render(React.createElement(Handler, error: error), document.getElementById 'react')
-      console.log 'error', error.stack
+      RouterActionCreators.routeChangeError(error)
+      React.render(React.createElement(Handler, isError: true), document.getElementById 'react')
     )
 

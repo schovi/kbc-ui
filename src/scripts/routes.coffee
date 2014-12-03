@@ -1,6 +1,7 @@
 React = require 'react'
 Router = require 'react-router'
 App = require './components/App.coffee'
+ErrorPage = require './components/ErrorPage.coffee'
 
 componentsRoutes = require './modules/components/Routes.coffee'
 orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'
@@ -40,7 +41,7 @@ routes =
   name: 'app'
   defaultRouteHandler: Home
   defaultRouteName: 'home'
-  notFoundRouteHandler: NotFound
+  notFoundRouteHandler: ErrorPage
   childRoutes: [
       name: 'transformations'
       title: 'Transformations'

@@ -22,5 +22,6 @@ module.exports =
 
     # Router state
     ROUTER_ROUTE_CHANGED: null
+    ROUTER_ROUTE_CHANGE_ERROR: null
     ROUTER_ROUTES_CONFIGURATION_RECEIVE: null
   )

@@ -11,3 +11,4 @@ module.exports =
       type: constants.ActionTypes.APPLICATION_DATA_RECEIVED
       applicationData: data
     )
+
