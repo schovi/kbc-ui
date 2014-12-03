@@ -5,8 +5,8 @@ routes = require './routes.coffee'
 createReactRouterRoutes = require './utils/createReactRouterRoutes.coffee'
 
 ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
-ComponentsActionCreators = require './actions/ComponentsActionCreators.coffee'
-InstalledComponentsActionCreators = require './actions/InstalledComponentsActionCreators.coffee'
+ComponentsActionCreators = require './modules/components/ComponentsActionCreators.coffee'
+InstalledComponentsActionCreators = require './modules/components/InstalledComponentsActionCreators.coffee'
 RouterActionCreators = require './actions/RouterActionCreators.coffee'
 
 NoTokenPage = require './components/debug/NoTokenPage.coffee'

@@ -2,14 +2,8 @@ React = require 'react'
 Router = require 'react-router'
 App = require './components/App.coffee'
 
-
-
-# class factories parametrized by component type
-createComponentsIndex = require './components/components/ComponentsIndex.coffee'
-createNewComponentPage = require './components/components/NewComponent.coffee'
-createNewComponentButton = require './components/components/NewComponentButton.coffee'
-ComponentReloaderButton = require './components/components/ComponentsReloaderButton.coffee'
-
+componentsRoutes = require './modules/components/routes.coffee'
+orchestrationsRoutes = require './modules/orchestrations/routes.coffee'
 
 Transformations = React.createClass
   displayName: 'Transformations'
@@ -51,29 +45,11 @@ routes =
       title: 'Transformations'
       handler: Transformations
     ,
-      require './modules/orchestrations/routes.coffee'
+      orchestrationsRoutes
     ,
-      name: 'extractors'
-      title: 'Extractors'
-      defaultRouteHandler: createComponentsIndex('extractor')
-      headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor')
-      reloaderHandler: ComponentReloaderButton
-      childRoutes: [
-        name: 'new-extractor'
-        title: 'New Extractor'
-        handler: createNewComponentPage('extractor')
-      ]
+      componentsRoutes.extractors
     ,
-      name: 'writers'
-      title: 'Writers'
-      defaultRouteHandler: createComponentsIndex('writer')
-      headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer')
-      reloaderHandler: ComponentReloaderButton
-      childRoutes: [
-        name: 'new-writer'
-        title: 'New Writer'
-        handler: createNewComponentPage('writer')
-      ]
+      componentsRoutes.writers
     ,
       name: 'storage'
       title: 'Storage'
