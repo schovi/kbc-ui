@@ -2,6 +2,7 @@
 Dispatcher = require('../Dispatcher.coffee')
 Immutable = require 'immutable'
 Map = Immutable.Map
+List = Immutable.List
 StoreUtils = require '../utils/StoreUtils.coffee'
 _ = require 'underscore'
 
@@ -32,7 +33,7 @@ nestedRoutesToByNameMap = (route) ->
  Returns title for route
 ###
 getRouteTitle = (store, routeName) ->
-  title = store.getIn ['routesByName', routeName, 'title']
+  title = store.getIn ['routesByName', routeName, 'title'], List()
 
   if _.isFunction title
     title(store.get 'routerState')
@@ -40,7 +41,7 @@ getRouteTitle = (store, routeName) ->
     title
 
 getCurrentRouteName = (store) ->
-  routes = store.getIn ['routerState', 'routes']
+  routes = store.getIn ['routerState', 'routes'], List()
   route = routes.findLast((route) ->
     !!route.get('name')
   )
@@ -51,7 +52,7 @@ getCurrentRouteName = (store) ->
 
 generateBreadcrumbs = (store) ->
   currentParams = store.getIn ['routerState', 'params']
-  store.getIn(['routerState', 'routes'])
+  store.getIn(['routerState', 'routes'], List())
     .shift()
     .filter((route) -> !!route.get 'name')
     .map((route) ->
@@ -73,6 +74,15 @@ RoutesStore = StoreUtils.createStore
 
   getCurrentRouteConfig: ->
     _store.getIn ['routesByName', getCurrentRouteName(_store)]
+
+
+  getRequireDataFunctionsForRouterState: (routes) ->
+    Immutable
+      .fromJS(routes)
+      .map((route) ->
+        _store.getIn ['routesByName', route.get('name'), 'requireData']
+      )
+      .filter((func) -> _.isFunction func)
 
 Dispatcher.register (payload) ->
   action = payload.action

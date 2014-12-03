@@ -37,12 +37,10 @@ OrchestrationDetail = React.createClass
 
 
   componentDidMount: ->
-    OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
-    OrchestrationsActionCreators.loadOrchestration(@_getOrchestrationId())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
 
   _handleFilterChange: (query) ->

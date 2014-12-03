@@ -4,6 +4,8 @@ dispatcher = require '../../Dispatcher.coffee'
 constants = require './Constants.coffee'
 orchestrationsApi = require './OrchestrationsApi.coffee'
 OrchestrationStore = require './stores/OrchestrationsStore.coffee'
+OrchestrationJobsStore = require './stores/OrchestrationJobsStore.coffee'
+Promise = require 'bluebird'
 
 
 module.exports =
@@ -32,17 +34,19 @@ module.exports =
 
   ###
     Request orchestrations load only if not alread loaded
+    @return Promise
   ###
   loadOrchestrations: ->
     # don't load if already loaded
-    return if OrchestrationStore.getIsLoaded()
+    return Promise.resolve() if OrchestrationStore.getIsLoaded()
 
     @loadOrchestrationsForce()
 
   ###
     Request specified orchestration load from server
+    @return Promise
   ###
-  loadOrchestration: (id) ->
+  loadOrchestrationForce: (id) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_LOAD
       orchestrationId: id
@@ -57,14 +61,10 @@ module.exports =
         )
         return
       )
-    .catch((error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
-          orchestrationId: id
-          status: error.status
-          response: error.response
-        )
-      )
+
+  loadOrchestration: (id) ->
+    return Promise.resolve() if OrchestrationStore.get(id)
+    @loadOrchestrationForce(id)
 
   ###
     Load specifed orchestration jobs from server
@@ -96,7 +96,7 @@ module.exports =
   ###
     Fetch single job from server
   ###
-  loadJob: (jobId) ->
+  loadJobForce: (jobId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD
       jobId: jobId
@@ -111,14 +111,13 @@ module.exports =
           job: job
         )
       )
-    .catch((error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_ERROR
-          jobId: jobId
-          status: error.status
-          response: error.response
-        )
-      )
+
+  ###
+    Ensure that job is loaded, cached version is accpeted
+  ###
+  loadJob: (jobId) ->
+    return Promise.resolve() if OrchestrationJobsStore.getJob(jobId)
+    @loadJobForce jobId
 
   ###
     Filter orchestrations

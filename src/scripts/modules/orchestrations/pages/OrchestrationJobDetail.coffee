@@ -66,12 +66,10 @@ OrchestrationJobDetail = React.createClass
 
   componentDidMount: ->
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
-    OrchestrationsActionCreators.loadJob(@_getJobId())
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
     OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
-    OrchestrationsActionCreators.loadJob(@_getJobId())
 
   render: ->
 

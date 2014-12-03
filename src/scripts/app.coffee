@@ -1,5 +1,6 @@
 React = require 'react'
 Router = require 'react-router'
+Promise = require 'bluebird'
 
 routes = require './routes.coffee'
 createReactRouterRoutes = require './utils/createReactRouterRoutes.coffee'
@@ -10,6 +11,9 @@ InstalledComponentsActionCreators = require './modules/components/InstalledCompo
 RouterActionCreators = require './actions/RouterActionCreators.coffee'
 
 NoTokenPage = require './components/debug/NoTokenPage.coffee'
+
+RoutesStore = require './stores/RoutesStore.coffee'
+App = require './components/App.coffee'
 
 
 getParameterByName = (name, searchString) ->
@@ -41,6 +45,25 @@ router = Router.create
   routes: createReactRouterRoutes(routes)
   location: Router.HashLocation
 
+
+
+# render after each change
 router.run (Handler, state) ->
   RouterActionCreators.routeChange(state)
-  React.render(React.createElement(Handler), document.getElementById 'react')
+
+  # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
+  promises = RoutesStore
+    .getRequireDataFunctionsForRouterState(state.routes)
+    .map((requireData) ->
+      requireData(state.params)
+    ).toArray()
+
+  Promise.all(promises)
+    .then(->
+      React.render(React.createElement(Handler), document.getElementById 'react')
+    )
+    .catch((error) ->
+      React.render(React.createElement(Handler, error: error), document.getElementById 'react')
+      console.log 'some fucking error', error
+    )
+

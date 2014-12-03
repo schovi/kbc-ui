@@ -45,7 +45,7 @@ OrchestrationJobsStore = StoreUtils.createStore
   getJob: (id) ->
     foundJob = null
     _store.get('jobsByOrchestrationId').find (jobs) ->
-      foundJob = jobs.find (job) -> job.get('id') == id
+      foundJob = jobs.find (job) -> job.get('id') == parseInt(id)
     foundJob
 
   ###

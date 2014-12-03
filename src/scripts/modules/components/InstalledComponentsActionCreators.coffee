@@ -4,7 +4,7 @@ dispatcher = require '../../Dispatcher.coffee'
 constants = require '../../constants/KbcConstants.coffee'
 
 InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
-installedComponentsApi = require './installedComponentsApi.coffee'
+installedComponentsApi = require './InstalledComponentsApi.coffee'
 
 
 module.exports =

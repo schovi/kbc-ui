@@ -13,6 +13,8 @@ NewOrchestrationButton = require './components/NewOrchestionButton.coffee'
 # stores
 OrchestrationsStore = require './stores/OrchestrationsStore.coffee'
 
+OrchestrationsActionCreators = require './ActionCreators.coffee'
+
 routes =
   name: 'orchestrations'
   title: 'Orchestrations'
@@ -22,6 +24,8 @@ routes =
   childRoutes: [
     name: 'orchestration'
     path: ':orchestrationId'
+    requireData: (params) ->
+      OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
     title: (routerState) ->
       orchestrationId = routerState.getIn ['params', 'orchestrationId']
       orchestration = OrchestrationsStore.get(orchestrationId)
@@ -33,6 +37,8 @@ routes =
     defaultRouteHandler: OrchestrationDetail
     childRoutes: [
       name:  'orchestrationJob'
+      requireData: (params) ->
+        OrchestrationsActionCreators.loadJob(params.jobId)
       title: (routerState) ->
         'Job ' +  routerState.getIn ['params', 'jobId']
       path: 'jobs/:jobId'

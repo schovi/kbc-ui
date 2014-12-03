@@ -34,6 +34,7 @@ Index = React.createClass
     filter: OrchestrationStore.getFilter()
 
   render: ->
+    console.log 'render orch index'
     div {className: 'container-fluid'},
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
       if @state.isLoaded
