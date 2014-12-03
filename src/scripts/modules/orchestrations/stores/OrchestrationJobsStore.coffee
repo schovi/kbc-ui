@@ -67,18 +67,18 @@ Dispatcher.register (payload) ->
   switch action.type
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD
-      _store = addToLoadingOrchestrations(_store, action.orchestrationId)
+      _store = addToLoadingOrchestrations(_store, parseInt(action.orchestrationId))
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
-      _store = removeFromLoadingOrchestrations(_store, action.orchestrationId)
+      _store = removeFromLoadingOrchestrations(_store, parseInt(action.orchestrationId))
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
-        removeFromLoadingOrchestrations(store, action.orchestrationId)
+        removeFromLoadingOrchestrations(store, parseInt(action.orchestrationId))
         .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->
-            jobsByOrchestrationId.set action.orchestrationId, Immutable.fromJS(action.jobs)
+            jobsByOrchestrationId.set parseInt(action.orchestrationId), Immutable.fromJS(action.jobs)
         )
       )
       OrchestrationJobsStore.emitChange()
