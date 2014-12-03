@@ -1,5 +1,4 @@
 React = require 'react'
-Router = require 'react-router'
 
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
@@ -18,46 +17,32 @@ SearchRow = React.createFactory(require '../../../components/common/SearchRow.co
 
 OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
-  mixins: [Router.State, createStoreMixin(OrchestrationStore, OrchestrationJobsStore, RoutesStore)]
+  mixins: [createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
   getStateFromStores: ->
-    orchestrationId = @_getOrchestrationId()
+    orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
     return {
       orchestration: OrchestrationStore.get orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filter: OrchestrationStore.getFilter()
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
-      currentParams: RoutesStore.getCurrentRouteConfig().get 'params'
     }
 
-  _getOrchestrationId: ->
-    # using getParams method provided by Router.State mixin
-    parseInt(@getParams().orchestrationId)
-
-
   componentDidMount: ->
-    OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
-    OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
 
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   _handleJobsReload: ->
-    OrchestrationsActionCreators.loadOrchestrationJobs(@_getOrchestrationId())
+    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
 
   render: ->
-    if @state.isLoading
-      text = 'loading ...'
-    else
-      if @state.orchestration
-        text = 'Orchestration ' + @state.orchestration.get('id') + ' ' + @state.orchestration.get('name')
-      else
-        text = 'Orchestration not found'
-
     div {className: 'container-fluid'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         SearchRow(onChange: @_handleFilterChange, query: @state.filter)
@@ -66,7 +51,7 @@ OrchestrationDetail = React.createClass
         div {className: 'row kbc-header'},
           div {className: 'kbc-title'},
             h2 null,
-              text
+              'Orchestration ' + @state.orchestration.get('name')
           div {className: 'kbc-buttons'},
             ''
         JobsTable(

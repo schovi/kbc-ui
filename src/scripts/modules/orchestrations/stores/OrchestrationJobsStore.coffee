@@ -36,7 +36,7 @@ OrchestrationJobsStore = StoreUtils.createStore
   ###
   getOrchestrationJobs: (idOrchestration) ->
     _store
-      .getIn(['jobsByOrchestrationId', idOrchestration], List())
+      .getIn(['jobsByOrchestrationId', parseInt(idOrchestration)], List())
       .sortBy((job) -> -1 * job.get 'id')
 
   ###
@@ -58,7 +58,7 @@ OrchestrationJobsStore = StoreUtils.createStore
     Test if specified orchestration jobs are currently being loaded
   ###
   isLoading: (idOrchestration) ->
-    _store.get('loadingOrchestrationJobs').contains idOrchestration
+    _store.get('loadingOrchestrationJobs').contains parseInt(idOrchestration)
 
 
 Dispatcher.register (payload) ->
@@ -75,7 +75,6 @@ Dispatcher.register (payload) ->
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
-      console.log 'jogs laod succ'
       _store = _store.withMutations((store) ->
         removeFromLoadingOrchestrations(store, action.orchestrationId)
         .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->

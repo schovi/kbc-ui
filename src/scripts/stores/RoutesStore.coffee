@@ -75,6 +75,8 @@ RoutesStore = StoreUtils.createStore
   getCurrentRouteConfig: ->
     _store.getIn ['routesByName', getCurrentRouteName(_store)]
 
+  getRouterState: ->
+    _store.get 'routerState'
 
   getRequireDataFunctionsForRouterState: (routes) ->
     Immutable

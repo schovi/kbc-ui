@@ -5,7 +5,7 @@ FinishedWithIcon = React.createFactory(require '../../../../components/common/Fi
 JobStatusCircle = React.createFactory(require '../../../../components/common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
 
-OrchestrationActionCreators = require '../../actionCreators.coffee'
+OrchestrationActionCreators = require '../../ActionCreators.coffee'
 
 prettyCron = require 'prettycron'
 

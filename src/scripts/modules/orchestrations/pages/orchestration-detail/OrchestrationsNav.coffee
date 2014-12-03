@@ -1,7 +1,9 @@
 React = require 'react'
 
+createStoreMixin = require '../../../../mixins/createStoreMixin.coffee'
+
 OrchestrationStore = require '../../stores/OrchestrationsStore.coffee'
-OrchestrationsActionCreators = require '../../actionCreators.coffee'
+OrchestrationsActionCreators = require '../../ActionCreators.coffee'
 
 DurationWithIcon = React.createFactory(require '../../../../components/common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../../../../components/common/FinishedWithIcon.coffee')
@@ -55,19 +57,10 @@ getStateFromStores = ->
 
 OrchestrationsNav = React.createClass(
   displayName: 'OrchestrationsNavList'
+  mixins: [createStoreMixin(OrchestrationStore)]
 
-  getInitialState: ->
-    getStateFromStores()
-
-  componentDidMount: ->
-    OrchestrationStore.addChangeListener(@_onChange)
-    OrchestrationsActionCreators.loadOrchestrations()
-
-  componentWillUnmount: ->
-    OrchestrationStore.removeChangeListener(@_onChange)
-
-  _onChange: ->
-    @setState(getStateFromStores())
+  getStateFromStores: ->
+    orchestrations: OrchestrationStore.getFiltered()
 
   render: ->
     filtered = @state.orchestrations

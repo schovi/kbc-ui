@@ -46,10 +46,10 @@ router = Router.create
   location: Router.HashLocation
 
 
+Promise.longStackTraces()
 
 # render after each change
 router.run (Handler, state) ->
-  RouterActionCreators.routeChange(state)
 
   # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
   promises = RoutesStore
@@ -60,10 +60,11 @@ router.run (Handler, state) ->
 
   Promise.all(promises)
     .then(->
+      RouterActionCreators.routeChange(state)
       React.render(React.createElement(Handler), document.getElementById 'react')
     )
     .catch((error) ->
       React.render(React.createElement(Handler, error: error), document.getElementById 'react')
-      console.log 'some fucking error', error
+      console.log 'error', error.stack
     )
 
