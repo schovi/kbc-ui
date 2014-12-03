@@ -24,8 +24,16 @@ routes =
   childRoutes: [
     name: 'orchestration'
     path: ':orchestrationId'
-    requireData: (params) ->
-      OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
+    requireData: [
+        (params) ->
+          OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
+      ,
+        (params) ->
+          OrchestrationsActionCreators.loadOrchestrationJobs(params.orchestrationId)
+      ,
+        () ->
+          OrchestrationsActionCreators.loadOrchestrations()
+    ]
     title: (routerState) ->
       orchestrationId = routerState.getIn ['params', 'orchestrationId']
       orchestration = OrchestrationsStore.get(orchestrationId)

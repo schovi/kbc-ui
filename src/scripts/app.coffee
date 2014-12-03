@@ -49,14 +49,17 @@ router = Router.create
 
 Promise.longStackTraces()
 
-# re-render after each route change
 rootNode = document.getElementById 'react'
+
+# Show loading page before app is ready
+loading = _.once (Handler) ->
+  React.render(React.createElement(Handler, isLoading: true), rootNode)
+
+# re-render after each route change
 router.run (Handler, state) ->
 
-  # Run only on first load, displays loading page
-  _.once( ->
-    React.render(React.createElement(Handler, isLoading: true), rootNode)
-  )()
+  # run only once on first render
+  loading(Handler)
 
   # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
   promises = RoutesStore

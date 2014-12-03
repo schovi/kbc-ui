@@ -69,7 +69,7 @@ module.exports =
   ###
     Load specifed orchestration jobs from server
   ###
-  loadOrchestrationJobs: (orchestrationId) ->
+  loadOrchestrationJobsForce: (orchestrationId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD
       orchestrationId: orchestrationId
@@ -84,14 +84,10 @@ module.exports =
           jobs: jobs
         )
       )
-    .catch((error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
-          orchestrationId: orchestrationId
-          status: error.status
-          response: error.response
-        )
-      )
+
+  loadOrchestrationJobs: (orchestrationId) ->
+    return Promise.resolve() if OrchestrationJobsStore.getOrchestrationJobs(orchestrationId).size
+    @loadOrchestrationJobsForce(orchestrationId)
 
   ###
     Fetch single job from server

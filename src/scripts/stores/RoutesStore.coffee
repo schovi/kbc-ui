@@ -108,8 +108,12 @@ RoutesStore = StoreUtils.createStore
     Immutable
       .fromJS(routes)
       .map((route) ->
-        _store.getIn ['routesByName', route.get('name'), 'requireData']
+        requireDataFunctions = _store.getIn ['routesByName', route.get('name'), 'requireData']
+        if !Immutable.List.isList(requireDataFunctions)
+          requireDataFunctions = Immutable.List.of(requireDataFunctions)
+        requireDataFunctions
       )
+      .flatten()
       .filter((func) -> _.isFunction func)
 
 Dispatcher.register (payload) ->

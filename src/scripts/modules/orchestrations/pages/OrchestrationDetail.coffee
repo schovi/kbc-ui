@@ -29,18 +29,14 @@ OrchestrationDetail = React.createClass
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
 
-  componentDidMount: ->
-    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
-
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
-    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
 
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   _handleJobsReload: ->
-    OrchestrationsActionCreators.loadOrchestrationJobs(@state.orchestration.get 'id')
+    OrchestrationsActionCreators.loadOrchestrationJobsForce(@state.orchestration.get 'id')
 
   render: ->
     div {className: 'container-fluid'},
