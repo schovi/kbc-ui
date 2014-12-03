@@ -36,7 +36,8 @@ NotFound = React.createClass
 routes =
   handler: App
   path: '/'
-  title: 'Home'
+  title: 'Overview'
+  name: 'app'
   defaultRouteHandler: Home
   defaultRouteName: 'home'
   notFoundRouteHandler: NotFound

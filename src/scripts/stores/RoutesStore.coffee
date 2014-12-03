@@ -33,7 +33,10 @@ nestedRoutesToByNameMap = (route) ->
  Returns title for route
 ###
 getRouteTitle = (store, routeName) ->
-  title = store.getIn ['routesByName', routeName, 'title'], List()
+  title = store.getIn ['routesByName', routeName, 'title'], ''
+
+  if !title
+    title = store.get('routesByName').find((route) -> route.get('defaultRouteName') == routeName)?.get('title')
 
   if _.isFunction title
     title(store.get 'routerState')
