@@ -1,6 +1,7 @@
 React = require 'react'
 Router = require 'react-router'
 Promise = require 'bluebird'
+_ = require 'underscore'
 
 routes = require './routes.coffee'
 createReactRouterRoutes = require './utils/createReactRouterRoutes.coffee'
@@ -49,7 +50,13 @@ router = Router.create
 Promise.longStackTraces()
 
 # re-render after each route change
+rootNode = document.getElementById 'react'
 router.run (Handler, state) ->
+
+  # Run only on first load, displays loading page
+  _.once( ->
+    React.render(React.createElement(Handler, isLoading: true), rootNode)
+  )()
 
   # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
   promises = RoutesStore
@@ -62,10 +69,11 @@ router.run (Handler, state) ->
   Promise.all(promises)
     .then(->
       RouterActionCreators.routeChange(state)
-      React.render(React.createElement(Handler), document.getElementById 'react')
+      React.render(React.createElement(Handler), rootNode)
     )
     .catch((error) ->
+      # render error page
       RouterActionCreators.routeChangeError(error)
-      React.render(React.createElement(Handler, isError: true), document.getElementById 'react')
+      React.render(React.createElement(Handler, isError: true), rootNode)
     )
 
