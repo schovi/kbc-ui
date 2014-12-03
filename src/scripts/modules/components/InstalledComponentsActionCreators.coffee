@@ -1,6 +1,6 @@
 
 
-dispatcher = require '../../dispatcher.coffee'
+dispatcher = require '../../Dispatcher.coffee'
 constants = require '../../constants/KbcConstants.coffee'
 
 InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'

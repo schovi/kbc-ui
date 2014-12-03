@@ -1,5 +1,5 @@
 
-Dispatcher = require('../dispatcher.coffee')
+Dispatcher = require('../Dispatcher.coffee')
 Immutable = require 'immutable'
 Map = Immutable.Map
 StoreUtils = require '../utils/StoreUtils.coffee'

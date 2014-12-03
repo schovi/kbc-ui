@@ -4,7 +4,7 @@ Router = require 'react-router'
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
 # actions and stores
-OrchestrationsActionCreators = require '../actionCreators.coffee'
+OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationStore = require '../stores/OrchestrationsStore.coffee'
 OrchestrationJobsStore = require '../stores/OrchestrationJobsStore.coffee'
 RoutesStore = require '../../../stores/RoutesStore.coffee'

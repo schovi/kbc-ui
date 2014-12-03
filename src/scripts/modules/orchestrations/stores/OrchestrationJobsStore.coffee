@@ -1,8 +1,8 @@
 
-Dispatcher = require '../../../dispatcher.coffee'
+Dispatcher = require '../../../Dispatcher.coffee'
 Immutable = require('immutable')
 {Map, List} = Immutable
-Constants = require '../constants.coffee'
+Constants = require '../Constants.coffee'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils.coffee'
 

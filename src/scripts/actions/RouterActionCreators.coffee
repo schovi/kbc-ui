@@ -1,4 +1,4 @@
-dispatcher = require '../dispatcher.coffee'
+dispatcher = require '../Dispatcher.coffee'
 constants = require '../constants/KbcConstants.coffee'
 
 module.exports =

@@ -3,7 +3,7 @@ Immutable = require 'immutable'
 
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
-OrchestrationsActionCreators = require '../actionCreators.coffee'
+OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationStore = require '../stores/OrchestrationsStore.coffee'
 
 OrchestrationRow = React.createFactory(require './orchestrations-index/OrchestrationRow.coffee')

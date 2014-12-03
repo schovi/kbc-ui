@@ -1,6 +1,6 @@
 React = require 'react'
 
-OrchestrationsActionCreators = require '../actionCreators.coffee'
+OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationsStore = require '../stores/OrchestrationsStore.coffee'
 RefreshIcon = React.createFactory(require '../../../components/common/RefreshIcon.coffee')
 

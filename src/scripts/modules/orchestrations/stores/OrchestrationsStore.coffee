@@ -1,9 +1,9 @@
 
-Dispatcher = require '../../../dispatcher.coffee'
+Dispatcher = require '../../../Dispatcher.coffee'
 Immutable = require('immutable')
 Map = Immutable.Map
 List = Immutable.List
-Constants = require '../constants.coffee'
+Constants = require '../Constants.coffee'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils.coffee'
 
@@ -25,17 +25,6 @@ removeOrchestrationFromLoading = (store, id) ->
     loadingOrchestrations.remove(store.get('loadingOrchestrations').indexOf(id))
 
 
-orchestrationsComparator = (orchestration) ->
-
-  console.log 'cmp',  orchestration
-  return orchestration.get 'name'
-  if orchestration.lastExecutedJob?.status == 'processing'
-    return -1 * (new Date(orchestration.lastExecutedJob?.startTime))
-
-  if orchestration.lastExecutedJob
-    return -1 * (new Date(orchestration.lastExecutedJob?.endTime).getTime())
-
-  orchestration.name
 
 
 OrchestrationStore = StoreUtils.createStore
@@ -106,6 +95,7 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
+      console.log 'load success'
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
