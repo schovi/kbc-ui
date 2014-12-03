@@ -1,5 +1,4 @@
 
-invariant = require 'react/lib/invariant'
 
 createStoreMixin = (stores...) ->
 

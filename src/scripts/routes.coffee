@@ -2,14 +2,6 @@ React = require 'react'
 Router = require 'react-router'
 App = require './components/App.coffee'
 
-# orchestrations components
-OrchestrationsIndex = require './components/orchestrations/OrchestrationsIndex.coffee'
-OrchestrationDetail = require './components/orchestrations/OrchestrationDetail.coffee'
-OrchestrationJobDetail = require './components/orchestrations/OrchestrationJobDetail.coffee'
-OrchestrationsReloaderButton = require './components/orchestrations/OrchestrationsReloaderButton.coffee'
-OrchestrationStore = require './stores/OrchestrationStore.coffee'
-NewOrchestrationButton = require './components/orchestrations/NewOrchestionButton.coffee'
-
 
 
 # class factories parametrized by component type
@@ -59,31 +51,7 @@ routes =
       title: 'Transformations'
       handler: Transformations
     ,
-      name: 'orchestrations'
-      title: 'Orchestrations'
-      defaultRouteHandler: OrchestrationsIndex
-      reloaderHandler: OrchestrationsReloaderButton
-      headerButtonsHandler: NewOrchestrationButton
-      childRoutes: [
-        name: 'orchestration'
-        path: ':orchestrationId'
-        title: (routerState) ->
-          orchestrationId = routerState.getIn ['params', 'orchestrationId']
-          orchestration = OrchestrationStore.get(orchestrationId)
-          if orchestration
-            "Orchestration #{orchestration.get('name')}"
-          else
-            "Orchestration #{orchestrationId}"
-
-        defaultRouteHandler: OrchestrationDetail
-        childRoutes: [
-          name:  'orchestrationJob'
-          title: (routerState) ->
-            'Job ' +  routerState.getIn ['params', 'jobId']
-          path: 'jobs/:jobId'
-          handler: OrchestrationJobDetail
-        ]
-      ]
+      require './modules/orchestrations/routes.coffee'
     ,
       name: 'extractors'
       title: 'Extractors'

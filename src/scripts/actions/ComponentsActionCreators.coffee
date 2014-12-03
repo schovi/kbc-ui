@@ -1,6 +1,6 @@
 
 
-dispatcher = require '../dispatcher/KbcDispatcher.coffee'
+dispatcher = require '../dispatcher.coffee'
 constants = require '../constants/KbcConstants.coffee'
 
 

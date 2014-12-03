@@ -1,5 +1,5 @@
 
-Dispatcher = require('../dispatcher/KbcDispatcher.coffee')
+Dispatcher = require('../dispatcher.coffee')
 constants = require '../constants/KbcConstants.coffee'
 Immutable = require('immutable')
 Map = Immutable.Map
