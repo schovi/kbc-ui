@@ -1,7 +1,7 @@
 
 
 dispatcher = require '../../Dispatcher.coffee'
-constants = require './constants.coffee'
+constants = require './Constants.coffee'
 
 
 module.exports =

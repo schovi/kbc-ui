@@ -2,8 +2,8 @@ React = require 'react'
 Router = require 'react-router'
 App = require './components/App.coffee'
 
-componentsRoutes = require './modules/components/routes.coffee'
-orchestrationsRoutes = require './modules/orchestrations/routes.coffee'
+componentsRoutes = require './modules/components/Routes.coffee'
+orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'
 
 Transformations = React.createClass
   displayName: 'Transformations'

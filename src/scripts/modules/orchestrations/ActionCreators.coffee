@@ -1,7 +1,7 @@
 
 
-dispatcher = require '../../dispatcher.coffee'
-constants = require './constants.coffee'
+dispatcher = require '../../Dispatcher.coffee'
+constants = require './Constants.coffee'
 orchestrationsApi = require './OrchestrationsApi.coffee'
 OrchestrationStore = require './stores/OrchestrationsStore.coffee'
 
