@@ -38,7 +38,6 @@ nestedRoutesToByNameMap = (route) ->
  Returns title for route
 ###
 getRouteTitle = (store, routeName) ->
-  console.log 'title', routeName
   title = store.getIn ['routesByName', routeName, 'title'], ''
 
   if !title
@@ -97,6 +96,12 @@ RoutesStore = StoreUtils.createStore
 
   getRouterState: ->
     _store.get 'routerState'
+
+  ###
+    Returns if route change is pending
+  ###
+  getIsPending: ->
+    _store.get 'isPending'
 
   ###
     @return Error

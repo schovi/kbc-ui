@@ -4,6 +4,7 @@ createStoreMixin = require '../../mixins/createStoreMixin.coffee'
 RoutesStore = require '../../stores/RoutesStore.coffee'
 
 Link = React.createFactory(require('react-router').Link)
+RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator.coffee')
 
 {div, nav, span, a, h1} = React.DOM
 
@@ -15,6 +16,7 @@ Header = React.createClass
   getStateFromStores: ->
     breadcrumbs: RoutesStore.getBreadcrumbs()
     currentRouteConfig: RoutesStore.getCurrentRouteConfig()
+    isRoutePending: RoutesStore.getIsPending()
 
   render: ->
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
@@ -28,6 +30,7 @@ Header = React.createClass
             @_renderBreadcrumbs()
             ' '
             @_renderReloader()
+            RoutePendingIndicator() if @state.isRoutePending
           div {className: 'kbc-buttons'},
             @_renderButtons()
 
