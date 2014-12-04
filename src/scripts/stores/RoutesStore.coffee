@@ -11,7 +11,6 @@ Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 
 _store = Map(
-  error: null
   routerState: Map()
   routesByName: Map()
 )
@@ -60,7 +59,7 @@ getCurrentRouteName = (store) ->
     null
 
 generateBreadcrumbs = (store) ->
-  if store.get 'error'
+  if store.has 'error'
     List.of(
       Map(
         name: 'error'
@@ -87,7 +86,7 @@ generateBreadcrumbs = (store) ->
 RoutesStore = StoreUtils.createStore
 
   isError: ->
-    _store.get 'error'
+    _store.has 'error'
 
   getBreadcrumbs: ->
     generateBreadcrumbs(_store)
@@ -132,7 +131,7 @@ Dispatcher.register (payload) ->
             .set 'routerState', newState
         else
           store
-            .set 'error', null
+            .remove 'error'
             .set 'routerState', newState
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_ERROR

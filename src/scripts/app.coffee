@@ -76,6 +76,7 @@ router.run (Handler, state) ->
     )
     .catch((error) ->
       # render error page
+      console.log 'error', error
       RouterActionCreators.routeChangeError(error)
       React.render(React.createElement(Handler, isError: true), rootNode)
     )

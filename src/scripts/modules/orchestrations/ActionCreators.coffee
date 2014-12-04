@@ -61,6 +61,12 @@ module.exports =
         )
         return
       )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
+      )
+      throw error
+    )
 
   loadOrchestration: (id) ->
     return Promise.resolve() if OrchestrationStore.get(id)
@@ -84,6 +90,13 @@ module.exports =
           jobs: jobs
         )
       )
+    .catch((error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
+          orchestrationId: orchestrationId
+        )
+        throw error
+    )
 
   loadOrchestrationJobs: (orchestrationId) ->
     return Promise.resolve() if OrchestrationJobsStore.getOrchestrationJobs(orchestrationId).size
