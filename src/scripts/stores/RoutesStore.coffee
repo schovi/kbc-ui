@@ -120,7 +120,7 @@ Dispatcher.register (payload) ->
 
   switch action.type
 
-    when Constants.ActionTypes.ROUTER_ROUTE_CHANGED
+    when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
       _store = _store.withMutations (store) ->
         newState = Immutable.fromJS(action.routerState)
         notFound = newState.get('routes').last().get('name') == 'notFound'

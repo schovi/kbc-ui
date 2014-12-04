@@ -9,9 +9,15 @@ module.exports =
       routes: routes
     )
 
-  routeChange: (routerState) ->
+  routeChangeStart: (newRouterState) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.ROUTER_ROUTE_CHANGED
+      type: constants.ActionTypes.ROUTER_ROUTE_CHANGE_START
+      routerState: newRouterState
+    )
+
+  routeChangeSuccess: (routerState) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
       routerState: routerState
     )
 

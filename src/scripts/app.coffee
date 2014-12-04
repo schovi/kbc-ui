@@ -57,6 +57,7 @@ loading = _.once (Handler) ->
 
 # re-render after each route change
 router.run (Handler, state) ->
+  RouterActionCreators.routeChangeStart(state)
 
   # run only once on first render
   loading(Handler)
@@ -71,7 +72,7 @@ router.run (Handler, state) ->
   # wait for data and trigger render
   Promise.all(promises)
     .then(->
-      RouterActionCreators.routeChange(state)
+      RouterActionCreators.routeChangeSuccess(state)
       React.render(React.createElement(Handler), rootNode)
     )
     .catch((error) ->
