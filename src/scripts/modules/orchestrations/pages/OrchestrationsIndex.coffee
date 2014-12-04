@@ -17,9 +17,6 @@ Index = React.createClass
   displayName: 'OrchestrationsIndex'
   mixins: [createStoreMixin(OrchestrationStore)]
 
-  componentDidMount: ->
-    OrchestrationsActionCreators.loadOrchestrations()
-
   shouldComponentUpdate: (nextProps, nextState) ->
     !Immutable.is(nextState.orchestrations, @state.orchestrations) ||
       nextState.isLoading != @state.isLoading
@@ -37,8 +34,10 @@ Index = React.createClass
     console.log 'render orch index'
     div {className: 'container-fluid'},
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
-      if @state.isLoaded
-        if @state.orchestrations.count() then @_renderTable() else @_renderEmptyState()
+      if @state.orchestrations.count()
+        @_renderTable()
+      else
+        @_renderEmptyState()
 
   _renderEmptyState: ->
     div null, 'No orchestrations found'

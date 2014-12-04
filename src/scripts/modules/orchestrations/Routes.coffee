@@ -23,6 +23,8 @@ routes =
   defaultRouteHandler: OrchestrationsIndex
   reloaderHandler: OrchestrationsReloaderButton
   headerButtonsHandler: NewOrchestrationButton
+  requireData: ->
+    OrchestrationsActionCreators.loadOrchestrations()
   childRoutes: [
     name: 'orchestration'
     path: ':orchestrationId'
@@ -33,9 +35,6 @@ routes =
       ,
         (params) ->
           OrchestrationsActionCreators.loadOrchestrationJobs(params.orchestrationId)
-      ,
-        () ->
-          OrchestrationsActionCreators.loadOrchestrations()
     ]
     title: (routerState) ->
       orchestrationId = routerState.getIn ['params', 'orchestrationId']
