@@ -9,11 +9,6 @@ installedComponentsApi = require './InstalledComponentsApi.coffee'
 
 module.exports =
 
-  loadComponents: ->
-    return if InstalledComponentsStore.getIsLoaded()
-    @loadComponentsForce()
-
-
   loadComponentsForce: ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD

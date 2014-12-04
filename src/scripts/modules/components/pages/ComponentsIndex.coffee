@@ -17,9 +17,6 @@ createComponentsIndex = (type) ->
     getStateFromStores: ->
       installedComponents: InstalledComponentsStore.getAllForType(type)
 
-    componentDidMount: ->
-      InstalledComponentsActionCreators.loadComponents()
-
     render: ->
       rows =  @state.installedComponents.map((component) ->
         @renderComponentRow component
@@ -28,7 +25,6 @@ createComponentsIndex = (type) ->
       div className: 'container-fluid',
         table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
           tbody null, rows
-
 
     renderComponentRow: (component) ->
       tr key: component.get('id'),

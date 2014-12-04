@@ -7,7 +7,6 @@ StoreUtils = require '../../../utils/StoreUtils.coffee'
 
 _store = Map(
   components: Map()
-  isLoaded: false
   isLoading: false
 )
 
@@ -20,9 +19,6 @@ InstalledComponentsStore = StoreUtils.createStore
     @getAll().filter((component) ->
       component.get('type') == type
     )
-
-  getIsLoaded: ->
-    _store.get 'isLoaded'
 
   getIsLoading: ->
     _store.get 'isLoading'
@@ -43,7 +39,6 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
         store
-          .set('isLoaded', true)
           .set('isLoading', false)
           .set('components', Immutable.fromJS action.components)
       )
