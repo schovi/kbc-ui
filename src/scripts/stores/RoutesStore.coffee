@@ -11,6 +11,7 @@ Immutable = require('immutable')
 Constants = require '../constants/KbcConstants.coffee'
 
 _store = Map(
+  isPending: false
   routerState: Map()
   routesByName: Map()
 )
@@ -120,11 +121,15 @@ Dispatcher.register (payload) ->
 
   switch action.type
 
+    when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_START
+      _store = _store.set 'isPending', true
+
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
       _store = _store.withMutations (store) ->
         newState = Immutable.fromJS(action.routerState)
         notFound = newState.get('routes').last().get('name') == 'notFound'
 
+        store = store.set 'isPending', false
         if notFound
           store
             .set 'error', new Error('Page not found', 'Page not found')
@@ -135,7 +140,10 @@ Dispatcher.register (payload) ->
             .set 'routerState', newState
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_ERROR
-      _store = _store.set 'error', Error.fromXhrError(action.error)
+      _store = _store.withMutations (store) ->
+          store
+            .set 'isPending', false
+            .set 'error', Error.fromXhrError(action.error)
 
     when Constants.ActionTypes.ROUTER_ROUTES_CONFIGURATION_RECEIVE
       _store = _store.set 'routesByName', nestedRoutesToByNameMap(action.routes)
