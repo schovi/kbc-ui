@@ -9,6 +9,8 @@ OrchestrationJobDetail = require './pages/OrchestrationJobDetail.coffee'
 
 OrchestrationsReloaderButton = require './components/OrchestrationsReloaderButton.coffee'
 NewOrchestrationButton = require './components/NewOrchestionButton.coffee'
+OrchestrationReloaderButton = require './components/OrchestrationReloaderButton.coffee'
+JobReloaderButton = require './components/JobReloaderButton.coffee'
 
 # stores
 OrchestrationsStore = require './stores/OrchestrationsStore.coffee'
@@ -24,6 +26,7 @@ routes =
   childRoutes: [
     name: 'orchestration'
     path: ':orchestrationId'
+    reloaderHandler: OrchestrationReloaderButton
     requireData: [
         (params) ->
           OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
@@ -45,6 +48,7 @@ routes =
     defaultRouteHandler: OrchestrationDetail
     childRoutes: [
       name:  'orchestrationJob'
+      reloaderHandler: JobReloaderButton
       requireData: (params) ->
         OrchestrationsActionCreators.loadJob(params.jobId)
       title: (routerState) ->

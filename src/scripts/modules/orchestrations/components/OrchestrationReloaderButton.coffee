@@ -1,29 +1,27 @@
 React = require 'react'
 
+createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+
 OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationsStore = require '../stores/OrchestrationsStore.coffee'
+RoutesStore = require '../../../stores/RoutesStore.coffee'
+
 RefreshIcon = React.createFactory(require '../../../components/common/RefreshIcon.coffee')
 
-getStateFromStores = ->
-  isLoading: OrchestrationsStore.getIsLoading()
+
 
 OrchestrationReloaderButton = React.createClass
   displayName: 'OrchestrationsReloaderButton'
+  mixins: [createStoreMixin(OrchestrationsStore)]
 
-  getInitialState: ->
-    getStateFromStores()
+  _getOrchestrationId: ->
+    RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
 
-  componentDidMount: ->
-    OrchestrationsStore.addChangeListener(@_onChange)
+  getStateFromStores: ->
+    isLoading: OrchestrationsStore.getIsOrchestrationLoading(@_getOrchestrationId())
 
-  componentWillUnmount: ->
-    OrchestrationsStore.removeChangeListener(@_onChange)
-
-  _handleRefreshClick: (e) ->
-    OrchestrationsActionCreators.loadOrchestrationsForce()
-
-  _onChange: ->
-    @setState(getStateFromStores())
+  _handleRefreshClick: ->
+    OrchestrationsActionCreators.loadOrchestrationForce(@_getOrchestrationId())
 
   render: ->
     RefreshIcon isLoading: @state.isLoading, onClick: @_handleRefreshClick
