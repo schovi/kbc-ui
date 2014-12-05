@@ -19,7 +19,7 @@ JobsTable = React.createClass(
       JobsTableRow {job: job, key: job.get('id'), onJobCancel: @cancelJob}
     , @).toArray()
 
-    jobsTable = (table {className: 'table table-striped kb-table-jobs'},
+    jobsTable = (table {className: 'table table-striped table-hover kb-table-jobs'},
       (thead {},
         (tr {},
           (th {}, "ID"),
@@ -28,7 +28,7 @@ JobsTable = React.createClass(
           (th {}, "Initialized"),
           (th {}, "Creator"),
           (th {}, "Duration"),
-          (th {className: 'text-right'},
+          (th {className: 'text-right kbc-last-column-header'},
             RefreshIcon(
               isLoading: @props.jobsLoading
               onClick: @props.onJobsReload

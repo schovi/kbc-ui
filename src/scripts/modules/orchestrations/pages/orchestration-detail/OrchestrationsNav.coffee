@@ -33,20 +33,20 @@ OrchestrationRow = React.createFactory React.createClass(
     else
       duration = ''
 
-    (Link {className: "list-group-item tr #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
-      (span {className: 'td'},
-        (JobStatusCircle {status: lastExecutedJob?.get('status')})
-      ),
-      (span {className: 'td'},
-        (strong null, @props.orchestration.get('name')),
-        duration
-      ),
-      (span {className: 'td'},
-        (em null,
-          disabled
-        ),
-        (span {className: 'kb-info clearfix'},
-          (FinishedWithIcon endTime: lastExecutedJob.get('endTime')) if lastExecutedJob?.get('endTime')
+    (Link {className: "list-group-item #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')} },
+      (span {className: 'table'},
+        (span {className: 'tr'},
+          (span {className: 'td kbc-td-status'},
+            (JobStatusCircle {status: lastExecutedJob?.get('status')})
+          ),
+          (span {className: 'td'},
+            (em null, disabled),
+            (strong null, @props.orchestration.get('name')),
+            (span null, duration),
+            (span {className: 'kb-info clearfix pull-right'},
+              (FinishedWithIcon endTime: lastExecutedJob.get('endTime')) if lastExecutedJob?.get('endTime')
+            )
+          )
         )
       )
     )
@@ -73,7 +73,7 @@ OrchestrationsNav = React.createClass(
         'No Orchestrations found'
       )
 
-    (div className: 'list-group kb-orchestrations-nav table',
+    (div className: 'list-group kb-orchestrations-nav',
       childs
     )
 )
