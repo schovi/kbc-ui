@@ -41,8 +41,9 @@ OrchestrationDetail = React.createClass
   render: ->
     div {className: 'container-fluid'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
-        SearchRow(onChange: @_handleFilterChange, query: @state.filter)
-        OrchestrationsNav()
+        div {className: 'kbc-container'},
+          SearchRow(onChange: @_handleFilterChange, query: @state.filter)
+          OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
         div {className: 'row kbc-header'},
           div {className: 'kbc-title'},
