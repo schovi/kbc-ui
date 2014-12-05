@@ -67,9 +67,9 @@ OrchestrationJobDetail = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      div {className: 'col-md-3 kb-orchestrations-sidebar'},
+      div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         JobsNav jobs: @state.jobs, jobsLoading: @state.jobsLoading
-      div {className: 'col-md-9 kb-orchestrations-main'},
+      div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
         div {},
           TabbedArea defaultActiveKey: 'overview', animation: false,
             TabPane eventKey: 'overview', tab: 'Overview',

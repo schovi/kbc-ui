@@ -9,7 +9,7 @@ DurationWithIcon = React.createFactory(require '../../../../components/common/Du
 
 Link = React.createFactory(Router.Link)
 
-{div, span, a} = React.DOM
+{div, span, a, em, strong} = React.DOM
 
 JobRow = React.createClass(
   displayName: 'JobsTableRow'
@@ -22,13 +22,19 @@ JobRow = React.createClass(
     className = if  isActive then 'active' else ''
 
     (Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @getParams().orchestrationId, jobId: @props.job.get('id')}},
-      (JobStatusCircle {status: @props.job.get('status')}),
-      (span null, @props.job.get('id')),
-      (span {className: 'pull-right kb-info', title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually'
-      (span {className: 'kb-info clearfix'},
-        (DurationWithIcon {startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')}) if @props.job.get('startTime')
-        (span {className: 'pull-right'},
-          (FinishedWithIcon endTime: @props.job.get('endTime'))
+      (span {className: 'table'},
+        (span {className: 'tr'},
+          (span {className: 'td kbc-td-status'},
+            (JobStatusCircle {status: @props.job.get('status')})
+          ),
+          (span {className: 'td'},
+            (em {title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually',
+            (strong null, @props.job.get('id')),
+            (span null, (DurationWithIcon {startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')}) if @props.job.get('startTime')),
+            (span {className: 'kb-info clearfix pull-right'},
+              (FinishedWithIcon endTime: @props.job.get('endTime'))
+            )
+          )
         )
       )
     )
@@ -45,7 +51,7 @@ JobsNav = React.createClass(
       React.createElement JobRow, {job: job, key: job.get('id')}
     , @).toArray()
 
-    (div className: 'kb-orchestrations-nav',
+    (div className: 'kb-orchestrations-nav list-group',
       rows
     )
 
