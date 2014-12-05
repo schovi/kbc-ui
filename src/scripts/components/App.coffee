@@ -15,8 +15,7 @@ App = React.createClass
     isError: React.PropTypes.bool
     isLoading: React.PropTypes.bool
   render: ->
-    console.log 'render', @props
-    React.DOM.div null,
+    div null,
       Header(),
       div className: 'container-fluid',
         div className: 'row',

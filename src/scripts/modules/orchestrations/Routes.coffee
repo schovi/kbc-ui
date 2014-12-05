@@ -38,11 +38,7 @@ routes =
     ]
     title: (routerState) ->
       orchestrationId = routerState.getIn ['params', 'orchestrationId']
-      orchestration = OrchestrationsStore.get(orchestrationId)
-      if orchestration
-        "Orchestration #{orchestration.get('name')}"
-      else
-        "Orchestration #{orchestrationId}"
+      OrchestrationsStore.get(orchestrationId).get 'name'
 
     defaultRouteHandler: OrchestrationDetail
     childRoutes: [
