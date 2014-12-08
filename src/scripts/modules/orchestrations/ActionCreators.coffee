@@ -69,7 +69,7 @@ module.exports =
     )
 
   loadOrchestration: (id) ->
-    return Promise.resolve() if OrchestrationStore.get(id)
+    return Promise.resolve() if OrchestrationStore.has(id) && OrchestrationStore.hasOrchestrationTasks(id)
     @loadOrchestrationForce(id)
 
   ###

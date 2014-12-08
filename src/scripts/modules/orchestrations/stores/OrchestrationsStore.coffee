@@ -9,6 +9,7 @@ StoreUtils = require '../../../utils/StoreUtils.coffee'
 
 _store = Map(
   orchestrationsById: Map()
+  orchestrationTasksById: Map()
   filter: ''
   isLoading: false
   isLoaded: false
@@ -46,6 +47,15 @@ OrchestrationStore = StoreUtils.createStore
   ###
   get: (id) ->
     _store.getIn ['orchestrationsById', parseInt(id)]
+
+  has: (id) ->
+    _store.get('orchestrationsById').has parseInt(id)
+
+  getOrchestrationTasks: (orchestrationId) ->
+    _store.getIn ['orchestrationTasksById', parseInt(orchestrationId)]
+
+  hasOrchestrationTasks: (orchestrationId) ->
+    _store.get('orchestrationTasksById').has parseInt(orchestrationId)
 
   ###
     Returns all orchestrations filtered by current filter value
@@ -119,6 +129,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         removeOrchestrationFromLoading(store, action.orchestration.id)
         .setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
+        .setIn ['orchestrationTasksById', action.orchestration.id], Immutable.fromJS(action.orchestration.tasks)
       )
       OrchestrationStore.emitChange()
 
