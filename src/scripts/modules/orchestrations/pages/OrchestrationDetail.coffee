@@ -24,6 +24,7 @@ OrchestrationDetail = React.createClass
     orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
     return {
       orchestration: OrchestrationStore.get orchestrationId
+      tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filter: OrchestrationStore.getFilter()
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
@@ -53,7 +54,7 @@ OrchestrationDetail = React.createClass
           div {className: 'kbc-buttons'},
             Router.Link to: 'orchestrationTasks', params:
               orchestrationId: @state.orchestration.get('id')
-            , 'Tasks'
+            , "Tasks (#{@state.tasks.size})"
         JobsTable(
           jobs: @state.jobs
           jobsLoading: @state.jobsLoading

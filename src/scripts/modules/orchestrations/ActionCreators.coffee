@@ -99,7 +99,7 @@ module.exports =
     )
 
   loadOrchestrationJobs: (orchestrationId) ->
-    return Promise.resolve() if OrchestrationJobsStore.getOrchestrationJobs(orchestrationId).size
+    return Promise.resolve() if OrchestrationJobsStore.hasOrchestrationJobs(orchestrationId)
     @loadOrchestrationJobsForce(orchestrationId)
 
   ###

@@ -56,6 +56,7 @@ routes =
       title: 'Tasks'
       path: 'tasks'
       handler: OrchestrationTasks
+      reloaderHandler: OrchestrationReloaderButton
     ]
   ]
 

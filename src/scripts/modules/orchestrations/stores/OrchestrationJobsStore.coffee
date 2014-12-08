@@ -40,6 +40,12 @@ OrchestrationJobsStore = StoreUtils.createStore
       .sortBy((job) -> -1 * job.get 'id')
 
   ###
+    Check if store contains job for specifed orchestration
+  ###
+  hasOrchestrationJobs: (idOrchestration) ->
+    _store.get('jobsByOrchestrationId').has parseInt(idOrchestration)
+
+  ###
     Returns one job by it's id
   ###
   getJob: (id) ->
