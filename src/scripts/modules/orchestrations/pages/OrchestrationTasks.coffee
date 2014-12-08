@@ -1,5 +1,4 @@
 React = require 'react'
-Router = require 'react-router'
 
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
@@ -16,9 +15,9 @@ SearchRow = React.createFactory(require '../../../components/common/SearchRow.co
 
 {div, h2} = React.DOM
 
-OrchestrationDetail = React.createClass
-  displayName: 'OrchestrationDetail'
-  mixins: [createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
+OrchestrationTasks = React.createClass
+  displayName: 'OrchestrationTasks'
+  mixins: [createStoreMixin(OrchestrationStore)]
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
@@ -26,8 +25,6 @@ OrchestrationDetail = React.createClass
       orchestration: OrchestrationStore.get orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filter: OrchestrationStore.getFilter()
-      jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
-      jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
 
   componentWillReceiveProps: ->
@@ -46,19 +43,7 @@ OrchestrationDetail = React.createClass
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
           OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        div {className: 'row kbc-header'},
-          div {className: 'kbc-title'},
-            h2 null,
-              'Orchestration ' + @state.orchestration.get('name')
-          div {className: 'kbc-buttons'},
-            Router.Link to: 'orchestrationTasks', params:
-              orchestrationId: @state.orchestration.get('id')
-            , 'Tasks'
-        JobsTable(
-          jobs: @state.jobs
-          jobsLoading: @state.jobsLoading
-          onJobsReload: @_handleJobsReload
-        )
+        'TODO Tasks'
 
 
-module.exports = OrchestrationDetail
+module.exports = OrchestrationTasks

@@ -6,6 +6,7 @@
 OrchestrationsIndex = require './pages/OrchestrationsIndex.coffee'
 OrchestrationDetail = require './pages/OrchestrationDetail.coffee'
 OrchestrationJobDetail = require './pages/OrchestrationJobDetail.coffee'
+OrchestrationTasks = require './pages/OrchestrationTasks.coffee'
 
 OrchestrationsReloaderButton = require './components/OrchestrationsReloaderButton.coffee'
 NewOrchestrationButton = require './components/NewOrchestionButton.coffee'
@@ -50,6 +51,11 @@ routes =
         'Job ' +  routerState.getIn ['params', 'jobId']
       path: 'jobs/:jobId'
       handler: OrchestrationJobDetail
+    ,
+      name: 'orchestrationTasks'
+      title: 'Tasks'
+      path: 'tasks'
+      handler: OrchestrationTasks
     ]
   ]
 
