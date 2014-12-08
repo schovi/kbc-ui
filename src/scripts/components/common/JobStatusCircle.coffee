@@ -1,21 +1,25 @@
 React = require 'react'
 
+statusColorMap =
+  success: 'green'
+  error: 'red'
+  warn: 'red'
+  processing: 'orange'
+  cancelled: 'grey'
+  waiting: 'grey'
+
 JobStatusCircle = React.createClass
   displayName: 'JobStatusCircle'
   propTypes:
     status: React.PropTypes.string
 
   render: ->
-    classMap =
-      success: 'status-success'
-      error: 'status-error'
-      waiting: 'status-waiting'
-      canceled: 'status-canceled'
-      warn: 'status-error'
-      processing: 'status-warn'
+    color = statusColorMap[@props.status] || 'grey'
 
-    className = classMap[@props.status]
-    React.DOM.span {className: "fa fa-circle kb-orchestration-status #{className}"}
+    React.DOM.img
+      src: @_getPathForColor color
 
+  _getPathForColor: (color) ->
+    "images/status-#{color}.svg"
 
 module.exports = JobStatusCircle

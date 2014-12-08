@@ -34,12 +34,13 @@ gulp.task 'server', ->
       routes:
         "/bower_components": path.join(__dirname, 'bower_components')
         "/fonts": path.join(__dirname, 'bower_components/kbc-bootstrap/dist/fonts')
+        "/images": path.join(__dirname, 'bower_components/kbc-bootstrap/dist/img')
       # handles pushstate rewrite
       middleware: (req, res, next) ->
         fileName = parse(req.url)
         fileName = fileName.href.split(fileName.search).join("")
         fileExists = fs.existsSync(path.join(__dirname, 'src') + fileName) || fileExists = fs.existsSync(path.join(__dirname, 'tmp') + fileName)
-        if !fileExists && fileName.indexOf("browser-sync-client") < 0 && fileName.indexOf("bower_components") < 0 && fileName.indexOf("fonts") < 0
+        if !fileExists && fileName.indexOf("browser-sync-client") < 0 && fileName.indexOf("bower_components") < 0 && fileName.indexOf("fonts") < 0 && fileName.indexOf("images") < 0
           req.url = "/" + defaultFile
         next()
 
@@ -94,6 +95,9 @@ gulp.task 'build-styles', ->
 gulp.task 'copy', ->
   gulp.src('./bower_components/kbc-bootstrap/dist/fonts/**')
   .pipe(gulp.dest('./dist/fonts'))
+
+  gulp.src('./bower_components/kbc-bootstrap/dist/img/**')
+  .pipe(gulp.dest('./dist/images'))
 
   gulp.src('./src/index.dist.html')
   .pipe(rename('index.html'))
