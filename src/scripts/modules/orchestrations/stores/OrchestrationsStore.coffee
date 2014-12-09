@@ -25,7 +25,13 @@ removeOrchestrationFromLoading = (store, id) ->
   store.update 'loadingOrchestrations', (loadingOrchestrations) ->
     loadingOrchestrations.remove(store.get('loadingOrchestrations').indexOf(id))
 
+setLastExecutedJob = (store, orchestrationId, job) ->
+  orchestration = store.getIn ['orchestrationsById', orchestrationId]
+  return store if !orchestration || !orchestration.get('lastExecutedJob')
+  return store if orchestration.getIn(['lastExecutedJob', 'id']) > job.get('id')
 
+  # set only if job is newer or same
+  store.setIn ['orchestrationsById', orchestrationId, 'lastExecutedJob'], job
 
 
 OrchestrationStore = StoreUtils.createStore
@@ -132,5 +138,20 @@ Dispatcher.register (payload) ->
         .setIn ['orchestrationTasksById', action.orchestration.id], Immutable.fromJS(action.orchestration.tasks)
       )
       OrchestrationStore.emitChange()
+
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
+      # try to update orchestration latest job
+      _store = setLastExecutedJob(_store, action.job.orchestrationId, Immutable.fromJS(action.job))
+      OrchestrationStore.emitChange()
+
+
+    when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
+      # try to update orchestration latest job
+
+      latestJob = Immutable.fromJS(action.jobs).last()
+      if latestJob
+        _store = setLastExecutedJob(_store, parseInt(action.orchestrationId), latestJob)
+        OrchestrationStore.emitChange()
 
 module.exports = OrchestrationStore

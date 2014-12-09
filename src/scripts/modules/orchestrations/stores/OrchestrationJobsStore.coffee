@@ -28,6 +28,14 @@ removeFromLoadingJobs = (store, jobId) ->
   store.update 'loadingJobs', (loadingJobs) ->
     loadingJobs.remove(loadingJobs.indexOf(jobId))
 
+setOrchestrationJob = (store, orchestrationId, job) ->
+  jobId = job.get 'id'
+  store.updateIn(['jobsByOrchestrationId', orchestrationId], List(), (jobs) ->
+    jobs
+    .filter((job) -> job.get('id') != jobId)
+    .push job
+  )
+
 
 OrchestrationJobsStore = StoreUtils.createStore
 
@@ -96,12 +104,8 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
 
       _store = _store.withMutations((store) ->
-        removeFromLoadingJobs(store, action.job.id)
-        .updateIn(['jobsByOrchestrationId', action.orchestrationId], (jobs) ->
-            jobs
-              .filter((job) -> job.get('id') != action.job.id)
-              .push Immutable.fromJS(action.job)
-        )
+        store = removeFromLoadingJobs(store, action.job.id)
+        setOrchestrationJob(store, action.job.orchestrationId, Immutable.fromJS(action.job))
       )
       OrchestrationJobsStore.emitChange()
 
