@@ -12,6 +12,7 @@ OrchestrationsReloaderButton = require './components/OrchestrationsReloaderButto
 NewOrchestrationButton = require './components/NewOrchestionButton.coffee'
 OrchestrationReloaderButton = require './components/OrchestrationReloaderButton.coffee'
 JobReloaderButton = require './components/JobReloaderButton.coffee'
+OrchestrationDetailButtons = require './components/OrchestrationDetailButtons.coffee'
 
 # stores
 OrchestrationsStore = require './stores/OrchestrationsStore.coffee'
@@ -34,6 +35,8 @@ routes =
     name: 'orchestration'
     path: ':orchestrationId'
     reloaderHandler: OrchestrationReloaderButton
+    headerButtonsHandler: OrchestrationDetailButtons
+    defaultRouteHandler: OrchestrationDetail
     poll:
       interval: 10
       action: (params) ->
@@ -49,7 +52,6 @@ routes =
       orchestrationId = routerState.getIn ['params', 'orchestrationId']
       OrchestrationsStore.get(orchestrationId).get 'name'
 
-    defaultRouteHandler: OrchestrationDetail
     childRoutes: [
       name:  'orchestrationJob'
       reloaderHandler: JobReloaderButton
