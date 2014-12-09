@@ -28,6 +28,13 @@ orchestrationsApi =
         response.body
       )
 
+  runOrchestration: (id) ->
+    createRequest('POST', "orchestrations/#{id}/jobs")
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   updateOrchestration: (id, data) ->
     createRequest('PUT', "orchestrations/#{id}")
     .send(data)

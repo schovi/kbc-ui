@@ -94,13 +94,13 @@ Dispatcher.register (payload) ->
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
-      data = {}
-      data[action.orchestrationId] = [action.job]
 
       _store = _store.withMutations((store) ->
         removeFromLoadingJobs(store, action.job.id)
-        .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->
-            jobsByOrchestrationId.merge Immutable.fromJS(data)
+        .updateIn(['jobsByOrchestrationId', action.orchestrationId], (jobs) ->
+            jobs
+              .filter((job) -> job.get('id') != action.job.id)
+              .push Immutable.fromJS(action.job)
         )
       )
       OrchestrationJobsStore.emitChange()

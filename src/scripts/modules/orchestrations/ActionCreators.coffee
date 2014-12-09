@@ -156,3 +156,15 @@ module.exports =
     orchestrationsApi.updateOrchestration(id,
       active: false
     )
+
+  runOrchestration: (id) ->
+
+    orchestrationsApi
+    .runOrchestration(id)
+    .then((newJob) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
+        orchestrationId: newJob.orchestrationId
+        job: newJob
+      )
+    )
