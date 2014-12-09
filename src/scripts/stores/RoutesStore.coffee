@@ -121,6 +121,18 @@ RoutesStore = StoreUtils.createStore
       .flatten()
       .filter((func) -> _.isFunction func)
 
+  getPollersForRoutes: (routes) ->
+    route = Immutable
+      .fromJS(routes)
+      .filter((route) -> !!route.get 'name')
+      .last() # use poller only from last route in hiearchy
+
+    pollerFunctions = _store.getIn ['routesByName', route.get('name'), 'poll'], List()
+    if !Immutable.List.isList(pollerFunctions)
+      pollerFunctions = Immutable.List.of(pollerFunctions)
+
+    pollerFunctions
+
 Dispatcher.register (payload) ->
   action = payload.action
 

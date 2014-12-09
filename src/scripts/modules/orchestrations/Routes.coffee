@@ -24,12 +24,20 @@ routes =
   defaultRouteHandler: OrchestrationsIndex
   reloaderHandler: OrchestrationsReloaderButton
   headerButtonsHandler: NewOrchestrationButton
+  poll:
+    interval: 10
+    action: ->
+      OrchestrationsActionCreators.loadOrchestrationsForce()
   requireData: ->
     OrchestrationsActionCreators.loadOrchestrations()
   childRoutes: [
     name: 'orchestration'
     path: ':orchestrationId'
     reloaderHandler: OrchestrationReloaderButton
+    poll:
+      interval: 10
+      action: (params) ->
+        OrchestrationsActionCreators.loadOrchestrationJobsForce(params.orchestrationId)
     requireData: [
         (params) ->
           OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
@@ -45,6 +53,10 @@ routes =
     childRoutes: [
       name:  'orchestrationJob'
       reloaderHandler: JobReloaderButton
+      poll:
+        interval: 10
+        action: (params) ->
+          OrchestrationsActionCreators.loadJobForce(params.jobId)
       requireData: (params) ->
         OrchestrationsActionCreators.loadJob(params.jobId)
       title: (routerState) ->

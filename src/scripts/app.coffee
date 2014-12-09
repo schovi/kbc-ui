@@ -2,9 +2,11 @@ React = require 'react'
 Router = require 'react-router'
 Promise = require 'bluebird'
 _ = require 'underscore'
+Immutable = require 'immutable'
 
 routes = require './routes.coffee'
 createReactRouterRoutes = require './utils/createReactRouterRoutes.coffee'
+Timer = require './utils/Timer.coffee'
 
 ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
 ComponentsActionCreators = require './modules/components/ComponentsActionCreators.coffee'
@@ -55,12 +57,20 @@ rootNode = document.getElementById 'react'
 loading = _.once (Handler) ->
   React.render(React.createElement(Handler, isLoading: true), rootNode)
 
+# registered pollers for previous page
+registeredPollers = Immutable.List()
+
 # re-render after each route change
 router.run (Handler, state) ->
   RouterActionCreators.routeChangeStart(state)
 
   # run only once on first render
   loading(Handler)
+
+  # stop pollers required by previous page
+  registeredPollers.forEach((action) ->
+    Timer.stop(action)
+  )
 
   # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
   promises = RoutesStore
@@ -74,10 +84,19 @@ router.run (Handler, state) ->
     .then(->
       RouterActionCreators.routeChangeSuccess(state)
       React.render(React.createElement(Handler), rootNode)
-    )
-    .catch((error) ->
+
+      # Start pollers for new page
+      registeredPollers = RoutesStore
+        .getPollersForRoutes(state.routes)
+        .map((poller) ->
+          callback = -> poller.get('action')(state.params)
+          Timer.poll(callback, poller.get('interval'))
+          return callback
+        )
+
+    ).catch((error) ->
       # render error page
-      console.log 'error', error
+      console.log error, error.stack
       RouterActionCreators.routeChangeError(error)
       React.render(React.createElement(Handler, isError: true), rootNode)
     )
