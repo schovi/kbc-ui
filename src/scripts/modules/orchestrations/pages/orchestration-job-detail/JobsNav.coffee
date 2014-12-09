@@ -28,9 +28,9 @@ JobRow = React.createClass(
             (JobStatusCircle {status: @props.job.get('status')})
           ),
           (span {className: 'td'},
-            (em {title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually',
-            (strong null, @props.job.get('id')),
-            (span null, (DurationWithIcon {startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')}) if @props.job.get('startTime')),
+            (em {title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually'
+            (strong null, @props.job.get('id'))
+            (span null, (DurationWithIcon {startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')}) if @props.job.get('startTime'))
             (span {className: 'kb-info clearfix pull-right'},
               (FinishedWithIcon endTime: @props.job.get('endTime'))
             )
