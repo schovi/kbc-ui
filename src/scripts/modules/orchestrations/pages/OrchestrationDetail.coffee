@@ -1,5 +1,4 @@
 React = require 'react'
-Router = require 'react-router'
 
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
@@ -13,6 +12,7 @@ RoutesStore = require '../../../stores/RoutesStore.coffee'
 OrchestrationsNav = React.createFactory(require './orchestration-detail/OrchestrationsNav.coffee')
 JobsTable = React.createFactory(require './orchestration-detail/JobsTable.coffee')
 SearchRow = React.createFactory(require '../../../components/common/SearchRow.coffee')
+Link = React.createFactory(require('react-router').Link)
 
 {div, h2} = React.DOM
 
@@ -52,7 +52,7 @@ OrchestrationDetail = React.createClass
             h2 null,
               'Orchestration ' + @state.orchestration.get('name')
           div {className: 'kbc-buttons'},
-            Router.Link to: 'orchestrationTasks', params:
+            Link to: 'orchestrationTasks', params:
               orchestrationId: @state.orchestration.get('id')
             , "Tasks (#{@state.tasks.size})"
         JobsTable(
