@@ -5,10 +5,12 @@ ComponentsStore = require '../../../components/stores/ComponentsStore.coffee'
 {Panel, PanelGroup} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
-ComponentIcon = React.createFactory(require '../../../../components/common/ComponentIcon.coffee')
-ComponentName = React.createFactory(require '../../../../components/common/ComponentName.coffee')
-Duration = React.createFactory(require '../../../../components/common/Duration.coffee')
-JobStatusLabel = React.createFactory(require '../../../../components/common/JobStatusLabel.coffee')
+
+kbCommon = require '../../../../components/common/common.coffee'
+ComponentIcon = React.createFactory(kbCommon.ComponentIcon)
+ComponentName = React.createFactory(kbCommon.ComponentName)
+Duration = React.createFactory(kbCommon.Duration)
+JobStatusLabel = React.createFactory(kbCommon.JobStatusLabel)
 
 date = require '../../../../utils/date.coffee'
 
