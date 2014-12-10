@@ -1,7 +1,7 @@
 React = require 'react'
 
 ComponentsStore = require '../../../components/stores/ComponentsStore.coffee'
-{span} = React.DOM
+{span, div, strong, h5} = React.DOM
 {Panel, PanelGroup} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
@@ -10,6 +10,7 @@ kbCommon = require '../../../../components/common/common.coffee'
 ComponentIcon = React.createFactory(kbCommon.ComponentIcon)
 ComponentName = React.createFactory(kbCommon.ComponentName)
 Duration = React.createFactory(kbCommon.Duration)
+Tree = React.createFactory(kbCommon.Tree)
 JobStatusLabel = React.createFactory(kbCommon.JobStatusLabel)
 
 date = require '../../../../utils/date.coffee'
@@ -40,13 +41,19 @@ JobTasks = React.createClass
       span className: 'col-sm-4',
         JobStatusLabel status: task.get('status') if task.has('status')
 
-
     Panel
       header: header
       key: task.get('id')
       eventKey: task.get('id')
     ,
-      date.format(task.get('startTime'))
+      div(className: 'pull-right', date.format(task.get('startTime'))) if task.get('startTime')
+      div(null, strong(null, 'POST'), ' ', task.get('runUrl')) if task.get('runUrl')
+      h5 null, 'Parameters'
+      Tree data: task.get('runParameters')
+      if task.get('response')
+        div null,
+          h5(null, 'Response'),
+          Tree data: task.get('response')
 
 
 module.exports = JobTasks
