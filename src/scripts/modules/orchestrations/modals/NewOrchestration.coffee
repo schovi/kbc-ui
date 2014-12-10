@@ -10,8 +10,12 @@ OrchestrationActionCreators = require '../ActionCreators.coffee'
 NewOrchestration = React.createClass
   displayName: 'NewOrchestration'
 
+  componentDidMount: ->
+    @refs.name.getDOMNode().focus()
+
   getInitialState: ->
     isLoading: false
+    isValid: false
     name: ''
 
   render: ->
@@ -21,12 +25,17 @@ NewOrchestration = React.createClass
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Name'
             div className: 'col-sm-6',
-              input className: 'form-control', value: @state.text, onChange: @_setName
+              input
+                placeholder: 'Orchestration name'
+                className: 'form-control'
+                value: @state.text
+                onChange: @_setName
+                ref: 'name'
       div className: 'modal-footer',
         ButtonToolbar null,
           Button onClick: @props.onRequestHide,
             'Cancel'
-          Button bsStyle: 'primary', onClick: @_handleCreate, disabled: @state.isLoading,
+          Button bsStyle: 'primary', onClick: @_handleCreate, disabled: @state.isLoading || !@state.isValid,
             'Create'
 
   _handleCreate: ->
@@ -39,8 +48,10 @@ NewOrchestration = React.createClass
     ).then @props.onRequestHide
 
   _setName: (e) ->
+    name = e.target.value.trim()
     @setState
-      name: e.target.value
+      name: name
+      isValid: name.length > 0
 
 
 
