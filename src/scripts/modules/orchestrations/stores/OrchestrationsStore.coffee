@@ -127,6 +127,10 @@ Dispatcher.register (payload) ->
         loadingOrchestrations.push action.orchestrationId
       OrchestrationStore.emitChange()
 
+    when Constants.ActionTypes.ORCHESTRATION_DELETE
+      _store = _store.removeIn ['orchestrationsById', action.orchestrationId]
+      OrchestrationStore.emitChange()
+
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
       _store = removeOrchestrationFromLoading(_store, action.orchestrationId)
       OrchestrationStore.emitChange()

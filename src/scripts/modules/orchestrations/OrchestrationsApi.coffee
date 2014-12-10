@@ -28,6 +28,10 @@ orchestrationsApi =
         response.body
       )
 
+  deleteOrchestration: (id) ->
+    createRequest('DELETE', "orchestrations/#{id}")
+    .promise()
+
   runOrchestration: (id) ->
     createRequest('POST', "orchestrations/#{id}/jobs")
     .promise()

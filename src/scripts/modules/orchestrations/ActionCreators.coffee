@@ -72,6 +72,18 @@ module.exports =
     return Promise.resolve() if OrchestrationStore.has(id) && OrchestrationStore.hasOrchestrationTasks(id)
     @loadOrchestrationForce(id)
 
+
+  deleteOrchestration: (id) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_DELETE
+      orchestrationId: id
+    )
+
+    orchestrationsApi
+    .deleteOrchestration(id)
+
+
+
   ###
     Load specifed orchestration jobs from server
   ###
