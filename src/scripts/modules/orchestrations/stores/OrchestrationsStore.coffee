@@ -143,6 +143,10 @@ Dispatcher.register (payload) ->
       )
       OrchestrationStore.emitChange()
 
+    when Constants.ActionTypes.ORCHESTRATION_CREATE_SUCCESS
+      _store = _store.setIn ['orchestrationsById', action.orchestration.id], Immutable.fromJS(action.orchestration)
+      OrchestrationStore.emitChange()
+
 
     when Constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
       # try to update orchestration latest job

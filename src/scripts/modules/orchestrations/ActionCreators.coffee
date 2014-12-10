@@ -82,6 +82,18 @@ module.exports =
     orchestrationsApi
     .deleteOrchestration(id)
 
+  createOrchestration: (data) ->
+
+    orchestrationsApi
+    .createOrchestration(data)
+    .then((newOrchestration) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_CREATE_SUCCESS
+        orchestration: newOrchestration
+      )
+    )
+
+
 
 
   ###

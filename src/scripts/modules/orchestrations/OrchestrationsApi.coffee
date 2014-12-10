@@ -14,6 +14,14 @@ createRequest = (method, path) ->
 
 orchestrationsApi =
 
+  createOrchestration: (data) ->
+    createRequest('POST', 'orchestrations')
+    .send(data)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   getOrchestrations: ->
     createRequest('GET', 'orchestrations')
     .promise()
