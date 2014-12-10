@@ -1,5 +1,5 @@
 React = require 'react'
-
+List = require('immutable').List
 createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
 
 # actions and stores
@@ -33,7 +33,7 @@ JobDetailBody = React.createFactory(React.createClass
         'Tasks',
         ' ',
         @_renderTotalDurationInHeader(),
-      JobTasks(tasks: @props.job.getIn ['results', 'tasks'])
+      JobTasks(tasks: @props.job.getIn ['results', 'tasks'], List())
 
   _renderTotalDurationInHeader: ->
     return '' if !@props.job.get('startTime')

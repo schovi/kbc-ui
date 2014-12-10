@@ -5,6 +5,7 @@ Router = require 'react-router'
 Link = React.createFactory(Router.Link)
 Duration = React.createFactory(require '../../../../components/common/Duration.coffee')
 JobStatusLabel = React.createFactory(require '../../../../components/common/JobStatusLabel.coffee')
+date = require '../../../../utils/date.coffee'
 
 {tr, td, div, span} = React.DOM
 
@@ -46,7 +47,7 @@ JobRow = React.createClass(
     (tr {onClick: @jobDetail},
       (td {}, @props.job.get('id')),
       (td {}, JobStatusLabel({status: @props.job.get('status')})),
-      (td {}, @props.job.get('createdTime')),
+      (td {}, date.format(@props.job.get('createdTime'))),
       (td {}, @props.job.get('initializedBy')),
       (td {}, @props.job.getIn(['initiatorToken', 'description'])),
       (td {}, (Duration
