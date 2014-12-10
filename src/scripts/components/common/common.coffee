@@ -10,3 +10,4 @@ module.exports =
   JobStatusLabel: require './JobStatusLabel.coffee'
   RefreshIcon: require './RefreshIcon.coffee'
   SearchRow: require './SearchRow.coffee'
+  Tree: require './Tree.coffee'
