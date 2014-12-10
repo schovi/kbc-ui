@@ -30,6 +30,11 @@ _pages = [
     id: 'storage'
     title: 'Storage'
     icon: 'kbc-icon-storage'
+  ,
+    id: 'jobs'
+    title: 'Jobs'
+    icon: 'kbc-icon-storage'
+
 ]
 
 Sidebar = React.createClass

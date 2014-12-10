@@ -5,6 +5,7 @@ ErrorPage = require './components/ErrorPage.coffee'
 
 componentsRoutes = require './modules/components/Routes.coffee'
 orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'
+jobsRoutes = require './modules/jobs/Routes.coffee'
 
 Transformations = React.createClass
   displayName: 'Transformations'
@@ -56,6 +57,9 @@ routes =
       name: 'storage'
       title: 'Storage'
       handler: Storage
+    ,
+      jobsRoutes
+
   ]
 
 
