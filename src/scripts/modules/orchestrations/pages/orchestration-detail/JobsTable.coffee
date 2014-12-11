@@ -1,6 +1,6 @@
 React = require 'react'
 JobsTableRow = React.createFactory(require './JobsTableRow.coffee')
-RefreshIcon = React.createFactory(require '../../../../components/common/RefreshIcon.coffee')
+RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon.coffee')
 
 {table, thead, th, tr, tbody, div} = React.DOM
 

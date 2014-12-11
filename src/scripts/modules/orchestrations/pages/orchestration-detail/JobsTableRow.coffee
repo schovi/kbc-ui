@@ -3,8 +3,8 @@ React = require 'react'
 Router = require 'react-router'
 
 Link = React.createFactory(Router.Link)
-Duration = React.createFactory(require '../../../../components/common/Duration.coffee')
-JobStatusLabel = React.createFactory(require '../../../../components/common/JobStatusLabel.coffee')
+Duration = React.createFactory(require '../../../../react/common/Duration.coffee')
+JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel.coffee')
 date = require '../../../../utils/date.coffee'
 
 {tr, td, div, span} = React.DOM

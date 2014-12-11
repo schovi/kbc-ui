@@ -7,8 +7,8 @@ OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationStore = require '../stores/OrchestrationsStore.coffee'
 
 OrchestrationRow = React.createFactory(require './orchestrations-index/OrchestrationRow.coffee')
-SearchRow = React.createFactory(require '../../../components/common/SearchRow.coffee')
-RefreshIcon = React.createFactory(require '../../../components/common/RefreshIcon.coffee')
+SearchRow = React.createFactory(require '../../../react/common/SearchRow.coffee')
+RefreshIcon = React.createFactory(require '../../../react/common/RefreshIcon.coffee')
 
 
 {div, span, strong} = React.DOM

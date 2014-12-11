@@ -6,7 +6,7 @@ ComponentsStore = require '../../../components/stores/ComponentsStore.coffee'
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 
-kbCommon = require '../../../../components/common/common.coffee'
+kbCommon = require '../../../../react/common/common.coffee'
 ComponentIcon = React.createFactory(kbCommon.ComponentIcon)
 ComponentName = React.createFactory(kbCommon.ComponentName)
 Duration = React.createFactory(kbCommon.Duration)

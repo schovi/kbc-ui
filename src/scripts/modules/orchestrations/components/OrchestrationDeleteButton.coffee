@@ -5,7 +5,7 @@ Router = require 'react-router'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
-Confirm = React.createFactory(require '../../../components/common/Confirm.coffee')
+Confirm = React.createFactory(require '../../../react/common/Confirm.coffee')
 
 {button, span, i} = React.DOM
 

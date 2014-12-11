@@ -5,9 +5,9 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
 OrchestrationStore = require '../../stores/OrchestrationsStore.coffee'
 OrchestrationsActionCreators = require '../../ActionCreators.coffee'
 
-DurationWithIcon = React.createFactory(require '../../../../components/common/DurationWithIcon.coffee')
-FinishedWithIcon = React.createFactory(require '../../../../components/common/FinishedWithIcon.coffee')
-JobStatusCircle = React.createFactory(require '../../../../components/common/JobStatusCircle.coffee')
+DurationWithIcon = React.createFactory(require '../../../../react/common/DurationWithIcon.coffee')
+FinishedWithIcon = React.createFactory(require '../../../../react/common/FinishedWithIcon.coffee')
+JobStatusCircle = React.createFactory(require '../../../../react/common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
 State = require('react-router').State
 

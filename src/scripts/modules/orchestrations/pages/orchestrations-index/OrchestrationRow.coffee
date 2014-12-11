@@ -1,8 +1,8 @@
 React = require 'react'
 Immutable = require 'immutable'
-DurationWithIcon = React.createFactory(require '../../../../components/common/DurationWithIcon.coffee')
-FinishedWithIcon = React.createFactory(require '../../../../components/common/FinishedWithIcon.coffee')
-JobStatusCircle = React.createFactory(require '../../../../components/common/JobStatusCircle.coffee')
+DurationWithIcon = React.createFactory(require '../../../../react/common/DurationWithIcon.coffee')
+FinishedWithIcon = React.createFactory(require '../../../../react/common/FinishedWithIcon.coffee')
+JobStatusCircle = React.createFactory(require '../../../../react/common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
 OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton.coffee')
 OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton.coffee')

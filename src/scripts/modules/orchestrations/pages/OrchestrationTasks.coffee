@@ -11,7 +11,7 @@ RoutesStore = require '../../../stores/RoutesStore.coffee'
 # React components
 OrchestrationsNav = React.createFactory(require './orchestration-detail/OrchestrationsNav.coffee')
 JobsTable = React.createFactory(require './orchestration-detail/JobsTable.coffee')
-SearchRow = React.createFactory(require '../../../components/common/SearchRow.coffee')
+SearchRow = React.createFactory(require '../../../react/common/SearchRow.coffee')
 
 {div, h2} = React.DOM
 
