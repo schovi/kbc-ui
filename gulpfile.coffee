@@ -65,7 +65,7 @@ gulp.task 'watch', ->
     fullPaths: true
 
   bundle.transform(coffeeify)
-  bundle.transform(envify())
+  bundle.transform(envify(NODE_ENV: 'development'))
 
   bundle.on 'update', ->
     gutil.log "Starting '#{chalk.cyan 'rebundle'}'..."
