@@ -13,10 +13,10 @@ ComponentsActionCreators = require './modules/components/ComponentsActionCreator
 InstalledComponentsActionCreators = require './modules/components/InstalledComponentsActionCreators.coffee'
 RouterActionCreators = require './actions/RouterActionCreators.coffee'
 
-NoTokenPage = require './components/debug/NoTokenPage.coffee'
+NoTokenPage = require './react/debug/NoTokenPage.coffee'
 
 RoutesStore = require './stores/RoutesStore.coffee'
-App = require './components/App.coffee'
+App = require './react/layout/App.coffee'
 
 
 getParameterByName = (name, searchString) ->

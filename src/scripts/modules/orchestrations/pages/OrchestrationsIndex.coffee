@@ -1,7 +1,7 @@
 React = require 'react'
 Immutable = require 'immutable'
 
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 
 OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationStore = require '../stores/OrchestrationsStore.coffee'

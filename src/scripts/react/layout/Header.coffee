@@ -1,5 +1,5 @@
 React = require 'react'
-createStoreMixin = require '../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../mixins/createStoreMixin.coffee'
 
 RoutesStore = require '../../stores/RoutesStore.coffee'
 

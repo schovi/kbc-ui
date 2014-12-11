@@ -2,10 +2,10 @@ React = require 'react'
 RouteHandler = React.createFactory(require('react-router').RouteHandler)
 
 
-Header = React.createFactory(require './layout/Header.coffee')
-Sidebar = React.createFactory(require './layout/Sidebar.coffee')
-ErrorPage = React.createFactory(require './ErrorPage.coffee')
-LoadingPage = React.createFactory(require './LoadingPage.coffee')
+Header = React.createFactory(require '././Header.coffee')
+Sidebar = React.createFactory(require '././Sidebar.coffee')
+ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
+LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
 
 {div} = React.DOM
 

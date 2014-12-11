@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 ComponentIcon = React.createFactory(require '../../../components/common/ComponentIcon.coffee')
 InstalledComponentsStore = require '../stores/InstalledComponentsStore.coffee'
 InstalledComponentsActionCreators = require '../InstalledComponentsActionCreators.coffee'

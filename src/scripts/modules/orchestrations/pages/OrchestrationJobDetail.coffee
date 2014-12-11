@@ -1,6 +1,6 @@
 React = require 'react'
 List = require('immutable').List
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 
 # actions and stores
 OrchestrationsActionCreators = require '../ActionCreators.coffee'

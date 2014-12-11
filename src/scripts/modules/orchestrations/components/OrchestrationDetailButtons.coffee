@@ -1,5 +1,5 @@
 React = require 'react'
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 OrchestrationsStore = require '../stores/OrchestrationsStore.coffee'
 RoutesStore = require '../../../stores/RoutesStore.coffee'
 OrchestrationActiveButton = React.createFactory(require './OrchestrationActiveButton.coffee')

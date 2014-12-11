@@ -1,6 +1,6 @@
 React = require 'react'
 
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 
 ComponentIcon = React.createFactory(require '../../../components/common/ComponentIcon.coffee')
 SearchRow = React.createFactory(require '../../../components/common/SearchRow.coffee')

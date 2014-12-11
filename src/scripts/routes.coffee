@@ -1,7 +1,7 @@
 React = require 'react'
 Router = require 'react-router'
-App = require './components/App.coffee'
-ErrorPage = require './components/ErrorPage.coffee'
+App = require './react/layout/App.coffee'
+ErrorPage = require './react/pages/ErrorPage.coffee'
 
 componentsRoutes = require './modules/components/Routes.coffee'
 orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'

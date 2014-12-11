@@ -1,6 +1,6 @@
 React = require 'react'
 
-createStoreMixin = require '../../../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../react/mixins/createStoreMixin.coffee'
 
 OrchestrationsActionCreators = require '../ActionCreators.coffee'
 OrchestrationsStore = require '../stores/OrchestrationsStore.coffee'
