@@ -13,11 +13,11 @@ TreeNode = React.createClass
       li null,
         if Immutable.Iterable.isIterable(value)
           span null,
-            strong null, key,
+            strong(null, key),
             React.createElement(TreeNode, data: value)
         else
           span null,
-            strong null, key,
+            strong(null, key),
             ': ',
             value
     ).toJS()
