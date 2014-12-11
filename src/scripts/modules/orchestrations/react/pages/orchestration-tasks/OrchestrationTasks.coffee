@@ -12,8 +12,9 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav.coffee')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
 TasksTable = React.createFactory(require './TasksTable.coffee')
+TasksEditor = React.createFactory(require './TasksEditor.coffee')
 
-{div, h2} = React.DOM
+{div, button} = React.DOM
 
 OrchestrationTasks = React.createClass
   displayName: 'OrchestrationTasks'
@@ -25,8 +26,8 @@ OrchestrationTasks = React.createClass
       orchestration: OrchestrationStore.get orchestrationId
       tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
       components: ComponentsStore.getAll()
-      isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filter: OrchestrationStore.getFilter()
+      isEditing: false
     }
 
   componentWillReceiveProps: ->
@@ -35,8 +36,9 @@ OrchestrationTasks = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
-  _handleJobsReload: ->
-    OrchestrationsActionCreators.loadOrchestrationJobsForce(@state.orchestration.get 'id')
+  _startEditing: ->
+    @setState
+      isEditing: true
 
   render: ->
     div {className: 'container-fluid'},
@@ -45,7 +47,18 @@ OrchestrationTasks = React.createClass
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
           OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        TasksTable(tasks: @state.tasks, components: @state.components)
+        if @state.isEditing
+          div null,
+            TasksEditor
+              tasks: @state.tasks
+              components: @state.components
+        else
+          div null,
+            TasksTable
+              tasks: @state.tasks
+              components: @state.components
+            button onClick: @_startEditing, className: 'btn btn-primary',
+              'Edit vole'
 
 
 module.exports = OrchestrationTasks
