@@ -14,6 +14,8 @@ module.exports =
     Request orchestrations reload from server
   ###
   loadOrchestrationsForce: ->
+    actions = @
+
     # trigger load initialized
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATIONS_LOAD
@@ -24,13 +26,16 @@ module.exports =
     .getOrchestrations()
     .then((orchestrations) ->
         # load success
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
-          orchestrations: orchestrations
-        )
+        actions.receiveAllOrchestrations(orchestrations)
       )
     .catch (err) ->
         console.log 'error', err
+
+  receiveAllOrchestrations: (orchestrations) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
+      orchestrations: orchestrations
+    )
 
   ###
     Request orchestrations load only if not alread loaded

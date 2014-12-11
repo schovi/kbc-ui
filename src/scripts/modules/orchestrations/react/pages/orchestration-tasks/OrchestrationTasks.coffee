@@ -10,8 +10,8 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
 # React components
 OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav.coffee')
-JobsTable = React.createFactory(require './../orchestration-detail/JobsTable.coffee')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
+TasksTable = React.createFactory(require './TasksTable.coffee')
 
 {div, h2} = React.DOM
 
@@ -43,7 +43,7 @@ OrchestrationTasks = React.createClass
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
           OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        'TODO Tasks'
+        TasksTable(tasks: @state.orchestration.get('tasks'))
 
 
 module.exports = OrchestrationTasks
