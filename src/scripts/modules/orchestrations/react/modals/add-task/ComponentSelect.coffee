@@ -10,14 +10,10 @@ ComponentSelect = React.createClass
     onComponentSelect: React.PropTypes.func.isRequired
 
   render: ->
-    extractors = @props.components.filter((component) -> component.get('type') == 'extractor')
-    writers = @props.components.filter((component) -> component.get('type') == 'writer')
-    transformations = @props.components.filter((component) -> component.get('type') == 'transformation')
-
     div null,
-      @_renderSection('Extractors', extractors),
-      @_renderSection('Transformations', transformations),
-      @_renderSection('Writers', writers)
+      @_renderSection('Extractors', @_getComponentsForType('extractor')),
+      @_renderSection('Transformations', @_getComponentsForType('transformation')),
+      @_renderSection('Writers', @_getComponentsForType('writer'))
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
@@ -33,11 +29,14 @@ ComponentSelect = React.createClass
 
     div null,
       h2 null, title,
-        div className: 'list-group',
-          components
+      div className: 'list-group',
+        components
 
   _handleSelect: (component) ->
     @props.onComponentSelect(component)
+
+  _getComponentsForType: (type) ->
+    @props.components.filter((component) -> component.get('type') == type)
 
 
 module.exports = ComponentSelect
