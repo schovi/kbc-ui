@@ -1,6 +1,6 @@
 gulp = require 'gulp'
 gutil      = require 'gulp-util'
-clean = require 'gulp-clean'
+del = require 'del'
 size = require 'gulp-size'
 browserify = require 'browserify'
 coffeeify = require 'coffeeify'
@@ -50,9 +50,8 @@ gulp.task 'dist-server', ->
     server:
       baseDir: './dist'
 
-gulp.task 'clean', ->
-  gulp.src(['dist/*', 'tmp/*'], {read: false})
-  .pipe(clean())
+gulp.task 'clean', (cb) ->
+  del(['dist/**', 'tmp/**'], cb)
 
 gulp.task 'watch', ->
 
@@ -81,19 +80,19 @@ gulp.task 'watch', ->
 
   .emit 'update'
 
-gulp.task 'less', ->
+gulp.task 'less', ['clean'], ->
   gulp.src('./src/styles/app.less')
   .pipe(less())
   .pipe(gulp.dest('./tmp/styles'))
 
-gulp.task 'build-styles', ->
+gulp.task 'build-styles', ['clean'], ->
   gulp.src('./src/styles/app.less')
     .pipe(less())
     .pipe(rename('app.min.css'))
     .pipe(gulp.dest('./dist/styles'))
 
 
-gulp.task 'copy', ->
+gulp.task 'copy', ['clean'], ->
   gulp.src('./bower_components/kbc-bootstrap/dist/fonts/**')
   .pipe(gulp.dest('./dist/fonts'))
 
@@ -104,7 +103,7 @@ gulp.task 'copy', ->
   .pipe(rename('index.html'))
   .pipe(gulp.dest('./dist'))
 
-gulp.task 'build-scripts', ->
+gulp.task 'build-scripts', ['clean'], ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
     extensions: ['.coffee']
@@ -125,6 +124,6 @@ gulp.task 'build-scripts', ->
   .pipe(gulp.dest('./dist/scripts'))
 
 
-gulp.task 'build', ['clean', 'build-styles', 'build-scripts', 'copy']
+gulp.task 'build', [ 'build-styles', 'build-scripts', 'copy']
 
-gulp.task 'default', ['clean', 'less', 'watch', 'server']
+gulp.task 'default', ['less', 'watch', 'server']
