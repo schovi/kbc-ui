@@ -5,7 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 # actions and stores
 OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
 OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
-OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore.coffee'
+ComponentsStore = require '../../../../components/stores/ComponentsStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
 # React components
@@ -17,12 +17,14 @@ TasksTable = React.createFactory(require './TasksTable.coffee')
 
 OrchestrationTasks = React.createClass
   displayName: 'OrchestrationTasks'
-  mixins: [createStoreMixin(OrchestrationStore)]
+  mixins: [createStoreMixin(OrchestrationStore, ComponentsStore)]
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
     return {
       orchestration: OrchestrationStore.get orchestrationId
+      tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
+      components: ComponentsStore.getAll()
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filter: OrchestrationStore.getFilter()
     }
@@ -43,7 +45,7 @@ OrchestrationTasks = React.createClass
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
           OrchestrationsNav()
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        TasksTable(tasks: @state.orchestration.get('tasks'))
+        TasksTable(tasks: @state.tasks, components: @state.components)
 
 
 module.exports = OrchestrationTasks

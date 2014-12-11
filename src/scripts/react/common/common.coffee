@@ -11,3 +11,4 @@ module.exports =
   RefreshIcon: require './RefreshIcon.coffee'
   SearchRow: require './SearchRow.coffee'
   Tree: require './Tree.coffee'
+  Check: require './Check.coffee'
