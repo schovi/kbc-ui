@@ -4,14 +4,20 @@ React = require 'react'
 
 ComponentIcon = React.createClass(
   displayName: 'ComponentIcon'
+
   propTypes:
     component: React.PropTypes.object
     size: React.PropTypes.string
+
   defaultIconClass:
     extractor: 'fa-cloud-download'
     writer: 'fa-cloud-upload'
     transformation: 'fa-cogs'
     other: 'fa-cogs'
+
+  getDefaultProps: ->
+    size: '32'
+
   render: ->
     component = @props.component
     if !component
