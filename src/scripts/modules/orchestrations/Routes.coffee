@@ -3,16 +3,16 @@
 ###
 
 # pages and components
-OrchestrationsIndex = require './pages/OrchestrationsIndex.coffee'
-OrchestrationDetail = require './pages/OrchestrationDetail.coffee'
-OrchestrationJobDetail = require './pages/OrchestrationJobDetail.coffee'
-OrchestrationTasks = require './pages/OrchestrationTasks.coffee'
+OrchestrationsIndex = require './react/pages/orchestrations-index/OrchestrationsIndex.coffee'
+OrchestrationDetail = require './react/pages/orchestration-detail/OrchestrationDetail.coffee'
+OrchestrationJobDetail = require './react/pages/orchestration-job-detail/OrchestrationJobDetail.coffee'
+OrchestrationTasks = require './react/pages/orchestration-tasks/OrchestrationTasks.coffee'
 
-OrchestrationsReloaderButton = require './components/OrchestrationsReloaderButton.coffee'
-NewOrchestrationButton = require './components/NewOrchestionButton.coffee'
-OrchestrationReloaderButton = require './components/OrchestrationReloaderButton.coffee'
-JobReloaderButton = require './components/JobReloaderButton.coffee'
-OrchestrationDetailButtons = require './components/OrchestrationDetailButtons.coffee'
+OrchestrationsReloaderButton = require './react/components/OrchestrationsReloaderButton.coffee'
+NewOrchestrationButton = require './react/components/NewOrchestionButton.coffee'
+OrchestrationReloaderButton = require './react/components/OrchestrationReloaderButton.coffee'
+JobReloaderButton = require './react/components/JobReloaderButton.coffee'
+OrchestrationDetailButtons = require './react/components/OrchestrationDetailButtons.coffee'
 
 # stores
 OrchestrationsStore = require './stores/OrchestrationsStore.coffee'
