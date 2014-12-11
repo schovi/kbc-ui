@@ -1,13 +1,8 @@
 React = require 'react'
-JobsIndex = React.createClass
-  render: ->
-    React.DOM.span null,"TODO"
+JobDetail = require('./react/pages/job-detail/JobDetail.coffee')
+JobsIndex = require('./react/pages/jobs-index/JobsIndex.coffee')
 
-JobDetail = React.createClass
-  render: ->
-    React.DOM.span null,"TODO detail"
-
-
+console.log JobDetail, JobsIndex
 routes =
       name:'jobs'
       title: 'Jobs'
