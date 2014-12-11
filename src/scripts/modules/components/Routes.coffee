@@ -1,9 +1,9 @@
 
 
-createComponentsIndex = require './pages/ComponentsIndex.coffee'
-createNewComponentPage = require './pages/NewComponent.coffee'
-createNewComponentButton = require './components/NewComponentButton.coffee'
-ComponentReloaderButton = require './components/ComponentsReloaderButton.coffee'
+createComponentsIndex = require './react/pages/ComponentsIndex.coffee'
+createNewComponentPage = require './react/pages/NewComponent.coffee'
+createNewComponentButton = require './react/components/NewComponentButton.coffee'
+ComponentReloaderButton = require './react/components/ComponentsReloaderButton.coffee'
 
 routes =
 
