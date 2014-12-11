@@ -1,6 +1,7 @@
 gulp = require 'gulp'
 gutil      = require 'gulp-util'
 clean = require 'gulp-clean'
+size = require 'gulp-size'
 browserify = require 'browserify'
 coffeeify = require 'coffeeify'
 watchify   = require 'watchify'
@@ -119,6 +120,8 @@ gulp.task 'build-scripts', ->
   .pipe(source('bundle.min.js'))
   .pipe(buffer())
   .pipe(uglify())
+  .pipe(size(showFiles: true, gzip: false))
+  .pipe(size(showFiles: true, gzip: true))
   .pipe(gulp.dest('./dist/scripts'))
 
 

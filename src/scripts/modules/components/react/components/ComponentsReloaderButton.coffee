@@ -1,6 +1,5 @@
 React = require 'react'
 
-
 createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
 InstalledComponetsStore = require '../../stores/InstalledComponentsStore.coffee'
