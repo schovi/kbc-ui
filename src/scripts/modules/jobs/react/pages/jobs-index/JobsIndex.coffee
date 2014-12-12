@@ -2,11 +2,19 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 JobsStore = require('../../../stores/JobsStore.coffee')
+ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
+
+
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon.coffee'))
+JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel.coffee')
+Duration = React.createFactory(require('../../../../../react/common/Duration.coffee'))
+ComponentName = React.createFactory(require '../../../../../react/common/ComponentName.coffee')
+date = require '../../../../../utils/date.coffee'
 
 {div, span, strong} = React.DOM
 
 JobsIndex = React.createClass
-  mixins: [createStoreMixin(JobsStore)]
+  mixins: [createStoreMixin(JobsStore,ComponentsStore)]
 
   getStateFromStores: ->
     jobs: JobsStore.getAll()
@@ -35,13 +43,18 @@ JobsIndex = React.createClass
           strong null, 'Duration'
 
   _renderTableRow: (row) ->
+    rowComponent = ComponentsStore.getComponent(row.get 'component')
     div {className: "tr", key:row.get 'id'},
       div className: "td", row.get 'id'
-      div className: "td", row.get 'status'
-      div className: "td", row.get 'component'
+      div className: "td", JobStatusLabel {status: row.get 'status'}
+      div className: "td",
+        ComponentIcon {component: rowComponent, size:"32"}
+        ComponentName {component: rowComponent}
       div className: "td", row.getIn ['token','description']
-      div className: "td", row.get 'createdTime'
-      div className: "td", row.get 'durationSeconds'
+      div className: "td",
+        date.format(row.get('createdTime'))
+      div className: "td",
+        Duration {startTime: row.get('startTime'), endTime: row.get('endTime')}
 
 
   _renderTable: ->
