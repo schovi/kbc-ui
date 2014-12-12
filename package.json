@@ -10,12 +10,13 @@
     "underscore": "~1.7.0",
     "react-router": "~0.11.1",
     "moment": "~2.8.3",
-    "immutable": "~3.2.1",
+    "immutable": "~3.3.0",
     "react-bootstrap": "~0.13.0",
     "prettycron": "git+https://git@github.com/keboola/prettycron.git#fdc0a11ec63d9aa449c38ac8961c0d173e6eb920",
     "fuzzy": "~0.1.0",
     "bluebird": "~2.3.11",
-    "superagent": "~0.21.0"
+    "superagent": "~0.21.0",
+    "react-immutable-render-mixin": "~0.7.0"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

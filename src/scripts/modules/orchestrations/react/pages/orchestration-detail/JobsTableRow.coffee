@@ -7,6 +7,8 @@ Duration = React.createFactory(require '../../../../../react/common/Duration.cof
 JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel.coffee')
 date = require '../../../../../utils/date.coffee'
 
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+
 {tr, td, div, span} = React.DOM
 
 JobRow = React.createClass(
@@ -29,6 +31,7 @@ JobRow = React.createClass(
     this.props.onJobCancel(@props.job)
 
   render: ->
+    console.log 'render', @props.job.get('id')
 
     actionButtons = []
     actionButtons.push(Link

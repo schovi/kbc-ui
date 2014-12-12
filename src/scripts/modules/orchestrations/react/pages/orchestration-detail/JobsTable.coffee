@@ -1,11 +1,13 @@
 React = require 'react'
 JobsTableRow = React.createFactory(require './JobsTableRow.coffee')
 RefreshIcon = React.createFactory(require '../../../../../react/common/RefreshIcon.coffee')
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 {table, thead, th, tr, tbody, div} = React.DOM
 
 JobsTable = React.createClass(
   displayName: 'JobsTable'
+  mixins: [ImmutableRendererMixin]
   propTypes:
     jobs: React.PropTypes.object.isRequired
     jobsLoading: React.PropTypes.bool.isRequired
@@ -15,6 +17,7 @@ JobsTable = React.createClass(
     # TODO
 
   render: ->
+    console.log 'render jobs'
     rows = @props.jobs.map((job) ->
       JobsTableRow {job: job, key: job.get('id'), onJobCancel: @cancelJob}
     , @).toArray()

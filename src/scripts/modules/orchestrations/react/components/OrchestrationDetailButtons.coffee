@@ -22,7 +22,6 @@ OrchestrationDetailButtons = React.createClass
     orchestration: OrchestrationsStore.get(@_getOrchestrationId())
 
   render: ->
-    console.log 'render buttons'
     React.DOM.span null,
       OrchestrationActiveButton(orchestration: @state.orchestration),
       OrchestrationDeleteButton(orchestration: @state.orchestration),

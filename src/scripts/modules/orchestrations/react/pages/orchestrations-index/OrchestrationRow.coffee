@@ -1,5 +1,4 @@
 React = require 'react'
-Immutable = require 'immutable'
 DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
 JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
@@ -7,48 +6,22 @@ Link = React.createFactory(require('react-router').Link)
 OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton.coffee')
 OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton.coffee')
 OrchestrationRunButton = React.createFactory(require '../../components/OrchestrationRunButton.coffee')
+CronRecord = React.createFactory(require './CronRecord.coffee')
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 OrchestrationActionCreators = require '../../../ActionCreators.coffee'
-
-prettyCron = require 'prettycron'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 
 {span, div, a, button, i} = React.DOM
 
-Cron = React.createFactory React.createClass(
-  displayName: 'Cron'
-  propTypes:
-    crontabRecord: React.PropTypes.string
-
-  shouldComponentUpdate: (nextProps) ->
-    nextProps.crontabRecord != @props.crontabRecord
-
-  cronUTCtext: (crontab) ->
-    if !crontab
-      return ""
-    cArray = crontab.split(" ")
-    if cArray and cArray[1] != "*"
-      return " (UTC) "
-    return ""
-
-  render: ->
-    span null,
-      span null, prettyCron.toString(@props.crontabRecord),
-      span null, @cronUTCtext(@props.crontabRecord)
-)
-
-
 
 OrchestrationRow = React.createClass(
   displayName: 'OrchestrationRow'
+  mixins: [ImmutableRenderMixin]
   propTypes:
     orchestration: React.PropTypes.object
-
-  shouldComponentUpdate: (nextProps) ->
-    !Immutable.is(nextProps.orchestration, @props.orchestration)
-
 
   buttons: ->
     buttons = []
@@ -70,11 +43,10 @@ OrchestrationRow = React.createClass(
 
     buttons
 
-
   cron: ->
     if @props.orchestration.get('crontabRecord')
       (span {className: 'inline-edit crontab-record'},
-        (Cron {crontabRecord: @props.orchestration.get('crontabRecord')})
+        (CronRecord {crontabRecord: @props.orchestration.get('crontabRecord')})
       )
     else
       (span {className: 'param-value pull-left'}, 'No schedule')
