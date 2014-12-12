@@ -1,16 +1,17 @@
 React = require 'react'
 JobDetail = require('./react/pages/job-detail/JobDetail.coffee')
 JobsIndex = require('./react/pages/jobs-index/JobsIndex.coffee')
+JobsActionCreators = require('./ActionCreators.coffee')
 
-console.log JobDetail, JobsIndex
 routes =
       name:'jobs'
       title: 'Jobs'
       defaultRouteHandler: JobsIndex
-      # requireData: [
-      #   (params) ->
-      #     JobsActionCreators.loadJobs()
-      #   ]
+      requireData: [
+        (params) ->
+          JobsActionCreators.loadJobs()
+        ]
+
       childRoutes: [
         name:'jobDetail'
         path: ':jobId'

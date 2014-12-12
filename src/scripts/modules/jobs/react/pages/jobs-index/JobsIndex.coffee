@@ -34,17 +34,26 @@ JobsIndex = React.createClass
         span {className: 'th'},
           strong null, 'Duration'
 
+  _renderTableRow: (row) ->
+    div {className: "tr", key:row.get 'id'},
+      div className: "td", row.get 'id'
+      div className: "td", row.get 'status'
+      div className: "td", row.get 'component'
+      div className: "td", row.getIn ['token','description']
+      div className: "td", row.get 'createdTime'
+      div className: "td", row.get 'durationSeconds'
+
+
   _renderTable: ->
+    console.log "rendering table"
     div {className:"table"},
-      @_renderTableHeader()
+      @_renderTableHeader(),
       div className: "tbody",
-        div className: "tr",
-          div className: "td", "ID"
-          div className: "td", "status"
-          div className: "td", "component"
-          div className: "td", "Token"
-          div className: "td", "Created Time"
-          div className: "td", "Duration"
+        @state.jobs.map((job) ->
+          @_renderTableRow(job)
+        , @).toArray()
+
+
 
 
 
