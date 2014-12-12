@@ -1,6 +1,10 @@
 React = require 'react'
+Immutable = require 'immutable'
 common = require '../../../../../react/common/common.coffee'
 
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+
+TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit.coffee')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(common.Tree)
@@ -35,7 +39,10 @@ TasksEditTableRow = React.createClass
           defaultValue: @props.task.get('action')
           onChange: @_handleActionChange
       td null,
-        Tree data: @props.task.get('actionParameters')
+        ModalTrigger
+          modal: TaskParametersEditModal(onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
+        ,
+          Tree data: @props.task.get('actionParameters')
       td null,
         input
           type: 'checkbox'
@@ -49,6 +56,9 @@ TasksEditTableRow = React.createClass
       td null,
         div className: 'pull-right',
           i className: 'kbc-icon-cup', onClick: @_handleDelete
+
+  _handleParametersChange: (parameters) ->
+    @props.onTaskUpdate @props.task.set('actionParameters', Immutable.fromJS(parameters))
 
   _handleActionChange: (event) ->
     @props.onTaskUpdate @props.task.set('action', event.target.value.trim())

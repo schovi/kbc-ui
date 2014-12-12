@@ -8,7 +8,7 @@ Tree = React.createClass
     data: React.PropTypes.object.isRequired
 
   render: ->
-    React.DOM.div className: 'kb-tree',
+    React.DOM.div className: 'kb-tree', onClick: @props.onClick,
       TreeNode data: @props.data
 
 
