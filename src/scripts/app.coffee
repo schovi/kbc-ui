@@ -60,6 +60,9 @@ else
 
   # re-render after each route change
   router.run (Handler, state) ->
+    # avoid state mutation by router
+    state = _.extend {}, state
+
     RouterActionCreators.routeChangeStart(state)
 
     # run only once on first render
