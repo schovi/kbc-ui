@@ -49,6 +49,7 @@ JobsIndex = React.createClass
       div className: "td", JobStatusLabel {status: row.get 'status'}
       div className: "td",
         ComponentIcon {component: rowComponent, size:"32"}
+        ' '
         ComponentName {component: rowComponent}
       div className: "td", row.getIn ['token','description']
       div className: "td",

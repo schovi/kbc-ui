@@ -18,7 +18,11 @@ JobsStore = StoreUtils.createStore
   getAll: ->
     _store
       .get('jobsById')
-      #.sortBy(TODO)
+      .sortBy( (job) ->
+        date = job.get 'createdTime'
+        if date then -1 * (new Date(date).getTime()) else null
+        )
+
   get: (id) ->
     _store.getIn ['jobsById', parseInt(id)]
   getIsLoading: ->
