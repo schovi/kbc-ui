@@ -186,6 +186,24 @@ module.exports =
       active: false
     )
 
+  saveOrchestrationTasks: (orchestrationId, tasks) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_SET_TASKS
+      orchestrationId: orchestrationId
+      tasks: tasks
+    )
+
+    orchestrationsApi
+    .saveOrchestrationTasks(orchestrationId, tasks)
+    .then((tasks) ->
+      # update tasks from server
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_SET_TASKS
+        orchestrationId: orchestrationId
+        tasks: tasks
+      )
+    )
+
   runOrchestration: (id) ->
 
     orchestrationsApi

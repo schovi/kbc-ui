@@ -13,7 +13,6 @@ TasksTable = React.createClass
     components: React.PropTypes.object.isRequired
 
   render: ->
-    console.log 'tasks', @props.tasks.toJS(), @props.components.toJS()
     table className: 'table table-stripped',
       thead null,
         tr null,

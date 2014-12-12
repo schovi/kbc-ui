@@ -64,7 +64,7 @@ AddTaskModal = React.createClass
   ###
   _handleConfigurationSelect: (configuration) ->
     @props.onRequestHide() # hide modal
-    @props.onConfigurationSelect(configuration)
+    @props.onConfigurationSelect(@state.selectedComponent, configuration)
 
 
 

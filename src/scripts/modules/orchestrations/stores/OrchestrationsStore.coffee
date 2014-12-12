@@ -162,4 +162,10 @@ Dispatcher.register (payload) ->
         _store = setLastExecutedJob(_store, parseInt(action.orchestrationId), latestJob)
         OrchestrationStore.emitChange()
 
+    when Constants.ActionTypes.ORCHESTRATION_SET_TASKS
+      _store = _store.withMutations((store) ->
+        store.setIn ['orchestrationTasksById', action.orchestrationId], Immutable.fromJS(action.tasks)
+      )
+      OrchestrationStore.emitChange()
+
 module.exports = OrchestrationStore

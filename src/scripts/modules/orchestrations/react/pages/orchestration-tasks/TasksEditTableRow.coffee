@@ -6,13 +6,16 @@ ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(common.Tree)
 Check = React.createFactory(common.Check)
 
-{tr, td, span} = React.DOM
+{tr, td, span, div, i, input} = React.DOM
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
   propTypes:
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
+    onTaskDelete: React.PropTypes.func.isRequired
+    onTaskUpdate: React.PropTypes.func.isRequired
+
   render: ->
     tr null,
       td null,
@@ -26,14 +29,38 @@ TasksEditTableRow = React.createClass
         else
           @props.task.get('componentUrl')
       td null,
-        span className: 'label label-info',
-          @props.task.get('action')
+        input
+          className: 'form-control'
+          type: 'text'
+          defaultValue: @props.task.get('action')
+          onChange: @_handleActionChange
       td null,
         Tree data: @props.task.get('actionParameters')
       td null,
-        Check isChecked: @props.task.get('active')
+        input
+          type: 'checkbox'
+          checked: @props.task.get('active')
+          onChange: @_handleActiveChange
       td null,
-        Check isChecked: @props.task.get('continueOnFailure')
+        input
+          type: 'checkbox'
+          checked: @props.task.get('continueOnFailure')
+          onChange: @_handleContinueOnFailureChange
+      td null,
+        div className: 'pull-right',
+          i className: 'kbc-icon-cup', onClick: @_handleDelete
+
+  _handleActionChange: (event) ->
+    @props.onTaskUpdate @props.task.set('action', event.target.value.trim())
+
+  _handleActiveChange: ->
+    @props.onTaskUpdate @props.task.set('active', !@props.task.get('active'))
+
+  _handleContinueOnFailureChange: ->
+    @props.onTaskUpdate @props.task.set('continueOnFailure', !@props.task.get('continueOnFailure'))
+
+  _handleDelete: ->
+    @props.onTaskDelete(@props.task.get('id'))
 
 
 module.exports = TasksEditTableRow

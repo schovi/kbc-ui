@@ -55,6 +55,14 @@ orchestrationsApi =
         response.body
       )
 
+  saveOrchestrationTasks: (id, tasks) ->
+    createRequest('PUT', "orchestrations/#{id}/tasks")
+    .send(tasks)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   getOrchestrationJobs: (id) ->
     createRequest('GET', "orchestrations/#{id}/jobs")
     .promise()

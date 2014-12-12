@@ -36,6 +36,20 @@ OrchestrationTasks = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
+  _handleTasksSave: (tasks) ->
+    @setState(
+      isEditing: false
+    )
+    OrchestrationsActionCreators.saveOrchestrationTasks(
+      @state.orchestration.get('id')
+      tasks.toJS()
+    )
+
+  _handleReset: ->
+    @setState(
+      isEditing: false
+    )
+
   _startEditing: ->
     @setState
       isEditing: true
@@ -52,6 +66,8 @@ OrchestrationTasks = React.createClass
             TasksEditor
               tasks: @state.tasks
               components: @state.components
+              onSave: @_handleTasksSave
+              onCancel: @_handleReset
         else
           div null,
             TasksTable
