@@ -26,6 +26,7 @@ OrchestrationDetail = React.createClass
       orchestration: OrchestrationStore.get orchestrationId
       tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
+      filteredOrchestrations: OrchestrationStore.getFiltered()
       filter: OrchestrationStore.getFilter()
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
@@ -45,7 +46,9 @@ OrchestrationDetail = React.createClass
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
-          OrchestrationsNav()
+          OrchestrationsNav
+            orchestrations: @state.filteredOrchestrations
+            activeOrchestrationId: @state.orchestration.get 'id'
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
         div {className: 'row kbc-header'},
           div {className: 'kbc-title'},

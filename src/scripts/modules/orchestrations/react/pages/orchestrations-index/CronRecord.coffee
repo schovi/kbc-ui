@@ -1,4 +1,4 @@
-React = require 'React'
+React = require 'react'
 prettyCron = require 'prettycron'
 
 {span} = React.DOM

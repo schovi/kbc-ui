@@ -13,7 +13,7 @@ ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererM
 
 JobRow = React.createClass(
   displayName: 'JobsTableRow'
-  mixins: [Router.Navigation, Router.State]
+  mixins: [Router.Navigation, Router.State, ImmutableRendererMixin]
   propTypes:
     job: React.PropTypes.object.isRequired
     onJobCancel: React.PropTypes.func
@@ -31,8 +31,6 @@ JobRow = React.createClass(
     this.props.onJobCancel(@props.job)
 
   render: ->
-    console.log 'render', @props.job.get('id')
-
     actionButtons = []
     actionButtons.push(Link
         key: 'detail'

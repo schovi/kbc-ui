@@ -6,6 +6,7 @@ Router = require 'react-router'
 JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
 FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
 DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 Link = React.createFactory(Router.Link)
 
@@ -13,15 +14,15 @@ Link = React.createFactory(Router.Link)
 
 JobRow = React.createClass(
   displayName: 'JobsTableRow'
-  mixins: [Router.State]
+  mixins: [ImmutableRendererMixin]
   propTypes:
-    job: React.PropTypes.object
+    job: React.PropTypes.object.isRequired
+    isActive: React.PropTypes.bool.isRequired
 
   render: ->
-    isActive = @isActive('orchestrationJob', {orchestrationId: @getParams().orchestrationId, jobId: @props.job.get('id')})
-    className = if  isActive then 'active' else ''
+    className = if  @props.isActive then 'active' else ''
 
-    (Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @getParams().orchestrationId, jobId: @props.job.get('id')}},
+    (Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @props.job.get('orchestrationId'), jobId: @props.job.get('id')}},
       (span {className: 'table'},
         (span {className: 'tr'},
           (span {className: 'td kbc-td-status'},
@@ -44,11 +45,12 @@ JobsNav = React.createClass(
   displayName: 'JobsNav'
   propTypes:
     jobsLoading: React.PropTypes.bool
+    activeJobId: React.PropTypes.number
     jobs: React.PropTypes.object
 
   render: ->
     rows = @props.jobs.map((job) ->
-      React.createElement JobRow, {job: job, key: job.get('id')}
+      React.createElement JobRow, {job: job, isActive: @props.activeJobId == job.get('id'), key: job.get('id')}
     , @).toArray()
 
     (div className: 'kb-orchestrations-nav list-group',

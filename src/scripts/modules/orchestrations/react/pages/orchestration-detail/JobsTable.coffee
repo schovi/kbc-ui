@@ -17,7 +17,6 @@ JobsTable = React.createClass(
     # TODO
 
   render: ->
-    console.log 'render jobs'
     rows = @props.jobs.map((job) ->
       JobsTableRow {job: job, key: job.get('id'), onJobCancel: @cancelJob}
     , @).toArray()

@@ -2,14 +2,14 @@ React = require 'react'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 
-OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
 OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
 
 DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
 FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
 JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
 Link = React.createFactory(require('react-router').Link)
-State = require('react-router').State
+
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 { a, span, div, strong, em} = React.DOM
 
@@ -17,10 +17,10 @@ OrchestrationRow = React.createFactory React.createClass(
   displayName: 'OrchestrationRow'
   propTypes:
     orchestration: React.PropTypes.object
-  mixins: [ State ]
+    isActive: React.PropTypes.bool
+  mixins: [ ImmutableRendererMixin]
   render: ->
-    isActive = @isActive('orchestration', id: @props.orchestration.get('id'))
-    className = if isActive then 'active' else ''
+    className = if @props.isActive then 'active' else ''
 
     if  !@props.orchestration.get('active')
       disabled = (span {className: 'pull-right kb-disabled'}, 'Disabled')
@@ -52,21 +52,22 @@ OrchestrationRow = React.createFactory React.createClass(
     )
 )
 
-getStateFromStores = ->
-  orchestrations: OrchestrationStore.getFiltered()
 
 OrchestrationsNav = React.createClass(
   displayName: 'OrchestrationsNavList'
-  mixins: [createStoreMixin(OrchestrationStore)]
-
-  getStateFromStores: ->
-    orchestrations: OrchestrationStore.getFiltered()
+  mixins: [ImmutableRendererMixin]
+  propTypes:
+    orchestrations: React.PropTypes.object.isRequired
+    activeOrchestrationId: React.PropTypes.number.isRequired
 
   render: ->
-    filtered = @state.orchestrations
+    filtered = @props.orchestrations
     if filtered.size
       childs = filtered.map((orchestration) ->
-        OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
+        OrchestrationRow
+          orchestration: orchestration
+          key: orchestration.get('id')
+          isActive: @props.activeOrchestrationId == orchestration.get('id')
       , @).toArray()
     else
       childs = (div className: 'list-group-item',

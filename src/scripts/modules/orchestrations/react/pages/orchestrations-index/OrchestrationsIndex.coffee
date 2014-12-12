@@ -9,17 +9,14 @@ OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
 OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
 RefreshIcon = React.createFactory(require '../../../../../react/common/RefreshIcon.coffee')
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 
 {div, span, strong} = React.DOM
 
 Index = React.createClass
   displayName: 'OrchestrationsIndex'
-  mixins: [createStoreMixin(OrchestrationStore)]
-
-  shouldComponentUpdate: (nextProps, nextState) ->
-    !Immutable.is(nextState.orchestrations, @state.orchestrations) ||
-      nextState.isLoading != @state.isLoading
+  mixins: [createStoreMixin(OrchestrationStore), ImmutableRendererMixin]
 
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
