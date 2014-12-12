@@ -10,7 +10,7 @@ JobsNav = React.createClass
 
   render: ->
     rows = @props.jobs.map((job) ->
-      React.createElement JobsNavRow,
+      JobsNavRow
         job: job
         isActive: @props.activeJobId == job.get('id')
         key: job.get('id')

@@ -3,7 +3,7 @@ prettyCron = require 'prettycron'
 
 {span} = React.DOM
 
-Cron = React.createFactory React.createClass(
+Cron = React.createClass(
   displayName: 'Cron'
   propTypes:
     crontabRecord: React.PropTypes.string
