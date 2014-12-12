@@ -5,6 +5,6 @@ module.exports =
     JOBS_LOAD: null
     JOBS_LOAD_SUCCESS: null
     JOBS_LOAD_ERROR: null
-    JOBS_SET_FILTER: null
+    JOBS_SET_QUERY: null
 #    :null
   )

@@ -3,7 +3,9 @@ Link = React.createFactory(require('react-router').Link)
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 JobsStore = require('../../../stores/JobsStore.coffee')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
+ActionCreators = require('../../../ActionCreators.coffee')
 
+QueryRow = React.createFactory(require('./QueryRow.coffee'))
 
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon.coffee'))
 JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel.coffee')
@@ -11,8 +13,7 @@ Duration = React.createFactory(require('../../../../../react/common/Duration.cof
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName.coffee')
 date = require '../../../../../utils/date.coffee'
 
-{div, span, strong} = React.DOM
-
+{div, span,input, strong, form} = React.DOM
 JobsIndex = React.createClass
   mixins: [createStoreMixin(JobsStore,ComponentsStore)]
 
@@ -21,9 +22,14 @@ JobsIndex = React.createClass
     isLoading: JobsStore.getIsLoading()
     isLoaded: JobsStore.getIsLoaded()
 
+  _search: ->
+    console.log "TODO: search query"
+    return
+
 
   render: ->
     div {className: 'container-fluid'},
+      QueryRow(onSearch:@_search)
       @_renderTable()
 
   _renderTableHeader: ->

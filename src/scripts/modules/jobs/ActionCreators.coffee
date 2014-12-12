@@ -22,3 +22,8 @@ module.exports =
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
       jobs: jobs
+
+  setQuery:(query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.JOBS_SET_QUERY
+      query: query

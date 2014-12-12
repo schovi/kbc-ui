@@ -9,12 +9,16 @@ List = Immutable.List
 
 _store = Map(
   jobsById: Map()
-  filter:''
+  query:''
   isLoading: false
   isLoaded: false
   )
 
 JobsStore = StoreUtils.createStore
+  getJobsFiltered: ->
+    filter = _store.get 'query'
+    if not filter
+      return getAll()
   getAll: ->
     _store
       .get('jobsById')
@@ -27,8 +31,14 @@ JobsStore = StoreUtils.createStore
     _store.getIn ['jobsById', parseInt(id)]
   getIsLoading: ->
     _store.get 'isLoading'
+
   getIsLoaded: ->
     _store.get 'isLoaded'
+
+  getQuery: ->
+    _store.get 'query'
+
+
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -45,6 +55,13 @@ Dispatcher.register (payload) ->
           .set('jobsById', Immutable.fromJS(action.jobs).toMap())
       )
       JobsStore.emitChange()
+    when Constants.ActionTypes.JOBS_SET_QUERY
+      _store = _store.withMutations((store) ->
+        store
+          .set('query', action.query.trim())
+      )
+      JobsStore.emitChange()
+
 
 
 
