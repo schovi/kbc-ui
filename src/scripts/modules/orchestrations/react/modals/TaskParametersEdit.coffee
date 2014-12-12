@@ -13,13 +13,15 @@ TaskParametersEdit = React.createClass
 
   getInitialState: ->
     parameters: @props.parameters
+    parametersString: JSON.stringify @props.parameters, null, '\t'
+    isValid: true
 
   render: ->
     Modal title: 'Task parameters edit', onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
         textarea
           className: 'form-control'
-          value: JSON.stringify @state.parameters, null, '\t'
+          value: @state.parametersString
           onChange: @_handleChange
       div className: 'modal-footer',
         ButtonToolbar null,
@@ -30,13 +32,21 @@ TaskParametersEdit = React.createClass
             'Cancel'
           Button
             bsStyle: 'primary'
+            disabled: !@state.isValid
             onClick: @_handleSet
           ,
             'Set'
 
   _handleChange: (e) ->
     @setState
-      parameters: JSON.parse(e.target.value)
+      parametersString: e.target.value
+    try
+      @setState
+        parameters: JSON.parse(e.target.value)
+        isValid: true
+    catch error
+      @setState
+        isValid: false
 
   _handleSet: ->
     @props.onRequestHide()
