@@ -28,6 +28,7 @@ OrchestrationTasks = React.createClass
       components: ComponentsStore.getAll()
       filter: OrchestrationStore.getFilter()
       isEditing: false
+      filteredOrchestrations: OrchestrationStore.getFiltered()
     }
 
   componentWillReceiveProps: ->
@@ -59,7 +60,9 @@ OrchestrationTasks = React.createClass
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
-          OrchestrationsNav()
+          OrchestrationsNav
+            orchestrations: @state.filteredOrchestrations
+            activeOrchestrationId: @state.orchestration.get 'id'
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
         if @state.isEditing
           div null,
@@ -74,7 +77,7 @@ OrchestrationTasks = React.createClass
               tasks: @state.tasks
               components: @state.components
             button onClick: @_startEditing, className: 'btn btn-primary',
-              'Edit vole'
+              'Edit tasks'
 
 
 module.exports = OrchestrationTasks
