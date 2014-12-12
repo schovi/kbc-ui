@@ -1,6 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
-Immutable = require 'Immutable'
+Immutable = require 'immutable'
 
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
