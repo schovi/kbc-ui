@@ -1,17 +1,21 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
 Immutable = require 'immutable'
+PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
+_ = require 'underscore'
 
 EventService = require('../EventService.coffee')
 EventsTable = React.createFactory(require './EventsTable.coffee')
 
 Events = React.createClass
   displayName: 'Events'
+  mixins: [PureRendererMixin]
   propTypes:
     params: React.PropTypes.object
 
   getInitialState: ->
     events: Immutable.List()
+    isLoadingOlder: false
 
   componentDidMount: ->
     console.log 'did mount'
@@ -21,9 +25,9 @@ Events = React.createClass
 
 
   componentWillReceiveProps: (nextProps) ->
-    console.log 'nextprops', nextProps
-    @_events.setParams(nextProps.params)
-    @_events.load()
+    if !_.isEqual(nextProps.params, @props.params)
+      @_events.setParams(nextProps.params)
+      @_events.load()
 
   render: ->
     React.DOM.div null,
@@ -32,8 +36,9 @@ Events = React.createClass
       Button
         bsStyle: 'default'
         onClick: @_handleLoadMore
+        disabled: @state.isLoadingOlder
       ,
-        'More ...'
+        if  @state.isLoadingOlder then 'Loading ...' else 'More ...'
 
   _handleLoadMore: ->
     @_events.loadMore()
@@ -42,6 +47,7 @@ Events = React.createClass
     console.log 'changed'
     @setState
       events: @_events.getEvents()
+      isLoadingOlder: @_events.getIsLoadingOlder()
 
 
 module.exports = Events

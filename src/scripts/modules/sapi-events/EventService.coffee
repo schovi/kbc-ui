@@ -9,8 +9,12 @@ CHANGE_EVENT = 'change'
 class EventsService
 
   constructor: (@api, @defaultParams) ->
-    @_events = List
     @_emmiter = new EventEmitter()
+
+  _reset = ->
+    @_events = List()
+    @_isLoading = false
+    @_loadingOlder = false
 
   setParams: (params) ->
     @defaultParams = params
@@ -21,16 +25,34 @@ class EventsService
       limit: 10
     ).then(@_setEvents.bind(@))
 
+  loadNew: ->
+    @isLoading = true
+    
 
   loadMore: ->
-    # todo
+    @_loadingOlder = true
+    @_emitChange()
+
+    @api
+    .listEvents(_.extend {}, @defaultParams,
+      limit: 10
+      maxId: @_events.last().get('id')
+    ).then(@_appendEvents.bind(@))
 
   getEvents: ->
     @_events
 
+  getIsLoadingOlder: ->
+    @_loadingOlder
+
   _setEvents: (events) ->
     console.log 'set events', events
     @_events = Immutable.fromJS(events)
+    @_emitChange()
+
+  _appendEvents: (events) ->
+    @_loadingOlder = false
+    @_events = @_events.concat(Immutable.fromJS(events))
     @_emitChange()
 
   _emitChange: ->
