@@ -6,34 +6,34 @@ Duration = React.createFactory(require '../../../../../react/common/Duration.cof
 JobStatusLabel = React.createFactory(require('../../../../../react/common/common.coffee').JobStatusLabel)
 
 date = require '../../../../../utils/date.coffee'
-{div, h2, small, span} = React.DOM
+{div, h2, small, span, strong} = React.DOM
 
 JobDetailOverview = React.createClass
   displayName: 'JobDetailBody'
   render: ->
     div null,
-      div null,
-        div className: 'row',
-          div className: 'col-md-6',
-            span null, 'Created '
-            span null, date.format(@props.job.get('createdTime'))
-          div className: 'col-md-6',
-            span null, 'Status'
-            JobStatusLabel status: @props.job.get('status')
-        div className: 'row',
-          div className: 'col-md-6',
-            span null, 'Start '
-            span null, date.format(@props.job.get('startTime'))
-          div className: 'col-md-6',
-            span null, 'End '
-            span null, @props.job.get('endTime')
-        div className: 'row',
-          div className: 'col-md-6',
-            span null, 'Initialized '
-            span null, "#{@props.job.get('initializedBy')} (#{@props.job.getIn(['initiatorToken', 'description'])})"
-          div className: 'col-md-6',
-            span null, 'Token '
-            span null, @props.job.getIn(['token', 'description'])
+      div className: 'table kbc-table-border-vertical kbc-detail-table',
+        div className: 'tr',
+          div className: 'td',
+            div className: 'row',
+              span className: 'col-md-3', 'Created '
+              strong className: 'col-md-9', date.format(@props.job.get('createdTime'))
+            div className: 'row',
+              span className: 'col-md-3', 'Start '
+              strong className: 'col-md-9', date.format(@props.job.get('startTime'))
+            div className: 'row',
+              span className: 'col-md-3', 'Initialized '
+              strong className: 'col-md-9', "#{@props.job.get('initializedBy')} (#{@props.job.getIn(['initiatorToken', 'description'])})"
+          div className: 'td',
+            div className: 'row',
+              span className: 'col-md-3', 'Status '
+              span className: 'col-md-9', JobStatusLabel status: @props.job.get('status')
+            div className: 'row',
+              span className: 'col-md-3', 'End '
+              strong className: 'col-md-9', @props.job.get('endTime')
+            div className: 'row',
+              span className: 'col-md-3', 'Token '
+              strong className: 'col-md-9', @props.job.getIn(['token', 'description'])
 
       h2 null,
         'Tasks',
@@ -43,7 +43,7 @@ JobDetailOverview = React.createClass
 
   _renderTotalDurationInHeader: ->
     return '' if !@props.job.get('startTime')
-    small null,
+    small className: 'pull-right',
       'Total Duration ',
       Duration
         startTime: @props.job.get('startTime')

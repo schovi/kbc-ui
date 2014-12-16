@@ -31,15 +31,18 @@ JobTasks = React.createClass
 
   _renderTask: (task) ->
     component = @state.components.get(task.get('component'))
-    header = span className: 'row',
-      span className: 'col-sm-5',
-        ComponentIcon size: '32', component: component
-        ' '
-        ComponentName component: component
-      span className: 'col-sm-3',
-        Duration startTime: task.get('startTime'), endTime: task.get('endTime')
-      span className: 'col-sm-4',
-        JobStatusLabel status: task.get('status') if task.has('status')
+    header = span null,
+      span className: 'table',
+        span className: 'tbody',
+          span className: 'tr',
+            span className: 'td',
+              ComponentIcon size: '32', component: component
+              ' '
+              ComponentName component: component
+            span className: 'td',
+              Duration startTime: task.get('startTime'), endTime: task.get('endTime')
+            span className: 'td text-right',
+              JobStatusLabel status: task.get('status') if task.has('status')
 
     Panel
       header: header
