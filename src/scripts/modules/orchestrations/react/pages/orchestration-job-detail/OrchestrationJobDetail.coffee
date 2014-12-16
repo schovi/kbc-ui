@@ -11,6 +11,7 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 # components
 JobsNav = React.createFactory(require './JobsNav.coffee')
 JobOverview = React.createFactory(require './Overview.coffee')
+Events = React.createFactory(require '../../../../sapi-events/react/Events.coffee')
 
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
@@ -52,7 +53,10 @@ OrchestrationJobDetail = React.createClass
             TabPane eventKey: 'overview', tab: 'Overview',
               JobOverview(job: @state.job)
             TabPane eventKey: 'log', tab: 'Log',
-              'Todo'
+              Events
+                params:
+                  runId: @state.job.get('id')
+
 
 
 module.exports = OrchestrationJobDetail
