@@ -1,6 +1,6 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
-Immutable = require 'Immutable'
+Immutable = require 'immutable'
 
 EventService = require('../EventService.coffee')
 EventsTable = React.createFactory(require './EventsTable.coffee')
