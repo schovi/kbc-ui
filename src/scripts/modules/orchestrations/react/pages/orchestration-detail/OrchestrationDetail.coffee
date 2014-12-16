@@ -11,6 +11,7 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 # React components
 OrchestrationsNav = React.createFactory(require './OrchestrationsNav.coffee')
 JobsTable = React.createFactory(require './JobsTable.coffee')
+JobsGraph = React.createFactory(require './JobsGraph.coffee')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
 Link = React.createFactory(require('react-router').Link)
 
@@ -58,6 +59,7 @@ OrchestrationDetail = React.createClass
             Link to: 'orchestrationTasks', params:
               orchestrationId: @state.orchestration.get('id')
             , "Tasks (#{@state.tasks.size})"
+        (JobsGraph(jobs: @state.jobs) if @state.jobs.size >= 2)
         JobsTable(
           jobs: @state.jobs
           jobsLoading: @state.jobsLoading

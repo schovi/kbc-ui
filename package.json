@@ -16,7 +16,9 @@
     "fuzzy": "~0.1.0",
     "bluebird": "~2.3.11",
     "superagent": "~0.21.0",
-    "react-immutable-render-mixin": "~0.7.0"
+    "react-immutable-render-mixin": "~0.7.0",
+    "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
+    "d3": "~3.5.2"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
