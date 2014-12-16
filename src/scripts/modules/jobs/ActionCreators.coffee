@@ -8,17 +8,18 @@ jobsApi = require('./JobsApi.coffee')
 module.exports =
   loadJobs: ->
     return Promise.resolve() if JobsStore.getIsLoaded()
-    @loadJobsForce()
+    @loadMoreJobs()
 
-  loadJobsForce: ->
+  loadMoreJobs: () ->
     actions = @
+    limit = JobsStore.getLimit()
+    offset = JobsStore.getOffset() + 1
+    query = JobsStore.getQuery()
     dispatcher.handleViewAction type: constants.ActionTypes.JOBS_LOAD
-    jobsApi.getJobs().then (jobs) ->
-      actions.recieveAllJobs(jobs)
-    .catch (err) ->
-      console.log 'error', err
+    jobsApi.getJobsParametrized(query,limit,offset).then (jobs) ->
+      actions.recieveMoreJobs(jobs)
 
-  recieveAllJobs:(jobs) ->
+  recieveMoreJobs:(jobs) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
       jobs: jobs
