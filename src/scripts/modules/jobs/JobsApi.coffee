@@ -18,3 +18,12 @@ module.exports =
       .promise()
       .then (response) ->
         response.body
+
+    getJobsParametrized: (query,limit,offset) ->
+      createRequest('GET','jobs')
+      .query({'q':query})
+      .query({'limit':limit})
+      .query({'offset':offset})
+      .promise()
+      .then (response) ->
+        response.body

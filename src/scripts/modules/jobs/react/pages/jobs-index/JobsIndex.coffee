@@ -13,7 +13,7 @@ Duration = React.createFactory(require('../../../../../react/common/Duration.cof
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName.coffee')
 date = require '../../../../../utils/date.coffee'
 
-{div, span,input, strong, form} = React.DOM
+{div, span,input, strong, form, button} = React.DOM
 JobsIndex = React.createClass
   mixins: [createStoreMixin(JobsStore,ComponentsStore)]
 
@@ -21,16 +21,23 @@ JobsIndex = React.createClass
     jobs: JobsStore.getAll()
     isLoading: JobsStore.getIsLoading()
     isLoaded: JobsStore.getIsLoaded()
+    isLoadMore: JobsStore.getIsLoadMore()
 
-  _search: ->
-    console.log "TODO: search query"
+  _search: (query)->
+    ActionCreators.setQuery(query)
+    @_loadMore()
     return
 
+  _loadMore: ->
+    ActionCreators.loadMoreJobs()
 
   render: ->
     div {className: 'container-fluid'},
       QueryRow(onSearch:@_search)
       @_renderTable()
+      if @state.isLoadMore
+        button onClick: @_loadMore, className: 'btn btn-default',
+          'More..'
 
   _renderTableHeader: ->
     div {className: 'thead' },
@@ -48,10 +55,10 @@ JobsIndex = React.createClass
         span {className: 'th'},
           strong null, 'Duration'
 
-  _renderTableRow: (row) ->
+  _renderTableRow: (row,idx) ->
     rowComponent = ComponentsStore.getComponent(row.get 'component')
     div {className: "tr", key:row.get 'id'},
-      div className: "td", row.get 'id'
+      div className: "td", row.get('id')
       div className: "td", JobStatusLabel {status: row.get 'status'}
       div className: "td",
         ComponentIcon {component: rowComponent, size:"32"}
@@ -66,11 +73,14 @@ JobsIndex = React.createClass
 
   _renderTable: ->
     console.log "rendering table"
+    idx = 0
     div {className:"table"},
       @_renderTableHeader(),
       div className: "tbody",
         @state.jobs.map((job) ->
-          @_renderTableRow(job)
+          idx++
+          @_renderTableRow(job,idx)
+
         , @).toArray()
 
 
