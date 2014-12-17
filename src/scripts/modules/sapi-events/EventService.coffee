@@ -51,9 +51,7 @@ class EventsService
     @_isLoading = true
     @_emitChange()
 
-    @_listEvents(
-      limit: 10
-    )
+    @_listEvents()
     .then(@_setEvents.bind(@))
     .catch @_onError.bind(@)
 
@@ -85,7 +83,7 @@ class EventsService
   _getParams: ->
     _.extend {}, @defaultParams,
       q: @_query
-      limit: 10
+      limit: 50
 
   _listEvents: (params) ->
     @api

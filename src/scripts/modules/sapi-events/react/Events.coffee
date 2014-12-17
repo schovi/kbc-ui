@@ -73,7 +73,10 @@ Events = React.createClass
             @_renderMoreButton()
         else
           div className: 'well',
-            'No events found'
+            if @state.isLoading
+              'Loading ...'
+            else
+              'No events found'
 
   _renderMoreButton: ->
     return null if !@state.hasMore
