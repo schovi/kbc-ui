@@ -22,6 +22,7 @@ JobsIndex = React.createClass
     isLoading: JobsStore.getIsLoading()
     isLoaded: JobsStore.getIsLoaded()
     isLoadMore: JobsStore.getIsLoadMore()
+    query:JobsStore.getQuery()
 
   _search: (query)->
     ActionCreators.setQuery(query)
@@ -33,10 +34,10 @@ JobsIndex = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      QueryRow(onSearch:@_search)
+      QueryRow(onSearch:@_search, query:@state.query)
       @_renderTable()
       if @state.isLoadMore
-        button onClick: @_loadMore, className: 'btn btn-default',
+        button onClick: @_loadMore, className: 'btn btn-default btn-large text-center',
           'More..'
 
   _renderTableHeader: ->

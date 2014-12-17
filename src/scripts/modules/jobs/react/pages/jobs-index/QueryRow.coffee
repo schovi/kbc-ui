@@ -8,16 +8,18 @@ QueryRow = React.createClass
     onSearch: React.PropTypes.func.isRequired
 
   getInitialState: ->
-    query:''
+    query:@props.query
+
 
   _onQueryChange: (event) ->
     @setState
       query:event.target.value
-  _doSearch: () ->
+  _doSearch: (event) ->
     @props.onSearch @state.query
+    event.preventDefault()
   render: ->
     div {className:"form-group form-group-sm"},
-      form {onSubmit:@_search},
+      form {onSubmit:@_doSearch},
         div {className:"input-group"},
           input {type:'text', value:@state.query, className:'form-control', onChange: @_onQueryChange, placeholder:"search"},
           div {className:"input-group-addon"},
