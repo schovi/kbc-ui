@@ -4,8 +4,11 @@ Immutable = require 'immutable'
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
 _ = require 'underscore'
 
+{div} = React.DOM
+
 EventService = require('../EventService.coffee')
 EventsTable = React.createFactory(require './EventsTable.coffee')
+EventDetail = React.createFactory(require './EventDetail.coffee')
 
 Events = React.createClass
   displayName: 'Events'
@@ -17,6 +20,9 @@ Events = React.createClass
   getInitialState: ->
     events: Immutable.List()
     isLoadingOlder: false
+    isLoading: false
+    hasMore: true
+    selectedEvent: null
 
   componentDidMount: ->
     @_createEventsService(@props.params)
@@ -43,12 +49,20 @@ Events = React.createClass
     @_events.reset()
 
   render: ->
-    React.DOM.div null,
-      (EventsTable
-        isLoading: @state.isLoading
-        events: @state.events
-      ),
-      @_renderMoreButton()
+    div null,
+      div null,
+        if @state.selectedEvent
+          EventDetail
+            event: @state.selectedEvent
+            onGoBack: @_resetSelectedEvent
+        else
+          div null,
+            (EventsTable
+              isLoading: @state.isLoading
+              events: @state.events
+              onEventSelect: @_handleEventSelect
+            ),
+            @_renderMoreButton()
 
   _renderMoreButton: ->
     return null if !@state.hasMore
@@ -62,6 +76,14 @@ Events = React.createClass
 
   _handleLoadMore: ->
     @_events.loadMore()
+
+  _handleEventSelect: (selectedEvent) ->
+    @setState
+      selectedEvent: selectedEvent
+
+  _resetSelectedEvent: ->
+    @setState
+      selectedEvent: null
 
   _handleChange: ->
     if @isMounted()

@@ -8,7 +8,7 @@ module.exports = React.createClass
   displayName: 'TableRow'
   mixins: [PureRendererMixin]
   render: ->
-    tr null,
+    tr onClick: @props.onClick,
       td null,
         date.format @props.event.get('created'),
       td null,

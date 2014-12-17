@@ -10,6 +10,7 @@ module.exports = React.createClass
   mixins: [PureRendererMixin]
   propTypes:
     events: React.PropTypes.object.isRequired
+    onEventSelect: React.PropTypes.func.isRequired
     isLoading: React.PropTypes.bool.isRequired
 
   render: ->
@@ -23,7 +24,11 @@ module.exports = React.createClass
       tbody null,
         @props.events.map( (event) ->
           TableRow
+            onClick: @_handleEventSelect.bind(@, event)
             event: event
             key: event.get('id')
         , @).toArray()
+
+  _handleEventSelect: (selectedEvent) ->
+    @props.onEventSelect(selectedEvent)
 
