@@ -16,6 +16,7 @@ eventsApi =
   listEvents: (params) ->
     createRequest('GET', 'events')
     .query(params)
+    .timeout(4000)
     .promise()
     .then((response) ->
       response.body

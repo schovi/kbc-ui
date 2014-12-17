@@ -51,33 +51,45 @@ class EventsService
     @_isLoading = true
     @_emitChange()
 
-    @api
-    .listEvents(_.extend {}, @_getParams(),
+    @_listEvents(
       limit: 10
-    ).then(@_setEvents.bind(@))
+    )
+    .then(@_setEvents.bind(@))
+    .catch @_onError.bind(@)
 
   loadNew: =>
     @_isLoading = true
     @_emitChange()
-    @api
-    .listEvents(_.extend {},  @_getParams(),
+    @_listEvents(
       limit: 10
       sinceId: @_events.first()?.get('id')
-    ).then(@_prependEvents.bind(@))
+    )
+    .then(@_prependEvents.bind(@))
+    .catch @_onError.bind(@)
 
   loadMore: ->
     @_loadingOlder = true
     @_emitChange()
 
-    @api
-    .listEvents(_.extend {}, @_getParams(),
+    @_listEvents(
       maxId: @_events.last().get('id')
     ).then(@_appendEvents.bind(@))
+    .catch @_onError.bind(@)
+
+
+  _onError: (error) ->
+    @_loadingOlder = false
+    @_isLoading = false
+    @_emitChange()
 
   _getParams: ->
     _.extend {}, @defaultParams,
       q: @_query
       limit: 10
+
+  _listEvents: (params) ->
+    @api
+    .listEvents(_.extend {}, @_getParams(), params)
 
   getEvents: ->
     @_events
