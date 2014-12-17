@@ -74,7 +74,6 @@ Dispatcher.register (payload) ->
       limit = _store.get 'limit'
       loadMore = false if action.jobs.length < limit
       newJobs = _.uniq(_.union(_.values(currentJobs), _.first(action.jobs, _store.get('limit'))), (j) -> j.id)
-      console.log newJobs
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
