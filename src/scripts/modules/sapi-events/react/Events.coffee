@@ -36,6 +36,7 @@ Events = React.createClass
     if !_.isEqual(nextProps.params, @props.params)
       @_destroyEventsService()
       @_createEventsService(nextProps.params)
+      @_resetSelectedEvent()
 
     @_events.setAutoReload nextProps.autoReload
 
