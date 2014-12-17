@@ -26,8 +26,12 @@ class EventsService
     ).then(@_setEvents.bind(@))
 
   loadNew: ->
-    @isLoading = true
-    
+    @_isLoading = true
+    @api
+    .listEvents(_.extend {}, @defaultParams,
+        limit: 10
+        sinceId: @_events.first().get('id')
+    ).then(@_prependEvents.bind(@))
 
   loadMore: ->
     @_loadingOlder = true
@@ -45,9 +49,17 @@ class EventsService
   getIsLoadingOlder: ->
     @_loadingOlder
 
+  getIsLoading: ->
+    @_isLoading
+
   _setEvents: (events) ->
     console.log 'set events', events
     @_events = Immutable.fromJS(events)
+    @_emitChange()
+
+  _prependEvents: ->
+    @_isLoading = false
+    @_events = @_events.unshift(Immutable.fromJS(events))
     @_emitChange()
 
   _appendEvents: (events) ->

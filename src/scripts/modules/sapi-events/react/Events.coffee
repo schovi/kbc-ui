@@ -27,6 +27,7 @@ Events = React.createClass
   componentWillReceiveProps: (nextProps) ->
     if !_.isEqual(nextProps.params, @props.params)
       @_events.setParams(nextProps.params)
+      
       @_events.load()
 
   render: ->
