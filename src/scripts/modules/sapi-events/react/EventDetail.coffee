@@ -3,13 +3,11 @@ date = require '../../../utils/date.coffee'
 filesize = require('../../../utils/utils.coffee').filesize
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
 
+
+sapiEventsUtils = require '../utils.coffee'
 Tree = React.createFactory(require('../../../react/common/common.coffee').Tree)
 {div, span, a, h2, h3, p, ul, li} = React.DOM
 
-_classMap =
-  error: 'danger'
-  warn: 'warning'
-  success: 'success'
 
 module.exports = React.createClass
   displayName: 'EventDetail'
@@ -77,4 +75,4 @@ module.exports = React.createClass
 
 
   _eventClass: ->
-    _classMap[@props.event.get('type')]
+    sapiEventsUtils.classForEventType(@props.event.get('type'))
