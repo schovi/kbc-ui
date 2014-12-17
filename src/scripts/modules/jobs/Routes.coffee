@@ -2,11 +2,12 @@ React = require 'react'
 JobDetail = require('./react/pages/job-detail/JobDetail.coffee')
 JobsIndex = require('./react/pages/jobs-index/JobsIndex.coffee')
 JobsActionCreators = require('./ActionCreators.coffee')
-
+JobsReloaderButton = require('./react/components/JobsReloaderButton.coffee')
 routes =
       name:'jobs'
       title: 'Jobs'
       defaultRouteHandler: JobsIndex
+      reloaderHandler: JobsReloaderButton
       requireData: [
         (params) ->
           JobsActionCreators.loadJobs()
