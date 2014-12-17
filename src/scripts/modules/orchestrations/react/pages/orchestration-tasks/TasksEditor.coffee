@@ -29,6 +29,7 @@ TasksEditor = React.createClass
         components: @props.components
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
+        onTaskMove: @_handleTaskMove
       ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
         button className: 'btn btn-primary',
           'Add task'
@@ -57,6 +58,13 @@ TasksEditor = React.createClass
         @state.tasks.findIndex((task) -> task.get('id') == updatedTask.get('id')),
         updatedTask
       )
+
+  _handleTaskMove: (id, afterId) ->
+    task = @state.tasks.find((task) -> task.get('id') == id)
+    currentIndex = @state.tasks.findIndex((task) -> task.get('id') == id)
+    afterIndex = @state.tasks.findIndex((task) -> task.get('id') == afterId)
+    @setState
+      tasks: @state.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
 
   _handleTaskAdd: (component, configuration) ->
     # prepare task

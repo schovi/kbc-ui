@@ -11,12 +11,13 @@ TasksEditTable = React.createClass
     components: React.PropTypes.object.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
+    onTaskMove: React.PropTypes.func.isRequired
 
   render: ->
     table className: 'table table-stripped',
       thead null,
         tr null,
-          th colSpan: 2, 'Component'
+          th colSpan: 3, 'Component'
           th null, 'Action'
           th null, 'Parameters'
           th null, 'Active'
@@ -30,6 +31,7 @@ TasksEditTable = React.createClass
             key: task.get('id')
             onTaskDelete: @props.onTaskDelete
             onTaskUpdate: @props.onTaskUpdate
+            onTaskMove: @props.onTaskMove
         , @).toArray()
 
 

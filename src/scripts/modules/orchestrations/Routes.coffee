@@ -38,7 +38,7 @@ routes =
     headerButtonsHandler: OrchestrationDetailButtons
     defaultRouteHandler: OrchestrationDetail
     poll:
-      interval: 60
+      interval: 20
       action: (params) ->
         OrchestrationsActionCreators.loadOrchestrationJobsForce(params.orchestrationId)
     requireData: [

@@ -19,7 +19,8 @@
     "react-immutable-render-mixin": "~0.7.0",
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "d3": "~3.5.2",
-    "filesize": "~2.0.4"
+    "filesize": "~2.0.4",
+    "react-dnd": "~0.6.2"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

@@ -1,6 +1,9 @@
 React = require 'react'
 Immutable = require 'immutable'
 common = require '../../../../../react/common/common.coffee'
+_ = require 'underscore'
+
+DragDropMixin = require('react-dnd').DragDropMixin
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
@@ -14,14 +17,35 @@ Check = React.createFactory(common.Check)
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
+  mixins: [DragDropMixin]
   propTypes:
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
+    onTaskMove: React.PropTypes.func.isRequired
+
+
+  configureDragDrop: (registerType) ->
+    row = @
+    registerType('task',
+      dragSource:
+        beginDrag: ->
+          item: @props.task
+      dropTarget:
+        over: (task) ->
+          @props.onTaskMove task.get('id'), @props.task.get('id')
+    )
 
   render: ->
-    tr null,
+    isDragging = @getDragState('task').isDragging
+    style =
+      cursor: 'move'
+      opacity: if isDragging then 0 else
+
+    tr _.extend({style: style}, @dragSourceFor('task'), @dropTargetFor('task')),
+      td null,
+        i className: 'fa fa-bars'
       td null,
         if @props.component
           ComponentIcon component: @props.component
