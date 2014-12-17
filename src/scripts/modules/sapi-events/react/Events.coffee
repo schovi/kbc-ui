@@ -29,13 +29,15 @@ Events = React.createClass
 
   componentDidMount: ->
     @_createEventsService(@props.params)
+    @_events.load()
     @_events.setAutoReload @props.autoReload
-
 
   componentWillReceiveProps: (nextProps) ->
     if !_.isEqual(nextProps.params, @props.params)
       @_destroyEventsService()
       @_createEventsService(nextProps.params)
+      @_events.setQuery @state.searchQuery
+      @_events.load()
       @_resetSelectedEvent()
 
     @_events.setAutoReload nextProps.autoReload
@@ -45,7 +47,6 @@ Events = React.createClass
 
   _createEventsService: (params) ->
     @_events =  EventService.factory(params)
-    @_events.load()
     @_events.addChangeListener(@_handleChange)
 
   _destroyEventsService: ->
