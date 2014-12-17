@@ -16,6 +16,7 @@ class EventsService
 
   reset: ->
     @_events = List()
+    @_query = ''
     @_isLoading = false
     @_loadingOlder = false
     @_hasMore = true
@@ -26,6 +27,9 @@ class EventsService
   setParams: (params) ->
     @defaultParams = params
     @reset()
+
+  setQuery: (query) ->
+    @_query = query
 
   setAutoReload: (flag) ->
     if flag
@@ -45,8 +49,10 @@ class EventsService
 
   load: ->
     @_isLoading = true
+    @_emitChange()
+
     @api
-    .listEvents(_.extend {}, @defaultParams,
+    .listEvents(_.extend {}, @_getParams(),
       limit: 10
     ).then(@_setEvents.bind(@))
 
@@ -54,7 +60,7 @@ class EventsService
     @_isLoading = true
     @_emitChange()
     @api
-    .listEvents(_.extend {}, @defaultParams,
+    .listEvents(_.extend {},  @_getParams(),
       limit: 10
       sinceId: @_events.first()?.get('id')
     ).then(@_prependEvents.bind(@))
@@ -64,10 +70,14 @@ class EventsService
     @_emitChange()
 
     @api
-    .listEvents(_.extend {}, @defaultParams,
-      limit: 10
+    .listEvents(_.extend {}, @_getParams(),
       maxId: @_events.last().get('id')
     ).then(@_appendEvents.bind(@))
+
+  _getParams: ->
+    _.extend {}, @defaultParams,
+      q: @_query
+      limit: 10
 
   getEvents: ->
     @_events
@@ -80,6 +90,9 @@ class EventsService
 
   getHasMore: ->
     @_hasMore
+
+  getQuery: ->
+    @_query
 
   _setEvents: (events) ->
     @_isLoading = false

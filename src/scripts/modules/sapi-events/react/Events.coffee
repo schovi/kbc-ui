@@ -7,6 +7,8 @@ _ = require 'underscore'
 {div} = React.DOM
 
 EventService = require('../EventService.coffee')
+
+SearchRow = React.createFactory(require('../../../react/common/common.coffee').SearchRow)
 EventsTable = React.createFactory(require './EventsTable.coffee')
 EventDetail = React.createFactory(require './EventDetail.coffee')
 
@@ -22,6 +24,7 @@ Events = React.createClass
     isLoadingOlder: false
     isLoading: false
     hasMore: true
+    searchQuery: ''
     selectedEvent: null
 
   componentDidMount: ->
@@ -51,6 +54,9 @@ Events = React.createClass
   render: ->
     div null,
       div null,
+        SearchRow
+          query: @state.searchQuery
+          onSubmit: @_handleQueryChange
         if @state.selectedEvent
           EventDetail
             event: @state.selectedEvent
@@ -85,9 +91,15 @@ Events = React.createClass
     @setState
       selectedEvent: null
 
+  _handleQueryChange: (query) ->
+    @_events.setQuery(query)
+    @_events.load()
+    console.log 'query change', query
+
   _handleChange: ->
     if @isMounted()
       @setState
+        searchQuery: @_events.getQuery()
         events: @_events.getEvents()
         isLoading: @_events.getIsLoading()
         isLoadingOlder: @_events.getIsLoadingOlder()

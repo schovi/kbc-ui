@@ -1,16 +1,22 @@
 React = require 'react'
 
-{div, span, input} = React.DOM
+{form, span, input} = React.DOM
 
 SearchRow = React.createClass
   displayName: 'SearchRow'
   propTypes:
     query: React.PropTypes.string.isRequired
-    onChange: React.PropTypes.func.isRequired
+    onChange: React.PropTypes.func
+    onSubmit: React.PropTypes.func
     className: React.PropTypes.string
 
   getInitialState: ->
     query: @props.query
+
+  getDefaultProps: ->
+    onChange: ->
+    onSubmit: (e) ->
+      event.preventDefault()
 
   componentDidMount: ->
     @refs.searchInput.getDOMNode().focus()
@@ -20,8 +26,15 @@ SearchRow = React.createClass
       query: event.target.value
     @props.onChange event.target.value
 
+  _onSubmit: (event) ->
+    event.preventDefault()
+    @props.onSubmit(@state.query)
+
   render: ->
-    div className: 'kbc-search' + ' ' + @props.className,
+    form
+      className: 'kbc-search' + ' ' + @props.className
+      onSubmit: @_onSubmit
+    ,
       span className: 'kbc-icon-search'
       input
         type: 'text'
