@@ -88,7 +88,7 @@ class EventsService
 
   _prependEvents: (events) ->
     @_isLoading = false
-    @_events = @_events.unshiftAll(Immutable.fromJS(events)) if events.length
+    @_events = Immutable.fromJS(events).concat(@_events) if events.length
     @_emitChange()
 
   _appendEvents: (events) ->
