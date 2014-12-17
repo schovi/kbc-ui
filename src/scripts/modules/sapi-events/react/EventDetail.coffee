@@ -1,9 +1,10 @@
 React = require 'react'
 date = require '../../../utils/date.coffee'
+filesize = require('../../../utils/utils.coffee').filesize
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
 
 Tree = React.createFactory(require('../../../react/common/common.coffee').Tree)
-{div, span, a, h2, h3, p} = React.DOM
+{div, span, a, h2, h3, p, ul, li} = React.DOM
 
 _classMap =
   error: 'danger'
@@ -46,14 +47,29 @@ module.exports = React.createClass
           'Run ID'
         div className: 'col-md-9',
           @props.event.get('runId')
-       @_treeSection('Parameters', 'params')
-       @_treeSection('Results', 'results')
-       @_treeSection('Performance', 'performance')
-       @_treeSection('Context', 'context')
+      @_attachments()
+      @_treeSection('Parameters', 'params')
+      @_treeSection('Results', 'results')
+      @_treeSection('Performance', 'performance')
+      @_treeSection('Context', 'context')
+
+  _attachments: ->
+    return null if !@props.event.get('attachments').size
+    div null,
+      h3 null,
+        'Attachments'
+      ul null,
+        @props.event.get('attachments').map((attachment) ->
+          li null,
+            a
+              href: attachment.get('url')
+            ,
+              attachment.get('name')
+              " (#{filesize attachment.get('sizeBytes')}) "
+        ).toArray()
 
   _treeSection: (header, eventPropertyName) ->
     return null if !@props.event.get(eventPropertyName)?.size
-
     div null,
       h3 null,
         header,
