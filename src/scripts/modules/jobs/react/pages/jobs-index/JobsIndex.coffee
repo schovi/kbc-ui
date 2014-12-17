@@ -26,7 +26,7 @@ JobsIndex = React.createClass
 
   _search: (query)->
     ActionCreators.setQuery(query)
-    @_loadMore()
+    ActionCreators.loadJobsForce(0) #offset force set to 0
     return
 
   _loadMore: ->

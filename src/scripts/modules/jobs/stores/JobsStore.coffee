@@ -33,7 +33,8 @@ JobsStore = StoreUtils.createStore
 
   get: (id) ->
     _store.getIn ['jobsById', parseInt(id)]
-
+  getPreviousOffset: ->
+    _store.get 'previousOffset'
   getIsLoading: ->
     _store.get 'isLoading'
 
@@ -49,8 +50,12 @@ JobsStore = StoreUtils.createStore
   getOffset: ->
     _store.get 'offset'
 
+  getNextOffset: ->
+    _store.get('offset') + _store.get('limit')
+
   getIsLoadMore: ->
     _store.get 'isLoadMore'
+
 
 
 Dispatcher.register (payload) ->
@@ -63,18 +68,18 @@ Dispatcher.register (payload) ->
 
     #LOAD MORE JOBS FROM API and merge with current jobs
     when Constants.ActionTypes.JOBS_LOAD_SUCCESS
-      currentOffset = _store.get 'offset'
       currentJobs = _store.get('jobsById').toJS()
-      currentJobs = {} if currentOffset == 0
+      currentJobs = {} if action.newOffset == 0
       loadMore = true
       limit = _store.get 'limit'
       loadMore = false if action.jobs.length < limit
-      newJobs = _.union(_.values(currentJobs), _.first(action.jobs, _store.get('limit')))
+      newJobs = _.uniq(_.union(_.values(currentJobs), _.first(action.jobs, _store.get('limit'))), (j) -> j.id)
+      console.log newJobs
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
           .set('isLoaded', true)
-          .set('offset', currentOffset + limit)
+          .set('offset', action.newOffset)
           .set('jobsById', Immutable.fromJS(newJobs).toMap())
           .set('isLoadMore', loadMore)
       )
