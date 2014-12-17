@@ -61,7 +61,7 @@ Events = React.createClass
           EventDetail
             event: @state.selectedEvent
             onGoBack: @_resetSelectedEvent
-        else
+        else if @state.events.size
           div null,
             (EventsTable
               isLoading: @state.isLoading
@@ -69,6 +69,9 @@ Events = React.createClass
               onEventSelect: @_handleEventSelect
             ),
             @_renderMoreButton()
+        else
+          div className: 'well',
+            'No events found'
 
   _renderMoreButton: ->
     return null if !@state.hasMore
