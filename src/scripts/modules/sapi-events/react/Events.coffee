@@ -12,43 +12,64 @@ Events = React.createClass
   mixins: [PureRendererMixin]
   propTypes:
     params: React.PropTypes.object
+    autoReload: React.PropTypes.bool
 
   getInitialState: ->
     events: Immutable.List()
     isLoadingOlder: false
 
   componentDidMount: ->
-    console.log 'did mount'
-    @_events =  EventService.factory(@props.params)
-    @_events.load()
-    @_events.addChangeListener(@_handleChange)
+    @_createEventsService(@props.params)
+    @_events.setAutoReload @props.autoReload
 
 
   componentWillReceiveProps: (nextProps) ->
     if !_.isEqual(nextProps.params, @props.params)
-      @_events.setParams(nextProps.params)
-      
-      @_events.load()
+      @_destroyEventsService()
+      @_createEventsService(nextProps.params)
+
+    @_events.setAutoReload nextProps.autoReload
+
+  componentWillUnmount: ->
+    @_destroyEventsService()
+
+  _createEventsService: (params) ->
+    @_events =  EventService.factory(params)
+    @_events.load()
+    @_events.addChangeListener(@_handleChange)
+
+  _destroyEventsService: ->
+    @_events.removeChangeListener(@_handleChange)
+    @_events.reset()
 
   render: ->
     React.DOM.div null,
-      EventsTable
+      (EventsTable
+        isLoading: @state.isLoading
         events: @state.events
-      Button
-        bsStyle: 'default'
-        onClick: @_handleLoadMore
-        disabled: @state.isLoadingOlder
-      ,
-        if  @state.isLoadingOlder then 'Loading ...' else 'More ...'
+      ),
+      @_renderMoreButton()
+
+  _renderMoreButton: ->
+    return null if !@state.hasMore
+
+    Button
+      bsStyle: 'default'
+      onClick: @_handleLoadMore
+      disabled: @state.isLoadingOlder
+    ,
+      if  @state.isLoadingOlder then 'Loading ...' else 'More ...'
 
   _handleLoadMore: ->
     @_events.loadMore()
 
   _handleChange: ->
-    console.log 'changed'
-    @setState
-      events: @_events.getEvents()
-      isLoadingOlder: @_events.getIsLoadingOlder()
+    if @isMounted()
+      @setState
+        events: @_events.getEvents()
+        isLoading: @_events.getIsLoading()
+        isLoadingOlder: @_events.getIsLoadingOlder()
+        hasMore: @_events.getHasMore()
 
 
 module.exports = Events

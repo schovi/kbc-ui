@@ -56,6 +56,7 @@ OrchestrationJobDetail = React.createClass
               Events
                 params:
                   runId: @state.job.get('id')
+                autoReload: @state.job.get('status') == 'waiting' ||  @state.job.get('status') == 'processing'
 
 
 

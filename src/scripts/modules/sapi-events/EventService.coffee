@@ -2,6 +2,7 @@ Immutable = require 'immutable'
 EventEmitter = require('events').EventEmitter
 List = Immutable.List
 _ = require 'underscore'
+timer = require '../../utils/Timer.coffee'
 
 api = require './EventsApi.coffee'
 CHANGE_EVENT = 'change'
@@ -10,27 +11,52 @@ class EventsService
 
   constructor: (@api, @defaultParams) ->
     @_emmiter = new EventEmitter()
+    @_autoReload = false
+    @reset()
 
-  _reset = ->
+  reset: ->
     @_events = List()
     @_isLoading = false
     @_loadingOlder = false
+    @_hasMore = true
+    @_timer = timer
+    @stopAutoReload()
+    @_emitChange()
 
   setParams: (params) ->
     @defaultParams = params
+    @reset()
+
+  setAutoReload: (flag) ->
+    if flag
+      @startAutoReload()
+    else
+      @stopAutoReload()
+
+  stopAutoReload: ->
+    return if !@_autoReload
+    @_autoReload = false
+    @_timer.stop(@loadNew)
+
+  startAutoReload: ->
+    return if @_autoReload
+    @_autoReload = true
+    @_timer.poll(@loadNew, 5)
 
   load: ->
+    @_isLoading = true
     @api
     .listEvents(_.extend {}, @defaultParams,
       limit: 10
     ).then(@_setEvents.bind(@))
 
-  loadNew: ->
+  loadNew: =>
     @_isLoading = true
+    @_emitChange()
     @api
     .listEvents(_.extend {}, @defaultParams,
-        limit: 10
-        sinceId: @_events.first().get('id')
+      limit: 10
+      sinceId: @_events.first()?.get('id')
     ).then(@_prependEvents.bind(@))
 
   loadMore: ->
@@ -52,19 +78,23 @@ class EventsService
   getIsLoading: ->
     @_isLoading
 
+  getHasMore: ->
+    @_hasMore
+
   _setEvents: (events) ->
-    console.log 'set events', events
+    @_isLoading = false
     @_events = Immutable.fromJS(events)
     @_emitChange()
 
-  _prependEvents: ->
+  _prependEvents: (events) ->
     @_isLoading = false
-    @_events = @_events.unshift(Immutable.fromJS(events))
+    @_events = @_events.unshiftAll(Immutable.fromJS(events)) if events.length
     @_emitChange()
 
   _appendEvents: (events) ->
     @_loadingOlder = false
     @_events = @_events.concat(Immutable.fromJS(events))
+    @_hasMore = false if !events.length
     @_emitChange()
 
   _emitChange: ->
