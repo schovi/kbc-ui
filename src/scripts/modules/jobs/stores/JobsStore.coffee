@@ -33,8 +33,7 @@ JobsStore = StoreUtils.createStore
 
   get: (id) ->
     _store.getIn ['jobsById', parseInt(id)]
-  getPreviousOffset: ->
-    _store.get 'previousOffset'
+
   getIsLoading: ->
     _store.get 'isLoading'
 
@@ -68,20 +67,22 @@ Dispatcher.register (payload) ->
 
     #LOAD MORE JOBS FROM API and merge with current jobs
     when Constants.ActionTypes.JOBS_LOAD_SUCCESS
-      currentJobs = _store.get('jobsById').toJS()
-      currentJobs = {} if action.newOffset == 0
-      loadMore = true
       limit = _store.get 'limit'
-      loadMore = false if action.jobs.length < limit
-      newJobs = _.uniq(_.union(_.values(currentJobs), _.first(action.jobs, _store.get('limit'))), (j) -> j.id)
+      if action.resetJobs
+        _store = _store.set('jobsById', Map())
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
           .set('isLoaded', true)
           .set('offset', action.newOffset)
-          .set('jobsById', Immutable.fromJS(newJobs).toMap())
-          .set('isLoadMore', loadMore)
-      )
+          .mergeIn(['jobsById'], Immutable.fromJS(action.jobs).toMap().mapKeys((key, job) ->
+            job.get 'id'
+          )))
+      loadMore = true
+      offset = _store.get('offset')
+      if _store.get('jobsById').count() < (offset + limit)
+        loadMore = false
+      _store = _store.set('isLoadMore', loadMore)
       JobsStore.emitChange()
 
     #RESET QUERY and OFFSET and jobs
