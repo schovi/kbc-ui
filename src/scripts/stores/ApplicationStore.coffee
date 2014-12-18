@@ -1,11 +1,12 @@
 
 Dispatcher = require('../Dispatcher.coffee')
 Immutable = require('immutable')
-Map = Immutable.Map
+{Map, List} = Immutable
 Constants = require '../constants/KbcConstants.coffee'
 
 _store = Map(
   sapiToken: Map()
+  organizations: List()
   sapiUrl: ''
 )
 
@@ -17,6 +18,11 @@ ApplicationStore =
   getSapiUrl: ->
     _store.get 'sapiUrl'
 
+  getOrganizations: ->
+    _store.get 'organizations'
+
+  getCurrentProjectId: ->
+    _store.getIn ['sapiToken', 'owner', 'id']
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -27,5 +33,6 @@ Dispatcher.register (payload) ->
         store
           .set 'sapiToken', Immutable.fromJS(action.applicationData.sapiToken)
           .set 'sapiUrl', action.applicationData.sapiUrl
+          .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
 
 module.exports = ApplicationStore

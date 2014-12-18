@@ -31,13 +31,15 @@ if !token
   React.render(React.createElement(NoTokenPage), document.getElementById 'react')
 else
 
+  initialData = require './__fixtures/martin.coffee'
   fixturesApply = require './__fixtures/apply.coffee'
-  fixturesApply(require './__fixtures/martin.coffee')
+  fixturesApply(initialData)
 
   ApplicationActionCreators.receiveApplicationData(
     sapiUrl: 'https://connection.keboola.com'
     sapiToken:
       token: token
+    organizations: initialData.organizations
   )
 
   RouterActionCreators.routesConfigurationReceive(routes)
