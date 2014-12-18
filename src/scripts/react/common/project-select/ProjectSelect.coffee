@@ -22,9 +22,9 @@ module.exports = React.createClass
       Dropdown
         organizations: @props.organizations
         currentProjectId: @props.currentProjectId
+        open: @state.open
 
   _handleDropdownClick: (e) ->
     e.preventDefault()
-    console.log 'click', @state.open
     @setDropdownState(!@state.open)
 

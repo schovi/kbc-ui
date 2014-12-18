@@ -8,9 +8,15 @@ module.exports = React.createClass
   propTypes:
     organizations: React.PropTypes.object.isRequired
     currentProjectId: React.PropTypes.number.isRequired
+    open: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     query: ''
+
+  componentDidUpdate: (prevProps) ->
+    # focus search on dropdown open
+    if @props.open && @props.open != prevProps.open
+      @refs.searchInput.getDOMNode().focus()
 
   render: ->
     div className: 'dropdown-menu',
@@ -23,6 +29,7 @@ module.exports = React.createClass
             className: 'form-control'
             placeholder: 'Search your projects'
             value: @state.query
+            ref: 'searchInput'
             onChange: @_handleQueryChange
 
       @_projectsList()
