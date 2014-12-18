@@ -14,8 +14,10 @@ JobsTable = React.createFactory(require './JobsTable.coffee')
 JobsGraph = React.createFactory(require './JobsGraph.coffee')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
 Link = React.createFactory(require('react-router').Link)
+TasksSummary = React.createFactory(require './TasksSummary.coffee')
+CronRecord = React.createFactory(require '../../components/CronRecord.coffee')
 
-{div, h2} = React.DOM
+{div, h2, span, strong} = React.DOM
 
 OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
@@ -51,14 +53,30 @@ OrchestrationDetail = React.createClass
             orchestrations: @state.filteredOrchestrations
             activeOrchestrationId: @state.orchestration.get 'id'
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        div {className: 'row kbc-header'},
-          div {className: 'kbc-title'},
-            h2 null,
-              'Orchestration ' + @state.orchestration.get('name')
-          div {className: 'kbc-buttons'},
-            Link to: 'orchestrationTasks', params:
-              orchestrationId: @state.orchestration.get('id')
-            , "Tasks (#{@state.tasks.size})"
+        div className: 'table kbc-table-border-vertical kbc-detail-table',
+          div className: 'tr',
+            div className: 'td',
+              div className: 'row',
+                span className: 'col-md-3', 'Schedule '
+                strong className: 'col-md-9',
+                  CronRecord crontabRecord: @state.orchestration.get('crontabRecord')
+              div className: 'row',
+                span className: 'col-md-3', 'Assigned Token'
+                strong className: 'col-md-9', @state.orchestration.getIn ['token', 'description']
+            div className: 'td',
+              div className: 'row',
+                span className: 'col-md-3', 'Notifications '
+                strong className: 'col-md-9', 'TODO'
+              div className: 'row',
+                span className: 'col-md-3', 'Tasks '
+                strong className: 'col-md-9',
+                  TasksSummary tasks: @state.tasks
+                  Link to: 'orchestrationTasks', params:
+                    orchestrationId: @state.orchestration.get('id')
+                  ,
+                    ' '
+                    span className: 'fa fa-edit'
+                    ' Configure tasks'
         (JobsGraph(jobs: @state.jobs) if @state.jobs.size >= 2)
         JobsTable(
           jobs: @state.jobs

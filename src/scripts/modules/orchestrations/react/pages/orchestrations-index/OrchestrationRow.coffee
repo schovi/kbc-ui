@@ -6,7 +6,7 @@ Link = React.createFactory(require('react-router').Link)
 OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton.coffee')
 OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton.coffee')
 OrchestrationRunButton = React.createFactory(require '../../components/OrchestrationRunButton.coffee')
-CronRecord = React.createFactory(require './CronRecord.coffee')
+CronRecord = React.createFactory(require './../../components/CronRecord.coffee')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 OrchestrationActionCreators = require '../../../ActionCreators.coffee'
