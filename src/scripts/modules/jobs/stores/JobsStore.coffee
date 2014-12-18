@@ -32,7 +32,7 @@ JobsStore = StoreUtils.createStore
         )
 
   get: (id) ->
-    _store.getIn ['jobsById', parseInt(id)]
+    _store.getIn ['jobsById',id]
 
   getIsLoading: ->
     _store.get 'isLoading'
@@ -96,5 +96,8 @@ Dispatcher.register (payload) ->
       JobsStore.emitChange()
 
 
+    when Constants.ActionTypes.JOB_LOAD_SUCCESS
+      _store = _store.setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
+      JobsStore.emitChange()
 
 module.exports = JobsStore

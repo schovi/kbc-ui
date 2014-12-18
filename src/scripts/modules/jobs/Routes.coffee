@@ -16,14 +16,14 @@ routes =
       childRoutes: [
         name:'jobDetail'
         path: ':jobId'
-        title: 'Job Detail'
+        title: (routerState) ->
+          "Job " + routerState.getIn ['params', 'jobId']
         handler: JobDetail
-        # requireData:
-        #   [
-        #     (params) ->
-        #       JobsActionCreators.loadJobDetail(params.jobId)
-        #     ]
-
+        requireData:
+          [
+            (params) ->
+              JobsActionCreators.loadJobDetail(params.jobId)
+            ]
         ]
 
 module.exports = routes

@@ -1,9 +1,11 @@
 React = require('react')
 Link = React.createFactory(require('react-router').Link)
+
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 JobsStore = require('../../../stores/JobsStore.coffee')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
 ActionCreators = require('../../../ActionCreators.coffee')
+
 
 QueryRow = React.createFactory(require('./QueryRow.coffee'))
 
@@ -57,7 +59,8 @@ JobsIndex = React.createClass
 
   _renderTableRow: (row,idx) ->
     rowComponent = ComponentsStore.getComponent(row.get 'component')
-    div {className: "tr", key:row.get 'id'},
+
+    Link {className: "tr", to:"jobDetail", params:{jobId: row.get('id')}},
       div className: "td", row.get('id')
       div className: "td", JobStatusLabel {status: row.get 'status'}
       div className: "td",

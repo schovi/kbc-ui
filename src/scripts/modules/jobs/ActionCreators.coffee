@@ -27,6 +27,19 @@ module.exports =
         offset = JobsStore.getOffset()
       actions.recieveJobs(jobs, offset, resetJobs)
 
+  filterJobs:(query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.JOBS_SET_QUERY
+      query: query
+    @loadJobsForce(0, true, false)
+
+
+  loadJobDetail: (jobId) ->
+    actions = @
+    dispatcher.handleViewAction type:constants.ActionTypes.JOB_LOAD
+    jobsApi.getJobDetail(jobId).then (jobDetail) ->
+      actions.recieveJobDetail(jobDetail)
+
   recieveJobs:(jobs, newOffset, resetJobs) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
@@ -34,8 +47,7 @@ module.exports =
       newOffset: newOffset
       resetJobs: resetJobs
 
-  filterJobs:(query) ->
+  recieveJobDetail: (jobDetail) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.JOBS_SET_QUERY
-      query: query
-    @loadJobsForce(0, true, false)
+      type: constants.ActionTypes.JOB_LOAD_SUCCESS
+      job : jobDetail

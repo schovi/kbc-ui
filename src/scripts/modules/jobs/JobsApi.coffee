@@ -27,3 +27,9 @@ module.exports =
       .promise()
       .then (response) ->
         response.body
+
+    getJobDetail : (jobId) ->
+      createRequest('GET','job/' + jobId)
+      .promise()
+      .then (response) ->
+        response.body
