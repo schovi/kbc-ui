@@ -60,6 +60,9 @@ OrchestrationDetail = React.createClass
                 span className: 'col-md-3', 'Schedule '
                 strong className: 'col-md-9',
                   CronRecord crontabRecord: @state.orchestration.get('crontabRecord')
+                  span null,
+                    span className: 'fa fa-edit'
+                    ' Edit schedule'
               div className: 'row',
                 span className: 'col-md-3', 'Assigned Token'
                 strong className: 'col-md-9', @state.orchestration.getIn ['token', 'description']
