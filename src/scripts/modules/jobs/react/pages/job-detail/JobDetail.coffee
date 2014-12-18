@@ -15,4 +15,5 @@ JobDetail = React.createClass
     console.log @state.job.toJS()
     React.DOM.span null,"TODO detail"
 
+
 module.exports = JobDetail
