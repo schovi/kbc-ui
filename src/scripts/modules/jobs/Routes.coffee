@@ -3,6 +3,7 @@ JobDetail = require('./react/pages/job-detail/JobDetail.coffee')
 JobsIndex = require('./react/pages/jobs-index/JobsIndex.coffee')
 JobsActionCreators = require('./ActionCreators.coffee')
 JobsReloaderButton = require('./react/components/JobsReloaderButton.coffee')
+JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton.coffee')
 JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel.coffee')
 JobsStore = require('./stores/JobsStore.coffee')
 
@@ -25,12 +26,16 @@ routes =
         path: ':jobId'
         title: (routerState) ->
           jobId = routerState.getIn(['params', 'jobId'])
-          job = JobsStore.get jobId
-          React.DOM.span null,"Job " + jobId,
-            ' '
-            JobStatusLabel {status: job.get 'status'}
-
+          React.DOM.span null,"Job " + jobId
+        reloaderHandler: JobDetailReloaderButton
         handler: JobDetail
+        poll:
+          interval: 10
+          action: (params) ->
+            jobId = params.jobId
+            job = JobsStore.get jobId
+            if job and job.get('status') in ['waiting','processing']
+              JobsActionCreators.loadJobDetail(params.jobId)
 
         requireData:
           [

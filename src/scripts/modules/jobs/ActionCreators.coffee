@@ -36,7 +36,9 @@ module.exports =
 
   loadJobDetail: (jobId) ->
     actions = @
-    dispatcher.handleViewAction type:constants.ActionTypes.JOB_LOAD
+    dispatcher.handleViewAction
+      type:constants.ActionTypes.JOB_LOAD
+      jobId: jobId
     jobsApi.getJobDetail(jobId).then (jobDetail) ->
       actions.recieveJobDetail(jobDetail)
 

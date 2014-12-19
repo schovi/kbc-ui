@@ -55,12 +55,19 @@ JobsStore = StoreUtils.createStore
   getIsLoadMore: ->
     _store.get 'isLoadMore'
 
+  getIsJobLoading: (jobId) ->
+    _store.getIn(['jobsById',jobId,"isLoading"])
+
 
 
 Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.JOB_LOAD
+      jobId = action.jobId
+      _store = _store.setIn(['jobsById',jobId,'isLoading'], true)
+      JobsStore.emitChange()
     when Constants.ActionTypes.JOBS_LOAD
       _store = _store.set 'isLoading', true
       JobsStore.emitChange()
@@ -97,7 +104,12 @@ Dispatcher.register (payload) ->
 
 
     when Constants.ActionTypes.JOB_LOAD_SUCCESS
-      _store = _store.setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
+      _store = _store.withMutations((store) ->
+        store
+          .setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
+          .setIn ['jobsById', action.job.id,'isLoading'],false
+          )
+
       JobsStore.emitChange()
 
 module.exports = JobsStore
