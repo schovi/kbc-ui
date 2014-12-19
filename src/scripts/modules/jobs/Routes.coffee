@@ -11,6 +11,10 @@ routes =
       title: 'Jobs'
       defaultRouteHandler: JobsIndex
       reloaderHandler: JobsReloaderButton
+      poll:
+        interval: 10
+        action: (params) ->
+          JobsActionCreators.reloadJobs()
       requireData: [
         (params) ->
           JobsActionCreators.loadJobs()
@@ -27,6 +31,7 @@ routes =
             JobStatusLabel {status: job.get 'status'}
 
         handler: JobDetail
+
         requireData:
           [
             (params) ->
