@@ -19,13 +19,13 @@ JobDetail = React.createClass
     job: JobsStore.get jobId
 
   _renderRunInfoRow: (job) ->
-    isDuration = ->
-      job.get('startTime') and job.get('endTime')
+    jobStarted = ->
+      job.get('startTime')
 
     div {className: 'row'},
       div {className:'col-md-6'},"RunId " + job.get('runId')
       div {className:'col-md-6'},"Duration ",
-        if isDuration()
+        if jobStarted()
           Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
         else
            "N/A"
