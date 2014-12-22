@@ -1,5 +1,6 @@
 React = require('react')
 Link = React.createFactory(require('react-router').Link)
+Immutable = require('immutable')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 JobsStore = require('../../../stores/JobsStore.coffee')
@@ -57,8 +58,17 @@ JobsIndex = React.createClass
         span {className: 'th'},
           strong null, 'Duration'
 
+  _unknownComponent: (name) ->
+    result =
+      id: name
+      name: name
+      type: "unknown"
+    return Immutable.fromJS(result)
+
   _renderTableRow: (row,idx) ->
     rowComponent = ComponentsStore.getComponent(row.get 'component')
+    if not rowComponent
+      rowComponent = @_unknownComponent(row.get 'component')
 
     Link {className: "tr", to:"jobDetail", params:{jobId: row.get('id')}},
       div className: "td", row.get('id')
