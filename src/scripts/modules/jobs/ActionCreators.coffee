@@ -8,7 +8,7 @@ jobsApi = require('./JobsApi.coffee')
 module.exports =
   loadJobs: ->
     return Promise.resolve() if JobsStore.getIsLoaded()
-    @loadJobsForce(JobsStore.getOffset(),false, true)
+    @loadJobsForce(JobsStore.getOffset(), false, true)
 
   reloadJobs: () ->
     @loadJobsForce(0, false, true)
@@ -22,12 +22,12 @@ module.exports =
     limit = JobsStore.getLimit()
     query = JobsStore.getQuery()
     dispatcher.handleViewAction type: constants.ActionTypes.JOBS_LOAD
-    jobsApi.getJobsParametrized(query,limit,offset).then (jobs) ->
+    jobsApi.getJobsParametrized(query, limit, offset).then (jobs) ->
       if preserveCurrentOffset
         offset = JobsStore.getOffset()
       actions.recieveJobs(jobs, offset, resetJobs)
 
-  filterJobs:(query) ->
+  filterJobs: (query) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_SET_QUERY
       query: query
@@ -37,12 +37,12 @@ module.exports =
   loadJobDetail: (jobId) ->
     actions = @
     dispatcher.handleViewAction
-      type:constants.ActionTypes.JOB_LOAD
+      type: constants.ActionTypes.JOB_LOAD
       jobId: jobId
     jobsApi.getJobDetail(jobId).then (jobDetail) ->
       actions.recieveJobDetail(jobDetail)
 
-  recieveJobs:(jobs, newOffset, resetJobs) ->
+  recieveJobs: (jobs, newOffset, resetJobs) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
       jobs: jobs

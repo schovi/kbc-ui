@@ -6,7 +6,7 @@ ActionCreators = require('../../ActionCreators.coffee')
 
 
 JobsReloaderButton = React.createClass
-  displayName:'JobsReloaderButton'
+  displayName: 'JobsReloaderButton'
   mixins: [createStoreMixin(JobsStore)]
 
   getStateFromStores: ->

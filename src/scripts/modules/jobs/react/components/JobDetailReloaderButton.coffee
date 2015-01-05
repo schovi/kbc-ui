@@ -7,11 +7,11 @@ RoutesStore = require('../../../../stores/RoutesStore.coffee')
 JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel.coffee')
 
 JobDetailReloaderButton = React.createClass
-  displayName:'JobDetailReloaderButton'
+  displayName: 'JobDetailReloaderButton'
   mixins: [createStoreMixin(JobsStore)]
 
   _getJobId: ->
-    RoutesStore.getRouterState().getIn ['params','jobId']
+    RoutesStore.getRouterState().getIn ['params', 'jobId']
 
   getStateFromStores: ->
     job: JobsStore.get @_getJobId()
@@ -20,7 +20,7 @@ JobDetailReloaderButton = React.createClass
   render: ->
     React.DOM.span null,
       JobStatusLabel {status: @state.job.get 'status'}
-      RefreshIcon {isLoading:true} if @state.jobLoading
+      RefreshIcon {isLoading: true} if @state.jobLoading
 
 
 module.exports = JobDetailReloaderButton

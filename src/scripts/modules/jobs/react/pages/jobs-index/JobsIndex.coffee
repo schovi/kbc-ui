@@ -18,14 +18,14 @@ date = require '../../../../../utils/date.coffee'
 
 {div, span,input, strong, form, button} = React.DOM
 JobsIndex = React.createClass
-  mixins: [createStoreMixin(JobsStore,ComponentsStore)]
+  mixins: [createStoreMixin(JobsStore, ComponentsStore)]
 
   getStateFromStores: ->
     jobs: JobsStore.getAll()
     isLoading: JobsStore.getIsLoading()
     isLoaded: JobsStore.getIsLoaded()
     isLoadMore: JobsStore.getIsLoadMore()
-    query:JobsStore.getQuery()
+    query: JobsStore.getQuery()
 
   _search: (query)->
     ActionCreators.filterJobs(query)
@@ -36,7 +36,7 @@ JobsIndex = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      QueryRow(onSearch:@_search, query:@state.query)
+      QueryRow(onSearch: @_search, query: @state.query)
       @_renderTable()
       if @state.isLoadMore
         button onClick: @_loadMore, className: 'btn btn-default btn-large text-center',
@@ -62,7 +62,7 @@ JobsIndex = React.createClass
     result =
       id: name
       name: name
-      type: "unknown"
+      type: 'unknown'
     return Immutable.fromJS(result)
 
   _renderTableRow: (row,idx) ->
@@ -70,29 +70,29 @@ JobsIndex = React.createClass
     if not rowComponent
       rowComponent = @_unknownComponent(row.get 'component')
 
-    Link {className: "tr", to:"jobDetail", params:{jobId: row.get('id')}},
-      div className: "td", row.get('id')
-      div className: "td", JobStatusLabel {status: row.get 'status'}
-      div className: "td",
-        ComponentIcon {component: rowComponent, size:"32"}
+    Link {className: 'tr', to: 'jobDetail', params: {jobId: row.get('id')}},
+      div className: 'td', row.get('id')
+      div className: 'td', JobStatusLabel {status: row.get 'status'}
+      div className: 'td',
+        ComponentIcon {component: rowComponent, size: '32'}
         ' '
         ComponentName {component: rowComponent}
-      div className: "td", row.getIn ['token','description']
-      div className: "td",
+      div className: 'td', row.getIn ['token', 'description']
+      div className: 'td',
         date.format(row.get('createdTime'))
-      div className: "td",
+      div className: 'td',
         Duration {startTime: row.get('startTime'), endTime: row.get('endTime')}
 
 
   _renderTable: ->
-    console.log "rendering table"
+    console.log 'rendering table'
     idx = 0
-    div {className:"table table-striped table-hover"},
+    div {className: 'table table-striped table-hover'},
       @_renderTableHeader(),
-      div className: "tbody",
+      div className: 'tbody',
         @state.jobs.map((job) ->
           idx++
-          @_renderTableRow(job,idx)
+          @_renderTableRow(job, idx)
 
         , @).toArray()
 

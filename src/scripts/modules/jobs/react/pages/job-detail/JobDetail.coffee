@@ -15,7 +15,7 @@ JobDetail = React.createClass
   mixins: [createStoreMixin(JobsStore)]
 
   getStateFromStores: ->
-    jobId = RoutesStore.getRouterState().getIn ['params','jobId']
+    jobId = RoutesStore.getRouterState().getIn ['params', 'jobId']
     job: JobsStore.get jobId
 
   _renderRunInfoRow: (job) ->
@@ -23,65 +23,65 @@ JobDetail = React.createClass
       job.get('startTime')
 
     div {className: 'row'},
-      div {className:'col-md-6'},"RunId " + job.get('runId')
-      div {className:'col-md-6'},"Duration ",
+      div {className: 'col-md-6'}, 'RunId ' + job.get('runId')
+      div {className: 'col-md-6'}, 'Duration ',
         if jobStarted()
           Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
         else
-           "N/A"
+           'N/A'
 
   _renderRunTimesRow: (job) ->
-    renderDate =  (pdate) ->
+    renderDate = (pdate) ->
       if pdate
         date.format(pdate)
       else
-        "N/A"
-    div {className:'row'},
-      div {className:'col-md-6'},"Start ",
+        'N/A'
+    div {className: 'row'},
+      div {className: 'col-md-6'}, 'Start ',
         renderDate(job.get('startTime'))
-      div {className:'col-md-6'},"End ",
+      div {className: 'col-md-6'}, 'End ',
         renderDate(job.get('endTime'))
 
   _renderParamsRow: (job) ->
     status = job.get 'status'
     result = job.get 'result'
-    exceptionId = job.getIn ['result','exceptionId'] if result
-    message =  job.getIn ['result','message'] if result
+    exceptionId = job.getIn ['result', 'exceptionId'] if result
+    message =  job.getIn ['result', 'message'] if result
     div {className: 'row'},
-      div {className:'col-md-6'},
-        h4 null,"Params "
-        Tree {data:job.get('params')}
-      div {className:'col-md-6'},
-        h4 null,"Results "
+      div {className: 'col-md-6'},
+        h4 null, 'Params '
+        Tree {data: job.get('params')}
+      div {className: 'col-md-6'},
+        h4 null,'Results '
         if status == 'error'
           div {className: 'alert alert-danger'},
             if exceptionId
-              span null, "ExceptionId " + exceptionId
+              span null, 'ExceptionId ' + exceptionId
             p null, message
         else
-          Tree {data:result} if result
+          Tree {data: result} if result
 
 
   _renderGeneralInfoRow: (job)->
     component = ComponentsStore.getComponent(job.get 'component')
     div {className: 'row'},
-      div {className:'col-md-6'},
+      div {className: 'col-md-6'},
         span {className: 'form-control-static'},
-          ComponentIcon {component: component, size:"32"}
+          ComponentIcon {component: component, size: '32'}
           ' '
           ComponentName {component:component}
         ' '
-        span {className:'label label-info'},job.get('command')
-      div {className:'col-md-6'},
-        span null, "Created By"
+        span {className: 'label label-info'},job.get('command')
+      div {className: 'col-md-6'},
+        span null, 'Created By'
           ' '
-          strong null, job.getIn(['token','description'])
+          strong null, job.getIn(['token', 'description'])
           ' on '
           date.format(job.get('createdTime'))
 
-  _renderLogRow : (job) ->
-    div {className:"col-md-12"},
-      h4 null, "Log"
+  _renderLogRow: (job) ->
+    div {className: 'col-md-12'},
+      h4 null, 'Log'
       Events
         params:
           runId: job.get('runId')

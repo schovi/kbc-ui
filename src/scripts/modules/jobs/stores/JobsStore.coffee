@@ -9,7 +9,7 @@ List = Immutable.List
 
 _store = Map(
   jobsById: Map()
-  query:''
+  query: ''
   isLoading: false
   isLoaded: false
   isLoadMore: true
@@ -32,7 +32,7 @@ JobsStore = StoreUtils.createStore
         )
 
   get: (id) ->
-    _store.getIn ['jobsById',id]
+    _store.getIn ['jobsById', id]
 
   getIsLoading: ->
     _store.get 'isLoading'
@@ -56,7 +56,7 @@ JobsStore = StoreUtils.createStore
     _store.get 'isLoadMore'
 
   getIsJobLoading: (jobId) ->
-    _store.getIn(['jobsById',jobId,"isLoading"])
+    _store.getIn(['jobsById', jobId, 'isLoading'])
 
 
 
@@ -66,7 +66,7 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.JOB_LOAD
       jobId = action.jobId
-      _store = _store.setIn(['jobsById',jobId,'isLoading'], true)
+      _store = _store.setIn(['jobsById', jobId, 'isLoading'], true)
       JobsStore.emitChange()
     when Constants.ActionTypes.JOBS_LOAD
       _store = _store.set 'isLoading', true
@@ -97,7 +97,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         store
           .set('query', action.query.trim())
-          .set('offset',0)
+          .set('offset', 0)
           #.set('jobsById', Map())
       )
       JobsStore.emitChange()
@@ -107,7 +107,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         store
           .setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
-          .setIn ['jobsById', action.job.id,'isLoading'],false
+          .setIn ['jobsById', action.job.id, 'isLoading'], false
           )
 
       JobsStore.emitChange()
