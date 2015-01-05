@@ -38,7 +38,11 @@ Header = React.createClass
     breadcrumbs = []
     @state.breadcrumbs.forEach((part, i) ->
       if i != @state.breadcrumbs.size - 1
-        partElement = Link key: part.get('name'), to: part.getIn(['link', 'to']), params: part.getIn(['link', 'params']).toJS(),
+        partElement = Link
+          key: part.get('name')
+          to: part.getIn(['link', 'to'])
+          params: part.getIn(['link', 'params']).toJS()
+        ,
           part.get 'title'
         breadcrumbs.push partElement
         breadcrumbs.push(span className: 'kbc-icon-arrow-right', key: 'arrow-' + part.get('name'))

@@ -24,14 +24,20 @@ OrchestrationRow = React.createFactory React.createClass
     else
       disabled = ''
 
-
     lastExecutedJob = @props.orchestration.get 'lastExecutedJob'
     if lastExecutedJob?.get('startTime')
-      duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})
+      duration = DurationWithIcon
+        startTime: lastExecutedJob.get('startTime')
+        endTime: lastExecutedJob.get('endTime')
     else
       duration = ''
 
-    Link className: "list-group-item #{className}", to: 'orchestration', params: {orchestrationId: @props.orchestration.get('id')},
+    Link
+      className: "list-group-item #{className}"
+      to: 'orchestration'
+      params:
+        orchestrationId: @props.orchestration.get('id')
+    ,
       span className: 'table',
         span className: 'tr',
           span className: 'td kbc-td-status',

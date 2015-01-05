@@ -20,19 +20,27 @@ JobNavRow = React.createClass
   render: ->
     className = if  @props.isActive then 'active' else ''
 
-    Link {className: "list-group-item #{className}", to: 'orchestrationJob', params: {orchestrationId: @props.job.get('orchestrationId'), jobId: @props.job.get('id')}},
-       span className: 'table',
-        span className: 'tr',
-          span className: 'td kbc-td-status',
-            JobStatusCircle status: @props.job.get('status')
-          span className: 'td',
-            (em({title: @props.job.getIn(['initiatorToken', 'description'])}, 'manually') if @props.job.get('initializedBy') == 'manually')
-            strong null,
-              @props.job.get('id')
-            span null,
-              DurationWithIcon startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime') if @props.job.get('startTime')
-            span className: 'kb-info clearfix pull-right',
-              FinishedWithIcon endTime: @props.job.get('endTime')
+    Link
+      className: "list-group-item #{className}"
+      to: 'orchestrationJob'
+      params:
+        orchestrationId: @props.job.get('orchestrationId')
+        jobId: @props.job.get('id')
+    ,
+     span className: 'table',
+      span className: 'tr',
+        span className: 'td kbc-td-status',
+          JobStatusCircle status: @props.job.get('status')
+        span className: 'td',
+          if @props.job.get('initializedBy') == 'manually'
+            em title: @props.job.getIn(['initiatorToken', 'description']), 'manually'
+          strong null,
+            @props.job.get('id')
+          span null,
+            if @props.job.get('startTime')
+              DurationWithIcon startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')
+          span className: 'kb-info clearfix pull-right',
+            FinishedWithIcon endTime: @props.job.get('endTime')
 
 
 module.exports = JobNavRow

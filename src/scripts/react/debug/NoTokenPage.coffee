@@ -27,7 +27,12 @@ NoTokenPage = React.createClass
             strong null, 'Please enter your token:'
             form className: 'form-inline', onSubmit: @_useToken,
               div className: 'form-group',
-                input className: 'form-control input-sm', onChange: @_setToken, value: @state.token, style: {width: '400px'}
+                input
+                  className: 'form-control input-sm'
+                  onChange: @_setToken
+                  value: @state.token
+                  style:
+                    width: '400px'
               ' '
               button className: 'btn btn-primary', 'Use token'
 
