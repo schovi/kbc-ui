@@ -18,12 +18,10 @@ QueryRow = React.createClass
     @props.onSearch @state.query
     event.preventDefault()
   render: ->
-    div {className:"form-group form-group-sm"},
-      form {onSubmit:@_doSearch},
-        div {className:"input-group"},
-          input {type:'text', value:@state.query, className:'form-control', onChange: @_onQueryChange, placeholder:"search"},
-          div {className:"input-group-addon"},
-            span {className:"fa fa-fw fa-search", onClick:@_doSearch}
+    form {onSubmit:@_doSearch},
+      div {className:"row kbc-search kbc-search-row"},
+        span {className:"kbc-icon-search"}
+        input {type:'text', value:@state.query, className:'form-control', onChange: @_onQueryChange, placeholder:"search"}
 
 
 

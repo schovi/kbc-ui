@@ -87,7 +87,7 @@ JobsIndex = React.createClass
   _renderTable: ->
     console.log "rendering table"
     idx = 0
-    div {className:"table"},
+    div {className:"table table-striped table-hover"},
       @_renderTableHeader(),
       div className: "tbody",
         @state.jobs.map((job) ->
