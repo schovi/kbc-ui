@@ -27,7 +27,7 @@ JobsIndex = React.createClass
     isLoadMore: JobsStore.getIsLoadMore()
     query: JobsStore.getQuery()
 
-  _search: (query)->
+  _search: (query) ->
     ActionCreators.filterJobs(query)
     return
 

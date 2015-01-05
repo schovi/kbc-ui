@@ -10,10 +10,10 @@ module.exports =
     return Promise.resolve() if JobsStore.getIsLoaded()
     @loadJobsForce(JobsStore.getOffset(), false, true)
 
-  reloadJobs: () ->
+  reloadJobs: ->
     @loadJobsForce(0, false, true)
 
-  loadMoreJobs: () ->
+  loadMoreJobs: ->
     offset = JobsStore.getNextOffset()
     @loadJobsForce(offset, false, false)
 
@@ -52,4 +52,4 @@ module.exports =
   recieveJobDetail: (jobDetail) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOB_LOAD_SUCCESS
-      job : jobDetail
+      job: jobDetail

@@ -55,7 +55,10 @@ OrchestrationRow = React.createClass(
   render: ->
     lastExecutedJob = @props.orchestration.get('lastExecutedJob')
     if lastExecutedJob && lastExecutedJob.get 'startTime'
-      duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})
+      duration = (DurationWithIcon
+        startTime: lastExecutedJob.get('startTime')
+        endTime: lastExecutedJob.get('endTime')
+        )
     else
       duration = 'No run yet'
 

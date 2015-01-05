@@ -13,7 +13,7 @@ QueryRow = React.createClass
 
   _onQueryChange: (event) ->
     @setState
-      query:event.target.value
+      query: event.target.value
   _doSearch: (event) ->
     @props.onSearch @state.query
     event.preventDefault()
@@ -21,7 +21,13 @@ QueryRow = React.createClass
     form {onSubmit: @_doSearch},
       div {className: 'row kbc-search kbc-search-row'},
         span {className: 'kbc-icon-search'}
-        input {type:'text', value: @state.query, className: 'form-control', onChange: @_onQueryChange, placeholder: 'search'}
+        input
+          type: 'text'
+          value: @state.query
+          className: 'form-control'
+          onChange: @_onQueryChange
+          placeholder: 'search'
+
 
 
 

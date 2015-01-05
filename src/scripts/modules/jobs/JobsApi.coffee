@@ -13,22 +13,22 @@ createRequest = (method, path) ->
 
 module.exports =
   jobsApi =
-    getJobs : ->
+    getJobs: ->
       createRequest('GET', 'jobs')
       .promise()
       .then (response) ->
         response.body
 
-    getJobsParametrized: (query,limit,offset) ->
+    getJobsParametrized: (query, limit, offset) ->
       createRequest('GET','jobs')
-      .query({'q':query})
-      .query({'limit':limit})
-      .query({'offset':offset})
+      .query({'q': query})
+      .query({'limit': limit})
+      .query({'offset': offset})
       .promise()
       .then (response) ->
         response.body
 
-    getJobDetail : (jobId) ->
+    getJobDetail: (jobId) ->
       createRequest('GET','job/' + jobId)
       .promise()
       .then (response) ->

@@ -64,7 +64,8 @@ TasksEditTableRow = React.createClass
           onChange: @_handleActionChange
       td null,
         ModalTrigger
-          modal: TaskParametersEditModal(onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
+          modal: TaskParametersEditModal(
+            onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
         ,
           Tree data: @props.task.get('actionParameters')
       td null,
@@ -98,4 +99,3 @@ TasksEditTableRow = React.createClass
 
 
 module.exports = TasksEditTableRow
-

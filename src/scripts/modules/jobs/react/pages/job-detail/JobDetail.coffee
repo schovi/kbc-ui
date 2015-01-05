@@ -28,7 +28,7 @@ JobDetail = React.createClass
         if jobStarted()
           Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
         else
-           'N/A'
+          'N/A'
 
   _renderRunTimesRow: (job) ->
     renderDate = (pdate) ->
@@ -62,14 +62,14 @@ JobDetail = React.createClass
           Tree {data: result} if result
 
 
-  _renderGeneralInfoRow: (job)->
+  _renderGeneralInfoRow: (job) ->
     component = ComponentsStore.getComponent(job.get 'component')
     div {className: 'row'},
       div {className: 'col-md-6'},
         span {className: 'form-control-static'},
           ComponentIcon {component: component, size: '32'}
           ' '
-          ComponentName {component:component}
+          ComponentName {component: component}
         ' '
         span {className: 'label label-info'},job.get('command')
       div {className: 'col-md-6'},

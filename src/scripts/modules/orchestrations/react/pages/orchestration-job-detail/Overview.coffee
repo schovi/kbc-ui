@@ -23,7 +23,9 @@ JobDetailOverview = React.createClass
               strong className: 'col-md-9', date.format(@props.job.get('startTime'))
             div className: 'row',
               span className: 'col-md-3', 'Initialized '
-              strong className: 'col-md-9', "#{@props.job.get('initializedBy')} (#{@props.job.getIn(['initiatorToken', 'description'])})"
+              strong
+                className: 'col-md-9',
+                "#{@props.job.get('initializedBy')} (#{@props.job.getIn(['initiatorToken', 'description'])})"
           div className: 'td',
             div className: 'row',
               span className: 'col-md-3', 'Status '

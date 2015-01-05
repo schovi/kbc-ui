@@ -1,6 +1,8 @@
 React = require 'react'
 
-# origin: https://github.com/travis-ci/travis-web/blob/aa06f3947eaeeedf594a59f0ce629ad4cd2763c6/assets/scripts/app/helpers/helpers.coffee
+# origin: https://github.com/travis-ci/travis-web/blob
+#                /aa06f3947eaeeedf594a59f0ce629ad4cd2763c6/assets/scripts
+#                /app/helpers/helpers.coffee
 durationFrom = (started, finished) ->
   (new Date(finished).getTime() - new Date(started).getTime()) / 1000
 

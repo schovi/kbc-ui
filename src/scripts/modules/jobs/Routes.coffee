@@ -8,7 +8,7 @@ JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel.
 JobsStore = require('./stores/JobsStore.coffee')
 
 routes =
-      name:'jobs'
+      name: 'jobs'
       title: 'Jobs'
       defaultRouteHandler: JobsIndex
       reloaderHandler: JobsReloaderButton
@@ -22,7 +22,7 @@ routes =
         ]
 
       childRoutes: [
-        name:'jobDetail'
+        name: 'jobDetail'
         path: ':jobId'
         title: (routerState) ->
           jobId = routerState.getIn(['params', 'jobId'])
