@@ -25,11 +25,11 @@ module.exports =
     orchestrationsApi
     .getOrchestrations()
     .then((orchestrations) ->
-        # load success
-        actions.receiveAllOrchestrations(orchestrations)
-      )
+      # load success
+      actions.receiveAllOrchestrations(orchestrations)
+    )
     .catch (err) ->
-        console.log 'error', err
+      console.log 'error', err
 
   receiveAllOrchestrations: (orchestrations) ->
     dispatcher.handleViewAction(
@@ -60,12 +60,12 @@ module.exports =
     orchestrationsApi
     .getOrchestration(id)
     .then((orchestration) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
-          orchestration: orchestration
-        )
-        return
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
+        orchestration: orchestration
       )
+      return
+    )
     .catch((error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
@@ -113,18 +113,18 @@ module.exports =
     orchestrationsApi
     .getOrchestrationJobs(orchestrationId)
     .then((jobs) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
-          orchestrationId: orchestrationId
-          jobs: jobs
-        )
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
+        orchestrationId: orchestrationId
+        jobs: jobs
       )
+    )
     .catch((error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
-          orchestrationId: orchestrationId
-        )
-        throw error
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
+        orchestrationId: orchestrationId
+      )
+      throw error
     )
 
   loadOrchestrationJobs: (orchestrationId) ->
@@ -143,12 +143,12 @@ module.exports =
     orchestrationsApi
     .getJob(jobId)
     .then((job) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
-          orchestrationId: job.orchestrationId
-          job: job
-        )
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS
+        orchestrationId: job.orchestrationId
+        job: job
       )
+    )
 
   ###
     Ensure that job is loaded, cached version is accpeted

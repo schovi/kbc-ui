@@ -33,16 +33,16 @@ JobRow = React.createClass(
   render: ->
     actionButtons = []
     actionButtons.push(Link
-        key: 'detail'
-        to: 'orchestrationJob'
-        params:
-          orchestrationId: @getParams().orchestrationId
-          jobId: @props.job.get('id')
-        className: 'btn kbc-btn-link-icon'
-        onClick: (e) ->
-          e.stopPropagation()
-      ,
-        span className: 'fa fa-bars'
+      key: 'detail'
+      to: 'orchestrationJob'
+      params:
+        orchestrationId: @getParams().orchestrationId
+        jobId: @props.job.get('id')
+      className: 'btn kbc-btn-link-icon'
+      onClick: (e) ->
+        e.stopPropagation()
+    ,
+      span className: 'fa fa-bars'
     )
 
     (tr {onClick: @jobDetail},

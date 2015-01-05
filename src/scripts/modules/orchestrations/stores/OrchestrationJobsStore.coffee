@@ -92,7 +92,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         removeFromLoadingOrchestrations(store, parseInt(action.orchestrationId))
         .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->
-            jobsByOrchestrationId.set parseInt(action.orchestrationId), Immutable.fromJS(action.jobs)
+          jobsByOrchestrationId.set parseInt(action.orchestrationId), Immutable.fromJS(action.jobs)
         )
       )
       OrchestrationJobsStore.emitChange()

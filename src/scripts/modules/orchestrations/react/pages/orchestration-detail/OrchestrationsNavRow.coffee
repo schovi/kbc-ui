@@ -24,6 +24,7 @@ OrchestrationRow = React.createFactory React.createClass
     else
       disabled = ''
 
+
     lastExecutedJob = @props.orchestration.get 'lastExecutedJob'
     if lastExecutedJob?.get('startTime')
       duration = (DurationWithIcon {startTime: lastExecutedJob.get('startTime'), endTime: lastExecutedJob.get('endTime')})

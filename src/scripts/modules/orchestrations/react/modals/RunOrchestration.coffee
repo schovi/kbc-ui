@@ -19,8 +19,8 @@ RunOrchestration = React.createClass
     Modal title: "Run orchestration #{@props.orchestration.get('name')}", onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
         p null,
-          'You are about to run the orchestration '
-           strong null, @props.orchestration.get('name')
+          'You are about to run the orchestration ',
+           strong null, @props.orchestration.get('name'),
            ' manually and the notifications will be sent only to you.'
       div className: 'modal-footer',
         ButtonToolbar null,

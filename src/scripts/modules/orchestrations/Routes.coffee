@@ -53,7 +53,7 @@ routes =
       OrchestrationsStore.get(orchestrationId).get 'name'
 
     childRoutes: [
-      name:  'orchestrationJob'
+      name: 'orchestrationJob'
       reloaderHandler: JobReloaderButton
       poll:
         interval: 10

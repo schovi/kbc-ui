@@ -161,11 +161,11 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_ERROR
       _store = _store.withMutations (store) ->
-          store = store
-            .set 'isPending', false
-            .set 'error', Error.fromXhrError(action.error)
+        store = store
+          .set 'isPending', false
+          .set 'error', Error.fromXhrError(action.error)
 
-          store.set 'breadcrumbs', generateBreadcrumbs(store)
+        store.set 'breadcrumbs', generateBreadcrumbs(store)
 
     when Constants.ActionTypes.ROUTER_ROUTES_CONFIGURATION_RECEIVE
       _store = _store.set 'routesByName', nestedRoutesToByNameMap(action.routes)

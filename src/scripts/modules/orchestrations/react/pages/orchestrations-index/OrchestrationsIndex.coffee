@@ -52,7 +52,7 @@ Index = React.createClass
     (div {className: 'thead', key: 'table-header'},
       (div {className: 'tr'},
         (span {className: 'th'},
-          (strong null, 'Name')
+          (strong null, 'Name neco')
         ),
         (span {className: 'th'},
           (strong null, 'Last Run')

@@ -26,15 +26,15 @@ orchestrationsApi =
     createRequest('GET', 'orchestrations')
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
 
   getOrchestration: (id) ->
     createRequest('GET', "orchestrations/#{id}")
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
 
   deleteOrchestration: (id) ->
     createRequest('DELETE', "orchestrations/#{id}")
@@ -52,8 +52,8 @@ orchestrationsApi =
     .send(data)
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
 
   saveOrchestrationTasks: (id, tasks) ->
     createRequest('PUT', "orchestrations/#{id}/tasks")
@@ -67,14 +67,14 @@ orchestrationsApi =
     createRequest('GET', "orchestrations/#{id}/jobs")
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
 
   getJob: (id) ->
     createRequest('GET', "jobs/#{id}")
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
 
 module.exports = orchestrationsApi

@@ -84,23 +84,23 @@ else
 
     # wait for data and trigger render
     Promise.all(promises)
-      .then(->
-        RouterActionCreators.routeChangeSuccess(state)
-        React.render(React.createElement(Handler), rootNode)
+    .then(->
+      RouterActionCreators.routeChangeSuccess(state)
+      React.render(React.createElement(Handler), rootNode)
 
-        # Start pollers for new page
-        registeredPollers = RoutesStore
-          .getPollersForRoutes(state.routes)
-          .map((poller) ->
-            callback = -> poller.get('action')(state.params)
-            Timer.poll(callback, poller.get('interval'))
-            return callback
-          )
+      # Start pollers for new page
+      registeredPollers = RoutesStore
+        .getPollersForRoutes(state.routes)
+        .map((poller) ->
+          callback = -> poller.get('action')(state.params)
+          Timer.poll(callback, poller.get('interval'))
+          return callback
+        )
 
-      ).catch((error) ->
-        # render error page
-        console.log error, error.stack
-        RouterActionCreators.routeChangeError(error)
-        React.render(React.createElement(Handler, isError: true), rootNode)
-      )
+    ).catch((error) ->
+      # render error page
+      console.log error, error.stack
+      RouterActionCreators.routeChangeError(error)
+      React.render(React.createElement(Handler, isError: true), rootNode)
+    )
 

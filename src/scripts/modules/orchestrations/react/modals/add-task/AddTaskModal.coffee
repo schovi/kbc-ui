@@ -53,7 +53,7 @@ AddTaskModal = React.createClass
       selectedComponent: component
       currentStep: STEP_CONFIGURATION_SELECT
 
-  _handleComponentReset: () ->
+  _handleComponentReset: ->
     @setState
       selectedComponent: null
       currentStep: STEP_COMPONENT_SELECT

@@ -4,11 +4,13 @@ del = require 'del'
 size = require 'gulp-size'
 browserify = require 'browserify'
 coffeeify = require 'coffeeify'
+coffeelint = require 'gulp-coffeelint'
 watchify   = require 'watchify'
 envify = require 'envify/custom'
 chalk      = require 'chalk'
 source     = require 'vinyl-source-stream'
 prettyTime = require 'pretty-hrtime'
+merge = require 'merge-stream'
 path       = require 'path'
 ecstatic   = require 'ecstatic'
 rename = require 'gulp-rename'
@@ -66,17 +68,26 @@ gulp.task 'watch', ->
   bundle.transform(coffeeify)
   bundle.transform(envify(NODE_ENV: 'development'))
 
-  bundle.on 'update', ->
+  bundle.on 'update', (changedFiles) ->
     gutil.log "Starting '#{chalk.cyan 'rebundle'}'..."
     start = process.hrtime()
+
     build = bundle.bundle()
     .on 'error', handleError
     .pipe source 'bundle.js'
-
-    build
     .pipe gulp.dest 'tmp/scripts'
     .pipe(reload stream: true)
     gutil.log "Finished '#{chalk.cyan 'rebundle'}' after #{chalk.magenta prettyTime process.hrtime start}"
+
+    if changedFiles
+      lintStream = gulp.src(changedFiles)
+      .pipe(coffeelint('./coffeelint.json'))
+      .pipe(coffeelint.reporter())
+      .pipe(coffeelint.reporter('fail'))
+
+      return merge(lintStream, build)
+    else
+      return build
 
   .emit 'update'
 
@@ -103,6 +114,12 @@ gulp.task 'copy', ['clean'], ->
   .pipe(rename('index.html'))
   .pipe(gulp.dest('./dist'))
 
+gulp.task 'lint', ->
+  gulp.src(['./src/**/*.coffee', '!./src/scripts/__fixtures/martin.coffee'])
+  .pipe coffeelint('./coffeelint.json')
+  .pipe coffeelint.reporter()
+  .pipe coffeelint.reporter('fail')
+
 gulp.task 'build-scripts', ['clean'], ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
@@ -124,6 +141,6 @@ gulp.task 'build-scripts', ['clean'], ->
   .pipe(gulp.dest('./dist/scripts'))
 
 
-gulp.task 'build', [ 'build-styles', 'build-scripts', 'copy']
+gulp.task 'build', [ 'lint', 'build-styles', 'build-scripts', 'copy']
 
 gulp.task 'default', ['less', 'watch', 'server']
