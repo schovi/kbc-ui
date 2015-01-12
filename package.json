@@ -10,7 +10,7 @@
     "underscore": "~1.7.0",
     "react-router": "~0.11.6",
     "moment": "~2.8.3",
-    "immutable": "~3.3.0",
+    "immutable": "~3.5.0",
     "react-bootstrap": "~0.13.0",
     "prettycron": "git+https://git@github.com/keboola/prettycron.git#fdc0a11ec63d9aa449c38ac8961c0d173e6eb920",
     "fuzzy": "~0.1.0",
@@ -20,7 +20,8 @@
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "d3": "~3.5.2",
     "filesize": "~2.0.4",
-    "react-dnd": "~0.6.2"
+    "react-dnd": "~0.6.2",
+    "brace": "~0.4.0"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
@@ -46,7 +47,8 @@
     "gulp-size": "~1.1.0",
     "del": "~1.1.0",
     "gulp-coffeelint": "~0.4.0",
-    "merge-stream": "~0.1.6"
+    "merge-stream": "~0.1.6",
+    "reactify": "~0.17.1"
   },
   "scripts": {
     "test": "jest"

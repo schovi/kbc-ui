@@ -12,3 +12,4 @@ module.exports =
   SearchRow: require './SearchRow.coffee'
   Tree: require './Tree.coffee'
   Check: require './Check.coffee'
+  CodeEditor: require './CodeEditor.coffee'

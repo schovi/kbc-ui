@@ -14,6 +14,12 @@ ExDbStore = StoreUtils.createStore
   getConfig: (configId) ->
     _store.getIn ['configs', configId]
 
+  hasConfig: (configId) ->
+    _store.hasIn ['configs', configId]
+
+  getConfigQuery: (configId, queryId) ->
+    _store.getIn(['configs', configId, 'queries']).find (query) ->
+      parseInt(query.get 'id') == parseInt(queryId)
 
 Dispatcher.register (payload) ->
   action = payload.action

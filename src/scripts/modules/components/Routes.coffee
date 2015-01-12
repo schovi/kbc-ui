@@ -4,7 +4,8 @@ createComponentsIndex = require './react/pages/ComponentsIndex.coffee'
 createNewComponentPage = require './react/pages/NewComponent.coffee'
 createNewComponentButton = require './react/components/NewComponentButton.coffee'
 
-ExDbIndex = require '../ex-db/react/pages/Index.coffee'
+ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
+ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton.coffee'
 IntalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
@@ -35,7 +36,14 @@ routes =
       title: (routerState) ->
         configId = routerState.getIn ['params', 'config']
         'Database extractor - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
-      handler: ExDbIndex
+      defaultRouteHandler: ExDbIndex
+      childRoutes: [
+        name: 'ex-db-query'
+        path: 'query/:query'
+        title: ->
+          'query'
+        handler: ExDbQueryDetail
+      ]
     ]
 
   writers:
