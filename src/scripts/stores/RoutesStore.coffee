@@ -110,6 +110,9 @@ RoutesStore = StoreUtils.createStore
   getError: ->
     _store.get 'error'
 
+  hasRoute: (routeName) ->
+    _store.get('routesByName').has routeName
+
   getRequireDataFunctionsForRouterState: (routes) ->
     Immutable
       .fromJS(routes)

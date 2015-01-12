@@ -20,6 +20,9 @@ InstalledComponentsStore = StoreUtils.createStore
       component.get('type') == type
     )
 
+  getConfig: (componentId, configId) ->
+    _store.getIn ['components', componentId, 'configurations', configId]
+
   getIsLoading: ->
     _store.get 'isLoading'
 
@@ -40,7 +43,18 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
-          .set('components', Immutable.fromJS action.components)
+          .set('components',
+            ## convert to by key structure
+            Immutable.fromJS(action.components)
+            .toMap()
+            .map((component) ->
+              component.set 'configurations', component.get('configurations').toMap().mapKeys((key, config) ->
+                config.get 'id'
+              )
+            )
+            .mapKeys((key, component) ->
+              component.get 'id'
+            ))
       )
       InstalledComponentsStore.emitChange()
 

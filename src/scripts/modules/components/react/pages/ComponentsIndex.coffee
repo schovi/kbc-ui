@@ -4,7 +4,9 @@ _ = require 'underscore'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
 ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon.coffee')
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore.coffee'
+RoutesStore =  require '../../../../stores/RoutesStore.coffee'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
+Link = React.createFactory require('react-router').Link
 
 {div, table, tbody, tr, td, ul, li, a, span} = React.DOM
 
@@ -31,14 +33,22 @@ createComponentsIndex = (type) ->
         td null,
           ComponentIcon(component: component, size: '32')
           component.get('name')
-        td null, @renderConfigs(component.get('configurations'))
+        td null, @renderConfigs(component)
 
-    renderConfigs: (configurations) ->
+    renderConfigs: (component) ->
       ul null,
-        configurations.map((config) ->
+        component.get('configurations').map((config) ->
           li key: config.get('id'),
-            a null,
-              config.get('name')
+            if RoutesStore.hasRoute(component.get('id'))
+              Link
+                to: component.get('id')
+                params:
+                  config: config.get('id')
+              ,
+                config.get('name')
+            else
+              span null,
+                config.get('name')
             span className: 'kbc-icon-arrow-right'
         ).toArray()
 
