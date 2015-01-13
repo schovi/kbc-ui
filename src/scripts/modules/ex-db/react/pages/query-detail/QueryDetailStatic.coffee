@@ -28,7 +28,10 @@ module.exports = React.createClass
               span className: 'col-md-3', 'Incremental '
               strong className: 'col-md-9',
                 Check isChecked: @props.query.get 'incremental'
-      div null,
+      div
+        style:
+          'margin-top': '-30px'
+      ,
         CodeEditor
           readOnly: true
           value: @props.query.get 'query'

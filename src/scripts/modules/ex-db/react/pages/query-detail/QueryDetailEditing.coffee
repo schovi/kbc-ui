@@ -59,7 +59,10 @@ module.exports = React.createClass
                   type: 'checkbox'
                   checked: @props.query.get 'incremental'
                   onChange: @_handleIncrementalChange
-      div null,
+      div
+        style:
+          'margin-top': '-30px'
+      ,
         CodeEditor
           readOnly: false
           value: @props.query.get 'query'

@@ -23,7 +23,7 @@ module.exports = React.createClass
     editor.setHighlightActiveLine !@props.readOnly
     editor.setShowPrintMargin false
     # hide cursor in read-only mode
-    editor.renderer.$cursorLayer.element.style.opacity=0 if @props.readOnly
+    editor.renderer.$cursorLayer.element.style.opacity = 0 if @props.readOnly
     editor.clearSelection()
     editor.getSession().on 'change', @_handleChange
 
@@ -40,6 +40,6 @@ module.exports = React.createClass
     React.DOM.div
       style:
         width: '100%'
-        height: '400px'
+        height: '90vh'
     ,
       'ace editor'
