@@ -4,14 +4,17 @@ createComponentsIndex = require './react/pages/ComponentsIndex.coffee'
 createNewComponentPage = require './react/pages/NewComponent.coffee'
 createNewComponentButton = require './react/components/NewComponentButton.coffee'
 
-ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
-ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
+
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton.coffee'
 IntalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators.coffee'
-ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
 
+
+ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
+ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
+ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
+ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons.coffee'
 
 
 routes =
@@ -43,6 +46,7 @@ routes =
         title: ->
           'query'
         handler: ExDbQueryDetail
+        headerButtonsHandler: ExDbQueryHeaderButtons
       ]
     ]
 

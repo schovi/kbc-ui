@@ -98,6 +98,9 @@ RoutesStore = StoreUtils.createStore
   getRouterState: ->
     _store.get 'routerState'
 
+  getCurrentRouteParam: (paramName) ->
+    @getRouterState().getIn ['params', paramName]
+
   ###
     Returns if route change is pending
   ###

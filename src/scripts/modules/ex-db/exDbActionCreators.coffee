@@ -25,6 +25,27 @@ module.exports =
     return Promise.resolve() if exDbStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
 
+  updateEditingQuery: (configurationId, query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_EDIT_UPDATE
+      configurationId:  configurationId
+      query: query
+
+  editQuery: (configurationId, queryId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_EDIT_START
+      configurationId:  configurationId
+      queryId: queryId
+
+  cancelQueryEdit: (configurationId, queryId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_EDIT_CANCEL
+      configurationId:  configurationId
+      queryId: queryId
+
+  saveQueryEdit: (configurationId, query) ->
+
+
 
 
 
