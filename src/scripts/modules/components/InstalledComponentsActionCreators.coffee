@@ -1,4 +1,4 @@
-
+Promise = require 'bluebird'
 
 dispatcher = require '../../Dispatcher.coffee'
 constants = require '../../constants/KbcConstants.coffee'
@@ -30,6 +30,9 @@ module.exports =
       )
     )
 
+  loadComponents: ->
+    return Promise.resolve() if InstalledComponentsStore.getIsLoaded()
+    @loadComponentsForce()
 
   receiveAllComponents: (componentsRaw) ->
     dispatcher.handleViewAction(

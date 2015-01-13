@@ -7,6 +7,7 @@ StoreUtils = require '../../../utils/StoreUtils.coffee'
 
 _store = Map(
   components: Map()
+  isLoaded: false
   isLoading: false
 )
 
@@ -26,6 +27,9 @@ InstalledComponentsStore = StoreUtils.createStore
   getIsLoading: ->
     _store.get 'isLoading'
 
+  getIsLoaded: ->
+    _store.get 'isLoaded'
+
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -43,6 +47,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
+          .set('isLoaded', true)
           .set('components',
             ## convert to by key structure
             Immutable.fromJS(action.components)

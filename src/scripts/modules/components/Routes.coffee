@@ -22,6 +22,8 @@ routes =
   extractors:
     name: 'extractors'
     title: 'Extractors'
+    requireData: ->
+      InstalledComponentsActionsCreators.loadComponents()
     defaultRouteHandler: createComponentsIndex('extractor')
     headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor')
     reloaderHandler: ComponentReloaderButton
@@ -53,6 +55,8 @@ routes =
   writers:
     name: 'writers'
     title: 'Writers'
+    requireData: ->
+      InstalledComponentsActionsCreators.loadComponents()
     defaultRouteHandler: createComponentsIndex('writer')
     headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer')
     reloaderHandler: ComponentReloaderButton
