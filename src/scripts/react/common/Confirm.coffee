@@ -17,7 +17,15 @@ Confirm = React.createClass
     buttonType: 'danger'
 
   render: ->
-    ModalTrigger modal: ConfirmModal(@props),
-      React.Children.only(@props.children)
+    React.DOM.span
+      onClick: (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+        console.log 'click wrapper'
+    ,
+      ModalTrigger
+        modal: ConfirmModal(@props)
+      ,
+        React.Children.only(@props.children)
 
 module.exports = Confirm
