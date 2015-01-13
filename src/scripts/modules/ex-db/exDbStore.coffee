@@ -19,8 +19,7 @@ ExDbStore = StoreUtils.createStore
     _store.hasIn ['configs', configId]
 
   getConfigQuery: (configId, queryId) ->
-    _store.getIn(['configs', configId, 'queries']).find (query) ->
-      parseInt(query.get 'id') == parseInt(queryId)
+    _store.getIn ['configs', configId, 'queries', queryId]
 
   isEditingQuery: (configId, queryId) ->
     _store.hasIn ['editingQueries', configId, queryId]
@@ -33,9 +32,11 @@ Dispatcher.register (payload) ->
 
   switch action.type
     when constants.ActionTypes.EX_DB_CONFIGURATION_LOAD_SUCCESS
-      _store = _store.withMutations (store) ->
-        store.setIn ['configs', action.configuration.id], Immutable.fromJS(action.configuration)
-
+      configuration = Immutable.fromJS(action.configuration).withMutations (configuration) ->
+        configuration.set 'queries', configuration.get('queries').toMap().mapKeys((key, query) ->
+          query.get 'id'
+        )
+      _store = _store.setIn ['configs', action.configuration.id], configuration
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_START
@@ -51,6 +52,15 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.EX_DB_QUERY_EDIT_UPDATE
       # query is already in ImmutableJS structure
       _store = _store.setIn ['editingQueries', action.configurationId, action.query.get('id')], action.query
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['configs', action.configurationId, 'queries', action.queryId],
+          ExDbStore.getEditingQuery(action.configurationId, action.queryId)
+        .deleteIn ['editingQueries', action.configurationId, action.queryId]
+      console.log 'store', _store.toJS()
       ExDbStore.emitChange()
 
 module.exports = ExDbStore

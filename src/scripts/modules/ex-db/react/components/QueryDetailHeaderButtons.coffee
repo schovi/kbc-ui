@@ -39,6 +39,7 @@ module.exports = React.createClass
           'Cancel'
         button
           className: 'btn btn-success'
+          onClick: @_handleEditSave
         ,
           'Save'
     else

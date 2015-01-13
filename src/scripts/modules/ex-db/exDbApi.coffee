@@ -27,3 +27,10 @@ module.exports =
       response.body
     )
 
+  saveQuery: (configurationId, query) ->
+    createRequest('PUT', "configs/#{configurationId}/queries/#{query.id}")
+    .send(query)
+    .promise()
+    .then((response) ->
+        response.body
+      )

@@ -29,6 +29,7 @@ module.exports = React.createClass
     isEditing: isEditing
 
   render: ->
+    console.log 'is edit', @state.isEditing
     if @state.isEditing
       QueryDetailEditing
         query: @state.editingQuery

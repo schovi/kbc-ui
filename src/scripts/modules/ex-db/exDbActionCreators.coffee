@@ -28,24 +28,33 @@ module.exports =
   updateEditingQuery: (configurationId, query) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_QUERY_EDIT_UPDATE
-      configurationId:  configurationId
+      configurationId: configurationId
       query: query
 
   editQuery: (configurationId, queryId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_QUERY_EDIT_START
-      configurationId:  configurationId
+      configurationId: configurationId
       queryId: queryId
 
   cancelQueryEdit: (configurationId, queryId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_QUERY_EDIT_CANCEL
-      configurationId:  configurationId
+      configurationId: configurationId
       queryId: queryId
 
-  saveQueryEdit: (configurationId, query) ->
+  saveQueryEdit: (configurationId, queryId) ->
+    query = exDbStore.getEditingQuery configurationId, queryId
 
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
+      configurationId: configurationId
+      queryId: queryId
 
+    exDbApi
+    .saveQuery configurationId, query.toJS()
+    .then (response) ->
+      console.log 'saved', response
 
 
 
