@@ -83,7 +83,6 @@ gulp.task 'watch', ->
       lintStream = gulp.src(changedFiles)
       .pipe(coffeelint('./coffeelint.json'))
       .pipe(coffeelint.reporter())
-      .pipe(coffeelint.reporter('fail'))
 
       return merge(lintStream, build)
     else
