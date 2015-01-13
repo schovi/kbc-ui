@@ -1,6 +1,6 @@
 React = require 'react'
 ace = require('brace')
-require 'brace/theme/github'
+require 'brace/theme/chrome'
 require 'brace/mode/mysql'
 
 module.exports = React.createClass
@@ -17,9 +17,13 @@ module.exports = React.createClass
   componentDidMount: ->
     editor = ace.edit(@getDOMNode())
     editor.getSession().setMode 'ace/mode/mysql'
-    editor.setTheme 'ace/theme/github'
+    editor.setTheme 'ace/theme/chrome'
     editor.setValue @props.value
     editor.setReadOnly @props.readOnly
+    editor.setHighlightActiveLine !@props.readOnly
+    editor.setShowPrintMargin false
+    # hide cursor in read-only mode
+    editor.renderer.$cursorLayer.element.style.opacity=0 if @props.readOnly
     editor.clearSelection()
     editor.getSession().on 'change', @_handleChange
 
