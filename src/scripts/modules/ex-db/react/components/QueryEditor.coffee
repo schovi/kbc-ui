@@ -1,34 +1,29 @@
 React = require 'react'
 
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
 
-CodeEditor  = React.createFactory(require('../../../../../react/common/common.coffee').CodeEditor)
-Check = React.createFactory(require('../../../../../react/common/common.coffee').Check)
+CodeEditor  = React.createFactory(require('../../../../react/common/common.coffee').CodeEditor)
+Check = React.createFactory(require('../../../../react/common/common.coffee').Check)
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input} = React.DOM
 
 
 module.exports = React.createClass
-  displayName: 'ExDbQueryDetailEditing'
+  displayName: 'ExDbQueryEditor'
   propTypes:
     query: React.PropTypes.object.isRequired
-    configId: React.PropTypes.string.isRequired
+    onChange: React.PropTypes.func.isRequired
 
   _handleOutputTableChange: (event) ->
-    ExDbActionCreators.updateEditingQuery @props.configId,
-      @props.query.set 'outputTable', event.target.value
+    @props.onChange(@props.query.set 'outputTable', event.target.value)
 
   _handlePrimaryKeyChange: (event) ->
-    ExDbActionCreators.updateEditingQuery @props.configId,
-      @props.query.set 'primaryKey', event.target.value
+    @props.onChange(@props.query.set 'primaryKey', event.target.value)
 
   _handleIncrementalChange: (event) ->
-    ExDbActionCreators.updateEditingQuery @props.configId,
-      @props.query.set 'incremental', event.target.checked
+    @props.onChange(@props.query.set 'incremental', event.target.checked)
 
   _handleQueryChange: (data) ->
-    ExDbActionCreators.updateEditingQuery @props.configId,
-      @props.query.set 'query', data.value
+    @props.onChange(@props.query.set 'query', data.value)
 
   render: ->
     div className: 'container-fluid',

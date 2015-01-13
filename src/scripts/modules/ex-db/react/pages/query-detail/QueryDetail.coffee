@@ -5,7 +5,9 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 ExDbStore = require '../../../exDbStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
-QueryDetailEditing = React.createFactory(require './QueryDetailEditing.coffee')
+ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+
+QueryEditor = React.createFactory(require '../../components/QueryEditor.coffee')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic.coffee')
 
 
@@ -28,12 +30,14 @@ module.exports = React.createClass
     editingQuery: ExDbStore.getEditingQuery configId, queryId
     isEditing: isEditing
 
+  _handleQueryChange: (newQuery) ->
+    ExDbActionCreators.updateEditingQuery @state.configId, newQuery
+
   render: ->
-    console.log 'is edit', @state.isEditing
     if @state.isEditing
-      QueryDetailEditing
+      QueryEditor
         query: @state.editingQuery
-        configId: @state.configId
+        onChange: @_handleQueryChange
     else
       QueryDetailStatic
         query: @state.query

@@ -7,7 +7,8 @@ StoreUtils = require '../../utils/StoreUtils.coffee'
 
 _store = Map(
   configs: Map()
-  editingQueries: Map() # [configId][queryId]
+  editingQueries: Map() # [configId][queryId] - query
+  newQueries: Map() # [configId] - query
 )
 
 ExDbStore = StoreUtils.createStore
@@ -26,6 +27,14 @@ ExDbStore = StoreUtils.createStore
 
   getEditingQuery: (configId, queryId) ->
     _store.getIn ['editingQueries', configId, queryId]
+
+  getNewQuery: (configId) ->
+    _store.getIn ['newQueries', configId], Map(
+      incremental: false
+      outputTable: ''
+      primaryKey: ''
+      query: ''
+    )
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -58,13 +67,28 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['editingQueries', action.configurationId, action.query.get('id')], action.query
       ExDbStore.emitChange()
 
+    when constants.ActionTypes.EX_DB_NEW_QUERY_UPDATE
+      # query is already in ImmutableJS structure
+      _store = _store.setIn ['newQueries', action.configurationId], action.query
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_NEW_QUERY_RESET
+      _store = _store.deleteIn ['newQueries', action.configurationId]
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_NEW_QUERY_CREATED
+      _store = _store.withMutations (store) ->
+        store
+          .setIn ['configs', action.configurationId, 'queries', action.query.id], Immutable.fromJS(action.query)
+          .deleteIn ['newQueries', action.configurationId]
+      ExDbStore.emitChange()
+
     when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
       _store = _store.withMutations (store) ->
         store
         .setIn ['configs', action.configurationId, 'queries', action.queryId],
           ExDbStore.getEditingQuery(action.configurationId, action.queryId)
         .deleteIn ['editingQueries', action.configurationId, action.queryId]
-      console.log 'store', _store.toJS()
       ExDbStore.emitChange()
 
 module.exports = ExDbStore

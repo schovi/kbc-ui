@@ -2,7 +2,7 @@ React = require 'react'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
 ExDbStore = require '../../exDbStore.coffee'
 RoutesStore = require '../../../../stores/RoutesStore.coffee'
-ExDbActionCreators = require '../../exDbActionCreators.coffee'
+Link = React.createFactory(require('react-router').Link)
 
 {button, span} = React.DOM
 
@@ -16,13 +16,12 @@ module.exports = React.createClass
   getStateFromStores: ->
     currentConfigId: RoutesStore.getCurrentRouteParam 'config'
 
-  _handleQueryCreate: ->
-    ExDbActionCreators.createQuery @state.currentConfigId
-
   render: ->
-    button
+    Link
+      to: 'ex-db-new-query'
+      params:
+        config: @state.currentConfigId
       className: 'btn btn-success'
-      onClick: @_handleQueryCreate
     ,
       span className: 'kbc-icon-plus'
       ' Add Query'

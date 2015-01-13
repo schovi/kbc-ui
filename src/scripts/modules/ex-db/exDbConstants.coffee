@@ -9,4 +9,7 @@ module.exports =
     EX_DB_QUERY_EDIT_UPDATE: null
     EX_DB_QUERY_EDIT_SAVE: null
     EX_DB_QUERY_DELETE: null
+    EX_DB_NEW_QUERY_UPDATE: null
+    EX_DB_NEW_QUERY_RESET: null
+    EX_DB_NEW_QUERY_CREATED: null
   )

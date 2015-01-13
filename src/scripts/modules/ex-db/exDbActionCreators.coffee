@@ -57,10 +57,26 @@ module.exports =
       console.log 'saved', response
 
   createQuery: (configurationId) ->
+    newQuery = exDbStore.getNewQuery configurationId
     exDbApi
-    .createQuery configurationId
+    .createQuery configurationId, newQuery.toJS()
     .then (newQuery) ->
-      console.log 'created', newQuery
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_NEW_QUERY_CREATED
+        configurationId: configurationId
+        query: newQuery
+
+
+  updateNewQuery: (configurationId, query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_NEW_QUERY_UPDATE
+      configurationId: configurationId
+      query: query
+
+  resetNewQuery: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_NEW_QUERY_RESET
+      configurationId: configurationId
 
   deleteQuery: (configurationId, queryId) ->
     dispatcher.handleViewAction

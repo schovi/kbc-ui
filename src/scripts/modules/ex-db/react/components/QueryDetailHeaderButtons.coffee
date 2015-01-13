@@ -23,10 +23,10 @@ module.exports = React.createClass
   _handleEditStart: ->
     ExDbActionCreators.editQuery @state.currentConfigId, @state.currentQueryId
 
-  _handleEditCancel: ->
+  _handleCancel: ->
     ExDbActionCreators.cancelQueryEdit @state.currentConfigId, @state.currentQueryId
 
-  _handleEditSave: ->
+  _handleCreate: ->
     ExDbActionCreators.saveQueryEdit @state.currentConfigId, @state.currentQueryId
 
   render: ->
@@ -34,12 +34,12 @@ module.exports = React.createClass
       React.DOM.div className: 'kbc-buttons',
         button
           className: 'btn btn-link'
-          onClick: @_handleEditCancel
+          onClick: @_handleCancel
         ,
           'Cancel'
         button
           className: 'btn btn-success'
-          onClick: @_handleEditSave
+          onClick: @_handleCreate
         ,
           'Save'
     else

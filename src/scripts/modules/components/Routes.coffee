@@ -14,6 +14,8 @@ InstalledComponentsActionsCreators = require './InstalledComponentsActionCreator
 ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
 ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
+ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery.coffee'
+ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons.coffee'
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons.coffee'
 ExDbIndexHeaderButtons = require '../ex-db/react/components/AddQueryButton.coffee'
 
@@ -51,6 +53,13 @@ routes =
           'query'
         handler: ExDbQueryDetail
         headerButtonsHandler: ExDbQueryHeaderButtons
+      ,
+        name: 'ex-db-new-query'
+        path: 'new-query'
+        title: ->
+          'New query'
+        handler: ExDbNewQuery
+        headerButtonsHandler: ExDbNewQueryHeaderButtons
       ]
     ]
 

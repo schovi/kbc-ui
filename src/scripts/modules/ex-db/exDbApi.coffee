@@ -42,9 +42,9 @@ module.exports =
       response.body
     )
 
-  createQuery: (configurationId) ->
+  createQuery: (configurationId, newQuery) ->
     createRequest('POST', "configs/#{configurationId}/queries")
-    .send {}
+    .send(newQuery)
     .promise()
     .then((response) ->
       response.body
