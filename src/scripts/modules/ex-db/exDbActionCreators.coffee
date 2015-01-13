@@ -56,6 +56,20 @@ module.exports =
     .then (response) ->
       console.log 'saved', response
 
+  createQuery: (configurationId) ->
+    exDbApi
+    .createQuery configurationId
+    .then (newQuery) ->
+      console.log 'created', newQuery
+
+  deleteQuery: (configurationId, queryId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_DELETE
+      configurationId: configurationId
+      queryId: queryId
+
+    exDbApi
+    .deleteQuery configurationId, queryId
 
 
 

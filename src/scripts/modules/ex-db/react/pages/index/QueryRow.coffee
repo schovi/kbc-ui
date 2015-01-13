@@ -3,9 +3,9 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 
 Link = React.createFactory(require('react-router').Link)
 Check = React.createFactory(require('../../../../../react/common/common.coffee').Check)
+QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton.coffee'))
 
 {span, div, a, button, i} = React.DOM
-
 
 module.exports = React.createClass(
   displayName: 'QueryRow'
@@ -28,6 +28,9 @@ module.exports = React.createClass(
         Check isChecked: @props.query.get 'incremental'
       span className: 'td',
         @props.query.get 'primaryKey'
-      span className: 'td'
+      span className: 'td text-right',
+        QueryDeleteButton
+          query: @props.query
+          configurationId: @props.configurationId
 
 )

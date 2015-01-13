@@ -15,6 +15,7 @@ ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
 ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons.coffee'
+ExDbIndexHeaderButtons = require '../ex-db/react/components/AddQueryButton.coffee'
 
 
 routes =
@@ -42,6 +43,7 @@ routes =
         configId = routerState.getIn ['params', 'config']
         'Database extractor - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
       defaultRouteHandler: ExDbIndex
+      headerButtonsHandler: ExDbIndexHeaderButtons
       childRoutes: [
         name: 'ex-db-query'
         path: 'query/:query'

@@ -39,6 +39,10 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['configs', action.configuration.id], configuration
       ExDbStore.emitChange()
 
+    when constants.ActionTypes.EX_DB_QUERY_DELETE
+      _store = _store.deleteIn ['configs', action.configurationId, 'queries', action.queryId]
+      ExDbStore.emitChange()
+
     when constants.ActionTypes.EX_DB_QUERY_EDIT_START
       _store = _store.withMutations (store) ->
         store.setIn ['editingQueries', action.configurationId, action.queryId],

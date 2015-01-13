@@ -31,7 +31,6 @@ OrchestrationRunButton = React.createClass
           i className: 'fa fa-fw fa-play'
 
   _runOrchestrationModal: (e) ->
-    console.log 'run orch'
     e.stopPropagation()
     e.preventDefault()
 

@@ -32,5 +32,20 @@ module.exports =
     .send(query)
     .promise()
     .then((response) ->
-        response.body
-      )
+      response.body
+    )
+
+  deleteQuery: (configurationId, queryId) ->
+    createRequest('DELETE', "configs/#{configurationId}/queries/#{queryId}")
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  createQuery: (configurationId) ->
+    createRequest('POST', "configs/#{configurationId}/queries")
+    .send {}
+    .promise()
+    .then((response) ->
+      response.body
+    )
