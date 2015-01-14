@@ -1,6 +1,6 @@
 
 Dispatcher = require('../../../Dispatcher.coffee')
-constants = require '../../../constants/KbcConstants.coffee'
+constants = require '../Constants.coffee'
 Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils.coffee'
@@ -41,6 +41,11 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_ERROR
       _store = _store.set 'isLoading', false
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION
+      _store = _store.mergeIn ['components', action.componentId, 'configurations', action.configurationId],
+        action.data
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS

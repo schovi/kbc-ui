@@ -20,5 +20,12 @@ installedComponentsApi =
       response.body
     )
 
+  updateComponentConfiguration: (componentId, configurationId, data) ->
+    createRequest 'PUT', "components/#{componentId}/configs/#{configurationId}"
+    .type 'form'
+    .send data
+    .promise()
+    .then (response) ->
+      response.body
 
 module.exports = installedComponentsApi

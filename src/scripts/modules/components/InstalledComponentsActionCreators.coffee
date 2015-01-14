@@ -1,12 +1,12 @@
 Promise = require 'bluebird'
 
 dispatcher = require '../../Dispatcher.coffee'
-constants = require '../../constants/KbcConstants.coffee'
+constants = require './Constants.coffee'
 
 InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
 installedComponentsApi = require './InstalledComponentsApi.coffee'
 
-
+console.log 'constants', constants
 module.exports =
 
   loadComponentsForce: ->
@@ -39,3 +39,15 @@ module.exports =
       type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS
       components: componentsRaw
     )
+
+  updateComponentConfiguration: (componentId, configurationId, data) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION
+      componentId: componentId
+      configurationId: configurationId
+      data: data
+
+    installedComponentsApi
+    .updateComponentConfiguration componentId, configurationId, data
+    .then (response) ->
+      console.log 'saved', response
