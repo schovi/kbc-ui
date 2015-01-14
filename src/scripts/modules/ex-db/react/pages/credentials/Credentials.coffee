@@ -7,6 +7,8 @@ ExDbActionCreators = require '../../../exDbActionCreators.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
 CredentialsForm = React.createFactory(require './CredentialsForm.coffee')
+SSLForm = React.createFactory(require './SSLForm.coffee')
+FixedIP = React.createFactory(require './FixedIP.coffee')
 
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
@@ -26,14 +28,23 @@ module.exports = React.createClass
     ExDbActionCreators.updateEditingCredentials @state.configuration.get('id'), newCredentials
 
   render: ->
+    if @state.isEditing
+      credentials = @state.editingCredentials
+    else
+      credentials = @state.configuration.get 'credentials'
+
     div className: 'container-fluid kbc-main-content',
       TabbedArea defaultActiveKey: 'db', animation: false,
         TabPane eventKey: 'db', tab: 'Database Credentials',
           CredentialsForm
-            credentials: if @state.isEditing then @state.editingCredentials else @state.configuration.get 'credentials'
+            credentials: credentials
             enabled: @state.isEditing
             onChange: @_handleCredentialsChange
         TabPane eventKey: 'ssl', tab: 'SSL',
-          'TODO SSL'
+          SSLForm
+            credentials: credentials
+            enabled: @state.isEditing
+            onChange: @_handleCredentialsChange
         TabPane eventKey: 'fixedIp', tab: 'Fixed IP',
-          'TODO FIXED'
+          FixedIP
+            credentials: credentials

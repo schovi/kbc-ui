@@ -1,7 +1,13 @@
 React = require 'react'
+_ = require 'underscore'
 Input = React.createFactory(require('react-bootstrap').Input)
 
-{form, div} = React.DOM
+{form, div, label, p, option} = React.DOM
+
+_drivers =
+  mysql: 'MySQL'
+  mssql: 'MSSQL'
+  pgsql: 'Postgre SQL'
 
 module.exports = React.createClass
   displayName: 'ExDbCredentialsForm'
@@ -16,6 +22,7 @@ module.exports = React.createClass
   render: ->
     form className: 'form-horizontal',
       div className: 'row',
+        @_createSelect 'Driver', 'driver', _drivers
         @_createInput 'Host name', 'host'
         @_createInput 'Port', 'port'
         @_createInput 'Username', 'user'
@@ -25,12 +32,38 @@ module.exports = React.createClass
   _handleChange: (propName, event) ->
     @props.onChange(@props.credentials.set propName, event.target.value)
 
-  _createInput: (label, propName) ->
-    Input
-      label: label
-      type: 'text'
-      disabled: !@props.enabled
-      value: @props.credentials.get propName
-      labelClassName: 'col-xs-4'
-      wrapperClassName: 'col-xs-8'
-      onChange: @_handleChange.bind @, propName
+  _createInput: (labelValue, propName) ->
+    if @props.enabled
+      Input
+        label: labelValue
+        type: 'text'
+        value: @props.credentials.get propName
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+        onChange: @_handleChange.bind @, propName
+    else
+      @_createStaticControl labelValue, propName
+
+  _createSelect: (labelValue, propName, options) ->
+    if @props.enabled
+      Input
+        label: labelValue
+        type: 'select'
+        value: @props.credentials.get propName
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+        onChange: @_handleChange.bind @, propName
+      ,
+        _.map options, (label, value) ->
+          option value: value,
+            label
+    else
+      @_createStaticControl labelValue, propName
+
+  _createStaticControl: (labelValue, propName) ->
+    div className: 'form-group',
+      label className: 'control-label col-xs-4',
+        labelValue
+      div className: 'col-xs-8',
+        p className: 'form-control-static',
+          @props.credentials.get propName
