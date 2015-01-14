@@ -27,5 +27,6 @@ module.exports = React.createClass
   render: ->
     InlineEditArea
       text: @state.config.get 'description'
+      placeholder: 'Describe the component ...'
       onSave: @_handleSave
 
