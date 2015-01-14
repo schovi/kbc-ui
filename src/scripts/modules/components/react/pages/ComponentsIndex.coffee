@@ -24,7 +24,7 @@ createComponentsIndex = (type) ->
         @renderComponentRow component
       , @).toArray()
 
-      div className: 'container-fluid',
+      div className: 'container-fluid kbc-main-content',
         table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
           tbody null, rows
 

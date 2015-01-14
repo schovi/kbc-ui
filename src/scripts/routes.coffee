@@ -10,7 +10,7 @@ jobsRoutes = require './modules/jobs/Routes.coffee'
 Transformations = React.createClass
   displayName: 'Transformations'
   render: ->
-    React.DOM.div className: 'container-fluid', 'Transformations'
+    React.DOM.div className: 'container-fluid kbc-main-content', 'Transformations'
 
 
 Writers = React.createClass
@@ -21,17 +21,17 @@ Writers = React.createClass
 Home = React.createClass
   displayName: 'Home'
   render: ->
-    React.DOM.div className: 'container-fluid', 'Home'
+    React.DOM.div className: 'container-fluid kbc-main-content', 'Home'
 
 Storage = React.createClass
   displayName: 'Storage'
   render: ->
-    React.DOM.div className: 'container-fluid', 'Storage'
+    React.DOM.div className: 'container-fluid kbc-main-content', 'Storage'
 
 NotFound = React.createClass
   displayName: 'NotFound'
   render: ->
-    React.DOM.div className: 'container-fluid', 'Page not found'
+    React.DOM.div className: 'container-fluid kbc-main-content', 'Page not found'
 
 
 # Custom routing configuration object

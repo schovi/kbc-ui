@@ -11,7 +11,7 @@ module.exports = React.createClass
     query: React.PropTypes.object.isRequired
 
   render: ->
-    div className: 'container-fluid',
+    div className: 'container-fluid kbc-main-content',
       div className: 'table kbc-table-border-vertical kbc-detail-table',
         div className: 'tr',
           div className: 'td',

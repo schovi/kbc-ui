@@ -56,7 +56,7 @@ OrchestrationTasks = React.createClass
       isEditing: true
 
   render: ->
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)

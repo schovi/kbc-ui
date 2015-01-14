@@ -42,7 +42,7 @@ createNewComponentPage = (type) ->
       filter: ComponentsStore.getFilter(type)
 
     render: ->
-      div className: 'container-fluid',
+      div className: 'container-fluid kbc-main-content',
         SearchRow(className: 'row kbc-search-row', onChange: @_handleFilterChange, query: @state.filter)
         @renderComponents()
 

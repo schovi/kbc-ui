@@ -35,7 +35,7 @@ JobsIndex = React.createClass
     ActionCreators.loadMoreJobs()
 
   render: ->
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       QueryRow(onSearch: @_search, query: @state.query)
       @_renderTable()
       if @state.isLoadMore

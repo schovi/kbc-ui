@@ -28,7 +28,7 @@ Index = React.createClass
     filter: OrchestrationStore.getFilter()
 
   render: ->
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
       if @state.orchestrations.count()
         @_renderTable()

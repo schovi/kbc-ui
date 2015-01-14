@@ -40,7 +40,7 @@ OrchestrationJobDetail = React.createClass
     OrchestrationsActionCreators.loadOrchestrationJobs(@state.job.get 'orchestrationId')
 
   render: ->
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},
           JobsNav

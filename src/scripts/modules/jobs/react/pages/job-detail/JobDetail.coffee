@@ -90,7 +90,7 @@ JobDetail = React.createClass
 
   render: ->
     job = @state.job
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)
       @_renderRunTimesRow(job)

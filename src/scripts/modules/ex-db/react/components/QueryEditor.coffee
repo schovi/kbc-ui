@@ -26,7 +26,7 @@ module.exports = React.createClass
     @props.onChange(@props.query.set 'query', data.value)
 
   render: ->
-    div className: 'container-fluid',
+    div className: 'container-fluid kbc-main-content',
       div className: 'table kbc-table-border-vertical kbc-detail-table',
         div className: 'tr',
           div className: 'td',

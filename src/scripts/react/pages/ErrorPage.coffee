@@ -14,7 +14,7 @@ ErrorPage = React.createClass
     error: RoutesStore.getError()
 
   render: ->
-    div className: 'container-fluid',
+    div className: 'container-fluid kbc-main-content',
       Alert bsStyle: 'danger',
         p null, @state.error?.getText()
 
