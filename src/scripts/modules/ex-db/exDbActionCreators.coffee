@@ -87,6 +87,38 @@ module.exports =
     exDbApi
     .deleteQuery configurationId, queryId
 
+  ###
+    Credentials actions
+  ###
+  editCredentials: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_START
+      configurationId: configurationId
+
+  cancelCredentialsEdit: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_CANCEL
+      configurationId: configurationId
+
+  updateEditingCredentials: (configurationId, credentials) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_UPDATE
+      configurationId: configurationId
+      credentials: credentials
+
+  saveCredentialsEdit: (configurationId) ->
+    credentials = exDbStore.getEditingCredentials configurationId
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE
+      configurationId: configurationId
+
+    exDbApi
+    .saveCredentials configurationId, credentials.toJS()
+    .then (response) ->
+      console.log 'saved', response
+
+
 
 
 

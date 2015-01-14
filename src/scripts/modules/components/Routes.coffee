@@ -13,11 +13,12 @@ InstalledComponentsActionsCreators = require './InstalledComponentsActionCreator
 
 ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
 ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
+ExDbCredentials = require '../ex-db/react/pages/credentials/Credentials.coffee'
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
 ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery.coffee'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons.coffee'
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons.coffee'
-ExDbIndexHeaderButtons = require '../ex-db/react/components/AddQueryButton.coffee'
+ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons.coffee'
 
 
 routes =
@@ -45,7 +46,6 @@ routes =
         configId = routerState.getIn ['params', 'config']
         'Database extractor - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
       defaultRouteHandler: ExDbIndex
-      headerButtonsHandler: ExDbIndexHeaderButtons
       childRoutes: [
         name: 'ex-db-query'
         path: 'query/:query'
@@ -60,6 +60,13 @@ routes =
           'New query'
         handler: ExDbNewQuery
         headerButtonsHandler: ExDbNewQueryHeaderButtons
+      ,
+        name: 'ex-db-credentials'
+        path: 'credentials'
+        title: ->
+          'Credentials'
+        handler: ExDbCredentials
+        headerButtonsHandler: ExDbCredentialsHeaderButtons
       ]
     ]
 

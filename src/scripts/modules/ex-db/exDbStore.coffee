@@ -7,6 +7,7 @@ StoreUtils = require '../../utils/StoreUtils.coffee'
 
 _store = Map(
   configs: Map()
+  editingCredentials: Map() # [configId] - credentials
   editingQueries: Map() # [configId][queryId] - query
   newQueries: Map() # [configId] - query
 )
@@ -35,6 +36,12 @@ ExDbStore = StoreUtils.createStore
       primaryKey: ''
       query: ''
     )
+
+  isEditingCredentials: (configId) ->
+    _store.hasIn ['editingCredentials', configId]
+
+  getEditingCredentials: (configId) ->
+    _store.getIn ['editingCredentials', configId]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -90,5 +97,30 @@ Dispatcher.register (payload) ->
           ExDbStore.getEditingQuery(action.configurationId, action.queryId)
         .deleteIn ['editingQueries', action.configurationId, action.queryId]
       ExDbStore.emitChange()
+
+    ## Credentials edit handling
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_START
+      _store = _store.withMutations (store) ->
+        store.setIn ['editingCredentials', action.configurationId],
+          ExDbStore.getConfig(action.configurationId).get 'credentials'
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_CANCEL
+      _store = _store.deleteIn ['editingCredentials', action.configurationId]
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_UPDATE
+      # credentials are already in ImmutableJS structure
+      _store = _store.setIn ['editingCredentials', action.configurationId], action.credentials
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['configs', action.configurationId, 'credentials'],
+            ExDbStore.getEditingCredentials(action.configurationId)
+        .deleteIn ['editingCredentials', action.configurationId]
+      ExDbStore.emitChange()
+
 
 module.exports = ExDbStore

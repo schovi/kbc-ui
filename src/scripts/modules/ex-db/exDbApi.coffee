@@ -49,3 +49,10 @@ module.exports =
     .then((response) ->
       response.body
     )
+
+  saveCredentials: (configurationId, credentials) ->
+    createRequest 'POST', "configs/#{configurationId}/credentials"
+    .send credentials
+    .promise()
+    .then (response) ->
+      response.body
