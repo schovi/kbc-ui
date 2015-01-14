@@ -118,6 +118,12 @@ module.exports =
     .then (response) ->
       console.log 'saved', response
 
+  testCredentials: (credentials) ->
+    exDbApi
+    .testCredentials credentials.toJS()
+    .then (job) ->
+      console.log 'job', job
+
 
 
 

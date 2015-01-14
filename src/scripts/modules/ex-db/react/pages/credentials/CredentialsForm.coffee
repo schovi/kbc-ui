@@ -1,6 +1,10 @@
 React = require 'react'
 _ = require 'underscore'
+
+ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+
 Input = React.createFactory(require('react-bootstrap').Input)
+TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup.coffee')
 
 {form, div, label, p, option} = React.DOM
 
@@ -28,6 +32,8 @@ module.exports = React.createClass
         @_createInput 'Username', 'user'
         @_createInput 'Password', 'password'
         @_createInput 'Connection retries', 'retries'
+        TestCredentialsButtonGroup
+          credentials: @props.credentials
 
   _handleChange: (propName, event) ->
     @props.onChange(@props.credentials.set propName, event.target.value)
@@ -67,3 +73,4 @@ module.exports = React.createClass
       div className: 'col-xs-8',
         p className: 'form-control-static',
           @props.credentials.get propName
+

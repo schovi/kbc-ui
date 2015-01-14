@@ -21,13 +21,13 @@ ExDbStore = StoreUtils.createStore
     _store.hasIn ['configs', configId]
 
   getConfigQuery: (configId, queryId) ->
-    _store.getIn ['configs', configId, 'queries', queryId]
+    _store.getIn ['configs', configId, 'queries', parseInt(queryId)]
 
   isEditingQuery: (configId, queryId) ->
-    _store.hasIn ['editingQueries', configId, queryId]
+    _store.hasIn ['editingQueries', configId, parseInt(queryId)]
 
   getEditingQuery: (configId, queryId) ->
-    _store.getIn ['editingQueries', configId, queryId]
+    _store.getIn ['editingQueries', configId, parseInt(queryId)]
 
   getNewQuery: (configId) ->
     _store.getIn ['newQueries', configId], Map(
@@ -56,17 +56,17 @@ Dispatcher.register (payload) ->
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_DELETE
-      _store = _store.deleteIn ['configs', action.configurationId, 'queries', action.queryId]
+      _store = _store.deleteIn ['configs', action.configurationId, 'queries', parseInt(action.queryId)]
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_START
       _store = _store.withMutations (store) ->
-        store.setIn ['editingQueries', action.configurationId, action.queryId],
+        store.setIn ['editingQueries', action.configurationId, parseInt(action.queryId)],
           ExDbStore.getConfigQuery action.configurationId, action.queryId
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_CANCEL
-      _store = _store.deleteIn ['editingQueries', action.configurationId, action.queryId]
+      _store = _store.deleteIn ['editingQueries', action.configurationId, parseInt(action.queryId)]
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_UPDATE
@@ -93,9 +93,9 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
       _store = _store.withMutations (store) ->
         store
-        .setIn ['configs', action.configurationId, 'queries', action.queryId],
-          ExDbStore.getEditingQuery(action.configurationId, action.queryId)
-        .deleteIn ['editingQueries', action.configurationId, action.queryId]
+        .setIn ['configs', action.configurationId, 'queries', parseInt(action.queryId)],
+          ExDbStore.getEditingQuery(action.configurationId, parseInt(action.queryId))
+        .deleteIn ['editingQueries', action.configurationId, parseInt(action.queryId)]
       ExDbStore.emitChange()
 
     ## Credentials edit handling

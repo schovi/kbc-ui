@@ -56,3 +56,10 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+  testCredentials: (credentials) ->
+    createRequest 'POST', 'test'
+    .send credentials
+    .promise()
+    .then (response) ->
+      response.body
