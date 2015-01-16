@@ -1,5 +1,7 @@
 Promise = require 'bluebird'
 
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators.coffee'
+
 dispatcher = require '../../Dispatcher.coffee'
 constants = require './Constants.coffee'
 componentRunner = require './ComponentRunner.coffee'
@@ -58,4 +60,5 @@ module.exports =
       data: params
       method: method
     .then (job) ->
-      console.log 'job created'
+      console.log 'job created', job
+      ApplicationActionCreators.sendNotification('')

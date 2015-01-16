@@ -7,8 +7,12 @@ constants = require '../constants/KbcConstants.coffee'
 module.exports =
 
   receiveApplicationData: (data) ->
-    dispatcher.handleViewAction(
+    dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_DATA_RECEIVED
       applicationData: data
-    )
+
+  sendNotification: (notification) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
+      notification: notification
 

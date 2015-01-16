@@ -3,7 +3,6 @@
 dispatcher = require '../../Dispatcher.coffee'
 constants = require './Constants.coffee'
 
-
 module.exports =
 
   setComponentsFilter: (query, componentType) ->
@@ -18,3 +17,4 @@ module.exports =
       type: constants.ActionTypes.COMPONENTS_LOAD_SUCCESS
       components: componentsRaw
     )
+
