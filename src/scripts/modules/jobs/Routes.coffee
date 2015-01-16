@@ -36,12 +36,10 @@ routes =
             job = JobsStore.get jobId
             if job and job.get('status') in ['waiting','processing']
               JobsActionCreators.loadJobDetail(params.jobId)
-
-        requireData:
-          [
-            (params) ->
-              JobsActionCreators.loadJobDetail(params.jobId)
-            ]
+        requireData: [
+          (params) ->
+            JobsActionCreators.loadJobDetail(params.jobId)
         ]
+      ]
 
 module.exports = routes

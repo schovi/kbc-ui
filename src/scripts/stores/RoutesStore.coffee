@@ -101,6 +101,9 @@ RoutesStore = StoreUtils.createStore
   getCurrentRouteParam: (paramName) ->
     @getRouterState().getIn ['params', paramName]
 
+  getCurrentRouteIntParam: (paramName) ->
+    parseInt(@getCurrentRouteParam paramName)
+
   ###
     Returns if route change is pending
   ###

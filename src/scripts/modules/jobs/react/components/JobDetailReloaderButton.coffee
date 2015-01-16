@@ -11,7 +11,7 @@ JobDetailReloaderButton = React.createClass
   mixins: [createStoreMixin(JobsStore)]
 
   _getJobId: ->
-    RoutesStore.getRouterState().getIn ['params', 'jobId']
+    RoutesStore.getCurrentRouteIntParam 'jobId'
 
   getStateFromStores: ->
     job: JobsStore.get @_getJobId()

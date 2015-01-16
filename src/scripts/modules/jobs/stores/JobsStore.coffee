@@ -9,6 +9,7 @@ List = Immutable.List
 
 _store = Map(
   jobsById: Map()
+  loadingJobs: List()
   query: ''
   isLoading: false
   isLoaded: false
@@ -56,7 +57,7 @@ JobsStore = StoreUtils.createStore
     _store.get 'isLoadMore'
 
   getIsJobLoading: (jobId) ->
-    _store.getIn(['jobsById', jobId, 'isLoading'])
+    _store.get('loadingJobs').contains jobId
 
 
 
@@ -66,7 +67,8 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.JOB_LOAD
       jobId = action.jobId
-      _store = _store.setIn(['jobsById', jobId, 'isLoading'], true)
+      _store = _store.update 'loadingJobs', (loadingJobs) ->
+        loadingJobs.push jobId
       JobsStore.emitChange()
     when Constants.ActionTypes.JOBS_LOAD
       _store = _store.set 'isLoading', true
@@ -104,11 +106,11 @@ Dispatcher.register (payload) ->
 
 
     when Constants.ActionTypes.JOB_LOAD_SUCCESS
-      _store = _store.withMutations((store) ->
+      _store = _store.withMutations (store) ->
         store
           .setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
-          .setIn ['jobsById', action.job.id, 'isLoading'], false
-          )
+          .update 'loadingJobs', (loadingJobs) ->
+            loadingJobs.remove(loadingJobs.indexOf(action.job.id))
 
       JobsStore.emitChange()
 

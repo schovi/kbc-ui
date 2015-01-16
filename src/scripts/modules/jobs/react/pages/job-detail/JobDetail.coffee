@@ -15,8 +15,7 @@ JobDetail = React.createClass
   mixins: [createStoreMixin(JobsStore)]
 
   getStateFromStores: ->
-    jobId = RoutesStore.getRouterState().getIn ['params', 'jobId']
-    job: JobsStore.get jobId
+    job: JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
 
   _renderRunInfoRow: (job) ->
     jobStarted = ->
@@ -63,6 +62,7 @@ JobDetail = React.createClass
 
 
   _renderGeneralInfoRow: (job) ->
+    console.log 'job', job.toJS()
     component = ComponentsStore.getComponent(job.get 'component')
     div {className: 'row'},
       div {className: 'col-md-6'},
@@ -90,6 +90,7 @@ JobDetail = React.createClass
 
   render: ->
     job = @state.job
+    console.log 'job render', job.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)
