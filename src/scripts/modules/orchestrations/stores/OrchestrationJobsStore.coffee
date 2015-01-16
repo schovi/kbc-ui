@@ -44,14 +44,14 @@ OrchestrationJobsStore = StoreUtils.createStore
   ###
   getOrchestrationJobs: (idOrchestration) ->
     _store
-      .getIn(['jobsByOrchestrationId', parseInt(idOrchestration)], List())
+      .getIn(['jobsByOrchestrationId', idOrchestration], List())
       .sortBy((job) -> -1 * job.get 'id')
 
   ###
     Check if store contains job for specifed orchestration
   ###
   hasOrchestrationJobs: (idOrchestration) ->
-    _store.get('jobsByOrchestrationId').has parseInt(idOrchestration)
+    _store.get('jobsByOrchestrationId').has idOrchestration
 
   ###
     Returns one job by it's id
@@ -59,7 +59,7 @@ OrchestrationJobsStore = StoreUtils.createStore
   getJob: (id) ->
     foundJob = null
     _store.get('jobsByOrchestrationId').find (jobs) ->
-      foundJob = jobs.find (job) -> job.get('id') == parseInt(id)
+      foundJob = jobs.find (job) -> job.get('id') == id
     foundJob
 
   ###
@@ -72,7 +72,7 @@ OrchestrationJobsStore = StoreUtils.createStore
     Test if specified orchestration jobs are currently being loaded
   ###
   isLoading: (idOrchestration) ->
-    _store.get('loadingOrchestrationJobs').contains parseInt(idOrchestration)
+    _store.get('loadingOrchestrationJobs').contains idOrchestration
 
 
 Dispatcher.register (payload) ->
@@ -81,18 +81,18 @@ Dispatcher.register (payload) ->
   switch action.type
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD
-      _store = addToLoadingOrchestrations(_store, parseInt(action.orchestrationId))
+      _store = addToLoadingOrchestrations(_store, action.orchestrationId)
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_ERROR
-      _store = removeFromLoadingOrchestrations(_store, parseInt(action.orchestrationId))
+      _store = removeFromLoadingOrchestrations(_store, action.orchestrationId)
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOBS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
-        removeFromLoadingOrchestrations(store, parseInt(action.orchestrationId))
+        removeFromLoadingOrchestrations(store, action.orchestrationId)
         .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->
-          jobsByOrchestrationId.set parseInt(action.orchestrationId), Immutable.fromJS(action.jobs)
+          jobsByOrchestrationId.set action.orchestrationId, Immutable.fromJS(action.jobs)
         )
       )
       OrchestrationJobsStore.emitChange()

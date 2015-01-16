@@ -52,16 +52,16 @@ OrchestrationStore = StoreUtils.createStore
     Returns orchestration specified by id
   ###
   get: (id) ->
-    _store.getIn ['orchestrationsById', parseInt(id)]
+    _store.getIn ['orchestrationsById', id]
 
   has: (id) ->
-    _store.get('orchestrationsById').has parseInt(id)
+    _store.get('orchestrationsById').has id
 
   getOrchestrationTasks: (orchestrationId) ->
-    _store.getIn ['orchestrationTasksById', parseInt(orchestrationId)]
+    _store.getIn ['orchestrationTasksById', orchestrationId]
 
   hasOrchestrationTasks: (orchestrationId) ->
-    _store.get('orchestrationTasksById').has parseInt(orchestrationId)
+    _store.get('orchestrationTasksById').has orchestrationId
 
   ###
     Returns all orchestrations filtered by current filter value

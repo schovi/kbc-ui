@@ -23,8 +23,8 @@ OrchestrationJobDetail = React.createClass
   mixins: [createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
 
   getStateFromStores: ->
-    orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
-    jobId = RoutesStore.getRouterState().getIn ['params', 'jobId']
+    orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    jobId = RoutesStore.getCurrentRouteIntParam 'jobId'
     return {
       job: OrchestrationJobsStore.getJob jobId
       isLoading: OrchestrationJobsStore.isJobLoading jobId

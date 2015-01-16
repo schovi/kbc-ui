@@ -32,13 +32,13 @@ routes =
         poll:
           interval: 10
           action: (params) ->
-            jobId = params.jobId
+            jobId = parseInt(params.jobId)
             job = JobsStore.get jobId
             if job and job.get('status') in ['waiting','processing']
-              JobsActionCreators.loadJobDetail(params.jobId)
+              JobsActionCreators.loadJobDetail(jobId)
         requireData: [
           (params) ->
-            JobsActionCreators.loadJobDetail(params.jobId)
+            JobsActionCreators.loadJobDetail(parseInt(params.jobId))
         ]
       ]
 

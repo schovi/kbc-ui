@@ -40,16 +40,16 @@ routes =
     poll:
       interval: 20
       action: (params) ->
-        OrchestrationsActionCreators.loadOrchestrationJobsForce(params.orchestrationId)
+        OrchestrationsActionCreators.loadOrchestrationJobsForce(parseInt(params.orchestrationId))
     requireData: [
         (params) ->
-          OrchestrationsActionCreators.loadOrchestration(params.orchestrationId)
+          OrchestrationsActionCreators.loadOrchestration(parseInt(params.orchestrationId))
       ,
         (params) ->
-          OrchestrationsActionCreators.loadOrchestrationJobs(params.orchestrationId)
+          OrchestrationsActionCreators.loadOrchestrationJobs(parseInt(params.orchestrationId))
     ]
     title: (routerState) ->
-      orchestrationId = routerState.getIn ['params', 'orchestrationId']
+      orchestrationId = parseInt(routerState.getIn ['params', 'orchestrationId'])
       OrchestrationsStore.get(orchestrationId).get 'name'
 
     childRoutes: [
@@ -58,9 +58,9 @@ routes =
       poll:
         interval: 10
         action: (params) ->
-          OrchestrationsActionCreators.loadJobForce(params.jobId)
+          OrchestrationsActionCreators.loadJobForce(parseInt(params.jobId))
       requireData: (params) ->
-        OrchestrationsActionCreators.loadJob(params.jobId)
+        OrchestrationsActionCreators.loadJob(parseInt(params.jobId))
       title: (routerState) ->
         'Job ' +  routerState.getIn ['params', 'jobId']
       path: 'jobs/:jobId'

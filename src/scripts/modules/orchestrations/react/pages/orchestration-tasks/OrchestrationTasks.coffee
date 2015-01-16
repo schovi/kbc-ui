@@ -21,7 +21,7 @@ OrchestrationTasks = React.createClass
   mixins: [createStoreMixin(OrchestrationStore, ComponentsStore)]
 
   getStateFromStores: ->
-    orchestrationId = RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
+    orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
     return {
       orchestration: OrchestrationStore.get orchestrationId
       tasks: OrchestrationStore.getOrchestrationTasks orchestrationId

@@ -12,7 +12,7 @@ JobReloaderButton = React.createClass
   mixins: [createStoreMixin(OrchestrationJobsStore)]
 
   _getJobId: ->
-    RoutesStore.getRouterState().getIn ['params', 'jobId']
+    RoutesStore.getCurrentRouteIntParam 'jobId'
 
   getStateFromStores: ->
     isLoading: OrchestrationJobsStore.isJobLoading(@_getJobId())

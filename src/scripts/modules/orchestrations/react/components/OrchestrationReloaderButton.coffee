@@ -15,7 +15,7 @@ OrchestrationReloaderButton = React.createClass
   mixins: [createStoreMixin(OrchestrationsStore)]
 
   _getOrchestrationId: ->
-    RoutesStore.getRouterState().getIn ['params', 'orchestrationId']
+    RoutesStore.getCurrentRouteIntParam 'orchestrationId'
 
   getStateFromStores: ->
     isLoading: OrchestrationsStore.getIsOrchestrationLoading(@_getOrchestrationId())

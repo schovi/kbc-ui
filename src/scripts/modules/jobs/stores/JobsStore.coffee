@@ -84,9 +84,12 @@ Dispatcher.register (payload) ->
           .set('isLoading', false)
           .set('isLoaded', true)
           .set('offset', action.newOffset)
-          .mergeIn(['jobsById'], Immutable.fromJS(action.jobs).toMap().mapKeys((key, job) ->
-            job.get 'id'
-          )))
+          .mergeIn(['jobsById'], Immutable.fromJS(action.jobs).toMap()
+            .map (job) ->
+              job.set 'id', parseInt(job.get('id')) # dokud to miro nefixne na backendu
+            .mapKeys (key, job) ->
+              job.get 'id'
+          ))
       loadMore = true
       offset = _store.get('offset')
       if _store.get('jobsById').count() < (offset + limit)
@@ -107,8 +110,10 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.JOB_LOAD_SUCCESS
       _store = _store.withMutations (store) ->
+        job = Immutable.fromJS(action.job)
+        job.set 'id', parseInt(job.get 'id')
         store
-          .setIn ['jobsById', action.job.id], Immutable.fromJS(action.job)
+          .setIn ['jobsById', action.job.id], job
           .update 'loadingJobs', (loadingJobs) ->
             loadingJobs.remove(loadingJobs.indexOf(action.job.id))
 
