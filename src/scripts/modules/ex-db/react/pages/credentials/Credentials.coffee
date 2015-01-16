@@ -19,7 +19,7 @@ module.exports = React.createClass
   displayName: 'ExDbCredentials'
   mixins: [createStoreMixin(ExDbStore)]
   getStateFromStores: ->
-    config = RoutesStore.getRouterState().getIn ['params', 'config']
+    config = RoutesStore.getCurrentRouteParam 'config'
     configuration: ExDbStore.getConfig config
     isEditing: ExDbStore.isEditingCredentials config
     editingCredentials: ExDbStore.getEditingCredentials config

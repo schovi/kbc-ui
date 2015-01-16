@@ -15,7 +15,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
-    queryId = RoutesStore.getCurrentRouteParam 'query'
+    queryId = RoutesStore.getCurrentRouteIntParam 'query'
     currentConfigId: configId
     currentQueryId: queryId
     isEditing: ExDbStore.isEditingQuery configId, queryId
