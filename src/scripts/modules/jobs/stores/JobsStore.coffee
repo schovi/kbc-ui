@@ -35,6 +35,9 @@ JobsStore = StoreUtils.createStore
   get: (id) ->
     _store.getIn ['jobsById', id]
 
+  has: (id) ->
+    _store.hasIn ['jobsById', id]
+
   getIsLoading: ->
     _store.get 'isLoading'
 

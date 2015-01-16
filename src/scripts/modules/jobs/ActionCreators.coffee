@@ -33,8 +33,11 @@ module.exports =
       query: query
     @loadJobsForce(0, true, false)
 
-
   loadJobDetail: (jobId) ->
+    return Promise.resolve() if JobsStore.has(jobId)
+    @loadJobDetailForce jobId
+
+  loadJobDetailForce: (jobId) ->
     actions = @
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOB_LOAD

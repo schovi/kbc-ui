@@ -52,6 +52,8 @@ JobsIndex = React.createClass
         span {className: 'th'},
           strong null, 'Component'
         span {className: 'th'},
+          strong null, 'Action'
+        span {className: 'th'},
           strong null, 'Token'
         span {className: 'th'},
           strong null, 'Created time'
@@ -77,6 +79,7 @@ JobsIndex = React.createClass
         ComponentIcon {component: rowComponent, size: '32'}
         ' '
         ComponentName {component: rowComponent}
+      div className: 'td', row.get 'command'
       div className: 'td', row.getIn ['token', 'description']
       div className: 'td',
         date.format(row.get('createdTime'))
