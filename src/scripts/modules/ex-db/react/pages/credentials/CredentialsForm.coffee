@@ -24,53 +24,43 @@ module.exports = React.createClass
     onChange: ->
 
   render: ->
+    console.log 'credentials', @props.credentials.toJS()
     form className: 'form-horizontal',
       div className: 'row',
         @_createSelect 'Driver', 'driver', _drivers
         @_createInput 'Host name', 'host'
-        @_createInput 'Port', 'port'
+        @_createInput 'Port', 'port', 'number'
         @_createInput 'Username', 'user'
         @_createInput 'Password', 'password'
-        @_createInput 'Connection retries', 'retries'
+        @_createInput 'Connection retries', 'retries', 'number'
         TestCredentialsButtonGroup
           credentials: @props.credentials
 
   _handleChange: (propName, event) ->
-    @props.onChange(@props.credentials.set propName, event.target.value)
-
-  _createInput: (labelValue, propName) ->
-    if @props.enabled
-      Input
-        label: labelValue
-        type: 'text'
-        value: @props.credentials.get propName
-        labelClassName: 'col-xs-4'
-        wrapperClassName: 'col-xs-8'
-        onChange: @_handleChange.bind @, propName
+    if ['port', 'retries'].indexOf propName >= 0
+      value = parseInt event.target.value
     else
-      @_createStaticControl labelValue, propName
+      value = event.target.value
+    @props.onChange(@props.credentials.set propName, value)
+
+  _createInput: (labelValue, propName, type = 'text') ->
+    Input
+      label: labelValue
+      type: if @props.enabled then type else 'static'
+      value: @props.credentials.get propName
+      labelClassName: 'col-xs-4'
+      wrapperClassName: 'col-xs-8'
+      onChange: @_handleChange.bind @, propName
 
   _createSelect: (labelValue, propName, options) ->
-    if @props.enabled
-      Input
-        label: labelValue
-        type: 'select'
-        value: @props.credentials.get propName
-        labelClassName: 'col-xs-4'
-        wrapperClassName: 'col-xs-8'
-        onChange: @_handleChange.bind @, propName
-      ,
-        _.map options, (label, value) ->
-          option value: value,
-            label
-    else
-      @_createStaticControl labelValue, propName
-
-  _createStaticControl: (labelValue, propName) ->
-    div className: 'form-group',
-      label className: 'control-label col-xs-4',
-        labelValue
-      div className: 'col-xs-8',
-        p className: 'form-control-static',
-          @props.credentials.get propName
-
+    Input
+      label: labelValue
+      type: if @props.enabled then 'select' else 'static'
+      value: @props.credentials.get propName
+      labelClassName: 'col-xs-4'
+      wrapperClassName: 'col-xs-8'
+      onChange: @_handleChange.bind @, propName
+    ,
+      _.map options, (label, value) ->
+        option value: value,
+          label

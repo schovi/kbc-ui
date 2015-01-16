@@ -13,3 +13,4 @@ module.exports =
   Tree: require './Tree.coffee'
   Check: require './Check.coffee'
   CodeEditor: require './CodeEditor.coffee'
+  Loader: require './Loader.coffee'

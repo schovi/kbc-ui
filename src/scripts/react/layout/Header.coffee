@@ -30,6 +30,7 @@ Header = React.createClass
             @_renderBreadcrumbs()
             ' '
             @_renderReloader()
+            ' '
             RoutePendingIndicator() if @state.isRoutePending
           div {className: 'kbc-buttons'},
             @_renderButtons()

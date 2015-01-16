@@ -4,6 +4,8 @@ ExDbStore = require '../../exDbStore.coffee'
 RoutesStore = require '../../../../stores/RoutesStore.coffee'
 ExDbActionCreators = require '../../exDbActionCreators.coffee'
 
+Loader = React.createFactory(require '../../../../react/common/Loader.coffee')
+
 {button, span} = React.DOM
 
 module.exports = React.createClass
@@ -25,7 +27,15 @@ module.exports = React.createClass
     ExDbActionCreators.cancelCredentialsEdit @state.currentConfigId
 
   _handleCreate: ->
-    ExDbActionCreators.saveCredentialsEdit @state.currentConfigId
+    @setState
+      isSaving: true
+    ExDbActionCreators
+    .saveCredentialsEdit @state.currentConfigId
+    .then @_saveDone
+
+  _saveDone: ->
+    @setState
+      isSaving: false
 
   render: ->
     if @state.isEditing
@@ -42,8 +52,11 @@ module.exports = React.createClass
           'Save'
     else
       React.DOM.div null,
+        Loader() if @state.isSaving,
+        ' ',
         button
           className: 'btn btn-success'
+          disabled: @state.isSaving
           onClick: @_handleEditStart
         ,
           span className: 'fa fa-edit'

@@ -1,7 +1,10 @@
 
 request = require '../../utils/request.coffee'
+_ = require 'underscore'
 ApplicationStore = require '../../stores/ApplicationStore.coffee'
 ComponentsStore = require '../components/stores/ComponentsStore.coffee'
+
+jobPoller = require '../../utils/jobPoller.coffee'
 
 createUrl = (path) ->
   ComponentsStore.getComponent('ex-db').get('uri') + '/' + path
@@ -58,8 +61,21 @@ module.exports =
       response.body
 
   testCredentials: (credentials) ->
+    allowedColumns = [
+      'database'
+      'driver'
+      'host'
+      'password'
+      'port'
+      'user'
+    ]
     createRequest 'POST', 'test'
-    .send credentials
+    .send _.pick credentials, allowedColumns...
     .promise()
     .then (response) ->
       response.body
+
+  testAndWaitForCredentials: (credentials) ->
+    @testCredentials(credentials)
+    .then (response) ->
+      jobPoller.poll ApplicationStore.getSapiTokenString(), response.url

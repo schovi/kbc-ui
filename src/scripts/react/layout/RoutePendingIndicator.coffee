@@ -1,4 +1,5 @@
 React = require 'react'
+Loader = React.createFactory(require '../common/Loader.coffee')
 
 ###
   Loading indicator is shown after few milisecond. Loader is not required for fast transitions.
@@ -23,7 +24,7 @@ RoutePendingIndicator = React.createClass
 
   render: ->
     if @state.isShown
-      React.DOM.span className: 'fa fa-spin fa-spinner'
+      Loader()
     else
       null
 

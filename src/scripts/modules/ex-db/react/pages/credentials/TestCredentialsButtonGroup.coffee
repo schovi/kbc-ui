@@ -1,10 +1,11 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
 
-
+Loader = React.createFactory(require('../../../../../react/common/common.coffee').Loader)
 ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+Link = React.createFactory(require('react-router').Link)
 
-{div} = React.DOM
+{div, span} = React.DOM
 
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
@@ -13,10 +14,12 @@ module.exports = React.createClass
 
   getInitialState: ->
     isTesting: false
+    job: null
 
   _startTesting: ->
     @setState
       isTesting: true
+      job: null
 
     ExDbActionCreators
     .testCredentials @props.credentials
@@ -25,7 +28,7 @@ module.exports = React.createClass
   _onTestingDone: (job) ->
     @setState
       isTesting: false
-    console.log 'done', job
+      job: job
 
   render: ->
     div className: 'form-group',
@@ -36,3 +39,32 @@ module.exports = React.createClass
           onClick: @_startTesting
         ,
           'Test Credentials'
+        ' '
+        Loader() if @state.isTesting
+        if @state.job
+          if @state.job.status == 'success'
+            @_testSuccess @state.job
+          else
+            @_testError @state.job
+
+  _testSuccess: (job) ->
+    span className: 'text-success',
+      span className: 'fa fa-fw fa-check'
+      ' Connected! '
+      Link
+        to: 'jobDetail'
+        params:
+          jobId: job.id
+      ,
+        'details'
+
+  _testError: (job) ->
+    span className: 'text-danger',
+      span className: 'fa fa-fw fa-meh-o'
+      ' Failed to connect! '
+      Link
+        to: 'jobDetail'
+        params:
+          jobId: job.id
+      ,
+        'details'
