@@ -1,8 +1,11 @@
 React = require 'react'
+InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators.coffee'
+
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
+
 
 {a, i, div} = React.DOM
 
@@ -43,7 +46,14 @@ module.exports = React.createClass
   _handleRunStart: ->
     @setState
       isLoading: true
-    console.log 'run vole'
+
+    InstalledComponentsActionCreators
+    .runComponent 'ex-db', config: @props.configId
+    .then @_handleStarted
+
+  _handleStarted: ->
+    @setState
+      isLoading: false
 
   render: ->
     ModalTrigger

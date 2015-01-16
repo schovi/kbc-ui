@@ -2,11 +2,10 @@ Promise = require 'bluebird'
 
 dispatcher = require '../../Dispatcher.coffee'
 constants = require './Constants.coffee'
-
+componentRunner = require './ComponentRunner.coffee'
 InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
 installedComponentsApi = require './InstalledComponentsApi.coffee'
 
-console.log 'constants', constants
 module.exports =
 
   loadComponentsForce: ->
@@ -51,3 +50,12 @@ module.exports =
     .updateComponentConfiguration componentId, configurationId, data
     .then (response) ->
       console.log 'saved', response
+
+
+  runComponent: (componentId, params, method = 'run') ->
+    componentRunner.run
+      component: componentId
+      data: params
+      method: method
+    .then (job) ->
+      console.log 'job created'

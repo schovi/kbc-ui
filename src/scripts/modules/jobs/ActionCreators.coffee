@@ -56,3 +56,4 @@ module.exports =
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOB_LOAD_SUCCESS
       job: jobDetail
+

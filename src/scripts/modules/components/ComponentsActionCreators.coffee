@@ -18,5 +18,3 @@ module.exports =
       type: constants.ActionTypes.COMPONENTS_LOAD_SUCCESS
       components: componentsRaw
     )
-
-  runComponent: (componentId, params, method = 'run') ->
