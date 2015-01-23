@@ -61,12 +61,17 @@ module.exports =
         query: response
 
   createQuery: (configurationId) ->
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_START
+      configurationId: configurationId
+
     newQuery = exDbStore.getNewQuery configurationId
     exDbApi
     .createQuery configurationId, newQuery.toJS()
     .then (newQuery) ->
       dispatcher.handleViewAction
-        type: constants.ActionTypes.EX_DB_NEW_QUERY_CREATED
+        type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_SUCCESS
         configurationId: configurationId
         query: newQuery
 

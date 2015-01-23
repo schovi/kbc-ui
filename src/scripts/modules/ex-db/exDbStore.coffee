@@ -5,15 +5,14 @@ Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../utils/StoreUtils.coffee'
 
-_store = Map(
+_store = Map
   configs: Map()
   editingCredentials: Map() # [configId] - credentials
   savingCredentials: Map() # map of saving credentials ids
   editingQueries: Map() # [configId][queryId] - query
   deletingQueries: Map() # map of deleting query ids [configId][queryId] = true or not set
   savingQueries: Map() # map of saving query ids
-  newQueries: Map() # [configId] - query
-)
+  newQueries: Map() # [configId]['query'] - query [configId]['isSaving'] = true or not set
 
 ExDbStore = StoreUtils.createStore
 
@@ -35,11 +34,14 @@ ExDbStore = StoreUtils.createStore
   isSavingQuery: (configId, queryId) ->
     _store.hasIn ['savingQueries', configId, queryId]
 
+  isSavingNewQuery: (configId) ->
+    _store.getIn ['newQueries', configId, 'isSaving']
+
   getEditingQuery: (configId, queryId) ->
     _store.getIn ['editingQueries', configId, queryId]
 
   getNewQuery: (configId) ->
-    _store.getIn ['newQueries', configId], Map(
+    _store.getIn ['newQueries', configId, 'query'], Map(
       incremental: false
       outputTable: ''
       primaryKey: ''
@@ -95,14 +97,18 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.EX_DB_NEW_QUERY_UPDATE
       # query is already in ImmutableJS structure
-      _store = _store.setIn ['newQueries', action.configurationId], action.query
+      _store = _store.setIn ['newQueries', action.configurationId, 'query'], action.query
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_NEW_QUERY_RESET
-      _store = _store.deleteIn ['newQueries', action.configurationId]
+      _store = _store.deleteIn ['newQueries', action.configurationId, 'query']
       ExDbStore.emitChange()
 
-    when constants.ActionTypes.EX_DB_NEW_QUERY_CREATED
+    when constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_START
+      _store = _store.setIn ['newQueries', action.configurationId, 'isSaving'], true
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         store
           .setIn ['configs', action.configurationId, 'queries', action.query.id], Immutable.fromJS(action.query)
