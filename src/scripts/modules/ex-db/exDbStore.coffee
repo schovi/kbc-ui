@@ -8,6 +8,7 @@ StoreUtils = require '../../utils/StoreUtils.coffee'
 _store = Map(
   configs: Map()
   editingCredentials: Map() # [configId] - credentials
+  savingCredentials: Map() # map of saving credentials ids
   editingQueries: Map() # [configId][queryId] - query
   savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId] - query
@@ -43,6 +44,9 @@ ExDbStore = StoreUtils.createStore
 
   isEditingCredentials: (configId) ->
     _store.hasIn ['editingCredentials', configId]
+
+  isSavingCredentials: (configId) ->
+    _store.hasIn ['savingCredentials', configId]
 
   getEditingCredentials: (configId) ->
     _store.getIn ['editingCredentials', configId]
@@ -122,15 +126,23 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_UPDATE
       # credentials are already in ImmutableJS structure
+      console.log 'edit', action.credentials.toJS()
       _store = _store.setIn ['editingCredentials', action.configurationId], action.credentials
       ExDbStore.emitChange()
 
-    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_START
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['savingCredentials', action.configurationId], true
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         store
         .setIn ['configs', action.configurationId, 'credentials'],
-            ExDbStore.getEditingCredentials(action.configurationId)
+            Immutable.fromJS action.credentials
         .deleteIn ['editingCredentials', action.configurationId]
+        .deleteIn ['savingCredentials', action.configurationId]
       ExDbStore.emitChange()
 
 

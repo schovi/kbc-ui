@@ -37,7 +37,7 @@ module.exports = React.createClass
           credentials: @props.credentials
 
   _handleChange: (propName, event) ->
-    if ['port', 'retries'].indexOf propName >= 0
+    if ['port', 'retries'].indexOf(propName) >= 0
       value = parseInt event.target.value
     else
       value = event.target.value

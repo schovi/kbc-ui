@@ -19,6 +19,7 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam 'config'
     currentConfigId: configId
     isEditing: ExDbStore.isEditingCredentials configId
+    isSaving: ExDbStore.isSavingCredentials configId
 
   _handleEditStart: ->
     ExDbActionCreators.editCredentials @state.currentConfigId
@@ -27,33 +28,27 @@ module.exports = React.createClass
     ExDbActionCreators.cancelCredentialsEdit @state.currentConfigId
 
   _handleCreate: ->
-    @setState
-      isSaving: true
-    ExDbActionCreators
-    .saveCredentialsEdit @state.currentConfigId
-    .then @_saveDone
-
-  _saveDone: ->
-    @setState
-      isSaving: false
+    ExDbActionCreators.saveCredentialsEdit @state.currentConfigId
 
   render: ->
     if @state.isEditing
       React.DOM.div className: 'kbc-buttons',
+        if @state.isSaving
+          Loader()
         button
           className: 'btn btn-link'
+          disabled: @state.isSaving
           onClick: @_handleCancel
         ,
           'Cancel'
         button
           className: 'btn btn-success'
+          disabled: @state.isSaving
           onClick: @_handleCreate
         ,
           'Save'
     else
       React.DOM.div null,
-        Loader() if @state.isSaving,
-        ' ',
         button
           className: 'btn btn-success'
           disabled: @state.isSaving

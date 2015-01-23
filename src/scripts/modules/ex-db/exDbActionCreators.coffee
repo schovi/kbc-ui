@@ -114,13 +114,16 @@ module.exports =
     credentials = exDbStore.getEditingCredentials configurationId
 
     dispatcher.handleViewAction
-      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_START
       configurationId: configurationId
 
     exDbApi
     .saveCredentials configurationId, credentials.toJS()
     .then (response) ->
-      console.log 'saved', response
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_SUCCESS
+        configurationId: configurationId
+        credentials: response
 
   testCredentials: (credentials) ->
     exDbApi.testAndWaitForCredentials credentials.toJS()
