@@ -25,6 +25,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     config = RoutesStore.getRouterState().getIn ['params', 'config']
     configuration: ExDbStore.getConfig config
+    deletingQueries: ExDbStore.getDeletingQueries config
 
   render: ->
     div className: 'container-fluid',
@@ -44,7 +45,9 @@ module.exports = React.createClass
               span className: 'kbc-icon-plus'
               ' Add Query'
         if @state.configuration.get('queries').count()
-          QueryTable configuration: @state.configuration
+          QueryTable
+            configuration: @state.configuration
+            deletingQueries: @state.deletingQueries
         else
           'No queries yet'
       div className: 'col-md-3 kbc-main-sidebar',

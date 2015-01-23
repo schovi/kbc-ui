@@ -84,12 +84,17 @@ module.exports =
 
   deleteQuery: (configurationId, queryId) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.EX_DB_QUERY_DELETE
+      type: constants.ActionTypes.EX_DB_QUERY_DELETE_START
       configurationId: configurationId
       queryId: queryId
 
     exDbApi
     .deleteQuery configurationId, queryId
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_DELETE_SUCCESS
+        configurationId: configurationId
+        queryId: queryId
 
   ###
     Credentials actions

@@ -13,11 +13,13 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
   propTypes:
     configuration: React.PropTypes.object
+    deletingQueries: React.PropTypes.object
 
   render: ->
     childs = @props.configuration.get('queries').map((query) ->
       QueryRow
         query: query
+        isDeleting: @props.deletingQueries.has query.get('id')
         configurationId: @props.configuration.get 'id'
         key: query.get('id')
     , @).toArray()

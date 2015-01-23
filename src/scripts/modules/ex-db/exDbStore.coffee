@@ -10,6 +10,7 @@ _store = Map(
   editingCredentials: Map() # [configId] - credentials
   savingCredentials: Map() # map of saving credentials ids
   editingQueries: Map() # [configId][queryId] - query
+  deletingQueries: Map() # map of deleting query ids [configId][queryId] = true or not set
   savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId] - query
 )
@@ -18,6 +19,9 @@ ExDbStore = StoreUtils.createStore
 
   getConfig: (configId) ->
     _store.getIn ['configs', configId]
+
+  getDeletingQueries: (configId) ->
+    _store.getIn ['deletingQueries', configId], Map()
 
   hasConfig: (configId) ->
     _store.hasIn ['configs', configId]
@@ -63,8 +67,15 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['configs', action.configuration.id], configuration
       ExDbStore.emitChange()
 
-    when constants.ActionTypes.EX_DB_QUERY_DELETE
-      _store = _store.deleteIn ['configs', action.configurationId, 'queries', action.queryId]
+    when constants.ActionTypes.EX_DB_QUERY_DELETE_START
+      _store = _store.setIn ['deletingQueries', action.configurationId, action.queryId], true
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_QUERY_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .deleteIn ['configs', action.configurationId, 'queries', action.queryId]
+        .deleteIn ['deletingQueries', action.configurationId, action.queryId]
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_START
