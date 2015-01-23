@@ -3,6 +3,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
 ExDbStore = require '../../exDbStore.coffee'
 RoutesStore = require '../../../../stores/RoutesStore.coffee'
 ExDbActionCreators = require '../../exDbActionCreators.coffee'
+Loader = React.createFactory(require '../../../../react/common/Loader.coffee')
 
 {button, span} = React.DOM
 
@@ -19,6 +20,7 @@ module.exports = React.createClass
     currentConfigId: configId
     currentQueryId: queryId
     isEditing: ExDbStore.isEditingQuery configId, queryId
+    isSaving: ExDbStore.isSavingQuery configId, queryId
 
   _handleEditStart: ->
     ExDbActionCreators.editQuery @state.currentConfigId, @state.currentQueryId
@@ -32,13 +34,17 @@ module.exports = React.createClass
   render: ->
     if @state.isEditing
       React.DOM.div className: 'kbc-buttons',
+        if @state.isSaving
+          Loader()
         button
           className: 'btn btn-link'
+          disabled: @state.isSaving
           onClick: @_handleCancel
         ,
           'Cancel'
         button
           className: 'btn btn-success'
+          disabled: @state.isSaving
           onClick: @_handleCreate
         ,
           'Save'

@@ -47,14 +47,18 @@ module.exports =
     query = exDbStore.getEditingQuery configurationId, queryId
 
     dispatcher.handleViewAction
-      type: constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
+      type: constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_START
       configurationId: configurationId
       queryId: queryId
 
     exDbApi
     .saveQuery configurationId, query.toJS()
     .then (response) ->
-      console.log 'saved', response
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_SUCCESS
+        configurationId: configurationId
+        queryId: queryId
+        query: response
 
   createQuery: (configurationId) ->
     newQuery = exDbStore.getNewQuery configurationId

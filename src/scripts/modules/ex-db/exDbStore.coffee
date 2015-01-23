@@ -9,6 +9,7 @@ _store = Map(
   configs: Map()
   editingCredentials: Map() # [configId] - credentials
   editingQueries: Map() # [configId][queryId] - query
+  savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId] - query
 )
 
@@ -25,6 +26,9 @@ ExDbStore = StoreUtils.createStore
 
   isEditingQuery: (configId, queryId) ->
     _store.hasIn ['editingQueries', configId, queryId]
+
+  isSavingQuery: (configId, queryId) ->
+    _store.hasIn ['savingQueries', configId, queryId]
 
   getEditingQuery: (configId, queryId) ->
     _store.getIn ['editingQueries', configId, queryId]
@@ -90,12 +94,19 @@ Dispatcher.register (payload) ->
           .deleteIn ['newQueries', action.configurationId]
       ExDbStore.emitChange()
 
-    when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE
+    when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_START
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['savingQueries', action.configurationId, action.queryId], true
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         store
         .setIn ['configs', action.configurationId, 'queries', action.queryId],
-          ExDbStore.getEditingQuery(action.configurationId, action.queryId)
+          Immutable.fromJS action.query
         .deleteIn ['editingQueries', action.configurationId, action.queryId]
+        .deleteIn ['savingQueries', action.configurationId, action.queryId]
       ExDbStore.emitChange()
 
     ## Credentials edit handling
