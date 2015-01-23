@@ -50,6 +50,9 @@ else
   )
 
   Promise.longStackTraces()
+  Promise.onPossiblyUnhandledRejection (e) ->
+    console.error 'unhandled exception', e
+    alert(e.message)
 
   rootNode = document.getElementById 'react'
 

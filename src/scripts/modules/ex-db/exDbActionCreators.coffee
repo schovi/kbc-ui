@@ -59,6 +59,13 @@ module.exports =
         configurationId: configurationId
         queryId: queryId
         query: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_ERROR
+        configurationId: configurationId
+        queryId: queryId
+        error: e
+      throw e
 
   createQuery: (configurationId) ->
 
@@ -74,6 +81,12 @@ module.exports =
         type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_SUCCESS
         configurationId: configurationId
         query: newQuery
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_ERROR
+        configurationId: configurationId
+        error: e
+      throw new Error(e.error)
 
 
   updateNewQuery: (configurationId, query) ->

@@ -108,6 +108,10 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['newQueries', action.configurationId, 'isSaving'], true
       ExDbStore.emitChange()
 
+    when constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_ERROR
+      _store = _store.deleteIn ['newQueries', action.configurationId, 'isSaving']
+      ExDbStore.emitChange()
+
     when constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         store
@@ -119,6 +123,10 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store
         .setIn ['savingQueries', action.configurationId, action.queryId], true
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_ERROR
+      _store = _store.deleteIn ['savingQueries', action.configurationId, action.queryId]
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_QUERY_EDIT_SAVE_SUCCESS
