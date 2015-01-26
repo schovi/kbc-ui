@@ -1,5 +1,3 @@
-
-
 createComponentsIndex = require './react/pages/ComponentsIndex.coffee'
 createNewComponentPage = require './react/pages/NewComponent.coffee'
 createNewComponentButton = require './react/components/NewComponentButton.coffee'
@@ -10,7 +8,7 @@ IntalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators.coffee'
 
 exDbRoutes = require '../ex-db/exDbRoutes.coffee'
-
+exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes.coffee'
 routes =
 
   extractors:
@@ -27,6 +25,8 @@ routes =
       handler: createNewComponentPage('extractor'),
     ,
       exDbRoutes
+    ,
+      exGdriveGoogleRoutes
     ]
 
   writers:
