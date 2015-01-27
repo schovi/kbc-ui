@@ -1,4 +1,4 @@
-React = require('React')
+React = require('react')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
 
 Link = React.createFactory(require('react-router').Link)
