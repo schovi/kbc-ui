@@ -15,3 +15,14 @@ module.exports =
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Google Drive extractor - ' + IntalledComponentsStore.getConfig('ex-google-drive', configId).get 'name'
+
+  childRoutes: [
+    name: 'ex-google-drive-new-query'
+    path: 'new-query'
+  ,
+    name: 'ex-google-drive-authorize'
+    path: 'authorize'
+  ,
+    name: 'ex-google-drive-sheet'
+    path: 'sheet/:sheetId'
+  ]

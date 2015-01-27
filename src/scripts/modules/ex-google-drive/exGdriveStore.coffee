@@ -10,9 +10,9 @@ _store = Map()
 
 
 GdriveStore = StoreUtils.createStore
-  hasConfig : (configId) ->
+  hasConfig: (configId) ->
     _store.has configId
-  getConfig : (configId) ->
+  getConfig: (configId) ->
     _store.get configId
 
 
