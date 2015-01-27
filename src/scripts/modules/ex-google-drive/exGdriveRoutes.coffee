@@ -6,10 +6,11 @@ module.exports =
   name: 'ex-google-drive'
   path: 'ex-google-drive/:config'
   defaultRouteHandler: ExGdriveIndex
-  requireData: [
-    (params) ->
-      ExGoogleDriveActionCreators.loadConfiguration params.config
-  ]
+  # requireData: [
+  #   (params) ->
+  #     ExGoogleDriveActionCreators.loadConfiguration params.config
+  # ]
+
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Google Drive extractor - ' + IntalledComponentsStore.getConfig('ex-google-drive', configId).get 'name'
