@@ -8,7 +8,7 @@ RoutesStore =  require '../../../../stores/RoutesStore.coffee'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
 Link = React.createFactory require('react-router').Link
 
-{div, table, tbody, tr, td, ul, li, a, span} = React.DOM
+{div, table, tbody, tr, td, ul, li, a, span, small} = React.DOM
 
 createComponentsIndex = (type) ->
 
@@ -50,6 +50,8 @@ createComponentsIndex = (type) ->
               span null,
                 config.get('name')
             span className: 'kbc-icon-arrow-right'
+            if config.get 'description'
+              small null, config.get('description')
         ).toArray()
 
 
