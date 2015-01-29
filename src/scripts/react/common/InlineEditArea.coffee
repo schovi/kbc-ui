@@ -6,7 +6,7 @@ OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 
 {div, span, i, textarea, button} = React.DOM
 
-StaticArea = React.createClass
+StaticArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaStatic'
   propTypes:
     text: React.PropTypes.string
@@ -30,7 +30,7 @@ StaticArea = React.createClass
         ' '
         i className: 'fa fa-edit text-muted'
 
-EditArea = React.createClass
+EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
   propTypes:
     text: React.PropTypes.string

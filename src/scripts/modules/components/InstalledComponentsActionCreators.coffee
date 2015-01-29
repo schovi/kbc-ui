@@ -1,4 +1,9 @@
 Promise = require 'bluebird'
+React = require 'react'
+_ = require 'underscore'
+Link = require('react-router').Link
+console.log 'Link', Link
+
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators.coffee'
 
@@ -7,6 +12,10 @@ constants = require './Constants.coffee'
 componentRunner = require './ComponentRunner.coffee'
 InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
 installedComponentsApi = require './InstalledComponentsApi.coffee'
+
+Pokus = React.createClass
+  render: ->
+    React.DOM.strong null, 'pokus'
 
 module.exports =
 
@@ -53,11 +62,35 @@ module.exports =
     .then (response) ->
       console.log 'saved', response
 
+  ###
+    params:
+      - component - id of component like ex-db
+      - data - action parameters hashmap
+      - method - default = run
+      - message - enqueue message
+  ###
+  runComponent: (params) ->
 
-  runComponent: (componentId, params, method = 'run') ->
+    defaultParams =
+      method: 'run'
+      message: 'Extractor job has been scheduled.'
+
+    params = _.extend {}, defaultParams, params
+
     componentRunner.run
-      component: componentId
-      data: params
-      method: method
+      component: params.component
+      data: params.data
+      method: params.method
     .then (job) ->
-      ApplicationActionCreators.sendNotification('You can track the job progress. '  + job.id)
+      ApplicationActionCreators.sendNotification(React.createClass
+        render: ->
+          React.DOM.span null,
+            "#{params.message} You can track the job progress "
+            React.createElement Link,
+              to: 'jobDetail'
+              params:
+                jobId: job.id
+              onClick: @props.onClick
+            ,
+              'here'
+      )

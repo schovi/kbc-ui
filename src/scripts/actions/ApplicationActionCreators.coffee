@@ -11,6 +11,9 @@ module.exports =
       type: constants.ActionTypes.APPLICATION_DATA_RECEIVED
       applicationData: data
 
+  ###
+    notification - React element
+  ###
   sendNotification: (notification) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION

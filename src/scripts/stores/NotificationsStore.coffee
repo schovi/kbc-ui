@@ -20,7 +20,7 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
       _store = _store.update 'notifications', (notifications) ->
-        notifications.unshift Immutable.fromJS(action.notification)
+        notifications.unshift Map(action.notification)
       NotificationsStore.emitChange()
 
     when Constants.ActionTypes.APPLICATION_DELETE_NOTIFICATION

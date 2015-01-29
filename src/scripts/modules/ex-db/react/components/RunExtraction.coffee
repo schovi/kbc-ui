@@ -9,7 +9,7 @@ ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 
 {a, i, div} = React.DOM
 
-RunModal = React.createClass
+RunModal = React.createFactory React.createClass
 
   _handleRun: ->
     @props.onRequestHide()
@@ -48,7 +48,10 @@ module.exports = React.createClass
       isLoading: true
 
     InstalledComponentsActionCreators
-    .runComponent 'ex-db', config: @props.configId
+    .runComponent
+      component: 'ex-db'
+      data:
+        config: @props.configId
     .then @_handleStarted
 
   _handleStarted: ->

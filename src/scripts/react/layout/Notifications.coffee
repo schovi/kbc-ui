@@ -6,7 +6,7 @@ ApplicationActionCreators = require '../../actions/ApplicationActionCreators.cof
 Alert = React.createFactory(require('react-bootstrap').Alert)
 
 
-{div} = React.DOM
+{div, span} = React.DOM
 
 module.exports = React.createClass
   displayName: 'Notifications'
@@ -21,11 +21,16 @@ module.exports = React.createClass
   render: ->
     div null,
       @state.notifications.map (notification, index) ->
+        console.log 'notification', notification.get 'value'
         Alert
           bsStyle: 'success'
           onDismiss: @_handleAlertDismiss.bind(@, index)
         ,
-          notification.get 'value'
+          if notification.get('value') instanceof String
+            notification.get 'value'
+          else
+            React.createElement notification.get('value'),
+              onClick: @_handleAlertDismiss.bind(@, index)
       , @
       .toArray()
 
