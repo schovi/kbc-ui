@@ -14,5 +14,13 @@ module.exports =
   sendNotification: (notification) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
-      notification: notification
+      notification:
+        value: notification
+        type: 'info'
+
+  deleteNotification: (notificationIndex) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.APPLICATION_DELETE_NOTIFICATION
+      notificationIndex: notificationIndex
+
 

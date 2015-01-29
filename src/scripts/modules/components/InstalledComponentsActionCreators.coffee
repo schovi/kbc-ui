@@ -60,5 +60,4 @@ module.exports =
       data: params
       method: method
     .then (job) ->
-      console.log 'job created', job
-      ApplicationActionCreators.sendNotification('')
+      ApplicationActionCreators.sendNotification('You can track the job progress. '  + job.id)

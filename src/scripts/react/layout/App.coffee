@@ -4,6 +4,8 @@ ApplicationStore = require '../../stores/ApplicationStore.coffee'
 
 Header = React.createFactory(require '././Header.coffee')
 Sidebar = React.createFactory(require '././Sidebar.coffee')
+Notifications = React.createFactory(require './Notifications.coffee')
+
 ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
 LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
 ProjectSelect = React.createFactory(require '../common/project-select/ProjectSelect.coffee')
@@ -29,6 +31,7 @@ App = React.createClass
               currentProjecTId: @state.currentProjectId
             Sidebar()
           div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
+            Notifications()
             if @props.isError
               ErrorPage()
             else if @props.isLoading

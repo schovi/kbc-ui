@@ -12,6 +12,7 @@ module.exports =
     # Application state
     APPLICATION_DATA_RECEIVED: null
     APPLICATION_SEND_NOTIFICATION: null
+    APPLICATION_DELETE_NOTIFICATION: null
 
     # Router state
     ROUTER_ROUTE_CHANGE_START: null
