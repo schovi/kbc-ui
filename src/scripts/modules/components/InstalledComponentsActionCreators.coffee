@@ -6,6 +6,7 @@ console.log 'Link', Link
 
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators.coffee'
+JobsActionCreators = require '../../modules/jobs/ActionCreators.coffee'
 
 dispatcher = require '../../Dispatcher.coffee'
 constants = require './Constants.coffee'
@@ -82,6 +83,7 @@ module.exports =
       data: params.data
       method: params.method
     .then (job) ->
+      JobsActionCreators.recieveJobDetail(job)
       ApplicationActionCreators.sendNotification(React.createClass
         render: ->
           React.DOM.span null,
