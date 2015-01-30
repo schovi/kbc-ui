@@ -15,11 +15,18 @@ ItemsTable = require './ItemsTable.coffee'
 {strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
+  displayName: 'ExGdriveIndex'
   mixins: [createStoreMixin(ExGdriveStore)]
 
   getStateFromStores: ->
-    config =  RoutesStore.getRouterState().getIn ['params', 'config']
+    config =  RoutesStore.getCurrentRouteParam('config')
     configuration: ExGdriveStore.getConfig(config)
+
+  render: ->
+    console.log @state.configuration.toJS()
+    div {className: 'container-fluid'},
+      @_renderMainContent()
+      @_renderSideBar()
 
   _renderMainContent: ->
     items = @state.configuration.get('items')
@@ -31,7 +38,7 @@ module.exports = React.createClass
             configId: @state.configuration.get('id')
         div className: 'col-sm-4 kbc-buttons',
           Link
-            to: 'ex-google-drive-new-query'
+            to: 'ex-google-drive-add-sheet'
             params:
               config: @state.configuration.get 'id'
             className: 'btn btn-success'
@@ -67,10 +74,3 @@ module.exports = React.createClass
         span null,
           'Created On '
         strong null, '2014-05-07 09:24 '
-
-
-  render: ->
-    console.log @state.configuration.toJS()
-    div {className: 'container-fluid'},
-      @_renderMainContent()
-      @_renderSideBar()

@@ -1,0 +1,60 @@
+React = require 'react'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
+ExGdriveStore = require '../../exGdriveStore.coffee'
+RoutesStore = require '../../../../stores/RoutesStore.coffee'
+ExGdriveActionCreators = require '../../exGdriveActionCreators.coffee'
+
+Loader = React.createFactory(require '../../../../react/common/Loader.coffee')
+
+{button, span} = React.DOM
+
+module.exports = React.createClass
+  displayName: 'CredentialsHeaderButtons'
+  mixins: [createStoreMixin(ExGdriveStore)]
+
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
+
+  getStateFromStores: ->
+    configId = RoutesStore.getCurrentRouteParam 'config'
+    sheetId = RoutesStore.getCurrentRouteParam 'sheetId'
+    currentConfigId: configId
+    sheetId: sheetId
+    isEditing: ExGdriveStore.isEditingSheet configId, sheetId
+    isSaving: ExGdriveStore.isSavingSheet configId, sheetId
+
+  _handleEditStart: ->
+    ExGdriveActionCreators.editSheetStart @state.currentConfigId, @state.sheetId
+
+  _handleCancel: ->
+    ExGdriveActionCreators.cancelSheetEdit @state.currentConfigId, @state.sheetId
+
+  _handleUpdate: ->
+    ExGdriveActionCreators.saveSheetEdit @state.currentConfigId, @state.sheetId
+
+  render: ->
+    if @state.isEditing
+      React.DOM.div className: 'kbc-buttons',
+        if @state.isSaving
+          Loader()
+        button
+          className: 'btn btn-link'
+          disabled: @state.isSaving
+          onClick: @_handleCancel
+        ,
+          'Cancel'
+        button
+          className: 'btn btn-success'
+          disabled: @state.isSaving
+          onClick: @_handleUpdate
+        ,
+          'Save'
+    else
+      React.DOM.div null,
+        button
+          className: 'btn btn-success'
+          disabled: @state.isSaving
+          onClick: @_handleEditStart
+        ,
+          span className: 'fa fa-edit'
+          ' Edit'
