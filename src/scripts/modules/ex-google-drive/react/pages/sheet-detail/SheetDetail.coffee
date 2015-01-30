@@ -1,5 +1,6 @@
 React = require('react')
 ExGdriveStore = require '../../../exGdriveStore.coffee'
+ActionCreators = require '../../../exGdriveActionCreators.coffee'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 Input = React.createFactory(require('react-bootstrap').Input)
@@ -17,6 +18,9 @@ module.exports = React.createClass
     if ExGdriveStore.isEditingSheet(config, sheetId)
       sheet = ExGdriveStore.getEditingSheet(config, sheetId)
     sheet: sheet
+    isEditing: ExGdriveStore.isEditingSheet(config, sheetId)
+    configId: config
+    sheetId: sheetId
 
   render: ->
     #console.log @state.sheet.toJS()
@@ -27,9 +31,13 @@ module.exports = React.createClass
           @_createInput 'Sheet Title', 'sheetTitle', 'static'
           @_createInput 'Document GoogleId', 'googleId', 'static'
           @_createInput 'Sheet Id', 'sheetId', 'static'
+          if @state.isEditing
+            @_createInput 'Raw Config', 'config', 'textarea'
+          else
+            @_createInput 'Raw Config', 'config', 'static'
 
   _handleChange: (propName, event) ->
-
+    ActionCreators.sheetEditOnChange(@state.configId, @state.sheetId, propName, event.target.value)
 
 
   _createInput: (labelValue, propName, type = 'text') ->

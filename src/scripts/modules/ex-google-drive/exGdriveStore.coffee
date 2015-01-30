@@ -70,6 +70,17 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['configs', configId, 'items', sheetId], sheet
       _store = _store.deleteIn ['savingSheets', configId, sheetId], sheet
 
+    when Constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
+      configId = action.configurationId
+      sheetId = action.sheetId
+      propName = action.propName
+      newValue = action.newValue
+      #sheet = GdriveStore.getEditingSheet(configId, sheetId)
+      _store = _store.setIn ['editingSheets', configId, sheetId, propName], newValue
+
+
+
+
 
 
 

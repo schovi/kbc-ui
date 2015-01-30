@@ -30,6 +30,16 @@ module.exports =
       configurationId: configId
       sheetId: sheetId
 
+  sheetEditOnChange: (configId, sheetId, propName, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
+      configurationId: configId
+      sheetId: sheetId
+      propName: propName
+      newValue: newValue
+
+
+
   saveSheetEdit: (configId, sheetId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
