@@ -29,7 +29,7 @@ module.exports = React.createClass
         div className: 'td', row.get 'sheetTitle'
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'
-        div className: 'td', @_rawConfig(row).db?.table
+        div className: 'td', @_rawConfig(row)?.db?.table or "n/a"
         div className: 'td', "todo:delete play"
 
     , @).toArray()
