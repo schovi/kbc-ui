@@ -44,17 +44,20 @@ Dispatcher.register (payload) ->
       configId = action.configuration.id
       configObject = action.configuration.configuration
       _store = _store.setIn(['configs',configId], Immutable.fromJS(configObject))
+      GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_START
       configId = action.configurationId
       sheetId = action.sheetId
       sheet = GdriveStore.getConfigSheet(configId, sheetId)
       _store = _store.setIn ['editingSheets', configId, sheetId], sheet
+      GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_CANCEL
       configId = action.configurationId
       sheetId = action.sheetId
       _store = _store.deleteIn ['editingSheets', configId, sheetId], sheet
+      GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
       configId = action.configurationId
@@ -62,6 +65,7 @@ Dispatcher.register (payload) ->
       sheet = GdriveStore.getEditingSheet(configId, sheetId)
       _store = _store.setIn ['savingSheets', configId, sheetId], sheet
       _store = _store.deleteIn ['editingSheets', configId, sheetId], sheet
+      GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
       configId = action.configurationId
@@ -69,6 +73,7 @@ Dispatcher.register (payload) ->
       sheet = GdriveStore.getSavingSheet(configId, sheetId)
       _store = _store.setIn ['configs', configId, 'items', sheetId], sheet
       _store = _store.deleteIn ['savingSheets', configId, sheetId], sheet
+      GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
       configId = action.configurationId
@@ -77,6 +82,7 @@ Dispatcher.register (payload) ->
       newValue = action.newValue
       #sheet = GdriveStore.getEditingSheet(configId, sheetId)
       _store = _store.setIn ['editingSheets', configId, sheetId, propName], newValue
+      GdriveStore.emitChange()
 
 
 
@@ -86,7 +92,7 @@ Dispatcher.register (payload) ->
 
 
 
-  GdriveStore.emitChange()
+
 
 
 module.exports = GdriveStore
