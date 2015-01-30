@@ -17,6 +17,8 @@ module.exports = React.createClass
     sheet = ExGdriveStore.getConfigSheet(config,sheetId)
     if ExGdriveStore.isEditingSheet(config, sheetId)
       sheet = ExGdriveStore.getEditingSheet(config, sheetId)
+    if ExGdriveStore.isSavingSheet(config, sheetId)
+      sheet = ExGdriveStore.getSavingSheet(config, sheetId)
     sheet: sheet
     isEditing: ExGdriveStore.isEditingSheet(config, sheetId)
     configId: config
