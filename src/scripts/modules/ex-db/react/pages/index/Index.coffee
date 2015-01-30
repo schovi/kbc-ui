@@ -8,7 +8,7 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 QueryTable = React.createFactory(require './QueryTable.coffee')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
 ComponentDescription React.createFactory ComponentDescription
-RunExtraction = React.createFactory(require '../../components/RunExtraction.coffee')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton.coffee')
 Link = React.createFactory(require('react-router').Link)
 
 
@@ -61,8 +61,11 @@ module.exports = React.createClass
               i className: 'fa fa-fw fa-user'
               ' Database Credentials'
           li null,
-            RunExtraction
-              configId: @state.configuration.get 'id'
+            RunExtractionButton
+              component: 'ex-db'
+              mode: 'link'
+              runParams:
+                config: @state.configuration.get 'id'
 
         div className: 'kbc-buttons',
           span null,

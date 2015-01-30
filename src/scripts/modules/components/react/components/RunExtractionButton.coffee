@@ -1,5 +1,5 @@
 React = require 'react'
-InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators.coffee'
+InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Modal = React.createFactory(require('react-bootstrap').Modal)
@@ -7,7 +7,7 @@ Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 
 
-{a, i, div} = React.DOM
+{a, i, div, button} = React.DOM
 
 RunModal = React.createFactory React.createClass
 
@@ -38,7 +38,12 @@ RunModal = React.createFactory React.createClass
 module.exports = React.createClass
   displayName: 'RunExtraction'
   propTypes:
-    configId: React.PropTypes.string.isRequired
+    mode: React.PropTypes.oneOf ['button', 'link']
+    component: React.PropTypes.string.isRequired
+    runParams: React.PropTypes.object.isRequired
+
+  getDefaultProps: ->
+    mode: 'button'
 
   getInitialState: ->
     isLoading: false
@@ -49,9 +54,8 @@ module.exports = React.createClass
 
     InstalledComponentsActionCreators
     .runComponent
-      component: 'ex-db'
-      data:
-        config: @props.configId
+      component: @props.component
+      data: @props.runParams
     .then @_handleStarted
 
   _handleStarted: ->
@@ -63,9 +67,28 @@ module.exports = React.createClass
       modal: RunModal
         onRequestRun: @_handleRunStart
     ,
-      a null,
-        @_renderIcon()
-        ' Run Extraction!'
+      if @props.mode == 'button'
+        @_renderButton()
+      else
+        @_renderLink()
+
+  _renderButton: ->
+    button
+      className: 'btn btn-link'
+      onClick: (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+    ,
+      @_renderIcon()
+
+  _renderLink: ->
+    a
+      onClick: (e) ->
+        e.stopPropagation()
+        e.preventDefault()
+    ,
+      @_renderIcon()
+      ' Run Extraction'
 
   _renderIcon: ->
     if @state.isLoading

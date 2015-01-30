@@ -5,6 +5,7 @@ Link = React.createFactory(require('react-router').Link)
 Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
 Check = React.createFactory(require('../../../../../react/common/common.coffee').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton.coffee'))
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton.coffee')
 
 {span, div, a, button, i} = React.DOM
 
@@ -37,3 +38,8 @@ module.exports = React.createClass
           QueryDeleteButton
             query: @props.query
             configurationId: @props.configurationId
+        RunExtractionButton
+          component: 'ex-db'
+          runParams:
+            query: @props.query.get 'id'
+            config: @props.configurationId
