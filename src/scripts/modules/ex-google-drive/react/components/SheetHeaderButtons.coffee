@@ -18,19 +18,21 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
     sheetId = RoutesStore.getCurrentRouteParam 'sheetId'
+    fileId = RoutesStore.getCurrentRouteParam 'fileId'
     currentConfigId: configId
     sheetId: sheetId
-    isEditing: ExGdriveStore.isEditingSheet configId, sheetId
-    isSaving: ExGdriveStore.isSavingSheet configId, sheetId
+    fileId: fileId
+    isEditing: ExGdriveStore.isEditingSheet configId, fileId, sheetId
+    isSaving: ExGdriveStore.isSavingSheet configId, fileId, sheetId
 
   _handleEditStart: ->
-    ExGdriveActionCreators.editSheetStart @state.currentConfigId, @state.sheetId
+    ExGdriveActionCreators.editSheetStart @state.currentConfigId, @state.fileId, @state.sheetId
 
   _handleCancel: ->
-    ExGdriveActionCreators.cancelSheetEdit @state.currentConfigId, @state.sheetId
+    ExGdriveActionCreators.cancelSheetEdit @state.currentConfigId, @state.fileId, @state.sheetId
 
   _handleUpdate: ->
-    ExGdriveActionCreators.saveSheetEdit @state.currentConfigId, @state.sheetId
+    ExGdriveActionCreators.saveSheetEdit @state.currentConfigId, @state.fileId, @state.sheetId
 
   render: ->
     if @state.isEditing

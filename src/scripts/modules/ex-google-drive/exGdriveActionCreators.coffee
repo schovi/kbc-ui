@@ -18,38 +18,43 @@ module.exports =
     return Promise.resolve() if exGdriveStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
 
-  editSheetStart: (configId, sheetId) ->
+  editSheetStart: (configId, fileId, sheetId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_START
       configurationId: configId
       sheetId: sheetId
+      fileId: fileId
 
-  cancelSheetEdit: (configId, sheetId) ->
+  cancelSheetEdit: (configId, fileId, sheetId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_CANCEL
       configurationId: configId
       sheetId: sheetId
+      fileId: fileId
 
-  sheetEditOnChange: (configId, sheetId, propName, newValue) ->
+  sheetEditOnChange: (configId, fileId, sheetId, propName, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
       configurationId: configId
       sheetId: sheetId
+      fileId: fileId
       propName: propName
       newValue: newValue
 
 
 
-  saveSheetEdit: (configId, sheetId) ->
+  saveSheetEdit: (configId, fileId, sheetId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
       configurationId: configId
       sheetId: sheetId
-    sheet = exGdriveStore.getSavingSheet configId, sheetId
+      fileId: fileId
+    sheet = exGdriveStore.getSavingSheet configId, fileId, sheetId
     exGdriveApi.storeNewSheets(configId, [sheet.toJS()])
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
         configurationId: configId
         sheetId: sheetId
+        fileId: fileId
         result: result

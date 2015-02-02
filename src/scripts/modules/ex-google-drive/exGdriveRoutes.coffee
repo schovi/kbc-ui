@@ -26,7 +26,7 @@ module.exports =
     path: 'authorize'
   ,
     name: 'ex-google-drive-sheet'
-    path: 'sheet/:sheetId'
+    path: 'sheet/:fileId/:sheetId'
 
     title: ->
       'sheet'

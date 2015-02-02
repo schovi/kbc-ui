@@ -10,8 +10,6 @@ _store = Map(
   configs: Map() #config by configId
   editingSheets: Map() # configId:sheetid
   savingSheets: Map() # configId:sheetid
-
-
 )
 
 
@@ -22,20 +20,20 @@ GdriveStore = StoreUtils.createStore
   getConfig: (configId) ->
     _store.getIn ['configs',configId]
 
-  getConfigSheet: (configId, sheetId) ->
+  getConfigSheet: (configId, fileId, sheetId) ->
     items = _store.getIn ['configs', configId, 'items']
     result = items.find (value, key) ->
-      value.get("fileId") == sheetId
+      value.get('fileId') == fileId and value.get('sheetId')
     return result
 
-  isEditingSheet: (configId, sheetId) ->
-    _store.hasIn ['editingSheets', configId, sheetId]
-  isSavingSheet: (configId, sheetId) ->
-    _store.hasIn ['savingSheets', configId, sheetId]
-  getEditingSheet: (configId, sheetId) ->
-    _store.getIn ['editingSheets', configId, sheetId]
-  getSavingSheet: (configId, sheetId) ->
-    _store.getIn ['savingSheets', configId, sheetId]
+  isEditingSheet: (configId, fileId, sheetId) ->
+    _store.hasIn ['editingSheets', configId, fileId, sheetId]
+  isSavingSheet: (configId, fileId, sheetId) ->
+    _store.hasIn ['savingSheets', configId, fileId, sheetId]
+  getEditingSheet: (configId, fileId, sheetId) ->
+    _store.getIn ['editingSheets', configId, fileId, sheetId]
+  getSavingSheet: (configId, fileId, sheetId) ->
+    _store.getIn ['savingSheets', configId, fileId, sheetId]
 
 
 
@@ -53,48 +51,53 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_START
       configId = action.configurationId
       sheetId = action.sheetId
-      sheet = GdriveStore.getConfigSheet(configId, sheetId)
-      _store = _store.setIn ['editingSheets', configId, sheetId], sheet
+      fileId =  action.fileId
+      sheet = GdriveStore.getConfigSheet(configId, fileId, sheetId)
+      _store = _store.setIn ['editingSheets', configId, fileId, sheetId], sheet
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_CANCEL
       configId = action.configurationId
       sheetId = action.sheetId
-      _store = _store.deleteIn ['editingSheets', configId, sheetId], sheet
+      fileId =  action.fileId
+      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId], sheet
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
       configId = action.configurationId
       sheetId = action.sheetId
-      sheet = GdriveStore.getEditingSheet(configId, sheetId)
-      _store = _store.setIn ['savingSheets', configId, sheetId], sheet
-      _store = _store.deleteIn ['editingSheets', configId, sheetId], sheet
+      fileId =  action.fileId
+      sheet = GdriveStore.getEditingSheet(configId, fileId, sheetId)
+      _store = _store.setIn ['savingSheets', configId, fileId, sheetId], sheet
+      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId], sheet
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
       configId = action.configurationId
       sheetId = action.sheetId
-      sheet = GdriveStore.getSavingSheet(configId, sheetId)
+      fileId =  action.fileId
+      sheet = GdriveStore.getSavingSheet(configId, fileId, sheetId)
       #update configured sheets store with sheet by fileId == sheetId
       items = _store.getIn ['configs', configId, 'items']
       newItems = items.map( (value, key) ->
-        if value.get("fileId") == sheetId
+        if value.get("fileId") == fileId and value.get('sheetId') == sheetId
           return sheet
         else
           return value
         )
       _store = _store.setIn ['configs', configId, 'items'], newItems
-      _store = _store.deleteIn ['savingSheets', configId, sheetId], sheet
+      _store = _store.deleteIn ['savingSheets', configId, fileId, sheetId], sheet
 
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
       configId = action.configurationId
       sheetId = action.sheetId
+      fileId =  action.fileId
       propName = action.propName
       newValue = action.newValue
       #sheet = GdriveStore.getEditingSheet(configId, sheetId)
-      _store = _store.setIn ['editingSheets', configId, sheetId, propName], newValue
+      _store = _store.setIn ['editingSheets', configId, fileId, sheetId, propName], newValue
       GdriveStore.emitChange()
 
 

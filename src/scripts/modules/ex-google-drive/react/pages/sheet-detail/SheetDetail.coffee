@@ -13,16 +13,18 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     sheetId = RoutesStore.getCurrentRouteParam('sheetId')
+    fileId = RoutesStore.getCurrentRouteParam('fileId')
     config = RoutesStore.getCurrentRouteParam('config')
-    sheet = ExGdriveStore.getConfigSheet(config,sheetId)
-    if ExGdriveStore.isEditingSheet(config, sheetId)
-      sheet = ExGdriveStore.getEditingSheet(config, sheetId)
-    if ExGdriveStore.isSavingSheet(config, sheetId)
-      sheet = ExGdriveStore.getSavingSheet(config, sheetId)
+    sheet = ExGdriveStore.getConfigSheet(config, fileId, sheetId)
+    if ExGdriveStore.isEditingSheet(config, fileId, sheetId)
+      sheet = ExGdriveStore.getEditingSheet(config, fileId, sheetId)
+    if ExGdriveStore.isSavingSheet(config, fileId, sheetId)
+      sheet = ExGdriveStore.getSavingSheet(config, fileId, sheetId)
     sheet: sheet
-    isEditing: ExGdriveStore.isEditingSheet(config, sheetId)
+    isEditing: ExGdriveStore.isEditingSheet(config, fileId, sheetId)
     configId: config
     sheetId: sheetId
+    fileId: fileId
 
   render: ->
     #console.log @state.sheet.toJS()
@@ -39,7 +41,21 @@ module.exports = React.createClass
             @_createInput 'Raw Config', 'config', 'static'
 
   _handleChange: (propName, event) ->
-    ActionCreators.sheetEditOnChange(@state.configId, @state.sheetId, propName, event.target.value)
+    ActionCreators.sheetEditOnChange(@state.configId, @state.fileId,  @state.sheetId, propName, event.target.value)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   _createInput: (labelValue, propName, type = 'text') ->
