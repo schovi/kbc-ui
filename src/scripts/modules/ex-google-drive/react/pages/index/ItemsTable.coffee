@@ -24,7 +24,7 @@ module.exports = React.createClass
         to: 'ex-google-drive-sheet'
         params:
           config: @props.configurationId
-          sheetId: rowkey
+          sheetId: row.get 'fileId' #fileId is unique within the sheet row
         div className: 'td', row.get 'title'
         div className: 'td', row.get 'sheetTitle'
         div className: 'td',

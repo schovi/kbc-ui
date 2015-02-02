@@ -2,6 +2,7 @@ Dispatcher = require('../../Dispatcher.coffee')
 Constants = require './exGdriveConstants.coffee'
 Immutable = require('immutable')
 Map = Immutable.Map
+Iterable = Immutable.Iterable
 StoreUtils = require '../../utils/StoreUtils.coffee'
 
 
@@ -22,7 +23,10 @@ GdriveStore = StoreUtils.createStore
     _store.getIn ['configs',configId]
 
   getConfigSheet: (configId, sheetId) ->
-    _store.getIn ['configs', configId, 'items', sheetId]
+    items = _store.getIn ['configs', configId, 'items']
+    result = items.find (value, key) ->
+      value.get("fileId") == sheetId
+    return result
 
   isEditingSheet: (configId, sheetId) ->
     _store.hasIn ['editingSheets', configId, sheetId]
@@ -71,8 +75,17 @@ Dispatcher.register (payload) ->
       configId = action.configurationId
       sheetId = action.sheetId
       sheet = GdriveStore.getSavingSheet(configId, sheetId)
-      _store = _store.setIn ['configs', configId, 'items', sheetId], sheet
+      #update configured sheets store with sheet by fileId == sheetId
+      items = _store.getIn ['configs', configId, 'items']
+      newItems = items.map( (value, key) ->
+        if value.get("fileId") == sheetId
+          return sheet
+        else
+          return value
+        )
+      _store = _store.setIn ['configs', configId, 'items'], newItems
       _store = _store.deleteIn ['savingSheets', configId, sheetId], sheet
+
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_ON_CHANGE
