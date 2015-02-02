@@ -35,26 +35,53 @@ module.exports = React.createClass
           @_createInput 'Sheet Title', 'sheetTitle', 'static'
           @_createInput 'Document GoogleId', 'googleId', 'static'
           @_createInput 'Sheet Id', 'sheetId', 'static'
-          if @state.isEditing
-            @_createInput 'Raw Config', 'config', 'textarea'
-          else
-            @_createInput 'Raw Config', 'config', 'static'
+          @_createConfigInput(
+            'SAPI Table'
+            =>
+              @_parsedConfig()?.db?.table #readFn
+            (event, config) -> #setFn
+              config?.db?.table = event.target.value
+              config
+            'text'
+          )
+          @_createConfigInput(
+            'Header starts at row'
+            (=> @_parsedConfig()?.header?.rows) #readFn
+            (event, config) -> #setFn
+              newRows = parseInt event.target.value
+              if newRows != NaN or event.target.value == ""
+                config?.header?.rows = newRows
+              config
+            'number'
+          )
+          @_createConfigInput(
+            'Raw Config'
+            (=> @state.sheet.get 'config') #readFn
+            (event, config) ->
+              return JSON.parse event.target.value
+            'textarea'
+          )
+
+
 
   _handleChange: (propName, event) ->
     ActionCreators.sheetEditOnChange(@state.configId, @state.fileId,  @state.sheetId, propName, event.target.value)
 
+  _parsedConfig: ->
+    JSON.parse(@state.sheet.get 'config')
 
-
-
-
-
-
-
-
-
-
-
-
+  _createConfigInput: (caption, readFn, setFn, type) ->
+    Input
+      label: caption
+      type: if @state.isEditing then type else 'static'
+      value: readFn()
+      labelClassName: 'col-xs-4'
+      wrapperClassName: 'col-xs-8'
+      onChange: (event) =>
+        config = @_parsedConfig()
+        config = setFn(event, config)
+        newConfig = JSON.stringify(config)
+        ActionCreators.sheetEditOnChange(@state.configId, @state.fileId, @state.sheetId, 'config', newConfig)
 
 
 
