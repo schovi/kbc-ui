@@ -43,7 +43,12 @@ module.exports = React.createClass
             =>
               @_parsedConfig()?.db?.table #readFn
             (event, config) -> #setFn
-              config?.db?.table = event.target.value
+              if not config
+                config = {}
+              if not config.db
+                config.db = {}
+
+              config.db.table = event.target.value
               config
             'text'
             'table'
@@ -53,10 +58,14 @@ module.exports = React.createClass
             'Header starts at row'
             (=> @_parsedConfig()?.header?.rows) #readFn
             (event, config) -> #setFn
-              newRows = parseInt event.target.value
-              if newRows != NaN or event.target.value == ""
-                config?.header?.rows = newRows
-              config
+              if isFinite(event.target.value) and event.target.value != ""
+                newRows = parseInt event.target.value
+                if not config
+                  config = {}
+                if not config.header
+                  config.header = {}
+                config.header.rows = newRows
+              return config
             'number'
             'header'
           )

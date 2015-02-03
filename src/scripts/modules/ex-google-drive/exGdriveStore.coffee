@@ -75,7 +75,7 @@ Dispatcher.register (payload) ->
             table = config.db.table
             if table.split('.')[0] != 'in'
               validation.table = "Bucket must be of stage 'in'"
-          if not config?.header?.rows
+          if not config?.header?.rows?
             validation.header = 'Can not be empty.'
           else
             if not isFinite(config.header.rows)
