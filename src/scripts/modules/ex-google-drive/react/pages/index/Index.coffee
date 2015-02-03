@@ -6,8 +6,8 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction.coffee')
-ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription.coffee')
-
+ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
+ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
 
 ItemsTable = React.createFactory(require './ItemsTable.coffee')
