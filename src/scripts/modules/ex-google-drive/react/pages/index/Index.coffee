@@ -3,14 +3,14 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 ExGdriveStore = require '../../../exGdriveStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction.coffee')
-ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
-ComponentDescription React.createFactory ComponentDescription
+ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription.coffee')
+
 Link = React.createFactory(require('react-router').Link)
 
-ItemsTable = require './ItemsTable.coffee'
+ItemsTable = React.createFactory(require './ItemsTable.coffee')
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
@@ -21,6 +21,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     configuration: ExGdriveStore.getConfig(config)
+    deletingSheets: ExGdriveStore.getDeletingSheets(config)
 
   render: ->
     console.log @state.configuration.toJS()
@@ -49,6 +50,7 @@ module.exports = React.createClass
         ItemsTable
           items: items
           configurationId: @state.configuration.get 'id'
+          deletingSheets: @state.deletingSheets
       else
         "no queries yet"
 

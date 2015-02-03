@@ -8,8 +8,9 @@ StoreUtils = require '../../utils/StoreUtils.coffee'
 
 _store = Map(
   configs: Map() #config by configId
-  editingSheets: Map() # configId:sheetid
-  savingSheets: Map() # configId:sheetid
+  editingSheets: Map() #configId:fileId:sheetId
+  savingSheets: Map() #configId:fileId:sheetId
+  deletingSheets: Map() #configId:fileId:sheetId
 )
 
 
@@ -19,6 +20,8 @@ GdriveStore = StoreUtils.createStore
     _store.hasIn ['configs',configId]
   getConfig: (configId) ->
     _store.getIn ['configs',configId]
+  getDeletingSheets: (configId) ->
+    _store.getIn ['deletingSheets', configId]
 
   getConfigSheet: (configId, fileId, sheetId) ->
     items = _store.getIn ['configs', configId, 'items']
@@ -26,6 +29,8 @@ GdriveStore = StoreUtils.createStore
       value.get('fileId') == fileId and value.get('sheetId')
     return result
 
+  isDeletingSheet: (configId, fileId, sheetId) ->
+    _store.hasIn ['deletingSheets', configId, fileId, sheetId]
   isEditingSheet: (configId, fileId, sheetId) ->
     _store.hasIn ['editingSheets', configId, fileId, sheetId]
   isSavingSheet: (configId, fileId, sheetId) ->
@@ -143,6 +148,29 @@ Dispatcher.register (payload) ->
       #sheet = GdriveStore.getEditingSheet(configId, sheetId)
       _store = _store.setIn ['editingSheets', configId, fileId, sheetId, propName], newValue
       GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SHEET_DELETE_START
+      configId = action.configurationId
+      sheetId = action.sheetId
+      fileId =  action.fileId
+      sheet = GdriveStore.getConfigSheet(configId, fileId, sheetId)
+      _store = _store.setIn ['deletingSheets', configId, fileId, sheetId], sheet
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SHEET_DELETE_END
+      configId = action.configurationId
+      sheetId = action.sheetId
+      fileId =  action.fileId
+      _store = _store.deleteIn ['deletingSheets', configId, fileId, sheetId]
+
+      items = _store.getIn ['configs', configId, 'items']
+      newItems = items.filter (value,key) ->
+        value.get('fileId') != fileId and value.get('sheetId') != sheetId
+      _store = _store.setIn ['configs', configId, 'items'], newItems
+      GdriveStore.emitChange()
+
+
+
 
 
 

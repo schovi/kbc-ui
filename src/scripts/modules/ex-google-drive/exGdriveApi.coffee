@@ -16,12 +16,18 @@ promisify = (pendingRequest) ->
 
 module.exports =
   getConfiguration: (configId) ->
-    promisify createRequest("GET","account/" + configId )
+    promisify createRequest('GET', 'account/' + configId )
 
   storeNewSheets: (configId, newSheetsArray) ->
     data =
       data: newSheetsArray
-    createRequest("POST", "sheets/" + configId)
+    createRequest('POST', 'sheets/' + configId)
       .send data
       .promise().then (response) ->
+        response.body
+
+  deleteSheet: (configId, fileId, sheetId) ->
+    createRequest('DELETE', "sheet/#{configId}/#{fileId}/#{sheetId}")
+      .promise()
+      .then (response) ->
         response.body

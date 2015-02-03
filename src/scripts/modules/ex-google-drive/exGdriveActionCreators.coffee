@@ -41,8 +41,6 @@ module.exports =
       propName: propName
       newValue: newValue
 
-
-
   saveSheetEdit: (configId, fileId, sheetId) ->
     sheetConfig =
       configurationId: configId
@@ -61,4 +59,17 @@ module.exports =
       .then (result) ->
         sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
         sheetConfig.result = result
+        dispatcher.handleViewAction sheetConfig
+
+  deleteSheet: (configId, fileId, sheetId) ->
+    sheetConfig =
+      configurationId: configId
+      sheetId: sheetId
+      fileId: fileId
+      type: constants.ActionTypes.EX_GDRIVE_SHEET_DELETE_START
+    dispatcher.handleViewAction sheetConfig
+
+    if exGdriveStore.isDeletingSheet configId, fileId, sheetId
+      exGdriveApi.deleteSheet(configId, fileId, sheetId).then (result) ->
+        sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_DELETE_END
         dispatcher.handleViewAction sheetConfig
