@@ -34,6 +34,14 @@ GdriveStore = StoreUtils.createStore
     _store.getIn ['editingSheets', configId, fileId, sheetId]
   getSavingSheet: (configId, fileId, sheetId) ->
     _store.getIn ['savingSheets', configId, fileId, sheetId]
+  getSheetValidation: (configId, fileId, sheetId) ->
+    _store.getIn ["validationSheets", configId, fileId, sheetId]
+  isSheetValid: (configId, fileId, sheetId) ->
+    validation = _store.getIn ["validationSheets", configId, fileId, sheetId]
+    #sheet is valid if its validation object
+    #  does not contains any properties(ie messages)
+    return Object.keys(validation) == 0
+
 
 
 
@@ -47,6 +55,40 @@ Dispatcher.register (payload) ->
       configObject = action.configuration.configuration
       _store = _store.setIn(['configs',configId], Immutable.fromJS(configObject))
       GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_VALIDATE
+      configId = action.configurationId
+      sheetId = action.sheetId
+      fileId =  action.fileId
+      sheet = GdriveStore.getEditingSheet(configId, fileId, sheetId)
+      validation = {}
+      configStr = sheet.get 'config'
+      try
+        config = JSON.parse(configStr)
+        if config == null
+          validation.config ='Can not be empty'
+        else
+          if not config?.db?.table
+            validation.table = 'Can not be empty'
+          else
+            table = config.db.table
+            if table.split('.')[0] != 'in'
+              validation.table = "Bucket must be of stage 'in'"
+          if not config?.header?.rows
+            validation.header = 'Can not be empty.'
+          else
+            if not isFinite(validation.header.rows)
+              validation.header = 'Must be valid number'
+            else
+              if parseInt(validation.header.rows) < 0
+                validation.header = 'Can not be negative integer'
+      catch
+        validation.config = 'Config parameter must be valid JSON object'
+      _store = _store.setIn ["validationSheets", configId, fileId, sheetId], validation
+      GdriveStore.emitChange()
+
+
+
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_START
       configId = action.configurationId
@@ -80,7 +122,7 @@ Dispatcher.register (payload) ->
       #update configured sheets store with sheet by fileId == sheetId
       items = _store.getIn ['configs', configId, 'items']
       newItems = items.map( (value, key) ->
-        if value.get("fileId") == fileId and value.get('sheetId') == sheetId
+        if value.get('fileId') == fileId and value.get('sheetId') == sheetId
           return sheet
         else
           return value

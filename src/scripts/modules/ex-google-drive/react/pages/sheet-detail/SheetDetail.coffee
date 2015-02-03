@@ -20,13 +20,16 @@ module.exports = React.createClass
       sheet = ExGdriveStore.getEditingSheet(config, fileId, sheetId)
     if ExGdriveStore.isSavingSheet(config, fileId, sheetId)
       sheet = ExGdriveStore.getSavingSheet(config, fileId, sheetId)
+
     sheet: sheet
     isEditing: ExGdriveStore.isEditingSheet(config, fileId, sheetId)
     configId: config
     sheetId: sheetId
     fileId: fileId
+    validation: ExGdriveStore.getSheetValidation(config, fileId, sheetId)
 
   render: ->
+    console.log @state.validation
     #console.log @state.sheet.toJS()
     div {className: 'container-fluid'},
       form className: 'form-horizontal',
@@ -58,8 +61,9 @@ module.exports = React.createClass
             'Raw Config'
             (=> @state.sheet.get 'config') #readFn
             (event, config) ->
-              return JSON.parse event.target.value
+              event.target.value
             'textarea'
+            false
           )
 
 
@@ -68,9 +72,13 @@ module.exports = React.createClass
     ActionCreators.sheetEditOnChange(@state.configId, @state.fileId,  @state.sheetId, propName, event.target.value)
 
   _parsedConfig: ->
-    JSON.parse(@state.sheet.get 'config')
+    try
+      return JSON.parse(@state.sheet.get 'config')
+    catch
+      return {}
 
-  _createConfigInput: (caption, readFn, setFn, type) ->
+
+  _createConfigInput: (caption, readFn, setFn, type, stringify = true) ->
     Input
       label: caption
       type: if @state.isEditing then type else 'static'
@@ -80,7 +88,11 @@ module.exports = React.createClass
       onChange: (event) =>
         config = @_parsedConfig()
         config = setFn(event, config)
-        newConfig = JSON.stringify(config)
+        if stringify
+          newConfig = JSON.stringify(config)
+        else
+          newConfig = config
+
         ActionCreators.sheetEditOnChange(@state.configId, @state.fileId, @state.sheetId, 'config', newConfig)
 
 

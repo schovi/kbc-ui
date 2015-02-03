@@ -44,17 +44,21 @@ module.exports =
 
 
   saveSheetEdit: (configId, fileId, sheetId) ->
-    dispatcher.handleViewAction
-      type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
+    sheetConfig =
       configurationId: configId
       sheetId: sheetId
       fileId: fileId
-    sheet = exGdriveStore.getSavingSheet configId, fileId, sheetId
-    exGdriveApi.storeNewSheets(configId, [sheet.toJS()])
-    .then (result) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
-        configurationId: configId
-        sheetId: sheetId
-        fileId: fileId
-        result: result
+
+    #validate sheet before start saving
+    sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_VALIDATE
+    dispatcher.handleViewAction sheetConfig
+
+    if exGdriveStore.isSheetValid(configId, fileId, sheetId)
+      sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
+      dispatcher.handleViewAction sheetConfig #start saving
+      sheet = exGdriveStore.getSavingSheet configId, fileId, sheetId
+      exGdriveApi.storeNewSheets(configId, [sheet.toJS()])
+      .then (result) ->
+        sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
+        sheetConfig.result = result
+        dispatcher.handleViewAction sheetConfig
