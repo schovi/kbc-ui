@@ -113,7 +113,6 @@ Dispatcher.register (payload) ->
       fileId =  action.fileId
       sheet = GdriveStore.getEditingSheet(configId, fileId, sheetId)
       _store = _store.setIn ['savingSheets', configId, fileId, sheetId], sheet
-      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId]
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
@@ -130,6 +129,7 @@ Dispatcher.register (payload) ->
           return value
         )
       _store = _store.setIn ['configs', configId, 'items'], newItems
+      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId]
       _store = _store.deleteIn ['savingSheets', configId, fileId, sheetId]
 
       GdriveStore.emitChange()
