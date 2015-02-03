@@ -40,7 +40,7 @@ GdriveStore = StoreUtils.createStore
     validation = _store.getIn ["validationSheets", configId, fileId, sheetId]
     #sheet is valid if its validation object
     #  does not contains any properties(ie messages)
-    return Object.keys(validation) == 0
+    return validation != null and Object.keys(validation).length == 0
 
 
 
@@ -62,11 +62,12 @@ Dispatcher.register (payload) ->
       fileId =  action.fileId
       sheet = GdriveStore.getEditingSheet(configId, fileId, sheetId)
       validation = {}
+      _store = _store.setIn ["validationSheets", configId, fileId, sheetId], validation
       configStr = sheet.get 'config'
       try
         config = JSON.parse(configStr)
         if config == null
-          validation.config ='Can not be empty'
+          validation.config = 'Can not be empty'
         else
           if not config?.db?.table
             validation.table = 'Can not be empty'
@@ -77,13 +78,13 @@ Dispatcher.register (payload) ->
           if not config?.header?.rows
             validation.header = 'Can not be empty.'
           else
-            if not isFinite(validation.header.rows)
+            if not isFinite(config.header.rows)
               validation.header = 'Must be valid number'
             else
-              if parseInt(validation.header.rows) < 0
+              if parseInt(config.header.rows) < 0
                 validation.header = 'Can not be negative integer'
       catch
-        validation.config = 'Config parameter must be valid JSON object'
+        validation.config = 'Must be valid JSON object'
       _store = _store.setIn ["validationSheets", configId, fileId, sheetId], validation
       GdriveStore.emitChange()
 
@@ -102,7 +103,8 @@ Dispatcher.register (payload) ->
       configId = action.configurationId
       sheetId = action.sheetId
       fileId =  action.fileId
-      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId], sheet
+      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId]
+      _store = _store.deleteIn ['validationSheets', configId, fileId, sheetId]
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_START
@@ -111,7 +113,7 @@ Dispatcher.register (payload) ->
       fileId =  action.fileId
       sheet = GdriveStore.getEditingSheet(configId, fileId, sheetId)
       _store = _store.setIn ['savingSheets', configId, fileId, sheetId], sheet
-      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId], sheet
+      _store = _store.deleteIn ['editingSheets', configId, fileId, sheetId]
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
@@ -128,7 +130,7 @@ Dispatcher.register (payload) ->
           return value
         )
       _store = _store.setIn ['configs', configId, 'items'], newItems
-      _store = _store.deleteIn ['savingSheets', configId, fileId, sheetId], sheet
+      _store = _store.deleteIn ['savingSheets', configId, fileId, sheetId]
 
       GdriveStore.emitChange()
 

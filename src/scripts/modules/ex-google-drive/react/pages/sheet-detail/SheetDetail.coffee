@@ -29,7 +29,7 @@ module.exports = React.createClass
     validation: ExGdriveStore.getSheetValidation(config, fileId, sheetId)
 
   render: ->
-    console.log @state.validation
+    #console.log @state.validation
     #console.log @state.sheet.toJS()
     div {className: 'container-fluid'},
       form className: 'form-horizontal',
@@ -46,6 +46,8 @@ module.exports = React.createClass
               config?.db?.table = event.target.value
               config
             'text'
+            'table'
+
           )
           @_createConfigInput(
             'Header starts at row'
@@ -56,6 +58,7 @@ module.exports = React.createClass
                 config?.header?.rows = newRows
               config
             'number'
+            'header'
           )
           @_createConfigInput(
             'Raw Config'
@@ -63,6 +66,7 @@ module.exports = React.createClass
             (event, config) ->
               event.target.value
             'textarea'
+            'config'
             false
           )
 
@@ -78,13 +82,15 @@ module.exports = React.createClass
       return {}
 
 
-  _createConfigInput: (caption, readFn, setFn, type, stringify = true) ->
+  _createConfigInput: (caption, readFn, setFn, type, validationProperty,  stringify = true) ->
     Input
       label: caption
       type: if @state.isEditing then type else 'static'
       value: readFn()
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
+      help: @state.validation?[validationProperty] if @state.isEditing
+      bsStyle: 'error' if @state.validation?[validationProperty] and @state.isEditing
       onChange: (event) =>
         config = @_parsedConfig()
         config = setFn(event, config)
