@@ -39,13 +39,13 @@ module.exports = React.createClass
             configId: @state.configuration.get('id')
         div className: 'col-sm-4 kbc-buttons',
           Link
-            to: 'ex-google-drive-add-sheet'
+            to: 'ex-google-drive-select-sheets'
             params:
               config: @state.configuration.get 'id'
             className: 'btn btn-success'
           ,
             span className: 'kbc-icon-plus'
-            ' Add Query'
+            ' Select Sheets'
       if items.count()
         ItemsTable
           items: items

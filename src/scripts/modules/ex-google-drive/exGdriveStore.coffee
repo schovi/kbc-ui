@@ -11,6 +11,7 @@ _store = Map(
   editingSheets: Map() #configId:fileId:sheetId
   savingSheets: Map() #configId:fileId:sheetId
   deletingSheets: Map() #configId:fileId:sheetId
+  documents: Map() #email:fileId:sheetId
 )
 
 
@@ -47,6 +48,11 @@ GdriveStore = StoreUtils.createStore
     #  does not contains any properties(ie messages)
     return validation != null and Object.keys(validation).length == 0
 
+  getGdriveFiles: (configId) ->
+    config = @getConfig configId
+    email = config.email
+    _store.getIn ['documents',email]
+
 
 
 
@@ -55,6 +61,20 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+
+    # GOOGLE DRIVE FILES/SHEETS SELECTION
+    when Constants.ActionTypes.EX_GDRIVE_FILES_LOAD_SUCCESS
+      files = action.data.items
+      configId = action.configurationId
+      config = GdriveStore.getConfig configId
+      email = config.email
+      files = Immutable.fromJS(files).toMap().mapKeys (key, file) ->
+        return file.get('id')
+      _store = _store.setIn ['documents', email], files
+      GdriveStore.emitChange()
+
+
+    #WORKING WITH CONFIGURATION
     when Constants.ActionTypes.EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS
       configId = action.configuration.id
       configObject = action.configuration.configuration
@@ -92,7 +112,6 @@ Dispatcher.register (payload) ->
         validation.config = 'Must be valid JSON object'
       _store = _store.setIn ["validationSheets", configId, fileId, sheetId], validation
       GdriveStore.emitChange()
-
 
 
 
@@ -168,19 +187,5 @@ Dispatcher.register (payload) ->
         value.get('fileId') != fileId and value.get('sheetId') != sheetId
       _store = _store.setIn ['configs', configId, 'items'], newItems
       GdriveStore.emitChange()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = GdriveStore

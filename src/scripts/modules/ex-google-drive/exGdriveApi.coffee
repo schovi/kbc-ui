@@ -31,3 +31,8 @@ module.exports =
       .promise()
       .then (response) ->
         response.body
+
+  getGdriveFiles: (configId, nextPageToken) ->
+    nextPage = ''
+    nextPage = "/#{nextPageToken}" if nextPageToken
+    promisify createRequest('GET', "files/#{configId}#{nextPage}")

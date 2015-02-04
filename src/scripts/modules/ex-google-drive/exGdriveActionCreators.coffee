@@ -18,6 +18,16 @@ module.exports =
     return Promise.resolve() if exGdriveStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
 
+  loadGdriveFiles: (configId, nextPageToken) ->
+    exGdriveApi.getGdriveFiles(configId, nextPageToken)
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_GDRIVE_FILES_LOAD_SUCCESS
+        configurationId: configId
+        data: result
+
+
+
   editSheetStart: (configId, fileId, sheetId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_START
