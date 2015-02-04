@@ -3,6 +3,7 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 ExGdriveIndex = require './react/pages/index/Index.coffee'
 ExGoogleDriveActionCreators = require './exGdriveActionCreators.coffee'
 sheetDetail = require './react/pages/sheet-detail/SheetDetail.coffee'
+authorizePage = require './react/pages/authorize/authorize.coffee'
 ExGdriveSheetHeaderButtons = require './react/components/SheetHeaderButtons.coffee'
 
 module.exports =
@@ -24,13 +25,12 @@ module.exports =
   ,
     name: 'ex-google-drive-authorize'
     path: 'authorize'
+    handler: authorizePage
   ,
     name: 'ex-google-drive-sheet'
     path: 'sheet/:fileId/:sheetId'
-
     title: ->
       'sheet'
-
     handler: sheetDetail
     headerButtonsHandler: ExGdriveSheetHeaderButtons
 

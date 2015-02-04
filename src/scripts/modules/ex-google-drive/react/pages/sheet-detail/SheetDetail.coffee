@@ -31,7 +31,7 @@ module.exports = React.createClass
   render: ->
     #console.log @state.validation
     #console.log @state.sheet.toJS()
-    div {className: 'container-fluid'},
+    div {className: 'container-fluid kbc-main-content'},
       form className: 'form-horizontal',
         div className: 'row',
           @_createInput 'Document Title', 'title', 'static'
