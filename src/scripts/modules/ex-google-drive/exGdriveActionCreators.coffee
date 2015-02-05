@@ -14,7 +14,6 @@ module.exports =
         type: constants.ActionTypes.EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS
         configuration: configuration
 
-
   loadConfiguration: (configurationId) ->
     return Promise.resolve() if exGdriveStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
@@ -31,6 +30,33 @@ module.exports =
         configurationId: configId
         data: result
 
+  loadGdriveFileSheets: (configId, fileId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_FILE_SHEETS_LOAD_START
+      configurationId: configId
+      fileId: fileId
+
+    exGdriveApi.getGdriveFileSheets(configId, fileId)
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_GDRIVE_FILE_SHEETS_LOAD_SUCCESS
+        configurationId: configId
+        data: result
+        fileId: fileId
+
+  selectSheet: (configId, file, sheet) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_SELECT_SHEET
+      configurationId: configId
+      file: file
+      sheet: sheet
+
+  deselectSheet: (configId, fileId, sheetId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_DESELECT_SHEET
+      configurationId: configId
+      fileId: fileId
+      sheetId: sheetId
 
 
   editSheetStart: (configId, fileId, sheetId) ->

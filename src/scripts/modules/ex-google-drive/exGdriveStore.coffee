@@ -11,7 +11,9 @@ _store = Map(
   editingSheets: Map() #configId:fileId:sheetId
   savingSheets: Map() #configId:fileId:sheetId
   deletingSheets: Map() #configId:fileId:sheetId
-  documents: Map() #email:fileId:sheetId
+  documents: Map() #configId:fileId:sheetId
+  loadingFiles: Map() #configId:fileId
+  selectedSheets: Map() #configId:fileId:sheetId -> (sheet&file)
 )
 
 
@@ -31,12 +33,8 @@ GdriveStore = StoreUtils.createStore
     return result
 
   hasGdriveFiles: (configId) ->
-    if @hasConfig(configId)
-      config = @getConfig configId
-      email = config.email
-      return _store.hasIn ['documents', email]
+    return _store.hasIn ['documents', configId]
 
-    return false
 
   isDeletingSheet: (configId, fileId, sheetId) ->
     _store.hasIn ['deletingSheets', configId, fileId, sheetId]
@@ -57,12 +55,11 @@ GdriveStore = StoreUtils.createStore
     return validation != null and Object.keys(validation).length == 0
 
   getGdriveFiles: (configId) ->
-    config = @getConfig configId
-    email = config.email
-    _store.getIn ['documents',email]
-
-
-
+    _store.getIn ['documents', configId]
+  getLoadingFiles: (configId) ->
+    _store.getIn ['loadingFiles', configId]
+  getSelectedSheets: (configId) ->
+    _store.getIn ['selectedSheets', configId]
 
 
 Dispatcher.register (payload) ->
@@ -74,12 +71,41 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GDRIVE_FILES_LOAD_SUCCESS
       files = action.data.items
       configId = action.configurationId
-      config = GdriveStore.getConfig configId
-      email = config.email
       files = Immutable.fromJS(files).toMap().mapKeys (key, file) ->
         return file.get('id')
-      _store = _store.setIn ['documents', email], files
+      _store = _store.setIn ['documents', configId], files
       GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_FILE_SHEETS_LOAD_START
+      fileId = action.fileId
+      configId = action.configurationId
+      _store = _store.setIn ['loadingFiles', configId, fileId]
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_FILE_SHEETS_LOAD_SUCCESS
+      fileId = action.fileId
+      data = action.data
+      configId = action.configurationId
+      _store = _store.deleteIn ['loadingFiles', configId, fileId]
+      sheets = Immutable.fromJS(data)
+      _store = _store.setIn ['documents', configId, fileId, 'sheets'], sheets
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SELECT_SHEET
+      fileId = action.file.get 'id'
+      sheetId = action.sheet.get 'id'
+      configId = action.configurationId
+      item = action.sheet.set('file', action.file)
+      _store = _store.setIn ['selectedSheets', configId, fileId, sheetId, item]
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_DESELECT_SHEET
+      fileId = action.fileId
+      sheetId = action.sheetId
+      configId = action.configurationId
+      _store = _store.deleteIn ['selectedSheets', configId, fileId, sheetId]
+      GdriveStore.emitChange()
+
 
 
     #WORKING WITH CONFIGURATION

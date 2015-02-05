@@ -14,7 +14,7 @@ module.exports = React.createClass
   propTypes:
     items: React.PropTypes.object
     deletingSheets: React.PropTypes.object
-    #configurationId: number
+    # configurationId: number
 
   render: ->
     childs = @props.items.map((row, rowkey) ->

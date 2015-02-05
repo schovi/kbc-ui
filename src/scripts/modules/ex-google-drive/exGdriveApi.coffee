@@ -1,7 +1,9 @@
 request = require('../../utils/request.coffee')
 ApplicationStore = require '../../stores/ApplicationStore.coffee'
 ComponentsStore = require '../components/stores/ComponentsStore.coffee'
-
+Promise = require('bluebird')
+gdriveFilesMocked = require './api-mocks/gdFiles.coffee'
+gdConfigMocked  = require './api-mocks/gdConfig.coffee'
 createUrl = (path) ->
   baseUrl = ComponentsStore.getComponent('ex-google-drive').get('uri')
   "#{baseUrl}/#{path}"
@@ -16,7 +18,8 @@ promisify = (pendingRequest) ->
 
 module.exports =
   getConfiguration: (configId) ->
-    promisify createRequest('GET', 'account/' + configId )
+    Promise.props(gdConfigMocked)
+    #promisify createRequest('GET', 'account/' + configId )
 
   storeNewSheets: (configId, newSheetsArray) ->
     data =
@@ -32,7 +35,12 @@ module.exports =
       .then (response) ->
         response.body
 
+  getGdriveFileSheets: (configId, fileId) ->
+    promisify createRequest('GET', "sheets/#{configId}/#{fileId}")
+
   getGdriveFiles: (configId, nextPageToken) ->
     nextPage = ''
     nextPage = "/#{nextPageToken}" if nextPageToken
-    promisify createRequest('GET', "files/#{configId}#{nextPage}")
+    Promise.props(gdriveFilesMocked)
+    #promisify createRequest('GET', "files/#{configId}#{nextPage}")
+    #
