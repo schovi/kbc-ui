@@ -30,6 +30,14 @@ GdriveStore = StoreUtils.createStore
       value.get('fileId') == fileId and value.get('sheetId')
     return result
 
+  hasGdriveFiles: (configId) ->
+    if @hasConfig(configId)
+      config = @getConfig configId
+      email = config.email
+      return _store.hasIn ['documents', email]
+
+    return false
+
   isDeletingSheet: (configId, fileId, sheetId) ->
     _store.hasIn ['deletingSheets', configId, fileId, sheetId]
   isEditingSheet: (configId, fileId, sheetId) ->

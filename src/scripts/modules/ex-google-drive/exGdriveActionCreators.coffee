@@ -14,11 +14,16 @@ module.exports =
         type: constants.ActionTypes.EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS
         configuration: configuration
 
+
   loadConfiguration: (configurationId) ->
     return Promise.resolve() if exGdriveStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
 
   loadGdriveFiles: (configId, nextPageToken) ->
+    return Promise.resolve() if exGdriveStore.hasGdriveFiles configId
+    @loadGdriveFilesForce(configId, nextPageToken)
+
+  loadGdriveFilesForce: (configId, nextPageToken) ->
     exGdriveApi.getGdriveFiles(configId, nextPageToken)
     .then (result) ->
       dispatcher.handleViewAction
