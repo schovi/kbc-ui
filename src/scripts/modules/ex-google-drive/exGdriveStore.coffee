@@ -17,6 +17,7 @@ _store = Map(
   nextPageToken: Map() #configId:nextPagetoken
   loadingMore: Map() #configId loading more files for
   searchQuery: Map() #configId:value
+  savingNewSheets: Map() #configId: array
 )
 
 
@@ -69,6 +70,10 @@ GdriveStore = StoreUtils.createStore
     _store.hasIn ['loadingMore', configId]
   getSearchQueryValue: (configId) ->
     _store.getIn ['searchQuery', configId]
+  getSavingNewSheets: (configId) ->
+    _store.getIn ['savingNewSheets', configId]
+  isSavingNewSheets: (configId) ->
+    _store.hasIn ['savingNewSheets', configId]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -76,6 +81,32 @@ Dispatcher.register (payload) ->
   switch action.type
 
     # GOOGLE DRIVE FILES/SHEETS SELECTION
+    when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
+      configId = action.configurationId
+      data = action.data
+      _store = _store.withMutations( (store) ->
+        store
+          .deleteIn ['savingNewSheets', configId]
+          .deleteIn ['searchQuery', configId]
+          .deleteIn ['documents', configId]
+          .deleteIn ['selectedSheets', configId]
+          .deleteIn ['nextPageToken', configId]
+          .deleteIn ['configs', configId]
+      )
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_START
+      configId = action.configurationId
+      selectedSheets = GdriveStore.getSelectedSheets(configId)
+      sheetsToSave  = selectedSheets.map((sheets, fileId) ->
+        sheets.map((sheet, sheetId) ->
+          googleId: fileId
+          sheetTitle: sheet.get 'title'
+          sheetId: sheetId
+          title: sheet.getIn(['file', 'title'])).toList()).toList().flatten(true)
+      _store = _store.setIn ['savingNewSheets', configId], sheetsToSave
+      GdriveStore.emitChange()
+
     when Constants.ActionTypes.EX_GDRIVE_LOADING_MORE_START
       configId = action.configurationId
       _store = _store.setIn ['loadingMore', configId]

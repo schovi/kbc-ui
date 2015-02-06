@@ -11,6 +11,19 @@ module.exports =
       configurationId: configId
       value: newValue
 
+  saveSheetsSelection: (configurationId) ->
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_START
+      configurationId: configurationId
+    sheetsToSave = exGdriveStore.getSavingNewSheets(configurationId)
+    exGdriveApi.storeNewSheets(configurationId, sheetsToSave.toArray())
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
+        configurationId: configurationId
+        data: result
+
 
   loadMoreFiles: (configurationId, nextPageToken) ->
     dispatcher.handleViewAction

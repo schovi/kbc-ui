@@ -6,7 +6,7 @@ sheetDetail = require './react/pages/sheet-detail/SheetDetail.coffee'
 authorizePage = require './react/pages/authorize/authorize.coffee'
 ExGdriveSheetHeaderButtons = require './react/components/SheetHeaderButtons.coffee'
 sheetsPicker = require './react/pages/sheets-picker/SheetsPicker.coffee'
-
+ExGdriveSheetSelectionHeader = require './react/components/SaveSelectedSheetsHeader.coffee'
 module.exports =
   name: 'ex-google-drive'
   path: 'ex-google-drive/:config'
@@ -25,6 +25,7 @@ module.exports =
     path: 'sheets'
     handler: sheetsPicker
     title: 'Select Sheets'
+    headerButtonsHandler: ExGdriveSheetSelectionHeader
     requireData: [
       (params) ->
         nextPageToken = "" #load first page

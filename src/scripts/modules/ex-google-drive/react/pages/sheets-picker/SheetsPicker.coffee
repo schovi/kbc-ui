@@ -30,13 +30,19 @@ module.exports = React.createClass
     searchQuery: ExGdriveStore.getSearchQueryValue(configId) or ''
     nextPageToken: ExGdriveStore.getNextPageToken(configId)
     isLoadingMore: ExGdriveStore.isLoadingMore(configId)
+    isConfigLoaded: ExGdriveStore.hasConfig configId
+
 
 
   render: ->
     #console.log 'sheet picker files', @state.files.toJS()
-    div {className: 'container-fluid kbc-main-content'},
-      @_renderGdriveFiles()
-      @_renderProjectConfigFiles()
+    if @state.isConfigLoaded and @state.config
+      div {className: 'container-fluid kbc-main-content'},
+        @_renderGdriveFiles()
+        @_renderProjectConfigFiles()
+    else
+      div {}, 'Loading ...'
+
 
   _searchRowChanged: (newValue) ->
     ActionCreators.searchQueryChange(@state.configId, newValue)
@@ -51,7 +57,7 @@ module.exports = React.createClass
         TabPane eventKey: 'mydrive', tab: 'My Drive',
           @_renderFilePanel (file) =>
             @_isFileOwner(file)
-        TabPane eventKey: 'shared', tab: 'Shared with me',
+        TabPane eventKey: 'shared', tab: 'Shared With Me',
           @_renderFilePanel (file) =>
             not @_isFileOwner(file)
         TabPane eventKey: 'all', tab: 'All Sheets',
