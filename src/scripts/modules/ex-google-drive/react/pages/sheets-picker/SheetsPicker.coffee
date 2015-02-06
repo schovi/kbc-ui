@@ -27,7 +27,7 @@ module.exports = React.createClass
 
 
   render: ->
-    console.log 'sheet picker files', @state.files.toJS()
+    #console.log 'sheet picker files', @state.files.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderGdriveFiles()
       @_renderProjectConfigFiles()
@@ -45,12 +45,6 @@ module.exports = React.createClass
       files: @state.files.filter( (file) ->
         filterFn(file))
 
-  _isFileOwner: (file) ->
-    email = @state.config.get 'email'
-    owners = file.get 'owners'
-    result = owners.filter (owner) ->
-      owner.get('emailAddress') == email
-    return result.count() > 0
 
   _renderGdriveFiles: ->
     div className: 'col-sm-6',
@@ -64,6 +58,10 @@ module.exports = React.createClass
         TabPane eventKey: 'all', tab: 'All Sheets',
           @_renderFilePanel()
 
+  _renderProjectConfigFiles: ->
+    div className: 'col-sm-6',
+      span {}, 'project config files'
+
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)
 
@@ -73,6 +71,9 @@ module.exports = React.createClass
   _loadFilesSheets: (file) ->
     ActionCreators.loadGdriveFileSheets(@state.configId, file.get('id'))
 
-  _renderProjectConfigFiles: ->
-    div className: 'col-sm-6',
-      span {}, 'project config files'
+  _isFileOwner: (file) ->
+    email = @state.config.get 'email'
+    owners = file.get 'owners'
+    result = owners.filter (owner) ->
+      owner.get('emailAddress') == email
+    return result.count() > 0

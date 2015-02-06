@@ -35,7 +35,6 @@ module.exports = React.createClass
       onClick: => @_onClick(file)
       file.get 'title'
       Loader() if @_isLoading file
-
     Panel
       header: header
       key: file.get 'id'
@@ -47,6 +46,13 @@ module.exports = React.createClass
       else
         @_renderSheetsList(file)
 
+  _renderSheetsList: (file) ->
+    sheets = file.get 'sheets'
+    if sheets
+      ListGroup {},
+        sheets.map((sheet) =>
+          @_renderSheetGroupItem(file, sheet)).toArray()
+
   _renderSheetGroupItem: (file, sheet) ->
     ListGroupItem
       className: 'text-center'
@@ -55,14 +61,6 @@ module.exports = React.createClass
         @_sheetOnClick(file, sheet)
       ,
         sheet.get 'title'
-
-
-  _renderSheetsList: (file) ->
-    sheets = file.get 'sheets'
-    if sheets
-      ListGroup {},
-        sheets.map((sheet) =>
-          @_renderSheetGroupItem(file, sheet)).toArray()
 
   _sheetOnClick: (file, sheet) ->
     fileId = file.get 'id'
