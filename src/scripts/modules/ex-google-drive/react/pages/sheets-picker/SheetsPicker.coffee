@@ -42,6 +42,7 @@ module.exports = React.createClass
       selectSheetFn: @_selectSheet
       deselectSheetFn: @_deselectSheet
       selectedSheets: @state.selectedSheets
+      configuredSheets: @state.config.get 'items'
       loadingFiles: @state.loadingFiles
       files: @state.files.filter( (file) ->
         filterFn(file))

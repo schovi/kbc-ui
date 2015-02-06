@@ -20,6 +20,7 @@ module.exports = React.createClass
     loadSheetsFn: React.PropTypes.func
     selectSheetFn: React.PropTypes.func
     selectedSheets: React.PropTypes.object
+    configuredSheets: React.PropTypes.object
     deselectSheetFn: React.PropTypes.func
 
 
@@ -57,6 +58,7 @@ module.exports = React.createClass
     ListGroupItem
       className: 'text-center'
       active: @_isSelected(file.get('id'), sheet.get 'id')
+      disabled: @_isConfigured(file.get('id'), sheet.get 'id')
       onClick: =>
         @_sheetOnClick(file, sheet)
       ,
@@ -73,6 +75,11 @@ module.exports = React.createClass
   _isSelected: (fileId, sheetId) ->
     @props.selectedSheets and @props.selectedSheets.hasIn [fileId, sheetId]
 
+  _isConfigured: (fileId, sheetId) ->
+    result = @props.configuredSheets and @props.configuredSheets.find( (sheet) ->
+      return sheet.get('sheetId') == sheetId.toString() and sheet.get('googleId') == fileId
+    )
+    return result
 
   _onClick: (file) ->
     if not @_isLoading(file) and not @_isLoaded(file)

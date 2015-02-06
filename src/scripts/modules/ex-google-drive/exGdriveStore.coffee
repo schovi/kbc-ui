@@ -96,7 +96,7 @@ Dispatcher.register (payload) ->
       sheetId = action.sheet.get 'id'
       configId = action.configurationId
       item = action.sheet.set('file', action.file)
-      _store = _store.setIn ['selectedSheets', configId, fileId, sheetId, item]
+      _store = _store.setIn ['selectedSheets', configId, fileId, sheetId], item
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_DESELECT_SHEET
