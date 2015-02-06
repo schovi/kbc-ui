@@ -6,7 +6,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
 InstalledComponentsStore  = require('../../../../components/stores/InstalledComponentsStore.coffee')
 
-{div, span, input, strong, form, button, h4, i, button, small} = React.DOM
+{div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
 TransformationsIndex = React.createClass
   displayName: 'TransformationsIndex'
   mixins: [createStoreMixin(InstalledComponentsStore)]
@@ -15,8 +15,30 @@ TransformationsIndex = React.createClass
     buckets: InstalledComponentsStore.getComponent('transformation').get('configurations')
 
   render: ->
-    div {className: 'container-fluid kbc-main-content'},
-      @_renderTable()
+    div {className: 'container-fluid'}, 
+      div {className: 'col-md-9 kbc-main-content'},
+        @_renderTable()
+      div {className: 'col-md-3 kbc-main-sidebar'},
+        @_renderSidebar()
+
+  _renderSidebar: () ->
+    ul {className: 'nav nav-stacked'},
+      li {}, 
+        a {className: "add-bucket"},
+          i {className: "fa fa-fw fa-plus"}, 
+            "Add Bucket"
+      li {},
+        a {className: "sandbox"},
+          i {className: "fa fa-fw fa-wrench"},
+            "Create Sandbox"
+      li {},
+        a {className: "sandbox"},
+          i {className: "fa fa-fw fa-list-ul"},
+            "Sandbox Credentials"
+      li {},
+        a {className: "sandbox"},
+          i {className: "fa fa-fw fa-cogs"},
+            "Running Processes"
 
   _renderTableRow: (row) ->
     Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
