@@ -21,6 +21,9 @@ InstalledComponentsStore = StoreUtils.createStore
       component.get('type') == type
     )
 
+  getComponent: (componentId) ->
+    _store.getIn ['components', componentId]    
+    
   getConfig: (componentId, configId) ->
     _store.getIn ['components', componentId, 'configurations', configId]
 

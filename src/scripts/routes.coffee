@@ -6,6 +6,7 @@ ErrorPage = require './react/pages/ErrorPage.coffee'
 componentsRoutes = require './modules/components/Routes.coffee'
 orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'
 jobsRoutes = require './modules/jobs/Routes.coffee'
+transformationsRoutes = require './modules/transformations/Routes.coffee'
 
 Transformations = React.createClass
   displayName: 'Transformations'
@@ -44,10 +45,6 @@ routes =
   defaultRouteName: 'home'
   notFoundRouteHandler: ErrorPage
   childRoutes: [
-      name: 'transformations'
-      title: 'Transformations'
-      handler: Transformations
-    ,
       orchestrationsRoutes
     ,
       componentsRoutes.extractors
@@ -59,6 +56,8 @@ routes =
       handler: Storage
     ,
       jobsRoutes
+    ,
+      transformationsRoutes
 
   ]
 
