@@ -8,6 +8,7 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 PanelGroup = React.createFactory PanelGroup
 GdriveFilePanel = React.createFactory(require('./GdriveFilePanel.coffee'))
+ConfigSheetsPanels = React.createFactory(require('./ConfigSheetsPanels.coffee'))
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 
@@ -60,7 +61,12 @@ module.exports = React.createClass
 
   _renderProjectConfigFiles: ->
     div className: 'col-sm-6',
-      span {}, 'project config files'
+      ConfigSheetsPanels
+        deselectSheetFn: @_deselectSheet
+        selectedSheets: @state.selectedSheets
+        configSheets: @state.config.get 'items'
+        getPathFn: @_getPath
+
 
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)
@@ -77,3 +83,10 @@ module.exports = React.createClass
     result = owners.filter (owner) ->
       owner.get('emailAddress') == email
     return result.count() > 0
+
+  _getPath: (fileId) ->
+    file = @state.files.getIn [fileId]
+    if @_isFileOwner(file)
+      return 'My Drive'
+    else
+      return 'Shared With Me'
