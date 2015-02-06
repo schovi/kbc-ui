@@ -12,7 +12,8 @@ ConfigSheetsPanels = React.createFactory(require('./ConfigSheetsPanels.coffee'))
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 SearchRow = React.createFactory(require('../../../../../react/common/SearchRow.coffee'))
-
+Button = React.createFactory(require('react-bootstrap').Button)
+Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
 {div, span} = React.DOM
 
 module.exports = React.createClass
@@ -26,7 +27,9 @@ module.exports = React.createClass
     loadingFiles: ExGdriveStore.getLoadingFiles(configId)
     selectedSheets: ExGdriveStore.getSelectedSheets configId
     config: ExGdriveStore.getConfig(configId)
-    searchQuery: ''
+    searchQuery: ExGdriveStore.getSearchQueryValue(configId) or ''
+    nextPageToken: ExGdriveStore.getNextPageToken(configId)
+    isLoadingMore: ExGdriveStore.isLoadingMore(configId)
 
 
   render: ->
@@ -34,6 +37,42 @@ module.exports = React.createClass
     div {className: 'container-fluid kbc-main-content'},
       @_renderGdriveFiles()
       @_renderProjectConfigFiles()
+
+  _searchRowChanged: (newValue) ->
+    ActionCreators.searchQueryChange(@state.configId, newValue)
+
+  _renderGdriveFiles: ->
+    div className: 'col-sm-6',
+      SearchRow
+        query: @state.searchQuery
+        onChange: @_searchRowChanged
+    ,
+      TabbedArea defaultActiveKey: 'mydrive', animation: false,
+        TabPane eventKey: 'mydrive', tab: 'My Drive',
+          @_renderFilePanel (file) =>
+            @_isFileOwner(file)
+        TabPane eventKey: 'shared', tab: 'Shared with me',
+          @_renderFilePanel (file) =>
+            not @_isFileOwner(file)
+        TabPane eventKey: 'all', tab: 'All Sheets',
+          @_renderFilePanel()
+      if @state.nextPageToken
+        Button
+          className: 'btn btn-default'
+          onClick: @_loadMore
+          disabled: @state.isLoadingMore
+        ,
+          'Load more...'
+          Loader() if @state.isLoadingMore
+
+
+  _renderProjectConfigFiles: ->
+    div className: 'col-sm-6',
+      ConfigSheetsPanels
+        deselectSheetFn: @_deselectSheet
+        selectedSheets: @state.selectedSheets
+        configSheets: @state.config.get 'items'
+        getPathFn: @_getPath
 
   _renderFilePanel: (filterFn) ->
     if not filterFn
@@ -54,35 +93,6 @@ module.exports = React.createClass
         else
           return false
         )
-
-  _searchRowChanged: (newValue) ->
-    @setState
-      searchQuery: newValue
-
-  _renderGdriveFiles: ->
-    div className: 'col-sm-6',
-      SearchRow
-        query: @state.searchQuery
-        onChange: @_searchRowChanged
-    ,
-      TabbedArea defaultActiveKey: 'mydrive', animation: false,
-        TabPane eventKey: 'mydrive', tab: 'My Drive',
-          @_renderFilePanel (file) =>
-            @_isFileOwner(file)
-        TabPane eventKey: 'shared', tab: 'Shared with me',
-          @_renderFilePanel (file) =>
-            not @_isFileOwner(file)
-        TabPane eventKey: 'all', tab: 'All Sheets',
-          @_renderFilePanel()
-
-  _renderProjectConfigFiles: ->
-    div className: 'col-sm-6',
-      ConfigSheetsPanels
-        deselectSheetFn: @_deselectSheet
-        selectedSheets: @state.selectedSheets
-        configSheets: @state.config.get 'items'
-        getPathFn: @_getPath
-
 
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)
@@ -106,3 +116,5 @@ module.exports = React.createClass
       return 'My Drive'
     else
       return 'Shared With Me'
+  _loadMore: ->
+    ActionCreators.loadMoreFiles(@state.configId, @state.nextPageToken)

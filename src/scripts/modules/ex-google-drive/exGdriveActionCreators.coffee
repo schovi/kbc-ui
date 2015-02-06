@@ -5,6 +5,26 @@ exGdriveApi = require './exGdriveApi.coffee'
 exGdriveStore = require './exGdriveStore.coffee'
 module.exports =
 
+  searchQueryChange: (configId, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_SEARCH_QUERY_CHANGE
+      configurationId: configId
+      value: newValue
+
+
+  loadMoreFiles: (configurationId, nextPageToken) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_LOADING_MORE_START
+      configurationId: configurationId
+      nextPageToken: nextPageToken
+    exGdriveApi.getGdriveFiles(configurationId, nextPageToken)
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_GDRIVE_LOADING_MORE_SUCCESS
+        configurationId: configurationId
+        data: result
+        nextPageToken: nextPageToken
+
   loadConfigurationForce: (configurationId) ->
     Promise.props
       id: configurationId

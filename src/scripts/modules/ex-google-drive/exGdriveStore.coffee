@@ -14,6 +14,9 @@ _store = Map(
   documents: Map() #configId:fileId:sheetId
   loadingFiles: Map() #configId:fileId
   selectedSheets: Map() #configId:fileId:sheetId -> (sheet&file)
+  nextPageToken: Map() #configId:nextPagetoken
+  loadingMore: Map() #configId loading more files for
+  searchQuery: Map() #configId:value
 )
 
 
@@ -60,7 +63,12 @@ GdriveStore = StoreUtils.createStore
     _store.getIn ['loadingFiles', configId]
   getSelectedSheets: (configId) ->
     _store.getIn ['selectedSheets', configId]
-
+  getNextPageToken: (configId) ->
+    _store.getIn ['nextPageToken', configId]
+  isLoadingMore: (configId) ->
+    _store.hasIn ['loadingMore', configId]
+  getSearchQueryValue: (configId) ->
+    _store.getIn ['searchQuery', configId]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -68,9 +76,35 @@ Dispatcher.register (payload) ->
   switch action.type
 
     # GOOGLE DRIVE FILES/SHEETS SELECTION
+    when Constants.ActionTypes.EX_GDRIVE_LOADING_MORE_START
+      configId = action.configurationId
+      _store = _store.setIn ['loadingMore', configId]
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_SEARCH_QUERY_CHANGE
+      configId = action.configurationId
+      value = action.value
+      _store = _store.setIn ['searchQuery', configId], value
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_LOADING_MORE_SUCCESS
+      configId = action.configurationId
+      oldNextToken = action.nextPageToken
+      data = action.data.items
+      newNextToken = data.nextPageToken or null
+      _store = _store.setIn ['nextPageToken', configId], newNextToken
+      _store = _store.deleteIn ['loadingMore', configId]
+      newFiles = Immutable.fromJS(data).toMap().mapKeys (key, file) ->
+        return file.get('id')
+      _store = _store.mergeIn ['documents', configId], newFiles
+      GdriveStore.emitChange()
+
     when Constants.ActionTypes.EX_GDRIVE_FILES_LOAD_SUCCESS
+      nextToken = action.data.nextPageToken
       files = action.data.items
       configId = action.configurationId
+      if nextToken
+        _store = _store.setIn ['nextPageToken', configId], nextToken
       files = Immutable.fromJS(files).toMap().mapKeys (key, file) ->
         return file.get('id')
       _store = _store.setIn ['documents', configId], files

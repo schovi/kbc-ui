@@ -40,6 +40,7 @@ module.exports = React.createClass
               sheetTitle = sheet.get 'sheetTitle'
               ListGroupItem
                 className: 'text-center'
+                key: sheet.get('sheetId') + sheet.get('googleId')
                 ,
                   "#{path} / #{fileTitle} / #{sheetTitle}").toArray()
         else
