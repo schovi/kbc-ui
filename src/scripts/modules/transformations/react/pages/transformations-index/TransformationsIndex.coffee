@@ -19,7 +19,7 @@ TransformationsIndex = React.createClass
       @_renderTable()
 
   _renderTableRow: (row) ->
-    span {className: 'tr'},
+    Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
       span {className: 'td'}, 
         h4 {}, row.get('name')
       span {className: 'td'}, 
