@@ -8,6 +8,9 @@ RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 PanelGroup = React.createFactory PanelGroup
 GdriveFilePanel = React.createFactory(require('./GdriveFilePanel.coffee'))
+TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
+TabPane = React.createFactory(require('react-bootstrap').TabPane)
+
 {div, span} = React.DOM
 
 module.exports = React.createClass
@@ -20,22 +23,46 @@ module.exports = React.createClass
     files: ExGdriveStore.getGdriveFiles(configId)
     loadingFiles: ExGdriveStore.getLoadingFiles(configId)
     selectedSheets: ExGdriveStore.getSelectedSheets configId
+    config: ExGdriveStore.getConfig(configId)
+
 
   render: ->
-    #console.log 'sheet picker files', @state.files.toJS()
+    console.log 'sheet picker files', @state.files.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderGdriveFiles()
       @_renderProjectConfigFiles()
 
+  _renderFilePanel: (filterFn) ->
+    if not filterFn
+      filterFn = (file) ->
+        file
+    GdriveFilePanel
+      loadSheetsFn: @_loadFilesSheets
+      selectSheetFn: @_selectSheet
+      deselectSheetFn: @_deselectSheet
+      selectedSheets: @state.selectedSheets
+      loadingFiles: @state.loadingFiles
+      files: @state.files.filter( (file) ->
+        filterFn(file))
+
+  _isFileOwner: (file) ->
+    email = @state.config.get 'email'
+    owners = file.get 'owners'
+    result = owners.filter (owner) ->
+      owner.get('emailAddress') == email
+    return result.count() > 0
+
   _renderGdriveFiles: ->
     div className: 'col-sm-6',
-      GdriveFilePanel
-        files: @state.files
-        loadSheetsFn: @_loadFilesSheets
-        loadingFiles: @state.loadingFiles
-        selectSheetFn: @_selectSheet
-        selectedSheets: @state.selectedSheets
-        deselectSheetFn: @_deselectSheet
+      TabbedArea defaultActiveKey: 'mydrive', animation: false,
+        TabPane eventKey: 'mydrive', tab: 'My Drive',
+          @_renderFilePanel (file) =>
+            @_isFileOwner(file)
+        TabPane eventKey: 'shared', tab: 'Shared with me',
+          @_renderFilePanel (file) =>
+            not @_isFileOwner(file)
+        TabPane eventKey: 'all', tab: 'All Sheets',
+          @_renderFilePanel()
 
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)

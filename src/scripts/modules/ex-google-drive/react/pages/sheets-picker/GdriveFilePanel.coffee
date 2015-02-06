@@ -8,7 +8,7 @@ PanelGroup = React.createFactory PanelGroup
 ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
 
-{div} = React.DOM
+{div, span} = React.DOM
 Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
 
 module.exports = React.createClass
@@ -47,18 +47,22 @@ module.exports = React.createClass
       else
         @_renderSheetsList(file)
 
+  _renderSheetGroupItem: (file, sheet) ->
+    ListGroupItem
+      className: 'text-center'
+      active: @_isSelected(file.get('id'), sheet.get 'id')
+      onClick: =>
+        @_sheetOnClick(file, sheet)
+      ,
+        sheet.get 'title'
+
+
   _renderSheetsList: (file) ->
     sheets = file.get 'sheets'
     if sheets
       ListGroup {},
-        sheets.map (sheet) =>
-          ListGroupItem
-            className: 'text-center'
-            active: @_isSelected(file.get('id'), sheet.get 'id')
-            onClick: =>
-              @_sheetOnClick(file, sheet)
-          ,
-            sheet.title
+        sheets.map((sheet) =>
+          @_renderSheetGroupItem(file, sheet)).toArray()
 
   _sheetOnClick: (file, sheet) ->
     fileId = file.get 'id'
