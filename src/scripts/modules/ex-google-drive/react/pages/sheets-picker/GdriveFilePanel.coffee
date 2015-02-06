@@ -26,9 +26,12 @@ module.exports = React.createClass
 
   render: ->
     PanelGroup accordion: true,
-      @props.files.map( (file) ->
-        @_renderFilePanel(file)
-      ,@).toArray()
+      if @props.files and @props.files.count() > 0
+        @props.files.map( (file) ->
+          @_renderFilePanel(file)
+        ,@).toArray()
+      else
+        div className: 'well', 'No files.'
 
   _renderFilePanel: (file) ->
     header = div
@@ -53,6 +56,8 @@ module.exports = React.createClass
       ListGroup {},
         sheets.map((sheet) =>
           @_renderSheetGroupItem(file, sheet)).toArray()
+    else
+      div className: 'well', 'No sheets.'
 
   _renderSheetGroupItem: (file, sheet) ->
     ListGroupItem

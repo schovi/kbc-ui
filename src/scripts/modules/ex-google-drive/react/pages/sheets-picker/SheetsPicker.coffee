@@ -11,6 +11,7 @@ GdriveFilePanel = React.createFactory(require('./GdriveFilePanel.coffee'))
 ConfigSheetsPanels = React.createFactory(require('./ConfigSheetsPanels.coffee'))
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
+SearchRow = React.createFactory(require('../../../../../react/common/SearchRow.coffee'))
 
 {div, span} = React.DOM
 
@@ -25,6 +26,7 @@ module.exports = React.createClass
     loadingFiles: ExGdriveStore.getLoadingFiles(configId)
     selectedSheets: ExGdriveStore.getSelectedSheets configId
     config: ExGdriveStore.getConfig(configId)
+    searchQuery: ''
 
 
   render: ->
@@ -44,12 +46,25 @@ module.exports = React.createClass
       selectedSheets: @state.selectedSheets
       configuredSheets: @state.config.get 'items'
       loadingFiles: @state.loadingFiles
-      files: @state.files.filter( (file) ->
-        filterFn(file))
+      files: @state.files.filter( (file) =>
+        fileTitle = file.get('title').toLowerCase()
+        containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
+        if @state.searchQuery == '' or containsQuery > 0
+          return filterFn(file)
+        else
+          return false
+        )
 
+  _searchRowChanged: (newValue) ->
+    @setState
+      searchQuery: newValue
 
   _renderGdriveFiles: ->
     div className: 'col-sm-6',
+      SearchRow
+        query: @state.searchQuery
+        onChange: @_searchRowChanged
+    ,
       TabbedArea defaultActiveKey: 'mydrive', animation: false,
         TabPane eventKey: 'mydrive', tab: 'My Drive',
           @_renderFilePanel (file) =>
