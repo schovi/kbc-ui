@@ -48,7 +48,7 @@ module.exports = React.createClass
   _renderConfiguredSheets: ->
     Panel
       header:
-        h3 className:'text-center', 'Sheets Already Configured in Project'
+        h3 className: 'text-center', 'Sheets Already Configured in Project'
       ,
         ListGroup {},
           @props.configSheets.map((sheet) =>
