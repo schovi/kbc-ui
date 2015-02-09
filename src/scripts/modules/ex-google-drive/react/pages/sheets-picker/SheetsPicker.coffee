@@ -94,7 +94,7 @@ module.exports = React.createClass
       files: @state.files.filter( (file) =>
         fileTitle = file.get('title').toLowerCase()
         containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
-        if @state.searchQuery == '' or containsQuery > 0
+        if @state.searchQuery == '' or containsQuery >= 0
           return filterFn(file)
         else
           return false
