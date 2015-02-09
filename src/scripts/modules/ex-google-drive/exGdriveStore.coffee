@@ -95,6 +95,11 @@ Dispatcher.register (payload) ->
       )
       GdriveStore.emitChange()
 
+    when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_CANCEL
+      configId = action.configurationId
+      _store = _store.deleteIn ['selectedSheets', configId]
+      GdriveStore.emitChange()
+
     when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_START
       configId = action.configurationId
       selectedSheets = GdriveStore.getSelectedSheets(configId)

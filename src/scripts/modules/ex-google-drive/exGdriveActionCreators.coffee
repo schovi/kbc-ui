@@ -12,7 +12,6 @@ module.exports =
       value: newValue
 
   saveSheetsSelection: (configurationId) ->
-
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_START
       configurationId: configurationId
@@ -24,6 +23,10 @@ module.exports =
         configurationId: configurationId
         data: result
 
+  cancelSheetSelection: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_CANCEL
+      configurationId: configurationId
 
   loadMoreFiles: (configurationId, nextPageToken) ->
     dispatcher.handleViewAction

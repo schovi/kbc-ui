@@ -33,12 +33,13 @@ module.exports = React.createClass
     React.DOM.div className: 'kbc-buttons',
       if @state.isSaving
         Loader()
-      button
-        className: 'btn btn-link'
-        disabled: @state.isSaving
-        onClick: @_handleCancel
-      ,
-        'Cancel'
+      if @state.isSelected
+        button
+          className: 'btn btn-link'
+          disabled: @state.isSaving
+          onClick: @_handleCancel
+        ,
+          'Cancel'
       button
         className: 'btn btn-success'
         disabled: @state.isSaving or not @state.isSelected
