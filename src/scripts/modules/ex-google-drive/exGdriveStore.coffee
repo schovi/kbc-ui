@@ -288,7 +288,7 @@ Dispatcher.register (payload) ->
 
       items = _store.getIn ['configs', configId, 'items']
       newItems = items.filter (value,key) ->
-        value.get('fileId') != fileId and value.get('sheetId') != sheetId
+        not (value.get('fileId') == fileId and value.get('sheetId') == sheetId)
       _store = _store.setIn ['configs', configId, 'items'], newItems
       GdriveStore.emitChange()
 
