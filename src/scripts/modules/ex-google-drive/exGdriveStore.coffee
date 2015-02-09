@@ -18,6 +18,8 @@ _store = Map(
   loadingMore: Map() #configId loading more files for
   searchQuery: Map() #configId:value
   savingNewSheets: Map() #configId: array
+  extLinks: Map() #configId:link
+  extLinksGenerating: Map() #configId
 )
 
 
@@ -39,7 +41,10 @@ GdriveStore = StoreUtils.createStore
   hasGdriveFiles: (configId) ->
     return _store.hasIn ['documents', configId]
 
-
+  isGeneratingExtLink: (configId) ->
+    _store.hasIn ['extLinksGenerating', configId]
+  getExtLink: (configId) ->
+    _store.getIn ['extLinks', configId]
   isDeletingSheet: (configId, fileId, sheetId) ->
     _store.hasIn ['deletingSheets', configId, fileId, sheetId]
   isEditingSheet: (configId, fileId, sheetId) ->
@@ -79,13 +84,26 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    # authorize generate external link actions
+    when Constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_START
+      configId = action.configurationId
+      _store = _store.deleteIn ['extLinks', configId]
+      _store = _store.setIn ['extLinksGenerating', configId], true
+      GdriveStore.emitChange()
+
+    when Constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_END
+      configId = action.configurationId
+      extLink = Immutable.fromJS(action.extLink)
+      _store = _store.deleteIn ['extLinksGenerating', configId]
+      _store = _store.setIn ['extLinks', configId], extLink
+      GdriveStore.emitChange()
 
     # GOOGLE DRIVE FILES/SHEETS SELECTION
     when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
       configId = action.configurationId
       console.log "data", action.data
       data = Immutable.fromJS(action.data)
-      console.log data
+      #console.log data
       _store = _store.withMutations( (store) ->
         store
           .deleteIn ['savingNewSheets', configId]

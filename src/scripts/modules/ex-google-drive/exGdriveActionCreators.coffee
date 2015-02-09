@@ -5,6 +5,16 @@ exGdriveApi = require './exGdriveApi.coffee'
 exGdriveStore = require './exGdriveStore.coffee'
 module.exports =
 
+  generateExternalLink: (configId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_START
+      configurationId: configId
+    exGdriveApi.getExtLink(configId).then (extLink) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_END
+        configurationId: configId
+        extLink: extLink
+
   searchQueryChange: (configId, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SEARCH_QUERY_CHANGE

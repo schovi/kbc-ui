@@ -24,7 +24,7 @@ module.exports = React.createClass
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
 
   render: ->
-    console.log @state.configuration.toJS()
+    #console.log @state.configuration.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()

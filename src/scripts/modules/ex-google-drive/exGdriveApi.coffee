@@ -17,6 +17,15 @@ promisify = (pendingRequest) ->
     response.body
 
 module.exports =
+  getExtLink: (configId) ->
+    data =
+      'account': configId
+      'referrer': 'https://s3.amazonaws.com/kbc-apps.keboola.com/ex-authorize/index.html#/googledrive'
+    createRequest('POST', 'external-link')
+      .send data
+      .promise().then (response) ->
+        response.body
+
   getConfiguration: (configId) ->
     #Promise.props(gdConfigMocked)
     promisify createRequest('GET', 'account/' + configId )

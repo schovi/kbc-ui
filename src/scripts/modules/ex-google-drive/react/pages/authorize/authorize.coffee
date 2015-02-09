@@ -11,7 +11,7 @@ TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
-
+Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
 {div, span, form } = React.DOM
 
 module.exports = React.createClass
@@ -24,6 +24,8 @@ module.exports = React.createClass
     gdriveComponent: ComponentsStore.getComponent('ex-google-drive')
     configId: configId
     token: token
+    isGeneratingExtLink: ExGdriveStore.isGeneratingExtLink(configId)
+    extLink: ExGdriveStore.getExtLink(configId)
 
   render: ->
     @_getReferrer()
@@ -44,7 +46,26 @@ module.exports = React.createClass
                 #onClick: @_handleCancel
 
         TabPane eventKey: 'external', tab: 'External Authorization',
-          div className: 'row', 'blabla'
+          form {className: 'form-horizontal'},
+            div className: 'row',
+              div className: 'well',
+                'Generated external link allows to authorize the google drive account without having an access to the KBC. The link is temporary valid and expires 48 hours after the generation.'
+              @_renderExtLink() if @state.extLink
+              Button
+                className: 'btn btn-primary'
+                onClick: @_generateExternalLink
+                disabled: @state.isGeneratingExtLink
+                type: 'button',
+                  if @state.extLink
+                    'Regenerate External Link'
+                  else
+                    'Generate External Link'
+              Loader() if @state.isGeneratingExtLink
+  _renderExtLink: ->
+    div className: 'pre', @state.extLink.get('link')
+  _generateExternalLink: ->
+    ActionCreators.generateExternalLink(@state.configId)
+
 
   _getOAuthUrl: ->
     endpoint = @state.gdriveComponent.get('uri')
