@@ -24,7 +24,8 @@ module.exports = React.createClass
   render: ->
     #console.log @props.configSheets.toJS()
     div {},
-      @_renderConfiguredSheets()
+      if @props.configSheets and @props.configSheets.count() > 0
+        @_renderConfiguredSheets()
       @_renderSelectedSheets()
 
   _renderConfiguredSheets: ->

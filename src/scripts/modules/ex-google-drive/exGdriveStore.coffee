@@ -83,15 +83,14 @@ Dispatcher.register (payload) ->
     # GOOGLE DRIVE FILES/SHEETS SELECTION
     when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
       configId = action.configurationId
-      data = action.data
+      console.log "data", action.data
+      data = Immutable.fromJS(action.data)
+      console.log data
       _store = _store.withMutations( (store) ->
         store
           .deleteIn ['savingNewSheets', configId]
-          .deleteIn ['searchQuery', configId]
-          .deleteIn ['documents', configId]
           .deleteIn ['selectedSheets', configId]
-          .deleteIn ['nextPageToken', configId]
-          .deleteIn ['configs', configId]
+          .mergeIn ['configs', configId, 'items'], data
       )
       GdriveStore.emitChange()
 
