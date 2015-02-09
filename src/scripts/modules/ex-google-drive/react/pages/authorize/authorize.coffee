@@ -49,7 +49,9 @@ module.exports = React.createClass
           form {className: 'form-horizontal'},
             div className: 'row',
               div className: 'well',
-                'Generated external link allows to authorize the google drive account without having an access to the KBC. The link is temporary valid and expires 48 hours after the generation.'
+                'Generated external link allows to authorize the google drive account\
+                 without having an access to the KBC. The link is temporary valid and \
+                 expires 48 hours after the generation.'
               @_renderExtLink() if @state.extLink
               Button
                 className: 'btn btn-primary'
