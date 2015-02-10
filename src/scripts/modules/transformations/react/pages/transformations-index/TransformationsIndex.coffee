@@ -21,7 +21,7 @@ TransformationsIndex = React.createClass
       div {className: 'col-md-3 kbc-main-sidebar'},
         @_renderSidebar()
 
-  _renderSidebar: () ->
+  _renderSidebar: ->
     ul {className: 'nav nav-stacked'},
       li {}, 
         a {className: "add-bucket"},
