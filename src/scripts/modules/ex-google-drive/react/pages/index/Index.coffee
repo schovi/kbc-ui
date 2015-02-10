@@ -4,8 +4,8 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
 ExGdriveStore = require '../../../exGdriveStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore.coffee'
 
-
 RunExtraction = React.createFactory(require '../../components/RunExtraction.coffee')
+
 ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
@@ -67,7 +67,9 @@ module.exports = React.createClass
             ' Authorize'
         li null,
           RunExtraction
-            configId: @state.configuration.get 'id'
+            component: 'ex-google-drive'
+            runParams:
+              account: @state.configuration.get 'id'
       div className: 'kbc-buttons',
         span null,
           'Created By '

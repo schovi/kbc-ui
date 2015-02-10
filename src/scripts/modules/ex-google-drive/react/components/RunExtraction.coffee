@@ -48,7 +48,10 @@ module.exports = React.createClass
       isLoading: true
 
     InstalledComponentsActionCreators
-    .runComponent 'ex-google-drive', config: @props.configId
+    .runComponent
+      component: 'ex-google-drive'
+      data:
+        account: @props.runParams.account
     .then @_handleStarted
 
   _handleStarted: ->
