@@ -49,8 +49,6 @@ TransformationsIndex = React.createClass
       span {className: 'td'},
         button {className: 'btn btn-default btn-sm remove-bucket'}, 
           i {className: 'kbc-icon-cup'}
-        button {className: 'btn btn-default btn-sm add-transformation'},
-          i {className: 'fa fa-fw fa-plus'}
         button {className: 'btn btn-default btn-sm run-transformation'},
           i {className: 'fa fa-fw fa-play'}
         
