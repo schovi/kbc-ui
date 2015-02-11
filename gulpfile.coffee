@@ -165,7 +165,9 @@ gulp.task 'release', ['build'], ->
       scripts: [
         s3basePath + 'scripts/bundle.min.js'
       ]
-      styles: []
+      styles: [
+        s3basePath + 'scripts/app.min.css'
+      ]
 
     fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
       throw err if err
