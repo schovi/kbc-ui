@@ -1,6 +1,6 @@
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore.coffee'
 
-#ExGanalIndex = require './react/pages/index/Index.coffee'
+ExGanalIndex = require './react/pages/index/Index.coffee'
 #ExGanalActionCreators = require './exGanalActionCreators.coffee'
 #authorizePage = require './react/pages/authorize/authorize.coffee'
 #ExGanalSheetHeaderButtons = require './react/components/SheetHeaderButtons.coffee'
@@ -9,7 +9,7 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 module.exports =
   name: 'ex-google-analytics'
   path: 'ex-google-analytics/:config'
-  #defaultRouteHandler: ExGdriveIndex
+  defaultRouteHandler: ExGanalIndex
   # requireData: [
   #   (params) ->
   #     ExGoogleDriveActionCreators.loadConfiguration params.config
