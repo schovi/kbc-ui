@@ -20,7 +20,7 @@ initializeData = require './initializeData.coffee'
 ###
   Bootstrap and start whole application
 ###
-startApp = (initialData, rootNode) ->
+startApp = (initialData, rootNode, locationType = 'history') ->
 
   initializeData(initialData)
 
@@ -33,8 +33,10 @@ startApp = (initialData, rootNode) ->
   RouterActionCreators.routesConfigurationReceive(routes)
 
   router = Router.create(
-    routes: createReactRouterRoutes(routes)
-    location: Router.HashLocation
+    routes: createReactRouterRoutes(_.extend {}, routes,
+      path: initialData.kbc.projectBaseUrl
+    )
+    location: if locationType == 'history' then Router.HistoryLocation else Router.HashLocation
   )
 
   Promise.longStackTraces()

@@ -13,14 +13,16 @@
     kbcApp.start({
         "components": components,
         "organizations": [],
-        "installedComponents": [],
         "sapi": {
             "url": "https://connection.keboola.com",
             "token": {
                 "token": kbcApp.helpers.getUrlParameterByName('token', window.location.search)
             }
+        },
+        "kbc": {
+            "projectBaseUrl": "/"
         }
-    }, document.getElementById('react'));
+    }, document.getElementById('react'), 'hash');
 </script>
 </body>
 </html>
