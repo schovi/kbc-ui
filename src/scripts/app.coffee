@@ -13,32 +13,20 @@ Timer = require './utils/Timer.coffee'
 ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
 RouterActionCreators = require './actions/RouterActionCreators.coffee'
 
-NoTokenPage = require './react/debug/NoTokenPage.coffee'
 
 RoutesStore = require './stores/RoutesStore.coffee'
+initializeData = require './initializeData.coffee'
 
+###
+  Bootstrap and start whole application
+###
+startApp = (initialData, rootNode) ->
 
-getParameterByName = (name, searchString) ->
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
-  regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
-  results = regex.exec(searchString)
-  (if not results? then "" else decodeURIComponent(results[1].replace(/\+/g, " ")))
-
-
-
-token = getParameterByName('token', window.location.search)
-if !token
-  React.render(React.createElement(NoTokenPage), document.getElementById 'react')
-else
-
-  initialData = require './__fixtures/martin.coffee'
-  fixturesApply = require './__fixtures/apply.coffee'
-  fixturesApply(initialData)
+  initializeData(initialData)
 
   ApplicationActionCreators.receiveApplicationData(
-    sapiUrl: 'https://connection.keboola.com'
-    sapiToken:
-      token: token
+    sapiUrl: initialData.sapi.url
+    sapiToken: initialData.sapi.token
     organizations: initialData.organizations
   )
 
@@ -107,3 +95,11 @@ else
       React.render(React.createElement(Handler, isError: true), rootNode)
     )
 
+global.kbcApp =
+  start: startApp
+  helpers:
+    getUrlParameterByName: (name, searchString) ->
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+      regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
+      results = regex.exec(searchString)
+      (if not results? then "" else decodeURIComponent(results[1].replace(/\+/g, " ")))
