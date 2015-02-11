@@ -15,14 +15,25 @@ cache:
   directories:
     - node_modules
 deploy:
-  provider: s3
-  access_key_id: AKIAJPIXG5FWMBKORQZA
-  secret_access_key:
-    secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
-  bucket: kbc-uis
-  local-dir: dist
-  upload-dir: kbc
-  acl: public_read
-  skip_cleanup: true
-  on:
-    repo: keboola/kbc-ui
+  - provider: s3
+    access_key_id: AKIAJPIXG5FWMBKORQZA
+    secret_access_key:
+      secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
+    bucket: kbc-uis
+    local-dir: release
+    upload-dir: kbc
+    acl: public_read
+    skip_cleanup: true
+    on:
+      repo: keboola/kbc-ui
+  - provider: s3
+    access_key_id: AKIAJPIXG5FWMBKORQZA
+    secret_access_key:
+      secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
+    bucket: kbc-uis
+    local-dir: dist
+    upload-dir: kbc
+    acl: public_read
+    skip_cleanup: true
+    on:
+      repo: keboola/kbc-ui

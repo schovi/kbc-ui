@@ -42,7 +42,6 @@ startApp = (initialData, rootNode) ->
     console.error 'unhandled exception', e, e.stack
     alert(e.message)
 
-  rootNode = document.getElementById 'react'
 
   # Show loading page before app is ready
   loading = _.once (Handler) ->

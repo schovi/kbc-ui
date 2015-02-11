@@ -48,7 +48,8 @@
     "del": "~1.1.0",
     "gulp-coffeelint": "~0.4.0",
     "merge-stream": "~0.1.6",
-    "reactify": "~0.17.1"
+    "reactify": "~0.17.1",
+    "gulp-git": "~1.0.0"
   },
   "scripts": {
     "test": "jest"

@@ -16,6 +16,7 @@ ecstatic   = require 'ecstatic'
 rename = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
 debug = require 'gulp-debug'
+git = require 'gulp-git'
 buffer = require 'vinyl-buffer'
 less = require 'gulp-less'
 browserSync = require 'browser-sync'
@@ -53,7 +54,7 @@ gulp.task 'dist-server', ->
       baseDir: './dist'
 
 gulp.task 'clean', (cb) ->
-  del(['dist/**', 'tmp/**'], cb)
+  del(['dist/**', 'tmp/**', 'release/**'], cb)
 
 gulp.task 'watch', ->
 
@@ -119,6 +120,7 @@ gulp.task 'lint', ->
   .pipe coffeelint.reporter()
   .pipe coffeelint.reporter('fail')
 
+
 gulp.task 'build-scripts', ['clean'], ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
@@ -141,5 +143,31 @@ gulp.task 'build-scripts', ['clean'], ->
 
 
 gulp.task 'build', [ 'lint', 'build-styles', 'build-scripts', 'copy']
-
 gulp.task 'default', ['less', 'watch', 'server']
+
+gulp.task 'release', ['build'], ->
+
+  git.exec args : 'describe --tags', (err, tag) ->
+    throw err if err
+
+    tag = tag.trim()
+    gulp.src('./dist/**')
+    .pipe(gulp.dest("./release/#{tag}"))
+
+    s3basePath = "https://kbc-uis.s3.amazonaws.com/"
+    s3basePath = s3basePath + "kbc/#{tag}/"
+
+    manifest =
+      name: 'kbc'
+      version: tag
+      basePath: s3basePath
+      buildUrl: 'https://travis-ci.org/' + process.env.TRAVIS_REPO_SLUG + '/builds/' + process.env.TRAVIS_BUILD_ID
+      scripts: [
+        s3basePath + 'scripts/bundle.min.js'
+      ]
+      styles: []
+
+    fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
+      throw err if err
+
+
