@@ -175,6 +175,7 @@ gulp.task 'release', ['copy-to-release'], ->
       s3basePath + 'scripts/app.min.css'
     ]
 
+  console.log 'Manifest URL: ', "#{s3basePath}manifest.json"
   fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
     throw err if err
 
