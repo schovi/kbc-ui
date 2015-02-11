@@ -9,7 +9,7 @@ install:
 - time npm install
 - bower --version
 - time bower install --dev
-script: NODE_ENV=production gulp build
+script: NODE_ENV=production gulp release
 sudo: false
 cache:
   directories:
