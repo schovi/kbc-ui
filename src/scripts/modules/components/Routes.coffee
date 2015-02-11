@@ -9,6 +9,7 @@ InstalledComponentsActionsCreators = require './InstalledComponentsActionCreator
 
 exDbRoutes = require '../ex-db/exDbRoutes.coffee'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes.coffee'
+exGanalRoutes = require '../ex-google-analytics/exGanalRoutes.coffee'
 routes =
 
   extractors:
@@ -27,6 +28,8 @@ routes =
       exDbRoutes
     ,
       exGdriveGoogleRoutes
+    ,
+      exGanalRoutes
     ]
 
   writers:
