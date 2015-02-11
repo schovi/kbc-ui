@@ -142,34 +142,40 @@ gulp.task 'build-scripts', ['clean'], ->
   .pipe(gulp.dest('./dist/scripts'))
 
 
+tag = ''
+gulp.task 'read-revision', (cb) ->
+  git.exec args : 'describe --tags', (err, newTag) ->
+    throw err if err
+    tag = newTag.trim()
+    console.log 'revision: ' + tag
+    cb()
+
+gulp.task 'copy-to-release', ['build', 'read-revision'], ->
+  gulp.src('./dist/**')
+  .pipe(gulp.dest("./release/#{tag}"))
+
 gulp.task 'build', [ 'lint', 'build-styles', 'build-scripts', 'copy']
+
 gulp.task 'default', ['less', 'watch', 'server']
 
-gulp.task 'release', ['build'], ->
+gulp.task 'release', ['copy-to-release'], ->
 
-  git.exec args : 'describe --tags', (err, tag) ->
+  s3basePath = "https://kbc-uis.s3.amazonaws.com/"
+  s3basePath = s3basePath + "kbc/#{tag}/"
+
+  manifest =
+    name: 'kbc'
+    version: tag
+    basePath: s3basePath
+    buildUrl: 'https://travis-ci.org/' + process.env.TRAVIS_REPO_SLUG + '/builds/' + process.env.TRAVIS_BUILD_ID
+    scripts: [
+      s3basePath + 'scripts/bundle.min.js'
+    ]
+    styles: [
+      s3basePath + 'scripts/app.min.css'
+    ]
+
+  fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
     throw err if err
-
-    tag = tag.trim()
-    gulp.src('./dist/**')
-    .pipe(gulp.dest("./release/#{tag}"))
-
-    s3basePath = "https://kbc-uis.s3.amazonaws.com/"
-    s3basePath = s3basePath + "kbc/#{tag}/"
-
-    manifest =
-      name: 'kbc'
-      version: tag
-      basePath: s3basePath
-      buildUrl: 'https://travis-ci.org/' + process.env.TRAVIS_REPO_SLUG + '/builds/' + process.env.TRAVIS_BUILD_ID
-      scripts: [
-        s3basePath + 'scripts/bundle.min.js'
-      ]
-      styles: [
-        s3basePath + 'scripts/app.min.css'
-      ]
-
-    fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
-      throw err if err
 
 
