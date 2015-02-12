@@ -9,9 +9,9 @@ Notifications = React.createFactory(require './Notifications.coffee')
 ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
 LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
 ProjectSelect = React.createFactory(require '../common/project-select/ProjectSelect.coffee')
+
 User = React.createFactory(require './User.coffee')
 UserLinks = React.createFactory(require './UserLinks.coffee')
-
 
 {div} = React.DOM
 

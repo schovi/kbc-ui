@@ -109,3 +109,8 @@ global.kbcApp =
       regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
       results = regex.exec(searchString)
       (if not results? then "" else decodeURIComponent(results[1].replace(/\+/g, " ")))
+  ###
+    Application parts used on non SPA pages
+  ###
+  parts:
+    ProjectSelect: require './react/common/project-select/ProjectSelect.coffee'
