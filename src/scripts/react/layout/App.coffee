@@ -9,6 +9,9 @@ Notifications = React.createFactory(require './Notifications.coffee')
 ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
 LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
 ProjectSelect = React.createFactory(require '../common/project-select/ProjectSelect.coffee')
+User = React.createFactory(require './User.coffee')
+UserLinks = React.createFactory(require './UserLinks.coffee')
+
 
 {div} = React.DOM
 
@@ -20,6 +23,7 @@ App = React.createClass
   getInitialState: ->
     organizations: ApplicationStore.getOrganizations()
     currentProject: ApplicationStore.getCurrentProject()
+    currentAdmin: ApplicationStore.getCurrentAdmin()
   render: ->
     div null,
       Header(),
@@ -30,6 +34,9 @@ App = React.createClass
               organizations: @state.organizations
               currentProject: @state.currentProject
             Sidebar()
+            div className: 'kbc-sidebar-footer',
+              User user: @state.currentAdmin
+              UserLinks()
           div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
             Notifications()
             if @props.isError

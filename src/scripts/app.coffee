@@ -19,25 +19,29 @@ initializeData = require './initializeData.coffee'
 
 ###
   Bootstrap and start whole application
+  appOptions:
+    - data - initial data
+    - rootNode - mount element
+    - locationMode - hash or pushState location
 ###
-startApp = (initialData, rootNode, locationType = 'history') ->
+startApp = (appOptions) ->
 
-  initializeData(initialData)
+  initializeData(appOptions.data)
 
   ApplicationActionCreators.receiveApplicationData(
-    sapiUrl: initialData.sapi.url
-    sapiToken: initialData.sapi.token
-    organizations: initialData.organizations
-    kbc: initialData.kbc
+    sapiUrl: appOptions.data.sapi.url
+    sapiToken: appOptions.data.sapi.token
+    organizations: appOptions.data.organizations
+    kbc: appOptions.data.kbc
   )
 
   RouterActionCreators.routesConfigurationReceive(routes)
 
   router = Router.create(
     routes: createReactRouterRoutes(_.extend {}, routes,
-      path: initialData.kbc.projectBaseUrl
+      path: appOptions.data.kbc.projectBaseUrl
     )
-    location: if locationType == 'history' then Router.HistoryLocation else Router.HashLocation
+    location: if appOptions.locationMode == 'history' then Router.HistoryLocation else Router.HashLocation
   )
 
   Promise.longStackTraces()
@@ -48,7 +52,7 @@ startApp = (initialData, rootNode, locationType = 'history') ->
 
   # Show loading page before app is ready
   loading = _.once (Handler) ->
-    React.render(React.createElement(Handler, isLoading: true), rootNode)
+    React.render(React.createElement(Handler, isLoading: true), appOptions.rootNode)
 
   # registered pollers for previous page
   registeredPollers = Immutable.List()
@@ -79,7 +83,7 @@ startApp = (initialData, rootNode, locationType = 'history') ->
     Promise.all(promises)
     .then(->
       RouterActionCreators.routeChangeSuccess(state)
-      React.render(React.createElement(Handler), rootNode)
+      React.render(React.createElement(Handler), appOptions.rootNode)
 
       # Start pollers for new page
       registeredPollers = RoutesStore
@@ -94,7 +98,7 @@ startApp = (initialData, rootNode, locationType = 'history') ->
       # render error page
       console.log error, error.stack
       RouterActionCreators.routeChangeError(error)
-      React.render(React.createElement(Handler, isError: true), rootNode)
+      React.render(React.createElement(Handler, isError: true), appOptions.rootNode)
     )
 
 global.kbcApp =

@@ -8,7 +8,7 @@ _store = Map(
   sapiToken: Map()
   organizations: List()
   sapiUrl: ''
-  kbc: Map() # contains - projectBaseUrl
+  kbc: Map() # contains - projectBaseUrl, admin (object)
 )
 
 ApplicationStore =
@@ -27,6 +27,9 @@ ApplicationStore =
 
   getCurrentProject: ->
     _store.getIn ['sapiToken', 'owner']
+
+  getCurrentAdmin: ->
+    _store.getIn ['kbc', 'admin']
 
   getProjectBaseUrl: ->
     console.log 'store', _store.get('kbc').toJS()
