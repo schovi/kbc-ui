@@ -25,6 +25,9 @@ ApplicationStore =
   getCurrentProjectId: ->
     _store.getIn ['sapiToken', 'owner', 'id']
 
+  getCurrentProject: ->
+    _store.getIn ['sapiToken', 'owner']
+
   getProjectBaseUrl: ->
     console.log 'store', _store.get('kbc').toJS()
     _store.getIn ['kbc', 'projectBaseUrl']

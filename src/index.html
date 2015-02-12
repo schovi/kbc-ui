@@ -17,7 +17,11 @@
         "sapi": {
             "url": "https://connection.keboola.com",
             "token": {
-               "token": kbcApp.helpers.getUrlParameterByName('token', window.location.search)
+               "token": kbcApp.helpers.getUrlParameterByName('token', window.location.search),
+                "owner": {
+                    "id": 0,
+                    "name": "Development"
+                }
             }
         },
         "kbc": {

@@ -10,18 +10,18 @@ module.exports = React.createClass
   mixins: [DropdownStateMixin]
   propTypes:
     organizations: React.PropTypes.object.isRequired
-    currentProjectId: React.PropTypes.number.isRequired
+    currentProject: React.PropTypes.object.isRequired
 
   render: ->
     if @state.open then className = 'open' else ''
     div className: "kbc-project-select dropdown #{className}",
       button onClick: @_handleDropdownClick,
         span null,
-          "Project #{@props.currentProjectId}"
+          @props.currentProject.get('name')
           span className: 'kbc-icon-pickerDouble'
       Dropdown
         organizations: @props.organizations
-        currentProjectId: @props.currentProjectId
+        currentProjectId: @props.currentProject.get('id')
         open: @state.open
 
   _handleDropdownClick: (e) ->
