@@ -1,4 +1,4 @@
-React = require 'React'
+React = require 'react'
 ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin.coffee'
 ApplicationStore = require '../../stores/ApplicationStore.coffee'
 
