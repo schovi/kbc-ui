@@ -24,6 +24,7 @@ App = React.createClass
     organizations: ApplicationStore.getOrganizations()
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
+    urlTemplates: ApplicationStore.getUrlTemplates()
   render: ->
     div null,
       Header(),
@@ -33,6 +34,7 @@ App = React.createClass
             ProjectSelect
               organizations: @state.organizations
               currentProject: @state.currentProject
+              urlTemplates: @state.urlTemplates
             Sidebar()
             div className: 'kbc-sidebar-footer',
               User user: @state.currentAdmin

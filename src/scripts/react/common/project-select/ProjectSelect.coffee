@@ -11,6 +11,7 @@ module.exports = React.createClass
   propTypes:
     organizations: React.PropTypes.object.isRequired
     currentProject: React.PropTypes.object.isRequired
+    urlTemplates: React.PropTypes.object.isRequired
 
   render: ->
     if @state.open then className = 'open' else ''
@@ -22,6 +23,7 @@ module.exports = React.createClass
       Dropdown
         organizations: @props.organizations
         currentProjectId: @props.currentProject.get('id')
+        urlTemplates: @props.urlTemplates
         open: @state.open
 
   _handleDropdownClick: (e) ->

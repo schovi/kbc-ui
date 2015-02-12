@@ -26,6 +26,10 @@
             },
             "kbc": {
                 "projectBaseUrl": "/",
+                "urlTemplates": {
+                    "project": "/admin/projects/<%= projectId %>/",
+                    "organization": "/admin/organizations/<%= organizationId %>"
+                },
                 "admin": {
                     "id": 1,
                     "name": "Some Developer",

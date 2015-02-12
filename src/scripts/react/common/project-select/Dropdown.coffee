@@ -1,5 +1,6 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
+_ = require 'underscore'
 
 {div, ul, li, a, span, input} = React.DOM
 
@@ -8,6 +9,7 @@ module.exports = React.createClass
   propTypes:
     organizations: React.PropTypes.object.isRequired
     currentProjectId: React.PropTypes.number.isRequired
+    urlTemplates: React.PropTypes.object.isRequired
     open: React.PropTypes.bool.isRequired
 
   getInitialState: ->
@@ -45,15 +47,17 @@ module.exports = React.createClass
       elements = organizations.map((organization) ->
 
         organizationElement = li className: 'dropdown-header', key: "org-#{organization.get('id')}",
-          a null, organization.get('name')
+          a href: @_organizationUrl(organization.get 'id'),
+            organization.get('name')
 
         projectElements = organization.get('projects').map((project) ->
           li key: "proj-#{project.get('id')}",
-            a null, project.get('name')
-        ).toArray()
+            a href: @_projectUrl(project.get 'id'),
+              project.get('name')
+        , @).toArray()
 
         [[organizationElement], projectElements]
-      ).flatten().toArray()
+      , @).flatten().toArray()
     else
       elements = li className: 'dropdown-header', 'No projects found'
 
@@ -68,6 +72,12 @@ module.exports = React.createClass
     ).filter((organization) ->
       organization.get('projects').size > 0
     )
+
+  _projectUrl: (id) ->
+    _.template(@props.urlTemplates.get('project'))(projectId: id)
+
+  _organizationUrl: (id) ->
+    _.template(@props.urlTemplates.get('organization'))(organizationId: id)
 
   _handleQueryChange: (event) ->
     @setState

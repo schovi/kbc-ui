@@ -38,6 +38,9 @@ ApplicationStore =
   getProjectPageUrl: (path) ->
     @getProjectBaseUrl() + path
 
+  getUrlTemplates: ->
+    _store.getIn ['kbc', 'urlTemplates']
+
 Dispatcher.register (payload) ->
   action = payload.action
 
