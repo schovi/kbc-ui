@@ -28,6 +28,7 @@ startApp = (initialData, rootNode, locationType = 'history') ->
     sapiUrl: initialData.sapi.url
     sapiToken: initialData.sapi.token
     organizations: initialData.organizations
+    kbc: initialData.kbc
   )
 
   RouterActionCreators.routesConfigurationReceive(routes)

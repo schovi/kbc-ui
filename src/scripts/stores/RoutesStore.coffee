@@ -35,14 +35,20 @@ nestedRoutesToByNameMap = (route) ->
   traverse(route)
   Immutable.fromJS map
 
+getRoute = (store, routeName) ->
+  route = store.getIn ['routesByName', routeName]
+
+  if !route
+    route = store.get('routesByName').find((route) -> route.get('defaultRouteName') == routeName)
+
+  route
+
 ###
  Returns title for route
 ###
 getRouteTitle = (store, routeName) ->
-  title = store.getIn ['routesByName', routeName, 'title'], ''
-
-  if !title
-    title = store.get('routesByName').find((route) -> route.get('defaultRouteName') == routeName)?.get('title')
+  route = getRoute(store, routeName)
+  title = if route then route.get 'title' else ''
 
   if _.isFunction title
     title(store.get 'routerState')
@@ -117,7 +123,7 @@ RoutesStore = StoreUtils.createStore
     _store.get 'error'
 
   hasRoute: (routeName) ->
-    _store.get('routesByName').has routeName
+    !!getRoute(_store, routeName)
 
   getRequireDataFunctionsForRouterState: (routes) ->
     Immutable

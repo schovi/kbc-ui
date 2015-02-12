@@ -24,11 +24,6 @@ Home = React.createClass
   render: ->
     React.DOM.div className: 'container-fluid kbc-main-content', 'Home'
 
-Storage = React.createClass
-  displayName: 'Storage'
-  render: ->
-    React.DOM.div className: 'container-fluid kbc-main-content', 'Storage'
-
 NotFound = React.createClass
   displayName: 'NotFound'
   render: ->
@@ -50,10 +45,6 @@ routes =
       componentsRoutes.extractors
     ,
       componentsRoutes.writers
-    ,
-      name: 'storage'
-      title: 'Storage'
-      handler: Storage
     ,
       jobsRoutes
     ,

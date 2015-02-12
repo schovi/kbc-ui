@@ -1,6 +1,8 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
 State = require('react-router').State
+RoutesStore = require '../../stores/RoutesStore.coffee'
+ApplicationStore = require '../../stores/ApplicationStore.coffee'
 
 _ = require 'underscore'
 
@@ -45,9 +47,15 @@ Sidebar = React.createClass
       isActive = @isActive(page.id)
       className = if isActive then 'active' else ''
       li className: className, key: page.id,
-        Link to: page.id,
-          span className: page.icon
-          page.title
+        if RoutesStore.hasRoute(page.id)
+          Link to: page.id,
+            span className: page.icon
+            span null, page.title
+        else
+          a href: ApplicationStore.getProjectPageUrl(page.id),
+            span className: page.icon
+            span null, page.title
+
     , @)
   render: ->
     ul className: 'kbc-nav-sidebar nav nav-sidebar', @renderLinks()

@@ -8,6 +8,7 @@ _store = Map(
   sapiToken: Map()
   organizations: List()
   sapiUrl: ''
+  kbc: Map() # contains - projectBaseUrl
 )
 
 ApplicationStore =
@@ -24,15 +25,24 @@ ApplicationStore =
   getCurrentProjectId: ->
     _store.getIn ['sapiToken', 'owner', 'id']
 
+  getProjectBaseUrl: ->
+    console.log 'store', _store.get('kbc').toJS()
+    _store.getIn ['kbc', 'projectBaseUrl']
+
+  getProjectPageUrl: (path) ->
+    @getProjectBaseUrl() + path
+
 Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
     when Constants.ActionTypes.APPLICATION_DATA_RECEIVED
+      console.log 'action', action
       _store = _store.withMutations (store) ->
         store
           .set 'sapiToken', Immutable.fromJS(action.applicationData.sapiToken)
           .set 'sapiUrl', action.applicationData.sapiUrl
+          .set 'kbc', Immutable.fromJS(action.applicationData.kbc)
           .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
 
 module.exports = ApplicationStore
