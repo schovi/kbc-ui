@@ -32,8 +32,10 @@ ApplicationStore =
     _store.getIn ['kbc', 'admin']
 
   getProjectBaseUrl: ->
-    console.log 'store', _store.get('kbc').toJS()
     _store.getIn ['kbc', 'projectBaseUrl']
+
+  getScriptsBasePath: ->
+    _store.getIn ['kbc', 'scriptsBasePath']
 
   getProjectPageUrl: (path) ->
     @getProjectBaseUrl() + path

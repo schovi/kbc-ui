@@ -1,4 +1,5 @@
 React = require 'react'
+ApplicationStore = require '../../stores/ApplicationStore.coffee'
 
 statusColorMap =
   success: 'green'
@@ -20,6 +21,6 @@ JobStatusCircle = React.createClass
       src: @_getPathForColor color
 
   _getPathForColor: (color) ->
-    "images/status-#{color}.svg"
+    ApplicationStore.getScriptsBasePath() + "images/status-#{color}.svg"
 
 module.exports = JobStatusCircle
