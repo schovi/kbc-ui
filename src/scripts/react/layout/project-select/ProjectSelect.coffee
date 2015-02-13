@@ -14,6 +14,7 @@ module.exports = React.createClass
     currentProject: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
     xsrf: React.PropTypes.string.isRequired
+    canCreateProject: React.PropTypes.bool.isRequired
 
   render: ->
     if @state.open then className = 'open' else ''
@@ -27,6 +28,7 @@ module.exports = React.createClass
         currentProjectId: @props.currentProject.get('id')
         urlTemplates: @props.urlTemplates
         xsrf: @props.xsrf
+        canCreateProject: @props.canCreateProject
         open: @state.open
 
   _handleDropdownClick: (e) ->

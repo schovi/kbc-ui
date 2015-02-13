@@ -42,7 +42,10 @@ module.exports = React.createClass
             wrapperClassName: 'col-sm-6'
           ,
             @props.organizations.map (organization) ->
-              option value: organization.get('id'),
+              option
+                value: organization.get('id')
+                key: organization.get('id')
+              ,
                 organization.get 'name'
             .toArray()
           input

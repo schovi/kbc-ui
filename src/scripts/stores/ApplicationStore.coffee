@@ -44,6 +44,9 @@ ApplicationStore =
   getXsrfToken: ->
     _store.getIn ['kbc', 'xsrfToken']
 
+  getCanCreateProject: ->
+    _store.getIn ['kbc', 'canCreateProject']
+
 Dispatcher.register (payload) ->
   action = payload.action
 

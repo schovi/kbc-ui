@@ -25,6 +25,7 @@ App = React.createClass
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
     xsrf: ApplicationStore.getXsrfToken()
+    canCreateProject: ApplicationStore.getCanCreateProject()
   render: ->
     div null,
       Header(),
@@ -36,6 +37,7 @@ App = React.createClass
               currentProject: @state.currentProject
               urlTemplates: @state.urlTemplates
               xsrf: @state.xsrf
+              canCreateProject: @state.canCreateProject
             Sidebar()
             div className: 'kbc-sidebar-footer',
               User user: @state.currentAdmin

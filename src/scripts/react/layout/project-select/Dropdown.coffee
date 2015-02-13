@@ -14,6 +14,7 @@ module.exports = React.createClass
     urlTemplates: React.PropTypes.object.isRequired
     xsrf: React.PropTypes.string.isRequired
     open: React.PropTypes.bool.isRequired
+    canCreateProject: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     query: ''
@@ -38,16 +39,8 @@ module.exports = React.createClass
             onChange: @_handleQueryChange
 
       @_projectsList()
-      ul className: 'list-unstyled kbc-project-select-new',
-        li null,
-          ModalTrigger modal: NewProjectModal(
-            urlTemplates: @props.urlTemplates
-            xsrf: @props.xsrf
-            organizations: @props.organizations
-          ),
-            span null,
-              span className: 'fa fa-plus-circle'
-              ' New Project'
+      @_newProject() if @props.canCreateProject
+
 
   _projectsList: ->
     organizations = @_organizationsFiltered()
@@ -70,6 +63,18 @@ module.exports = React.createClass
       elements = li className: 'dropdown-header', 'No projects found'
 
     ul className: 'list-unstyled kbc-project-select-results', elements
+
+  _newProject: ->
+    ul className: 'list-unstyled kbc-project-select-new',
+      li null,
+        ModalTrigger modal: NewProjectModal(
+          urlTemplates: @props.urlTemplates
+          xsrf: @props.xsrf
+          organizations: @props.organizations
+        ),
+          span null,
+            span className: 'fa fa-plus-circle'
+            ' New Project'
 
   _organizationsFiltered: ->
     filter = @state.query
