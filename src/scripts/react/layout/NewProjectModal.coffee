@@ -72,7 +72,7 @@ module.exports = React.createClass
 
   _handleNameChange: (e) ->
     @setState
-      name: e.target.value.trim()
+      name: e.target.value
 
   _isValid: ->
     @state.name != ''
