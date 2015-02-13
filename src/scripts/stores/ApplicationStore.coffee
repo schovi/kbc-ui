@@ -41,6 +41,9 @@ ApplicationStore =
   getUrlTemplates: ->
     _store.getIn ['kbc', 'urlTemplates']
 
+  getXsrfToken: ->
+    _store.getIn ['kbc', 'xsrfToken']
+
 Dispatcher.register (payload) ->
   action = payload.action
 

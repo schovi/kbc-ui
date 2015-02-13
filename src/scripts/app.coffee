@@ -116,4 +116,4 @@ global.kbcApp =
     Application parts used on non SPA pages
   ###
   parts:
-    ProjectSelect: require './react/common/project-select/ProjectSelect.coffee'
+    ProjectSelect: require './react/layout/project-select/ProjectSelect.coffee'

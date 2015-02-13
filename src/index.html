@@ -56,7 +56,10 @@
             },
             "kbc": {
                 "projectBaseUrl": "/",
+                "canCreateProject": true,
+                "xsrfToken": "hovno",
                 "urlTemplates": {
+                    "createProject": "/admin/projects-new/create-project",
                     "project": "/admin/projects/<%= projectId %>/",
                     "organization": "/admin/organizations/<%= organizationId %>"
                 },

@@ -1,9 +1,10 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
 _ = require 'underscore'
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+NewProjectModal = React.createFactory(require '../NewProjectModal.coffee')
 
 {div, ul, li, a, span, input} = React.DOM
-
 
 module.exports = React.createClass
   displayName: 'ProjectSelectDropdown'
@@ -11,6 +12,7 @@ module.exports = React.createClass
     organizations: React.PropTypes.object.isRequired
     currentProjectId: React.PropTypes.number.isRequired
     urlTemplates: React.PropTypes.object.isRequired
+    xsrf: React.PropTypes.string.isRequired
     open: React.PropTypes.bool.isRequired
 
   getInitialState: ->
@@ -38,9 +40,14 @@ module.exports = React.createClass
       @_projectsList()
       ul className: 'list-unstyled kbc-project-select-new',
         li null,
-          a null,
-            span className: 'fa fa-plus-circle'
-            ' New Project'
+          ModalTrigger modal: NewProjectModal(
+            urlTemplates: @props.urlTemplates
+            xsrf: @props.xsrf
+            organizations: @props.organizations
+          ),
+            span null,
+              span className: 'fa fa-plus-circle'
+              ' New Project'
 
   _projectsList: ->
     organizations = @_organizationsFiltered()

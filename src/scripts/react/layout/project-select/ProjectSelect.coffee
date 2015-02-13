@@ -2,6 +2,7 @@ React = require 'react'
 
 {div, button, span} = React.DOM
 
+
 Dropdown = React.createFactory(require './Dropdown.coffee')
 DropdownStateMixin = require('react-bootstrap').DropdownStateMixin
 
@@ -12,6 +13,7 @@ module.exports = React.createClass
     organizations: React.PropTypes.object.isRequired
     currentProject: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
+    xsrf: React.PropTypes.string.isRequired
 
   render: ->
     if @state.open then className = 'open' else ''
@@ -24,9 +26,9 @@ module.exports = React.createClass
         organizations: @props.organizations
         currentProjectId: @props.currentProject.get('id')
         urlTemplates: @props.urlTemplates
+        xsrf: @props.xsrf
         open: @state.open
 
   _handleDropdownClick: (e) ->
     e.preventDefault()
     @setDropdownState(!@state.open)
-

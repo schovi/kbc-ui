@@ -5,10 +5,9 @@ ApplicationStore = require '../../stores/ApplicationStore.coffee'
 Header = React.createFactory(require '././Header.coffee')
 Sidebar = React.createFactory(require '././Sidebar.coffee')
 Notifications = React.createFactory(require './Notifications.coffee')
-
 ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
 LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
-ProjectSelect = React.createFactory(require '../common/project-select/ProjectSelect.coffee')
+ProjectSelect = React.createFactory(require './project-select/ProjectSelect.coffee')
 
 User = React.createFactory(require './User.coffee')
 UserLinks = React.createFactory(require './UserLinks.coffee')
@@ -25,6 +24,7 @@ App = React.createClass
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
+    xsrf: ApplicationStore.getXsrfToken()
   render: ->
     div null,
       Header(),
@@ -35,6 +35,7 @@ App = React.createClass
               organizations: @state.organizations
               currentProject: @state.currentProject
               urlTemplates: @state.urlTemplates
+              xsrf: @state.xsrf
             Sidebar()
             div className: 'kbc-sidebar-footer',
               User user: @state.currentAdmin
