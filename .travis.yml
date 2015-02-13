@@ -37,3 +37,7 @@ deploy:
     skip_cleanup: true
     on:
       repo: keboola/kbc-ui
+after_deploy:
+  - "CURRENT_TAG=`git describe --tags HEAD`"
+  - "echo $CURRENT_TAG"
+  - curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json -H X-Token:$KBC_ADMIN_TOKEN https://martin-connection-devel.keboola.com/admin/manage-apps-api/register
