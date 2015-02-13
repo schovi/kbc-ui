@@ -17,6 +17,9 @@ module.exports = React.createClass
     name: ''
     isSaving: false
 
+  componentDidMount: ->
+    @refs.name.getInputDOMNode().focus()
+
   render: ->
     Modal title: "New Project", onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
@@ -24,10 +27,12 @@ module.exports = React.createClass
           className: 'form-horizontal'
           ref: 'projectCreateForm'
           method: 'post'
+          action: @props.urlTemplates.get 'createProject'
         ,
           Input
             label: 'Name'
             name: 'name'
+            ref: 'name'
             value: @state.name
             onChange: @_handleNameChange
             type: 'text'
