@@ -51,9 +51,11 @@ JobTasks = React.createClass
     ,
       div(className: 'pull-right', date.format(task.get('startTime'))) if task.get('startTime')
       div(null, strong(null, 'POST'), ' ', task.get('runUrl')) if task.get('runUrl')
-      h5 null, 'Parameters'
-      Tree data: task.get('runParameters')
-      if task.get('response')
+      if task.get('runParameters')?.size
+        div null,
+          h5 null, 'Parameters'
+          Tree data: task.get('runParameters')
+      if task.get('response')?.size
         div null,
           h5(null, 'Response'),
           Tree data: task.get('response')
