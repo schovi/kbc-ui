@@ -123,6 +123,7 @@ RoutesStore = StoreUtils.createStore
     .getIn(['routerState', 'routes'], List())
     .find (route) ->
       routeConfig = getRoute _store, route.get('name')
+      return false if !routeConfig
       routeConfig.get 'isComponent', false
 
     return foundRoute.get('name') if foundRoute
