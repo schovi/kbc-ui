@@ -1,4 +1,5 @@
 React = require 'react'
+Immutable = require 'immutable'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
@@ -8,9 +9,27 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription React.createFactory ComponentDescription
+LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
 Link = React.createFactory(require('react-router').Link)
 
+jobs = [
+  id: 123
+  status: 'processing'
+  startTime: "2015-02-16T15:01:52+01:00"
+  endTime: null
+  token:
+    id: 234
+    description: "martin@keboola.com"
+,
+  id: 120
+  status: 'success'
+  startTime: "2015-02-16T16:01:52+01:00"
+  endTime: "2015-02-16T15:02:23+00:00"
+  token:
+    id: 235
+    description: "Orchestrator new"
+]
 
 {div, table, tbody, tr, td, ul, li, i, a, span, h2, p, strong, br} = React.DOM
 
@@ -75,3 +94,6 @@ module.exports = React.createClass
           span null,
             'Created On '
           strong null, '2014-05-07 09:24 '
+
+        LatestJobs
+          jobs: Immutable.fromJS jobs
