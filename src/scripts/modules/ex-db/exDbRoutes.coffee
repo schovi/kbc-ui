@@ -19,7 +19,7 @@ module.exports =
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'Database extractor - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
+    'Database - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
   defaultRouteHandler: ExDbIndex
   childRoutes: [
     name: 'ex-db-query'
