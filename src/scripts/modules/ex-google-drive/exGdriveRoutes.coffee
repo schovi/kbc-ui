@@ -7,8 +7,10 @@ authorizePage = require './react/pages/authorize/authorize'
 ExGdriveSheetHeaderButtons = require './react/components/SheetHeaderButtons'
 sheetsPicker = require './react/pages/sheets-picker/SheetsPicker'
 ExGdriveSheetSelectionHeader = require './react/components/SaveSelectedSheetsHeader'
+
 module.exports =
   name: 'ex-google-drive'
+  isComponent: true
   path: 'ex-google-drive/:config'
   defaultRouteHandler: ExGdriveIndex
   requireData: [

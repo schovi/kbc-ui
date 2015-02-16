@@ -12,7 +12,7 @@ createUrl = (path) ->
 createRequest = (method, path) ->
   request(method, createUrl(path))
   .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
-  .timeout 5000
+  .timeout 10000
 
 
 module.exports =

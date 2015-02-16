@@ -13,6 +13,7 @@ ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHea
 module.exports =
   name: 'ex-db'
   path: 'ex-db/:config'
+  isComponent: true
   requireData: [
     (params) ->
       ExDbActionCreators.loadConfiguration params.config

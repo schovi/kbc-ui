@@ -75,4 +75,3 @@ module.exports = React.createClass
           span null,
             'Created On '
           strong null, '2014-05-07 09:24 '
-

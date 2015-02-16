@@ -2,9 +2,11 @@ React = require 'react'
 createStoreMixin = require '../mixins/createStoreMixin'
 
 RoutesStore = require '../../stores/RoutesStore'
+ComponentsStore = require '../../modules/components/stores/ComponentsStore'
 
 Link = React.createFactory(require('react-router').Link)
 RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator')
+ComponentIcon = React.createFactory(require '../common/ComponentIcon')
 
 {div, nav, span, a, h1} = React.DOM
 
@@ -16,11 +18,18 @@ Header = React.createClass
     homeUrl: React.PropTypes.string.isRequired
 
   getStateFromStores: ->
+    componentId = RoutesStore.getCurrentRouteComponentId()
+    component = ComponentsStore.getComponent componentId
+
     breadcrumbs: RoutesStore.getBreadcrumbs()
     currentRouteConfig: RoutesStore.getCurrentRouteConfig()
     isRoutePending: RoutesStore.getIsPending()
+    currentRouteComponentId: RoutesStore.getCurrentRouteComponentId()
+    component: component
+
 
   render: ->
+    console.log 'route config', @state.currentRouteComponentId
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},
         a href: @props.homeUrl,
@@ -29,6 +38,7 @@ Header = React.createClass
       div {className: 'col-sm-9 col-md-10'},
         div {className: 'kbc-main-header kbc-header'},
           div {className: 'kbc-title'},
+            @_renderComponentIcon()
             @_renderBreadcrumbs()
             ' '
             @_renderReloader()
@@ -36,6 +46,12 @@ Header = React.createClass
             RoutePendingIndicator() if @state.isRoutePending
           div {className: 'kbc-buttons'},
             @_renderButtons()
+
+  _renderComponentIcon: ->
+    if @state.component
+      span null,
+        ComponentIcon component: @state.component
+        ' '
 
   _renderBreadcrumbs: ->
     breadcrumbs = []

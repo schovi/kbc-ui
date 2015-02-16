@@ -115,6 +115,20 @@ RoutesStore = StoreUtils.createStore
     getRouteTitle(_store, currentRouteName)
 
   ###
+    If it'is a component route, component id is returned
+    componet is some writer or extractor like wr-db or ex-db
+  ###
+  getCurrentRouteComponentId: ->
+    foundRoute = _store
+    .getIn(['routerState', 'routes'], List())
+    .find (route) ->
+      routeConfig = getRoute _store, route.get('name')
+      routeConfig.get 'isComponent', false
+
+    return foundRoute.get('name') if foundRoute
+
+
+  ###
     Returns if route change is pending
   ###
   getIsPending: ->
