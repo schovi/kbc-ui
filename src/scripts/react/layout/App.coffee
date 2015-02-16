@@ -8,6 +8,7 @@ Notifications = React.createFactory(require './Notifications.coffee')
 ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
 LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
 ProjectSelect = React.createFactory(require './project-select/ProjectSelect.coffee')
+PageTitle = React.createFactory(require './PageTitle.coffee')
 
 User = React.createFactory(require './User.coffee')
 UserLinks = React.createFactory(require './UserLinks.coffee')
@@ -29,6 +30,7 @@ App = React.createClass
     homeUrl: ApplicationStore.getUrlTemplates().get 'home'
   render: ->
     div null,
+      PageTitle()
       Header
         homeUrl: @state.homeUrl
       div className: 'container-fluid',

@@ -26,7 +26,7 @@ routes =
         path: ':jobId'
         title: (routerState) ->
           jobId = routerState.getIn(['params', 'jobId'])
-          React.DOM.span null,"Job " + jobId
+          "Job " + jobId
         reloaderHandler: JobDetailReloaderButton
         handler: JobDetail
         poll:

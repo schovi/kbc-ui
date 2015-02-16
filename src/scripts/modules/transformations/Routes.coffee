@@ -16,12 +16,12 @@ routes =
         path: ':bucketId'
         title: (routerState) ->
           bucketId = routerState.getIn(['params', 'bucketId'])
-          React.DOM.span null,"Bucket " + bucketId
+          "Bucket " + bucketId
         handler: TransformationBucket
         #requireData: [
         #  (params) ->
         #    JobsActionCreators.loadJobDetail(parseInt(params.jobId))
         #]
-      ]      
+      ]
 
 module.exports = routes
