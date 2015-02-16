@@ -26,9 +26,11 @@ App = React.createClass
     urlTemplates: ApplicationStore.getUrlTemplates()
     xsrf: ApplicationStore.getXsrfToken()
     canCreateProject: ApplicationStore.getCanCreateProject()
+    homeUrl: ApplicationStore.getUrlTemplates().get 'home'
   render: ->
     div null,
-      Header(),
+      Header
+        homeUrl: @state.homeUrl
       div className: 'container-fluid',
         div className: 'row',
           div className: 'col-sm-3 col-md-2 kbc-sidebar',

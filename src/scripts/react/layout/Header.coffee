@@ -12,6 +12,8 @@ RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator.cof
 Header = React.createClass
   displayName: 'Header'
   mixins: [createStoreMixin(RoutesStore)]
+  propTypes:
+    homeUrl: React.PropTypes.string.isRequired
 
   getStateFromStores: ->
     breadcrumbs: RoutesStore.getBreadcrumbs()
@@ -21,7 +23,7 @@ Header = React.createClass
   render: ->
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},
-        Link {to: 'home'},
+        a href: @props.homeUrl,
           span className: "kbc-icon-keboola", null
           'Connection'
       div {className: 'col-sm-9 col-md-10'},
