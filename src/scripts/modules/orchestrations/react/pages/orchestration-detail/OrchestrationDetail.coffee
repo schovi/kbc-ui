@@ -1,21 +1,21 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
-OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
-OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
-OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+OrchestrationsActionCreators = require '../../../ActionCreators'
+OrchestrationStore = require '../../../stores/OrchestrationsStore'
+OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
 # React components
-OrchestrationsNav = React.createFactory(require './OrchestrationsNav.coffee')
-JobsTable = React.createFactory(require './JobsTable.coffee')
-JobsGraph = React.createFactory(require './JobsGraph.coffee')
-SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
+OrchestrationsNav = React.createFactory(require './OrchestrationsNav')
+JobsTable = React.createFactory(require './JobsTable')
+JobsGraph = React.createFactory(require './JobsGraph')
+SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
 Link = React.createFactory(require('react-router').Link)
-TasksSummary = React.createFactory(require './TasksSummary.coffee')
-CronRecord = React.createFactory(require '../../components/CronRecord.coffee')
+TasksSummary = React.createFactory(require './TasksSummary')
+CronRecord = React.createFactory(require '../../components/CronRecord')
 
 {div, h2, span, strong} = React.DOM
 

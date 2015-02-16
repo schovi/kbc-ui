@@ -1,5 +1,5 @@
 React = require 'react'
-OrchestrationActionCreators = require '../../ActionCreators.coffee'
+OrchestrationActionCreators = require '../../ActionCreators'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)

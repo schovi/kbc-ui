@@ -1,14 +1,14 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+ExDbStore = require '../../../exDbStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
-QueryTable = React.createFactory(require './QueryTable.coffee')
-ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
+QueryTable = React.createFactory(require './QueryTable')
+ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription React.createFactory ComponentDescription
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton.coffee')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
 Link = React.createFactory(require('react-router').Link)
 
 

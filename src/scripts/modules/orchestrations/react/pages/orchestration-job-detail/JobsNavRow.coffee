@@ -1,10 +1,10 @@
 React = require 'react'
 
 
-JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
-FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
-DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
-ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle')
+FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon')
+DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon')
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
 

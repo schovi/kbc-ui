@@ -2,9 +2,9 @@ Immutable = require 'immutable'
 EventEmitter = require('events').EventEmitter
 List = Immutable.List
 _ = require 'underscore'
-timer = require '../../utils/Timer.coffee'
+timer = require '../../utils/Timer'
 
-api = require './EventsApi.coffee'
+api = require './EventsApi'
 CHANGE_EVENT = 'change'
 
 class EventsService

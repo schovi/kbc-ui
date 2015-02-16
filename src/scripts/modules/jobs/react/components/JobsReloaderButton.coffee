@@ -1,8 +1,8 @@
 React = require('react')
-createStoreMixin = require('../../../../react/mixins/createStoreMixin.coffee')
-JobsStore = require('../../stores/JobsStore.coffee')
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon.coffee')
-ActionCreators = require('../../ActionCreators.coffee')
+createStoreMixin = require('../../../../react/mixins/createStoreMixin')
+JobsStore = require('../../stores/JobsStore')
+RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+ActionCreators = require('../../ActionCreators')
 
 
 JobsReloaderButton = React.createClass

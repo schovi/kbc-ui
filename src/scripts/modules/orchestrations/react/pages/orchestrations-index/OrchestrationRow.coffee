@@ -1,15 +1,15 @@
 React = require 'react'
-DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
-FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
-JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
+DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon')
+FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon')
+JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle')
 Link = React.createFactory(require('react-router').Link)
-OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton.coffee')
-OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton.coffee')
-OrchestrationRunButton = React.createFactory(require '../../components/OrchestrationRunButton.coffee')
-CronRecord = React.createFactory(require './../../components/CronRecord.coffee')
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton')
+OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton')
+OrchestrationRunButton = React.createFactory(require '../../components/OrchestrationRunButton')
+CronRecord = React.createFactory(require './../../components/CronRecord')
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
-OrchestrationActionCreators = require '../../../ActionCreators.coffee'
+OrchestrationActionCreators = require '../../../ActionCreators'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)

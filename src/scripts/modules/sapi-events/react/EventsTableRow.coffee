@@ -1,7 +1,7 @@
 React = require 'react'
-date = require '../../../utils/date.coffee'
-PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
-sapiEventsUtils = require '../utils.coffee'
+date = require '../../../utils/date'
+PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
+sapiEventsUtils = require '../utils'
 
 {table, thead, tbody, tr, th, td} = React.DOM
 

@@ -1,10 +1,10 @@
 React = require 'react'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
-QueryRow = React.createFactory(require './QueryRow.coffee')
+QueryRow = React.createFactory(require './QueryRow')
 Link = React.createFactory(require('react-router').Link)
-Check = React.createFactory(require('../../../../../react/common/common.coffee').Check)
-QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton.coffee'))
+Check = React.createFactory(require('../../../../../react/common/common').Check)
+QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
 
 {span, div, a, strong} = React.DOM
 

@@ -1,5 +1,5 @@
 React = require 'react'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 statusColorMap =
   success: 'green'

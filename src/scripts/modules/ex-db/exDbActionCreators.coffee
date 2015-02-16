@@ -1,11 +1,11 @@
 
 
-dispatcher = require '../../Dispatcher.coffee'
-constants = require './exDbConstants.coffee'
+dispatcher = require '../../Dispatcher'
+constants = require './exDbConstants'
 Promise = require('bluebird')
 
-exDbApi = require './exDbApi.coffee'
-exDbStore = require './exDbStore.coffee'
+exDbApi = require './exDbApi'
+exDbStore = require './exDbStore'
 
 module.exports =
 

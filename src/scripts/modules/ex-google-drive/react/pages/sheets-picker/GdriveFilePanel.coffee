@@ -1,6 +1,6 @@
 React = require('react')
-ActionCreators = require '../../../exGdriveActionCreators.coffee'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ActionCreators = require '../../../exGdriveActionCreators'
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 {Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
 
 Panel  = React.createFactory Panel
@@ -9,7 +9,7 @@ ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
 
 {div, span} = React.DOM
-Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
 
 module.exports = React.createClass
   displayName: 'GdriveFilePanel'

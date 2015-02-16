@@ -1,11 +1,11 @@
 React = require 'react'
 _ = require 'underscore'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
-ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon.coffee')
-InstalledComponentsStore = require '../../stores/InstalledComponentsStore.coffee'
-RoutesStore =  require '../../../../stores/RoutesStore.coffee'
-InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
+InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
+RoutesStore =  require '../../../../stores/RoutesStore'
+InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 Link = React.createFactory require('react-router').Link
 
 {div, table, tbody, tr, td, ul, li, a, span, small} = React.DOM

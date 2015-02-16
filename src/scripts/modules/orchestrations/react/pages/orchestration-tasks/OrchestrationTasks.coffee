@@ -1,18 +1,18 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
-OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
-OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
-ComponentsStore = require '../../../../components/stores/ComponentsStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+OrchestrationsActionCreators = require '../../../ActionCreators'
+OrchestrationStore = require '../../../stores/OrchestrationsStore'
+ComponentsStore = require '../../../../components/stores/ComponentsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
 # React components
-OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav.coffee')
-SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
-TasksTable = React.createFactory(require './TasksTable.coffee')
-TasksEditor = React.createFactory(require './TasksEditor.coffee')
+OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav')
+SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
+TasksTable = React.createFactory(require './TasksTable')
+TasksEditor = React.createFactory(require './TasksEditor')
 
 {div, button} = React.DOM
 

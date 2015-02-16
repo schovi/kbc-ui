@@ -1,19 +1,19 @@
 React = require('react')
-ExGdriveStore = require '../../../exGdriveStore.coffee'
-ActionCreators = require '../../../exGdriveActionCreators.coffee'
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+ExGdriveStore = require '../../../exGdriveStore'
+ActionCreators = require '../../../exGdriveActionCreators'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
 {Panel, PanelGroup} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 PanelGroup = React.createFactory PanelGroup
-GdriveFilePanel = React.createFactory(require('./GdriveFilePanel.coffee'))
-ConfigSheetsPanels = React.createFactory(require('./ConfigSheetsPanels.coffee'))
+GdriveFilePanel = React.createFactory(require('./GdriveFilePanel'))
+ConfigSheetsPanels = React.createFactory(require('./ConfigSheetsPanels'))
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
-SearchRow = React.createFactory(require('../../../../../react/common/SearchRow.coffee'))
+SearchRow = React.createFactory(require('../../../../../react/common/SearchRow'))
 Button = React.createFactory(require('react-bootstrap').Button)
-Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
 {div, span} = React.DOM
 
 module.exports = React.createClass

@@ -1,9 +1,9 @@
-request = require('../../utils/request.coffee')
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
-ComponentsStore = require '../components/stores/ComponentsStore.coffee'
+request = require('../../utils/request')
+ApplicationStore = require '../../stores/ApplicationStore'
+ComponentsStore = require '../components/stores/ComponentsStore'
 Promise = require('bluebird')
-#gdriveFilesMocked = require './api-mocks/gdFiles.coffee'
-#gdConfigMocked  = require './api-mocks/gdConfig.coffee'
+#gdriveFilesMocked = require './api-mocks/gdFiles'
+#gdConfigMocked  = require './api-mocks/gdConfig'
 createUrl = (path) ->
   baseUrl = ComponentsStore.getComponent('ex-google-drive').get('uri')
   "#{baseUrl}/#{path}"

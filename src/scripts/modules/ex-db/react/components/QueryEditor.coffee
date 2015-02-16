@@ -1,8 +1,8 @@
 React = require 'react'
 
 
-CodeEditor  = React.createFactory(require('../../../../react/common/common.coffee').CodeEditor)
-Check = React.createFactory(require('../../../../react/common/common.coffee').Check)
+CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
+Check = React.createFactory(require('../../../../react/common/common').Check)
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input} = React.DOM
 

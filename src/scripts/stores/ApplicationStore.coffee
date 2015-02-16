@@ -1,8 +1,8 @@
 
-Dispatcher = require('../Dispatcher.coffee')
+Dispatcher = require('../Dispatcher')
 Immutable = require('immutable')
 {Map, List} = Immutable
-Constants = require '../constants/KbcConstants.coffee'
+Constants = require '../constants/KbcConstants'
 
 _store = Map(
   sapiToken: Map()

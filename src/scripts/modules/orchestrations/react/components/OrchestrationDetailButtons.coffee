@@ -1,10 +1,10 @@
 React = require 'react'
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
-OrchestrationsStore = require '../../stores/OrchestrationsStore.coffee'
-RoutesStore = require '../../../../stores/RoutesStore.coffee'
-OrchestrationActiveButton = React.createFactory(require './OrchestrationActiveButton.coffee')
-OrchestrationDeleteButton = React.createFactory(require './OrchestrationDeleteButton.coffee')
-OrchestrationRunButton = React.createFactory(require './OrchestrationRunButton.coffee')
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+OrchestrationsStore = require '../../stores/OrchestrationsStore'
+RoutesStore = require '../../../../stores/RoutesStore'
+OrchestrationActiveButton = React.createFactory(require './OrchestrationActiveButton')
+OrchestrationDeleteButton = React.createFactory(require './OrchestrationDeleteButton')
+OrchestrationRunButton = React.createFactory(require './OrchestrationRunButton')
 
 {button, span} = React.DOM
 

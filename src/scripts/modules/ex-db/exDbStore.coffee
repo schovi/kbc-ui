@@ -1,9 +1,9 @@
 
-Dispatcher = require('../../Dispatcher.coffee')
-constants = require './exDbConstants.coffee'
+Dispatcher = require('../../Dispatcher')
+constants = require './exDbConstants'
 Immutable = require('immutable')
 Map = Immutable.Map
-StoreUtils = require '../../utils/StoreUtils.coffee'
+StoreUtils = require '../../utils/StoreUtils'
 
 _store = Map
   configs: Map()

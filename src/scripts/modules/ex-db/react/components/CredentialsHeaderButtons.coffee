@@ -1,10 +1,10 @@
 React = require 'react'
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
-ExDbStore = require '../../exDbStore.coffee'
-RoutesStore = require '../../../../stores/RoutesStore.coffee'
-ExDbActionCreators = require '../../exDbActionCreators.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+ExDbStore = require '../../exDbStore'
+RoutesStore = require '../../../../stores/RoutesStore'
+ExDbActionCreators = require '../../exDbActionCreators'
 
-Loader = React.createFactory(require '../../../../react/common/Loader.coffee')
+Loader = React.createFactory(require '../../../../react/common/Loader')
 
 {button, span} = React.DOM
 

@@ -1,9 +1,9 @@
-IntalledComponentsStore = require '../components/stores/InstalledComponentsStore.coffee'
+IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 
-ExGanalIndex = require './react/pages/index/Index.coffee'
-#ExGanalActionCreators = require './exGanalActionCreators.coffee'
-#authorizePage = require './react/pages/authorize/authorize.coffee'
-#ExGanalSheetHeaderButtons = require './react/components/SheetHeaderButtons.coffee'
+ExGanalIndex = require './react/pages/index/Index'
+#ExGanalActionCreators = require './exGanalActionCreators'
+#authorizePage = require './react/pages/authorize/authorize'
+#ExGanalSheetHeaderButtons = require './react/components/SheetHeaderButtons'
 
 
 module.exports =

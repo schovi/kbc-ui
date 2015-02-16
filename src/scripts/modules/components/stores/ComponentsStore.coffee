@@ -1,10 +1,10 @@
 
-Dispatcher = require('../../../Dispatcher.coffee')
-Constants = require '../Constants.coffee'
+Dispatcher = require('../../../Dispatcher')
+Constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
 fuzzy = require 'fuzzy'
-StoreUtils = require '../../../utils/StoreUtils.coffee'
+StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
   components: Map()

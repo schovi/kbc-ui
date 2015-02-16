@@ -3,11 +3,11 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
-ComponentSelect = React.createFactory(require './ComponentSelect.coffee')
-ConfigurationSelect = React.createFactory(require './ConfigurationSelect.coffee')
+ComponentSelect = React.createFactory(require './ComponentSelect')
+ConfigurationSelect = React.createFactory(require './ConfigurationSelect')
 
 
-InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore.coffee'
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
 STEP_COMPONENT_SELECT = 'componentSelect'
 STEP_CONFIGURATION_SELECT = 'configurationSelect'

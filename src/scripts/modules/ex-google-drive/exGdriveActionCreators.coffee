@@ -1,8 +1,8 @@
-dispatcher = require '../../Dispatcher.coffee'
-constants = require './exGdriveConstants.coffee'
+dispatcher = require '../../Dispatcher'
+constants = require './exGdriveConstants'
 Promise = require('bluebird')
-exGdriveApi = require './exGdriveApi.coffee'
-exGdriveStore = require './exGdriveStore.coffee'
+exGdriveApi = require './exGdriveApi'
+exGdriveStore = require './exGdriveStore'
 module.exports =
 
   generateExternalLink: (configId) ->

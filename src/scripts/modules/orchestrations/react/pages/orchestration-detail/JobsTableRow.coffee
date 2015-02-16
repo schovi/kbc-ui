@@ -3,11 +3,11 @@ React = require 'react'
 Router = require 'react-router'
 
 Link = React.createFactory(Router.Link)
-Duration = React.createFactory(require '../../../../../react/common/Duration.coffee')
-JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel.coffee')
-date = require '../../../../../utils/date.coffee'
+Duration = React.createFactory(require '../../../../../react/common/Duration')
+JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel')
+date = require '../../../../../utils/date'
 
-ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 {tr, td, div, span} = React.DOM
 

@@ -1,6 +1,6 @@
 React = require 'react'
-ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin.coffee'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 {div, ul, li, a, span} = React.DOM
 

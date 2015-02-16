@@ -1,15 +1,15 @@
 React = require 'react'
 Immutable = require 'immutable'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
-OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
+OrchestrationsActionCreators = require '../../../ActionCreators'
+OrchestrationStore = require '../../../stores/OrchestrationsStore'
 
-OrchestrationRow = React.createFactory(require './OrchestrationRow.coffee')
-SearchRow = React.createFactory(require '../../../../../react/common/SearchRow.coffee')
-RefreshIcon = React.createFactory(require '../../../../../react/common/RefreshIcon.coffee')
-ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+OrchestrationRow = React.createFactory(require './OrchestrationRow')
+SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
+RefreshIcon = React.createFactory(require '../../../../../react/common/RefreshIcon')
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 
 {div, span, strong} = React.DOM

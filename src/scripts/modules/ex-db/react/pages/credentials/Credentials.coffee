@@ -1,14 +1,14 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore.coffee'
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+ExDbStore = require '../../../exDbStore'
+ExDbActionCreators = require '../../../exDbActionCreators'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
-CredentialsForm = React.createFactory(require './CredentialsForm.coffee')
-SSLForm = React.createFactory(require './SSLForm.coffee')
-FixedIP = React.createFactory(require './FixedIP.coffee')
+CredentialsForm = React.createFactory(require './CredentialsForm')
+SSLForm = React.createFactory(require './SSLForm')
+FixedIP = React.createFactory(require './FixedIP')
 
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)

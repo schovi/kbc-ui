@@ -1,5 +1,5 @@
 React = require 'react'
-common = require '../../../../../react/common/common.coffee'
+common = require '../../../../../react/common/common'
 
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)

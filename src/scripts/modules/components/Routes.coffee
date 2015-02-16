@@ -1,15 +1,15 @@
-createComponentsIndex = require './react/pages/ComponentsIndex.coffee'
-createNewComponentPage = require './react/pages/NewComponent.coffee'
-createNewComponentButton = require './react/components/NewComponentButton.coffee'
+createComponentsIndex = require './react/pages/ComponentsIndex'
+createNewComponentPage = require './react/pages/NewComponent'
+createNewComponentButton = require './react/components/NewComponentButton'
 
 
-ComponentReloaderButton = require './react/components/ComponentsReloaderButton.coffee'
-IntalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
-InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators.coffee'
+ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
+IntalledComponentsStore = require './stores/InstalledComponentsStore'
+InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators'
 
-exDbRoutes = require '../ex-db/exDbRoutes.coffee'
-exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes.coffee'
-exGanalRoutes = require '../ex-google-analytics/exGanalRoutes.coffee'
+exDbRoutes = require '../ex-db/exDbRoutes'
+exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
+exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 routes =
 
   extractors:

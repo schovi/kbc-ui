@@ -1,6 +1,6 @@
 React = require 'react'
 
-NewOrchestrationModal = React.createFactory(require '../modals/NewOrchestration.coffee')
+NewOrchestrationModal = React.createFactory(require '../modals/NewOrchestration')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
 {button, span} = React.DOM

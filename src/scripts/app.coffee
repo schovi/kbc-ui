@@ -6,16 +6,16 @@ Promise = require 'bluebird'
 _ = require 'underscore'
 Immutable = require 'immutable'
 
-routes = require './routes.coffee'
-createReactRouterRoutes = require './utils/createReactRouterRoutes.coffee'
-Timer = require './utils/Timer.coffee'
+routes = require './routes'
+createReactRouterRoutes = require './utils/createReactRouterRoutes'
+Timer = require './utils/Timer'
 
-ApplicationActionCreators = require './actions/ApplicationActionCreators.coffee'
-RouterActionCreators = require './actions/RouterActionCreators.coffee'
+ApplicationActionCreators = require './actions/ApplicationActionCreators'
+RouterActionCreators = require './actions/RouterActionCreators'
 
 
-RoutesStore = require './stores/RoutesStore.coffee'
-initializeData = require './initializeData.coffee'
+RoutesStore = require './stores/RoutesStore'
+initializeData = require './initializeData'
 
 ###
   Bootstrap and start whole application
@@ -116,4 +116,4 @@ global.kbcApp =
     Application parts used on non SPA pages
   ###
   parts:
-    ProjectSelect: require './react/layout/project-select/ProjectSelect.coffee'
+    ProjectSelect: require './react/layout/project-select/ProjectSelect'

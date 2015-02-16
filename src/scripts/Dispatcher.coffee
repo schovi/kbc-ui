@@ -1,6 +1,6 @@
 assign = require 'object-assign'
 Dispatcher = require('flux').Dispatcher
-KbcConstants = require('./constants/KbcConstants.coffee')
+KbcConstants = require('./constants/KbcConstants')
 
 PayloadSources = KbcConstants.PayloadSources
 

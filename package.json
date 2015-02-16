@@ -2,7 +2,7 @@
   "name": "kbc-ui",
   "version": "0.0.0",
   "description": "Keboola Connection UI",
-  "main": "src/scripts/app.coffee",
+  "main": "src/scripts/app",
   "dependencies": {
     "flux": "^2.0.0",
     "object-assign": "^1.0.0",

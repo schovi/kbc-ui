@@ -1,10 +1,10 @@
 
 
-dispatcher = require '../../Dispatcher.coffee'
-constants = require './Constants.coffee'
-orchestrationsApi = require './OrchestrationsApi.coffee'
-OrchestrationStore = require './stores/OrchestrationsStore.coffee'
-OrchestrationJobsStore = require './stores/OrchestrationJobsStore.coffee'
+dispatcher = require '../../Dispatcher'
+constants = require './Constants'
+orchestrationsApi = require './OrchestrationsApi'
+OrchestrationStore = require './stores/OrchestrationsStore'
+OrchestrationJobsStore = require './stores/OrchestrationJobsStore'
 Promise = require 'bluebird'
 
 

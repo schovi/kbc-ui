@@ -5,14 +5,14 @@ Link = require('react-router').Link
 console.log 'Link', Link
 
 
-ApplicationActionCreators = require '../../actions/ApplicationActionCreators.coffee'
-JobsActionCreators = require '../../modules/jobs/ActionCreators.coffee'
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
+JobsActionCreators = require '../../modules/jobs/ActionCreators'
 
-dispatcher = require '../../Dispatcher.coffee'
-constants = require './Constants.coffee'
-componentRunner = require './ComponentRunner.coffee'
-InstalledComponentsStore = require './stores/InstalledComponentsStore.coffee'
-installedComponentsApi = require './InstalledComponentsApi.coffee'
+dispatcher = require '../../Dispatcher'
+constants = require './Constants'
+componentRunner = require './ComponentRunner'
+InstalledComponentsStore = require './stores/InstalledComponentsStore'
+installedComponentsApi = require './InstalledComponentsApi'
 
 Pokus = React.createClass
   render: ->

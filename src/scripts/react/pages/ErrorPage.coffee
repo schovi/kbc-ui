@@ -1,7 +1,7 @@
 React = require 'react'
 
-createStoreMixin = require '../mixins/createStoreMixin.coffee'
-RoutesStore = require '../../stores/RoutesStore.coffee'
+createStoreMixin = require '../mixins/createStoreMixin'
+RoutesStore = require '../../stores/RoutesStore'
 Alert = React.createFactory(require('react-bootstrap').Alert)
 
 {div, p} = React.DOM

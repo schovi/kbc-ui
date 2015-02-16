@@ -1,16 +1,16 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
-ExGdriveStore = require '../../exGdriveStore.coffee'
-RoutesStore = require '../../../../stores/RoutesStore.coffee'
-ExGdriveActionCreators = require '../../exGdriveActionCreators.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+ExGdriveStore = require '../../exGdriveStore'
+RoutesStore = require '../../../../stores/RoutesStore'
+ExGdriveActionCreators = require '../../exGdriveActionCreators'
 
-Loader = React.createFactory(require '../../../../react/common/Loader.coffee')
+Loader = React.createFactory(require '../../../../react/common/Loader')
 
 {button, span} = React.DOM
 
 module.exports = React.createClass
-  displayName: 'SaveSelectedSheetsHeader.coffee'
+  displayName: 'SaveSelectedSheetsHeader'
   mixins: [createStoreMixin(ExGdriveStore)]
 
   getStateFromStores: ->

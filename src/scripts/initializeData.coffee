@@ -1,7 +1,7 @@
 _ = require 'underscore'
-ComponentsActionCreators = require './modules/components/ComponentsActionCreators.coffee'
-InstalledComponentsActionCreators = require './modules/components/InstalledComponentsActionCreators.coffee'
-OrchestrationsActionCreators = require './modules/orchestrations/ActionCreators.coffee'
+ComponentsActionCreators = require './modules/components/ComponentsActionCreators'
+InstalledComponentsActionCreators = require './modules/components/InstalledComponentsActionCreators'
+OrchestrationsActionCreators = require './modules/orchestrations/ActionCreators'
 
 module.exports = (initialData) ->
   _.forEach(initialData, (data, name) ->

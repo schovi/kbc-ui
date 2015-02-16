@@ -1,10 +1,10 @@
 
-request = require '../../utils/request.coffee'
+request = require '../../utils/request'
 _ = require 'underscore'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
-ComponentsStore = require '../components/stores/ComponentsStore.coffee'
+ApplicationStore = require '../../stores/ApplicationStore'
+ComponentsStore = require '../components/stores/ComponentsStore'
 
-jobPoller = require '../../utils/jobPoller.coffee'
+jobPoller = require '../../utils/jobPoller'
 
 createUrl = (path) ->
   ComponentsStore.getComponent('ex-db').get('uri') + '/' + path

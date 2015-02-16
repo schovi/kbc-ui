@@ -2,9 +2,9 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
-InstalledComponentsStore  = require('../../../../components/stores/InstalledComponentsStore.coffee')
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+ComponentsStore  = require('../../../../components/stores/ComponentsStore')
+InstalledComponentsStore  = require('../../../../components/stores/InstalledComponentsStore')
 
 {div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
 TransformationsIndex = React.createClass

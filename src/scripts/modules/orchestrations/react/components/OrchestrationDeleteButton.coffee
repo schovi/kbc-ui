@@ -1,11 +1,11 @@
 React = require 'react'
-OrchestrationActionCreators = require '../../ActionCreators.coffee'
+OrchestrationActionCreators = require '../../ActionCreators'
 
 Router = require 'react-router'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
-Confirm = React.createFactory(require '../../../../react/common/Confirm.coffee')
+Confirm = React.createFactory(require '../../../../react/common/Confirm')
 
 {button, span, i} = React.DOM
 

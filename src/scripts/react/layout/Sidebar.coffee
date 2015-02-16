@@ -1,8 +1,8 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
 State = require('react-router').State
-RoutesStore = require '../../stores/RoutesStore.coffee'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+RoutesStore = require '../../stores/RoutesStore'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 _ = require 'underscore'
 

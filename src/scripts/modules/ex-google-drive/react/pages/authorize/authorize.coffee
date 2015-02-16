@@ -1,17 +1,17 @@
 React = require('react')
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-ExGdriveStore = require '../../../exGdriveStore.coffee'
-ComponentsStore = require '../../../../components/stores/ComponentsStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
-ApplicationStore = require '../../../../../stores/ApplicationStore.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+ExGdriveStore = require '../../../exGdriveStore'
+ComponentsStore = require '../../../../components/stores/ComponentsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
-ActionCreators = require '../../../exGdriveActionCreators.coffee'
+ActionCreators = require '../../../exGdriveActionCreators'
 
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
-Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
 {div, span, form } = React.DOM
 
 module.exports = React.createClass

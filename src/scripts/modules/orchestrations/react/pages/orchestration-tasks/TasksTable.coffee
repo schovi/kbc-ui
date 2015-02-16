@@ -1,5 +1,5 @@
 React = require 'react'
-TasksTableRow = React.createFactory(require './TasksTableRow.coffee')
+TasksTableRow = React.createFactory(require './TasksTableRow')
 
 
 

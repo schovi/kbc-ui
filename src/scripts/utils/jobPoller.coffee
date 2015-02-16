@@ -1,6 +1,6 @@
 
 Promise = require 'bluebird'
-request = require './request.coffee'
+request = require './request'
 
 _pollStatuses = [
   'processing'

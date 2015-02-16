@@ -1,12 +1,12 @@
 React = require 'react'
 
 
-DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon.coffee')
-FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon.coffee')
-JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle.coffee')
+DurationWithIcon = React.createFactory(require '../../../../../react/common/DurationWithIcon')
+FinishedWithIcon = React.createFactory(require '../../../../../react/common/FinishedWithIcon')
+JobStatusCircle = React.createFactory(require '../../../../../react/common/JobStatusCircle')
 Link = React.createFactory(require('react-router').Link)
 
-ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 { a, span, div, strong, em} = React.DOM
 

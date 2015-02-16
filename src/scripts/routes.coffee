@@ -1,12 +1,12 @@
 React = require 'react'
 Router = require 'react-router'
-App = require './react/layout/App.coffee'
-ErrorPage = require './react/pages/ErrorPage.coffee'
+App = require './react/layout/App'
+ErrorPage = require './react/pages/ErrorPage'
 
-componentsRoutes = require './modules/components/Routes.coffee'
-orchestrationsRoutes = require './modules/orchestrations/Routes.coffee'
-jobsRoutes = require './modules/jobs/Routes.coffee'
-transformationsRoutes = require './modules/transformations/Routes.coffee'
+componentsRoutes = require './modules/components/Routes'
+orchestrationsRoutes = require './modules/orchestrations/Routes'
+jobsRoutes = require './modules/jobs/Routes'
+transformationsRoutes = require './modules/transformations/Routes'
 
 Transformations = React.createClass
   displayName: 'Transformations'

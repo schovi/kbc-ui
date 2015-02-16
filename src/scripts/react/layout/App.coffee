@@ -1,17 +1,17 @@
 React = require 'react'
 RouteHandler = React.createFactory(require('react-router').RouteHandler)
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+ApplicationStore = require '../../stores/ApplicationStore'
 
-Header = React.createFactory(require '././Header.coffee')
-Sidebar = React.createFactory(require '././Sidebar.coffee')
-Notifications = React.createFactory(require './Notifications.coffee')
-ErrorPage = React.createFactory(require './../pages/ErrorPage.coffee')
-LoadingPage = React.createFactory(require './../pages/LoadingPage.coffee')
-ProjectSelect = React.createFactory(require './project-select/ProjectSelect.coffee')
-PageTitle = React.createFactory(require './PageTitle.coffee')
+Header = React.createFactory(require '././Header')
+Sidebar = React.createFactory(require '././Sidebar')
+Notifications = React.createFactory(require './Notifications')
+ErrorPage = React.createFactory(require './../pages/ErrorPage')
+LoadingPage = React.createFactory(require './../pages/LoadingPage')
+ProjectSelect = React.createFactory(require './project-select/ProjectSelect')
+PageTitle = React.createFactory(require './PageTitle')
 
-User = React.createFactory(require './User.coffee')
-UserLinks = React.createFactory(require './UserLinks.coffee')
+User = React.createFactory(require './User')
+UserLinks = React.createFactory(require './UserLinks')
 
 {div} = React.DOM
 

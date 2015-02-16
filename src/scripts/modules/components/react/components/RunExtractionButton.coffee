@@ -1,5 +1,5 @@
 React = require 'react'
-InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
+InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Modal = React.createFactory(require('react-bootstrap').Modal)

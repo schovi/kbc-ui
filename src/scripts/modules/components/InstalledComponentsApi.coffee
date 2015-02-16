@@ -1,6 +1,6 @@
 
-request = require '../../utils/request.coffee'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+request = require '../../utils/request'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 createUrl = (path) ->
   baseUrl = ApplicationStore.getSapiUrl()

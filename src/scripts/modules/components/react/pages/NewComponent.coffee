@@ -1,11 +1,11 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon.coffee')
-SearchRow = React.createFactory(require '../../../../react/common/SearchRow.coffee')
-ComponentsStore = require '../../stores/ComponentsStore.coffee'
-ComponentsActionCreators = require '../../ComponentsActionCreators.coffee'
+ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
+SearchRow = React.createFactory(require '../../../../react/common/SearchRow')
+ComponentsStore = require '../../stores/ComponentsStore'
+ComponentsActionCreators = require '../../ComponentsActionCreators'
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM
 

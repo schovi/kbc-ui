@@ -1,10 +1,10 @@
 React = require('react')
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
-DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton.coffee')
-Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton.coffee')
+DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
 
 {i, span, div, a, strong} = React.DOM
 

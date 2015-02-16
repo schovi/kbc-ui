@@ -1,10 +1,10 @@
 React = require 'react'
-createStoreMixin = require '../mixins/createStoreMixin.coffee'
+createStoreMixin = require '../mixins/createStoreMixin'
 
-RoutesStore = require '../../stores/RoutesStore.coffee'
+RoutesStore = require '../../stores/RoutesStore'
 
 Link = React.createFactory(require('react-router').Link)
-RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator.coffee')
+RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator')
 
 {div, nav, span, a, h1} = React.DOM
 

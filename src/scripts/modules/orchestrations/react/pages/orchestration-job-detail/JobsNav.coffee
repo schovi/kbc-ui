@@ -1,5 +1,5 @@
 React = require 'react'
-JobsNavRow = React.createFactory(require './JobsNavRow.coffee')
+JobsNavRow = React.createFactory(require './JobsNavRow')
 
 JobsNav = React.createClass
   displayName: 'JobsNav'

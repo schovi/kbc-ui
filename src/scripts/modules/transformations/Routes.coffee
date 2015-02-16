@@ -1,7 +1,8 @@
 React = require 'react'
-TransformationsIndex = require('./react/pages/transformations-index/TransformationsIndex.coffee')
-TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket.coffee')
-InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators.coffee')
+TransformationsIndex = require('./react/pages/transformations-index/TransformationsIndex')
+TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket')
+InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
+
 
 routes =
       name: 'transformations'

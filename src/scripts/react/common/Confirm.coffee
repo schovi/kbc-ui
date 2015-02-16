@@ -1,7 +1,7 @@
 React = require 'react'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-ConfirmModal = React.createFactory(require './ConfirmModal.coffee')
+ConfirmModal = React.createFactory(require './ConfirmModal')
 
 Confirm = React.createClass
   displayName: 'Confirm'

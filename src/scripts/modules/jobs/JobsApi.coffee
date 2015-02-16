@@ -1,6 +1,6 @@
-request = require('../../utils/request.coffee')
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
-ComponentsStore = require '../components/stores/ComponentsStore.coffee'
+request = require('../../utils/request')
+ApplicationStore = require '../../stores/ApplicationStore'
+ComponentsStore = require '../components/stores/ComponentsStore'
 
 createUrl = (path) ->
   baseUrl = ComponentsStore.getComponent('queue').get('uri')

@@ -2,7 +2,7 @@ React = require 'react'
 fuzzy = require 'fuzzy'
 _ = require 'underscore'
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-NewProjectModal = React.createFactory(require '../NewProjectModal.coffee')
+NewProjectModal = React.createFactory(require '../NewProjectModal')
 
 {div, ul, li, a, span, input} = React.DOM
 

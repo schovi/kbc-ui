@@ -1,16 +1,16 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-ExGanalStore = require '../../../exGanalStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+ExGanalStore = require '../../../exGanalStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
-#RunExtraction = React.createFactory(require '../../components/RunExtraction.coffee')
+#RunExtraction = React.createFactory(require '../../components/RunExtraction')
 
-ComponentDescription = require '../../../../components/react/components/ComponentDescription.coffee'
+ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
 
-#ItemsTable = React.createFactory(require './ItemsTable.coffee')
+#ItemsTable = React.createFactory(require './ItemsTable')
 
 {strong, br, ul, li, div, span, i} = React.DOM
 

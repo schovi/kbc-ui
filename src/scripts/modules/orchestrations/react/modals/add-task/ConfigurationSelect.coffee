@@ -1,6 +1,6 @@
 React = require 'react'
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon.coffee'))
-ComponentName = React.createFactory(require('../../../../../react/common/ComponentName.coffee'))
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+ComponentName = React.createFactory(require('../../../../../react/common/ComponentName'))
 
 {div, h2, a, ul, li, i} = React.DOM
 

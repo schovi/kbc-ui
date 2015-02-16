@@ -1,12 +1,12 @@
 React = require 'react'
 Map = require('immutable').Map
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+ExDbStore = require '../../../exDbStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
+ExDbActionCreators = require '../../../exDbActionCreators'
 
-QueryEditor = React.createFactory(require '../../components/QueryEditor.coffee')
+QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM
 

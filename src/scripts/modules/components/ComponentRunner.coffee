@@ -1,8 +1,8 @@
 
-ComponentsStore = require './stores/ComponentsStore.coffee'
-ApplicationStore = require '../../stores/ApplicationStore.coffee'
+ComponentsStore = require './stores/ComponentsStore'
+ApplicationStore = require '../../stores/ApplicationStore'
 
-request = require '../../utils/request.coffee'
+request = require '../../utils/request'
 
 _getComponentUrl = (componentId) ->
   ComponentsStore.getComponent(componentId).get 'uri'

@@ -1,11 +1,11 @@
 React = require 'react'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
-Loader = React.createFactory(require '../../../../../react/common/Loader.coffee')
-Check = React.createFactory(require('../../../../../react/common/common.coffee').Check)
-QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton.coffee'))
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton.coffee')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
+Check = React.createFactory(require('../../../../../react/common/common').Check)
+QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
 
 {span, div, a, button, i} = React.DOM
 

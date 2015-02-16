@@ -1,6 +1,6 @@
 React = require 'react'
 
-TreeNode = React.createFactory(require './TreeNode.coffee')
+TreeNode = React.createFactory(require './TreeNode')
 
 Tree = React.createClass
   displayName: 'Tree'

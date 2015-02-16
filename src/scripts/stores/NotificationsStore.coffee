@@ -1,9 +1,9 @@
 
-Dispatcher = require('../Dispatcher.coffee')
+Dispatcher = require('../Dispatcher')
 Immutable = require('immutable')
 {Map, List} = Immutable
-Constants = require '../constants/KbcConstants.coffee'
-StoreUtils = require '../utils/StoreUtils.coffee'
+Constants = require '../constants/KbcConstants'
+StoreUtils = require '../utils/StoreUtils'
 
 _store = Map
   notifications: List()

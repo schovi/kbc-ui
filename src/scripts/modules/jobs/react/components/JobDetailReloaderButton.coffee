@@ -1,10 +1,10 @@
 React = require('react')
-createStoreMixin = require('../../../../react/mixins/createStoreMixin.coffee')
-JobsStore = require('../../stores/JobsStore.coffee')
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon.coffee')
-ActionCreators = require('../../ActionCreators.coffee')
-RoutesStore = require('../../../../stores/RoutesStore.coffee')
-JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel.coffee')
+createStoreMixin = require('../../../../react/mixins/createStoreMixin')
+JobsStore = require('../../stores/JobsStore')
+RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+ActionCreators = require('../../ActionCreators')
+RoutesStore = require('../../../../stores/RoutesStore')
+JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel')
 
 JobDetailReloaderButton = React.createClass
   displayName: 'JobDetailReloaderButton'

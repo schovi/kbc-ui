@@ -1,9 +1,9 @@
 React = require 'react'
-ExGdriveActionCreators = require '../../exGdriveActionCreators.coffee'
+ExGdriveActionCreators = require '../../exGdriveActionCreators'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
-Confirm = React.createFactory(require '../../../../react/common/Confirm.coffee')
+Confirm = React.createFactory(require '../../../../react/common/Confirm')
 
 {button, span, i} = React.DOM
 

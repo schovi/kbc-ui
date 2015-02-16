@@ -1,11 +1,11 @@
 React = require 'react'
 List = require('immutable').List
 
-JobTasks = React.createFactory(require './JobTasks.coffee')
-Duration = React.createFactory(require '../../../../../react/common/Duration.coffee')
-JobStatusLabel = React.createFactory(require('../../../../../react/common/common.coffee').JobStatusLabel)
+JobTasks = React.createFactory(require './JobTasks')
+Duration = React.createFactory(require '../../../../../react/common/Duration')
+JobStatusLabel = React.createFactory(require('../../../../../react/common/common').JobStatusLabel)
 
-date = require '../../../../../utils/date.coffee'
+date = require '../../../../../utils/date'
 {div, h2, small, span, strong} = React.DOM
 
 JobDetailOverview = React.createClass

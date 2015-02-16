@@ -1,8 +1,8 @@
-dispatcher = require('../../Dispatcher.coffee')
-JobsStore = require('./stores/JobsStore.coffee')
+dispatcher = require('../../Dispatcher')
+JobsStore = require('./stores/JobsStore')
 Promise = require('bluebird')
-constants = require('./Constants.coffee')
-jobsApi = require('./JobsApi.coffee')
+constants = require('./Constants')
+jobsApi = require('./JobsApi')
 
 
 module.exports =

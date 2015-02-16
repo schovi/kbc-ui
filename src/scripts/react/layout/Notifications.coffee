@@ -1,7 +1,7 @@
 React = require 'react'
-createStoreMixin = require '../../react/mixins/createStoreMixin.coffee'
-NotificationsStore = require '../../stores/NotificationsStore.coffee'
-ApplicationActionCreators = require '../../actions/ApplicationActionCreators.coffee'
+createStoreMixin = require '../../react/mixins/createStoreMixin'
+NotificationsStore = require '../../stores/NotificationsStore'
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 
 Alert = React.createFactory(require('react-bootstrap').Alert)
 

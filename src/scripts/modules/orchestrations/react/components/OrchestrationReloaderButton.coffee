@@ -1,12 +1,12 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-OrchestrationsActionCreators = require '../../ActionCreators.coffee'
-OrchestrationsStore = require '../../stores/OrchestrationsStore.coffee'
-RoutesStore = require '../../../../stores/RoutesStore.coffee'
+OrchestrationsActionCreators = require '../../ActionCreators'
+OrchestrationsStore = require '../../stores/OrchestrationsStore'
+RoutesStore = require '../../../../stores/RoutesStore'
 
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon.coffee')
+RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
 
 
 

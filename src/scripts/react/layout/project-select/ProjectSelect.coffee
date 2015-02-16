@@ -3,7 +3,7 @@ React = require 'react'
 {div, button, span} = React.DOM
 
 
-Dropdown = React.createFactory(require './Dropdown.coffee')
+Dropdown = React.createFactory(require './Dropdown')
 DropdownStateMixin = require('react-bootstrap').DropdownStateMixin
 
 module.exports = React.createClass

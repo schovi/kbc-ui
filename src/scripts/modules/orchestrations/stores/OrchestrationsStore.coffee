@@ -1,11 +1,11 @@
 
-Dispatcher = require '../../../Dispatcher.coffee'
+Dispatcher = require '../../../Dispatcher'
 Immutable = require('immutable')
 Map = Immutable.Map
 List = Immutable.List
-Constants = require '../Constants.coffee'
+Constants = require '../Constants'
 fuzzy = require 'fuzzy'
-StoreUtils = require '../../../utils/StoreUtils.coffee'
+StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
   orchestrationsById: Map()

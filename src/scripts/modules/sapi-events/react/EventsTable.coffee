@@ -1,7 +1,7 @@
 React = require 'react'
-TableRow = React.createFactory(require './EventsTableRow.coffee')
-RefreshIcon = React.createFactory(require('../../../react/common/common.coffee').RefreshIcon)
-PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
+TableRow = React.createFactory(require './EventsTableRow')
+RefreshIcon = React.createFactory(require('../../../react/common/common').RefreshIcon)
+PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
 {table, thead, tbody, tr, th, td} = React.DOM
 

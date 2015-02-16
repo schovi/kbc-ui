@@ -1,17 +1,17 @@
 React = require 'react'
 List = require('immutable').List
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
-OrchestrationsActionCreators = require '../../../ActionCreators.coffee'
-OrchestrationStore = require '../../../stores/OrchestrationsStore.coffee'
-OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+OrchestrationsActionCreators = require '../../../ActionCreators'
+OrchestrationStore = require '../../../stores/OrchestrationsStore'
+OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
 # components
-JobsNav = React.createFactory(require './JobsNav.coffee')
-JobOverview = React.createFactory(require './Overview.coffee')
-Events = React.createFactory(require '../../../../sapi-events/react/Events.coffee')
+JobsNav = React.createFactory(require './JobsNav')
+JobOverview = React.createFactory(require './Overview')
+Events = React.createFactory(require '../../../../sapi-events/react/Events')
 
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)

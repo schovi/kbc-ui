@@ -1,16 +1,16 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
 Immutable = require 'immutable'
-PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
+PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 _ = require 'underscore'
 
 {div} = React.DOM
 
-EventService = require('../EventService.coffee')
+EventService = require('../EventService')
 
-SearchRow = React.createFactory(require('../../../react/common/common.coffee').SearchRow)
-EventsTable = React.createFactory(require './EventsTable.coffee')
-EventDetail = React.createFactory(require './EventDetail.coffee')
+SearchRow = React.createFactory(require('../../../react/common/common').SearchRow)
+EventsTable = React.createFactory(require './EventsTable')
+EventDetail = React.createFactory(require './EventDetail')
 
 Events = React.createClass
   displayName: 'Events'

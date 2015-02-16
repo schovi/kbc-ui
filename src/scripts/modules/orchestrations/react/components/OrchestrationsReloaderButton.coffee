@@ -1,10 +1,10 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-OrchestrationsActionCreators = require '../../ActionCreators.coffee'
-OrchestrationsStore = require '../../stores/OrchestrationsStore.coffee'
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon.coffee')
+OrchestrationsActionCreators = require '../../ActionCreators'
+OrchestrationsStore = require '../../stores/OrchestrationsStore'
+RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
 
 OrchestrationsReloaderButton = React.createClass
   displayName: 'OrchestrationsReloaderButton'

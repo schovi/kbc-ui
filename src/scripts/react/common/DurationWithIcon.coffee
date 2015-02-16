@@ -1,5 +1,5 @@
 React = require 'react'
-Duration = React.createFactory(require './Duration.coffee')
+Duration = React.createFactory(require './Duration')
 
 {span, i} = React.DOM
 

@@ -1,14 +1,14 @@
 
-IntalledComponentsStore = require '../components/stores/InstalledComponentsStore.coffee'
+IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 
-ExDbActionCreators = require '../ex-db/exDbActionCreators.coffee'
-ExDbIndex = require '../ex-db/react/pages/index/Index.coffee'
-ExDbCredentials = require '../ex-db/react/pages/credentials/Credentials.coffee'
-ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail.coffee'
-ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery.coffee'
-ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons.coffee'
-ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons.coffee'
-ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons.coffee'
+ExDbActionCreators = require '../ex-db/exDbActionCreators'
+ExDbIndex = require '../ex-db/react/pages/index/Index'
+ExDbCredentials = require '../ex-db/react/pages/credentials/Credentials'
+ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail'
+ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
+ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'
+ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons'
+ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
 
 module.exports =
   name: 'ex-db'

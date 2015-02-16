@@ -1,5 +1,5 @@
 React = require 'react'
-Loader = React.createFactory(require '../common/Loader.coffee')
+Loader = React.createFactory(require '../common/Loader')
 
 ###
   Loading indicator is shown after few milisecond. Loader is not required for fast transitions.

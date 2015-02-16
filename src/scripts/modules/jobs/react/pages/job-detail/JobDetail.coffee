@@ -1,14 +1,14 @@
 React = require('react')
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
-JobsStore = require('../../../stores/JobsStore.coffee')
-ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
-Events = React.createFactory(require '../../../../sapi-events/react/Events.coffee')
-ComponentName = React.createFactory(require '../../../../../react/common/ComponentName.coffee')
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon.coffee'))
-Duration = React.createFactory(require('../../../../../react/common/Duration.coffee'))
-date = require '../../../../../utils/date.coffee'
-Tree = require '../../../../../react/common/Tree.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+RoutesStore = require '../../../../../stores/RoutesStore'
+JobsStore = require('../../../stores/JobsStore')
+ComponentsStore  = require('../../../../components/stores/ComponentsStore')
+Events = React.createFactory(require '../../../../sapi-events/react/Events')
+ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+Duration = React.createFactory(require('../../../../../react/common/Duration'))
+date = require '../../../../../utils/date'
+Tree = require '../../../../../react/common/Tree'
 {strong,div, h2, span, h4, section, p} = React.DOM
 
 JobDetail = React.createClass

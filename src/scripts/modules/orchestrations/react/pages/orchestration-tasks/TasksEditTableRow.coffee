@@ -1,13 +1,13 @@
 React = require 'react'
 Immutable = require 'immutable'
-common = require '../../../../../react/common/common.coffee'
+common = require '../../../../../react/common/common'
 _ = require 'underscore'
 
 DragDropMixin = require('react-dnd').DragDropMixin
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
-TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit.coffee')
+TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(common.Tree)

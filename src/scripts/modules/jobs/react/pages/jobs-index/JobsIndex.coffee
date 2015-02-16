@@ -2,19 +2,19 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-JobsStore = require('../../../stores/JobsStore.coffee')
-ComponentsStore  = require('../../../../components/stores/ComponentsStore.coffee')
-ActionCreators = require('../../../ActionCreators.coffee')
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+JobsStore = require('../../../stores/JobsStore')
+ComponentsStore  = require('../../../../components/stores/ComponentsStore')
+ActionCreators = require('../../../ActionCreators')
 
 
-QueryRow = React.createFactory(require('./QueryRow.coffee'))
+QueryRow = React.createFactory(require('./QueryRow'))
 
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon.coffee'))
-JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel.coffee')
-Duration = React.createFactory(require('../../../../../react/common/Duration.coffee'))
-ComponentName = React.createFactory(require '../../../../../react/common/ComponentName.coffee')
-date = require '../../../../../utils/date.coffee'
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel')
+Duration = React.createFactory(require('../../../../../react/common/Duration'))
+ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
+date = require '../../../../../utils/date'
 
 {div, span,input, strong, form, button} = React.DOM
 JobsIndex = React.createClass

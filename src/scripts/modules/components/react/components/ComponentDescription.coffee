@@ -1,10 +1,10 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../react/mixins/createStoreMixin.coffee'
-InstalledComponentsStore = require '../../stores/InstalledComponentsStore.coffee'
-InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators.coffee'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
+InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
-InlineEditArea = React.createFactory(require '../../../../react/common/InlineEditArea.coffee')
+InlineEditArea = React.createFactory(require '../../../../react/common/InlineEditArea')
 
 {button, span} = React.DOM
 

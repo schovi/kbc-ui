@@ -1,5 +1,5 @@
 React = require 'react'
-TasksEditTableRow = React.createFactory(require './TasksEditTableRow.coffee')
+TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 
 {table, thead, tbody, th, td, tr} = React.DOM
 

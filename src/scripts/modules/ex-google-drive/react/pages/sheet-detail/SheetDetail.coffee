@@ -1,8 +1,8 @@
 React = require('react')
-ExGdriveStore = require '../../../exGdriveStore.coffee'
-ActionCreators = require '../../../exGdriveActionCreators.coffee'
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+ExGdriveStore = require '../../../exGdriveStore'
+ActionCreators = require '../../../exGdriveActionCreators'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+RoutesStore = require '../../../../../stores/RoutesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
 
 

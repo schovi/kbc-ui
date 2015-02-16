@@ -3,7 +3,7 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
-OrchestrationActionCreators = require '../../ActionCreators.coffee'
+OrchestrationActionCreators = require '../../ActionCreators'
 
 {div, p, strong} = React.DOM
 

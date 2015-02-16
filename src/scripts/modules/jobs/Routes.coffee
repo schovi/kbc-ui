@@ -1,11 +1,11 @@
 React = require 'react'
-JobDetail = require('./react/pages/job-detail/JobDetail.coffee')
-JobsIndex = require('./react/pages/jobs-index/JobsIndex.coffee')
-JobsActionCreators = require('./ActionCreators.coffee')
-JobsReloaderButton = require('./react/components/JobsReloaderButton.coffee')
-JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton.coffee')
-JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel.coffee')
-JobsStore = require('./stores/JobsStore.coffee')
+JobDetail = require('./react/pages/job-detail/JobDetail')
+JobsIndex = require('./react/pages/jobs-index/JobsIndex')
+JobsActionCreators = require('./ActionCreators')
+JobsReloaderButton = require('./react/components/JobsReloaderButton')
+JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton')
+JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel')
+JobsStore = require('./stores/JobsStore')
 
 routes =
       name: 'jobs'

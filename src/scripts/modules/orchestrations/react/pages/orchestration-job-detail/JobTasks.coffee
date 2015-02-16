@@ -1,19 +1,19 @@
 React = require 'react'
 
-ComponentsStore = require '../../../../components/stores/ComponentsStore.coffee'
+ComponentsStore = require '../../../../components/stores/ComponentsStore'
 {span, div, strong, h5} = React.DOM
 {Panel, PanelGroup} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 
-kbCommon = require '../../../../../react/common/common.coffee'
+kbCommon = require '../../../../../react/common/common'
 ComponentIcon = React.createFactory(kbCommon.ComponentIcon)
 ComponentName = React.createFactory(kbCommon.ComponentName)
 Duration = React.createFactory(kbCommon.Duration)
 Tree = React.createFactory(kbCommon.Tree)
 JobStatusLabel = React.createFactory(kbCommon.JobStatusLabel)
 
-date = require '../../../../../utils/date.coffee'
+date = require '../../../../../utils/date'
 
 JobTasks = React.createClass
   displayName: 'JobTasks'

@@ -1,5 +1,5 @@
 React = require 'react'
-ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin.coffee'
+ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
 
 {div, img, strong, span} = React.DOM
 

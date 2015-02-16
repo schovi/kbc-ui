@@ -1,9 +1,9 @@
-Dispatcher = require('../../Dispatcher.coffee')
-Constants = require './exGdriveConstants.coffee'
+Dispatcher = require('../../Dispatcher')
+Constants = require './exGdriveConstants'
 Immutable = require('immutable')
 Map = Immutable.Map
 Iterable = Immutable.Iterable
-StoreUtils = require '../../utils/StoreUtils.coffee'
+StoreUtils = require '../../utils/StoreUtils'
 
 
 _store = Map(

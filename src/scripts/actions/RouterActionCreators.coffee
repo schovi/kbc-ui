@@ -1,5 +1,5 @@
-dispatcher = require '../Dispatcher.coffee'
-constants = require '../constants/KbcConstants.coffee'
+dispatcher = require '../Dispatcher'
+constants = require '../constants/KbcConstants'
 
 module.exports =
 

@@ -1,7 +1,7 @@
 
 
 module.exports =
-  date: require './date.coffee'
+  date: require './date'
   filesize: require 'filesize'
-  timer: require './Timer.coffee'
-  jobPoller: require './jobPoller.coffee'
+  timer: require './Timer'
+  jobPoller: require './jobPoller'

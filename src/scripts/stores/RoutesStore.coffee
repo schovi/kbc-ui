@@ -1,14 +1,14 @@
 
-Dispatcher = require('../Dispatcher.coffee')
+Dispatcher = require('../Dispatcher')
 Immutable = require 'immutable'
 Map = Immutable.Map
 List = Immutable.List
-Error = require '../utils/Error.coffee'
-StoreUtils = require '../utils/StoreUtils.coffee'
+Error = require '../utils/Error'
+StoreUtils = require '../utils/StoreUtils'
 _ = require 'underscore'
 
 Immutable = require('immutable')
-Constants = require '../constants/KbcConstants.coffee'
+Constants = require '../constants/KbcConstants'
 
 _store = Map(
   isPending: false

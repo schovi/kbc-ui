@@ -1,11 +1,11 @@
 React = require 'react'
-date = require '../../../utils/date.coffee'
-filesize = require('../../../utils/utils.coffee').filesize
-PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin.coffee'
+date = require '../../../utils/date'
+filesize = require('../../../utils/utils').filesize
+PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
 
-sapiEventsUtils = require '../utils.coffee'
-Tree = React.createFactory(require('../../../react/common/common.coffee').Tree)
+sapiEventsUtils = require '../utils'
+Tree = React.createFactory(require('../../../react/common/common').Tree)
 {div, span, a, h2, h3, p, ul, li} = React.DOM
 
 

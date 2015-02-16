@@ -1,10 +1,10 @@
 React = require 'react'
-OrchestrationActionCreators = require '../../ActionCreators.coffee'
+OrchestrationActionCreators = require '../../ActionCreators'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-RunOrchestrationModal = React.createFactory(require '../modals/RunOrchestration.coffee')
+RunOrchestrationModal = React.createFactory(require '../modals/RunOrchestration')
 
 {button, span, i} = React.DOM
 

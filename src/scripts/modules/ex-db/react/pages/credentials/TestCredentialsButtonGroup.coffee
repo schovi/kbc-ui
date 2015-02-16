@@ -1,8 +1,8 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
 
-Loader = React.createFactory(require('../../../../../react/common/common.coffee').Loader)
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+Loader = React.createFactory(require('../../../../../react/common/common').Loader)
+ExDbActionCreators = require '../../../exDbActionCreators'
 Link = React.createFactory(require('react-router').Link)
 
 {div, span} = React.DOM

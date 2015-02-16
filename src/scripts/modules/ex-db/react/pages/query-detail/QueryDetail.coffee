@@ -1,14 +1,14 @@
 React = require 'react'
 
-createStoreMixin = require '../../../../../react/mixins/createStoreMixin.coffee'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore.coffee'
-RoutesStore = require '../../../../../stores/RoutesStore.coffee'
+ExDbStore = require '../../../exDbStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+ExDbActionCreators = require '../../../exDbActionCreators'
 
-QueryEditor = React.createFactory(require '../../components/QueryEditor.coffee')
-QueryDetailStatic = React.createFactory(require './QueryDetailStatic.coffee')
+QueryEditor = React.createFactory(require '../../components/QueryEditor')
+QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
 
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM

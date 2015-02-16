@@ -1,10 +1,10 @@
 React = require 'react'
 _ = require 'underscore'
 
-ExDbActionCreators = require '../../../exDbActionCreators.coffee'
+ExDbActionCreators = require '../../../exDbActionCreators'
 
 Input = React.createFactory(require('react-bootstrap').Input)
-TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup.coffee')
+TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 
 {form, div, label, p, option} = React.DOM
 

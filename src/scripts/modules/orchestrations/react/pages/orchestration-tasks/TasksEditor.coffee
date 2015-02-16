@@ -5,9 +5,9 @@ Immutable = require 'immutable'
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
-TasksEditTable = React.createFactory(require './TasksEditTable.coffee')
+TasksEditTable = React.createFactory(require './TasksEditTable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal.coffee')
+AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal')
 
 {div, button} = React.DOM
 

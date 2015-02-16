@@ -1,7 +1,7 @@
 Immutable = require('immutable')
-StoreUtils = require('../../../utils/StoreUtils.coffee')
-Constants = require('../Constants.coffee')
-Dispatcher = require '../../../Dispatcher.coffee'
+StoreUtils = require('../../../utils/StoreUtils')
+Constants = require('../Constants')
+Dispatcher = require '../../../Dispatcher'
 _ = require('underscore')
 
 Map = Immutable.Map
