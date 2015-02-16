@@ -38,7 +38,7 @@ ApplicationStore =
     _store.getIn ['kbc', 'scriptsBasePath']
 
   getProjectPageUrl: (path) ->
-    @getProjectBaseUrl() + path
+    @getProjectBaseUrl() + '/' + path
 
   getUrlTemplates: ->
     _store.getIn ['kbc', 'urlTemplates']

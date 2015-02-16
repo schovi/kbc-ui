@@ -160,7 +160,6 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
       _store = _store.withMutations (store) ->
         newState = Immutable.fromJS(action.routerState)
-        console.log 'new state', action.routerState
         notFound = newState.get('routes').last().get('name') == 'notFound'
 
         store = store.set 'isPending', false
