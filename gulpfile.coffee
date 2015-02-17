@@ -24,6 +24,7 @@ reload = browserSync.reload
 parse = require('url').parse
 fs = require 'fs'
 exorcist = require 'exorcist'
+insert = require 'gulp-insert'
 
 handleError = (err) ->
   gutil.log err
@@ -144,6 +145,7 @@ gulp.task 'build-scripts', ['clean'], ->
   .pipe(source('bundle.min.js'))
   .pipe(buffer())
   .pipe(uglify())
+  .pipe(insert.append('//# sourceMappingURL=bundle.js.map'))
   .pipe(size(showFiles: true, gzip: false))
   .pipe(size(showFiles: true, gzip: true))
   .pipe(gulp.dest('./dist/scripts'))

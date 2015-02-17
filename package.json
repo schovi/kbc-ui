@@ -51,7 +51,8 @@
     "merge-stream": "~0.1.6",
     "reactify": "~0.17.1",
     "gulp-git": "~1.0.0",
-    "exorcist": "~0.1.6"
+    "exorcist": "~0.1.6",
+    "gulp-insert": "~0.4.0"
   },
   "scripts": {
     "test": "jest"
