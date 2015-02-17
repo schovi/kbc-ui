@@ -23,6 +23,7 @@ browserSync = require 'browser-sync'
 reload = browserSync.reload
 parse = require('url').parse
 fs = require 'fs'
+exorcist = require 'exorcist'
 
 handleError = (err) ->
   gutil.log err
@@ -125,7 +126,7 @@ gulp.task 'build-scripts', ['clean'], ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
     extensions: ['.coffee']
-    debug: false
+    debug: true # source maps are appended to output and then separated by exorcist
     cache: {}
     packageCache: {}
     fullPaths: false
@@ -133,7 +134,13 @@ gulp.task 'build-scripts', ['clean'], ->
   bundler.transform(coffeeify)
   bundler.transform(envify(NODE_ENV: 'production'))
 
+  # exorcist cannot create directory
+  # so we have to prepare it
+  fs.mkdirSync path.join(__dirname, './dist')
+  fs.mkdirSync path.join(__dirname, './dist/scripts')
+
   bundler.bundle()
+  .pipe(exorcist('./dist/scripts/bundle.js.map'))
   .pipe(source('bundle.min.js'))
   .pipe(buffer())
   .pipe(uglify())
@@ -178,5 +185,3 @@ gulp.task 'release', ['copy-to-release'], ->
   console.log 'Manifest URL: ', "#{s3basePath}manifest.json"
   fs.writeFile "./release/#{tag}/manifest.json", JSON.stringify(manifest), (err) ->
     throw err if err
-
-
