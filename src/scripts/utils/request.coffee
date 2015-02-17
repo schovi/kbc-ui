@@ -1,12 +1,7 @@
 request = require 'superagent'
 Promise = require 'bluebird'
 Request = require('superagent').Request
-
-
-class HttpError extends Error
-
-  constructor: (@response) ->
-    @message = @response.body?.error
+HttpError = require './HttpError'
 
 
 

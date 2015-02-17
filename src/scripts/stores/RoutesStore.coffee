@@ -197,7 +197,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store = store
           .set 'isPending', false
-          .set 'error', Error.fromXhrError(action.error)
+          .set 'error', Error.factory(action.error)
 
         store.set 'breadcrumbs', generateBreadcrumbs(store)
 
