@@ -44,10 +44,14 @@ startApp = (appOptions) ->
     location: if appOptions.locationMode == 'history' then Router.HistoryLocation else Router.HashLocation
   )
 
+  window.onerror = ->
+    console.log 'on error', arguments
+
   Promise.longStackTraces()
+  # error thrown during application live not on route chage
   Promise.onPossiblyUnhandledRejection (e) ->
-    console.error 'unhandled exception', e, e.stack
-    alert(e.message)
+    console.error 'unhandled exception', e.message, e.stack
+    ApplicationActionCreators.sendNotification "Error: #{e.message.toString()}", 'error'
 
 
   # Show loading page before app is ready
@@ -96,7 +100,7 @@ startApp = (appOptions) ->
 
     ).catch((error) ->
       # render error page
-      console.log error, error.stack
+      console.log 'route change error', error.message, error, error.stack
       RouterActionCreators.routeChangeError(error)
       React.render(React.createElement(Handler, isError: true), appOptions.rootNode)
     )

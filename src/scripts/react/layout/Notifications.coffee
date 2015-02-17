@@ -8,6 +8,10 @@ Alert = React.createFactory(require('react-bootstrap').Alert)
 
 {div, span} = React.DOM
 
+classMap =
+  success: 'success'
+  error: 'danger'
+
 module.exports = React.createClass
   displayName: 'Notifications'
   mixins: [createStoreMixin(NotificationsStore)]
@@ -21,12 +25,11 @@ module.exports = React.createClass
   render: ->
     div null,
       @state.notifications.map (notification, index) ->
-        console.log 'notification', notification.get 'value'
         Alert
-          bsStyle: 'success'
+          bsStyle: classMap[notification.get 'type']
           onDismiss: @_handleAlertDismiss.bind(@, index)
         ,
-          if notification.get('value') instanceof String
+          if typeof notification.get('value') == 'string'
             notification.get 'value'
           else
             React.createElement notification.get('value'),

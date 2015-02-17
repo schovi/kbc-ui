@@ -33,6 +33,7 @@ module.exports =
 
   saveQuery: (configurationId, query) ->
     createRequest('PUT', "configs/#{configurationId}/queries/#{query.id}")
+    .timeout 1000
     .send(query)
     .promise()
     .then((response) ->

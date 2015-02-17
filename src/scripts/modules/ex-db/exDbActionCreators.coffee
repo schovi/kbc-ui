@@ -86,8 +86,7 @@ module.exports =
         type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_ERROR
         configurationId: configurationId
         error: e
-      throw new Error(e.error)
-
+      throw e
 
   updateNewQuery: (configurationId, query) ->
     dispatcher.handleViewAction

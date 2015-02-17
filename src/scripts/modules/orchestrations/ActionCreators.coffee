@@ -29,7 +29,7 @@ module.exports =
       actions.receiveAllOrchestrations(orchestrations)
     )
     .catch (err) ->
-      console.log 'error', err
+      throw err
 
   receiveAllOrchestrations: (orchestrations) ->
     dispatcher.handleViewAction(

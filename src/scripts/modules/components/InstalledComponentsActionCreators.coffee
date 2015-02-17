@@ -39,6 +39,7 @@ module.exports =
         status: error.status
         response: error.response
       )
+      throw error
     )
 
   loadComponents: ->
