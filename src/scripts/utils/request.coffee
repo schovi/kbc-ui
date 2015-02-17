@@ -9,9 +9,7 @@ Request.prototype.promise = ->
   new Promise (resolve, reject) ->
     req.end (err, res) ->
       if err
-        return reject(
-          error: err
-        )
+        return reject err
       else if !res.ok
         return reject(
           status: res.status
