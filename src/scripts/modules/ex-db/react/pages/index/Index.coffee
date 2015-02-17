@@ -8,7 +8,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
-ComponentDescription React.createFactory ComponentDescription
+ComponentDescription = React.createFactory ComponentDescription
 LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
 Link = React.createFactory(require('react-router').Link)

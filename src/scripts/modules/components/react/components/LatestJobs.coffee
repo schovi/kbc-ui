@@ -11,5 +11,7 @@ module.exports = React.createClass
       React.DOM.h3 null, 'Last runs'
       React.DOM.div null,
         @props.jobs.map (job) ->
-          JobRow job: job
+          JobRow
+            job: job
+            key: job.get 'id'
         .toArray()
