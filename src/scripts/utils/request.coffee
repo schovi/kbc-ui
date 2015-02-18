@@ -10,7 +10,6 @@ Request.prototype.promise = ->
   req = @
   new Promise (resolve, reject) ->
     req.end (err, res) ->
-      console.log 'end', err, res
       if err
         return reject err
       else if !res.ok
@@ -19,4 +18,6 @@ Request.prototype.promise = ->
         resolve res
 
 
-module.exports = request
+module.exports = (method, url) ->
+  request(method, url)
+  .timeout 30000

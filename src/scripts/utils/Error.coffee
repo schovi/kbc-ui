@@ -11,8 +11,10 @@ class Error
   @factory: (error) ->
     if error instanceof HttpError
       Error.fromXhrError error
+    else if error.isOperational # error from bluebird
+      new Error('Connection error', error.message)
     else
-      new Error('Application error.', 'Please try reload the browser')
+      new Error('Application error', 'Please try reload the browser')
 
   @fromXhrError: (httpError) ->
     title = switch httpError.response.status
