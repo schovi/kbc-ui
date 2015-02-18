@@ -9,6 +9,7 @@ StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
   orchestrationsById: Map()
+  orchestrationsPendingActions: Map() # by orchestration id
   orchestrationTasksById: Map()
   filter: ''
   isLoading: false
@@ -47,6 +48,12 @@ OrchestrationStore = StoreUtils.createStore
         date = orchestration.getIn ['lastExecutedJob', 'startTime']
         if date then -1 * (new Date(date).getTime()) else null
       )
+
+  getPendingActions: ->
+    _store.get 'orchestrationsPendingActions'
+
+  getPendingActionsForOrchestration: (id) ->
+    @getPendingActions().get(id, Map())
 
   ###
     Returns orchestration specified by id
@@ -96,15 +103,23 @@ Dispatcher.register (payload) ->
       _store = _store.set 'filter', action.query.trim()
       OrchestrationStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_ACTIVATE
-      _store = updateOrchestration _store, action.orchestrationId,
-        active: true
+
+
+    when Constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_START
+      _store = _store.setIn ['orchestrationsPendingActions', action.orchestrationId, 'active'], true
       OrchestrationStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_DISABLE
-      _store = updateOrchestration _store, action.orchestrationId,
-        active: false
+    when Constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_ERROR
+      _store = _store.deleteIn ['orchestrationsPendingActions', action.orchestrationId, 'active']
       OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store = store.deleteIn ['orchestrationsPendingActions', action.orchestrationId, 'active']
+        updateOrchestration store, action.orchestrationId,
+          active: action.active
+      OrchestrationStore.emitChange()
+
 
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD
       _store = _store.set 'isLoading', true
@@ -127,9 +142,23 @@ Dispatcher.register (payload) ->
         loadingOrchestrations.push action.orchestrationId
       OrchestrationStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_DELETE
-      _store = _store.removeIn ['orchestrationsById', action.orchestrationId]
+
+    when Constants.ActionTypes.ORCHESTRATION_DELETE_START
+      _store = _store.setIn ['orchestrationsPendingActions', action.orchestrationId, 'delete'], true
       OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_DELETE_ERROR
+      _store = _store.deleteIn ['orchestrationsPendingActions', action.orchestrationId, 'delete']
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .removeIn ['orchestrationsById', action.orchestrationId]
+        .removeIn ['orchestrationsPendingActions', action.orchestrationId, 'delete']
+
+      OrchestrationStore.emitChange()
+
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
       _store = removeOrchestrationFromLoading(_store, action.orchestrationId)

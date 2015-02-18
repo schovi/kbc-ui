@@ -79,13 +79,21 @@ module.exports =
 
 
   deleteOrchestration: (id) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.ORCHESTRATION_DELETE
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_DELETE_START
       orchestrationId: id
-    )
 
     orchestrationsApi
     .deleteOrchestration(id)
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_DELETE_SUCCESS
+        orchestrationId: id
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_DELETE_ERROR
+        orchestrationId: id
+      throw e
 
   createOrchestration: (data) ->
 
@@ -167,24 +175,34 @@ module.exports =
     )
 
   activateOrchestration: (id) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.ORCHESTRATION_ACTIVATE
-      orchestrationId: id
-    )
-
-    orchestrationsApi.updateOrchestration(id,
-      active: true
-    )
+    @changeActiveState(id, true)
 
   disableOrchestration: (id) ->
+    @changeActiveState(id, false)
+
+  changeActiveState: (orchestrationId, active) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.ORCHESTRATION_DISABLE
-      orchestrationId: id
+      type: constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_START
+      active: active
+      orchestrationId: orchestrationId
     )
 
-    orchestrationsApi.updateOrchestration(id,
-      active: false
+    orchestrationsApi.updateOrchestration(orchestrationId,
+      active: active
     )
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_SUCCESS
+        active: response.active
+        orchestrationId: orchestrationId
+      )
+    .catch (e) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_ERROR
+        active: active
+        orchestrationId: orchestrationId
+      )
+      throw e
 
   saveOrchestrationTasks: (orchestrationId, tasks) ->
     dispatcher.handleViewAction(

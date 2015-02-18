@@ -20,12 +20,18 @@ OrchestrationDetailButtons = React.createClass
 
   getStateFromStores: ->
     orchestration: OrchestrationsStore.get(@_getOrchestrationId())
+    pendingActions: OrchestrationsStore.getPendingActionsForOrchestration(@_getOrchestrationId())
 
   render: ->
     React.DOM.span null,
-      OrchestrationActiveButton(orchestration: @state.orchestration),
-      OrchestrationDeleteButton(orchestration: @state.orchestration),
-      OrchestrationRunButton(orchestration: @state.orchestration)
+      OrchestrationActiveButton
+        orchestration: @state.orchestration
+        isPending: @state.pendingActions.get 'active'
+      OrchestrationDeleteButton
+        orchestration: @state.orchestration
+        isPending: @state.pendingActions.get 'delete'
+      OrchestrationRunButton
+        orchestration: @state.orchestration
 
 
 module.exports = OrchestrationDetailButtons

@@ -6,6 +6,7 @@ Router = require 'react-router'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require '../../../../react/common/Confirm')
+Loader = React.createFactory(require '../../../../react/common/Loader')
 
 {button, span, i} = React.DOM
 
@@ -17,21 +18,26 @@ OrchestrationDeleteButton = React.createClass
   mixins: [Router.Navigation]
   propTypes:
     orchestration: React.PropTypes.object.isRequired
+    isPending: React.PropTypes.bool.isRequired
 
   render: ->
-    OverlayTrigger
-      overlay: Tooltip null, 'Delete orchestration'
-      key: 'delete'
-      placement: 'top'
-    ,
-      Confirm
-        title: 'Delete Orchestration'
-        text: "Do you really want to delete orchestration #{@props.orchestration.get('name')}"
-        buttonLabel: 'Delete'
-        onConfirm: @_deleteOrchestration
+    if @props.isPending
+      span className: 'btn btn-link',
+        Loader()
+    else
+      OverlayTrigger
+        overlay: Tooltip null, 'Delete orchestration'
+        key: 'delete'
+        placement: 'top'
       ,
-        button className: 'btn btn-link',
-          i className: 'kbc-icon-cup'
+        Confirm
+          title: 'Delete Orchestration'
+          text: "Do you really want to delete orchestration #{@props.orchestration.get('name')}"
+          buttonLabel: 'Delete'
+          onConfirm: @_deleteOrchestration
+        ,
+          button className: 'btn btn-link',
+            i className: 'kbc-icon-cup'
 
   _deleteOrchestration: ->
     @transitionTo 'orchestrations'

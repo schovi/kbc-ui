@@ -23,6 +23,7 @@ Index = React.createClass
 
   getStateFromStores: ->
     orchestrations: OrchestrationStore.getFiltered()
+    pendingActions: OrchestrationStore.getPendingActions()
     isLoading: OrchestrationStore.getIsLoading()
     isLoaded: OrchestrationStore.getIsLoaded()
     filter: OrchestrationStore.getFilter()
@@ -40,7 +41,10 @@ Index = React.createClass
 
   _renderTable: ->
     childs = @state.orchestrations.map((orchestration) ->
-      OrchestrationRow {orchestration: orchestration, key: orchestration.get('id')}
+      OrchestrationRow
+        orchestration: orchestration
+        pendingActions: @state.pendingActions.get(orchestration.get('id'), Immutable.Map())
+        key: orchestration.get 'id'
     , @).toArray()
 
     div className: 'table table-striped table-hover',

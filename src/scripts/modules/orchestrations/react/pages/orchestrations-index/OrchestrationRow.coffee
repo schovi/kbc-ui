@@ -22,17 +22,20 @@ OrchestrationRow = React.createClass(
   mixins: [ImmutableRenderMixin]
   propTypes:
     orchestration: React.PropTypes.object
+    pendingActions: React.PropTypes.object
 
   buttons: ->
     buttons = []
 
     buttons.push(OrchestrationDeleteButton(
       orchestration: @props.orchestration
+      isPending: @props.pendingActions.get 'delete'
       key: 'delete'
     ))
 
     buttons.push(OrchestrationActiveButton(
       orchestration: @props.orchestration
+      isPending: @props.pendingActions.get 'active'
       key: 'activate'
     ))
 
