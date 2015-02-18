@@ -73,7 +73,10 @@ EditArea = React.createFactory React.createClass
             onClick: @props.onSave
           ,
             'Save'
-          Loader() if @props.isSaving
+          if @props.isSaving
+            span null,
+              ' '
+              Loader()
 
 
 module.exports = React.createClass
