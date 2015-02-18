@@ -9,6 +9,7 @@ TasksEditTable = React.createClass
   propTypes:
     tasks: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
+    disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
@@ -28,6 +29,7 @@ TasksEditTable = React.createClass
           TasksEditTableRow
             task: task
             component: @props.components.get(task.get('component'))
+            disabled: @props.disabled
             key: task.get('id')
             onTaskDelete: @props.onTaskDelete
             onTaskUpdate: @props.onTaskUpdate

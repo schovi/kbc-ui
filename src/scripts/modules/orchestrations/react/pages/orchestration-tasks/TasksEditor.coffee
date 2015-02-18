@@ -8,14 +8,16 @@ Button = React.createFactory(require('react-bootstrap').Button)
 TasksEditTable = React.createFactory(require './TasksEditTable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal')
+Loader = React.createFactory(require '../../../../../react/common/Loader')
 
-{div, button} = React.DOM
+{div, button, span} = React.DOM
 
 TasksEditor = React.createClass
   displayName: 'TasksEditor'
   propTypes:
     tasks: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
+    isSaving: React.PropTypes.bool.isRequired
     onSave: React.PropTypes.func.isRequired
     onChange: React.PropTypes.func.isRequired
     onCancel: React.PropTypes.func.isRequired
@@ -25,26 +27,36 @@ TasksEditor = React.createClass
       TasksEditTable
         tasks: @props.tasks
         components: @props.components
+        disabled: @props.isSaving
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
         onTaskMove: @_handleTaskMove
       ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
-        button className: 'btn btn-primary',
+        Button
+          bsStyle: 'primary'
+          disabled: @props.isSaving
+        ,
           'Add task'
       ButtonToolbar null,
         Button
-          bsStyle: 'default'
+          bsStyle: 'link'
+          disabled: @props.isSaving
           onClick: ( ->
             @props.onCancel()).bind(@)
         ,
           'Cancel',
         Button
           bsStyle: 'primary'
+          disabled: @props.isSaving
           onClick: ( ->
-            @props.onSave(@state.tasks)
+            @props.onSave()
           ).bind(@)
         ,
           'Save'
+        if @props.isSaving
+          span null,
+            ' '
+            Loader()
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(

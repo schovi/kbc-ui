@@ -11,6 +11,7 @@ _store = Map(
   orchestrationsById: Map()
   orchestrationsPendingActions: Map() # by orchestration id
   editing: Map() # [orchestrationId][tasks] - edit value
+  saving: Map() # [orchestrationId][tasks] - bool value
   orchestrationTasksById: Map()
   filter: ''
   isLoading: false
@@ -73,6 +74,9 @@ OrchestrationStore = StoreUtils.createStore
 
   isEditing: (orchestrationId, field) ->
     _store.hasIn ['editing', orchestrationId, field]
+
+  isSaving: (orchestrationId, field) ->
+    _store.hasIn ['saving', orchestrationId, field]
 
   getEditingValue: (orchestrationId, field) ->
     _store.getIn ['editing', orchestrationId, field]
@@ -216,10 +220,20 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
 
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_START
+      _store = _store.setIn ['saving', action.orchestrationId, 'tasks'], true
+      OrchestrationStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_SET_TASKS
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_ERROR
+      _store = _store.deleteIn ['saving', action.orchestrationId, 'tasks'],
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_SUCCESS
       _store = _store.withMutations((store) ->
-        store.setIn ['orchestrationTasksById', action.orchestrationId], Immutable.fromJS(action.tasks)
+        store
+        .setIn ['orchestrationTasksById', action.orchestrationId], Immutable.fromJS(action.tasks)
+        .deleteIn ['saving', action.orchestrationId, 'tasks']
+        .deleteIn ['editing', action.orchestrationId, 'tasks']
       )
       OrchestrationStore.emitChange()
 

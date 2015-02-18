@@ -33,6 +33,7 @@ OrchestrationTasks = React.createClass
       components: ComponentsStore.getAll()
       filter: OrchestrationStore.getFilter()
       isEditing: isEditing
+      isSaving: OrchestrationStore.isSaving(orchestrationId, 'tasks')
       filteredOrchestrations: OrchestrationStore.getFiltered()
     }
 
@@ -43,7 +44,7 @@ OrchestrationTasks = React.createClass
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   _handleTasksSave: ->
-   console.log 'todo'
+    OrchestrationsActionCreators.saveOrchestrationTasks(@state.orchestration.get 'id')
 
   _handleReset: ->
     OrchestrationsActionCreators.cancelOrchestrationTasksEdit(@state.orchestration.get 'id')
@@ -67,6 +68,7 @@ OrchestrationTasks = React.createClass
           div null,
             TasksEditor
               tasks: @state.tasks
+              isSaving: @state.isSaving
               components: @state.components
               onSave: @_handleTasksSave
               onChange: @_handleTasksChange

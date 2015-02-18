@@ -21,6 +21,7 @@ TasksEditTableRow = React.createClass
   propTypes:
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
+    disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
@@ -61,6 +62,7 @@ TasksEditTableRow = React.createClass
           className: 'form-control'
           type: 'text'
           defaultValue: @props.task.get('action')
+          disabled: @props.disabled
           onChange: @_handleActionChange
       td null,
         ModalTrigger
@@ -71,11 +73,13 @@ TasksEditTableRow = React.createClass
       td null,
         input
           type: 'checkbox'
+          disabled: @props.disabled
           checked: @props.task.get('active')
           onChange: @_handleActiveChange
       td null,
         input
           type: 'checkbox'
+          disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
       td null,

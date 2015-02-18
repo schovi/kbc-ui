@@ -226,23 +226,31 @@ module.exports =
       tasks: tasks
     )
 
-  saveOrchestrationTasks: (orchestrationId, tasks) ->
+  saveOrchestrationTasks: (orchestrationId) ->
+    tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
+
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.ORCHESTRATION_SET_TASKS
+      type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_START
       orchestrationId: orchestrationId
-      tasks: tasks
     )
 
     orchestrationsApi
-    .saveOrchestrationTasks(orchestrationId, tasks)
+    .saveOrchestrationTasks(orchestrationId, tasks.toJS())
     .then((tasks) ->
       # update tasks from server
       dispatcher.handleViewAction(
-        type: constants.ActionTypes.ORCHESTRATION_SET_TASKS
+        type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_SUCCESS
         orchestrationId: orchestrationId
         tasks: tasks
       )
     )
+    .catch (e) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_ERROR
+        orchestrationId: orchestrationId
+        error: e
+      )
+      throw e
 
   runOrchestration: (id) ->
 
