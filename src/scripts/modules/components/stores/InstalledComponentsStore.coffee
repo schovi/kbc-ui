@@ -23,7 +23,7 @@ InstalledComponentsStore = StoreUtils.createStore
       component.get('type') == type
 
   getComponent: (componentId) ->
-    _store.getIn ['components', componentId]    
+    _store.getIn ['components', componentId]
     
   getConfig: (componentId, configId) ->
     _store.getIn ['components', componentId, 'configurations', configId]
@@ -87,7 +87,8 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_SUCCESS
       _store = _store.withMutations (store) ->
         store
-          .mergeIn ['components', action.componentId, 'configurations', action.configurationId], Immutable.fromJS(action.data)
+          .mergeIn ['components', action.componentId, 'configurations', action.configurationId],
+            Immutable.fromJS(action.data)
           .deleteIn ['savingConfigurations', action.componentId, action.configurationId, action.field]
           .deleteIn ['editingConfigurations', action.componentId, action.configurationId, action.field]
       InstalledComponentsStore.emitChange()
