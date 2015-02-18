@@ -3,8 +3,11 @@ Dispatcher = require('../../../Dispatcher')
 Constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
+_ = require 'underscore'
+camelize = require 'underscore.string/camelize'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils'
+ApplicationStore = require '../../../stores/ApplicationStore'
 
 _store = Map(
   components: Map()
@@ -31,6 +34,25 @@ ComponentsStore = StoreUtils.createStore
 
   getFilter: (type) ->
     _store.getIn(['filter', type]) || ''
+
+  hasComponentLegacyUI: (id) ->
+    _store.getIn(['componentsById', id], Map()).get 'hasUI'
+
+  getComponentDetailLegacyUrl: (id, configurationId) ->
+    component = @getComponent id
+
+    if component.type == 'extractor'
+      templateName = 'legacyExtractorDetail'
+    else
+      templateName = 'legacyWriterDetail'
+
+    template = ApplicationStore.getUrlTemplates().get templateName
+    _.template(template)(
+      projectId: ApplicationStore.getCurrentProjectId()
+      appId: "kbc." + camelize(id)
+      configId: configurationId
+    )
+
 
 Dispatcher.register (payload) ->
   action = payload.action
