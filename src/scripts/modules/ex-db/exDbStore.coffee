@@ -80,6 +80,10 @@ Dispatcher.register (payload) ->
         .deleteIn ['deletingQueries', action.configurationId, action.queryId]
       ExDbStore.emitChange()
 
+    when constants.ActionTypes.EX_DB_QUERY_DELETE_ERROR
+      _store = _store.deleteIn ['deletingQueries', action.configurationId, action.queryId]
+      ExDbStore.emitChange()
+
     when constants.ActionTypes.EX_DB_QUERY_EDIT_START
       _store = _store.withMutations (store) ->
         store.setIn ['editingQueries', action.configurationId, action.queryId],
@@ -168,6 +172,10 @@ Dispatcher.register (payload) ->
             Immutable.fromJS action.credentials
         .deleteIn ['editingCredentials', action.configurationId]
         .deleteIn ['savingCredentials', action.configurationId]
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_ERROR
+      _store = _store.deleteIn ['savingCredentials', action.configurationId]
       ExDbStore.emitChange()
 
 

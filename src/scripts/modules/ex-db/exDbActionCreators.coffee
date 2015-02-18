@@ -112,6 +112,13 @@ module.exports =
         type: constants.ActionTypes.EX_DB_QUERY_DELETE_SUCCESS
         configurationId: configurationId
         queryId: queryId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_DELETE_ERROR
+        configurationId: configurationId
+        queryId: queryId
+        error: e
+      throw e
 
   ###
     Credentials actions
@@ -146,6 +153,12 @@ module.exports =
         type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_SUCCESS
         configurationId: configurationId
         credentials: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_ERROR
+        configurationId: configurationId
+        error: e
+      throw e
 
   testCredentials: (credentials) ->
     exDbApi.testAndWaitForCredentials credentials.toJS()
