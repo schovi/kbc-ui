@@ -9,6 +9,7 @@ install:
 - time npm install
 - bower --version
 - time bower install --dev
+- git --version
 - git describe --tags
 script: NODE_ENV=production gulp release
 sudo: false
