@@ -14,9 +14,7 @@ componentRunner = require './ComponentRunner'
 InstalledComponentsStore = require './stores/InstalledComponentsStore'
 installedComponentsApi = require './InstalledComponentsApi'
 
-Pokus = React.createClass
-  render: ->
-    React.DOM.strong null, 'pokus'
+
 
 module.exports =
 
@@ -52,17 +50,57 @@ module.exports =
       components: componentsRaw
     )
 
-  updateComponentConfiguration: (componentId, configurationId, data) ->
+  startConfigurationEdit: (componentId, configurationId, field) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_START
       componentId: componentId
       configurationId: configurationId
-      data: data
+      field: field
+
+  updateEditingConfiguration: (componentId, configurationId, field, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_UPDATE
+      configurationId: configurationId
+      componentId: componentId
+      field: field
+      value: newValue
+
+  cancelConfigurationEdit: (componentId, configurationId, field) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_CANCEL
+      componentId: componentId
+      configurationId: configurationId
+      field: field
+
+  saveConfigurationEdit: (componentId, configurationId, field) ->
+    newValue = InstalledComponentsStore.getEditingConfig(componentId, configurationId, field)
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_START
+      componentId: componentId
+      configurationId: configurationId
+      field: field
+
+    data = {}
+    data[field] = newValue
 
     installedComponentsApi
     .updateComponentConfiguration componentId, configurationId, data
     .then (response) ->
-      console.log 'saved', response
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_SUCCESS
+        componentId: componentId
+        configurationId: configurationId
+        field: field
+        data: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_ERROR
+        componentId: componentId
+        configurationId: configurationId
+        field: field
+        error: e
+      throw e
 
   ###
     params:

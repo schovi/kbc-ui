@@ -3,8 +3,10 @@ _ = require 'underscore'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
+Button = React.createFactory(require('react-bootstrap').Button)
+Loader = React.createFactory(require '../../react/common/Loader')
 
-{div, span, i, textarea, button} = React.DOM
+{div, span, i, textarea} = React.DOM
 
 StaticArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaStatic'
@@ -34,6 +36,7 @@ EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
   propTypes:
     text: React.PropTypes.string
+    isSaving: React.PropTypes.bool
     placeholder: React.PropTypes.string
     onCancel: React.PropTypes.func
     onSave: React.PropTypes.func
@@ -51,71 +54,59 @@ EditArea = React.createFactory React.createClass
         textarea(
           ref: 'textArea'
           value: @props.text
+          disabled: @props.isSaving
           placeholder: @props.placeholder
           onChange: @_onChange
           className: 'form-control'
         ),
       div className: 'form-group',
         div className: 'kbc-buttons',
-          button
-            className: 'btn btn-link'
+          Button
+            bsStyle: 'link'
+            disabled: @props.isSaving
             onClick: @props.onCancel
           ,
             'Cancel'
-          button
-            className: 'btn btn-primary'
+          Button
+            bsStyle: 'primary'
+            disabled: @props.isSaving
             onClick: @props.onSave
           ,
             'Save'
+          Loader() if @props.isSaving
 
 
 module.exports = React.createClass
   displayName: 'InlineEditArea'
   propTypes:
-    onSave: React.PropTypes.func.isRequired
+    onEditStart: React.PropTypes.func.isRequired
+    onEditCancel: React.PropTypes.func.isRequired
+    onEditChange: React.PropTypes.func.isRequired
+    onEditSubmit: React.PropTypes.func.isRequired
     text: React.PropTypes.string
+    isSaving: React.PropTypes.bool
+    isEditing: React.PropTypes.bool
     editTooltip: React.PropTypes.string
     placeholder: React.PropTypes.string
 
   getDefaultProps: ->
     placeholder: 'Click to edit'
     editTooltip: 'Click to edit'
-
-  getInitialState: ->
-    isEditing: false
-    editText: null
-
-  _startEdit: ->
-    @setState
-      isEditing: true
-      editText: @props.text
-
-  _stopEdit: ->
-    @setState
-      isEditing: false
-
-  _editChange: (newText) ->
-    @setState
-      editText: newText
-
-  _save: ->
-    @props.onSave @state.editText
-    @setState
-      isEditing: false
-
+    isSaving: false
 
   render: ->
-    if @state.isEditing
+    if @props.isEditing
       EditArea
-        text: @state.editText
+        text: @props.text
+        isSaving: @props.isSaving
         placeholder: @props.placeholder
-        onChange: @_editChange
-        onCancel: @_stopEdit
-        onSave: @_save
+        onChange: @props.onEditChange
+        onCancel: @props.onEditCancel
+        onSave: @props.onEditSubmit
     else
       StaticArea
         text: @props.text
         editTooltip: @props.editTooltip
         placeholder: @props.placeholder
-        onClick: @_startEdit
+        onClick: @props.onEditStart
 

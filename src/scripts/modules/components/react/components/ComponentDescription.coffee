@@ -8,6 +8,7 @@ InlineEditArea = React.createFactory(require '../../../../react/common/InlineEdi
 
 {button, span} = React.DOM
 
+FIELD_NAME = 'description'
 
 module.exports = React.createClass
   displayName: 'ComponentDescription'
@@ -17,16 +18,36 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
 
   getStateFromStores: ->
-    config: InstalledComponentsStore.getConfig @props.componentId, @props.configId
+    value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get FIELD_NAME
+    editValue: InstalledComponentsStore.getEditingConfig @props.componentId, @props.configId, FIELD_NAME
+    isEditing:  InstalledComponentsStore.isEditingConfig @props.componentId, @props.configId, FIELD_NAME
+    isSaving: InstalledComponentsStore.isSavingConfig @props.componentId, @props.configId, FIELD_NAME
 
-  _handleSave: (newDescription) ->
-    InstalledComponentsActionCreators.updateComponentConfiguration @props.componentId, @props.configId,
-        description: newDescription
+  _handleEditStart: ->
+    InstalledComponentsActionCreators.startConfigurationEdit(@props.componentId, @props.configId, FIELD_NAME)
 
+  _handleEditCancel: ->
+    InstalledComponentsActionCreators.cancelConfigurationEdit(@props.componentId, @props.configId, FIELD_NAME)
+
+  _handleEditChange: (newValue) ->
+    InstalledComponentsActionCreators.updateEditingConfiguration(
+      @props.componentId,
+      @props.configId,
+      FIELD_NAME,
+      newValue
+    )
+
+  _handleEditSubmit: ->
+    InstalledComponentsActionCreators.saveConfigurationEdit(@props.componentId, @props.configId, FIELD_NAME)
 
   render: ->
     InlineEditArea
-      text: @state.config.get 'description'
+      text: if @state.isEditing then @state.editValue else @state.value
       placeholder: 'Describe the component ...'
-      onSave: @_handleSave
+      isSaving: @state.isSaving
+      isEditing: @state.isEditing
+      onEditStart: @_handleEditStart
+      onEditCancel: @_handleEditCancel
+      onEditChange: @_handleEditChange
+      onEditSubmit: @_handleEditSubmit
 
