@@ -20,7 +20,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get FIELD_NAME
     editValue: InstalledComponentsStore.getEditingConfig @props.componentId, @props.configId, FIELD_NAME
-    isEditing:  InstalledComponentsStore.isEditingConfig @props.componentId, @props.configId, FIELD_NAME
+    isEditing: InstalledComponentsStore.isEditingConfig @props.componentId, @props.configId, FIELD_NAME
     isSaving: InstalledComponentsStore.isSavingConfig @props.componentId, @props.configId, FIELD_NAME
 
   _handleEditStart: ->
