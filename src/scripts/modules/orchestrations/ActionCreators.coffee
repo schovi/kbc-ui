@@ -204,6 +204,28 @@ module.exports =
       )
       throw e
 
+  ###
+    Editing orchestration tasks
+  ###
+  startOrchestrationTasksEdit: (orchestrationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_START
+      orchestrationId: orchestrationId
+    )
+
+  cancelOrchestrationTasksEdit: (orchestrationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_CANCEL
+      orchestrationId: orchestrationId
+    )
+
+  updateOrchestrationsTasksEdit: (orchestrationId, tasks) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_UPDATE
+      orchestrationId: orchestrationId
+      tasks: tasks
+    )
+
   saveOrchestrationTasks: (orchestrationId, tasks) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_SET_TASKS

@@ -22,12 +22,17 @@ OrchestrationTasks = React.createClass
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    isEditing = OrchestrationStore.isEditing(orchestrationId, 'tasks')
+    if isEditing
+      tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
+    else
+      tasks = OrchestrationStore.getOrchestrationTasks(orchestrationId)
     return {
       orchestration: OrchestrationStore.get orchestrationId
-      tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
+      tasks: tasks
       components: ComponentsStore.getAll()
       filter: OrchestrationStore.getFilter()
-      isEditing: false
+      isEditing: isEditing
       filteredOrchestrations: OrchestrationStore.getFiltered()
     }
 
@@ -37,23 +42,17 @@ OrchestrationTasks = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
-  _handleTasksSave: (tasks) ->
-    @setState(
-      isEditing: false
-    )
-    OrchestrationsActionCreators.saveOrchestrationTasks(
-      @state.orchestration.get('id')
-      tasks.toJS()
-    )
+  _handleTasksSave: ->
+   console.log 'todo'
 
   _handleReset: ->
-    @setState(
-      isEditing: false
-    )
+    OrchestrationsActionCreators.cancelOrchestrationTasksEdit(@state.orchestration.get 'id')
 
   _startEditing: ->
-    @setState
-      isEditing: true
+    OrchestrationsActionCreators.startOrchestrationTasksEdit(@state.orchestration.get 'id')
+
+  _handleTasksChange: (newTasks) ->
+    OrchestrationsActionCreators.updateOrchestrationsTasksEdit(@state.orchestration.get('id'), newTasks)
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -70,6 +69,7 @@ OrchestrationTasks = React.createClass
               tasks: @state.tasks
               components: @state.components
               onSave: @_handleTasksSave
+              onChange: @_handleTasksChange
               onCancel: @_handleReset
         else
           div null,

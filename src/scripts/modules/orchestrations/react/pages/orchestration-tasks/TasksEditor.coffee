@@ -17,15 +17,13 @@ TasksEditor = React.createClass
     tasks: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
     onSave: React.PropTypes.func.isRequired
+    onChange: React.PropTypes.func.isRequired
     onCancel: React.PropTypes.func.isRequired
-
-  getInitialState: ->
-    tasks: @props.tasks
 
   render: ->
     div null,
       TasksEditTable
-        tasks: @state.tasks
+        tasks: @props.tasks
         components: @props.components
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
@@ -49,22 +47,25 @@ TasksEditor = React.createClass
           'Save'
 
   _handleTaskDelete: (configurationId) ->
-    @setState
-      tasks: @state.tasks.remove(@state.tasks.findIndex((task) -> task.get('id') == configurationId))
+    @props.onChange(
+      @props.tasks.remove(@props.tasks.findIndex((task) -> task.get('id') == configurationId))
+    )
 
   _handleTaskUpdate: (updatedTask) ->
-    @setState
-      tasks: @state.tasks.set(
-        @state.tasks.findIndex((task) -> task.get('id') == updatedTask.get('id')),
+    @props.onChange(
+      @props.tasks.set(
+        @props.tasks.findIndex((task) -> task.get('id') == updatedTask.get('id')),
         updatedTask
       )
+    )
 
   _handleTaskMove: (id, afterId) ->
-    task = @state.tasks.find((task) -> task.get('id') == id)
-    currentIndex = @state.tasks.findIndex((task) -> task.get('id') == id)
-    afterIndex = @state.tasks.findIndex((task) -> task.get('id') == afterId)
-    @setState
-      tasks: @state.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
+    task = @props.tasks.find((task) -> task.get('id') == id)
+    currentIndex = @props.tasks.findIndex((task) -> task.get('id') == id)
+    afterIndex = @props.tasks.findIndex((task) -> task.get('id') == afterId)
+    @props.onChange(
+      @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
+    )
 
   _handleTaskAdd: (component, configuration) ->
     # prepare task
@@ -94,8 +95,9 @@ TasksEditor = React.createClass
     if _.contains ['ex-recurly', 'ex-youtube'], component.get('id')
       task.actionParameters = {}
 
-    @setState
-      tasks: @state.tasks.push(Immutable.fromJS(task))
+    @props.onChange(
+      @props.tasks.push(Immutable.fromJS(task))
+    )
 
 
 module.exports = TasksEditor

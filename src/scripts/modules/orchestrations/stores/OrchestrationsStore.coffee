@@ -10,6 +10,7 @@ StoreUtils = require '../../../utils/StoreUtils'
 _store = Map(
   orchestrationsById: Map()
   orchestrationsPendingActions: Map() # by orchestration id
+  editing: Map() # [orchestrationId][tasks] - edit value
   orchestrationTasksById: Map()
   filter: ''
   isLoading: false
@@ -69,6 +70,12 @@ OrchestrationStore = StoreUtils.createStore
 
   hasOrchestrationTasks: (orchestrationId) ->
     _store.get('orchestrationTasksById').has orchestrationId
+
+  isEditing: (orchestrationId, field) ->
+    _store.hasIn ['editing', orchestrationId, field]
+
+  getEditingValue: (orchestrationId, field) ->
+    _store.getIn ['editing', orchestrationId, field]
 
   ###
     Returns all orchestrations filtered by current filter value
@@ -143,6 +150,7 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
 
+
     when Constants.ActionTypes.ORCHESTRATION_DELETE_START
       _store = _store.setIn ['orchestrationsPendingActions', action.orchestrationId, 'delete'], true
       OrchestrationStore.emitChange()
@@ -158,6 +166,7 @@ Dispatcher.register (payload) ->
         .removeIn ['orchestrationsPendingActions', action.orchestrationId, 'delete']
 
       OrchestrationStore.emitChange()
+
 
 
     when Constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
@@ -190,6 +199,23 @@ Dispatcher.register (payload) ->
       if latestJob
         _store = setLastExecutedJob(_store, parseInt(action.orchestrationId), latestJob)
         OrchestrationStore.emitChange()
+
+
+
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_START
+      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'],
+        OrchestrationStore.getOrchestrationTasks(action.orchestrationId)
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_CANCEL
+      _store = _store.deleteIn ['editing', action.orchestrationId, 'tasks']
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_UPDATE
+      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'], action.tasks
+      OrchestrationStore.emitChange()
+
+
 
     when Constants.ActionTypes.ORCHESTRATION_SET_TASKS
       _store = _store.withMutations((store) ->
