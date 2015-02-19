@@ -9,8 +9,6 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory ComponentDescription
-ComponentName = require '../../../../components/react/components/ComponentName'
-ComponentName = React.createFactory ComponentName
 
 LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
@@ -55,9 +53,6 @@ module.exports = React.createClass
         div className: 'row kbc-header',
           div className: 'col-sm-8',
             ComponentDescription
-              componentId: 'ex-db'
-              configId: @state.configuration.get('id')
-            ComponentName
               componentId: 'ex-db'
               configId: @state.configuration.get('id')
           div className: 'col-sm-4 kbc-buttons',
