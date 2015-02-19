@@ -15,7 +15,7 @@ module.exports = React.createClass
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
     fieldName: React.PropTypes.string.isRequired
-    editElement: React.PropTypes.element.isRequired
+    editElement: React.PropTypes.func.isRequired
 
   getStateFromStores: ->
     value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get @props.fieldName
