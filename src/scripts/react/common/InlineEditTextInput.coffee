@@ -38,6 +38,7 @@ EditInput = React.createFactory React.createClass
   propTypes:
     text: React.PropTypes.string
     isSaving: React.PropTypes.bool
+    isValid: React.PropTypes.bool
     placeholder: React.PropTypes.string
     onCancel: React.PropTypes.func
     onSave: React.PropTypes.func
@@ -55,6 +56,7 @@ EditInput = React.createFactory React.createClass
         Input
           ref: 'input'
           type: 'text'
+          bsStyle: if !@props.isValid then 'error' else ''
           value: @props.text
           disabled: @props.isSaving
           placeholder: @props.placeholder
@@ -62,7 +64,7 @@ EditInput = React.createFactory React.createClass
         ' '
         Button
           bsStyle: 'primary'
-          disabled: @props.isSaving
+          disabled: @props.isSaving || !@props.isValid
           onClick: @props.onSave
         ,
           'Save'
@@ -90,6 +92,7 @@ module.exports = React.createClass
     text: React.PropTypes.string
     isSaving: React.PropTypes.bool
     isEditing: React.PropTypes.bool
+    isValid: React.PropTypes.bool
     editTooltip: React.PropTypes.string
     placeholder: React.PropTypes.string
 
@@ -103,6 +106,7 @@ module.exports = React.createClass
       EditInput
         text: @props.text
         isSaving: @props.isSaving
+        isValid: @props.isValid
         placeholder: @props.placeholder
         onChange: @props.onEditChange
         onCancel: @props.onEditCancel

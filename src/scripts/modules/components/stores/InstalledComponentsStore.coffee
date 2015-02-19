@@ -34,6 +34,14 @@ InstalledComponentsStore = StoreUtils.createStore
   getEditingConfig: (componentId, configId, field) ->
     _store.getIn ['editingConfigurations', componentId, configId, field]
 
+  isValidEditingConfig: (componentId, configId, field) ->
+    value = @getEditingConfig(componentId, configId, field)
+    return true if value == undefined
+    switch field
+      when 'description' then true
+      when 'name' then value.trim().length > 0
+
+
   isSavingConfig: (componentId, configId, field) ->
     _store.hasIn ['savingConfigurations', componentId, configId, field]
 

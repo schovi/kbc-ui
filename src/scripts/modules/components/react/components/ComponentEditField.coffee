@@ -2,6 +2,7 @@
 React = require 'react'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+immutableMixin = require '../../../../react/mixins/ImmutableRendererMixin'
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
@@ -9,7 +10,7 @@ InstalledComponentsActionCreators = require '../../InstalledComponentsActionCrea
 
 module.exports = React.createClass
   displayName: "ComponentEditField"
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore), immutableMixin]
   propTypes:
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
@@ -21,6 +22,7 @@ module.exports = React.createClass
     editValue: InstalledComponentsStore.getEditingConfig @props.componentId, @props.configId, @props.fieldName
     isEditing: InstalledComponentsStore.isEditingConfig @props.componentId, @props.configId, @props.fieldName
     isSaving: InstalledComponentsStore.isSavingConfig @props.componentId, @props.configId, @props.fieldName
+    isValid: InstalledComponentsStore.isValidEditingConfig @props.componentId, @props.configId, @props.fieldName
 
   _handleEditStart: ->
     InstalledComponentsActionCreators.startConfigurationEdit(@props.componentId, @props.configId, @props.fieldName)
@@ -45,6 +47,7 @@ module.exports = React.createClass
       placeholder: 'Describe the component ...'
       isSaving: @state.isSaving
       isEditing: @state.isEditing
+      isValid: @state.isValid
       onEditStart: @_handleEditStart
       onEditCancel: @_handleEditCancel
       onEditChange: @_handleEditChange
