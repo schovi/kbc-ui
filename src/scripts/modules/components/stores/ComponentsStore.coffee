@@ -41,7 +41,7 @@ ComponentsStore = StoreUtils.createStore
   getComponentDetailLegacyUrl: (id, configurationId) ->
     component = @getComponent id
 
-    if component.type == 'extractor'
+    if component.get('type') == 'extractor'
       templateName = 'legacyExtractorDetail'
     else
       templateName = 'legacyWriterDetail'
