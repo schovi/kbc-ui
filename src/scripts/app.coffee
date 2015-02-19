@@ -78,7 +78,6 @@ startApp = (appOptions) ->
     )
 
     # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
-    console.log 'routes', state
     promises = RoutesStore
       .getRequireDataFunctionsForRouterState(state.routes)
       .map((requireData) ->

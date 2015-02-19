@@ -27,6 +27,7 @@ deploy:
     upload-dir: kbc
     acl: public_read
     skip_cleanup: true
+    cache_control: 'max-age=31536000'
     on:
       repo: keboola/kbc-ui
   - provider: s3
@@ -38,6 +39,7 @@ deploy:
     upload-dir: kbc
     acl: public_read
     skip_cleanup: true
+    cache_control: 'max-age=31536000'
     on:
       repo: keboola/kbc-ui
 after_deploy:
