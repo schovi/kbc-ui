@@ -184,7 +184,7 @@ Dispatcher.register (payload) ->
         store = store.set 'isPending', false
         if notFound
           store
-            .set 'error', new Error('Page not found', 'Page not found')
+            .set 'error', new Error.Error('Page not found', 'Page not found')
             .set 'routerState', newState
         else
           store
@@ -197,7 +197,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store = store
           .set 'isPending', false
-          .set 'error', Error.factory(action.error)
+          .set 'error', Error.create(action.error)
 
         store.set 'breadcrumbs', generateBreadcrumbs(store)
 

@@ -9,6 +9,7 @@ Immutable = require 'immutable'
 routes = require './routes'
 createReactRouterRoutes = require './utils/createReactRouterRoutes'
 Timer = require './utils/Timer'
+Error = require './utils/Error'
 
 ApplicationActionCreators = require './actions/ApplicationActionCreators'
 RouterActionCreators = require './actions/RouterActionCreators'
@@ -44,11 +45,11 @@ startApp = (appOptions) ->
     location: if appOptions.locationMode == 'history' then Router.HistoryLocation else Router.HashLocation
   )
 
-
   Promise.longStackTraces()
   # error thrown during application live not on route chage
   Promise.onPossiblyUnhandledRejection (e) ->
-    ApplicationActionCreators.sendNotification "Error: #{e.message.toString()}", 'error'
+    error = Error.create(e)
+    ApplicationActionCreators.sendNotification "Error: #{error.getTitle()}. #{error.getText()}", 'error'
     throw e
 
 
