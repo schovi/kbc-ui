@@ -52,7 +52,6 @@ startApp = (appOptions) ->
     ApplicationActionCreators.sendNotification "Error: #{error.getTitle()}. #{error.getText()}", 'error'
     throw e
 
-
   # Show loading page before app is ready
   loading = _.once (Handler) ->
     React.render(React.createElement(Handler, isLoading: true), appOptions.rootNode)

@@ -7,11 +7,20 @@ ApplicationStore = require '../../stores/ApplicationStore'
 module.exports = React.createClass
   displayName: 'UserLinks'
   mixins: [ImmutableRendererMixin]
+
+  _openSupportModal: (e) ->
+    window.Zenbox.show() # zendesk global
+    e.preventDefault()
+    e.stopPropagation()
+
   render: ->
     div className: 'kbc-user-links',
       ul className: 'nav',
         li null,
-          a href: '',
+          a
+            href: ''
+            onClick: @_openSupportModal
+          ,
             span className: 'kbc-icon-comment'
             ' Support '
         li null,
