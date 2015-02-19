@@ -1,10 +1,10 @@
 React = require 'react'
 createComponentEditClass = require './ComponentEditField'
-InlineEditTextArea = require '../../../../react/common/InlineEditArea'
+InlineEditTextInput = require '../../../../react/common/InlineEditTextInput'
 ComponentEditField = require './ComponentEditField'
 
 module.exports = React.createClass
-  displayName: 'ComponentDescription'
+  displayName: 'ComponentName'
   propTypes:
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
@@ -12,7 +12,7 @@ module.exports = React.createClass
     React.createElement ComponentEditField,
       componentId: @props.componentId
       configId: @props.configId
-      fieldName: 'description'
-      editElement: InlineEditTextArea
-
+      fieldName: 'name'
+      editElement: InlineEditTextInput
+  
 

@@ -29,7 +29,6 @@ Header = React.createClass
 
 
   render: ->
-    console.log 'route config', @state.currentRouteComponentId
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-sm-3 col-md-2 kbc-logo'},
         a href: @props.homeUrl,
