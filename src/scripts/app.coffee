@@ -62,7 +62,10 @@ startApp = (appOptions) ->
   # re-render after each route change
   router.run (Handler, state) ->
     # avoid state mutation by router
-    state = _.extend {}, state
+    state = _.extend {}, state,
+      routes: _.map state.routes, (route) ->
+        # convert to plain object
+        _.extend {}, route
 
     RouterActionCreators.routeChangeStart(state)
 
@@ -75,6 +78,7 @@ startApp = (appOptions) ->
     )
 
     # async data handling inspired by https://github.com/rackt/react-router/blob/master/examples/async-data/app.js
+    console.log 'routes', state
     promises = RoutesStore
       .getRequireDataFunctionsForRouterState(state.routes)
       .map((requireData) ->
