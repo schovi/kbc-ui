@@ -48,13 +48,13 @@ EditInput = React.createFactory React.createClass
     @props.onChange e.target.value
 
   componentDidMount: ->
-    @refs.input.getDOMNode().focus()
+    @refs.valueInput.getInputDOMNode().focus()
 
   render: ->
     div className: 'form-inline',
       div className: 'form-group',
         Input
-          ref: 'input'
+          ref: 'valueInput'
           type: 'text'
           bsStyle: if !@props.isValid then 'error' else ''
           value: @props.text
