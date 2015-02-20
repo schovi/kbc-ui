@@ -15,7 +15,7 @@ TransformationsIndex = React.createClass
     buckets: InstalledComponentsStore.getComponent('transformation').get('configurations')
 
   render: ->
-    div {className: 'container-fluid'}, 
+    div {className: 'container-fluid'},
       div {className: 'col-md-9 kbc-main-content'},
         @_renderTable()
       div {className: 'col-md-3 kbc-main-sidebar'},
@@ -23,35 +23,35 @@ TransformationsIndex = React.createClass
 
   _renderSidebar: ->
     ul {className: 'nav nav-stacked'},
-      li {}, 
+      li {},
         a {className: "add-bucket"},
-          i {className: "fa fa-fw fa-plus"}, 
-            "Add Bucket"
+          i {className: "fa fa-fw fa-plus"}
+          "Add Bucket"
       li {},
         a {className: "sandbox"},
-          i {className: "fa fa-fw fa-wrench"},
-            "Create Sandbox"
+          i {className: "fa fa-fw fa-wrench"}
+          "Create Sandbox"
       li {},
         a {className: "sandbox"},
-          i {className: "fa fa-fw fa-list-ul"},
-            "Sandbox Credentials"
+          i {className: "fa fa-fw fa-list-ul"}
+          "Sandbox Credentials"
       li {},
         a {className: "sandbox"},
-          i {className: "fa fa-fw fa-cogs"},
-            "Running Processes"
+          i {className: "fa fa-fw fa-cogs"}
+          "Running Processes"
 
   _renderTableRow: (row) ->
     Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
-      span {className: 'td'}, 
+      span {className: 'td'},
         h4 {}, row.get('name')
-      span {className: 'td'}, 
+      span {className: 'td'},
         small {}, row.get('description')
       span {className: 'td'},
-        button {className: 'btn btn-default btn-sm remove-bucket'}, 
+        button {className: 'btn btn-default btn-sm remove-bucket'},
           i {className: 'kbc-icon-cup'}
         button {className: 'btn btn-default btn-sm run-transformation'},
           i {className: 'fa fa-fw fa-play'}
-        
+
   _renderTable: ->
     console.log 'rendering table'
     idx = 0
@@ -61,6 +61,6 @@ TransformationsIndex = React.createClass
           idx++
           @_renderTableRow(bucket)
 
-        , @).toArray()    
+        , @).toArray()
 
 module.exports = TransformationsIndex

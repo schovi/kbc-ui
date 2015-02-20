@@ -19,10 +19,11 @@ module.exports = React.createClass
   render: ->
     if @state.open then className = 'open' else ''
     div className: "kbc-project-select dropdown #{className}",
-      button onClick: @_handleDropdownClick,
+      button onClick: @_handleDropdownClick, title: @props.currentProject.get('name'),
         span null,
-          @props.currentProject.get('name')
           span className: 'kbc-icon-pickerDouble'
+          span className: 'kbc-project-name',
+            @props.currentProject.get('name')
       Dropdown
         organizations: @props.organizations
         currentProjectId: @props.currentProject.get('id')
