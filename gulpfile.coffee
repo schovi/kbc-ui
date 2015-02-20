@@ -93,10 +93,13 @@ gulp.task 'watch', ->
 
   .emit 'update'
 
+  gulp.watch ['./src/styles/app.less', './bower_components/kbc-bootstrap/dist/**'], ['less']
+
 gulp.task 'less', ['clean'], ->
   gulp.src('./src/styles/app.less')
   .pipe(less())
   .pipe(gulp.dest('./tmp/styles'))
+  .pipe(browserSync.reload( stream:true))
 
 gulp.task 'build-styles', ['clean'], ->
   gulp.src('./src/styles/app.less')
