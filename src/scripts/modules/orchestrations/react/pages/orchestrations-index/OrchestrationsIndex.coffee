@@ -37,7 +37,10 @@ Index = React.createClass
         @_renderEmptyState()
 
   _renderEmptyState: ->
-    div null, 'No orchestrations found'
+    div {className: 'table table-striped'},
+      div {className: 'tfoot'},
+        div {className: 'tr'},
+          div {className: 'td'}, 'No orchestrations found'
 
   _renderTable: ->
     childs = @state.orchestrations.map((orchestration) ->
