@@ -21,10 +21,10 @@ module.exports = React.createClass
             href: ''
             onClick: @_openSupportModal
           ,
-            span className: 'kbc-icon-comment'
+            span className: 'kbc-icon kbc-icon-comment'
             ' Support '
         li null,
           a href: ApplicationStore.getProjectPageUrl('settings'),
-            span className: 'kbc-icon-user'
+            span className: 'kbc-icon kbc-icon-user'
             ' Users & Settings '
 
