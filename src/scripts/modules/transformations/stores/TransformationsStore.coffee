@@ -23,33 +23,33 @@ removeFromLoadingBuckets = (store, bucketId) ->
 
 TransformationsStore = StoreUtils.createStore
 
-###
-  Returns all transformations for bucket id
-###
+  ###
+    Returns all transformations for bucket id
+  ###
   getTransformations: (bucketId) ->
     _store
-    .getIn(['transformationsByBucketId', bucketId], List())
-    .sortBy((transformation) -> transformation.get 'phase')
-    .sortBy((transformation) -> transformation.get 'name')
+      .getIn(['transformationsByBucketId', bucketId], List())
+      .sortBy((transformation) -> transformation.get('phase'))
+      .sortBy((transformation) -> transformation.get('name'))
 
-###
-  Check if store contains transformations for specified bucket
-###
+  ###
+    Check if store contains transformations for specified bucket
+  ###
   hasTransformations: (bucketId) ->
     _store.get('transformationsByBucketId').has bucketId
 
-###
-  Returns one transformation by its id
-###
+  ###
+    Returns one transformation by its id
+  ###
   getTransformation: (transformationId) ->
     foundTransformation = null
     _store.get('transformationsByBucketId').find (transformations) ->
       foundTransformation = transformations.find (transformation) -> transformation.get('id') == transformationId
     foundTransformation
 
-###
-  Test if specified transformation buckets are currently being loaded
-###
+  ###
+    Test if specified transformation buckets are currently being loaded
+  ###
   isBucketLoading: (bucketId) ->
     _store.get('loadingTransformationBuckets').contains bucketId
 
