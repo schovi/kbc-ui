@@ -3,18 +3,20 @@ Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
-InstalledComponentsStore  = require('../../../../components/stores/InstalledComponentsStore')
+TransformationsStore  = require('../../../stores/TransformationBucketsStore')
 
 {div, span, input, strong, form, button, h4, i, button, small} = React.DOM
 TransformationBucket = React.createClass
   displayName: 'TransformationsIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(TransformationsStore)]
 
   getStateFromStores: ->
-    buckets: InstalledComponentsStore.getComponent('transformation').get('configurations')
+    transformations: TransformationsStore.getAll()
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
-      "test"  
+      @state.transformations.map((transformation) ->
+        div {}, transformation.get("name")
+      , @).toArray()
 
 module.exports = TransformationBucket

@@ -2,7 +2,7 @@ React = require 'react'
 TransformationsIndex = require('./react/pages/transformations-index/TransformationsIndex')
 TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
-
+TransformationsActionCreators = require('./ActionCreators')
 
 routes =
       name: 'transformations'
@@ -10,7 +10,8 @@ routes =
       defaultRouteHandler: TransformationsIndex
       requireData: [
         (params) ->
-          InstalledComponentsActionCreators.loadComponents()
+          TransformationsActionCreators.loadTransformationBuckets()
+        
       ]
       childRoutes: [
         name: 'transformationBucket'
@@ -19,10 +20,10 @@ routes =
           bucketId = routerState.getIn(['params', 'bucketId'])
           "Bucket " + bucketId
         handler: TransformationBucket
-        #requireData: [
-        #  (params) ->
-        #    JobsActionCreators.loadJobDetail(parseInt(params.jobId))
-        #]
+        requireData: [
+          (params) ->
+            TransformationsActionCreators.loadTransformations(params.bucketId)
+        ]
       ]
 
 module.exports = routes

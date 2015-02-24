@@ -4,15 +4,15 @@ Immutable = require('immutable')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
-InstalledComponentsStore  = require('../../../../components/stores/InstalledComponentsStore')
+TransformationBucketsStore = require('../../../stores/TransformationBucketsStore')
 
 {div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
 TransformationsIndex = React.createClass
   displayName: 'TransformationsIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(TransformationBucketsStore)]
 
   getStateFromStores: ->
-    buckets: InstalledComponentsStore.getComponent('transformation').get('configurations')
+    buckets: TransformationBucketsStore.getAll()
 
   render: ->
     div {className: 'container-fluid'},
@@ -60,7 +60,7 @@ TransformationsIndex = React.createClass
         @state.buckets.map((bucket) ->
           idx++
           @_renderTableRow(bucket)
-
+          
         , @).toArray()
 
 module.exports = TransformationsIndex
