@@ -10,7 +10,7 @@ module.exports = React.createClass
   displayName: 'FormHeader'
   propTypes:
     component: React.PropTypes.object.isRequired
-    onCreate: React.PropTypes.func.isRequired
+    onSave: React.PropTypes.func.isRequired
     onCancel: React.PropTypes.func.isRequired
     isValid: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
@@ -37,6 +37,6 @@ module.exports = React.createClass
         Button
           bsStyle: 'success'
           disabled: !@props.isValid || @props.isSaving
-          onclick: @props.onCreate
+          onClick: @props.onSave
         ,
           'Create'

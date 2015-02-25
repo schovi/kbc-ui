@@ -121,5 +121,11 @@ Dispatcher.register (payload) ->
       )
       InstalledComponentsStore.emitChange()
 
+    when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
+      _store = _store.setIn ['components', action.componentId, 'configurations', action.configuration.id],
+        Immutable.fromJS action.configuration
+
+      InstalledComponentsStore.emitChange()
+
 
 module.exports = InstalledComponentsStore

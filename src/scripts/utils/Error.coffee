@@ -23,7 +23,7 @@ class Error
 
 createFromException = (error) ->
   if error instanceof HttpError
-    Error.fromXhrError error
+    createFromXhrError error
   else if error.isOperational # error from bluebird
     new Error('Connection error', error.message)
   else

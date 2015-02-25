@@ -3,15 +3,12 @@ request = require '../../utils/request'
 _ = require 'underscore'
 ApplicationStore = require '../../stores/ApplicationStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
+SyrupApi = require '../components/SyrupComponentApi'
 
 jobPoller = require '../../utils/jobPoller'
 
-createUrl = (path) ->
-  ComponentsStore.getComponent('ex-db').get('uri') + '/' + path
-
 createRequest = (method, path) ->
-  request(method, createUrl(path))
-  .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
+  SyrupApi.createRequest('ex-db', method, path)
 
 
 module.exports =

@@ -6,6 +6,7 @@ StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
   configurations: Map() # indexed by component id
+  saving: Map()
 )
 
 NewConfigurationsStore = StoreUtils.createStore
@@ -20,7 +21,7 @@ NewConfigurationsStore = StoreUtils.createStore
     !!@getConfiguration(componentId).get('name').trim()
 
   isSavingConfiguration: (componentId) ->
-    true
+    _store.hasIn ['saving', componentId]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -33,6 +34,22 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_CANCEL
       _store = _store.deleteIn ['configurations', action.componentId]
+      NewConfigurationsStore.emitChange()
+
+    when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_START
+      _store = _store.setIn ['saving', action.componentId], true
+      NewConfigurationsStore.emitChange()
+
+    when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_ERROR
+      _store = _store.deleteIn ['saving', action.componentId]
+      NewConfigurationsStore.emitChange()
+
+    when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .deleteIn ['saving', action.componentId]
+        .deleteIn ['configurations', action.componentId]
+
       NewConfigurationsStore.emitChange()
 
 module.exports = NewConfigurationsStore

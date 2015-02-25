@@ -28,4 +28,13 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
+
+  createConfiguration: (componentId, data) ->
+    createRequest 'POST', "components/#{componentId}/configs"
+    .type 'form'
+    .send data
+    .promise()
+    .then (response) ->
+      response.body
+
 module.exports = installedComponentsApi

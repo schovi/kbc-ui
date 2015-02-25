@@ -13,6 +13,7 @@ module.exports = React.createClass
     component: React.PropTypes.object.isRequired
     configuration: React.PropTypes.object.isRequired
     onCancel: React.PropTypes.func.isRequired
+    onSave: React.PropTypes.func.isRequired
     onChange: React.PropTypes.func.isRequired
     isValid: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
@@ -25,6 +26,7 @@ module.exports = React.createClass
       FormHeader
         component: @props.component
         onCancel: @props.onCancel
+        onSave: @props.onSave
         isValid: @props.isValid
         isSaving: @props.isSaving
       div className: 'row',

@@ -30,6 +30,9 @@ module.exports = React.createClass
   _handleChange: (newConfiguration) ->
     NewConfigurationsActionCreators.updateConfiguration(@state.component.get('id'), newConfiguration)
 
+  _handleSave: ->
+    NewConfigurationsActionCreators.saveConfiguration(@state.component.get('id'))
+
   render: ->
     div className: 'container-fluid kbc-main-content',
       DefaultForm
@@ -39,5 +42,6 @@ module.exports = React.createClass
         isSaving: @state.isSaving
         onCancel: @_handleReset
         onChange: @_handleChange
+        onSave: @_handleSave
 
 
