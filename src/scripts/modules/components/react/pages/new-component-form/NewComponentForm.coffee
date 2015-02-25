@@ -7,7 +7,8 @@ NewConfigurationsStore = require '../../../stores/NewConfigurationsStore'
 
 NewConfigurationsActionCreators = require '../../../NewConfigurationsActionCreators'
 
-DefaultForm = React.createFactory(require './DefaultForm')
+DefaultForm = require './DefaultForm'
+GoodDataWriterForm = require './GoodDataWriterForm'
 
 
 {div} = React.DOM
@@ -35,7 +36,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      DefaultForm
+      React.createElement @_getFormHandler(),
         component: @state.component
         configuration: @state.configuration
         isValid: @state.isValid
@@ -43,5 +44,10 @@ module.exports = React.createClass
         onCancel: @_handleReset
         onChange: @_handleChange
         onSave: @_handleSave
+
+  _getFormHandler: ->
+    switch @state.component.get('id')
+      when 'gooddata-writer' then GoodDataWriterForm
+      else DefaultForm
 
 

@@ -9,13 +9,28 @@ _store = Map(
   saving: Map()
 )
 
+_defaults = Immutable.fromJS
+  'gooddata-writer':
+    name: ''
+    description: ''
+    pid: ''
+    username: ''
+    password: ''
+    accessToken: ''
+    mode: 'new'
+    tokenType: 'production'
+
+getDefaultConfiguration = (componentId) ->
+  _defaults.get componentId, Map(
+    name: ''
+    description: ''
+  )
+
 NewConfigurationsStore = StoreUtils.createStore
 
   getConfiguration: (componentId) ->
     _store.getIn ['configurations', componentId],
-      Map
-        name: ''
-        description: ''
+      getDefaultConfiguration componentId
 
   isValidConfiguration: (componentId) ->
     !!@getConfiguration(componentId).get('name').trim()
