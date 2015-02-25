@@ -18,8 +18,11 @@ module.exports = React.createClass
   mixins: [createStoreMixin(NewConfigurationsStore)]
 
   getStateFromStores: ->
-    component: ComponentsStore.getComponent(RoutesStore.getCurrentRouteParam('componentId'))
-    configuration: NewConfigurationsStore.getConfiguration(RoutesStore.getCurrentRouteParam('componentId'))
+    componentId = RoutesStore.getCurrentRouteParam('componentId')
+    component: ComponentsStore.getComponent(componentId)
+    configuration: NewConfigurationsStore.getConfiguration(componentId)
+    isValid: NewConfigurationsStore.isValidConfiguration(componentId)
+    isSaving: NewConfigurationsStore.isSavingConfiguration(componentId)
 
   _handleReset: ->
     NewConfigurationsActionCreators.resetConfiguration(@state.component.get 'id')
@@ -32,6 +35,8 @@ module.exports = React.createClass
       DefaultForm
         component: @state.component
         configuration: @state.configuration
+        isValid: @state.isValid
+        isSaving: @state.isSaving
         onCancel: @_handleReset
         onChange: @_handleChange
 

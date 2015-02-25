@@ -16,6 +16,12 @@ NewConfigurationsStore = StoreUtils.createStore
         name: ''
         description: ''
 
+  isValidConfiguration: (componentId) ->
+    !!@getConfiguration(componentId).get('name').trim()
+
+  isSavingConfiguration: (componentId) ->
+    true
+
 Dispatcher.register (payload) ->
   action = payload.action
 

@@ -14,6 +14,8 @@ module.exports = React.createClass
     configuration: React.PropTypes.object.isRequired
     onCancel: React.PropTypes.func.isRequired
     onChange: React.PropTypes.func.isRequired
+    isValid: React.PropTypes.bool.isRequired
+    isSaving: React.PropTypes.bool.isRequired
 
   _handleChange: (propName, event) ->
     @props.onChange(@props.configuration.set propName, event.target.value)
@@ -23,6 +25,8 @@ module.exports = React.createClass
       FormHeader
         component: @props.component
         onCancel: @props.onCancel
+        isValid: @props.isValid
+        isSaving: @props.isSaving
       div className: 'row',
         div className: 'col-xs-4',
           Input
@@ -33,6 +37,7 @@ module.exports = React.createClass
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-10'
             onChange: @_handleChange.bind @, 'name'
+            disabled: @props.isSaving
           Input
             type: 'textarea'
             label: 'Description'
@@ -40,3 +45,4 @@ module.exports = React.createClass
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-10'
             onChange: @_handleChange.bind @, 'description'
+            disabled: @props.isSaving
