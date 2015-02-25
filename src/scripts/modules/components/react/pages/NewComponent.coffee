@@ -4,8 +4,11 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
 ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
 SearchRow = React.createFactory(require '../../../../react/common/SearchRow')
+Link = React.createFactory(require('react-router').Link)
+
 ComponentsStore = require '../../stores/ComponentsStore'
 ComponentsActionCreators = require '../../ComponentsActionCreators'
+
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM
 
@@ -22,10 +25,17 @@ ComponentBox = React.createClass
     div className: 'col-sm-4',
       div className: 'panel',
         div className: 'panel-body text-center',
-          ComponentIcon component: component, size: '32'
+          ComponentIcon
+            component: component
+            size: '64'
           h2 null, component.get('name')
           p null, component.get('description')
-          a className: 'btn btn-success btn-lg',
+          Link
+            className: 'btn btn-success btn-lg'
+            to: 'new-extractor-form'
+            params:
+              componentId: component.get 'id'
+          ,
             span className: 'kbc-icon-plus', 'Add'
 
 createNewComponentPage = (type) ->

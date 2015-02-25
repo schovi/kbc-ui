@@ -27,6 +27,9 @@ ComponentsStore = StoreUtils.createStore
   getComponent: (id) ->
     _store.getIn ['componentsById', id]
 
+  hasComponent: (id) ->
+    _store.hasIn ['componentsById', id]
+
   getFilteredForType: (type) ->
     filter = @getFilter(type)
     all = @getAllForType(type)

@@ -32,7 +32,9 @@ createComponentsIndex = (type) ->
     renderComponentRow: (component) ->
       tr key: component.get('id'),
         td null,
-          ComponentIcon(component: component, size: '32')
+          ComponentIcon
+            component: component
+            size: '32'
           component.get('name')
         td null, @renderConfigs(component)
 

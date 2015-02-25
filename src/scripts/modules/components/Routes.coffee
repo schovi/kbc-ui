@@ -1,15 +1,20 @@
+React = require 'react'
+
 createComponentsIndex = require './react/pages/ComponentsIndex'
 createNewComponentPage = require './react/pages/NewComponent'
 createNewComponentButton = require './react/components/NewComponentButton'
 
+NewComponentFormPage = React.createFactory(require './react/pages/new-component-form/NewComponentForm')
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators'
+ComponentsActionCreators = require './ComponentsActionCreators'
 
 exDbRoutes = require '../ex-db/exDbRoutes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
+
 routes =
 
   extractors:
@@ -23,7 +28,15 @@ routes =
     childRoutes: [
       name: 'new-extractor'
       title: 'New Extractor'
-      handler: createNewComponentPage('extractor'),
+      defaultRouteHandler: createNewComponentPage('extractor')
+      childRoutes: [
+        name: 'new-extractor-form'
+        title: 'New Extractor'
+        path: ':componentId'
+        handler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.componentId
+      ]
     ,
       exDbRoutes
     ,
