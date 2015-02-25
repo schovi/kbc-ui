@@ -5,7 +5,8 @@ constants = require './Constants'
 
 NewConfigurationsStore = require './stores/NewConfigurationsStore'
 
-componentsUtils = require './Utils'
+createComponentConfiguration = require './utils/createComponentConfiguration'
+transitionToComponentConfiguration = require './utils/componentConfigurationTransition'
 
 module.exports =
 
@@ -28,14 +29,14 @@ module.exports =
       type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_START
       componentId: componentId
 
-    componentsUtils
-    .createComponentConfiguration componentId, configuration
+    createComponentConfiguration componentId, configuration
     .then (response) ->
       console.log 'created', response
       dispatcher.handleViewAction
         type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
         componentId: componentId
         configuration: response
+      transitionToComponentConfiguration(componentId, response.id)
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_ERROR

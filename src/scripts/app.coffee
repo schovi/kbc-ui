@@ -59,6 +59,8 @@ startApp = (appOptions) ->
   # registered pollers for previous page
   registeredPollers = Immutable.List()
 
+  RouterActionCreators.routerCreated router
+
   # re-render after each route change
   router.run (Handler, state) ->
     # avoid state mutation by router

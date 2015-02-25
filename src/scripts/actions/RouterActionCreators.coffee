@@ -26,3 +26,9 @@ module.exports =
       type: constants.ActionTypes.ROUTER_ROUTE_CHANGE_ERROR
       error: error
     )
+
+  routerCreated: (router) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ROUTER_ROUTER_CREATED
+      router: router
+    )

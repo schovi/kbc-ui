@@ -11,6 +11,7 @@ Immutable = require('immutable')
 Constants = require '../constants/KbcConstants'
 
 _store = Map(
+  router: null
   isPending: false
   routerState: Map()
   routesByName: Map()
@@ -94,6 +95,9 @@ RoutesStore = StoreUtils.createStore
 
   isError: ->
     _store.has 'error'
+
+  getRouter: ->
+    _store.get 'router'
 
   getBreadcrumbs: ->
     _store.get 'breadcrumbs'
@@ -203,6 +207,9 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.ROUTER_ROUTES_CONFIGURATION_RECEIVE
       _store = _store.set 'routesByName', nestedRoutesToByNameMap(action.routes)
+
+    when Constants.ActionTypes.ROUTER_ROUTER_CREATED
+      _store = _store.set 'router', action.router
 
   # Emit change on events
   # for example orchestration is loaed asynchronously while breadcrumbs are already rendered so it has to be rendered again
