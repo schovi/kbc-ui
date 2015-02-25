@@ -8,6 +8,8 @@ module.exports = React.createClass
   displayName: 'FormHeader'
   propTypes:
     component: React.PropTypes.object.isRequired
+    onCreate: React.PropTypes.func.isRequired
+    onCancel: React.PropTypes.func.isRequired
 
   render: ->
     div className: 'row kbc-header',
@@ -20,9 +22,11 @@ module.exports = React.createClass
       div className: 'kbc-buttons',
         Button
           bsStyle: 'link'
+          onClick: @props.onCancel
         ,
           'Cancel'
         Button
           bsStyle: 'success'
+          onclick: @props.onCreate
         ,
           'Create'
