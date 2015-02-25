@@ -35,10 +35,6 @@ TransformationsIndex = React.createClass
         a {className: "sandbox"},
           i {className: "fa fa-fw fa-list-ul"}
           "Sandbox Credentials"
-      li {},
-        a {className: "sandbox"},
-          i {className: "fa fa-fw fa-cogs"}
-          "Running Processes"
 
   _renderTableRow: (row) ->
     Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
