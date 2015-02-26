@@ -32,7 +32,7 @@ ComponentBox = React.createClass
           p null, component.get('description')
           Link
             className: 'btn btn-success btn-lg'
-            to: 'new-extractor-form'
+            to: "new-#{component.get('type')}-form"
             params:
               componentId: component.get 'id'
           ,

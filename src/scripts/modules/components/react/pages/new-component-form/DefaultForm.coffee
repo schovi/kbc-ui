@@ -18,6 +18,9 @@ module.exports = React.createClass
     isValid: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
 
+  componentDidMount: ->
+    @refs.name.getInputDOMNode().focus()
+
   _handleChange: (propName, event) ->
     @props.onChange(@props.configuration.set propName, event.target.value)
 
@@ -34,6 +37,7 @@ module.exports = React.createClass
           Input
             type: 'text'
             label: 'Name'
+            ref: 'name'
             value: @props.configuration.get 'name'
             placeholder: "My #{@props.component.get('name')}"
             labelClassName: 'col-xs-2'
