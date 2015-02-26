@@ -8,6 +8,9 @@ NewConfigurationsStore = require './stores/NewConfigurationsStore'
 createComponentConfiguration = require './utils/createComponentConfiguration'
 transitionToComponentConfiguration = require './utils/componentConfigurationTransition'
 
+RoutesStore = require '../../stores/RoutesStore'
+ComponentsStore = require './stores/ComponentsStore'
+
 module.exports =
 
 
@@ -21,6 +24,10 @@ module.exports =
     dispatcher.handleViewAction
       type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_CANCEL
       componentId: componentId
+
+    component = ComponentsStore.getComponent componentId
+    RoutesStore.getRouter().transitionTo "new-#{component.get('type')}"
+
 
   saveConfiguration: (componentId) ->
     configuration = NewConfigurationsStore.getConfiguration componentId

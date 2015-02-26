@@ -9,6 +9,7 @@ NewConfigurationsActionCreators = require '../../../NewConfigurationsActionCreat
 
 DefaultForm = require './DefaultForm'
 GoodDataWriterForm = require './GoodDataWriterForm'
+ManualConfigurationForm = require './ManualConfigurationFrom'
 
 
 {div} = React.DOM
@@ -46,6 +47,9 @@ module.exports = React.createClass
         onSave: @_handleSave
 
   _getFormHandler: ->
+    if !@state.component.get 'hasUI'
+      return ManualConfigurationForm
+
     switch @state.component.get('id')
       when 'gooddata-writer' then GoodDataWriterForm
       else DefaultForm
