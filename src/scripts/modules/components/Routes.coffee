@@ -8,6 +8,7 @@ NewComponentFormPage = React.createFactory(require './react/pages/new-component-
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
+ComponentsStore = require './stores/ComponentsStore'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
 
@@ -31,7 +32,9 @@ routes =
       defaultRouteHandler: createNewComponentPage('extractor')
       childRoutes: [
         name: 'new-extractor-form'
-        title: 'New Extractor'
+        title: (routerState) ->
+          componentId = routerState.getIn ['params', 'componentId']
+          ComponentsStore.getComponent(componentId).get 'name'
         path: ':componentId'
         handler: NewComponentFormPage
         requireData: (params) ->
@@ -59,7 +62,9 @@ routes =
       defaultRouteHandler: createNewComponentPage('writer')
       childRoutes: [
         name: 'new-writer-form'
-        title: 'New Writer'
+        title: (routerState) ->
+          componentId = routerState.getIn ['params', 'componentId']
+          ComponentsStore.getComponent(componentId).get 'name'
         path: ':componentId'
         handler: NewComponentFormPage
         requireData: (params) ->
