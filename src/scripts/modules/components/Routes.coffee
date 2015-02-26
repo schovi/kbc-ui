@@ -56,7 +56,16 @@ routes =
     childRoutes: [
       name: 'new-writer'
       title: 'New Writer'
-      handler: createNewComponentPage('writer')
+      defaultRouteHandler: createNewComponentPage('writer')
+      childRoutes: [
+        name: 'new-writer-form'
+        title: 'New Writer'
+        path: ':componentId'
+        handler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.componentId
+      ]
     ]
+
 
 module.exports = routes
