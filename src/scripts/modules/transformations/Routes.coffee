@@ -4,10 +4,16 @@ TransformationBucket = require('./react/pages/transformation-bucket/Transformati
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
 
+TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
+NewTransformationBucketButton = require './react/components/NewTransformationBucketButton'
+
+
 routes =
       name: 'transformations'
       title: 'Transformations'
       defaultRouteHandler: TransformationsIndex
+      reloaderHandler: TransformationsIndexReloaderButton
+      headerButtonsHandler: NewTransformationBucketButton
       requireData: [
         (params) ->
           TransformationsActionCreators.loadTransformationBuckets()

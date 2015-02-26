@@ -2,6 +2,8 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 
+TransformationBucketRow = React.createFactory(require './TransformationBucketRow')
+
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 TransformationBucketsStore = require('../../../stores/TransformationBucketsStore')
@@ -13,6 +15,7 @@ TransformationsIndex = React.createClass
 
   getStateFromStores: ->
     buckets: TransformationBucketsStore.getAll()
+    pendingActions: TransformationBucketsStore.getPendingActions()
 
   render: ->
     div {className: 'container-fluid'},
@@ -23,10 +26,6 @@ TransformationsIndex = React.createClass
 
   _renderSidebar: ->
     ul {className: 'nav nav-stacked'},
-      li {},
-        a {className: "add-bucket"},
-          i {className: "fa fa-fw fa-plus"}
-          "Add Bucket"
       li {},
         a {className: "sandbox"},
           i {className: "fa fa-fw fa-wrench"}
@@ -50,12 +49,15 @@ TransformationsIndex = React.createClass
 
   _renderTable: ->
     console.log 'rendering table'
-    idx = 0
+
     span {className: 'table'},
       span {className: 'tbody'},
         @state.buckets.map((bucket) ->
-          idx++
-          @_renderTableRow(bucket)
+          TransformationBucketRow
+            bucket: bucket
+            pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
+            key: bucket.get 'id'
+          
           
         , @).toArray()
 

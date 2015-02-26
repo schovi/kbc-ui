@@ -12,6 +12,7 @@ _store = Map(
   isLoading: false
   isLoaded: false
   loadingBuckets: List()
+  bucketsPendingActions: Map() # by bucket id id
 )
 
 TransformationBucketsStore = StoreUtils.createStore
@@ -39,6 +40,12 @@ TransformationBucketsStore = StoreUtils.createStore
   getIsLoaded: ->
     _store.get 'isLoaded'
 
+  getPendingActions: ->
+    _store.get 'bucketsPendingActions'
+
+  getPendingActionsForBucket: (bucketId) ->
+    @getPendingActions().get(bucketId, Map())
+
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -60,4 +67,23 @@ Dispatcher.register (payload) ->
       )
       TransformationBucketsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_BUCKET_CREATE_SUCCESS
+      _store = _store.setIn ['bucketsById', action.bucket.id], Immutable.fromJS(action.bucket)
+      TransformationBucketsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_DELETE_START
+      _store = _store.setIn ['bucketsPendingActions', action.bucketId, 'delete'], true
+      TransformationBucketsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_DELETE_ERROR
+      _store = _store.deleteIn ['bucketsPendingActions', action.bucketId, 'delete']
+      TransformationBucketsStore.emitChange()
+      
+    when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .removeIn ['bucketsById', action.bucketId]
+        .removeIn ['bucketsPendingActions', action.bucketId, 'delete']
+      TransformationBucketsStore.emitChange()
+      
 module.exports = TransformationBucketsStore
