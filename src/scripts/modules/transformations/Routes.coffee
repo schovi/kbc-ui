@@ -1,11 +1,12 @@
 React = require 'react'
 TransformationsIndex = require('./react/pages/transformations-index/TransformationsIndex')
 TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket')
+Sandbox = require('./react/pages/sandbox/Sandbox')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
 
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
-NewTransformationBucketButton = require './react/components/NewTransformationBucketButton'
+TransformationBucketButtons = require './react/components/TransformationBucketButtons'
 
 
 routes =
@@ -13,7 +14,7 @@ routes =
       title: 'Transformations'
       defaultRouteHandler: TransformationsIndex
       reloaderHandler: TransformationsIndexReloaderButton
-      headerButtonsHandler: NewTransformationBucketButton
+      headerButtonsHandler: TransformationBucketButtons
       requireData: [
         (params) ->
           TransformationsActionCreators.loadTransformationBuckets()
@@ -21,7 +22,7 @@ routes =
       ]
       childRoutes: [
         name: 'transformationBucket'
-        path: ':bucketId'
+        path: 'bucket/:bucketId'
         title: (routerState) ->
           bucketId = routerState.getIn(['params', 'bucketId'])
           "Bucket " + bucketId
@@ -30,6 +31,11 @@ routes =
           (params) ->
             TransformationsActionCreators.loadTransformations(params.bucketId)
         ]
+      ,
+        name: 'sandbox'
+        title: ->
+          "Sandbox"
+        handler: Sandbox
       ]
-
+      
 module.exports = routes

@@ -19,21 +19,8 @@ TransformationsIndex = React.createClass
 
   render: ->
     div {className: 'container-fluid'},
-      div {className: 'col-md-9 kbc-main-content'},
+      div {className: 'col-md-12 kbc-main-content'},
         @_renderTable()
-      div {className: 'col-md-3 kbc-main-sidebar'},
-        @_renderSidebar()
-
-  _renderSidebar: ->
-    ul {className: 'nav nav-stacked'},
-      li {},
-        a {className: "sandbox"},
-          i {className: "fa fa-fw fa-wrench"}
-          "Create Sandbox"
-      li {},
-        a {className: "sandbox"},
-          i {className: "fa fa-fw fa-list-ul"}
-          "Sandbox Credentials"
 
   _renderTableRow: (row) ->
     Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
