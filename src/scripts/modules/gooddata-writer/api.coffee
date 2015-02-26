@@ -18,7 +18,7 @@ module.exports =
     .query writerId: configurationId
     .promise()
     .then((response) ->
-      response.body
+      response.body.writer
     )
 
   getWriterTables: (configurationId) ->
@@ -26,6 +26,6 @@ module.exports =
     .query writerId: configurationId
     .promise()
     .then((response) ->
-      response.body
+      response.body.tables
     )
 

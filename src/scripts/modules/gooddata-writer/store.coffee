@@ -36,11 +36,17 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_SUCCESS
+      groupedTables = Immutable
+        .fromJS(action.configuration.tables)
+        .toSeq()
+        .groupBy (table) ->
+          table.get 'bucket'
+
       _store = _store.withMutations (store) ->
         store
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
-        .setIn ['writers', action.configuration.id, 'tables'], Immutable.fromJS action.configuration.tables
+        .setIn ['writers', action.configuration.id, 'tables'], groupedTables
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

@@ -12,6 +12,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(goodDataWriterStore)]
 
   getStateFromStores: ->
+    todo: 'todo'
 
   render: ->
     div className: 'container-fluid',
