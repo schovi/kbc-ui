@@ -9,6 +9,7 @@ Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 
 TablesList = React.createFactory(require './BucketTablesList')
+ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
 
 goodDataWriterStore = require '../../../store'
 
@@ -34,16 +35,30 @@ module.exports = React.createClass
           div className: 'col-sm-4 kbc-buttons',
         PanelGroup accordion: true,
           @state.writer.get('tables').map (tables, bucketId) ->
-            Panel
-              header: bucketId
-              key: bucketId
-              eventKey: bucketId
-            ,
-              TablesList
-                configId: @state.writer.getIn ['config', 'id']
-                tables: tables
+            @_renderBucketPanel bucketId, tables
           , @
           .toArray()
 
       div className: 'col-md-3 kbc-main-sidebar',
         'TODO'
+
+  _renderBucketPanel: (bucketId, tables) ->
+    header = span null,
+      span className: 'table',
+        span className: 'tbody',
+          span className: 'tr',
+            span className: 'td',
+              bucketId
+            span className: 'td text-right',
+              ActiveCountBadge
+                totalCount: tables.size
+                activeCount: tables.filter((table) -> table.get('export')).count() # TODO: should be in store
+
+    Panel
+      header: header
+      key: bucketId
+      eventKey: bucketId
+    ,
+      TablesList
+        configId: @state.writer.getIn ['config', 'id']
+        tables: tables
