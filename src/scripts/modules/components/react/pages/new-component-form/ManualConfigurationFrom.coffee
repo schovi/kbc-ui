@@ -34,10 +34,12 @@ module.exports = React.createClass
   _text: ->
     switch @props.component.get 'type'
       when 'writer' then 'This writer has to be configured manually, please contact our support for assistance.'
-      when 'extractor' then 'This extractor has to be configured manually, please contact our support for assistance.'
+      when 'extractor' then 'This extractor has to be configured manually,
+       please contact our support for assistance.'
 
   _contactSupport: ->
     Zenbox.init
-      request_subject: "#{@props.component.get('name')} #{@props.component.get('type')} configuration assistance request"
+      request_subject: "#{@props.component.get('name')} #{@props.component.get('type')}
+        configuration assistance request"
     Zenbox.show()
 
