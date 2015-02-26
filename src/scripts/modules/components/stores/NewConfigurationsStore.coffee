@@ -17,8 +17,8 @@ _defaults = Immutable.fromJS
     username: ''
     password: ''
     accessToken: ''
-    mode: 'new'
-    tokenType: 'production'
+    mode: constants.GoodDataWriterModes.NEW
+    tokenType: constants.GoodDataWriterTokenTypes.PRODUCTION
 
 getDefaultConfiguration = (componentId) ->
   _defaults.get componentId, Map(
@@ -33,7 +33,19 @@ NewConfigurationsStore = StoreUtils.createStore
       getDefaultConfiguration componentId
 
   isValidConfiguration: (componentId) ->
-    !!@getConfiguration(componentId).get('name').trim()
+    configuration = @getConfiguration(componentId)
+    return false if !configuration.get('name').trim()
+
+    if componentId == 'gooddata-writer'
+      switch configuration.get('mode')
+        when constants.GoodDataWriterModes.NEW
+          if configuration.get('tokenType') == constants.GoodDataWriterTokenTypes.CUSTOM
+            return false if !configuration.get('accessToken').trim()
+        when constants.GoodDataWriterModes.EXISTING
+          return false if !configuration.get('pid').trim()
+          return false if !configuration.get('password').trim()
+          return false if !configuration.get('username').trim()
+    true
 
   isSavingConfiguration: (componentId) ->
     _store.hasIn ['saving', componentId]

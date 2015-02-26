@@ -35,11 +35,14 @@ createFromXhrError = (httpError) ->
     when 401 then 'Unauthorized access'
     else 'Application Error'
 
+  text = ''
   if httpError.response.body?.error
-    text = httpError.response.body.error
-  else if httpError.response.body?.message
-    text = httpError.response.body.message
-  else
+    text += httpError.response.body.error
+
+  if httpError.response.body?.message
+    text += httpError.response.body.message
+
+  if !text
     text = 'Application error. Please try reload the browser'
 
   new Error(title, text, httpError, httpError.response.body?.exceptionId)

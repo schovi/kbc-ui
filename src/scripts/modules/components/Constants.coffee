@@ -2,7 +2,7 @@ keyMirror = require('react/lib/keyMirror')
 
 module.exports =
 
-  ActionTypes: keyMirror(
+  ActionTypes: keyMirror
 
     # Components
     COMPONENTS_SET_FILTER: null
@@ -28,4 +28,12 @@ module.exports =
     COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS: null
     COMPONENTS_NEW_CONFIGURATION_SAVE_ERROR: null
 
-  )
+  GoodDataWriterModes: keyMirror
+    NEW: null
+    EXISTING: null
+
+  GoodDataWriterTokenTypes: keyMirror
+    PRODUCTION: null
+    DEVELOPER: null
+    CUSTOM: null
+

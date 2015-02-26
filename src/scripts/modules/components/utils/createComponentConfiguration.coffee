@@ -1,8 +1,10 @@
 
 installedComponentsApi = require '../InstalledComponentsApi'
 syrupApi = require '../SyrupComponentApi'
+constants = require '../Constants'
 string = require '../../../utils/string'
 ComponentsStore = require '../stores/ComponentsStore'
+ApplicationStore = require '../../../stores/ApplicationStore'
 Promise = require 'bluebird'
 
 createConfigByApi = (componentId, configuration) ->
@@ -18,17 +20,51 @@ createConfigManually = (configuration) ->
     data:
       id: string.webalize(configuration.get('name')) + '-' + Math.round(new Date().getTime() / 1000)
 
+# Custom create method for GoodData writer
+createGoodDataWriter = (configuration) ->
+  writerId = string.webalize(configuration.get('name'), '_')
+  params =
+    writerId: writerId
+    description: configuration.get 'description'
+    users: ApplicationStore.getKbcVars().get('adminEmails').join ','
+
+  # create new
+  if configuration.get('mode') == constants.GoodDataWriterModes.NEW
+    if configuration.get('tokenType') == constants.GoodDataWriterTokenTypes.CUSTOM
+      params.accessToken = configuration.get 'accessToken'
+    else
+      params.accessToken = ApplicationStore.getKbcVars().getIn [
+        'goodDataTokens'
+        configuration.get('tokenType').toLowerCase()
+      ]
+
+  # create from existing
+  if configuration.get('mode') == constants.GoodDataWriterModes.EXISTING
+    params.pid = configuration.get 'pid'
+    params.username = configuration.get 'username'
+    params.password = configuration.get 'password'
+
+  console.log 'params', params
+  syrupApi
+  .createRequest('gooddata-writer', 'POST', 'writers')
+  .send params
+  .promise()
+  .then ->
+    id: writerId
 
 
 module.exports = (componentId, configuration) ->
   component = ComponentsStore.getComponent componentId
 
-  if component.get 'uri'
+  if componentId == 'gooddata-writer'
+    promise = createGoodDataWriter(configuration)
+  else if component.get 'uri'
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigByApi(configuration)
 
   promise.then (response) ->
+    console.log 'resposne', response
     installedComponentsApi
     .createConfiguration componentId,
       name: configuration.get 'name'

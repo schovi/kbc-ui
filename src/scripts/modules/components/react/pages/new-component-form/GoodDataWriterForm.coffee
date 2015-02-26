@@ -3,14 +3,12 @@ React = require 'react'
 FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
 
+{GoodDataWriterModes, GoodDataWriterTokenTypes} = require '../../../Constants'
+
+
+
 {div, form, h3, p} = React.DOM
 
-MODE_NEW = 'new'
-MODE_EXISTING = 'existing'
-
-TOKEN_TYPE_PRODUCTION = 'production'
-TOKEN_TYPE_DEVELOPMENT = 'development'
-TOKEN_TYPE_CUSTOM = 'custom'
 
 module.exports = React.createClass
   displayName: 'GoodDataWriterDefaultForm'
@@ -59,19 +57,19 @@ module.exports = React.createClass
             type: 'radio'
             label: 'Create new GoodData project'
             name: 'mode'
-            value: MODE_NEW
-            checked: @props.configuration.get('mode') == MODE_NEW
+            value: GoodDataWriterModes.NEW
+            checked: @props.configuration.get('mode') == GoodDataWriterModes.NEW
             onChange: @_handleChange.bind @, 'mode'
             wrapperClassName: 'col-xs-offset-2 col-xs-10'
           Input
             type: 'radio'
             name: 'mode'
-            value: MODE_EXISTING
+            value: GoodDataWriterModes.EXISTING
             label: 'Use existing GoodData project'
-            checked: @props.configuration.get('mode') != MODE_NEW
+            checked: @props.configuration.get('mode') == GoodDataWriterModes.EXISTING
             onChange: @_handleChange.bind @, 'mode'
             wrapperClassName: 'col-xs-offset-2 col-xs-10'
-      if @props.configuration.get('mode') == MODE_NEW
+      if @props.configuration.get('mode') == GoodDataWriterModes.NEW
         @_renderNewForm()
       else
         @_renderExistingForm()
@@ -86,8 +84,8 @@ module.exports = React.createClass
           label: 'Production'
           help: 'You are paying for it'
           name: 'tokenType'
-          value: TOKEN_TYPE_PRODUCTION
-          checked: @props.configuration.get('tokenType') == TOKEN_TYPE_PRODUCTION
+          value: GoodDataWriterTokenTypes.PRODUCTION
+          checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.PRODUCTION
           onChange: @_handleChange.bind @, 'tokenType'
           wrapperClassName: 'col-xs-offset-2 col-xs-10'
         Input
@@ -95,8 +93,8 @@ module.exports = React.createClass
           label: 'Development'
           help: 'max 2GB of data, expires in 2 months'
           name: 'tokenType'
-          value: TOKEN_TYPE_DEVELOPMENT
-          checked: @props.configuration.get('tokenType') == TOKEN_TYPE_DEVELOPMENT
+          value: GoodDataWriterTokenTypes.DEVELOPER
+          checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.DEVELOPER
           onChange: @_handleChange.bind @, 'tokenType'
           wrapperClassName: 'col-xs-offset-2 col-xs-10'
         Input
@@ -104,10 +102,18 @@ module.exports = React.createClass
           label: 'Custom'
           help: 'You have your own token'
           name: 'tokenType'
-          value: TOKEN_TYPE_CUSTOM
-          checked: @props.configuration.get('tokenType') == TOKEN_TYPE_CUSTOM
+          value: GoodDataWriterTokenTypes.CUSTOM
+          checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
           onChange: @_handleChange.bind @, 'tokenType'
           wrapperClassName: 'col-xs-offset-2 col-xs-10'
+        if @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
+          Input
+            type: 'text'
+            placeholder: 'Your token'
+            value: @props.configuration.get('accessToken')
+            onChange: @_handleChange.bind @, 'accessToken'
+            wrapperClassName: 'col-xs-offset-2 col-xs-10'
+
 
   _renderExistingForm: ->
     div className: 'row',

@@ -49,6 +49,9 @@ ApplicationStore =
   getCanCreateProject: ->
     _store.getIn ['kbc', 'canCreateProject']
 
+  getKbcVars: ->
+    _store.getIn ['kbc']
+
 Dispatcher.register (payload) ->
   action = payload.action
 

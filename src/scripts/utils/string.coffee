@@ -131,8 +131,9 @@ removeDiacritics = (str) ->
 
 module.exports =
 
-  webalize: (string) ->
+  webalize: (string, separator = '-') ->
     removeDiacritics(string)
     .toLowerCase()
     .replace(/\ /g, '-')
     .replace(/[^a-z0-9\-]/g, '')
+    .replace(/-/g, separator)
