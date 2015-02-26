@@ -16,6 +16,8 @@ exDbRoutes = require '../ex-db/exDbRoutes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 
+goodDataWriterRoutes = require '../gooddata-writer/routes'
+
 routes =
 
   extractors:
@@ -70,6 +72,8 @@ routes =
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
       ]
+    ,
+      goodDataWriterRoutes
     ]
 
 
