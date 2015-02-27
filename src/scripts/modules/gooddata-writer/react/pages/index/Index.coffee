@@ -22,9 +22,10 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     writer: goodDataWriterStore.getWriter(config)
+    tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
 
   render: ->
-    console.log 'writer', @state.writer.toJS()
+    console.log 'writer', @state.writer.toJS(), @state.tablesByBucket.toJS()
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -34,7 +35,7 @@ module.exports = React.createClass
               configId: @state.writer.getIn ['config', 'id']
           div className: 'col-sm-4 kbc-buttons',
         PanelGroup accordion: true,
-          @state.writer.get('tables').map (tables, bucketId) ->
+          @state.tablesByBucket.map (tables, bucketId) ->
             @_renderBucketPanel bucketId, tables
           , @
           .toArray()

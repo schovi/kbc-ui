@@ -26,14 +26,14 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.get 'id'
       span className: 'td',
-        @props.table.get 'name'
+        @props.table.getIn 'data', 'name'
       span className: 'td text-right',
         ActivateDeactivateButton
           activateTooltip: 'Enable Export'
           deactivateTooltip: 'Disable Export'
-          isActive: @props.table.get 'export'
-          isPending: false
-          onChange: @_handleActiveChange
+          isActive: @props.table.getIn ['data', 'export']
+          isPending: @props.table.get('pendingActions').contains 'exportStatusChange'
+          onChange: @_handleExportChange
 
   _handleExportChange: (newExportStatus) ->
     actionCreators.changeTableExportStatus(@props.configId, @props.table.get('id'), newExportStatus)

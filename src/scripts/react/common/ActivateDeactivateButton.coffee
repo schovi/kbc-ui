@@ -36,7 +36,6 @@ module.exports = React.createClass
             isChecked: @props.isActive
 
   _handleClick: (e) ->
-    console.log 'click', @props.isActive
     @props.onChange !@props.isActive
     e.stopPropagation()
     e.preventDefault()

@@ -1,5 +1,6 @@
 
 SyrupApi = require '../components/SyrupComponentApi'
+Immutable = require 'immutable'
 
 createRequest = (method, path) ->
   SyrupApi.createRequest('gooddata-writer', method, path)
@@ -28,4 +29,17 @@ module.exports =
     .then((response) ->
       response.body.tables
     )
+
+  updateTable: (configurationId, tableId, data) ->
+    data = Immutable.fromJS(data)
+      .set 'writerId', configurationId
+      .set 'tableId', tableId
+
+    createRequest('POST', 'tables')
+    .query writerId: configurationId
+    .send data.toJS()
+    .promise()
+    .then (response) ->
+      response.body
+
 

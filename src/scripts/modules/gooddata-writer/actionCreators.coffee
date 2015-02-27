@@ -34,3 +34,26 @@ module.exports =
 
 
   changeTableExportStatus: (configurationId, tableId, newExportStatus) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_START
+      configurationId: configurationId
+      tableId: tableId
+      newExportStatus: newExportStatus
+
+    goodDataWriterApi
+    .updateTable(configurationId, tableId,
+      export: newExportStatus
+    )
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        newExportStatus: newExportStatus
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        newExportStatus: newExportStatus
+      throw e

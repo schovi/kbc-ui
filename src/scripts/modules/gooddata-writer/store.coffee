@@ -4,11 +4,12 @@ Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 
-{Map} = Immutable
+{Map, List} = Immutable
 
 
 _store = Map
   writers: Map()
+  tables: Map()
 
 GoodDataWriterStore = StoreUtils.createStore
 
@@ -19,7 +20,12 @@ GoodDataWriterStore = StoreUtils.createStore
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
 
-  getWriterTables: (configurationId) ->
+  getWriterTablesByBucket: (configurationId) ->
+    _store
+    .getIn(['tables', configurationId])
+    .toSeq()
+    .groupBy (table) ->
+      table.getIn ['data', 'bucket']
 
 
 dispatcher.register (payload) ->
@@ -36,17 +42,42 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_SUCCESS
-      groupedTables = Immutable
-        .fromJS(action.configuration.tables)
-        .toSeq()
-        .groupBy (table) ->
-          table.get 'bucket'
+      tablesById = Immutable
+      .fromJS(action.configuration.tables)
+      .toMap()
+      .map (table) ->
+        Map
+          isLoading: false
+          id: table.get 'id'
+          pendingActions: List()
+          data: table
+      .mapKeys (key, table) ->
+        table.get 'id'
 
       _store = _store.withMutations (store) ->
         store
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
-        .setIn ['writers', action.configuration.id, 'tables'], groupedTables
+        .setIn ['tables', action.configuration.id], tablesById
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_START
+      _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
+        actions.push 'exportStatusChange'
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['tables', action.configurationId, action.tableId, 'data', 'export'], action.newExportStatus
+        .updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
+          actions.delete(actions.indexOf 'exportStatusChange')
+      console.log 'store', _store.toJS()
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
+      _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
+        actions.delete(actions.indexOf 'exportStatusChange')
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore
