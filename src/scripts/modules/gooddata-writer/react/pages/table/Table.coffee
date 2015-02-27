@@ -18,11 +18,15 @@ module.exports = React.createClass
   getStateFromStores: ->
     configurationId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('table')
+    isEditingColumns = goodDataWriterStore.isEditingTableColumns(configurationId, tableId)
 
     configurationId: configurationId
     table: goodDataWriterStore.getTable(configurationId, tableId)
-    isEditingColumns: goodDataWriterStore.isEditingTableColumns(configurationId, tableId)
-    columns: goodDataWriterStore.getTableColumns(configurationId, tableId)
+    isEditingColumns: isEditingColumns
+    columns: goodDataWriterStore.getTableColumns(configurationId,
+      tableId,
+      if isEditingColumns then 'editing' else 'current'
+    )
 
   _handleEditStart: ->
     actionCreators.startTableColumnsEdit(@state.configurationId, @state.table.get 'id')
@@ -33,8 +37,10 @@ module.exports = React.createClass
   _handleEditCancel: ->
     actionCreators.cancelTableColumnsEdit(@state.configurationId, @state.table.get 'id')
 
+  _handleEditUpdate: (column) ->
+    actionCreators.updateTableColumnsEdit(@state.configurationId, @state.table.get('id'), column)
+
   render: ->
-    console.log 'render', @state.table.toJS(), @state.columns.toJS()
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
         div className: 'col-sm-8'
@@ -61,3 +67,4 @@ module.exports = React.createClass
       ColumnsEditor
         columns: @state.columns
         isEditing: @state.isEditingColumns
+        onColumnChange: @_handleEditUpdate

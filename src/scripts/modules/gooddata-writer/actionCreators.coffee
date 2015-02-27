@@ -93,5 +93,12 @@ module.exports =
       configurationId: configurationId
       tableId: tableId
 
+  updateTableColumnsEdit: (configurationId, tableId, column) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
+      configurationId: configurationId
+      tableId: tableId
+      column: column
+
   saveTableColumnsEdit: (configurationId, tableId) ->
 

@@ -34,8 +34,8 @@ GoodDataWriterStore = StoreUtils.createStore
   getTable: (configurationId, tableId) ->
     _store.getIn ['tables', configurationId, tableId]
 
-  getTableColumns: (configurationId, tableId) ->
-    _store.getIn ['tableColumns', configurationId, tableId, 'current']
+  getTableColumns: (configurationId, tableId, version = 'current') ->
+    _store.getIn ['tableColumns', configurationId, tableId, version]
 
   isEditingTableColumns: (configurationId, tableId) ->
     _store.hasIn ['tableColumns', configurationId, tableId, 'editing']
@@ -96,10 +96,13 @@ dispatcher.register (payload) ->
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.name.split('.',2).join('.') # bucket is not returned by api
 
+      columns = table.get('columns').toMap().mapKeys (key, column) ->
+        column.get 'name'
+
       _store = _store.withMutations (store) ->
         store
         .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
-        .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], table.get('columns')
+        .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
@@ -109,6 +112,16 @@ dispatcher.register (payload) ->
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL
       _store = _store.deleteIn ['tableColumns', action.configurationId, action.tableId, 'editing']
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
+      _store = _store.setIn [
+        'tableColumns'
+        action.configurationId
+        action.tableId
+        'editing'
+        action.column.get 'name'
+      ], action.column
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

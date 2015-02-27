@@ -17,3 +17,26 @@ module.exports =
 
     GOOD_DATA_WRITER_COLUMNS_EDIT_START: null
     GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL: null
+    GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE: null
+
+
+  ColumnTypes: keyMirror
+    ATTRIBUTE: null
+    CONNECTION_POINT: null
+    DATE: null
+    FACT: null
+    HYPERLINK: null
+    IGNORE: null
+    LABEL: null
+    REFERENCE: null
+
+  DataTypes: keyMirror
+    BIGINT: null
+    DATE: null
+    DECIMAL: null
+    INT: null
+    VARCHAR: null
+
+  SortOrderOptions: keyMirror
+    ASC: null
+    DESC: null
