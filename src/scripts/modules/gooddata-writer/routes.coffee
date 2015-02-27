@@ -21,6 +21,10 @@ module.exports =
   childRoutes: [
     name: 'gooddata-writer-table'
     path: 'table/:table'
+    requireData: [
+      (params) ->
+        actionCreators.loadTableDetail(params.config, params.table)
+    ]
     title: ->
       'table'
     handler: TablePage

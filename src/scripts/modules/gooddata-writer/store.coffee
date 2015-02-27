@@ -10,12 +10,16 @@ constants = require './constants'
 _store = Map
   writers: Map()
   tables: Map()
+  tableColumns: Map()
 
 GoodDataWriterStore = StoreUtils.createStore
 
 
   hasWriter: (configurationId) ->
     _store.hasIn ['writers', configurationId]
+
+  hasTableColumns: (configurationId, tableId) ->
+    _store.hasIn ['tableColumns', configurationId, tableId, 'current']
 
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
@@ -27,6 +31,14 @@ GoodDataWriterStore = StoreUtils.createStore
     .groupBy (table) ->
       table.getIn ['data', 'bucket']
 
+  getTable: (configurationId, tableId) ->
+    _store.getIn ['tables', configurationId, tableId]
+
+  getTableColumns: (configurationId, tableId) ->
+    _store.getIn ['tableColumns', configurationId, tableId, 'current']
+
+  isEditingTableColumns: (configurationId, tableId) ->
+    _store.hasIn ['tableColumns', configurationId, tableId, 'editing']
 
 dispatcher.register (payload) ->
   action = payload.action
@@ -78,6 +90,25 @@ dispatcher.register (payload) ->
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
       _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
         actions.delete(actions.indexOf 'exportStatusChange')
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
+      table = Immutable.fromJS(action.table)
+        .set 'bucket', action.table.name.split('.',2).join('.') # bucket is not returned by api
+
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
+        .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], table.get('columns')
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
+      _store = _store.setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
+        _store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL
+      _store = _store.deleteIn ['tableColumns', action.configurationId, action.tableId, 'editing']
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

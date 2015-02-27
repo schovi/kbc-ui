@@ -30,6 +30,14 @@ module.exports =
       response.body.tables
     )
 
+  getTableDetail: (configurationId, tableId) ->
+    createRequest('GET', 'tables')
+    .query writerId: configurationId
+    .query tableId: tableId
+    .promise()
+    .then (response) ->
+      response.body.table
+
   updateTable: (configurationId, tableId, data) ->
     data = Immutable.fromJS(data)
       .set 'writerId', configurationId

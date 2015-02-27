@@ -53,7 +53,7 @@ module.exports = React.createClass
             span className: 'td text-right',
               ActiveCountBadge
                 totalCount: tables.size
-                activeCount: tables.filter((table) -> table.get('export')).count() # TODO: should be in store
+                activeCount: tables.filter((table) -> table.getIn(['data', 'export'])).count() # TODO: should be in store
 
     Panel
       header: header
