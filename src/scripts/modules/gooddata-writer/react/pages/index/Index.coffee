@@ -44,6 +44,9 @@ module.exports = React.createClass
         'TODO'
 
   _renderBucketPanel: (bucketId, tables) ->
+
+    activeCount = tables.filter((table) -> table.getIn(['data', 'export'])).count()
+
     header = span null,
       span className: 'table',
         span className: 'tbody',
@@ -53,7 +56,7 @@ module.exports = React.createClass
             span className: 'td text-right',
               ActiveCountBadge
                 totalCount: tables.size
-                activeCount: tables.filter((table) -> table.getIn(['data', 'export'])).count() # TODO: should be in store
+                activeCount: activeCount
 
     Panel
       header: header
