@@ -26,7 +26,7 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.get 'id'
       span className: 'td',
-        @props.table.getIn 'data', 'name'
+        @props.table.getIn ['data', 'name']
       span className: 'td text-right',
         ActivateDeactivateButton
           activateTooltip: 'Enable Export'

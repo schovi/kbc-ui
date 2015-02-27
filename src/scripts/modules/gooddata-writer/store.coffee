@@ -94,7 +94,7 @@ dispatcher.register (payload) ->
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
       table = Immutable.fromJS(action.table)
-        .set 'bucket', action.table.name.split('.',2).join('.') # bucket is not returned by api
+        .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
 
       columns = table.get('columns').toMap().mapKeys (key, column) ->
         column.get 'name'
