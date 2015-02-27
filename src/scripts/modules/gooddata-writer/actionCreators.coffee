@@ -31,3 +31,6 @@ module.exports =
   loadConfiguration: (configurationId) ->
     return Promise.resolve() if goodDataWriterStore.hasWriter(configurationId)
     @loadConfigurationForce(configurationId)
+
+
+  changeTableExportStatus: (configurationId, tableId, newExportStatus) ->

@@ -7,5 +7,6 @@ module.exports = React.createClass
     activeCount: React.PropTypes.number.isRequired
 
   render: ->
-    React.DOM.span className: 'badge',
+    className = if @props.activeCount > 0 then 'label-primary' else 'label-default'
+    React.DOM.span className: 'label ' + className,
       "#{@props.activeCount} / #{@props.totalCount}"

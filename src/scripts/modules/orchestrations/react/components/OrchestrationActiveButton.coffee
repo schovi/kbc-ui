@@ -1,48 +1,30 @@
 React = require 'react'
 OrchestrationActionCreators = require '../../ActionCreators'
 
-Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
-OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
-Loader = React.createFactory(require '../../../../react/common/Loader')
+ActivateDeactivateButton = require '../../../../react/common/ActivateDeactivateButton'
 
 {button, span, i} = React.DOM
 
 ###
   Enabled/Disabled orchestration button with tooltip
 ###
-OrchestrationActiveButton = React.createClass
+module.exports= React.createClass
   displayName: 'OrchestrationActiveButton'
   propTypes:
     orchestration: React.PropTypes.object.isRequired
     isPending: React.PropTypes.bool.isRequired
 
   render: ->
-    if @props.isPending
-      span className: 'btn btn-link',
-        Loader()
+    ActivateDeactivateButton
+      activateTooltip: 'Enable Orchestration'
+      deactivateTooltip: 'Disable Orchestration'
+      isActive: @props.orchestration.get('active')
+      isPending: @props.isPending
+      onChange: @_handleActiveChange
+
+  _handleActiveChange: (newValue) ->
+    if newValue
+      OrchestrationActionCreators.activateOrchestration(@props.orchestration.get('id'))
     else
-      isActive = @props.orchestration.get('active')
-      activateTooltip = if isActive then 'Disable orchestration' else 'Enable orchestration'
+      OrchestrationActionCreators.disableOrchestration(@props.orchestration.get('id'))
 
-      OverlayTrigger
-        overlay: Tooltip null, activateTooltip
-        placement: 'top'
-      ,
-        button
-          className: 'btn btn-link'
-          onClick: if isActive then @_setOrchestrationDisabled else @_setOrchestrationActive
-        ,
-          i className: if isActive then 'fa fa-fw fa-check' else 'fa fa-fw fa-times'
-
-
-  _setOrchestrationActive: (e) ->
-    OrchestrationActionCreators.activateOrchestration(@props.orchestration.get('id'))
-    e.stopPropagation()
-    e.preventDefault()
-
-  _setOrchestrationDisabled: (e) ->
-    OrchestrationActionCreators.disableOrchestration(@props.orchestration.get('id'))
-    e.stopPropagation()
-    e.preventDefault()
-
-module.exports = OrchestrationActiveButton

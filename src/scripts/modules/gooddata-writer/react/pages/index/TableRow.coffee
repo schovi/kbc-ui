@@ -2,6 +2,10 @@ React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 Link = React.createFactory(require('react-router').Link)
 
+ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+
+actionCreators = require '../../../actionCreators'
+
 {span, div, a, button, i} = React.DOM
 
 module.exports = React.createClass
@@ -24,4 +28,12 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.get 'name'
       span className: 'td text-right',
-        'todo'
+        ActivateDeactivateButton
+          activateTooltip: 'Enable Export'
+          deactivateTooltip: 'Disable Export'
+          isActive: @props.table.get 'export'
+          isPending: false
+          onChange: @_handleActiveChange
+
+  _handleExportChange: (newExportStatus) ->
+    actionCreators.changeTableExportStatus(@props.configId, @props.table.get('id'), newExportStatus)
