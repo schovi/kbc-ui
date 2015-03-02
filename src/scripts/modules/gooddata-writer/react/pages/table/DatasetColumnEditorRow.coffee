@@ -6,7 +6,8 @@ keyMirror = require('react/lib/keyMirror')
 
 Input = React.createFactory(require('react-bootstrap').Input)
 
-pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+#pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 {ColumnTypes, DataTypes, SortOrderOptions} = require '../../../constants'
 
@@ -22,7 +23,7 @@ visibleParts = keyMirror(
 
 module.exports = React.createClass
   displayName: 'DatasetColumnEditorRow'
-  mixins: [pureRendererMixin]
+  mixins: [PureRenderMixin]
   propTypes:
     column: React.PropTypes.object.isRequired
     referenceableColumns: React.PropTypes.object.isRequired
@@ -34,6 +35,7 @@ module.exports = React.createClass
     @props.onChange @props.column.set(propName, e.target.value)
 
   render: ->
+    console.log 'render row', @props.column.get('name')
     column = @props.column
     tr null,
       td null,
@@ -50,13 +52,8 @@ module.exports = React.createClass
           value: column.get 'type'
           onChange: @_handleInputChange.bind @, 'type'
         ,
-          Immutable.fromJS(ColumnTypes).map (columnType) ->
-            option
-              value: columnType
-              key: columnType
-            ,
-              columnType
-          .toArray()
+          @_selectOptions Immutable.fromJS(ColumnTypes)
+
       td null,
         @_renderSchemaReferenceSelect()
         @_renderReferenceSelect()
@@ -80,13 +77,12 @@ module.exports = React.createClass
         value: @props.column.get 'reference'
         onChange: @_handleInputChange.bind @, 'reference'
       ,
-        @props.referenceableColumns.map (column) ->
-          option
-            value: column.get('name')
-            key: column.get('name')
-          ,
+        @_selectOptions(
+          @props.referenceableColumns
+          .map (column) ->
             column.get('name')
-        .toArray()
+          .set('', '')
+        )
 
   _renderSortLabelSelect: ->
     return if !@_shouldRenderPart visibleParts.SORT_LABEL
@@ -96,13 +92,13 @@ module.exports = React.createClass
       value: @props.column.get 'sortLabel'
       onChange: @_handleInputChange.bind @, 'sortLabel'
     ,
-      @props.sortLabelColumns.map (column) ->
-        option
-          value: column.get('name')
-          key: column.get('name')
-        ,
+      @_selectOptions(
+        @props.sortLabelColumns
+        .map (column) ->
           column.get('name')
-      .toArray()
+        .set('', '')
+      )
+
 
   _renderDataTypeSelect: ->
     if @_shouldRenderPart visibleParts.DATA_TYPE
@@ -111,13 +107,7 @@ module.exports = React.createClass
         value: @props.column.get 'dataType'
         onChange: @_handleInputChange.bind @, 'dataType'
       ,
-        Immutable.fromJS(DataTypes).map (dataType) ->
-          option
-            key: dataType
-            value: dataType
-          ,
-            dataType
-        .toArray()
+        @_selectOptions Immutable.fromJS(DataTypes).set('', '')
 
 
   _shouldRenderPart: (partName) ->
@@ -132,4 +122,15 @@ module.exports = React.createClass
       when ColumnTypes.REFERENCE then [visibleParts.SCHEMA_REFERENCE]
 
     allowedPartsForType.indexOf(partName) >= 0
+
+  _selectOptions: (options) ->
+    options
+    .sort()
+    .map (value) ->
+      option
+        key: value
+        value: value
+      ,
+        value
+    .toArray()
 
