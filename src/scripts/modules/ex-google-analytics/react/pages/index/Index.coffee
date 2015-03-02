@@ -10,16 +10,16 @@ ComponentDescription = require '../../../../components/react/components/Componen
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
 
-#ItemsTable = React.createFactory(require './ItemsTable')
-
 {strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalIndex'
-  #mixins: [createStoreMixin(ExGanalStore)]
+  mixins: [createStoreMixin(ExGanalStore)]
 
   getStateFromStores: ->
-    null
+    configId = RoutesStore.getCurrentRouteParam('config')
+    config: ExGanalStore.getConfig(configId)
 
   render: ->
+    console.log 'rendering', @state.config.toJS()
     div {}, 'blabla'
