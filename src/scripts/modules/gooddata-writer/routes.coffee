@@ -24,6 +24,9 @@ module.exports =
     requireData: [
       (params) ->
         actionCreators.loadTableDetail(params.config, params.table)
+    ,
+      (params) ->
+        actionCreators.loadReferenceableTables(params.config)
     ]
     title: ->
       'table'

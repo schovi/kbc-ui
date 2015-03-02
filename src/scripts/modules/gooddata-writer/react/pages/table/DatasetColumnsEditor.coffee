@@ -63,6 +63,7 @@ module.exports = React.createClass
   mixins: [pureRendererMixin]
   propTypes:
     columns: React.PropTypes.object.isRequired
+    referenceableTables: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
 
@@ -84,6 +85,7 @@ module.exports = React.createClass
         @props.columns.map (currentColumn) ->
           Row
             column: currentColumn
+            referenceableTables: @props.referenceableTables
             referenceableColumns: @props.columns.filter (column) ->
               return false if column.get('name') == currentColumn.get('name')
               return true if [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(column.get('type')) >= 0

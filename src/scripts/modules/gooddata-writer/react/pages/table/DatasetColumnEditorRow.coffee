@@ -27,6 +27,7 @@ module.exports = React.createClass
   propTypes:
     column: React.PropTypes.object.isRequired
     referenceableColumns: React.PropTypes.object.isRequired
+    referenceableTables: React.PropTypes.object.isRequired
     sortLabelColumns: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
@@ -67,8 +68,13 @@ module.exports = React.createClass
     if @_shouldRenderPart visibleParts.SCHEMA_REFERENCE
       Input
         type: if @props.isEditing then 'select' else 'static'
-        value: @props.column.get 'schemaReference'
+        value: @props.column.get 'schemaReference', ''
         onChange: @_handleInputChange.bind @, 'schemaReference'
+      ,
+        @_selectOptions(
+          @props.referenceableTables
+          .set('', '')
+        )
 
   _renderReferenceSelect: ->
     if @_shouldRenderPart visibleParts.REFERENCE
@@ -126,10 +132,10 @@ module.exports = React.createClass
   _selectOptions: (options) ->
     options
     .sort()
-    .map (value) ->
+    .map (value, key) ->
       option
-        key: value
-        value: value
+        key: key
+        value: key
       ,
         value
     .toArray()

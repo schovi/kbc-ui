@@ -54,6 +54,27 @@ module.exports =
     return Promise.resolve() if goodDataWriterStore.hasTableColumns(configurationId, tableId)
     @loadTableDetailForce(configurationId, tableId)
 
+  loadReferencableTablesForce: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_START
+      configurationId: configurationId
+
+    goodDataWriterApi.getReferenceableTables(configurationId)
+    .then (tables) ->
+      console.log 'tables', tables
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_SUCCESS
+        configurationId: configurationId
+        tables: tables
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_ERROR
+        configurationId: configurationId
+        error: e
+      throw error
+
+  loadReferenceableTables: (configurationId) ->
+    @loadReferencableTablesForce(configurationId)
 
   changeTableExportStatus: (configurationId, tableId, newExportStatus) ->
     dispatcher.handleViewAction

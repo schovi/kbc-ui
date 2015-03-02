@@ -4,6 +4,7 @@ Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 
+{ColumnTypes} = constants
 {Map, List} = Immutable
 
 
@@ -11,6 +12,45 @@ _store = Map
   writers: Map()
   tables: Map()
   tableColumns: Map()
+  referenceableTables: Map()
+
+
+modifyColumns =  (columns, newColumn, currentColumn) ->
+
+  # reference changed
+  if (newColumn.get('reference') != currentColumn.get('reference'))
+    columns = columns.map (column) ->
+      if column.get('sortLabel') == currentColumn.get('name')
+        return column
+        .delete('sortOrder')
+        .delete('sortLabel')
+      return column
+
+  # schema reference changed
+  if newColumn.get('schemaReference') != currentColumn.get('schemaReference')
+    columns = columns.map (column) ->
+      return column if column.get('name') == newColumn.get('name')
+      if column.get('schemaReference') == newColumn.get('schemaReference')
+        return column.delete('schemaReference')
+      return column
+
+
+  # column type changed
+  if newColumn.get('type') != currentColumn.get('type')
+    columns = columns.map (column) ->
+      return column if column.get('name') == newColumn.get('name')
+
+      isNotReferencable = [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(newColumn.get('type')) < 0
+      if column.get('reference') == newColumn.get('name') && isNotReferencable
+        return column.delete('reference')
+      return column
+
+
+
+
+  console.log 'cols', columns.toJS()
+  columns
+
 
 GoodDataWriterStore = StoreUtils.createStore
 
@@ -23,6 +63,9 @@ GoodDataWriterStore = StoreUtils.createStore
 
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
+
+  getReferenceableTables: (configurationId) ->
+    _store.getIn ['referenceableTables', configurationId]
 
   getWriterTablesByBucket: (configurationId) ->
     _store
@@ -96,6 +139,7 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
+      console.log 'referenceable tables', action.referenceableTables
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
 
@@ -108,6 +152,12 @@ dispatcher.register (payload) ->
         .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_SUCCESS
+      _store = _store.setIn ['referenceableTables', action.configurationId], Immutable.fromJS(action.tables)
+      GoodDataWriterStore.emitChange()
+
+
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
       _store = _store.setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
         _store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
@@ -118,13 +168,25 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
-      _store = _store.setIn [
+      currentColumn = _store.getIn [
         'tableColumns'
         action.configurationId
         action.tableId
         'editing'
         action.column.get 'name'
-      ], action.column
+      ]
+
+
+      _store = _store.updateIn [
+        'tableColumns'
+        action.configurationId
+        action.tableId
+        'editing'
+      ], (columns) ->
+        columns = columns.set action.column.get('name'), action.column
+        modifyColumns columns, action.column, currentColumn
+
+      console.log 'updated', _store.toJS()
       GoodDataWriterStore.emitChange()
 
 
