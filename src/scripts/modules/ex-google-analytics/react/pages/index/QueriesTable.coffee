@@ -9,6 +9,7 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
   propTypes:
     queries: React.PropTypes.object
+    profiles: React.PropTypes.object
     # configurationId: number
 
 
@@ -21,10 +22,10 @@ module.exports = React.createClass
         params:
           config: @props.configId
           name: queryName
-        div className: 'td', row.get('metrics')
-        div className: 'td', row.get 'dimensions'
-        div className: 'td', 'filters'
-        div className: 'td', 'profiles'
+        div className: 'td', row.get('metrics').join()
+        div className: 'td', row.get('dimensions').join()
+        div className: 'td', row.get('filters') or 'n/a'
+        div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'
         div className: 'td', queryName
@@ -47,3 +48,19 @@ module.exports = React.createClass
           span className: 'th' #actions buttons
       div className: 'tbody',
          children
+
+  _getProfileName: (profileId) ->
+    profiles = @props.profiles
+    if not profileId
+      return '--all--'
+
+    profile = profiles.find( (value,key) ->
+      value.get('googleId') == profileId
+    )
+    if profile
+      accountName = profile.get('accountName')
+      propertyName = profile.get('webPropertyName')
+      pname = profile.get('name')
+      return "#{accountName}/ #{propertyName}/ #{pname}"
+    else
+      return "Unknown Profile(#{profileId})"

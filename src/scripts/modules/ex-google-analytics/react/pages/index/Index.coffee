@@ -43,6 +43,7 @@ module.exports = React.createClass
       if queries.count()
         QueriesTable
           queries: queries
+          profiles: @state.config.get 'items'
           configId: @state.configId
       else
         "no queries yet"
