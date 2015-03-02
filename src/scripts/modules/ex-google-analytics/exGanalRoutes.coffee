@@ -18,3 +18,14 @@ module.exports =
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Google Analytics extractor - ' + IntalledComponentsStore.getConfig('ex-google-analytics', configId).get 'name'
+
+  childRoutes: [
+    name: 'ex-google-analytics-select-profiles'
+    path: 'profiles'
+    title: 'Select Profiles'
+  ,
+    name: 'ex-google-analytics-query'
+    path: 'query/:name'
+    title: 'Query'
+
+  ]
