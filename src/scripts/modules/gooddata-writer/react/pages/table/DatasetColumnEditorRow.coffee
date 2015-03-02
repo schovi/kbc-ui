@@ -6,8 +6,8 @@ keyMirror = require('react/lib/keyMirror')
 
 Input = React.createFactory(require('react-bootstrap').Input)
 
-#pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-PureRenderMixin = require('react/addons').addons.PureRenderMixin
+PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+#PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 {ColumnTypes, DataTypes, SortOrderOptions} = require '../../../constants'
 
@@ -86,8 +86,6 @@ module.exports = React.createClass
       ,
         @_selectOptions(
           @props.referenceableColumns
-          .map (column) ->
-            column.get('name')
           .set('', '')
         )
 
@@ -101,8 +99,6 @@ module.exports = React.createClass
     ,
       @_selectOptions(
         @props.sortLabelColumns
-        .map (column) ->
-          column.get('name')
         .set('', '')
       )
 

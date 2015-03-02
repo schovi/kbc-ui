@@ -68,7 +68,25 @@ validateColumns = (columns) ->
     column.get('name')
 
 
+referenceableColumnFilter = (currentColumnName) ->
+  (column) ->
+    return false if column.get('name') == currentColumnName
+    return true if [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(column.get('type')) >= 0
+    return false
 
+sortLabelColumnFilter = (currentColumnName) ->
+  (column) ->
+    currentColumnName == column.get('reference')
+
+
+referencesForColumns = (columns) ->
+  columns.map (column) ->
+    refColumns = columns.filter(referenceableColumnFilter(column.get 'name')).map (column) -> column.get('name')
+    sortColumns = columns.filter(sortLabelColumnFilter(column.get 'name')).map (column) -> column.get('name')
+    Map(
+      referenceableColumns: refColumns
+      sortColumns: sortColumns
+    )
 
 GoodDataWriterStore = StoreUtils.createStore
 
@@ -82,8 +100,9 @@ GoodDataWriterStore = StoreUtils.createStore
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
 
-  getReferenceableTables: (configurationId) ->
-    _store.getIn ['referenceableTables', configurationId]
+  getReferenceableTablesForTable: (configurationId, tableId) ->
+    _store.getIn(['referenceableTables', configurationId]).filter (name, id) ->
+      id != tableId
 
   getWriterTablesByBucket: (configurationId) ->
     _store
@@ -100,6 +119,12 @@ GoodDataWriterStore = StoreUtils.createStore
 
   getTableColumnsValidation: (configurationId, tableId) ->
     _store.getIn ['tableColumns', configurationId, tableId, 'invalidColumns'], List()
+
+  getTableColumnsReferences: (configurationId, tableId) ->
+    _store.getIn ['tableColumns', configurationId, tableId, 'references'], Map(
+      referenceableColumns: Map()
+      sortColumns: Map()
+    )
 
   isEditingTableColumns: (configurationId, tableId) ->
     _store.hasIn ['tableColumns', configurationId, tableId, 'editing']
@@ -151,7 +176,6 @@ dispatcher.register (payload) ->
         .setIn ['tables', action.configurationId, action.tableId, 'data', 'export'], action.newExportStatus
         .updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
           actions.delete(actions.indexOf 'exportStatusChange')
-      console.log 'store', _store.toJS()
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
@@ -160,7 +184,6 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
-      console.log 'referenceable tables', action.referenceableTables
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
 
@@ -180,8 +203,14 @@ dispatcher.register (payload) ->
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
-      _store = _store.setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
-        _store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
+      _store = _store.withMutations (store) ->
+        columns =  store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
+        store
+        .setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
+          columns
+        .setIn ['tableColumns', action.configurationId, action.tableId, 'references'],
+          referencesForColumns(columns)
+
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL
@@ -189,6 +218,7 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
+      console.time 'modify'
       currentColumn = _store.getIn [
         'tableColumns'
         action.configurationId
@@ -207,13 +237,16 @@ dispatcher.register (payload) ->
         columns = columns.set action.column.get('name'), action.column
         columns = modifyColumns columns, action.column, currentColumn
 
-        invalidColumns = validateColumns columns
-
         tableColumns
         .set 'editing', columns
-        .set 'invalidColumns', invalidColumns
+        .set 'invalidColumns', validateColumns(columns)
+        .set 'references', referencesForColumns(columns)
 
+      console.timeEnd 'modify'
+
+      console.time 'change'
       GoodDataWriterStore.emitChange()
+      console.timeEnd 'change'
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_START

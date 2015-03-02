@@ -1,4 +1,5 @@
 React = require 'react'
+Immutable = require 'immutable'
 
 ###
   Pravidla:
@@ -65,6 +66,7 @@ module.exports = React.createClass
     columns: React.PropTypes.object.isRequired
     invalidColumns: React.PropTypes.object.isRequired
     referenceableTables: React.PropTypes.object.isRequired
+    columnsReferences: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
 
@@ -87,12 +89,8 @@ module.exports = React.createClass
           Row
             column: currentColumn
             referenceableTables: @props.referenceableTables
-            referenceableColumns: @props.columns.filter (column) ->
-              return false if column.get('name') == currentColumn.get('name')
-              return true if [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(column.get('type')) >= 0
-              return false
-            sortLabelColumns: @props.columns.filter (column) ->
-              currentColumn.get('name') == column.get('reference')
+            referenceableColumns: @props.columnsReferences.getIn [currentColumn.get('name'), 'referenceableColumns'], Immutable.Map()
+            sortLabelColumns: @props.columnsReferences.getIn [currentColumn.get('name'), 'sortColumns'], Immutable.Map()
             isEditing: @props.isEditing
             isValid: !@props.invalidColumns.contains currentColumn.get('name')
             key: currentColumn.get 'name'
