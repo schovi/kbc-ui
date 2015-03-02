@@ -9,7 +9,7 @@ actionCreators = require '../../../actionCreators'
 {strong, br, ul, li, div, span, i} = React.DOM
 
 ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
-Button = React.createFactory(require('react-bootstrap').Button)
+EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterTable'
@@ -23,6 +23,7 @@ module.exports = React.createClass
     configurationId: configurationId
     table: goodDataWriterStore.getTable(configurationId, tableId)
     isEditingColumns: isEditingColumns
+    isSavingColumns: goodDataWriterStore.isSavingTableColumns(configurationId, tableId)
     columns: goodDataWriterStore.getTableColumns(configurationId,
       tableId,
       if isEditingColumns then 'editing' else 'current'
@@ -45,24 +46,13 @@ module.exports = React.createClass
       div className: 'row kbc-header',
         div className: 'col-sm-8'
         div className: 'col-sm-4 kbc-buttons',
-          if @state.isEditingColumns
-            span null,
-              Button
-                bsStyle: 'link'
-                onClick: @_handleEditCancel
-              ,
-                'Cancel'
-              Button
-                bsStyle: 'success'
-                onClick: @_handleEditSave
-              ,
-                'Save'
-          else
-            Button
-              bsStyle: 'success'
-              onClick: @_handleEditStart
-            ,
-              'Edit columns'
+          EditButtons
+            isEditing: @state.isEditingColumns
+            isSaving: @state.isSavingColumns
+            onCancel: @_handleEditCancel
+            onSave: @_handleEditSave
+            onEditStart: @_handleEditStart
+            editLabel: 'Edit columns'
 
       ColumnsEditor
         columns: @state.columns

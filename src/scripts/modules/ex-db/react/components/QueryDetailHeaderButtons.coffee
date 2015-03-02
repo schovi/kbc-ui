@@ -3,9 +3,9 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ExDbStore = require '../../exDbStore'
 RoutesStore = require '../../../../stores/RoutesStore'
 ExDbActionCreators = require '../../exDbActionCreators'
-Loader = React.createFactory(require '../../../../react/common/Loader')
+EditButtons = React.createFactory(require '../../../../react/common/EditButtons')
 
-{button, span} = React.DOM
+
 
 module.exports = React.createClass
   displayName: 'QueryDetailHeaderButtons'
@@ -32,27 +32,9 @@ module.exports = React.createClass
     ExDbActionCreators.saveQueryEdit @state.currentConfigId, @state.currentQueryId
 
   render: ->
-    if @state.isEditing
-      React.DOM.div className: 'kbc-buttons',
-        if @state.isSaving
-          Loader()
-        button
-          className: 'btn btn-link'
-          disabled: @state.isSaving
-          onClick: @_handleCancel
-        ,
-          'Cancel'
-        button
-          className: 'btn btn-success'
-          disabled: @state.isSaving
-          onClick: @_handleCreate
-        ,
-          'Save'
-    else
-      React.DOM.div null,
-        button
-          className: 'btn btn-success'
-          onClick: @_handleEditStart
-        ,
-          span className: 'fa fa-edit'
-          ' Edit query'
+    EditButtons
+      isEditing: @state.isEditing
+      isSaving: @state.isSaving
+      onCancel: @_handleCancel
+      onSave: @_handleCreate
+      onEditStart: @_handleEditStart
