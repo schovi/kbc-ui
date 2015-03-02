@@ -86,13 +86,14 @@ module.exports = React.createClass
           th null
       tbody null,
         @props.columns.map (currentColumn) ->
+          colName = currentColumn.get 'name'
           Row
             column: currentColumn
             referenceableTables: @props.referenceableTables
-            referenceableColumns: @props.columnsReferences.getIn [currentColumn.get('name'), 'referenceableColumns'], Immutable.Map()
-            sortLabelColumns: @props.columnsReferences.getIn [currentColumn.get('name'), 'sortColumns'], Immutable.Map()
+            referenceableColumns: @props.columnsReferences.getIn [colName, 'referenceableColumns'], Immutable.Map()
+            sortLabelColumns: @props.columnsReferences.getIn [colName, 'sortColumns'], Immutable.Map()
             isEditing: @props.isEditing
-            isValid: !@props.invalidColumns.contains currentColumn.get('name')
+            isValid: !@props.invalidColumns.contains colName
             key: currentColumn.get 'name'
             onChange: @_handleColumnChange
         , @
