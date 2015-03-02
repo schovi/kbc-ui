@@ -30,15 +30,16 @@ module.exports = React.createClass
     referenceableTables: React.PropTypes.object.isRequired
     sortLabelColumns: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
+    isValid: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
 
   _handleInputChange: (propName, e) ->
     @props.onChange @props.column.set(propName, e.target.value)
 
   render: ->
-    console.log 'render row', @props.column.get('name')
     column = @props.column
-    tr null,
+    rowClassName = if @props.isValid then '' else 'danger'
+    tr className: rowClassName,
       td null,
         column.get('name'),
       td null,

@@ -15,6 +15,7 @@ module.exports = React.createClass
   propTypes:
     isEditing: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
+    isDisabled: React.PropTypes.bool
     editLabel: React.PropTypes.string
     cancelLabel: React.PropTypes.string
     saveLabel: React.PropTypes.string
@@ -27,6 +28,7 @@ module.exports = React.createClass
     editLabel: 'Edit'
     saveLabel: 'Save'
     cancelLabel: 'Cancel'
+    isDisabled: false
 
   render: ->
     if @props.isEditing
@@ -35,13 +37,13 @@ module.exports = React.createClass
           React.createElement Loader
         React.createElement Button,
           bsStyle: 'link'
-          disabled: @props.isSaving
+          disabled: @props.isSaving || @props.isDisabled
           onClick: @props.onCancel
         ,
           @props.cancelLabel
         React.createElement Button,
           bsStyle: 'success'
-          disabled: @props.isSaving
+          disabled: @props.isSaving || @props.isDisabled
           onClick: @props.onSave
         ,
           @props.saveLabel

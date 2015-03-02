@@ -45,11 +45,29 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
         return column.delete('reference')
       return column
 
-
-
-
-  console.log 'cols', columns.toJS()
   columns
+
+###
+
+###
+validateColumns = (columns) ->
+  columns
+  .filter (column) ->
+    # empty name
+    return true if column.get('gdName').trim() == ''
+
+    # reference not set
+    if [ColumnTypes.LABEL, ColumnTypes.HYPERLINK].indexOf(column.get('type')) >= 0
+      return true if !column.get('reference')
+
+    # schema reference not set
+    return true if column.get('type') == ColumnTypes.REFERENCE && !column.get('schemaReference')
+
+    false
+  .map (column) ->
+    column.get('name')
+
+
 
 
 GoodDataWriterStore = StoreUtils.createStore
@@ -79,6 +97,9 @@ GoodDataWriterStore = StoreUtils.createStore
 
   getTableColumns: (configurationId, tableId, version = 'current') ->
     _store.getIn ['tableColumns', configurationId, tableId, version]
+
+  getTableColumnsValidation: (configurationId, tableId) ->
+    _store.getIn ['tableColumns', configurationId, tableId, 'invalidColumns'], List()
 
   isEditingTableColumns: (configurationId, tableId) ->
     _store.hasIn ['tableColumns', configurationId, tableId, 'editing']
@@ -176,17 +197,22 @@ dispatcher.register (payload) ->
         action.column.get 'name'
       ]
 
-
       _store = _store.updateIn [
         'tableColumns'
         action.configurationId
         action.tableId
-        'editing'
-      ], (columns) ->
-        columns = columns.set action.column.get('name'), action.column
-        modifyColumns columns, action.column, currentColumn
 
-      console.log 'updated', _store.toJS()
+      ], (tableColumns) ->
+        columns = tableColumns.get('editing')
+        columns = columns.set action.column.get('name'), action.column
+        columns = modifyColumns columns, action.column, currentColumn
+
+        invalidColumns = validateColumns columns
+
+        tableColumns
+        .set 'editing', columns
+        .set 'invalidColumns', invalidColumns
+
       GoodDataWriterStore.emitChange()
 
 

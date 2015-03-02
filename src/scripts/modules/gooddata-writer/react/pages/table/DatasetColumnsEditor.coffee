@@ -63,6 +63,7 @@ module.exports = React.createClass
   mixins: [pureRendererMixin]
   propTypes:
     columns: React.PropTypes.object.isRequired
+    invalidColumns: React.PropTypes.object.isRequired
     referenceableTables: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
@@ -93,6 +94,7 @@ module.exports = React.createClass
             sortLabelColumns: @props.columns.filter (column) ->
               currentColumn.get('name') == column.get('reference')
             isEditing: @props.isEditing
+            isValid: !@props.invalidColumns.contains currentColumn.get('name')
             key: currentColumn.get 'name'
             onChange: @_handleColumnChange
         , @
