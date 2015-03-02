@@ -40,6 +40,9 @@ GoodDataWriterStore = StoreUtils.createStore
   isEditingTableColumns: (configurationId, tableId) ->
     _store.hasIn ['tableColumns', configurationId, tableId, 'editing']
 
+  isSavingTableColumns: (configurationId, tableId) ->
+    _store.hasIn ['tableColumns', configurationId, tableId, 'isSaving']
+
 dispatcher.register (payload) ->
   action = payload.action
 
@@ -122,6 +125,49 @@ dispatcher.register (payload) ->
         'editing'
         action.column.get 'name'
       ], action.column
+      GoodDataWriterStore.emitChange()
+
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_START
+      _store = _store.setIn [
+        'tableColumns'
+        action.configurationId
+        action.tableId
+        'isSaving'
+      ], true
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_ERROR
+      _store = _store.deleteIn [
+        'tableColumns'
+        action.configurationId
+        action.tableId
+        'isSaving'
+      ]
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .deleteIn([
+          'tableColumns'
+          action.configurationId
+          action.tableId
+          'editing'
+        ])
+        .deleteIn([
+          'tableColumns'
+          action.configurationId
+          action.tableId
+          'isSaving'
+        ])
+        .setIn([
+          'tableColumns'
+          action.configurationId
+          action.tableId
+          'current'
+        ], Immutable.fromJS(action.columns))
+
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

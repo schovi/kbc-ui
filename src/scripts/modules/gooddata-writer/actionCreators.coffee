@@ -101,4 +101,28 @@ module.exports =
       column: column
 
   saveTableColumnsEdit: (configurationId, tableId) ->
+    columns = goodDataWriterStore.getTableColumns(configurationId, tableId, 'editing')
 
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_START
+      configurationId: configurationId
+      tableId: tableId
+
+    goodDataWriterApi
+    .updateTable(configurationId, tableId,
+      columns: columns.toJS()
+    )
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        columns: columns.toJS()
+
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        error: e
+      throw e
