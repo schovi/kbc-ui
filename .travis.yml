@@ -16,34 +16,39 @@ sudo: false
 cache:
   bundler: true
   directories:
-    - node_modules
+  - node_modules
 deploy:
-  - provider: s3
-    access_key_id: AKIAJPIXG5FWMBKORQZA
-    secret_access_key:
-      secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
-    bucket: kbc-uis
-    local-dir: release
-    upload-dir: kbc
-    acl: public_read
-    skip_cleanup: true
-    cache_control: 'max-age=31536000'
-    on:
-      repo: keboola/kbc-ui
-  - provider: s3
-    access_key_id: AKIAJPIXG5FWMBKORQZA
-    secret_access_key:
-      secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
-    bucket: kbc-uis
-    local-dir: dist
-    upload-dir: kbc
-    acl: public_read
-    skip_cleanup: true
-    cache_control: 'max-age=31536000'
-    on:
-      repo: keboola/kbc-ui
+- provider: s3
+  access_key_id: AKIAJPIXG5FWMBKORQZA
+  secret_access_key:
+    secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
+  bucket: kbc-uis
+  local-dir: release
+  upload-dir: kbc
+  acl: public_read
+  skip_cleanup: true
+  cache_control: max-age=31536000
+  on:
+    repo: keboola/kbc-ui
+- provider: s3
+  access_key_id: AKIAJPIXG5FWMBKORQZA
+  secret_access_key:
+    secure: YnoCx0iURkQ9H9FLamLh8Hr7n2kosPURs7kYeVc5/AFeaprGSfRjOxP2kkOls9esvNfK3mbMpDStFZc4/BSC5nGG+fOL5WQK8r+YVGzlFXfBNu2FgSC/uGd4QeCOgvEDo7k06320LJrJBqQsUQ5484J7TnDq5AzKljDA77f2+Cc=
+  bucket: kbc-uis
+  local-dir: dist
+  upload-dir: kbc
+  acl: public_read
+  skip_cleanup: true
+  cache_control: max-age=31536000
+  on:
+    repo: keboola/kbc-ui
 after_deploy:
-  - "CURRENT_TAG=`git describe --tags HEAD`"
-  - "echo $CURRENT_TAG"
-  - curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json -H X-Token:$KBC_ADMIN_TOKEN_DEVEL https://martin-connection-devel.keboola.com/admin/manage-apps-api/register
-  - curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json -H X-Token:$KBC_ADMIN_TOKEN_PROD https://connection.keboola.com/admin/manage-apps-api/register
+- CURRENT_TAG=`git describe --tags HEAD`
+- echo $CURRENT_TAG
+- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json
+  -H X-Token:$KBC_ADMIN_TOKEN_DEVEL https://martin-connection-devel.keboola.com/admin/manage-apps-api/register
+- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json
+  -H X-Token:$KBC_ADMIN_TOKEN_PROD https://connection.keboola.com/admin/manage-apps-api/register
+notifications:
+  slack:
+    secure: QEH74o00ud7Q0TjKZ5yWzfHMZyq94KUYR/cWe+P0LbMocCbD25GzW/LnTpM+iJQjkDktR3+iZ53ycLOMbrGzFdPwUDIa98FRjv9nMIz0s1ZQv7/5/ydER7wppYT2ID/paIvUMkFQY0cXq0ZIOii66XwV21FPjVUHbOAxjwyWr+U=
