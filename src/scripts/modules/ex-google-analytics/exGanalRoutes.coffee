@@ -4,7 +4,7 @@ ExGanalIndex = require './react/pages/index/Index'
 ExGanalActionCreators = require './exGanalActionCreators'
 #authorizePage = require './react/pages/authorize/authorize'
 #ExGanalSheetHeaderButtons = require './react/components/SheetHeaderButtons'
-
+ExGanalNewQuery = require './react/pages/new-query/NewQuery'
 
 module.exports =
   name: 'ex-google-analytics'
@@ -35,5 +35,6 @@ module.exports =
     name: 'ex-google-analytics-new-query'
     path: 'Query'
     title: 'New Query'
+    handler: ExGanalNewQuery
 
   ]
