@@ -6,6 +6,7 @@ Constants = require './exGanalConstants'
 
 _store = Map(
   configs: Map() #config by configId
+  newQuery: Map() #configId
 )
 
 
@@ -14,6 +15,21 @@ GanalStore = StoreUtils.createStore
     _store.hasIn ['configs', configId]
   getConfig: (configId) ->
     _store.getIn(['configs', configId])
+
+  getNewQuery: (configId) ->
+    if _store.hasIn ['newQuery', configId]
+      return _store.getIn ['newQuery', configId]
+    newQuery = Immutable.fromJS
+      name: ""
+      metrics: []
+      dimensions: []
+      filters: ""
+      profile: ""
+
+    _store.setIn ['newQuery', configId], newQuery
+    return newQuery
+
+
 
 
 Dispatcher.register (payload) ->
@@ -26,5 +42,9 @@ Dispatcher.register (payload) ->
       _store = _store.setIn(['configs', configId], data)
       GanalStore.emitChange()
 
+    when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY
+      configId = action.configId
+      _store = _store.setIn ['newQuery', configId], action.newQuery
+      GanalStore.emitChange()
 
 module.exports = GanalStore
