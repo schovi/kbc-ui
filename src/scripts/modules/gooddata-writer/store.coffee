@@ -38,7 +38,24 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
     columns = columns.map (column) ->
-      return column if column.get('name') == newColumn.get('name')
+      if column.get('name') == newColumn.get('name')
+        columnDefaults =
+          dataType: null
+          dataTypeSize: null
+          reference: null
+          schemaReference: null
+          format: null
+          dateDimension: null
+          sortLabel: null
+          sortOrder: null
+        column = column
+          .merge(Map(columnDefaults))
+          .set('type', newColumn.get('type'))
+
+        if column.get('type') == ColumnTypes.DATE
+          column = column.set('format', 'yyyy-MM-dd HH:mm:ss')
+          
+        return column
 
       isNotReferencable = [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(newColumn.get('type')) < 0
       if column.get('reference') == newColumn.get('name') && isNotReferencable

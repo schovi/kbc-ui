@@ -15,6 +15,8 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     dimension: React.PropTypes.object.isRequired
 
+  getDefaultProps: ->
+    className: 'form-horizontal'
 
   _handleInputChange: (field, e) ->
     @props.onChange @props.dimension.set(field, e.target.value)
@@ -23,7 +25,7 @@ module.exports = React.createClass
     @props.onChange @props.dimension.set(field, e.target.checked)
 
   render: ->
-    form className: 'form-horizontal',
+    form className: @props.className,
       Input
         type: 'text'
         placeholder: 'Dimension name'

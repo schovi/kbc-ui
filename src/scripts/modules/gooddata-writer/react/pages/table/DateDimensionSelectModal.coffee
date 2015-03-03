@@ -14,7 +14,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 
 
-{div, p, strong, form, input, label, table, tbody, thead, tr, th, td} = React.DOM
+{div, p, strong, form, input, label, table, tbody, thead, tr, th, td, div} = React.DOM
 
 module.exports = React.createClass
   displayName: 'DateDimensionSelectModal'
@@ -29,7 +29,7 @@ module.exports = React.createClass
     actionCreators.loadDateDimensions(@props.configurationId)
 
   getInitialState: ->
-    selectedDimension: @props.column.getIn ['data', 'dateDimension']
+    selectedDimension: @props.column.get 'dateDimension'
 
   getStateFromStores: ->
     isLoading: dateDimensionStore.isLoading(@props.configurationId)
@@ -55,13 +55,17 @@ module.exports = React.createClass
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',
-        'loading' if @state.isLoading
+        if @state.isLoading
+          div className: 'well',
+            'Loading...'
         @_renderTable() if @state.dimensions
-        NewDimensionForm
-          isPending: @state.isCreatingNewDimension
-          dimension: @state.newDimension
-          onChange: @_handleNewDimensionUpdate
-          onSubmit: @_handleNewDimensionSave
+        div className: 'well',
+          NewDimensionForm
+            className: 'form-inline'
+            isPending: @state.isCreatingNewDimension
+            dimension: @state.newDimension
+            onChange: @_handleNewDimensionUpdate
+            onSubmit: @_handleNewDimensionSave
       div className: 'modal-footer',
         ButtonToolbar null,
           Button
@@ -71,6 +75,7 @@ module.exports = React.createClass
             'Cancel'
           Button
             onClick: @_handleConfirm
+            disabled: !@state.selectedDimension
             bsStyle: 'success'
           ,
             'Choose'
@@ -80,31 +85,34 @@ module.exports = React.createClass
       selectedDimension: e.target.value
 
   _renderTable: ->
-    console.log 'dims', @state.dimensions.toJS()
-    table className: 'table table-striped',
-      thead null,
-        tr null,
-          th null, 'Name'
-          th null, 'Include time'
-          th null, 'Selected'
-      tbody null,
-        @state.dimensions.map (dimension) ->
-          tr
-            key: dimension.get 'id'
-          ,
-            td null,
-              dimension.getIn ['data', 'name']
-            td null,
-              Check
-                isChecked: dimension.getIn ['data', 'includeTime']
-            td null,
-              Input
-                type: 'radio'
-                checked: dimension.get('id') == @state.selectedDimension
-                value: dimension.get('id')
-                onChange: @_handleSelectedDimensionChange
-        , @
-        .toArray()
+    if @state.dimensions.count()
+      table className: 'table table-striped',
+        thead null,
+          tr null,
+            th null, 'Name'
+            th null, 'Include time'
+            th null, 'Selected'
+        tbody null,
+          @state.dimensions.map (dimension) ->
+            tr
+              key: dimension.get 'id'
+            ,
+              td null,
+                dimension.getIn ['data', 'name']
+              td null,
+                Check
+                  isChecked: dimension.getIn ['data', 'includeTime']
+              td null,
+                Input
+                  type: 'radio'
+                  checked: dimension.get('id') == @state.selectedDimension
+                  value: dimension.get('id')
+                  onChange: @_handleSelectedDimensionChange
+          , @
+          .toArray()
+    else
+      div className: 'well',
+        'There are no date dimensions yet. Please create new one.'
 
   _title: ->
     "Date dimension for column #{@props.column.get('name')}"

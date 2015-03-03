@@ -129,15 +129,21 @@ module.exports = React.createClass
       span null,
         'Date dimension: '
         @props.column.get 'dateDimension'
-        ModalTrigger
-          modal: DateDimensionModal
-            column: @props.column
-            configurationId: @props.configurationId
-            onSelect: @_handleDateDimensionSelect
-        ,
-          span null,
-            span className: 'fa fa-calendar'
-            'Add'
+        ' '
+        if @props.isEditing
+          ModalTrigger
+            modal: DateDimensionModal
+              column: @props.column
+              configurationId: @props.configurationId
+              onSelect: @_handleDateDimensionSelect
+          ,
+            span className: 'btn btn-link',
+              span className: 'fa fa-calendar'
+              ' '
+              if @props.column.get('dateDimension')
+                'Change'
+              else
+                'Add'
 
   _handleDateDimensionSelect: (data) ->
     @props.onChange @props.column.set('dateDimension', data.selectedDimension)
