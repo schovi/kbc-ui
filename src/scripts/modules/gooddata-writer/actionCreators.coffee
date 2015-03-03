@@ -6,6 +6,8 @@ goodDataWriterStore = require './store'
 goodDataWriterApi = require './api'
 goodDataWriterConstants = require './constants'
 
+dimensionsStore = require './dateDimensionsStore'
+
 module.exports =
 
   loadConfigurationForce: (configurationId) ->
@@ -186,5 +188,33 @@ module.exports =
         type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_ERROR
         configurationId: configurationId
         dimensionName: dateDimensionName
+        error: e
+      throw e
+
+
+  updateNewDateDimension: (configurationId, newDimension) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_UPDATE
+      configurationId: configurationId
+      dimension: newDimension
+
+  saveNewDateDimension: (configurationId) ->
+    dateDimension = dimensionsStore.getNewDimension(configurationId)
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_START
+      configurationId: configurationId
+
+    goodDataWriterApi
+    .createDateDimension(configurationId, dateDimension.toJS())
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_SUCCESS
+        configurationId: configurationId
+        dimension: dateDimension
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_ERROR
+        configurationId: configurationId
         error: e
       throw e

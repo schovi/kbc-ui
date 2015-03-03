@@ -74,3 +74,14 @@ module.exports =
     .then (response) ->
       response.body
 
+  createDateDimension: (configurationId, dateDimension) ->
+    data = Immutable.fromJS(dateDimension)
+    .set 'writerId', configurationId
+
+    createRequest('POST', 'date-dimensions')
+    .query writerId: configurationId
+    .send data.toJS()
+    .promise()
+    .then (response) ->
+      response.body
+

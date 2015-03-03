@@ -9,6 +9,7 @@ constants = require './constants'
 
 _store = Map
   dimensionsById: Map()
+  newDimensions: Map()
   isLoading: false
 
 
@@ -16,6 +17,15 @@ DimensionsStore = StoreUtils.createStore
 
   getAll: (configurationId) ->
     _store.getIn ['dimensionsById', configurationId]
+
+  isCreatingNewDimension: (configurationId) ->
+    _store.hasIn ['newDimensions', configurationId, 'isSaving']
+
+  getNewDimension: (configurationId) ->
+    _store.getIn ['newDimensions', configurationId, 'dimension'],
+      Map
+        name: ''
+        includeTime: false
 
 dispatcher.register (payload) ->
   action = payload.action
@@ -85,5 +95,43 @@ dispatcher.register (payload) ->
       ], (actions) ->
         actions.delete(actions.indexOf 'delete')
       DimensionsStore.emitChange()
+
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_UPDATE
+      _store = _store.setIn [
+        'newDimensions'
+        action.configurationId
+        'dimension'
+      ], action.dimension
+      DimensionsStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_START
+      _store = _store.setIn [
+        'newDimensions'
+        action.configurationId
+        'isSaving'
+      ], true
+      DimensionsStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .deleteIn [
+          'newDimensions'
+          action.configurationId
+        ]
+        .setIn [
+          'dimensionsById'
+          action.configurationId
+          action.dimension.get('name')
+        ], Map
+          isLoading: false
+          id: action.dimension.get('name')
+          pendingActions: List()
+          data: action.dimension
+
+      DimensionsStore.emitChange()
+
+
 
 module.exports = DimensionsStore
