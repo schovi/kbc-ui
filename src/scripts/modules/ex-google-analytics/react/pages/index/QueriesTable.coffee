@@ -24,7 +24,7 @@ module.exports = React.createClass
           name: queryName
         div className: 'td', row.get('metrics').join()
         div className: 'td', row.get('dimensions').join()
-        div className: 'td', row.get('filters') or 'n/a'
+        div className: 'td', row.get('filters')?.get(0) or 'n/a'
         div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'

@@ -11,14 +11,17 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getRouterState().getIn ['params', 'config']
+    config = exGanalStore.getConfig(configId)
     configId: configId
     query: exGanalStore.getNewQuery(configId)
+    profiles: config.get 'items'
 
   render: ->
     QueryEditor
       configId: @state.configId
       onChange: @_onHandleChange
       query: @state.query
+      profiles: @state.profiles
 
 
   _onHandleChange: (newQuery) ->
