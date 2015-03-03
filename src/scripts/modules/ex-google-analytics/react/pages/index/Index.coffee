@@ -23,8 +23,12 @@ module.exports = React.createClass
 
   render: ->
     console.log 'rendering', @state.config.toJS()
-    queries = @state.config.get('configuration')
+    div {className: 'container-fluid'},
+      @_renderMainContent()
+      @_renderSideBar()
 
+  _renderMainContent: ->
+    queries = @state.config.get('configuration')
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row kbc-header',
         div className: 'col-sm-8',
@@ -47,3 +51,37 @@ module.exports = React.createClass
           configId: @state.configId
       else
         "no queries yet"
+
+  _renderSideBar: ->
+    div {className: 'col-md-3 kbc-main-sidebar'},
+      ul className: 'nav nav-stacked',
+        li null,
+          Link
+            to: 'ex-google-analytics-authorize'
+            params:
+              config: @state.configId
+          ,
+            i className: 'fa fa-fw fa-user'
+            'Authorize'
+        li null,
+          Link
+            to: 'ex-google-analytics-new-query'
+            params:
+              config: @state.configId
+          ,
+            i className: 'fa fa-fw fa-plus'
+            'Add Query'
+
+        # li null,
+        #   RunExtraction
+        #     component: 'ex-google-analytics'
+        #     runParams:
+        #       account: @state.configId
+      div className: 'kbc-buttons',
+        span null,
+          'Created By '
+        strong null, 'Damien Dickhead'
+        br null
+        span null,
+          'Created On '
+        strong null, '2014-05-07 09:24 '

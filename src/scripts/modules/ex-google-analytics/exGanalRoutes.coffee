@@ -27,5 +27,13 @@ module.exports =
     name: 'ex-google-analytics-query'
     path: 'query/:name'
     title: 'Query'
+  ,
+    name: 'ex-google-analytics-authorize'
+    path: 'Authorize'
+    title: 'Authorize'
+  ,
+    name: 'ex-google-analytics-new-query'
+    path: 'Query'
+    title: 'New Query'
 
   ]
