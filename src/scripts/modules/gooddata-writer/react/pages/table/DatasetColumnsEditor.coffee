@@ -68,6 +68,7 @@ module.exports = React.createClass
     referenceableTables: React.PropTypes.object.isRequired
     columnsReferences: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
+    isSaving: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
     configurationId: React.PropTypes.string.isRequired
 
@@ -94,6 +95,7 @@ module.exports = React.createClass
             referenceableColumns: @props.columnsReferences.getIn [colName, 'referenceableColumns'], Immutable.Map()
             sortLabelColumns: @props.columnsReferences.getIn [colName, 'sortColumns'], Immutable.Map()
             isEditing: @props.isEditing
+            isSaving: @props.isSaving
             isValid: !@props.invalidColumns.contains colName
             configurationId: @props.configurationId
             key: currentColumn.get 'name'

@@ -64,5 +64,6 @@ module.exports = React.createClass
         columnsReferences: @state.columnsReferences
         referenceableTables: @state.referenceableTables
         isEditing: @state.isEditingColumns
+        isSaving: @state.isSavingColumns
         onColumnChange: @_handleEditUpdate
         configurationId: @state.configurationId

@@ -54,7 +54,7 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
 
         if column.get('type') == ColumnTypes.DATE
           column = column.set('format', 'yyyy-MM-dd HH:mm:ss')
-          
+
         return column
 
       isNotReferencable = [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(newColumn.get('type')) < 0

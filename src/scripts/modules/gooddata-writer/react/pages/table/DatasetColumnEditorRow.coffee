@@ -7,7 +7,7 @@ keyMirror = require('react/lib/keyMirror')
 Input = React.createFactory(require('react-bootstrap').Input)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
-
+DateFormatHint = require './DateFormatHint'
 PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 #PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
@@ -35,6 +35,7 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
     isEditing: React.PropTypes.bool.isRequired
     isValid: React.PropTypes.bool.isRequired
+    isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
 
   _handleInputChange: (propName, e) ->
@@ -50,12 +51,13 @@ module.exports = React.createClass
         Input
           type: if @props.isEditing then 'text' else 'static'
           value: column.get 'gdName'
-          disabled: !@props.isEditing
+          disabled: @props.isSaving
           onChange: @_handleInputChange.bind @, 'gdName'
       td null,
         Input
           type: if @props.isEditing then 'select' else 'static'
           value: column.get 'type'
+          disableD: @props.isSaving
           onChange: @_handleInputChange.bind @, 'type'
         ,
           @_selectOptions Immutable.fromJS(ColumnTypes)
@@ -76,6 +78,7 @@ module.exports = React.createClass
       Input
         type: if @props.isEditing then 'select' else 'static'
         value: @props.column.get 'schemaReference', ''
+        disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'schemaReference'
       ,
         @_selectOptions(
@@ -87,6 +90,7 @@ module.exports = React.createClass
     if @_shouldRenderPart visibleParts.REFERENCE
       Input
         type: if @props.isEditing then 'select' else 'static'
+        disabled: @props.isSaving
         value: @props.column.get 'reference'
         onChange: @_handleInputChange.bind @, 'reference'
       ,
@@ -101,6 +105,7 @@ module.exports = React.createClass
     Input
       type: if @props.isEditing then 'select' else 'static'
       value: @props.column.get 'sortLabel'
+      disabled: @props.isSaving
       onChange: @_handleInputChange.bind @, 'sortLabel'
     ,
       @_selectOptions(
@@ -114,6 +119,7 @@ module.exports = React.createClass
       Input
         type: if @props.isEditing then 'select' else 'static'
         value: @props.column.get 'dataType'
+        disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'dataType'
       ,
         @_selectOptions Immutable.fromJS(DataTypes).set('', '')
@@ -125,7 +131,9 @@ module.exports = React.createClass
       Input
         type: if @props.isEditing then 'text' else 'static'
         value: @props.column.get 'format'
+        disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'format'
+        addonAfter: DateFormatHint() if @props.isEditing
       span null,
         'Date dimension: '
         @props.column.get 'dateDimension'
