@@ -9,6 +9,8 @@ CredentialsActionCreators = require('../../../../provisioning/ActionCreators')
 MySqlCredentials = require('../../../../provisioning/react/components/MySqlCredentials')
 RedshiftCredentials = require('../../../../provisioning/react/components/RedshiftCredentials')
 CreateSandboxModal = React.createFactory(require '../../modals/CreateSandbox')
+ConnectToMySqlSandbox = React.createFactory(require '../../components/ConnectToMySqlSandbox')
+
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
 
@@ -24,10 +26,7 @@ Sandbox = React.createClass
   mySqlCredentials: ->
     if @state.mySqlCredentials
       return span {},
-        MySqlCredentials {credentials: @state.mySqlCredentials, linkToSandbox: true}
-        button {className: "btn btn-default", onClick: @_dropMySqlCredentials}, 'Drop'
-        ModalTrigger modal: CreateSandboxModal({backend: 'mysql'}),
-          button {className: "btn btn-default"}, 'Import Tables'
+        MySqlCredentials {credentials: @state.mySqlCredentials}
     else
       return button {className: 'btn btn-success', onClick: @_createMySqlCredentials},
         'Create MySql Credentials'
@@ -37,13 +36,32 @@ Sandbox = React.createClass
     if @state.redshiftCredentials
       return span {},
         RedshiftCredentials {credentials: @state.redshiftCredentials}
-        button {className: "btn btn-default", onClick: @_dropRedshiftCredentials}, 'Drop'
-        button {className: "btn btn-default", onClick: @_refreshRedshiftCredentials}, 'Refresh'
-        ModalTrigger modal: CreateSandboxModal({backend: 'redshift'}),
-          button {className: "btn btn-default"}, 'Import Tables'
     else
       return button {className: 'btn btn-success', onClick: @_createRedshiftCredentials},
         'Create Redshift Credentials'
+
+  mySqlControlButtons: ->
+    if @state.mySqlCredentials
+      return span {},
+        ModalTrigger modal: CreateSandboxModal({backend: 'mysql'}),
+          button {className: "btn btn-link", title: 'Create Sandbox'},
+            span {className: 'fa fa-play'}
+        ConnectToMySqlSandbox {credentials: @state.mySqlCredentials},
+          button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+            span {className: 'fa fa-database'}
+        button {className: 'btn btn-link', title: 'Delete sandbox', onClick: @_dropMySqlCredentials},
+          span {className: 'kbc-icon-cup'}
+
+  redshiftControlButtons: ->
+    if @state.redshiftCredentials
+      return span {},
+        ModalTrigger modal: CreateSandboxModal({backend: 'redshift'}),
+          button {className: "btn btn-link", title: 'Create Sandbox'},
+            span {className: 'fa fa-play'}
+        button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
+          span {className: 'fa fa-refresh'}
+        button {className: "btn btn-link",  title: 'Delete sandbox', onClick: @_dropRedshiftCredentials},
+          span {className: 'kbc-icon-cup'}
 
   render: ->
     div {className: 'container-fluid'},
@@ -51,13 +69,19 @@ Sandbox = React.createClass
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
           div {className: 'tr'},
             div {className: 'td'},
-              h4 {}, 'MySQL'
+              div {className: 'row'},
+                h4 {}, 'MySQL'
+                div {className: 'pull-right'},
+                  @mySqlControlButtons()
             div {className: 'td'},
               @mySqlCredentials()
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
           div {className: 'tr'},
             div {className: 'td'},
-              h4 {}, 'Redshift'
+              div {className: 'row'},
+                h4 {}, 'Redshift'
+                div {className: 'pull-right'},
+                  @redshiftControlButtons()
             div {className: 'td'},
               @redshiftCredentials()
 
