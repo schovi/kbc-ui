@@ -4,6 +4,7 @@ TransformationBucket = require('./react/pages/transformation-bucket/Transformati
 Sandbox = require('./react/pages/sandbox/Sandbox')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
+ProvisioningActionCreators = require('../provisioning/ActionCreators')
 
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
 TransformationBucketButtons = require './react/components/TransformationBucketButtons'
@@ -36,6 +37,13 @@ routes =
         title: ->
           "Sandbox"
         handler: Sandbox
+        requireData: [
+          (params) ->
+            ProvisioningActionCreators.loadCredentials("mysql", "sandbox")
+        ,
+          (params) ->
+            ProvisioningActionCreators.loadCredentials("redshift", "sandbox")
+        ]
       ]
       
 module.exports = routes
