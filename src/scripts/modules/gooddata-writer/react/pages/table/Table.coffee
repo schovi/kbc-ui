@@ -65,3 +65,4 @@ module.exports = React.createClass
         referenceableTables: @state.referenceableTables
         isEditing: @state.isEditingColumns
         onColumnChange: @_handleEditUpdate
+        configurationId: @state.configurationId

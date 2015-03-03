@@ -2,7 +2,7 @@ React = require 'react'
 
 Input = React.createFactory(require('react-bootstrap').Input)
 Button = React.createFactory(require('react-bootstrap').Button)
-Loader = React.createFactory(require('../../../../../react/common/Loader'))
+Loader = React.createFactory(require('../../../../react/common/Loader'))
 
 {form, span} = React.DOM
 

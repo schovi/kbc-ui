@@ -10,13 +10,16 @@ constants = require './constants'
 _store = Map
   dimensionsById: Map()
   newDimensions: Map()
-  isLoading: false
+  isLoading: Map()
 
 
 DimensionsStore = StoreUtils.createStore
 
   getAll: (configurationId) ->
     _store.getIn ['dimensionsById', configurationId]
+
+  isLoading: (configurationId) ->
+    _store.hasIn ['isLoading', configurationId]
 
   isCreatingNewDimension: (configurationId) ->
     _store.hasIn ['newDimensions', configurationId, 'isSaving']
@@ -33,11 +36,11 @@ dispatcher.register (payload) ->
   switch action.type
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_START
-      _store = _store.set 'isLoading', true
+      _store = _store.setIn ['isLoading', action.configurationId], true
       DimensionsStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_ERROR
-      _store = _store.set 'isLoading', false
+      _store = _store.deleteIn ['isLoading', action.configurationId]
       DimensionsStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_SUCCESS
@@ -52,7 +55,7 @@ dispatcher.register (payload) ->
 
       _store = _store.withMutations (store) ->
         store
-        .set 'isLoading', false
+        .deleteIn ['isLoading', action.configurationId]
         .setIn ['dimensionsById', action.configurationId], dimensionsById
 
       DimensionsStore.emitChange()

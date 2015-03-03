@@ -69,6 +69,7 @@ module.exports = React.createClass
     columnsReferences: React.PropTypes.object.isRequired
     isEditing: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
+    configurationId: React.PropTypes.string.isRequired
 
   _handleColumnChange: (column) ->
     @props.onColumnChange column
@@ -94,6 +95,7 @@ module.exports = React.createClass
             sortLabelColumns: @props.columnsReferences.getIn [colName, 'sortColumns'], Immutable.Map()
             isEditing: @props.isEditing
             isValid: !@props.invalidColumns.contains colName
+            configurationId: @props.configurationId
             key: currentColumn.get 'name'
             onChange: @_handleColumnChange
         , @

@@ -2,12 +2,15 @@ React = require 'react'
 Immutable = require 'immutable'
 keyMirror = require('react/lib/keyMirror')
 
-{tr, td, option} = React.DOM
+{tr, td, option, span, div} = React.DOM
 
 Input = React.createFactory(require('react-bootstrap').Input)
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
 
 PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 #PureRenderMixin = require('react/addons').addons.PureRenderMixin
+
 
 {ColumnTypes, DataTypes, SortOrderOptions} = require '../../../constants'
 
@@ -29,6 +32,7 @@ module.exports = React.createClass
     referenceableColumns: React.PropTypes.object.isRequired
     referenceableTables: React.PropTypes.object.isRequired
     sortLabelColumns: React.PropTypes.object.isRequired
+    configurationId: React.PropTypes.string.isRequired
     isEditing: React.PropTypes.bool.isRequired
     isValid: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
@@ -59,6 +63,8 @@ module.exports = React.createClass
       td null,
         @_renderSchemaReferenceSelect()
         @_renderReferenceSelect()
+        @_renderDateSelect()
+
       td null,
         @_renderSortLabelSelect()
       td null,
@@ -111,6 +117,30 @@ module.exports = React.createClass
         onChange: @_handleInputChange.bind @, 'dataType'
       ,
         @_selectOptions Immutable.fromJS(DataTypes).set('', '')
+
+
+  _renderDateSelect: ->
+    return if !@_shouldRenderPart visibleParts.DATE
+    div null,
+      Input
+        type: if @props.isEditing then 'text' else 'static'
+        value: @props.column.get 'format'
+        onChange: @_handleInputChange.bind @, 'format'
+      span null,
+        'Date dimension: '
+        @props.column.get 'dateDimension'
+        ModalTrigger
+          modal: DateDimensionModal
+            column: @props.column
+            configurationId: @props.configurationId
+            onSelect: @_handleDateDimensionSelect
+        ,
+          span null,
+            span className: 'fa fa-calendar'
+            'Add'
+
+  _handleDateDimensionSelect: (data) ->
+    @props.onChange @props.column.set('dateDimension', data.selectedDimension)
 
 
   _shouldRenderPart: (partName) ->

@@ -8,7 +8,7 @@ actionCreators = require '../../../actionCreators'
 
 
 DateDimensionsTable = React.createFactory(require './DimensionsTable')
-NewDimensionForm = React.createFactory(require './NewForm')
+NewDimensionForm = React.createFactory(require './../../components/NewDimensionForm')
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
