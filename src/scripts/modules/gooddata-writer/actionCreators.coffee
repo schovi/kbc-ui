@@ -147,3 +147,44 @@ module.exports =
         tableId: tableId
         error: e
       throw e
+
+
+  loadDateDimensions: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_START
+      configurationId: configurationId
+
+    goodDataWriterApi
+    .getDateDimensions(configurationId)
+    .then (dimensions) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_SUCCESS
+        configurationId: configurationId
+        dimensions: dimensions
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_DATE_DIMENSIONS_ERROR
+        configurationId: configurationId
+        error: e
+      throw e
+
+  deleteDateDimension: (configurationId, dateDimensionName) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_START
+      configurationId: configurationId
+      dimensionName: dateDimensionName
+
+    goodDataWriterApi
+    .deleteDateDimension(configurationId, dateDimensionName)
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_SUCCESS
+        configurationId: configurationId
+        dimensionName: dateDimensionName
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_ERROR
+        configurationId: configurationId
+        dimensionName: dateDimensionName
+        error: e
+      throw e

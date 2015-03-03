@@ -59,3 +59,18 @@ module.exports =
       response.body
 
 
+  getDateDimensions: (configurationId) ->
+    createRequest('GET', 'date-dimensions')
+    .query writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body.dimensions
+
+  deleteDateDimension: (configurationId, name) ->
+    createRequest('DELETE', 'date-dimensions')
+    .query writerId: configurationId
+    .query name: name
+    .promise()
+    .then (response) ->
+      response.body
+

@@ -10,6 +10,7 @@ PanelGroup = React.createFactory PanelGroup
 
 TablesList = React.createFactory(require './BucketTablesList')
 ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
+Link = React.createFactory(require('react-router').Link)
 
 goodDataWriterStore = require '../../../store'
 
@@ -25,7 +26,6 @@ module.exports = React.createClass
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
 
   render: ->
-    console.log 'writer', @state.writer.toJS(), @state.tablesByBucket.toJS()
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -41,7 +41,15 @@ module.exports = React.createClass
           .toArray()
 
       div className: 'col-md-3 kbc-main-sidebar',
-        'TODO'
+        ul className: 'nav nav-stacked',
+          li null,
+            Link
+              to: 'gooddata-writer-date-dimensions'
+              params:
+                config: @state.writer.getIn ['config', 'id']
+            ,
+              span className: 'fa fa-clock-o fa-fw'
+              ' Date Dimensions'
 
   _renderBucketPanel: (bucketId, tables) ->
 
