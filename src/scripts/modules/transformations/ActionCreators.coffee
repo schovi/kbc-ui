@@ -44,7 +44,7 @@ module.exports =
   loadTransformationBuckets: ->
     # don't load if already loaded
     return Promise.resolve() if TransformationBucketsStore.getIsLoaded()
-    
+
     @.loadTransformationBucketsForce()
 
   createTransformationBucket: (data) ->
@@ -56,7 +56,7 @@ module.exports =
         bucket: newBucket
       )
     )
-    
+
   deleteTransformationBucket: (bucketId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_START
@@ -73,7 +73,7 @@ module.exports =
         type: constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_ERROR
         bucketId: bucketId
       throw e
-    
+
   ###
     Request specified orchestration load from server
     @return Promise
@@ -103,3 +103,14 @@ module.exports =
   loadTransformations: (bucketId) ->
     return Promise.resolve() if TransformationsStore.has(bucketId)
     @loadTransformationsForce(bucketId)
+
+  createSandbox: (data) ->
+    transformationsApi
+    .createSandbox(data)
+    .then((job) ->
+      console.log "job", job
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_SANDBOX_CREATE_SUCCESS
+        job: job
+      )
+    )

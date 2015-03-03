@@ -8,6 +8,9 @@ CredentialsStore = require('../../../../provisioning/stores/CredentialsStore')
 CredentialsActionCreators = require('../../../../provisioning/ActionCreators')
 MySqlCredentials = require('../../../../provisioning/react/components/MySqlCredentials')
 RedshiftCredentials = require('../../../../provisioning/react/components/RedshiftCredentials')
+CreateSandboxModal = React.createFactory(require '../../modals/CreateSandbox')
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 Sandbox = React.createClass
@@ -23,6 +26,8 @@ Sandbox = React.createClass
       return span {},
         MySqlCredentials {credentials: @state.mySqlCredentials, linkToSandbox: true}
         button {className: "btn btn-default", onClick: @_dropMySqlCredentials}, 'Drop'
+        ModalTrigger modal: CreateSandboxModal({backend: 'mysql'}),
+          button {className: "btn btn-default"}, 'Import Tables'
     else
       return button {className: 'btn btn-success', onClick: @_createMySqlCredentials},
         'Create MySql Credentials'
@@ -34,10 +39,12 @@ Sandbox = React.createClass
         RedshiftCredentials {credentials: @state.redshiftCredentials}
         button {className: "btn btn-default", onClick: @_dropRedshiftCredentials}, 'Drop'
         button {className: "btn btn-default", onClick: @_refreshRedshiftCredentials}, 'Refresh'
+        ModalTrigger modal: CreateSandboxModal({backend: 'redshift'}),
+          button {className: "btn btn-default"}, 'Import Tables'
     else
       return button {className: 'btn btn-success', onClick: @_createRedshiftCredentials},
         'Create Redshift Credentials'
- 
+
   render: ->
     div {className: 'container-fluid'},
       div {className: 'col-md-12 kbc-main-content'},
@@ -59,10 +66,10 @@ Sandbox = React.createClass
 
   _refreshRedshiftCredentials: ->
     CredentialsActionCreators.createCredentials('redshift', 'sandbox')
-    
+
   _dropRedshiftCredentials: ->
     CredentialsActionCreators.dropCredentials('redshift', @state.redshiftCredentials.getIn ["credentials", "id"])
-    
+
   _createMySqlCredentials: ->
     CredentialsActionCreators.createCredentials('mysql', 'sandbox')
 

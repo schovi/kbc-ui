@@ -20,7 +20,7 @@ transformationsApi =
     .then((response) ->
       response.body
     )
-    
+
   createTransformationBucket: (data) ->
     createRequest('POST', 'configs')
     .send(data)
@@ -28,17 +28,26 @@ transformationsApi =
     .then((response) ->
       response.body
     )
-    
+
   deleteTransformationBucket: (bucketId) ->
     createRequest('DELETE', "configs/#{bucketId}")
     .send()
     .promise()
-        
+
   getTransformations: (bucketId) ->
     createRequest('GET', "configs/#{bucketId}/items")
     .promise()
     .then((response) ->
       response.body
     )
-    
+
+  createSandbox: (data) ->
+    console.log "request data", data
+    createRequest('POST', "create-sandbox")
+    .send(data)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
 module.exports = transformationsApi
