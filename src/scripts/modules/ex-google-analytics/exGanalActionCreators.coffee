@@ -17,6 +17,13 @@ module.exports =
         configId: configId
         data: result
 
+  toogleEditing: (configId, name, initQuery) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_QUERY_TOOGLE_EDITING
+      configId: configId
+      initQuery: initQuery
+      name: name
+
   changeQuery: (configId, name, newQuery) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_CHANGE_QUERY

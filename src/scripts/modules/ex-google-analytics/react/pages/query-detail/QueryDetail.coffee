@@ -1,12 +1,14 @@
 React = require 'react'
-
+_ = require 'underscore'
 exGanalStore = require('../../../exGanalStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalActionCreators  = require '../../../exGanalActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
+Input = React.createFactory(require('react-bootstrap').Input)
+Label = React.createFactory(require('react-bootstrap').Label)
 
-{div} = React.DOM
+{div, form} = React.DOM
 module.exports = React.createClass
   displayName: 'ExGanalQueryDetail'
   mixins: [createStoreMixin(exGanalStore)]
@@ -19,7 +21,7 @@ module.exports = React.createClass
     query: exGanalStore.getQuery(configId, name)
     editingQuery: exGanalStore.getEditingQuery(configId, name)
     name: name
-    isEditing: exGanalStore.isQueryEditing(configId, name)
+    isEditing: exGanalStore.isEditingQuery(configId, name)
     profiles: config.get 'items'
     validation: exGanalStore.getQueryValidation(configId, name)
 
@@ -32,8 +34,31 @@ module.exports = React.createClass
         query: @state.editingQuery
         profiles: @state.profiles
         validation: @state.validation
+    else
+      div {className: 'container-fluid kbc-main-content'},
+        form className: 'form-horizontal',
+          div className: 'row',
+            @_createStaticInput('Name', 'name')
+            @_createStaticInput('Metrics', 'metrics', true)
+            @_createStaticInput('Dimensions', 'dimensions', true)
+            @_createStaticInput('Filters', 'filters')
 
-    div {}, 'static query detail'
+
+  _createStaticInput: (caption, propName, isArray = false) ->
+    pvalue = @state.query.get(propName)
+    if isArray
+      pvalue = pvalue.toJS().join(',')
+    else
+      if _.isArray(pvalue)
+        pvalue = pvalue[0]
+    if propName == 'name'
+      pvalue = @state.name
+    Input
+      label: caption
+      type: 'static'
+      value: pvalue
+      labelClassName: 'col-xs-4'
+      wrapperClassName: 'col-xs-8'
 
 
   _onQueryChange: (newQuery) ->

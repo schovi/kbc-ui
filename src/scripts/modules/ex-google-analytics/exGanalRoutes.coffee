@@ -7,6 +7,7 @@ ExGanalActionCreators = require './exGanalActionCreators'
 ExGanalNewQuery = require './react/pages/new-query/NewQuery'
 ExGanalQueryDetail = require './react/pages/query-detail/QueryDetail'
 NewQueryHandlerButton = require './react/components/NewQueryHeaderButton'
+QueryDetailHeaderButtons = require './react/components/QueryDetailHeaderButtons'
 module.exports =
   name: 'ex-google-analytics'
   path: 'ex-google-analytics/:config'
@@ -29,6 +30,7 @@ module.exports =
     path: 'query/:name'
     title: 'Query'
     handler: ExGanalQueryDetail
+    headerButtonsHandler: QueryDetailHeaderButtons
 
   ,
     name: 'ex-google-analytics-authorize'

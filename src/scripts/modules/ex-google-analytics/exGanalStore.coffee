@@ -9,19 +9,27 @@ _store = Map(
   newQuery: Map() #configId
   savingNewQuery: Map() #configId
   validation: Map()
-  editing: Map() #configId query
+  editing: Map() #configId name query
+  saving: Map() #configId name query
 )
 
 
 GanalStore = StoreUtils.createStore
+  isQueryInvalid: (configId, name) ->
+    val = _store.getIn ['validation', configId, name]
+    val and val.count() > 0
+  isEditingQuery: (configId, name) ->
+    _store.hasIn ['editing', configId, name]
+  isSavingQuery: (configId, name) ->
+    _store.hasIn ['saving', configId, name]
   getQueryValidation: (configId, name) ->
     _store.getIn ['validation', configId, name]
   getEditingQuery: (configId, name) ->
     _store.getIn ['editing', configId, name]
   getQuery: (configId, name) ->
     _store.getIn ['configs', configId, 'configuration', name]
-  isQueryEditing: (configId, name) ->
-    _store.hasIn ['editing', configId, name]
+
+
   isNewQueryInvalid: (configId) ->
     val = _store.getIn ['validation', configId, '--newquery--']
     val and val.count() > 0
@@ -53,6 +61,17 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_QUERY_TOOGLE_EDITING
+      configId = action.configId
+      name = action.name
+      initQuery = action.initQuery
+      filters = initQuery.get 'filters'
+      if filters and _.isArray(filters)
+        initQuery = initQuery.set 'filters', filters[0]
+      initQuery = initQuery.set 'name', name
+      _store = _store.setIn ['editing', configId, name], initQuery
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_CHANGE_QUERY
       configId = action.configId
       name = action.name

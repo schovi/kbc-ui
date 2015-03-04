@@ -84,6 +84,7 @@ module.exports = React.createClass
       label: 'Profiles'
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
+      defaultValue: @props.query.get('profile') or ''
       type: 'select'
       onChange: (event) =>
         @props.onChange(@props.query.set('profile', event.target.value))
