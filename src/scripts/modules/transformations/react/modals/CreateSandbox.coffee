@@ -116,24 +116,24 @@ CreateSandbox = React.createClass
     buckets = StorageBucketsStore.getAll()
     tables = StorageTablesStore.getAll()
     nodes = _.sortBy(_.union(
-        _.map(_.filter(buckets, (bucket) ->
-          bucket.id.substr(0,3) == 'in.' || bucket.id.substr(0,4) == 'out.'
-        ), (bucket) ->
-          {
-            label: bucket.id
-            value: bucket.id
-          }
-        )
-      ,
-        _.map(_.filter(tables, (table) ->
-            table.id.substr(0,3) == 'in.' || table.id.substr(0,4) == 'out.'
-          ), (table) ->
-          {
-            label: table.id
-            value: table.id
-          }
-        )
+      _.map(_.filter(buckets, (bucket) ->
+        bucket.id.substr(0, 3) == 'in.' || bucket.id.substr(0, 4) == 'out.'
+      ), (bucket) ->
+        {
+        label: bucket.id
+        value: bucket.id
+        }
       )
+    ,
+      _.map(_.filter(tables, (table) ->
+        table.id.substr(0, 3) == 'in.' || table.id.substr(0, 4) == 'out.'
+      ), (table) ->
+        {
+          label: table.id
+          value: table.id
+        }
+      )
+    )
     , (option) ->
       option.label
     )

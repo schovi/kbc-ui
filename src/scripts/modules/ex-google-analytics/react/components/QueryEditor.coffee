@@ -23,7 +23,7 @@ module.exports = React.createClass
   _profilesSelect: ->
     groups = @props.profiles.groupBy( (profile) ->
       profile.get('accountName') + '/ ' + profile.get('webPropertyName'))
-    options = groups.map( (group, groupName) =>
+    options = groups.map( (group, groupName) ->
       optgroup
         label: groupName
       ,
