@@ -103,14 +103,3 @@ module.exports =
   loadTransformations: (bucketId) ->
     return Promise.resolve() if TransformationsStore.has(bucketId)
     @loadTransformationsForce(bucketId)
-
-  createSandbox: (data) ->
-    transformationsApi
-    .createSandbox(data)
-    .then((job) ->
-      console.log "job", job
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_SANDBOX_CREATE_SUCCESS
-        job: job
-      )
-    )

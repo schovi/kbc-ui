@@ -4,7 +4,7 @@ ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Select = require('react-select')
 _ = require('underscore')
-TransformationActionCreators = require '../../ActionCreators'
+InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
@@ -104,12 +104,15 @@ CreateSandbox = React.createClass
       preserve: preserve
 
   _handleCreate: ->
-    TransformationActionCreators.createSandbox(
-      backend: @state.backend
-      preserve: @state.preserve
-      rows: @state.rows
-      include: @state.include
-      exclude: @state.exclude
+    InstalledComponentsActionCreators.runComponent(
+      component: 'transformation'
+      method: 'create-sandbox'
+      params:
+        backend: @state.backend
+        preserve: @state.preserve
+        rows: @state.rows
+        include: @state.include
+        exclude: @state.exclude
     ).then @props.onRequestHide
 
   _bucketsAndTables: ->

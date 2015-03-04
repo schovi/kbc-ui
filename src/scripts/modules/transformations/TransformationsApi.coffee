@@ -41,13 +41,4 @@ transformationsApi =
       response.body
     )
 
-  createSandbox: (data) ->
-    console.log "request data", data
-    createRequest('POST', "create-sandbox")
-    .send(data)
-    .promise()
-    .then((response) ->
-      response.body
-    )
-
 module.exports = transformationsApi
