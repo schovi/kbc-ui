@@ -7,7 +7,7 @@ request = require '../../utils/request'
 _getComponentUrl = (componentId) ->
   component = ComponentsStore.getComponent(componentId)
   if !component
-    throw "Component '#{componentId}' not found."
+    throw new Error("Component '#{componentId}' not found")
   component.get 'uri'
 
 module.exports =
