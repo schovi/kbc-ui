@@ -116,13 +116,21 @@ module.exports = React.createClass
 
   _renderDataTypeSelect: ->
     if @_shouldRenderPart visibleParts.DATA_TYPE
-      Input
-        type: if @props.isEditing then 'select' else 'static'
-        value: @props.column.get 'dataType'
-        disabled: @props.isSaving
-        onChange: @_handleInputChange.bind @, 'dataType'
-      ,
-        @_selectOptions Immutable.fromJS(DataTypes).set('', '')
+      span null,
+        Input
+          type: if @props.isEditing then 'select' else 'static'
+          value: @props.column.get 'dataType'
+          disabled: @props.isSaving
+          onChange: @_handleInputChange.bind @, 'dataType'
+        ,
+          @_selectOptions Immutable.fromJS(DataTypes).set('', '')
+
+        if [DataTypes.VARCHAR, DataTypes.DECIMAL].indexOf(@props.column.get 'dataType') >= 0
+          Input
+            type: if @props.isEditing then 'text' else 'static'
+            value: @props.column.get 'dataTypeSize'
+            disabled: @props.isSaving
+            onChange: @_handleInputChange.bind @, 'dataTypeSize'
 
 
   _renderDateSelect: ->

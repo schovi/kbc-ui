@@ -4,7 +4,7 @@ Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 
-{ColumnTypes} = constants
+{ColumnTypes, DataTypes} = constants
 {Map, List} = Immutable
 
 
@@ -34,6 +34,13 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
         return column.delete('schemaReference')
       return column
 
+  # data type changed
+  if newColumn.get('dataType') != currentColumn.get('dataType')
+    columns = columns.update newColumn.get('name'), (column) ->
+      switch column.get('dataType')
+        when DataTypes.VARCHAR then column.set 'dataTypeSize',  '255'
+        when DataTypes.DECIMAL then column.set 'dataTypeSize', '12,2'
+        else column.set 'dataTypeSize', null
 
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
