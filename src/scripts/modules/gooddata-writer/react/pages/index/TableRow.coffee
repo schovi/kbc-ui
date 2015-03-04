@@ -24,7 +24,7 @@ module.exports = React.createClass
         table: @props.table.get 'id'
     ,
       span className: 'td',
-        @props.table.get 'id'
+        @props.table.getIn ['data', 'sapiName']
       span className: 'td',
         @props.table.getIn ['data', 'name']
       span className: 'td text-right',

@@ -105,6 +105,9 @@ referencesForColumns = (columns) ->
       sortColumns: sortColumns
     )
 
+extendTable = (table) ->
+  table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
+
 GoodDataWriterStore = StoreUtils.createStore
 
 
@@ -171,7 +174,7 @@ dispatcher.register (payload) ->
           isLoading: false
           id: table.get 'id'
           pendingActions: List()
-          data: table
+          data: extendTable(table)
       .mapKeys (key, table) ->
         table.get 'id'
 
@@ -180,6 +183,7 @@ dispatcher.register (payload) ->
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
+
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_START
@@ -209,7 +213,7 @@ dispatcher.register (payload) ->
 
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
+        .setIn ['tables', action.configurationId, table.get('id'), 'data'], extendTable(table.remove('columns'))
         .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
