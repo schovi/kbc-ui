@@ -79,7 +79,7 @@ ConfigureSandbox = React.createClass
     @setState
       include: values
     ,
-      () ->
+      ->
         @props.onChange(@state)
 
   _setExclude: (string, array) ->
@@ -89,7 +89,7 @@ ConfigureSandbox = React.createClass
     @setState
       exclude: values
     ,
-      () ->
+      ->
         @props.onChange(@state)
 
   _setRows: (e) ->
@@ -97,7 +97,7 @@ ConfigureSandbox = React.createClass
     @setState
       rows: rows
     ,
-      () ->
+      ->
         @props.onChange(@state)
 
   _setPreserve: (e) ->
@@ -105,7 +105,7 @@ ConfigureSandbox = React.createClass
     @setState
       preserve: preserve
     ,
-      () ->
+      ->
         @props.onChange(@state)
 
   _bucketsAndTables: ->
