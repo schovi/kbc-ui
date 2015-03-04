@@ -23,7 +23,7 @@ browserSync = require 'browser-sync'
 reload = browserSync.reload
 parse = require('url').parse
 fs = require 'fs'
-exorcist = require 'exorcist'
+sourcemaps = require 'gulp-sourcemaps'
 insert = require 'gulp-insert'
 concat = require 'gulp-concat'
 
@@ -132,25 +132,17 @@ gulp.task 'build-scripts', ['clean'], ->
   bundler = browserify
     entries: ['./src/scripts/app.coffee']
     extensions: ['.coffee']
-    debug: true # source maps are appended to output and then separated by exorcist
-    cache: {}
-    packageCache: {}
-    fullPaths: false
 
   bundler.transform(coffeeify)
   bundler.transform(envify(NODE_ENV: 'production'))
 
-  # exorcist cannot create directory
-  # so we have to prepare it
-  fs.mkdirSync path.join(__dirname, './dist')
-  fs.mkdirSync path.join(__dirname, './dist/scripts')
 
   bundler.bundle()
-  .pipe(exorcist('./dist/scripts/bundle.js.map'))
   .pipe(source('bundle.min.js'))
   .pipe(buffer())
+  .pipe(sourcemaps.init(loadMaps: true))
   .pipe(uglify())
-  .pipe(insert.append("\n//# sourceMappingURL=bundle.js.map"))
+  .pipe(sourcemaps.write('./'))
   .pipe(size(showFiles: true, gzip: false))
   .pipe(size(showFiles: true, gzip: true))
   .pipe(gulp.dest('./dist/scripts'))
