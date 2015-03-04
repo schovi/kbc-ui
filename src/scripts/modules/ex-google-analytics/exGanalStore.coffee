@@ -34,8 +34,6 @@ GanalStore = StoreUtils.createStore
     return newQuery
 
 
-
-
 Dispatcher.register (payload) ->
   action = payload.action
 
@@ -73,7 +71,6 @@ Dispatcher.register (payload) ->
       configId = action.configId
       newConfig = action.newConfig
       _store = _store.setIn ['configs', configId], Immutable.fromJS(newConfig)
-
       _store = _store.deleteIn ['savingNewQuery', configId]
       _store = _store.deleteIn ['newQuery', configId]
       GanalStore.emitChange()

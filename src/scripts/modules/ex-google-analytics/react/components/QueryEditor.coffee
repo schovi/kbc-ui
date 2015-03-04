@@ -43,12 +43,12 @@ module.exports = React.createClass
         @_parseUrl event.target.value
 
 
-  _createArraySelect: (caption, propName)->
+  _createArraySelect: (caption, propName) ->
     values = @props.query.get(propName).toJS().join(',')
     values = null if values == ''
     div className: 'form-group',
       label className: 'control-label col-xs-4', caption
-      div className:'col-xs-8',
+      div className: 'col-xs-8',
         Select
           multi: true
           value: values
