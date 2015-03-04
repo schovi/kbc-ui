@@ -37,7 +37,7 @@ module.exports = React.createClass
           React.createElement Loader
         React.createElement Button,
           bsStyle: 'link'
-          disabled: @props.isSaving || @props.isDisabled
+          disabled: @props.isSaving
           onClick: @props.onCancel
         ,
           @props.cancelLabel

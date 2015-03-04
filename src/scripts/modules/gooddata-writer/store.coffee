@@ -74,7 +74,7 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
 ###
 
 ###
-validateColumns = (columns) ->
+getInvalidColumns = (columns) ->
   columns
   .filter (column) ->
     # empty name
@@ -87,6 +87,9 @@ validateColumns = (columns) ->
     # schema reference not set
     return true if column.get('type') == ColumnTypes.REFERENCE && !column.get('schemaReference')
 
+    # format and dateDimension not set for DATE type
+    return true if column.get('type') == ColumnTypes.DATE && !(column.get('format') && column.get('dateDimension'))
+    
     false
   .map (column) ->
     column.get('name')
@@ -242,7 +245,11 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL
-      _store = _store.deleteIn ['tableColumns', action.configurationId, action.tableId, 'editing']
+      _store = _store.withMutations (store) ->
+        store
+        .deleteIn ['tableColumns', action.configurationId, action.tableId, 'editing']
+        .deleteIn ['tableColumns', action.configurationId, action.tableId, 'invalidColumns']
+
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
@@ -267,7 +274,7 @@ dispatcher.register (payload) ->
 
         tableColumns
         .set 'editing', columns
-        .set 'invalidColumns', validateColumns(columns)
+        .set 'invalidColumns', getInvalidColumns(columns)
         .set 'references', referencesForColumns(columns)
 
       console.timeEnd 'modify'
