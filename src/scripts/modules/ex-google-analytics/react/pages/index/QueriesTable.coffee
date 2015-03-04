@@ -3,6 +3,8 @@ Link = React.createFactory(require('react-router').Link)
 Loader = React.createFactory(require '../../../../../react/common/Loader')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 {i, span, div, a, strong} = React.DOM
+_ = require 'underscore'
+
 
 module.exports = React.createClass
   displayName: 'QueriesTable'
@@ -24,7 +26,7 @@ module.exports = React.createClass
           name: queryName
         div className: 'td', row.get('metrics').join()
         div className: 'td', row.get('dimensions').join()
-        div className: 'td', row.get('filters')?.get(0) or 'n/a'
+        div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
         div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'

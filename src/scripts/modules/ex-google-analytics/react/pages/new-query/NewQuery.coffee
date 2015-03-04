@@ -17,12 +17,14 @@ module.exports = React.createClass
     profiles: config.get 'items'
 
   render: ->
-    QueryEditor
-      configId: @state.configId
-      onChange: @_onHandleChange
-      query: @state.query
-      profiles: @state.profiles
-
+    if @state.query
+      QueryEditor
+        configId: @state.configId
+        onChange: @_onHandleChange
+        query: @state.query
+        profiles: @state.profiles
+    else
+      div()
 
   _onHandleChange: (newQuery) ->
     console.log "newQuery change",newQuery.toJS()

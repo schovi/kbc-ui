@@ -1,4 +1,5 @@
 request = require('../../utils/request')
+
 ApplicationStore = require '../../stores/ApplicationStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
 Promise = require('bluebird')
@@ -14,6 +15,16 @@ createRequest = (method, path) ->
 
 module.exports =
   getConfig: (configId) ->
-    request = createRequest('GET', 'account/' + configId)
-    request.promise().then (response) ->
+    createRequest('GET', 'account/' + configId)
+    .promise().then (response) ->
       response.body
+
+  postConfig: (configId, data) ->
+    console.log 'data to POST', data
+    configData =
+      configuration: data
+    createRequest('POST', "account/#{configId}")
+    .send(configData)
+    .promise().then (response) ->
+      console.log 'POST OK', response.body
+      return response.body

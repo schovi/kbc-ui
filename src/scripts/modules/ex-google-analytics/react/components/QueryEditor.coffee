@@ -7,7 +7,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 Label = React.createFactory(require('react-bootstrap').Label)
 Select = React.createFactory(require('react-select'))
 
-{div, form, span, option, optgroup, a, label} = React.DOM
+{div, form, span, option, optgroup, a, label, fieldset} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalQueryEditor'
@@ -89,10 +89,13 @@ module.exports = React.createClass
       options
 
   _createInput: (caption, propName) ->
+    pvalue = @props.query.get(propName)
+    if _.isArray(pvalue)
+      pvalue = pvalue[0]
     Input
       label: caption
       type: 'text'
-      value: @props.query.get(propName)
+      value: pvalue
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
       onChange: (event) =>
