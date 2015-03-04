@@ -17,6 +17,13 @@ module.exports =
         configId: configId
         data: result
 
+  changeQuery: (configId, name, newQuery) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_CHANGE_QUERY
+      configId: configId
+      newQuery: newQuery
+      name: name
+
   changeNewQuery: (configId, newQuery) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY

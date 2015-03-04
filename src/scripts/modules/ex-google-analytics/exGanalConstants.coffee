@@ -7,4 +7,5 @@ module.exports =
     EX_GANAL_NEW_QUERY_RESET: null
     EX_GANAL_NEW_QUERY_CREATE_SUCCESS: null
     EX_GANAL_NEW_QUERY_CREATE_START: null
+    EX_GANAL_CHANGE_QUERY: null
   )
