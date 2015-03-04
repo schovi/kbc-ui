@@ -26,6 +26,7 @@ fs = require 'fs'
 sourcemaps = require 'gulp-sourcemaps'
 insert = require 'gulp-insert'
 concat = require 'gulp-concat'
+transform = require 'vinyl-transform'
 
 handleError = (err) ->
   gutil.log err
@@ -129,19 +130,20 @@ gulp.task 'lint', ->
 
 
 gulp.task 'build-scripts', ['clean'], ->
-  bundler = browserify
-    entries: ['./src/scripts/app.coffee']
-    extensions: ['.coffee']
 
-  bundler.transform(coffeeify)
-  bundler.transform(envify(NODE_ENV: 'production'))
+  browserified = transform (fileName) ->
+    b = browserify
+      entries: [fileName]
+      extensions: ['.coffee']
+    b.transform(coffeeify)
+    b.transform(envify(NODE_ENV: 'production'))
+    b.bundle()
 
-
-  bundler.bundle()
-  .pipe(source('bundle.min.js'))
-  .pipe(buffer())
+  gulp.src('./src/scripts/app.coffee')
+  .pipe(browserified)
   .pipe(sourcemaps.init(loadMaps: true))
   .pipe(uglify())
+  .pipe(rename('bundle.min.js'))
   .pipe(sourcemaps.write('./'))
   .pipe(size(showFiles: true, gzip: false))
   .pipe(size(showFiles: true, gzip: true))
