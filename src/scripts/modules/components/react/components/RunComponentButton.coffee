@@ -17,11 +17,11 @@ RunModal = React.createFactory React.createClass
 
   render: ->
     Modal
-      title: 'Run extraction'
+      title: @props.title
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',
-        'You are about to run extraction.'
+        @props.body
       div className: 'modal-footer',
         ButtonToolbar null,
           Button
@@ -38,12 +38,16 @@ RunModal = React.createFactory React.createClass
 module.exports = React.createClass
   displayName: 'RunExtraction'
   propTypes:
+    title: React.PropTypes.string.isRequired
+    body: React.PropTypes.object.isRequired
     mode: React.PropTypes.oneOf ['button', 'link']
     component: React.PropTypes.string.isRequired
-    runParams: React.PropTypes.object.isRequired
+    runParams: React.PropTypes.func.isRequired
+    method: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     mode: 'button'
+    method: 'run'
 
   getInitialState: ->
     isLoading: false
@@ -52,10 +56,13 @@ module.exports = React.createClass
     @setState
       isLoading: true
 
-    InstalledComponentsActionCreators
-    .runComponent
+    params =
+      method: @props.method
       component: @props.component
-      data: @props.runParams
+      data: @props.runParams()
+
+    InstalledComponentsActionCreators
+    .runComponent params
     .then @_handleStarted
 
   _handleStarted: ->
@@ -65,6 +72,8 @@ module.exports = React.createClass
   render: ->
     ModalTrigger
       modal: RunModal
+        title: @props.title
+        body: @props.body
         onRequestRun: @_handleRunStart
     ,
       if @props.mode == 'button'
@@ -88,7 +97,7 @@ module.exports = React.createClass
         e.preventDefault()
     ,
       @_renderIcon()
-      ' Run Extraction'
+      ' ' + @props.title
 
   _renderIcon: ->
     if @state.isLoading

@@ -8,8 +8,9 @@ CredentialsStore = require('../../../../provisioning/stores/CredentialsStore')
 CredentialsActionCreators = require('../../../../provisioning/ActionCreators')
 MySqlCredentials = require('../../../../provisioning/react/components/MySqlCredentials')
 RedshiftCredentials = require('../../../../provisioning/react/components/RedshiftCredentials')
-CreateSandboxModal = React.createFactory(require '../../modals/CreateSandbox')
+ConfigureSandbox = React.createFactory(require '../../components/ConfigureSandbox')
 ConnectToMySqlSandbox = React.createFactory(require '../../components/ConnectToMySqlSandbox')
+RunComponentButton = require '../../../../components/react/components/RunComponentButton'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
@@ -18,6 +19,9 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Sandbox = React.createClass
   displayName: 'Sandbox'
   mixins: [createStoreMixin(CredentialsStore)]
+
+  getInitialState: ->
+    redshiftSandboxConfiguration: {}
 
   getStateFromStores: ->
     mySqlCredentials: CredentialsStore.getByBackendAndType("mysql", "sandbox")
@@ -42,10 +46,20 @@ Sandbox = React.createClass
 
   mySqlControlButtons: ->
     if @state.mySqlCredentials
-      return span {},
-        ModalTrigger modal: CreateSandboxModal({backend: 'mysql'}),
-          button {className: "btn btn-link", title: 'Create Sandbox'},
-            span {className: 'fa fa-play'}
+      sandboxConfiguration = {}
+      span {},
+        RunComponentButton(
+          title: "Load Tables in MySQL Sandbox"
+          body: ConfigureSandbox
+            backend: 'mysql'
+            onChange: (params) ->
+              sandboxConfiguration = params
+          component: 'transformation'
+          method: 'create-sandbox'
+          mode: 'button'
+          runParams: ->
+            sandboxConfiguration
+        )
         ConnectToMySqlSandbox {credentials: @state.mySqlCredentials},
           button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
             span {className: 'fa fa-database'}
@@ -54,10 +68,21 @@ Sandbox = React.createClass
 
   redshiftControlButtons: ->
     if @state.redshiftCredentials
-      return span {},
-        ModalTrigger modal: CreateSandboxModal({backend: 'redshift'}),
-          button {className: "btn btn-link", title: 'Create Sandbox'},
-            span {className: 'fa fa-play'}
+
+      sandboxConfiguration = {}
+      span {},
+        RunComponentButton(
+          title: "Load Tables in Redshift Sandbox"
+          body: ConfigureSandbox
+            backend: 'redshift'
+            onChange: (params) ->
+              sandboxConfiguration = params
+          component: 'transformation'
+          method: 'create-sandbox'
+          mode: 'button'
+          runParams: ->
+            sandboxConfiguration
+        )
         button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
           span {className: 'fa fa-refresh'}
         button {className: "btn btn-link",  title: 'Delete sandbox', onClick: @_dropRedshiftCredentials},

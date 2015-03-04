@@ -5,7 +5,7 @@ Link = React.createFactory(require('react-router').Link)
 Loader = React.createFactory(require '../../../../../react/common/Loader')
 Check = React.createFactory(require('../../../../../react/common/common').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 
 {span, div, a, button, i} = React.DOM
 
@@ -18,6 +18,7 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
 
   render: ->
+    props = @props
     Link
       className: 'tr'
       to: 'ex-db-query'
@@ -39,7 +40,9 @@ module.exports = React.createClass
             query: @props.query
             configurationId: @props.configurationId
         RunExtractionButton
+          title: 'Run Extraction'
+          body: span {}, 'You are about to run extraction.'
           component: 'ex-db'
-          runParams:
-            query: @props.query.get 'id'
-            config: @props.configurationId
+          runParams: ->
+            query: props.query.get 'id'
+            config: props.configurationId

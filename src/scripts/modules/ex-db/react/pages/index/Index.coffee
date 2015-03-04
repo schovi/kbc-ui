@@ -11,7 +11,7 @@ ComponentDescription = require '../../../../components/react/components/Componen
 ComponentDescription = React.createFactory ComponentDescription
 
 LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
 
 jobs = [
@@ -48,6 +48,7 @@ module.exports = React.createClass
     deletingQueries: ExDbStore.getDeletingQueries config
 
   render: ->
+    configurationId = @state.configuration.get('id')
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -82,10 +83,12 @@ module.exports = React.createClass
               ' Database Credentials'
           li null,
             RunExtractionButton
+              title: 'Run Extraction'
+              body: span {}, 'You are about to run extraction.'
               component: 'ex-db'
               mode: 'link'
-              runParams:
-                config: @state.configuration.get 'id'
+              runParams: ->
+                config: configurationId
 
         div className: 'kbc-buttons',
           span null,

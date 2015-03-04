@@ -4,7 +4,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
 Loader = React.createFactory(require '../../../../../react/common/Loader')
-RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunExtractionButton')
+RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 
 {i, span, div, a, strong} = React.DOM
 
@@ -18,6 +18,7 @@ module.exports = React.createClass
 
   render: ->
     childs = @props.items.map((row, rowkey) ->
+      configurationId = @props.configurationId
       Link
         className: 'tr'
         to: 'ex-google-drive-sheet'
@@ -39,11 +40,13 @@ module.exports = React.createClass
               sheet: row
               configurationId: @props.configurationId
           RunExtractionButton
+            title: 'Run Extraction'
+            body: span {}, 'You are about to run extraction.'
             component: 'ex-google-drive'
-            runParams:
+            runParams: ->
               sheetId: row.get 'sheetId'
               googleId: row.get 'googleId'
-              account: @props.configurationId
+              account: configurationId
 
     , @).toArray()
 
