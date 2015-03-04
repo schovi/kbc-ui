@@ -15,6 +15,7 @@ module.exports = React.createClass
     configId: configId
     query: exGanalStore.getNewQuery(configId)
     profiles: config.get 'items'
+    validation: exGanalStore.getNewQueryValidation(configId)
 
   render: ->
     if @state.query
@@ -23,6 +24,7 @@ module.exports = React.createClass
         onChange: @_onHandleChange
         query: @state.query
         profiles: @state.profiles
+        validation: @state.validation
     else
       div()
 

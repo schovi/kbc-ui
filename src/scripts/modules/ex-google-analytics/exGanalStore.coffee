@@ -8,10 +8,18 @@ _store = Map(
   configs: Map() #config by configId
   newQuery: Map() #configId
   savingNewQuery: Map() #configId
+  validation: Map()
 )
 
 
 GanalStore = StoreUtils.createStore
+  isNewQueryInvalid: (configId) ->
+    val = _store.getIn ['validation', configId, '--newquery--']
+    val and val.count() > 0
+
+  getNewQueryValidation: (configId) ->
+    _store.getIn ['validation', configId, '--newquery--']
+
   hasConfig: (configId)  ->
     _store.hasIn ['configs', configId]
   getConfig: (configId) ->
@@ -46,12 +54,31 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY
       configId = action.configId
+      newQuery = action.newQuery
+      queries = GanalStore.getConfig(configId).get('configuration').toJS()
+      queryName = newQuery.get('name')
+      validation = {}
+      emptyArrayCheck = (what) ->
+        if newQuery.get(what).count() == 0
+          validation[what] = 'Can not be empty.'
+      emptyArrayCheck('metrics')
+      emptyArrayCheck('dimensions')
+
+      if _.isEmpty(queryName)
+        validation.name = 'Can not be empty.'
+      else
+        if queryName in _.keys(queries)
+          validation.name = 'Query with that name already exists.'
+      _store = _store.setIn ['validation',configId, '--newquery--'], Immutable.fromJS validation
+
+
       _store = _store.setIn ['newQuery', configId], action.newQuery
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_NEW_QUERY_RESET
       configId = action.configId
       _store = _store.deleteIn ['newQuery', configId]
+      _store = _store.deleteIn ['validation', configId, '--newquery--']
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_NEW_QUERY_CREATE_START

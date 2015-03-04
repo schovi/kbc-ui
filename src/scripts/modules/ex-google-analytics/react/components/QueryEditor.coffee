@@ -7,7 +7,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 Label = React.createFactory(require('react-bootstrap').Label)
 Select = React.createFactory(require('react-select'))
 
-{div, form, span, option, optgroup, a, label, fieldset} = React.DOM
+{p, div, form, span, option, optgroup, a, label, fieldset} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalQueryEditor'
@@ -15,6 +15,7 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
     query: React.PropTypes.object.isRequired
     profiles: React.PropTypes.object.isRequired
+    validation: React.PropTypes.object.isRequired
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -46,6 +47,10 @@ module.exports = React.createClass
   _createArraySelect: (caption, propName) ->
     values = @props.query.get(propName).toJS().join(',')
     values = null if values == ''
+    helpBlock = span className:'help-block',
+      p className: 'text-danger',
+        @props.validation.get propName if @props.validation
+
     div className: 'form-group',
       label className: 'control-label col-xs-4', caption
       div className: 'col-xs-8',
@@ -59,6 +64,7 @@ module.exports = React.createClass
             [filter]
           onChange: (stringOptions) =>
             @props.onChange(@props.query.set(propName, Immutable.fromJS(stringOptions.split(','))))
+        helpBlock
 
 
   _profilesSelect: ->
@@ -96,6 +102,8 @@ module.exports = React.createClass
       label: caption
       type: 'text'
       value: pvalue
+      help: @props.validation.get propName if @props.validation
+      bsStyle: 'error' if @props.validation and @props.validation.get(propName)
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
       onChange: (event) =>
