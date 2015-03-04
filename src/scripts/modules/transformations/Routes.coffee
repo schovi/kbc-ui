@@ -5,6 +5,7 @@ Sandbox = require('./react/pages/sandbox/Sandbox')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
 ProvisioningActionCreators = require('../provisioning/ActionCreators')
+StorageActionCreators = require('../components/StorageActionCreators')
 
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
 TransformationBucketButtons = require './react/components/TransformationBucketButtons'
@@ -19,7 +20,6 @@ routes =
       requireData: [
         (params) ->
           TransformationsActionCreators.loadTransformationBuckets()
-        
       ]
       childRoutes: [
         name: 'transformationBucket'
@@ -43,7 +43,14 @@ routes =
         ,
           (params) ->
             ProvisioningActionCreators.loadCredentials("redshift", "sandbox")
+        ,
+          (params) ->
+            StorageActionCreators.loadBuckets()
+        ,
+          (params) ->
+            StorageActionCreators.loadTables()
+
         ]
       ]
-      
+
 module.exports = routes

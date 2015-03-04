@@ -2,8 +2,11 @@ React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
-
+Select = require('react-select')
+_ = require('underscore')
 TransformationActionCreators = require '../../ActionCreators'
+StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
+StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
 {div, p, strong, form, input, label, textarea} = React.DOM
 
@@ -16,8 +19,8 @@ CreateSandbox = React.createClass
   getInitialState: ->
     preserve: false
     backend: @props.backend
-    include: ""
-    exclude: ""
+    include: []
+    exclude: []
     rows: 0
 
   render: ->
@@ -31,21 +34,25 @@ CreateSandbox = React.createClass
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Include'
             div className: 'col-sm-6',
-              input
-                placeholder: 'Buckets or tables...'
-                className: 'form-control'
+              Select
+                name: 'include'
                 value: @state.include
+                multi: true
+                options: @_bucketsAndTables()
+                delimiter: ','
                 onChange: @_setInclude
-                ref: 'include'
+                placeholder: 'Select buckets and tables...'
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Exclude'
             div className: 'col-sm-6',
-              input
-                placeholder: 'Buckets or tables...'
-                className: 'form-control'
+              Select
+                name: 'exclude'
                 value: @state.exclude
+                multi: true
+                options: @_bucketsAndTables()
+                delimiter: ','
                 onChange: @_setExclude
-                ref: 'exclude'
+                placeholder: 'Select buckets and tables...'
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Rows'
             div className: 'col-sm-6',
@@ -72,15 +79,19 @@ CreateSandbox = React.createClass
           Button bsStyle: 'primary', onClick: @_handleCreate,
             'Create'
 
-  _setInclude: (e) ->
-    include = e.target.value.trim()
+  _setInclude: (string, array) ->
+    values = _.map(array, (item) ->
+      item.value
+    )
     @setState
-      include: include
+      include: values
 
-  _setExclude: (e) ->
-    exclude = e.target.value.trim()
+  _setExclude: (string, array) ->
+    values = _.map(array, (item) ->
+      item.value
+    )
     @setState
-      exclude: exclude
+      exclude: values
 
   _setRows: (e) ->
     rows = e.target.value.trim()
@@ -100,5 +111,33 @@ CreateSandbox = React.createClass
       include: @state.include
       exclude: @state.exclude
     ).then @props.onRequestHide
+
+  _bucketsAndTables: ->
+    buckets = StorageBucketsStore.getAll()
+    tables = StorageTablesStore.getAll()
+    nodes = _.sortBy(_.union(
+        _.map(_.filter(buckets, (bucket) ->
+          bucket.id.substr(0,3) == 'in.' || bucket.id.substr(0,4) == 'out.'
+        ), (bucket) ->
+          {
+            label: bucket.id
+            value: bucket.id
+          }
+        )
+      ,
+        _.map(_.filter(tables, (table) ->
+            table.id.substr(0,3) == 'in.' || table.id.substr(0,4) == 'out.'
+          ), (table) ->
+          {
+            label: table.id
+            value: table.id
+          }
+        )
+      )
+    , (option) ->
+      option.label
+    )
+    return nodes
+
 
 module.exports = CreateSandbox

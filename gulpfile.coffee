@@ -25,6 +25,7 @@ parse = require('url').parse
 fs = require 'fs'
 exorcist = require 'exorcist'
 insert = require 'gulp-insert'
+concat = require 'gulp-concat'
 
 handleError = (err) ->
   gutil.log err
@@ -96,17 +97,18 @@ gulp.task 'watch', ->
   gulp.watch ['./src/styles/app.less', './bower_components/kbc-bootstrap/dist/**'], ['less']
 
 gulp.task 'less', ['clean'], ->
-  gulp.src('./src/styles/app.less')
+  gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
   .pipe(less())
+  .pipe(concat('app.css'))
   .pipe(gulp.dest('./tmp/styles'))
   .pipe(browserSync.reload( stream:true))
 
 gulp.task 'build-styles', ['clean'], ->
-  gulp.src('./src/styles/app.less')
+  gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
     .pipe(less())
+    .pipe(concat('app.css'))
     .pipe(rename('app.min.css'))
     .pipe(gulp.dest('./dist/styles'))
-
 
 gulp.task 'copy', ['clean'], ->
   gulp.src('./bower_components/kbc-bootstrap/dist/fonts/**')
