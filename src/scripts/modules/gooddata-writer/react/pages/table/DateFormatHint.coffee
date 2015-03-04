@@ -2,6 +2,7 @@ React = require 'react'
 
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Popover = React.createFactory(require('react-bootstrap').Popover)
+PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 {span, ul, li} = React.DOM
 
@@ -9,6 +10,7 @@ Popover = React.createFactory(require('react-bootstrap').Popover)
 
 module.exports = React.createClass
   displayName: 'DateFormatHint'
+  mixins: [PureRenderMixin]
   render: ->
     OverlayTrigger
       overlay: @_renderPopover()

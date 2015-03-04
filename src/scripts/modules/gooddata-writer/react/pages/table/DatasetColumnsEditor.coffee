@@ -71,6 +71,7 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool.isRequired
     onColumnChange: React.PropTypes.func.isRequired
     configurationId: React.PropTypes.string.isRequired
+    dataPreview: React.PropTypes.array
 
   _handleColumnChange: (column) ->
     @props.onColumnChange column
@@ -100,6 +101,7 @@ module.exports = React.createClass
             configurationId: @props.configurationId
             key: currentColumn.get 'name'
             onChange: @_handleColumnChange
+            dataPreview: @props.dataPreview
         , @
         .toArray()
 

@@ -25,7 +25,8 @@
     "react-select": "^0.3.4",
     "superagent": "~0.21.0",
     "underscore": "~1.7.0",
-    "underscore.string": "~3.0.3"
+    "underscore.string": "~3.0.3",
+    "csv-parse": "0.0.9"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

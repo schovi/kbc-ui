@@ -5,6 +5,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
+storageApi = require '../../../../components/StorageApi'
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
@@ -31,6 +32,18 @@ module.exports = React.createClass
       tableId,
       if isEditingColumns then 'editing' else 'current'
     )
+
+  getInitialState: ->
+    dataPreview: null
+
+  componentDidMount: ->
+    component = @
+    storageApi
+    .exportTable @state.table.get('id'),
+      limit: 10
+    .then (csv) ->
+      component.setState
+        dataPreview: csv
 
   _handleEditStart: ->
     actionCreators.startTableColumnsEdit(@state.configurationId, @state.table.get 'id')
@@ -67,3 +80,4 @@ module.exports = React.createClass
         isSaving: @state.isSavingColumns
         onColumnChange: @_handleEditUpdate
         configurationId: @state.configurationId
+        dataPreview: @state.dataPreview

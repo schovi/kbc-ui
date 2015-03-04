@@ -7,6 +7,7 @@ keyMirror = require('react/lib/keyMirror')
 Input = React.createFactory(require('react-bootstrap').Input)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
+ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
 DateFormatHint = require './DateFormatHint'
 PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 #PureRenderMixin = require('react/addons').addons.PureRenderMixin
@@ -37,11 +38,13 @@ module.exports = React.createClass
     isValid: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
+    dataPreview: React.PropTypes.array
 
   _handleInputChange: (propName, e) ->
     @props.onChange @props.column.set(propName, e.target.value)
 
   render: ->
+    console.log 'render row', @props.column.get('name')
     column = @props.column
     rowClassName = if @props.isValid then '' else 'danger'
     tr className: rowClassName,
@@ -71,7 +74,10 @@ module.exports = React.createClass
         @_renderSortLabelSelect()
       td null,
         @_renderDataTypeSelect()
-      td null
+      td null,
+        ColumnDataPreview
+          columnName: @props.column.get 'name'
+          tableData: @props.dataPreview
 
   _renderSchemaReferenceSelect: ->
     if @_shouldRenderPart visibleParts.SCHEMA_REFERENCE

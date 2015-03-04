@@ -1,5 +1,6 @@
 
 request = require '../../utils/request'
+parse = require '../../utils/parseCsv'
 ApplicationStore = require '../../stores/ApplicationStore'
 
 createUrl = (path) ->
@@ -26,5 +27,19 @@ storageApi =
     .then((response) ->
       response.body
     )
+
+  ###
+    Returns parsed CSV info plain arrays
+    [
+      [] - row 1
+      [] - row 2
+    ]
+  ###
+  exportTable: (tableId, params) ->
+    createRequest('GET', "tables/#{tableId}/export")
+    .query params
+    .promise()
+    .then (response) ->
+      parse response.text
 
 module.exports = storageApi
