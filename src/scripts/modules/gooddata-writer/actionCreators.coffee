@@ -72,7 +72,7 @@ module.exports =
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_ERROR
         configurationId: configurationId
-        error: e
+        error: error
       throw error
 
   loadReferenceableTables: (configurationId) ->
@@ -104,6 +104,7 @@ module.exports =
         tableId: tableId
         field: fieldName
         value: newValue
+        error: e
       throw e
 
   startTableFieldEdit: (configurationId, tableId, field) ->
