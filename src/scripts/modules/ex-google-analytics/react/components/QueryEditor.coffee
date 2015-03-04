@@ -47,7 +47,7 @@ module.exports = React.createClass
   _createArraySelect: (caption, propName) ->
     values = @props.query.get(propName).toJS().join(',')
     values = null if values == ''
-    helpBlock = span className:'help-block',
+    helpBlock = span className: 'help-block',
       p className: 'text-danger',
         @props.validation.get propName if @props.validation
 
