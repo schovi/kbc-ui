@@ -18,9 +18,11 @@ TransformationsIndex = React.createClass
     pendingActions: TransformationBucketsStore.getPendingActions()
 
   render: ->
-    div {className: 'container-fluid'},
-      div {className: 'col-md-12 kbc-main-content'},
+    div {className: 'container-fluid kbc-main-content'},
+      if @state.buckets.count()
         @_renderTable()
+      else
+        @_renderEmptyState()
 
   _renderTableRow: (row) ->
     Link {className: 'tr', to: 'transformationBucket', params: {bucketId: row.get('id')}},
@@ -35,17 +37,19 @@ TransformationsIndex = React.createClass
           i {className: 'fa fa-fw fa-play'}
 
   _renderTable: ->
-    console.log 'rendering table'
-
-    span {className: 'table'},
+    div className: 'table table-striped table-hover',
       span {className: 'tbody'},
         @state.buckets.map((bucket) ->
           TransformationBucketRow
             bucket: bucket
             pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
             key: bucket.get 'id'
-          
-          
         , @).toArray()
+
+  _renderEmptyState: ->
+    div {className: 'table table-striped'},
+      div {className: 'tfoot'},
+        div {className: 'tr'},
+          div {className: 'td'}, 'No transformation buckets found'
 
 module.exports = TransformationsIndex
