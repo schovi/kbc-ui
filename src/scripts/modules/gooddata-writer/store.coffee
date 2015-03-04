@@ -168,7 +168,7 @@ dispatcher.register (payload) ->
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_SUCCESS
       tablesById = Immutable
       .fromJS(action.configuration.tables)
-      .toMap()
+      .toOrderedMap()
       .map (table) ->
         Map
           isLoading: false
@@ -208,7 +208,7 @@ dispatcher.register (payload) ->
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
 
-      columns = table.get('columns').toMap().mapKeys (key, column) ->
+      columns = table.get('columns').toOrderedMap().mapKeys (key, column) ->
         column.get 'name'
 
       _store = _store.withMutations (store) ->
