@@ -12,6 +12,8 @@ storageApi = require '../../../../components/StorageApi'
 ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
+TableGdName = React.createFactory(require './TableGdNameEdit')
+
 module.exports = React.createClass
   displayName: 'GooddDataWriterTable'
   mixins: [createStoreMixin(goodDataWriterStore)]
@@ -60,7 +62,13 @@ module.exports = React.createClass
   render: ->
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
-        div className: 'col-sm-8'
+        div className: 'col-sm-8',
+          strong null, 'GoodData name'
+          ' '
+          TableGdName
+            table: @state.table
+            configurationId: @state.configurationId
+
         div className: 'col-sm-4 kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns

@@ -32,8 +32,8 @@ module.exports = React.createClass
           activateTooltip: 'Enable Export'
           deactivateTooltip: 'Disable Export'
           isActive: @props.table.getIn ['data', 'export']
-          isPending: @props.table.get('pendingActions').contains 'exportStatusChange'
+          isPending: @props.table.get('savingFields').contains 'export'
           onChange: @_handleExportChange
 
   _handleExportChange: (newExportStatus) ->
-    actionCreators.changeTableExportStatus(@props.configId, @props.table.get('id'), newExportStatus)
+    actionCreators.saveTableField(@props.configId, @props.table.get('id'), 'export', newExportStatus)

@@ -183,7 +183,8 @@ dispatcher.register (payload) ->
         Map
           isLoading: false
           id: table.get 'id'
-          pendingActions: List()
+          editingFields: Map()
+          savingFields: List()
           data: extendTable(table)
       .mapKeys (key, table) ->
         table.get 'id'
@@ -196,22 +197,27 @@ dispatcher.register (payload) ->
 
       GoodDataWriterStore.emitChange()
 
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_START
-      _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
-        actions.push 'exportStatusChange'
+    when constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START
+      _store = _store.updateIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'savingFields'
+      ], (fields) -> fields.push(action.field)
       GoodDataWriterStore.emitChange()
 
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_SUCCESS
+    when constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_SUCCESS
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, action.tableId, 'data', 'export'], action.newExportStatus
-        .updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
-          actions.delete(actions.indexOf 'exportStatusChange')
+        .setIn ['tables', action.configurationId, action.tableId, 'data', action.field], action.value
+        .deleteIn ['tables', action.configurationId, action.tableId, 'editingFields', action.field]
+        .updateIn ['tables', action.configurationId, action.tableId, 'savingFields'], (fields) ->
+          fields.delete(fields.indexOf(action.field))
       GoodDataWriterStore.emitChange()
 
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
-      _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'pendingActions'], (actions) ->
-        actions.delete(actions.indexOf 'exportStatusChange')
+    when constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_ERROR
+      _store = _store.updateIn ['tables', action.configurationId, action.tableId, 'savingFields'], (fields) ->
+        fields.delete(fields.indexOf(action.field))
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
@@ -325,5 +331,37 @@ dispatcher.register (payload) ->
         ], Immutable.fromJS(action.columns))
 
       GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_START
+      _store = _store.setIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'editingFields'
+        action.field
+      ], GoodDataWriterStore.getTable(action.configurationId, action.tableId).getIn(['data', action.field])
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_UPDATE
+      _store = _store.setIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'editingFields'
+        action.field
+      ], action.value
+      GoodDataWriterStore.emitChange()
+
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_CANCEL
+      _store = _store.deleteIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'editingFields'
+        action.field
+      ]
+      GoodDataWriterStore.emitChange()
+
 
 module.exports = GoodDataWriterStore

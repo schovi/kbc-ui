@@ -14,7 +14,7 @@ Link = React.createFactory(require('react-router').Link)
 
 goodDataWriterStore = require '../../../store'
 
-{strong, br, ul, li, div, span, i} = React.DOM
+{strong, br, ul, li, div, span, i, a} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
@@ -26,13 +26,14 @@ module.exports = React.createClass
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
 
   render: ->
+    writer = @state.writer.get 'config'
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           div className: 'col-sm-8',
             ComponentDescription
               componentId: 'gooddata-writer'
-              configId: @state.writer.getIn ['config', 'id']
+              configId: writer.get 'id'
           div className: 'col-sm-4 kbc-buttons',
         PanelGroup accordion: true,
           @state.tablesByBucket.map (tables, bucketId) ->
@@ -46,10 +47,19 @@ module.exports = React.createClass
             Link
               to: 'gooddata-writer-date-dimensions'
               params:
-                config: @state.writer.getIn ['config', 'id']
+                config: writer.get 'id'
             ,
               span className: 'fa fa-clock-o fa-fw'
               ' Date Dimensions'
+          if writer.getIn(['gd', 'pid']) && !writer.get('toDelete')
+            li null,
+              a
+                href: "https://secure.gooddata.com/#s=/gdc/projects/#{writer.getIn(['gd', 'pid'])}|dataPage|"
+                target: '_blank'
+              ,
+                span className: 'fa fa-bar-chart-o'
+                ' GoodData Project'
+
 
   _renderBucketPanel: (bucketId, tables) ->
 

@@ -78,30 +78,55 @@ module.exports =
   loadReferenceableTables: (configurationId) ->
     @loadReferencableTablesForce(configurationId)
 
-  changeTableExportStatus: (configurationId, tableId, newExportStatus) ->
+  saveTableField: (configurationId, tableId, fieldName, newValue) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_START
+      type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START
       configurationId: configurationId
       tableId: tableId
-      newExportStatus: newExportStatus
+      field: fieldName
+      value: newValue
 
+    data = {}
+    data[fieldName] = newValue
     goodDataWriterApi
-    .updateTable(configurationId, tableId,
-      export: newExportStatus
-    )
+    .updateTable(configurationId, tableId, data)
     .then ->
       dispatcher.handleViewAction
-        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_SUCCESS
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_SUCCESS
         configurationId: configurationId
         tableId: tableId
-        newExportStatus: newExportStatus
+        field: fieldName
+        value: newValue
     .catch (e) ->
       dispatcher.handleViewAction
-        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_EXPORT_STATUS_CHANGE_ERROR
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_ERROR
         configurationId: configurationId
         tableId: tableId
-        newExportStatus: newExportStatus
+        field: fieldName
+        value: newValue
       throw e
+
+  startTableFieldEdit: (configurationId, tableId, field) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_START
+      tableId: tableId
+      configurationId: configurationId
+      field: field
+
+  updateTableFieldEdit: (configurationId, tableId, field, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_UPDATE
+      configurationId: configurationId
+      tableId: tableId
+      field: field
+      value: newValue
+
+  cancelTableFieldEdit: (configurationId, tableId, field) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_FIELD_EDIT_CANCEL
+      tableId: tableId
+      configurationId: configurationId
+      field: field
 
 
   startTableColumnsEdit: (configurationId, tableId) ->
