@@ -1,7 +1,10 @@
 React = require 'react'
-
+Immutable = require('immutable')
 Input = React.createFactory(require('react-bootstrap').Input)
-{div, form, option, optgroup} = React.DOM
+Label = React.createFactory(require('react-bootstrap').Label)
+Select = React.createFactory(require('react-select'))
+
+{div, form, option, optgroup, label} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalQueryEditor'
@@ -15,9 +18,27 @@ module.exports = React.createClass
       form className: 'form-horizontal',
         div className: 'row',
           @_createInput 'Name', 'name'
+          @_createArraySelect('Metrics', 'metrics')
+          @_createArraySelect('Dimensions', 'dimensions')
           @_createInput 'Filters', 'filters'
-
           @_profilesSelect()
+
+  _createArraySelect: (caption, propName)->
+    values = @props.query.get(propName).toJS().join(',')
+    values = null if values == ''
+    div className: 'form-group',
+      label className: 'control-label col-xs-4', caption
+      div className:'col-xs-8',
+        Select
+          multi: true
+          value: values
+          noResultsText: ''
+          clearable: true
+          placeholder: 'type value and press enter'
+          filterOptions: (options, filter, currentValues) ->
+            [filter]
+          onChange: (stringOptions) =>
+            @props.onChange(@props.query.set(propName, Immutable.fromJS(stringOptions.split(','))))
 
 
   _profilesSelect: ->
@@ -39,7 +60,7 @@ module.exports = React.createClass
       wrapperClassName: 'col-xs-8'
       type: 'select'
       onChange: (event) =>
-        @props.onChange(@props.query.set('profile'), event.target.value)
+        @props.onChange(@props.query.set('profile', event.target.value))
     ,
       option
         value: ''
@@ -55,4 +76,4 @@ module.exports = React.createClass
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
       onChange: (event) =>
-        @props.onChange(@props.query.set(propName), event.target.value)
+        @props.onChange(@props.query.set(propName, event.target.value))

@@ -25,4 +25,5 @@ module.exports = React.createClass
 
 
   _onHandleChange: (newQuery) ->
+    console.log "newQuery change",newQuery.toJS()
     ExGanalActionCreators.changeNewQuery(@state.configId, newQuery)
