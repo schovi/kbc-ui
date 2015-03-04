@@ -5,7 +5,10 @@ ApplicationStore = require '../../stores/ApplicationStore'
 request = require '../../utils/request'
 
 _getComponentUrl = (componentId) ->
-  ComponentsStore.getComponent(componentId).get 'uri'
+  component = ComponentsStore.getComponent(componentId)
+  if !component
+    throw "Component '#{componentId}' not found."
+  component.get 'uri'
 
 module.exports =
 
