@@ -135,6 +135,8 @@ gulp.task 'build-scripts', ['clean'], ->
     b = browserify
       entries: [fileName]
       extensions: ['.coffee']
+      debug: true
+      fullPaths: false
     b.transform(coffeeify)
     b.transform(envify(NODE_ENV: 'production'))
     b.bundle()
