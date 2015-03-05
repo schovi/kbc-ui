@@ -24,6 +24,25 @@ module.exports =
       initQuery: initQuery
       name: name
 
+  saveQuery: (configId, name) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_QUERY_SAVE_START
+      configId: configId
+      name: name
+    config = exGanalStore.getConfigToSave(configId)
+    exGanalApi.postConfig(configId, config.toJS()).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_QUERY_SAVE_SUCCESS
+        configId: configId
+        name: name
+        newConfig: result
+
+  resetQuery: (configId, name) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_QUERY_RESET
+      configId: configId
+      name: name
+
   changeQuery: (configId, name, newQuery) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_CHANGE_QUERY

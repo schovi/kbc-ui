@@ -22,14 +22,14 @@ module.exports = React.createClass
     currentConfigId: configId
     name: name
     configId: configId
-    isSaving: ExGanalStore.isSavingQuery configId, name
+    isSaving: ExGanalStore.isSavingConfig configId
     isEditing: ExGanalStore.isEditingQuery configId, name
     isInvalid: ExGanalStore.isQueryInvalid configId, name
     query: ExGanalStore.getQuery configId, name
 
   _handleCancel: ->
-    ExGanalActionCreators.resetQuery @state.currentConfigId, @state.name
-    @transitionTo 'ex-google-analytics', config: @state.currentConfigId
+    ExGanalActionCreators.resetQuery @state.configId, @state.name
+    #@transitionTo 'ex-google-analytics', config: @state.currentConfigId
 
   _toogleEdit: ->
     ExGanalActionCreators.toogleEditing(@state.configId, @state.name, @state.query)
@@ -37,7 +37,7 @@ module.exports = React.createClass
   _handleCreate: ->
     component = @
     ExGanalActionCreators
-    .saveQuery @state.currentConfigId, @state.name
+    .saveQuery @state.configId, @state.name
     .then ->
       component.transitionTo 'ex-google-analytics', config: component.state.currentConfigId
 

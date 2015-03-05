@@ -26,23 +26,27 @@ module.exports = React.createClass
     validation: exGanalStore.getQueryValidation(configId, name)
 
   render: ->
-    console.log 'rendering query', @state.query.toJS()
-    if @state.isEditing
-      QueryEditor
-        configId: @state.configId
-        onChange: @_onQueryChange
-        query: @state.editingQuery
-        profiles: @state.profiles
-        validation: @state.validation
+    #if query name changes it does not exist and so we have to check it
+    if not @state.query
+      div {}
     else
-      div {className: 'container-fluid kbc-main-content'},
-        form className: 'form-horizontal',
-          div className: 'row',
-            @_createStaticInput('Name', 'name')
-            @_createStaticInput('Metrics', 'metrics', true)
-            @_createStaticInput('Dimensions', 'dimensions', true)
-            @_createStaticInput('Filters', 'filters')
-            @_createStaticInput('Profile', 'profile')
+      console.log 'rendering query', @state.query.toJS()
+      if @state.isEditing
+        QueryEditor
+          configId: @state.configId
+          onChange: @_onQueryChange
+          query: @state.editingQuery
+          profiles: @state.profiles
+          validation: @state.validation
+      else
+        div {className: 'container-fluid kbc-main-content'},
+          form className: 'form-horizontal',
+            div className: 'row',
+              @_createStaticInput('Name', 'name')
+              @_createStaticInput('Metrics', 'metrics', true)
+              @_createStaticInput('Dimensions', 'dimensions', true)
+              @_createStaticInput('Filters', 'filters')
+              @_createStaticInput('Profile', 'profile')
 
   _createStaticInput: (caption, propName, isArray = false) ->
     pvalue = @state.query.get(propName)

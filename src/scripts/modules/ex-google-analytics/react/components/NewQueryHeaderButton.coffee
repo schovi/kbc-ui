@@ -19,7 +19,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
     currentConfigId: configId
-    isSaving: ExGanalStore.isSavingNewQuery configId
+    isSaving: ExGanalStore.isSavingConfig configId
     isInvalid: ExGanalStore.isNewQueryInvalid configId
 
   _handleCancel: ->
