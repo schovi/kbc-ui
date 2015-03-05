@@ -28,7 +28,10 @@ module.exports =
   ,
     name: 'ex-google-analytics-query'
     path: 'query/:name'
-    title: 'Query'
+    title: (routerState) ->
+      queryName = routerState.getIn ['params', 'name']
+      return "Query #{queryName}"
+
     handler: ExGanalQueryDetail
     headerButtonsHandler: QueryDetailHeaderButtons
 

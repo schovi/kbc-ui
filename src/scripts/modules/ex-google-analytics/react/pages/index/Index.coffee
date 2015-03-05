@@ -37,13 +37,13 @@ module.exports = React.createClass
             configId: @state.configId
         div className: 'col-sm-4 kbc-buttons',
           Link
-            to: 'ex-google-analytics-select-profiles'
+            to: 'ex-google-analytics-new-query'
             params:
               config: @state.configId
             className: 'btn btn-success'
           ,
-            span className: 'kbc-icon-plus'
-            'Select Profiles'
+            i className: 'fa fa-fw fa-plus'
+            'Add Query'
       if queries.count()
         QueriesTable
           queries: queries
@@ -65,12 +65,12 @@ module.exports = React.createClass
             'Authorize'
         li null,
           Link
-            to: 'ex-google-analytics-new-query'
+            to: 'ex-google-analytics-select-profiles'
             params:
               config: @state.configId
           ,
-            i className: 'fa fa-fw fa-plus'
-            'Add Query'
+            span className: 'fa fa-fw fa-check'
+            'Select Profiles'
 
         # li null,
         #   RunExtraction
