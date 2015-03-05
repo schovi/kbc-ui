@@ -13,6 +13,7 @@ ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
 TableGdName = React.createFactory(require './TableGdNameEdit')
+TableLoadType = React.createFactory(require './TableLoadType')
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterTable'
@@ -66,6 +67,10 @@ module.exports = React.createClass
           strong null, 'GoodData name'
           ' '
           TableGdName
+            table: @state.table
+            configurationId: @state.configurationId
+          ' '
+          TableLoadType
             table: @state.table
             configurationId: @state.configurationId
 
