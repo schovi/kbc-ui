@@ -9,6 +9,7 @@ module.exports = React.createClass
   displayName: 'TableGdName'
 
   _handleEditStart: ->
+    return if @props.table.getIn ['data', 'isExported']
     actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD)
 
   _handleEditSave: ->
@@ -31,9 +32,15 @@ module.exports = React.createClass
     isSaving = @props.table.get('savingFields').contains FIELD
     console.log 'saving', isSaving
     text = if isEditing then @props.table.getIn(['editingFields', FIELD]) else @props.table.getIn(['data', FIELD])
+    if @props.table.getIn ['data', 'isExported']
+      editTooltip = 'Table cannot be renamed. It is already exported to GoodData'
+    else
+      editTooltip = 'Edit table name in GoodData'
+
     InlineEditText
       text: text
-      placeholder: 'Describe the component ...'
+      editTooltip: editTooltip
+      placeholder: 'Table Name'
       isSaving: isSaving
       isEditing: isEditing
       isValid: true

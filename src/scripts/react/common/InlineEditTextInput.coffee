@@ -93,6 +93,7 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool
     isEditing: React.PropTypes.bool
     isValid: React.PropTypes.bool
+
     editTooltip: React.PropTypes.string
     placeholder: React.PropTypes.string
 
