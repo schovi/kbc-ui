@@ -39,7 +39,7 @@ routes =
         handler: Sandbox
         requireData: [
           (params) ->
-            ProvisioningActionCreators.loadCredentials("mysql", "sandbox")
+            ProvisioningActionCreators.loadMySqlSandboxCredentials()
         ,
           (params) ->
             ProvisioningActionCreators.loadCredentials("redshift", "sandbox")

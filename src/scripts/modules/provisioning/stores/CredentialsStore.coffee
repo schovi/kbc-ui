@@ -9,7 +9,7 @@ List = Immutable.List
 
 _store = Map(
   credentialsById: Map()
-  )
+)
 
 CredentialsStore = StoreUtils.createStore
   get: (id) ->
@@ -22,10 +22,10 @@ CredentialsStore = StoreUtils.createStore
     result = _store.get("credentialsById").find (value) ->
       value.get('backend') == backend and value.get('credentialsType') == credentialsType
     return result
-      
+
   hasByBackendAndType: (backend, credentialsType) ->
     !!@getByBackendAndType(backend, credentialsType)
-    
+
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
@@ -34,7 +34,7 @@ Dispatcher.register (payload) ->
       if (credentials.getIn ['credentials', 'id'])
         _store = _store.setIn ['credentialsById', credentials.getIn(['credentials', 'id'])], credentials
         CredentialsStore.emitChange()
-      
+
     when Constants.ActionTypes.CREDENTIALS_CREATE_SUCCESS
       credentials = Immutable.fromJS(action.credentials)
       _store = _store.setIn ['credentialsById', credentials.getIn(['credentials', 'id'])], credentials
@@ -43,5 +43,5 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.CREDENTIALS_DROP_SUCCESS
       _store = _store.deleteIn ['credentialsById', action.credentialsId]
       CredentialsStore.emitChange()
-  
+
 module.exports = CredentialsStore

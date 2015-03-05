@@ -5,12 +5,15 @@ Immutable = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 CredentialsStore = require('../../../../provisioning/stores/CredentialsStore')
+MySqlSandboxCredentialsStore = require('../../../../provisioning/stores/MySqlSandboxCredentialsStore')
 CredentialsActionCreators = require('../../../../provisioning/ActionCreators')
-MySqlCredentials = require('../../../../provisioning/react/components/MySqlCredentials')
-RedshiftCredentials = require('../../../../provisioning/react/components/RedshiftCredentials')
+MySqlCredentials = React.createFactory(require('../../../../provisioning/react/components/MySqlCredentials'))
+RedshiftCredentials = React.createFactory(require('../../../../provisioning/react/components/RedshiftCredentials'))
 ConfigureSandbox = React.createFactory(require '../../components/ConfigureSandbox')
 ConnectToMySqlSandbox = React.createFactory(require '../../components/ConnectToMySqlSandbox')
-RunComponentButton = require '../../../../components/react/components/RunComponentButton'
+RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
+MySqlSandbox = React.createFactory(require '../../components/MySqlSandbox')
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
@@ -20,21 +23,8 @@ Sandbox = React.createClass
   displayName: 'Sandbox'
   mixins: [createStoreMixin(CredentialsStore)]
 
-  getInitialState: ->
-    redshiftSandboxConfiguration: {}
-
   getStateFromStores: ->
-    mySqlCredentials: CredentialsStore.getByBackendAndType("mysql", "sandbox")
     redshiftCredentials: CredentialsStore.getByBackendAndType("redshift", "sandbox")
-
-  mySqlCredentials: ->
-    if @state.mySqlCredentials
-      return span {},
-        MySqlCredentials {credentials: @state.mySqlCredentials}
-    else
-      return button {className: 'btn btn-success', onClick: @_createMySqlCredentials},
-        'Create MySql Credentials'
-
 
   redshiftCredentials: ->
     if @state.redshiftCredentials
@@ -43,28 +33,6 @@ Sandbox = React.createClass
     else
       return button {className: 'btn btn-success', onClick: @_createRedshiftCredentials},
         'Create Redshift Credentials'
-
-  mySqlControlButtons: ->
-    if @state.mySqlCredentials
-      sandboxConfiguration = {}
-      span {},
-        RunComponentButton(
-          title: "Load Tables in MySQL Sandbox"
-          body: ConfigureSandbox
-            backend: 'mysql'
-            onChange: (params) ->
-              sandboxConfiguration = params
-          component: 'transformation'
-          method: 'create-sandbox'
-          mode: 'button'
-          runParams: ->
-            sandboxConfiguration
-        )
-        ConnectToMySqlSandbox {credentials: @state.mySqlCredentials},
-          button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-            span {className: 'fa fa-database'}
-        button {className: 'btn btn-link', title: 'Delete sandbox', onClick: @_dropMySqlCredentials},
-          span {className: 'kbc-icon-cup'}
 
   redshiftControlButtons: ->
     if @state.redshiftCredentials
@@ -91,15 +59,7 @@ Sandbox = React.createClass
   render: ->
     div {className: 'container-fluid'},
       div {className: 'col-md-12 kbc-main-content'},
-        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-          div {className: 'tr'},
-            div {className: 'td'},
-              div {className: 'row'},
-                h4 {}, 'MySQL'
-                div {className: 'pull-right'},
-                  @mySqlControlButtons()
-            div {className: 'td'},
-              @mySqlCredentials()
+        MySqlSandbox {credentials: MySqlSandboxCredentialsStore}
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
           div {className: 'tr'},
             div {className: 'td'},
@@ -118,11 +78,5 @@ Sandbox = React.createClass
 
   _dropRedshiftCredentials: ->
     CredentialsActionCreators.dropCredentials('redshift', @state.redshiftCredentials.getIn ["credentials", "id"])
-
-  _createMySqlCredentials: ->
-    CredentialsActionCreators.createCredentials('mysql', 'sandbox')
-
-  _dropMySqlCredentials: ->
-    CredentialsActionCreators.dropCredentials('mysql', @state.mySqlCredentials.getIn ["credentials", "id"])
 
 module.exports = Sandbox

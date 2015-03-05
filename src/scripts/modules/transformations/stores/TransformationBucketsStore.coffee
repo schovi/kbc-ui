@@ -56,7 +56,6 @@ Dispatcher.register (payload) ->
       TransformationBucketsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
-      console.log 'load success', payload
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
@@ -78,12 +77,12 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.ORCHESTRATION_DELETE_ERROR
       _store = _store.deleteIn ['bucketsPendingActions', action.bucketId, 'delete']
       TransformationBucketsStore.emitChange()
-      
+
     when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_SUCCESS
       _store = _store.withMutations (store) ->
         store
         .removeIn ['bucketsById', action.bucketId]
         .removeIn ['bucketsPendingActions', action.bucketId, 'delete']
       TransformationBucketsStore.emitChange()
-      
+
 module.exports = TransformationBucketsStore

@@ -8,21 +8,22 @@ MySqlCredentials = React.createClass
     credentials: React.PropTypes.object
 
   render: ->
+    console.log "mysql credentials", @props.credentials
     div {},
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "hostname"]
+        strong {className: 'col-md-9'}, @props.credentials.get "hostname"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Port'
         strong {className: 'col-md-9'}, '3306'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'User'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "user"]
+        strong {className: 'col-md-9'}, @props.credentials.get "user"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Password'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "password"]
+        strong {className: 'col-md-9'}, @props.credentials.get "password"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Database'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "db"]
+        strong {className: 'col-md-9'}, @props.credentials.get "db"
 
 module.exports = MySqlCredentials
