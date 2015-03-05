@@ -49,7 +49,7 @@ module.exports = React.createClass
     if isArray
       pvalue = pvalue.toJS().join(',')
     if propName == 'filters'
-        pvalue = if pvalue then pvalue.get(0) else 'n/a'
+      pvalue = if pvalue then pvalue.get(0) else 'n/a'
     if propName == 'name'
       pvalue = @state.name
     if propName == 'profile'
