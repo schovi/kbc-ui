@@ -12,7 +12,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
-    configId : configId
+    configId: configId
 
   render: ->
     AuthorizeAccount

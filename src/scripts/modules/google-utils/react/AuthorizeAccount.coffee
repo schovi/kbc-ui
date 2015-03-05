@@ -17,7 +17,7 @@ module.exports = React.createClass
     componentName: React.PropTypes.string.isRequired
     isGeneratingExtLink: React.PropTypes.bool.isRequired
     extLink: React.PropTypes.string.isRequired
-    refererUrl : React.PropTypes.string.isRequired
+    refererUrlxs: React.PropTypes.string.isRequired
     generateExternalLinkFn: React.PropTypes.func.isRequired
 
 
