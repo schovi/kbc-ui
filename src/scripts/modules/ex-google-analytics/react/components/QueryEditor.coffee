@@ -62,7 +62,10 @@ module.exports = React.createClass
           filterOptions: (options, filter, currentValues) ->
             [filter]
           onChange: (stringOptions) =>
-            @props.onChange(@props.query.set(propName, Immutable.fromJS(stringOptions.split(','))))
+            if not stringOptions or stringOptions == ''
+              @props.onChange(@props.query.set(propName, Immutable.fromJS([])))
+            else
+              @props.onChange(@props.query.set(propName, Immutable.fromJS(stringOptions.split(','))))
         helpBlock
 
 

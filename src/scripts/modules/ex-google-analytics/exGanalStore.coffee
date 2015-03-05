@@ -77,6 +77,7 @@ Dispatcher.register (payload) ->
       configId = action.configId
       name = action.name
       _store = _store.deleteIn ['editing', configId, name]
+      _store = _store.deleteIn ['validation', configId, name]
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_QUERY_SAVE_START
@@ -122,7 +123,25 @@ Dispatcher.register (payload) ->
       configId = action.configId
       name = action.name
       newQuery = action.newQuery
+      queries = GanalStore.getConfig(configId).get('configuration').toJS()
+      queryName = newQuery.get('name')
+      validation = {}
+      emptyArrayCheck = (what) ->
+        if newQuery.get(what).count() == 0
+          validation[what] = 'Can not be empty.'
+      emptyArrayCheck('metrics')
+      emptyArrayCheck('dimensions')
+
+      if _.isEmpty(queryName)
+        validation.name = 'Can not be empty.'
+      else
+        if queryName in _.keys(queries) and queryName != name
+          validation.name = 'Query with that name already exists.'
+      _store = _store.setIn ['validation',configId, name], Immutable.fromJS validation
+
+
       _store = _store.setIn ['editing', configId, name], newQuery
+
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CONFIGURATION_LOAD_SUCCEES
