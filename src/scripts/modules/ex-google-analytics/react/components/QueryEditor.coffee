@@ -2,7 +2,6 @@ React = require 'react'
 Immutable = require('immutable')
 _ = require 'underscore'
 _.str = require 'underscore.string'
-
 Input = React.createFactory(require('react-bootstrap').Input)
 Label = React.createFactory(require('react-bootstrap').Label)
 Select = React.createFactory(require('react-select'))
@@ -97,8 +96,6 @@ module.exports = React.createClass
 
   _createInput: (caption, propName) ->
     pvalue = @props.query.get(propName)
-    if _.isArray(pvalue)
-      pvalue = pvalue[0]
     Input
       label: caption
       type: 'text'

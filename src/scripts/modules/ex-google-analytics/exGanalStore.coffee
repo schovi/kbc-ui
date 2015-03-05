@@ -1,6 +1,7 @@
 Dispatcher = require('../../Dispatcher')
 Immutable = require('immutable')
 Map = Immutable.Map
+List = Immutable.List
 StoreUtils = require('../../utils/StoreUtils')
 Constants = require './exGanalConstants'
 _ = require 'underscore'
@@ -66,8 +67,8 @@ Dispatcher.register (payload) ->
       name = action.name
       initQuery = action.initQuery
       filters = initQuery.get 'filters'
-      if filters and _.isArray(filters)
-        initQuery = initQuery.set 'filters', filters[0]
+      if filters and List.isList(filters)
+        initQuery = initQuery.set 'filters', filters.get(0)
       initQuery = initQuery.set 'name', name
       _store = _store.setIn ['editing', configId, name], initQuery
       GanalStore.emitChange()

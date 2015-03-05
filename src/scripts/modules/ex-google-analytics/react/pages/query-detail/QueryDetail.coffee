@@ -42,17 +42,18 @@ module.exports = React.createClass
             @_createStaticInput('Metrics', 'metrics', true)
             @_createStaticInput('Dimensions', 'dimensions', true)
             @_createStaticInput('Filters', 'filters')
-
+            @_createStaticInput('Profile', 'profile')
 
   _createStaticInput: (caption, propName, isArray = false) ->
     pvalue = @state.query.get(propName)
     if isArray
       pvalue = pvalue.toJS().join(',')
-    else
-      if _.isArray(pvalue)
-        pvalue = pvalue[0]
+    if propName == 'filters'
+        pvalue = if pvalue then pvalue.get(0) else 'n/a'
     if propName == 'name'
       pvalue = @state.name
+    if propName == 'profile'
+      pvalue = if pvalue then @_assmbleProfileName(pvalue) else '--all--'
     Input
       label: caption
       type: 'static'
@@ -60,7 +61,20 @@ module.exports = React.createClass
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
 
+  _assmbleProfileName: (profileId) ->
+    profile = @state.profiles.find( (p) ->
+      p.get('googleId') == profileId
+    )
+    if profile
+      accountName = profile.get('accountName')
+      propertyName = profile.get('webPropertyName')
+      pname = profile.get('name')
+      return "#{accountName}/ #{propertyName}/ #{pname}"
+    else
+      return "Unknown Profile(#{profileId})"
+
+
 
   _onQueryChange: (newQuery) ->
     console.log "query changed", newQuery.toJS()
-    ExGanalActionCreators.changeQuery(@state.configId, name, newQuery)
+    ExGanalActionCreators.changeQuery(@state.configId, @state.name, newQuery)
