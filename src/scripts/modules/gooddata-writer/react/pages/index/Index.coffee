@@ -1,5 +1,5 @@
 React = require 'react'
-
+{List} = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
@@ -8,13 +8,17 @@ ComponentDescription = React.createFactory(require '../../../../components/react
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 
+
+
 TablesList = React.createFactory(require './BucketTablesList')
 ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
 Link = React.createFactory(require('react-router').Link)
+{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
 goodDataWriterStore = require '../../../store'
+actionCreators = require '../../../actionCreators'
 
-{strong, br, ul, li, div, span, i, a} = React.DOM
+{strong, br, ul, li, div, span, i, a, button} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
@@ -59,7 +63,24 @@ module.exports = React.createClass
               ,
                 span className: 'fa fa-bar-chart-o'
                 ' GoodData Project'
+          li null,
+            Confirm
+              text: 'Upload project'
+              title: 'Are you sure you want to upload all tables to GoodData project?'
+              buttonLabel: 'Upload'
+              buttonType: 'success'
+              onConfirm: @_handleProjectUpload
+            ,
+              a null,
+                span className: 'fa fa-upload fa-fw'
+                ' Upload project'
+            if @state.writer.get('pendingActions', List()).contains 'uploadProject'
+              span null,
+                ' '
+                React.createElement Loader
 
+  _handleProjectUpload: ->
+    actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
 
   _renderBucketPanel: (bucketId, tables) ->
 

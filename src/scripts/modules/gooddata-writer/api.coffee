@@ -67,6 +67,24 @@ module.exports =
     .then (response) ->
       response.body
 
+  uploadTable: (configurationId, tableId) ->
+    createRequest('POST', 'upload-table')
+    .send
+      tableId: tableId
+      writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
+  uploadProject: (configurationId) ->
+    createRequest('POST', 'upload-project')
+    .send
+      writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
+
   getDateDimensions: (configurationId) ->
     createRequest('GET', 'date-dimensions')
     .query writerId: configurationId

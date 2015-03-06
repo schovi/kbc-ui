@@ -21,7 +21,6 @@ Confirm = React.createClass
       onClick: (e) ->
         e.stopPropagation()
         e.preventDefault()
-        console.log 'click wrapper'
     ,
       ModalTrigger
         modal: ConfirmModal(@props)

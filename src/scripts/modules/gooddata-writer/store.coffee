@@ -384,5 +384,43 @@ dispatcher.register (payload) ->
         actions.delete(actions.indexOf('resetTable'))
       GoodDataWriterStore.emitChange()
 
+    when constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_START
+
+      if action.tableId
+        _store = _store.updateIn [
+          'tables'
+          action.configurationId
+          action.tableId
+          'pendingActions'
+        ], (actions) ->
+          actions.push 'uploadTable'
+      else
+        _store = _store.updateIn [
+          'writers'
+          action.configurationId
+          'pendingActions'
+        ], List(), (actions) ->
+          actions.push 'uploadProject'
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_ERROR, constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_SUCCESS
+
+      if action.tableId
+        _store = _store.updateIn [
+          'tables'
+          action.configurationId
+          action.tableId
+          'pendingActions'
+        ], (actions) ->
+          actions.delete(actions.indexOf('uploadTable'))
+      else
+        _store = _store.updateIn [
+          'writers'
+          action.configurationId
+          'pendingActions'
+        ], List(), (actions) ->
+          actions.delete(actions.indexOf('uploadTable'))
+
+      GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

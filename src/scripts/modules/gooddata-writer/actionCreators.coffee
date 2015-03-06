@@ -1,5 +1,6 @@
 
 Promise = require 'bluebird'
+React = require 'react'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 goodDataWriterStore = require './store'
@@ -7,6 +8,8 @@ goodDataWriterApi = require './api'
 goodDataWriterConstants = require './constants'
 jobPoller = require '../../utils/jobPoller'
 applicationStore = require '../../stores/ApplicationStore'
+applicationActionCreators = require '../../actions/ApplicationActionCreators'
+Link = require('react-router').Link
 
 dimensionsStore = require './dateDimensionsStore'
 
@@ -173,6 +176,61 @@ module.exports =
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        error: e
+      throw e
+
+
+  uploadToGoodData: (configurationId, tableId = null) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_START
+      configurationId: configurationId
+      tableId: tableId
+
+    if tableId
+      promise = goodDataWriterApi.uploadTable configurationId, tableId
+    else
+      promise = goodDataWriterApi.uploadProject configurationId
+
+    promise
+    .then (job) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        job: job
+
+      if tableId
+        table = goodDataWriterStore.getTable configurationId, tableId
+        applicationActionCreators.sendNotification React.createClass
+          render: ->
+            React.DOM.span null,
+              "GoodData upload of table "
+              React.DOM.strong null, table.getIn ['data', 'name']
+              " has been initiated You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.job
+                onClick: @props.onClick
+              ,
+                'here'
+      else
+        applicationActionCreators.sendNotification React.createClass
+          render: ->
+            React.DOM.span null,
+              "GoodData upload has been initiated. You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.job
+                onClick: @props.onClick
+              ,
+                'here'
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_ERROR
         configurationId: configurationId
         tableId: tableId
         error: e
