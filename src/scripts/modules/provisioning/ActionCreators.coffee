@@ -3,120 +3,12 @@
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 provisioningApi = require './ProvisioningApi'
-credentialsStore = require './stores/CredentialsStore'
 mySqlSandboxCredentialsStore = require './stores/MySqlSandboxCredentialsStore'
+redshiftSandboxCredentialsStore = require './stores/RedshiftSandboxCredentialsStore'
 Promise = require 'bluebird'
 HttpError = require '../../utils/HttpError'
 
 module.exports =
-
-  ###
-    Request specified orchestration load from server
-    @return Promise
-  ###
-  loadCredentialsForce: (backend, credentialsType) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.CREDENTIALS_LOAD
-      backend: backend
-      credentialsType: credentialsType
-    )
-
-    provisioningApi
-    .getCredentials(backend, credentialsType)
-    .then((response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_LOAD_SUCCESS
-        credentials:
-          credentials: response.credentials
-          backend: backend
-          credentialsType: credentialsType
-      )
-      return
-    ).catch(HttpError, (error) ->
-      if error.response.status == 404
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.CREDENTIALS_LOAD_SUCCESS
-          credentials:
-            credentials:
-              id: null
-            backend: backend
-            credentialsType: credentialsType
-          )
-      else
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.CREDENTIALS_LOAD_ERROR
-          backend: backend
-          credentialsType: credentialsType
-        )
-        throw error
-    )
-    .catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_LOAD_ERROR
-        backend: backend
-        credentialsType: credentialsType
-      )
-      throw error
-    )
-
-  loadCredentials: (backend, credentialsType) ->
-    return Promise.resolve() if credentialsStore.hasByBackendAndType(backend, credentialsType)
-    @loadCredentialsForce(backend, credentialsType)
-
-
-  createCredentials: (backend, credentialsType) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.CREDENTIALS_CREATE
-      backend: backend
-      credentialsType: credentialsType
-    )
-
-    provisioningApi
-    .createCredentials(backend, credentialsType)
-    .then((response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_CREATE_SUCCESS
-        credentials:
-          credentials: response.credentials
-          backend: backend
-          credentialsType: credentialsType
-      )
-      return
-    ).catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_CREATE_ERROR
-        backend: backend
-        credentialsType: credentialsType
-      )
-      throw error
-    )
-
-  dropCredentials: (backend, credentialsId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.CREDENTIALS_DROP
-      backend: backend
-      credentialsId: credentialsId
-    )
-
-    provisioningApi
-    .dropCredentials(backend, credentialsId)
-    .then( ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_DROP_SUCCESS
-        backend: backend
-        credentialsId: credentialsId
-      )
-      return
-    ).catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_DROP_ERROR
-        backend: backend
-        credentialsId: credentialsId
-      )
-      throw error
-    )
-
-
 
 
   ###
@@ -196,6 +88,107 @@ module.exports =
     ).catch((error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_MYSQL_SANDBOX_DROP_ERROR
+      )
+      throw error
+    )
+
+  ###
+  Request specified orchestration load from server
+  @return Promise
+  ###
+  loadRedshiftSandboxCredentialsForce: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD
+    )
+
+    provisioningApi
+    .getCredentials('redshift', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch(HttpError, (error) ->
+      if error.response.status == 404
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD_SUCCESS
+          credentials:
+            id: null
+        )
+      else
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD_ERROR
+        )
+        throw error
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD_ERROR
+      )
+      throw error
+    )
+
+  loadRedshiftSandboxCredentials: ->
+    return Promise.resolve() if redshiftSandboxCredentialsStore.getIsLoaded()
+    @loadRedshiftSandboxCredentialsForce()
+
+
+  createRedshiftSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_CREATE
+    )
+
+    provisioningApi
+    .createCredentials('redshift', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_CREATE_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_CREATE_ERROR
+      )
+      throw error
+    )
+
+  dropRedshiftSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_DROP
+    )
+
+    provisioningApi
+    .dropCredentials('redshift', redshiftSandboxCredentialsStore.getCredentials().get("id"))
+    .then( ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_DROP_SUCCESS
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_DROP_ERROR
+      )
+      throw error
+    )
+
+  refreshRedshiftSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_REFRESH
+    )
+
+    provisioningApi
+    .createCredentials('redshift', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_REFRESH_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_REFRESH_ERROR
       )
       throw error
     )

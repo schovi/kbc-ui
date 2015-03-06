@@ -42,7 +42,7 @@ routes =
             ProvisioningActionCreators.loadMySqlSandboxCredentials()
         ,
           (params) ->
-            ProvisioningActionCreators.loadCredentials("redshift", "sandbox")
+            ProvisioningActionCreators.loadRedshiftSandboxCredentials()
         ,
           (params) ->
             StorageActionCreators.loadBuckets()

@@ -4,47 +4,46 @@ Immutable = require('immutable')
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ComponentsStore = require('../../../components/stores/ComponentsStore')
-MySqlSandboxCredentialsStore = require('../../../provisioning/stores/MySqlSandboxCredentialsStore')
+RedshiftSandboxCredentialsStore = require('../../../provisioning/stores/RedshiftSandboxCredentialsStore')
 CredentialsActionCreators = require('../../../provisioning/ActionCreators')
-MySqlCredentials = React.createFactory(require('../../../provisioning/react/components/MySqlCredentials'))
+RedshiftCredentials = React.createFactory(require('../../../provisioning/react/components/RedshiftCredentials'))
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
-ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySqlSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 Loader = React.createFactory(require '../../../../react/common/Loader')
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
-MySqlSandbox = React.createClass
+RedshiftSandbox = React.createClass
 
-  mixins: [createStoreMixin(MySqlSandboxCredentialsStore)]
+  mixins: [createStoreMixin(RedshiftSandboxCredentialsStore)]
 
-  displayName: 'MySqlSandbox'
+  displayName: 'RedshiftSandbox'
 
   getStateFromStores: ->
-    credentials: MySqlSandboxCredentialsStore.getCredentials()
-    pendingActions: MySqlSandboxCredentialsStore.getPendingActions()
-    isLoading: MySqlSandboxCredentialsStore.getIsLoading()
-    isLoaded: MySqlSandboxCredentialsStore.getIsLoaded()
+    credentials: RedshiftSandboxCredentialsStore.getCredentials()
+    pendingActions: RedshiftSandboxCredentialsStore.getPendingActions()
+    isLoading: RedshiftSandboxCredentialsStore.getIsLoading()
+    isLoaded: RedshiftSandboxCredentialsStore.getIsLoaded()
 
   _renderCredentials: ->
     if @state.credentials.get "id"
       span {},
-        MySqlCredentials {credentials: @state.credentials}
+        RedshiftCredentials {credentials: @state.credentials}
     else
       if @state.pendingActions.get "create"
         React.createElement Loader
       else
         button {className: 'btn btn-success', onClick: @_createCredentials},
-        'Create MySql Credentials'
+        'Create Redshift Credentials'
 
   _renderControlButtons: ->
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       span {},
         RunComponentButton(
-          title: "Load Tables in MySQL Sandbox"
+          title: "Load Tables in Redshift Sandbox"
           body: ConfigureSandbox
-            backend: 'mysql'
+            backend: 'redshift'
             onChange: (params) ->
               sandboxConfiguration = params
           component: 'transformation'
@@ -53,15 +52,18 @@ MySqlSandbox = React.createClass
           runParams: ->
             sandboxConfiguration
         )
-        ConnectToMySqlSandbox {credentials: @state.credentials},
-          button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-            span {className: 'fa fa-database'}
+        if @state.pendingActions.get 'refresh'
+          button {className: "btn btn-link", disabled: true},
+            React.createElement Loader
+        else
+          button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
+          span {className: 'fa fa-refresh'}
         React.createElement DeleteButton,
-          tooltip: 'Delete MySQL Sandbox'
+          tooltip: 'Delete Redshift Sandbox'
           isPending: @state.pendingActions.get 'drop'
           confirm:
-            title: 'Delete MySQL Sandbox'
-            text: 'Do you really want to delete MySQL sandbox?'
+            title: 'Delete Redshift Sandbox'
+            text: 'Do you really want to delete Redshift sandbox?'
             onConfirm: @_dropCredentials
 
   render: ->
@@ -69,16 +71,20 @@ MySqlSandbox = React.createClass
       div {className: 'tr'},
         div {className: 'td'},
           div {className: 'row'},
-            h4 {}, 'MySQL'
+            h4 {}, 'Redshift'
             div {className: 'pull-right'},
               @_renderControlButtons()
         div {className: 'td'},
           @_renderCredentials()
 
   _createCredentials: ->
-    CredentialsActionCreators.createMySqlSandboxCredentials()
+    CredentialsActionCreators.createRedshiftSandboxCredentials()
 
   _dropCredentials: ->
-    CredentialsActionCreators.dropMySqlSandboxCredentials()
+    CredentialsActionCreators.dropRedshiftSandboxCredentials()
 
-module.exports = MySqlSandbox
+  _refreshRedshiftCredentials: ->
+    CredentialsActionCreators.refreshRedshiftSandboxCredentials()
+
+
+module.exports = RedshiftSandbox

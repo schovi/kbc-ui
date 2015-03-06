@@ -6,26 +6,26 @@ RedshiftCredentials = React.createClass
   displayName: 'RedshiftCredentials'
   propTypes:
     credentials: React.PropTypes.object
-      
+
   render: ->
     div {},
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "hostname"]
+        strong {className: 'col-md-9'}, @props.credentials.get "hostname"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Port'
         strong {className: 'col-md-9'}, '5403'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'User'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "user"]
+        strong {className: 'col-md-9'}, @props.credentials.get "user"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Password'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "password"]
+        strong {className: 'col-md-9'}, @props.credentials.get "password"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Database'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "db"]
+        strong {className: 'col-md-9'}, @props.credentials.get "db"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Schema'
-        strong {className: 'col-md-9'}, @props.credentials.getIn ["credentials", "schema"]
+        strong {className: 'col-md-9'}, @props.credentials.get "schema"
 
 module.exports = RedshiftCredentials
