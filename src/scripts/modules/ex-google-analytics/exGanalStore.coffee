@@ -14,10 +14,19 @@ _store = Map(
   saving: Map() #configId name query
   extLinksGenerating: Map() #configId
   extLinks: Map() #configId
+  profiles: Map() #confiId
+  selectedProfiles: Map() #configId
 )
 
 
 GanalStore = StoreUtils.createStore
+  getSelectedProfiles: (configId) ->
+    _store.getIn ['selectedProfiles', configId]
+
+  hasProfiles: (configId) ->
+    _store.hasIn ['profiles', configId]
+  getProfiles: (configId) ->
+    _store.getIn ['profiles', configId]
   isQueryInvalid: (configId, name) ->
     val = _store.getIn ['validation', configId, name]
     val and val.count() > 0
@@ -67,6 +76,24 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+
+    when Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
+      configId = action.configId
+      profiles = Immutable.fromJS action.profiles
+      _store = _store.setIn ['profiles', configId], profiles
+      GanalStore.emitChange()
+
+    when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE
+      configId = action.configId
+      profile = action.profile
+      _store = _store.setIn ['selectedProfiles', configId, profile.get 'id'], profile
+      GanalStore.emitChange()
+    when Constants.ActionTypes.EX_GANAL_DESELECT_PROFILE
+      configId = action.configId
+      profile = action.profile
+      _store = _store.deleteIn ['selectedProfiles', configId, profile.get 'id']
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_QUERY_TOOGLE_EDITING
       configId = action.configId
       name = action.name
@@ -153,6 +180,8 @@ Dispatcher.register (payload) ->
       configId = action.configId
       data = Immutable.fromJS(action.data)
       _store = _store.setIn(['configs', configId], data)
+      if data.has('items') and data.get('items').count() > 0
+        _store = _store.setIn(['selectedProfiles', configId], data.get 'items')
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY

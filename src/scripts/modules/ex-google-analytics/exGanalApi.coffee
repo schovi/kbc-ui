@@ -28,6 +28,11 @@ module.exports =
       .promise().then (response) ->
         response.body
 
+  getProfiles: (configId) ->
+    createRequest('GET', 'profiles/' + configId)
+    .promise().then (response) ->
+      response.body
+
   postConfig: (configId, data) ->
     console.log 'data to POST', data
     configData =

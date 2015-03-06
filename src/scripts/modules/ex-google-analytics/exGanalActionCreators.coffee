@@ -6,6 +6,31 @@ exGanalStore = require './exGanalStore'
 
 module.exports =
 
+  selectProfile: (configId, profile) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE
+      configId: configId
+      profile: profile
+
+  deselectProfile: (configId, profile) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_DESELECT_PROFILE
+      configId: configId
+      profile: profile
+
+  loadProfiles: (configId) ->
+    if exGanalStore.hasProfiles(configId)
+      return Promise.resolve()
+    @loadProfilesForce(configId)
+
+
+  loadProfilesForce: (configId) ->
+    exGanalApi.getProfiles(configId).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
+        configId: configId
+        profiles: result
+
   generateExternalLink: (configId) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
