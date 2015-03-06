@@ -5,6 +5,17 @@ exGanalApi = require './exGanalApi'
 exGanalStore = require './exGanalStore'
 
 module.exports =
+
+  generateExternalLink: (configId) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
+      configId: configId
+    exGanalApi.getExtLink(configId).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
+        configId: configId
+        extLink: result
+
   loadConfiguration: (configId) ->
     if exGanalStore.hasConfig(configId)
       return Promise.resolve()

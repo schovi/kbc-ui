@@ -13,15 +13,17 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     configId: configId
+    isGeneratingExtLink: exGanalStore.isGeneratingExtLink(configId)
+    extLink: exGanalStore.getExtLink(configId)
 
   render: ->
     AuthorizeAccount
       componentName: 'ex-google-analytics'
-      isGeneratingExtLink: false
-      extLink: null
+      isGeneratingExtLink: @state.isGeneratingExtLink
+      extLink: @state.extLink
       refererUrl: @_getReferrer()
-      generateExternalLinkFn: ->
-        #ActionCreators.generateExternalLink()
+      generateExternalLinkFn: =>
+        ActionCreators.generateExternalLink(@state.configId)
 
 
   _getReferrer: ->

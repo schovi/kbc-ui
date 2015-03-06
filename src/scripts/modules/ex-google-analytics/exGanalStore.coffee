@@ -12,6 +12,8 @@ _store = Map(
   validation: Map()
   editing: Map() #configId name query
   saving: Map() #configId name query
+  extLinksGenerating: Map() #configId
+  extLinks: Map() #configId
 )
 
 
@@ -29,7 +31,10 @@ GanalStore = StoreUtils.createStore
     _store.getIn ['editing', configId, name]
   getQuery: (configId, name) ->
     _store.getIn ['configs', configId, 'configuration', name]
-
+  getExtLink: (configId) ->
+    _store.getIn ['extLinks', configId]
+  isGeneratingExtLink: (configId) ->
+    _store.hasIn ['extLinksGenerating', configId]
 
   isNewQueryInvalid: (configId) ->
     val = _store.getIn ['validation', configId, '--newquery--']
@@ -200,5 +205,17 @@ Dispatcher.register (payload) ->
       _store = _store.deleteIn ['newQuery', configId]
       GanalStore.emitChange()
 
+    when Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
+      configId = action.configId
+      _store = _store.deleteIn ['extLinks', configId]
+      _store = _store.setIn ['extLinksGenerating', configId], true
+      GanalStore.emitChange()
+
+    when Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
+      configId = action.configId
+      extLink = Immutable.fromJS(action.extLink)
+      _store = _store.deleteIn ['extLinksGenerating', configId]
+      _store = _store.setIn ['extLinks', configId], extLink
+      GanalStore.emitChange()
 
 module.exports = GanalStore

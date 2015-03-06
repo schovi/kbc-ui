@@ -30,7 +30,6 @@ module.exports = React.createClass
 
 
   render: ->
-    @_getReferrer()
     div {className: 'container-fluid kbc-main-content'},
       TabbedArea defaultActiveKey: 'instant', animation: false,
         TabPane eventKey: 'instant', tab: 'Instant Authorization',
@@ -45,7 +44,6 @@ module.exports = React.createClass
                 className: 'btn btn-primary'
                 type: 'submit',
                   'Authorize Google account now'
-                #onClick: @_handleCancel
 
         TabPane eventKey: 'external', tab: 'External Authorization',
           form {className: 'form-horizontal'},
@@ -64,7 +62,7 @@ module.exports = React.createClass
                     'Regenerate External Link'
                   else
                     'Generate External Link'
-              Loader() if @state.isGeneratingExtLink
+              Loader() if @props.isGeneratingExtLink
 
   _renderExtLink: ->
     div className: 'pre', @props.extLink.get('link')

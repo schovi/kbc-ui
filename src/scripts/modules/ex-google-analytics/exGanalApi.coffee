@@ -19,6 +19,15 @@ module.exports =
     .promise().then (response) ->
       response.body
 
+  getExtLink: (configId) ->
+    data =
+      'account': configId
+      'referrer': 'https://s3.amazonaws.com/kbc-apps.keboola.com/ex-authorize/index.html#/googleanalytics'
+    createRequest('POST', 'external-link')
+      .send data
+      .promise().then (response) ->
+        response.body
+
   postConfig: (configId, data) ->
     console.log 'data to POST', data
     configData =
