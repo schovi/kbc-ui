@@ -27,10 +27,8 @@ module.exports = React.createClass
     actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD, column)
 
   render: ->
-    console.log 'rnd', @props.table.toJS()
     isEditing = @props.table.hasIn ['editingFields', FIELD]
     isSaving = @props.table.get('savingFields').contains FIELD
-    console.log 'saving', isSaving
     text = if isEditing then @props.table.getIn(['editingFields', FIELD]) else @props.table.getIn(['data', FIELD])
     if @props.table.getIn ['data', 'isExported']
       editTooltip = 'Table cannot be renamed. It is already exported to GoodData'

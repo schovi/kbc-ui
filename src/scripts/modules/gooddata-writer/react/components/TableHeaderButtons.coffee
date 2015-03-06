@@ -32,11 +32,22 @@ module.exports = React.createClass
       'isExported'
       false
 
+  _handleResetTable: ->
+    actionCreators.resetTable @state.configurationId,
+      @state.table.get 'id'
+
   render: ->
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
       React.DOM.strong null, @state.table.getIn ['data', 'name']
       ' dataset?'
+
+    resetTableText = React.DOM.span null,
+      'You are about to remove dataset in the GoodData project belonging
+      to the table and reset its export status.
+      Are you sure you want to reset table '
+      React.DOM.strong null, @state.table.getIn ['data', 'name']
+      ' ?'
 
     React.createElement ButtonGroup, null,
       React.createElement DropdownButton, null,
@@ -50,7 +61,14 @@ module.exports = React.createClass
           ,
             React.DOM.span null, 'Reset export status'
         React.createElement MenuItem, null,
-          'Reset table'
+          React.createElement Confirm,
+            title: 'Reset table'
+            text: resetTableText
+            buttonLabel: 'Reset'
+            buttonType: 'success'
+            onConfirm: @_handleResetTable
+          ,
+            React.DOM.span null, 'Reset table'
       React.createElement Button, null,
         span className: 'fa fa-tasks fa-fw'
       React.createElement Button, null,

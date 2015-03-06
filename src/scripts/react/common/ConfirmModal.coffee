@@ -17,9 +17,15 @@ ConfirmModal = React.createClass
           @props.text
       div className: 'modal-footer',
         ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
+          Button
+            onClick: @props.onRequestHide
+            bsStyle: 'link'
+          ,
             'Cancel'
-          Button bsStyle: @props.buttonType, onClick: @_handleConfirm,
+          Button
+            bsStyle: @props.buttonType
+            onClick: @_handleConfirm
+          ,
             @props.buttonLabel
 
   _handleConfirm: ->

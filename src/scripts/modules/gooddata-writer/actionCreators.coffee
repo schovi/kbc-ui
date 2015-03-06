@@ -176,6 +176,26 @@ module.exports =
         error: e
       throw e
 
+  resetTable: (configurationId, tableId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_START
+      configurationId: configurationId
+      tableId: tableId
+
+    goodDataWriterApi
+    .resetTable configurationId, tableId
+    .then (dimensions) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        error: e
+      throw e
 
   loadDateDimensions: (configurationId) ->
     dispatcher.handleViewAction

@@ -58,6 +58,14 @@ module.exports =
     .then (response) ->
       response.body
 
+  resetTable: (configurationId, tableId) ->
+    createRequest('POST', 'reset-table')
+    .send
+      tableId: tableId
+      writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
 
   getDateDimensions: (configurationId) ->
     createRequest('GET', 'date-dimensions')
@@ -84,4 +92,3 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
-
