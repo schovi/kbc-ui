@@ -5,7 +5,10 @@ GoodDataWriterStore = require './store'
 
 IndexPage = require './react/pages/index/Index'
 TablePage = require './react/pages/table/Table'
+TablePageHeaderButtons = require './react/components/TableHeaderButtons'
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
+
+
 
 module.exports =
   name: 'gooddata-writer'
@@ -35,6 +38,7 @@ module.exports =
       table = GoodDataWriterStore.getTable(configId, tableId)
       "table #{table.get('id')}"
     handler: TablePage
+    headerButtonsHandler: TablePageHeaderButtons
   ,
     name: 'gooddata-writer-date-dimensions'
     title: ->
