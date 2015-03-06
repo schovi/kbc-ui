@@ -8,7 +8,7 @@ TablePage = require './react/pages/table/Table'
 TablePageHeaderButtons = require './react/components/TableHeaderButtons'
 TablePageHeaderExportStatus = require './react/components/TableHeaderExportStatus'
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
-
+ModelPage = require './react/pages/model/Model'
 
 
 module.exports =
@@ -50,4 +50,8 @@ module.exports =
         actionCreators.loadDateDimensions params.config
     ]
     handler: DateDimensionsPage
+  ,
+    name: 'gooddata-writer-model'
+    title: 'Model'
+    handler: ModelPage
   ]

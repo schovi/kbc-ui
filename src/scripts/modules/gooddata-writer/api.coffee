@@ -22,6 +22,13 @@ module.exports =
       response.body.writer
     )
 
+  getWriterModel: (configurationId) ->
+    createRequest('GET', 'model')
+    .query writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
   getWriterTables: (configurationId) ->
     createRequest('GET', "tables")
     .query writerId: configurationId

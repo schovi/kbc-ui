@@ -78,6 +78,14 @@ module.exports = React.createClass
               span null,
                 ' '
                 React.createElement Loader
+          li null,
+            Link
+              to: 'gooddata-writer-model'
+              params:
+                config: @state.writer.getIn ['config', 'id']
+            ,
+              span className: 'fa fa-sitemap fa-fw'
+              ' Model'
 
   _handleProjectUpload: ->
     actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])

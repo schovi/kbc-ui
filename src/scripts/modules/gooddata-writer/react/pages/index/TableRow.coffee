@@ -35,8 +35,8 @@ module.exports = React.createClass
           isPending: @props.table.get('savingFields').contains 'export'
           onChange: @_handleExportChange
         if @props.table.get('pendingActions').contains 'uploadTable'
-            React.DOM.span className: 'btn btn-link',
-              React.createElement Loader
+          React.DOM.span className: 'btn btn-link',
+            React.createElement Loader
         else
           React.createElement Tooltip,
             tooltip: 'Upload table to GoodData'
