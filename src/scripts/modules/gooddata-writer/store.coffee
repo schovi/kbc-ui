@@ -89,7 +89,7 @@ getInvalidColumns = (columns) ->
 
     # format and dateDimension not set for DATE type
     return true if column.get('type') == ColumnTypes.DATE && !(column.get('format') && column.get('dateDimension'))
-    
+
     false
   .map (column) ->
     column.get('name')
@@ -185,6 +185,7 @@ dispatcher.register (payload) ->
           id: table.get 'id'
           editingFields: Map()
           savingFields: List()
+          pendingActions: List()
           data: extendTable(table)
       .mapKeys (key, table) ->
         table.get 'id'
@@ -361,6 +362,26 @@ dispatcher.register (payload) ->
         'editingFields'
         action.field
       ]
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_START
+      _store = _store.updateIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'pendingActions'
+      ], (actions) ->
+        actions.push 'resetTable'
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_SUCCESS
+      _store = _store.updateIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'pendingActions'
+      ], (actions) ->
+        actions.delete(actions.indexOf('resetTable'))
       GoodDataWriterStore.emitChange()
 
 

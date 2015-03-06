@@ -32,11 +32,15 @@ module.exports = React.createClass
       React.createElement Tooltip, tooltip: @_tooltip(),
         React.DOM.span
           className: "fa fa-upload #{iconClass}"
-      if @state.table.get('savingFields').contains 'isExported'
-        React.DOM.span null,
-          ' '
-          React.createElement Loader
+      @_loader()
 
+  _loader: ->
+    isSaving = @state.table.get('savingFields').contains 'isExported'
+    isReset = @state.table.get('pendingActions').contains 'resetTable'
+    if isSaving || isReset
+      React.DOM.span null,
+        ' '
+        React.createElement Loader
 
   _tooltip: ->
     if @_isExported()

@@ -20,10 +20,7 @@ module.exports =
           if _pollStatuses.indexOf(response.body.status) >= 0
             setTimeout runRequest, 5
           else
-            console.log 'done', response.body
             resolve response.body
         .catch reject
 
       runRequest()
-
-

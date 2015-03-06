@@ -5,6 +5,8 @@ constants = require './constants'
 goodDataWriterStore = require './store'
 goodDataWriterApi = require './api'
 goodDataWriterConstants = require './constants'
+jobPoller = require '../../utils/jobPoller'
+applicationStore = require '../../stores/ApplicationStore'
 
 dimensionsStore = require './dateDimensionsStore'
 
@@ -184,7 +186,11 @@ module.exports =
 
     goodDataWriterApi
     .resetTable configurationId, tableId
-    .then (dimensions) ->
+    .then (job) ->
+      console.log 'job ready', job
+      jobPoller.poll applicationStore.getSapiTokenString(), job.url
+    .then (job) ->
+      console.log 'job done', job
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_SUCCESS
         configurationId: configurationId
