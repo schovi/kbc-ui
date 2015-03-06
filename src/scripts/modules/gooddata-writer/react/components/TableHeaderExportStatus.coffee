@@ -1,0 +1,48 @@
+React = require 'react'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+goodDataWriterStore = require '../../store'
+RoutesStore = require '../../../../stores/RoutesStore'
+
+{Tooltip, Loader} = require '../../../../react/common/common'
+
+{button, span} = React.DOM
+
+module.exports = React.createClass
+  displayName: 'GoodDataWriterTableExportStatus'
+  mixins: [createStoreMixin(goodDataWriterStore)]
+
+
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
+
+  getStateFromStores: ->
+    configId = RoutesStore.getCurrentRouteParam('config')
+    tableId = RoutesStore.getCurrentRouteParam('table')
+
+    table: goodDataWriterStore.getTable(configId, tableId)
+    configurationId: configId
+
+  render: ->
+    if @_isExported()
+      iconClass = 'text-success'
+    else
+      iconClass = 'text-muted'
+
+    React.DOM.small null,
+      React.createElement Tooltip, tooltip: @_tooltip(),
+        React.DOM.span
+          className: "fa fa-upload #{iconClass}"
+      if @state.table.get('savingFields').contains 'isExported'
+        React.DOM.span null,
+          ' '
+          React.createElement Loader
+
+
+  _tooltip: ->
+    if @_isExported()
+      'Table is exported'
+    else
+      'Table is not exported'
+
+  _isExported: ->
+    @state.table.getIn ['data', 'isExported']

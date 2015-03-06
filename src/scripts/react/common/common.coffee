@@ -15,3 +15,4 @@ module.exports =
   Check: require './Check'
   CodeEditor: require './CodeEditor'
   Loader: require './Loader'
+  Tooltip: require './Tooltip'
