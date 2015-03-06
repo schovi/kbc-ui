@@ -43,6 +43,7 @@ module.exports =
     reloaderHandler: TablePageHeaderExportStatus
   ,
     name: 'gooddata-writer-date-dimensions'
+    path: 'dimensions'
     title: ->
       'Date dimensions'
     requireData: [
@@ -52,6 +53,7 @@ module.exports =
     handler: DateDimensionsPage
   ,
     name: 'gooddata-writer-model'
+    path: 'model'
     title: 'Model'
     handler: ModelPage
   ]

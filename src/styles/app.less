@@ -1,1 +1,77 @@
 @import (inline) "../../bower_components/kbc-bootstrap/dist/css/kbc.css";
+
+svg.kb-graph {
+  margin-top: 10px;
+}
+
+svg.kb-graph  {
+	cursor: move;
+}
+
+.kb-graph .node {
+	cursor: pointer;
+}
+
+.kb-graph .node rect {
+  stroke-width: 0px;
+  stroke: #333;
+  fill: #fff;
+}
+
+.kb-graph .node text {
+  background-color: #999999;
+}
+
+.kb-graph .node text,
+.kb-graph .node a {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  fill: white;
+}
+
+.kb-graph .node.dataset rect {
+  fill: #468847;
+}
+
+.kb-graph .node.dimension rect {
+  fill: #428bca;
+}
+
+.kb-graph .edgePath {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1.5px;
+}
+
+.kb-graph .edgePath.transitive {
+  stroke-dasharray: 5 5;
+}
+
+.kb-graph .edgeLabel rect {
+  fill: #fff;
+}
+
+.kb-graph .controls {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
+.kb-graph .graph-options select.form-control {
+  width: auto;
+  display: inline;
+}
+
+#svgDownload {
+  visibility: hidden;
+}
+
+#canvasDownload {
+  display: none;
+}

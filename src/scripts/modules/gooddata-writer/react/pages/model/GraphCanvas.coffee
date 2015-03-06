@@ -1,6 +1,7 @@
 
 d3 = require 'd3'
 dagreD3 = require 'dagre-d3'
+_ = require 'underscore'
 assign = require 'object-assign'
 
 class Graph
@@ -46,11 +47,8 @@ class Graph
       <canvas id="canvasDownload" width="0" height="0"></canvas>
     """
 
-
-    wrapperElement.empty()
-    wrapperElement.append(angular.element(@svgTemplate))
-
-    @element = wrapperElement.find('svg')[0]
+    wrapperElement.innerHTML = @svgTemplate
+    @element = wrapperElement.childNodes[0]
 
   getData: (config) =>
     config = assign({noLinks: false}, config)
@@ -75,7 +73,7 @@ class Graph
   # add classes to paths
   getEdgeType: (edges, id, type) ->
     result = false
-    edges.forEach (dataEdge, key) ->
+    _.map edges, (dataEdge, key) ->
       if key == id && dataEdge.value.type == type
         result = true
     result
@@ -176,7 +174,9 @@ class Graph
     Math.min(500, Math.max(200, @dimensions.height * @zoom.scale))
 
   getCanvasWidth: ->
-    angular.element(@element).parent().width()
+    width =  @element.parentNode.offsetWidth
+    console.log 'width', width
+    width
 
   adjustCanvasWidth: ->
     d3.select(@element).attr "width", @getCanvasWidth()
@@ -245,7 +245,7 @@ class Graph
   render: ->
     data = @getData()
 
-    d3.select(@element).attr "width", angular.element(@element).parent().width()
+    d3.select(@element).attr "width", @element.parentNode.offsetWidth
     d3.select(@element).attr "height", 500
 
     if data
