@@ -1,5 +1,7 @@
 React = require 'react'
 
+Protected = React.createFactory(require '../../../../react/common/Protected')
+
 {span, div, strong} = React.DOM
 
 MySqlCredentials = React.createClass
@@ -8,7 +10,6 @@ MySqlCredentials = React.createClass
     credentials: React.PropTypes.object
 
   render: ->
-    console.log "mysql credentials", @props.credentials
     div {},
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
@@ -21,7 +22,9 @@ MySqlCredentials = React.createClass
         strong {className: 'col-md-9'}, @props.credentials.get "user"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Password'
-        strong {className: 'col-md-9'}, @props.credentials.get "password"
+        strong {className: 'col-md-9'},
+          Protected {},
+            @props.credentials.get "password"
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Database'
         strong {className: 'col-md-9'}, @props.credentials.get "db"
