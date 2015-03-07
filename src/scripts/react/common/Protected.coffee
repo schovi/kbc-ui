@@ -8,7 +8,10 @@ module.exports = React.createClass
 
   render: ->
     if @state.isProtected
-      React.DOM.span className: 'fa fa-fw fa-lock kbc-protected', title: 'Protected content, click to reveal', onClick: @_show
+      React.DOM.span
+        className: 'fa fa-fw fa-lock kbc-protected'
+        title: 'Protected content, click to reveal'
+        onClick: @_show
     else
       React.DOM.span {},
         @props.children
