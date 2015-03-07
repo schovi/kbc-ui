@@ -16,4 +16,5 @@ module.exports =
   CodeEditor: require './CodeEditor'
   Loader: require './Loader'
   Tooltip: require './Tooltip'
+  Protected: require './Protected'
   ActivateDeactivateButton: require './ActivateDeactivateButton'
