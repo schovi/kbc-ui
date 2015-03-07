@@ -41,12 +41,13 @@ module.exports = React.createClass
               configurationId: @props.configurationId
           RunExtractionButton
             title: 'Run Extraction'
-            body: span {}, 'You are about to run extraction.'
             component: 'ex-google-drive'
             runParams: ->
               sheetId: row.get 'sheetId'
               googleId: row.get 'googleId'
               account: configurationId
+          ,
+            'You are about to run extraction.'
 
     , @).toArray()
 

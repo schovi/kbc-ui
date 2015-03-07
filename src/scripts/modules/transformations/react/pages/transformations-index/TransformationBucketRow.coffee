@@ -3,7 +3,7 @@ Link = React.createFactory(require('react-router').Link)
 TransformationBucketDeleteButton = React.createFactory(require '../../components/TransformationBucketDeleteButton')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 InstalledComponentsActionCreators = require '../../../../components/InstalledComponentsActionCreators'
-RunComponentButton = require '../../../../components/react/components/RunComponentButton'
+RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 {span, div, a, button, i, h4, small} = React.DOM
 
 TransformationBucketRow = React.createClass(
@@ -19,11 +19,12 @@ TransformationBucketRow = React.createClass(
 
     buttons.push(RunComponentButton(
       title: "Run #{@props.bucket.get('name')}"
-      body: span {}, "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
       component: 'transformation'
       mode: 'button'
       runParams: ->
         configBucketId: props.bucket.get('id')
+    ,
+      "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
     ))
 
     buttons.push(TransformationBucketDeleteButton(

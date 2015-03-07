@@ -43,20 +43,21 @@ MySqlSandbox = React.createClass
       span {},
         RunComponentButton(
           title: "Load Tables in MySQL Sandbox"
-          body: ConfigureSandbox
-            backend: 'mysql'
-            onChange: (params) ->
-              sandboxConfiguration = params
           component: 'transformation'
           method: 'create-sandbox'
           mode: 'button'
           runParams: ->
             sandboxConfiguration
+        ,
+          ConfigureSandbox
+            backend: 'mysql'
+            onChange: (params) ->
+              sandboxConfiguration = params
         )
         ConnectToMySqlSandbox {credentials: @state.credentials},
           button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
             span {className: 'fa fa-database'}
-        React.createElement DeleteButton,
+        DeleteButton
           tooltip: 'Delete MySQL Sandbox'
           isPending: @state.pendingActions.get 'drop'
           confirm:

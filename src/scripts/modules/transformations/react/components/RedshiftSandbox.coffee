@@ -42,15 +42,16 @@ RedshiftSandbox = React.createClass
       span {},
         RunComponentButton(
           title: "Load Tables in Redshift Sandbox"
-          body: ConfigureSandbox
-            backend: 'redshift'
-            onChange: (params) ->
-              sandboxConfiguration = params
           component: 'transformation'
           method: 'create-sandbox'
           mode: 'button'
           runParams: ->
             sandboxConfiguration
+        ,
+          ConfigureSandbox
+            backend: 'redshift'
+            onChange: (params) ->
+              sandboxConfiguration = params
         )
         if @state.pendingActions.get 'refresh'
           button {className: "btn btn-link", disabled: true},
@@ -58,7 +59,7 @@ RedshiftSandbox = React.createClass
         else
           button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
           span {className: 'fa fa-refresh'}
-        React.createElement DeleteButton,
+        DeleteButton
           tooltip: 'Delete Redshift Sandbox'
           isPending: @state.pendingActions.get 'drop'
           confirm:

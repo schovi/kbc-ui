@@ -39,7 +39,6 @@ module.exports = React.createClass
   displayName: 'RunExtraction'
   propTypes:
     title: React.PropTypes.string.isRequired
-    body: React.PropTypes.object.isRequired
     mode: React.PropTypes.oneOf ['button', 'link']
     component: React.PropTypes.string.isRequired
     runParams: React.PropTypes.func.isRequired
@@ -73,7 +72,7 @@ module.exports = React.createClass
     ModalTrigger
       modal: RunModal
         title: @props.title
-        body: @props.body
+        body: @props.children
         onRequestRun: @_handleRunStart
     ,
       if @props.mode == 'button'

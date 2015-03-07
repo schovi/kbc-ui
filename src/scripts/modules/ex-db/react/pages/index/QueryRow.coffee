@@ -41,8 +41,9 @@ module.exports = React.createClass
             configurationId: @props.configurationId
         RunExtractionButton
           title: 'Run Extraction'
-          body: span {}, 'You are about to run extraction.'
           component: 'ex-db'
           runParams: ->
             query: props.query.get 'id'
             config: props.configurationId
+        ,
+          'You are about to run extraction.'

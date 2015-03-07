@@ -84,11 +84,12 @@ module.exports = React.createClass
           li null,
             RunExtractionButton
               title: 'Run Extraction'
-              body: span {}, 'You are about to run extraction.'
               component: 'ex-db'
               mode: 'link'
               runParams: ->
                 config: configurationId
+            ,
+              'You are about to run extraction.'
 
         div className: 'kbc-buttons',
           span null,
