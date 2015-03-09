@@ -2,6 +2,7 @@
 d3 = require 'd3'
 dagreD3 = require 'dagre-d3'
 _ = require 'underscore'
+canvg = require 'canvg'
 assign = require 'object-assign'
 
 class Graph
@@ -186,11 +187,13 @@ class Graph
     data = @getData(config)
     if data
       # create a new svg
-      angular.element("body").append(@svgTemplate.replace('svgGraph', 'svgDownload'))
-
+      svgElement = document.createElement 'div'
+      svgElement.innerHTML = @svgTemplate.replace('svgGraph', 'svgDownload')
+      document.body.appendChild svgElement
       dimensions = @createSvg(d3.select("#svgDownload"), data, config)
 
-      svgElement = $document.find('#svgDownload').get(0)
+      console.log 'download dims', dimensions
+      svgElement = document.getElementById('svgDownload')
       # detect height and width
 
       d3.select(svgElement).attr "width", dimensions.width * @zoom.scale + 10
@@ -229,18 +232,22 @@ class Graph
       d3.select(svgElement).select("g").attr "transform", "translate(" + [5 , 5] + "), scale(" + @zoom.scale + ")"
 
       #create canvas
-      angular.element("body").append(@canvasTemplate)
+      canvasElement = document.createElement 'div'
+      canvasElement.innerHTML = @canvasTemplate
+      document.body.appendChild canvasElement
 
       # conver canvast to img
       xml = new XMLSerializer().serializeToString(svgElement)
 
+      console.log 'canvg', canvg
       canvg('canvasDownload', xml, { ignoreMouse: true, ignoreAnimation: true })
-      canvas = $document.find("#canvasDownload").get(0)
+      canvas = document.getElementById("canvasDownload")
 
       image = canvas.toDataURL("image/png")
-      @localScope.openWindow(image)
-      @localScope.cleanDom("canvasDownload")
-      @localScope.cleanDom("svgDownload")
+      window.open image
+
+      svgElement.parentNode.removeChild(svgElement)
+      canvasElement.parentNode.removeChild(canvasElement)
 
   render: ->
     data = @getData()

@@ -28,7 +28,8 @@
     "underscore": "~1.7.0",
     "underscore.string": "~3.0.3",
     "csv-parse": "0.0.9",
-    "dagre-d3": "~0.2.0"
+    "dagre-d3": "~0.2.0",
+    "canvg": "git+https://git@github.com/keboola/canvg.git#f3e9fa2992d9a25fe4a46db3a59a208b5a8b86cb"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
