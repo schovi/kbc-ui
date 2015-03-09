@@ -3,7 +3,9 @@ constants = require './Constants'
 transformationsApi = require './TransformationsApi'
 TransformationBucketsStore = require './stores/TransformationBucketsStore'
 TransformationsStore = require './stores/TransformationsStore'
+InstalledComponentsActionCreators = require '../components/InstalledComponentsActionCreators'
 Promise = require 'bluebird'
+
 
 module.exports =
 
@@ -44,19 +46,26 @@ module.exports =
 
     @.loadTransformationBucketsForce()
 
+
   createTransformationBucket: (data) ->
+    newBucket = {}
     transformationsApi
     .createTransformationBucket(data)
-    .then((newBucket) ->
+    .then((bucket) ->
+      newBucket = bucket
+      InstalledComponentsActionCreators.loadComponentsForce()
+    )
+    .then( ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_BUCKET_CREATE_SUCCESS
         bucket: newBucket
       )
     )
 
+
   deleteTransformationBucket: (bucketId) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_START
+      type: constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE
       bucketId: bucketId
 
     transformationsApi

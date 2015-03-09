@@ -30,7 +30,7 @@ TransformationsIndex = React.createClass
           TransformationBucketRow
             bucket: bucket
             description: InstalledComponentsStore.getConfig('transformation', bucket.get('id')).get 'description'
-            pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
+            pendingActions: @state.pendingActions.get bucket.get('id'), Immutable.Map()
             key: bucket.get 'id'
         , @).toArray()
 
