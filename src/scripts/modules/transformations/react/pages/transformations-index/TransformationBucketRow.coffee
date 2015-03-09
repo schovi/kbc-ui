@@ -12,6 +12,7 @@ TransformationBucketRow = React.createClass(
   propTypes:
     bucket: React.PropTypes.object
     pendingActions: React.PropTypes.object
+    description: React.PropTypes.string
 
   buttons: ->
     buttons = []
@@ -41,7 +42,7 @@ TransformationBucketRow = React.createClass(
       span {className: 'td'},
         h4 {}, @props.bucket.get('name')
       span {className: 'td'},
-        small {}, @props.bucket.get('description')
+        small {}, @props.description || em {}, 'No description'
       span {className: 'td'},
         @buttons()
 )

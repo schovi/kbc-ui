@@ -41,4 +41,10 @@ transformationsApi =
       response.body
     )
 
+  deleteTransformation: (bucketId, transformationId) ->
+    createRequest('DELETE', "configs/#{bucketId}/items/#{transformationId}")
+    .send()
+    .promise()
+
+
 module.exports = transformationsApi

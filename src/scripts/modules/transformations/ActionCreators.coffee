@@ -1,12 +1,9 @@
-
-
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 transformationsApi = require './TransformationsApi'
 TransformationBucketsStore = require './stores/TransformationBucketsStore'
-TransformationsStore = require './stores/TransformationBucketsStore'
+TransformationsStore = require './stores/TransformationsStore'
 Promise = require 'bluebird'
-
 
 module.exports =
 
@@ -90,16 +87,46 @@ module.exports =
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATIONS_LOAD_SUCCESS
         transformations: transformations
+        bucketId: bucketId
       )
       return
     )
     .catch((error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATIONS_LOAD_ERROR
+        bucketId: bucketId
       )
       throw error
     )
 
   loadTransformations: (bucketId) ->
-    return Promise.resolve() if TransformationsStore.has(bucketId)
+    return Promise.resolve() if TransformationsStore.hasTransformations bucketId
     @loadTransformationsForce(bucketId)
+
+
+  deleteTransformation: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_DELETE
+      bucketId: bucketId
+      transformationId: transformationId
+    )
+
+    transformationsApi
+    .deleteTransformation(bucketId, transformationId)
+    .then( ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_DELETE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+      )
+      return
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_DELETE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+      )
+      throw error
+    )
+

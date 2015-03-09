@@ -6,10 +6,12 @@ List = Immutable.List
 Constants = require '../Constants'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils'
+_ = require 'underscore'
 
 _store = Map(
   transformationsByBucketId: Map()
   loadingTransformationBuckets: List()
+  pendingActions: Map()
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -20,7 +22,6 @@ removeFromLoadingBuckets = (store, bucketId) ->
   store.update 'loadingTransformationBuckets', (loadingTransformationBuckets) ->
     loadingTransformationBuckets.remove(loadingTransformationBuckets.indexOf(bucketId))
 
-
 TransformationsStore = StoreUtils.createStore
 
   ###
@@ -29,9 +30,11 @@ TransformationsStore = StoreUtils.createStore
   getTransformations: (bucketId) ->
     _store
       .getIn(['transformationsByBucketId', bucketId], List())
-      .sortBy((transformation) -> transformation.get('phase'))
-      .sortBy((transformation) -> transformation.get('name'))
-
+      .sortBy((transformation) ->
+        phase = transformation.get('phase') || "1"
+        name = transformation.get('friendlyName') || transformation.get('id')
+        phase + name.toLowerCase()
+      )
   ###
     Check if store contains transformations for specified bucket
   ###
@@ -47,12 +50,17 @@ TransformationsStore = StoreUtils.createStore
       foundTransformation = transformations.find (transformation) -> transformation.get('id') == transformationId
     foundTransformation
 
+  hasTransformation: (bucketId, transformationId) ->
+    _store.hasIn ['transformationsByBucketId', bucketId, transformationId]
+
   ###
     Test if specified transformation buckets are currently being loaded
   ###
   isBucketLoading: (bucketId) ->
     _store.get('loadingTransformationBuckets').contains bucketId
 
+  getPendingActions: (bucketId) ->
+    _store.getIn ['pendingActions', bucketId], Map()
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -69,12 +77,28 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.TRANSFORMATIONS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
-        removeFromLoadingBuckets(store, action.orchestrationId)
-        .update('transformationsByBucketId', (transformationsByBucketId) ->
-          console.log action
-          transformationsByBucketId.set action.bucketId, Immutable.fromJS(action.items)
+        _.each(action.transformations, (transformation) ->
+          tObj = Immutable.fromJS(transformation)
+          store = store.setIn ['transformationsByBucketId', action.bucketId, tObj.get 'id'], tObj
         )
+        store = removeFromLoadingBuckets(store, action.bucketId)
       )
       TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_DELETE
+      _store = _store.setIn ['pendingActions', action.bucketId, action.transformationId, 'delete'], true
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store = store
+        .removeIn ['transformationsByBucketId', action.bucketId, action.transformationId]
+        .removeIn ['pendingActions', action.bucketId, action.transformationId, 'delete']
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_DELETE_ERROR
+      _store = _store.removeIn ['pendingActions', action.bucketId, action.transformationId, 'delete']
+      TransformationsStore.emitChange()
+
 
 module.exports = TransformationsStore
