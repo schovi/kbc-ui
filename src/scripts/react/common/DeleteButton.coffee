@@ -19,15 +19,20 @@ module.exports = React.createClass
     tooltip: React.PropTypes.string
     confirm: React.PropTypes.object # Confirm props
     isPending: React.PropTypes.bool
+    isEnabled: React.PropTypes.bool
 
   getDefaultProps: ->
     tooltip: 'Delete'
     isPending: false
+    isEnabled: true
 
   render: ->
     if @props.isPending
       React.DOM.span className: 'btn btn-link',
         React.createElement Loader
+    else if !@props.isEnabled
+      React.DOM.span className: 'btn btn-link disabled',
+        React.DOM.em className: 'kbc-icon-cup'
     else
       OverlayTrigger
         overlay: Tooltip null, @props.tooltip
