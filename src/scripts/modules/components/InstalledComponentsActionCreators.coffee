@@ -2,8 +2,6 @@ Promise = require 'bluebird'
 React = require 'react'
 _ = require 'underscore'
 Link = require('react-router').Link
-console.log 'Link', Link
-
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 JobsActionCreators = require '../../modules/jobs/ActionCreators'
