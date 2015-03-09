@@ -1,9 +1,11 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
-TransformationBucketDeleteButton = React.createFactory(require '../../components/TransformationBucketDeleteButton')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 InstalledComponentsActionCreators = require '../../../../components/InstalledComponentsActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
+TransformationActionCreators = require '../../../ActionCreators'
+
 {span, div, a, button, i, h4, small} = React.DOM
 
 TransformationBucketRow = React.createClass(
@@ -24,16 +26,21 @@ TransformationBucketRow = React.createClass(
       mode: 'button'
       runParams: ->
         configBucketId: props.bucket.get('id')
+      key: 'run'
     ,
       "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
     ))
 
-    buttons.push(TransformationBucketDeleteButton(
-      bucket: @props.bucket
-      isPending: @props.pendingActions.get('delete', false)
-      enabled: @props.bucket.get('transformationsCount') == 0
-      key: 'delete'
-    ))
+    buttons.push(DeleteButton
+      tooltip: 'Delete Transformation Bucket'
+      isPending: @props.pendingActions.get 'delete'
+      confirm:
+        title: 'Delete Transformation Bucket'
+        text: "Do you really want to delete transformation bucket #{@props.bucket.get('name')}?"
+        onConfirm: @_deleteTransformationBucket
+      isEnabled: @props.bucket.get('transformationsCount') == 0
+      key: 'delete-new'
+    )
 
     buttons
 
@@ -45,6 +52,13 @@ TransformationBucketRow = React.createClass(
         small {}, @props.description || em {}, 'No description'
       span {className: 'td'},
         @buttons()
+
+  _deleteTransformationBucket: ->
+    # if transformation is deleted immediately view is rendered with missing bucket because of store changed
+    bucketId = @props.bucket.get('id')
+    TransformationActionCreators.deleteTransformationBucket(bucketId)
+
+
 )
 
 module.exports = TransformationBucketRow

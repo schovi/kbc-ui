@@ -12,7 +12,7 @@ _store = Map(
   isLoading: false
   isLoaded: false
   loadingBuckets: List()
-  bucketsPendingActions: Map() # by bucket id id
+  pendingActions: Map() # by bucket id id
 )
 
 TransformationBucketsStore = StoreUtils.createStore
@@ -41,7 +41,7 @@ TransformationBucketsStore = StoreUtils.createStore
     _store.get 'isLoaded'
 
   getPendingActions: ->
-    _store.get 'bucketsPendingActions'
+    _store.get 'pendingActions'
 
   getPendingActionsForBucket: (bucketId) ->
     @getPendingActions().get(bucketId, Map())
@@ -70,19 +70,19 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['bucketsById', action.bucket.id], Immutable.fromJS(action.bucket)
       TransformationBucketsStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_DELETE_START
-      _store = _store.setIn ['bucketsPendingActions', action.bucketId, 'delete'], true
+    when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE
+      _store = _store.setIn ['pendingActions', action.bucketId, 'delete'], true
       TransformationBucketsStore.emitChange()
 
-    when Constants.ActionTypes.ORCHESTRATION_DELETE_ERROR
-      _store = _store.deleteIn ['bucketsPendingActions', action.bucketId, 'delete']
+    when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_ERROR
+      _store = _store.deleteIn ['pendingActions', action.bucketId, 'delete']
       TransformationBucketsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_SUCCESS
       _store = _store.withMutations (store) ->
         store
         .removeIn ['bucketsById', action.bucketId]
-        .removeIn ['bucketsPendingActions', action.bucketId, 'delete']
+        .removeIn ['pendingActions', action.bucketId, 'delete']
       TransformationBucketsStore.emitChange()
 
 module.exports = TransformationBucketsStore

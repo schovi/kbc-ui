@@ -40,7 +40,7 @@ TransformationBucket = React.createClass
           TransformationRow
             transformation: transformation
             bucket: @state.bucket
-            pendingActions: @state.pendingActions.getIn [transformation.get('id')], Immutable.Map()
+            pendingActions: @state.pendingActions.get transformation.get('id'), Immutable.Map()
             key: transformation.get 'id'
         , @).toArray()
 
