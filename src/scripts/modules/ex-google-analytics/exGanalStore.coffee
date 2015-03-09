@@ -86,8 +86,10 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE
       configId = action.configId
       profile = action.profile
+      #console.log profile.toJS()
       _store = _store.setIn ['selectedProfiles', configId, profile.get 'id'], profile
       GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_DESELECT_PROFILE
       configId = action.configId
       profile = action.profile
@@ -181,7 +183,13 @@ Dispatcher.register (payload) ->
       data = Immutable.fromJS(action.data)
       _store = _store.setIn(['configs', configId], data)
       if data.has('items') and data.get('items').count() > 0
-        _store = _store.setIn(['selectedProfiles', configId], data.get 'items')
+        mappedProfiles = data.get('items').map( (profile, key) ->
+          profile = profile.set 'id', profile.get 'googleId'
+          return profile).toMap()
+        #remap by googleId
+        _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
+
+          return profile.get 'googleId')
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY

@@ -56,11 +56,11 @@ module.exports = React.createClass
       eventKey: profileGroupName,
     ,
       profileGroup.map( (profile, profileName) =>
-        @_renderProfilePanel(profile, profileName)
+        @_renderProfilePanel(profile, profileName, profileGroupName)
       ).toArray()
 
 
-  _renderProfilePanel: (profile, profileName) ->
+  _renderProfilePanel: (profile, profileName, profileGroupName) ->
     header = div
       className: 'text-center'
       profileName
@@ -76,6 +76,9 @@ module.exports = React.createClass
               className: 'text-center'
               active: @_isSelected(profileItem.get('id'))
               onClick: =>
+                profileItem = profileItem.set 'webPropertyName', profileName
+                profileItem = profileItem.set 'accountName', profileGroupName
+                profileItem = profileItem.set 'googleId', profileItem.get 'id'
                 @_profileOnClick(profileItem)
               ,
                 profileItem.get 'name'
