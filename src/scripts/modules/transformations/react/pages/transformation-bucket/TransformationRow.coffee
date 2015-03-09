@@ -39,7 +39,6 @@ TransformationRow = React.createClass(
         title: 'Delete Transformation'
         text: "Do you really want to delete sandbox transformation #{@props.transformation.get('friendlyName')}?"
         onConfirm: @_deleteTransformation
-
     )
     buttons
 

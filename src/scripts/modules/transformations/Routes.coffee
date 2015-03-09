@@ -20,7 +20,7 @@ routes =
       reloaderHandler: TransformationsIndexReloaderButton
       headerButtonsHandler: TransformationBucketButtons
       requireData: [
-        (params) ->
+        ->
           TransformationsActionCreators.loadTransformationBuckets()
       ,
         ->
@@ -33,7 +33,7 @@ routes =
           bucketId = routerState.getIn(['params', 'bucketId'])
           name = TransformationBucketsStore.get(bucketId).get 'name'
           "Bucket " + name
-        handler: TransformationBucket
+        defaultRouteHandler: TransformationBucket
         requireData: [
           (params) ->
             TransformationsActionCreators.loadTransformations(params.bucketId)
@@ -42,31 +42,28 @@ routes =
           name: 'transformationDetail'
           path: 'transformation/:transformationId'
           title: (routerState) ->
+            bucketId = routerState.getIn(['params', 'bucketId'])
             transformationId = routerState.getIn(['params', 'transformationId'])
-            name = TransformationsStore.getTransformation(transformationId).get 'friendlyName'
+            name = TransformationsStore.getTransformation(bucketId, transformationId).get 'friendlyName'
             "Transformation " + name
-          handler: TransformationDetail
-          requireData: [
-            (params) ->
-              TransformationsActionCreators.loadTransformations(params.bucketId)
-          ]
+          defaultRouteHandler: TransformationDetail
         ]
       ,
         name: 'sandbox'
         title: ->
           "Sandbox"
-        handler: Sandbox
+        defaultRouteHandler: Sandbox
         requireData: [
-          (params) ->
+          ->
             ProvisioningActionCreators.loadMySqlSandboxCredentials()
         ,
-          (params) ->
+          ->
             ProvisioningActionCreators.loadRedshiftSandboxCredentials()
         ,
-          (params) ->
+          ->
             StorageActionCreators.loadBuckets()
         ,
-          (params) ->
+          ->
             StorageActionCreators.loadTables()
 
         ]

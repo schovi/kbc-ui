@@ -44,11 +44,8 @@ TransformationsStore = StoreUtils.createStore
   ###
     Returns one transformation by its id
   ###
-  getTransformation: (transformationId) ->
-    foundTransformation = null
-    _store.get('transformationsByBucketId').find (transformations) ->
-      foundTransformation = transformations.find (transformation) -> transformation.get('id') == transformationId
-    foundTransformation
+  getTransformation: (bucketId, transformationId) ->
+    _store.getIn ['transformationsByBucketId', bucketId, transformationId]
 
   hasTransformation: (bucketId, transformationId) ->
     _store.hasIn ['transformationsByBucketId', bucketId, transformationId]

@@ -14,10 +14,16 @@ TransformationDetail = React.createClass
   mixins: [createStoreMixin(TransformationsStore, TransformationBucketsStore)]
 
   getStateFromStores: ->
+    bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
+    transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     transformation: TransformationsStore.getTransformations(transformationId)
+    bucket: TransformationBucketsStore.get(bucketId)
 
   render: ->
-    div {className: 'container-fluid kbc-main-content'},
-      'hey'
+    div className: 'container-fluid kbc-main-content',
+      div className: 'row kbc-header' #,
+        #TransformationDescription
+        #  componentId: 'transformation'
+        #  configId: @state.bucket.get 'id'
 
 module.exports = TransformationDetail
