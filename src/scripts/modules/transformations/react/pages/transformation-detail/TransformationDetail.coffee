@@ -15,7 +15,7 @@ OutputMappingRow = React.createFactory(require './OutputMappingRow')
 
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
-{div, span, input, strong, form, button, h4, i, ul, li, button, a, small} = React.DOM
+{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p} = React.DOM
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
@@ -42,24 +42,32 @@ TransformationDetail = React.createClass
           #  transformation: @state.transformation.get 'id'
         div className: 'row',
           h4 {}, 'Overview'
+        div className: 'row',
           h4 {}, 'Input Mapping'
-            div className: 'table table-striped table-hover',
-              span {className: 'tbody'},
-                @state.transformation.get('input').map((input) ->
-                  InputMappingRow
-                    transformationBackend: @state.transformation.get('backend')
-                    inputMapping: input,
-                    tables: @state.tables
-                , @).toArray()
+            if @state.transformation.get('input').count()
+              div className: 'table table-striped table-hover',
+                span {className: 'tbody'},
+                  @state.transformation.get('input').map((input) ->
+                    InputMappingRow
+                      transformationBackend: @state.transformation.get('backend')
+                      inputMapping: input,
+                      tables: @state.tables
+                  , @).toArray()
+            else
+              p {}, small {}, 'No Input Mapping'
+        div className: 'row',
           h4 {}, 'Output Mapping'
-            div className: 'table table-striped table-hover',
-              span {className: 'tbody'},
-                @state.transformation.get('output').map((output) ->
-                  OutputMappingRow
-                    outputMapping: output,
-                    tables: @state.tables
-                , @).toArray()
-
+            if @state.transformation.get('output').count()
+              div className: 'table table-striped table-hover',
+                span {className: 'tbody'},
+                  @state.transformation.get('output').map((output) ->
+                    OutputMappingRow
+                      outputMapping: output,
+                      tables: @state.tables
+                  , @).toArray()
+            else
+              p {}, small {}, 'No Output Mapping'
+        div className: 'row',
           h4 {}, 'Queries'
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
