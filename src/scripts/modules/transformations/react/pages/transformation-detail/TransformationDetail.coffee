@@ -17,7 +17,6 @@ TransformationsActionCreators = require '../../../ActionCreators'
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
   mixins: [createStoreMixin(TransformationsStore, TransformationBucketsStore), Router.Navigation]
-
   getStateFromStores: ->
     bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
@@ -28,7 +27,7 @@ TransformationDetail = React.createClass
   render: ->
     console.log 'transformation', @state.transformation
     div className: 'container-fluid',
-      div className:  'col-md-9 kbc-main-content',
+      div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           @state.transformation.get 'description'
           #TransformationDescription
