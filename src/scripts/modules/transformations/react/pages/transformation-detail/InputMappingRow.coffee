@@ -4,7 +4,6 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
-{FileSize} = require '../../../../../react/common/common'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -14,11 +13,10 @@ InputMappingRow = React.createClass(
 
   propTypes:
     transformationBackend: React.PropTypes.string.isRequired
-    inputMapping: React.PropTypes.object
-    tables: React.PropTypes.object
+    inputMapping: React.PropTypes.object.isRequired
+    tables: React.PropTypes.object.isRequired
 
   render: ->
-    console.log @props.transformationBackend, @props.inputMapping.get('type')
     div {className: 'tr'},
       span {className: 'td'},
         TableSizeLabel {size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']}

@@ -11,6 +11,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
+OutputMappingRow = React.createFactory(require './OutputMappingRow')
 
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
@@ -50,8 +51,15 @@ TransformationDetail = React.createClass
                     inputMapping: input,
                     tables: @state.tables
                 , @).toArray()
-
           h4 {}, 'Output Mapping'
+            div className: 'table table-striped table-hover',
+              span {className: 'tbody'},
+                @state.transformation.get('output').map((output) ->
+                  OutputMappingRow
+                    outputMapping: output,
+                    tables: @state.tables
+                , @).toArray()
+
           h4 {}, 'Queries'
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
