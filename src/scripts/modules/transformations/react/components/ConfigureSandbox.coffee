@@ -5,8 +5,6 @@ Button = React.createFactory(require('react-bootstrap').Button)
 Select = require('react-select')
 _ = require('underscore')
 InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
-StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
-StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
 {div, p, strong, form, input, label, textarea} = React.DOM
 
@@ -15,6 +13,8 @@ ConfigureSandbox = React.createClass
 
   propTypes:
     backend: React.PropTypes.string.isRequired
+    tables: React.PropTypes.object.isRequired
+    buckets: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
 
   getInitialState: ->
@@ -109,24 +109,22 @@ ConfigureSandbox = React.createClass
         @props.onChange(@state)
 
   _bucketsAndTables: ->
-    buckets = StorageBucketsStore.getAll()
-    tables = StorageTablesStore.getAll()
     nodes = _.sortBy(_.union(
-      _.map(_.filter(buckets, (bucket) ->
-        bucket.id.substr(0, 3) == 'in.' || bucket.id.substr(0, 4) == 'out.'
+      _.map(_.filter(@props.buckets.toArray(), (bucket) ->
+        bucket.get('id').substr(0, 3) == 'in.' || bucket.get('id').substr(0, 4) == 'out.'
       ), (bucket) ->
         {
-        label: bucket.id
-        value: bucket.id
+        label: bucket.get('id')
+        value: bucket.get('id')
         }
       )
     ,
-      _.map(_.filter(tables, (table) ->
-        table.id.substr(0, 3) == 'in.' || table.id.substr(0, 4) == 'out.'
+      _.map(_.filter(@props.tables.toArray(), (table) ->
+        table.get('id').substr(0, 3) == 'in.' || table.get('id').substr(0, 4) == 'out.'
       ), (table) ->
         {
-          label: table.id
-          value: table.id
+          label: table.get('id')
+          value: table.get('id')
         }
       )
     )

@@ -11,11 +11,14 @@ ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 Loader = React.createFactory(require '../../../../react/common/Loader')
+StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
+StorageTablesStore = require '../../../components/stores/StorageTablesStore'
+
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
 
-  mixins: [createStoreMixin(RedshiftSandboxCredentialsStore)]
+  mixins: [createStoreMixin(RedshiftSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)]
 
   displayName: 'RedshiftSandbox'
 
@@ -24,6 +27,8 @@ RedshiftSandbox = React.createClass
     pendingActions: RedshiftSandboxCredentialsStore.getPendingActions()
     isLoading: RedshiftSandboxCredentialsStore.getIsLoading()
     isLoaded: RedshiftSandboxCredentialsStore.getIsLoaded()
+    tables: StorageTablesStore.getAll()
+    buckets: StorageBucketsStore.getAll()
 
   _renderCredentials: ->
     if @state.credentials.get "id"
@@ -50,6 +55,8 @@ RedshiftSandbox = React.createClass
         ,
           ConfigureSandbox
             backend: 'redshift'
+            tables: @state.tables
+            buckets: @state.buckets
             onChange: (params) ->
               sandboxConfiguration = params
         )

@@ -4,6 +4,7 @@ constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
+_ = require 'underscore'
 
 _store = Map(
   tables: Map()
@@ -33,9 +34,12 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.STORAGE_TABLES_LOAD_SUCCESS
       _store = _store.withMutations (store) ->
-        store
-        .set 'isLoading', false
-        .set 'tables', action.tables
+        store = store.setIn ['tables'], Map()
+        _.each(action.tables, (table) ->
+          tObj = Immutable.fromJS(table)
+          store = store.setIn ['tables', tObj.get 'id'], tObj
+        )
+        store.set 'isLoading', false
       StorageTablesStore.emitChange()
 
     when constants.ActionTypes.STORAGE_TABLES_LOAD_ERROR

@@ -12,11 +12,14 @@ ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySq
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 Loader = React.createFactory(require '../../../../react/common/Loader')
+StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
+StorageTablesStore = require '../../../components/stores/StorageTablesStore'
+
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 MySqlSandbox = React.createClass
 
-  mixins: [createStoreMixin(MySqlSandboxCredentialsStore)]
+  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, StorageTablesStore, StorageTablesStore)]
 
   displayName: 'MySqlSandbox'
 
@@ -25,6 +28,8 @@ MySqlSandbox = React.createClass
     pendingActions: MySqlSandboxCredentialsStore.getPendingActions()
     isLoading: MySqlSandboxCredentialsStore.getIsLoading()
     isLoaded: MySqlSandboxCredentialsStore.getIsLoaded()
+    tables: StorageTablesStore.getAll()
+    buckets: StorageBucketsStore.getAll()
 
   _renderCredentials: ->
     if @state.credentials.get "id"
@@ -51,6 +56,8 @@ MySqlSandbox = React.createClass
         ,
           ConfigureSandbox
             backend: 'mysql'
+            tables: @state.tables
+            buckets: @state.buckets
             onChange: (params) ->
               sandboxConfiguration = params
         )

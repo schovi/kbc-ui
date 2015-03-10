@@ -4,6 +4,7 @@ constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
+_ = require 'underscore'
 
 _store = Map(
   buckets: Map()
@@ -33,9 +34,13 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.STORAGE_BUCKETS_LOAD_SUCCESS
       _store = _store.withMutations (store) ->
-        store
-        .set 'isLoading', false
-        .set 'buckets', action.buckets
+        store = store.setIn ['buckets'], Map()
+        _.each(action.buckets, (bucket) ->
+          bObj = Immutable.fromJS(bucket)
+          store = store.setIn ['buckets', bObj.get 'id'], bObj
+        )
+        store.set 'isLoading', false
+
       StorageBucketsStore.emitChange()
 
     when constants.ActionTypes.STORAGE_BUCKETS_LOAD_ERROR
