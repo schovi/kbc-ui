@@ -37,7 +37,7 @@ TransformationRow = React.createClass(
       isPending: @props.pendingActions.get 'delete'
       confirm:
         title: 'Delete Transformation'
-        text: "Do you really want to delete sandbox transformation #{@props.transformation.get('friendlyName')}?"
+        text: "Do you really want to delete transformation #{@props.transformation.get('friendlyName')}?"
         onConfirm: @_deleteTransformation
     )
     buttons

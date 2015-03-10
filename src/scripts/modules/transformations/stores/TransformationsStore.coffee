@@ -59,6 +59,9 @@ TransformationsStore = StoreUtils.createStore
   getPendingActions: (bucketId) ->
     _store.getIn ['pendingActions', bucketId], Map()
 
+  getTransformationPendingActions: (bucketId, transformationId) ->
+    _store.getIn ['pendingActions', bucketId, transformationId], Map()
+
 Dispatcher.register (payload) ->
   action = payload.action
 
