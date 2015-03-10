@@ -47,6 +47,10 @@ routes =
             name = TransformationsStore.getTransformation(bucketId, transformationId).get 'friendlyName'
             "Transformation " + name
           defaultRouteHandler: TransformationDetail
+          requireData: [
+            ->
+              StorageActionCreators.loadTables()
+          ]
         ]
       ,
         name: 'sandbox'

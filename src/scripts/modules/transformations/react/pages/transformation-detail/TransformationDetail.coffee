@@ -6,9 +6,11 @@ Immutable = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
 TransformationBucketsStore  = require('../../../stores/TransformationBucketsStore')
+StorageTablesStore  = require('../../../../components/stores/StorageTablesStore')
 RoutesStore = require '../../../../../stores/RoutesStore'
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationsActionCreators = require '../../../ActionCreators'
+InputMappingRow = React.createFactory(require './InputMappingRow')
 
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
@@ -16,16 +18,20 @@ TransformationsActionCreators = require '../../../ActionCreators'
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
-  mixins: [createStoreMixin(TransformationsStore, TransformationBucketsStore), Router.Navigation]
+  mixins: [
+    createStoreMixin(TransformationsStore, TransformationBucketsStore, StorageTablesStore),
+    Router.Navigation
+  ]
   getStateFromStores: ->
     bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
+    tables: StorageTablesStore.getAll()
 
   render: ->
-    console.log 'transformation', @state.transformation
+    console.log 'transformation', @state.transformation, @state.tables
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -36,6 +42,15 @@ TransformationDetail = React.createClass
         div className: 'row',
           h4 {}, 'Overview'
           h4 {}, 'Input Mapping'
+            div className: 'table table-striped table-hover',
+              span {className: 'tbody'},
+                @state.transformation.get('input').map((input) ->
+                  InputMappingRow
+                    transformationBackend: @state.transformation.get('backend')
+                    inputMapping: input,
+                    tables: @state.tables
+                , @).toArray()
+
           h4 {}, 'Output Mapping'
           h4 {}, 'Queries'
       div className: 'col-md-3 kbc-main-sidebar',
