@@ -1,5 +1,5 @@
 
-installedComponentsApi = require '../installedComponentsApi'
+installedComponentsApi = require '../InstalledComponentsApi'
 syrupApi = require '../SyrupComponentApi'
 
 module.exports = (componentId, configurationId) ->

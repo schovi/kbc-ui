@@ -6,6 +6,8 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction')
 
+DeleteConfigurationButton = React.createFactory(require '../../../../components/react/components/DeleteConfigurationButton')
+
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
@@ -70,6 +72,10 @@ module.exports = React.createClass
             component: 'ex-google-drive'
             runParams:
               account: @state.configuration.get 'id'
+        li null,
+          DeleteConfigurationButton
+            componentId: 'ex-google-drive'
+            configId: @state.configuration.get 'id'
       div className: 'kbc-buttons',
         span null,
           'Created By '
