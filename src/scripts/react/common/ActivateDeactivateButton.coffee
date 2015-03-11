@@ -13,9 +13,11 @@ module.exports = React.createClass
     isActive: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool
     onChange: React.PropTypes.func.isRequired
+    mode: React.PropTypes.oneOf ['button', 'link']
 
   getDefaultProps: ->
     isPending: false
+    mode: 'button'
 
   render: ->
     if @props.isPending
@@ -28,12 +30,29 @@ module.exports = React.createClass
         overlay: React.createElement(Tooltip, null, tooltip)
         placement: 'top'
       ,
-        React.DOM.button
-          className: 'btn btn-link'
-          onClick: @_handleClick
-        ,
-          React.createElement Check,
-            isChecked: @props.isActive
+        if @props.mode == 'button'
+          @_renderButton()
+        else
+          @_renderLink()
+
+  _renderIcon: ->
+    React.createElement Check,
+      isChecked: @props.isActive
+
+
+  _renderButton: ->
+    React.DOM.button
+      className: 'btn btn-link'
+      onClick: @_handleClick
+    ,
+      @_renderIcon()
+
+  _renderLink: ->
+    React.DOM.a
+      onClick: @_handleClick
+    ,
+      @_renderIcon()
+      ' ' + if @props.isActive then @props.deactivateTooltip else @props.activateTooltip
 
   _handleClick: (e) ->
     @props.onChange !@props.isActive
