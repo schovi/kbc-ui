@@ -10,7 +10,7 @@ NewQueryHandlerButton = require './react/components/NewQueryHeaderButton'
 QueryDetailHeaderButtons = require './react/components/QueryDetailHeaderButtons'
 ExGanalAuthorize = require './react/pages/authorize/Authorize'
 ExGanalProfiles = require './react/pages/profiles/Profiles'
-
+ProfilesHeaderButton = require './react/components/ProfilesHeaderButton'
 module.exports =
   name: 'ex-google-analytics'
   path: 'ex-google-analytics/:config'
@@ -29,6 +29,7 @@ module.exports =
     name: 'ex-google-analytics-select-profiles'
     path: 'profiles'
     title: 'Select Profiles'
+    headerButtonsHandler: ProfilesHeaderButton
     handler: ExGanalProfiles
     requireData: [
       (params) ->

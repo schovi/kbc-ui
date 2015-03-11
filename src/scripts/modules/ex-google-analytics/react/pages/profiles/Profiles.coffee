@@ -21,9 +21,10 @@ module.exports = React.createClass
     configId = RoutesStore.getRouterState().getIn ['params', 'config']
     name = RoutesStore.getRouterState().getIn ['params', 'name']
     config = exGanalStore.getConfig(configId)
+    configLoaded = exGanalStore.hasConfig configId
     config: config
     configId: configId
-    isConfigLoaded: exGanalStore.hasConfig configId
+    isConfigLoaded: configLoaded
     profiles: exGanalStore.getProfiles(configId)
     selectedProfiles: exGanalStore.getSelectedProfiles(configId)
 

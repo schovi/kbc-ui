@@ -16,12 +16,26 @@ _store = Map(
   extLinks: Map() #configId
   profiles: Map() #confiId
   selectedProfiles: Map() #configId
+  savingProfiles: Map() #configId
 )
 
 
 GanalStore = StoreUtils.createStore
+  isSavingProfiles: (configId) ->
+    _store.hasIn ['savingProfiles', configId]
+  getSavingProfiles: (configId) ->
+    _store.getIn ['savingProfiles', configId]
   getSelectedProfiles: (configId) ->
     _store.getIn ['selectedProfiles', configId]
+  resetSelectedProfiles: (configId) ->
+    config = GanalStore.getConfig configId
+    if config.has('items') and config.get('items').count() > 0
+      mappedProfiles = config.get('items').map( (profile, key) ->
+        profile = profile.set 'id', profile.get 'googleId'
+        return profile).toMap()
+        #remap by googleId
+      _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
+          return profile.get 'googleId')
 
   hasProfiles: (configId) ->
     _store.hasIn ['profiles', configId]
@@ -76,6 +90,18 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE_SUCCESS
+      configId = action.configId
+      profiles = _store.getIn ['savingProfiles', configId]
+      _store = _store.setIn ['configs', configId, 'items'], profiles
+      _store = _store.deleteIn ['savingProfiles', configId]
+      GanalStore.emitChange()
+
+    when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE
+      configId = action.configId
+      profiles = GanalStore.getSelectedProfiles(configId)
+      _store = _store.setIn ['savingProfiles', configId], profiles
+      GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
       configId = action.configId
@@ -173,23 +199,20 @@ Dispatcher.register (payload) ->
           validation.name = 'Query with that name already exists.'
       _store = _store.setIn ['validation',configId, name], Immutable.fromJS validation
 
-
       _store = _store.setIn ['editing', configId, name], newQuery
+      GanalStore.emitChange()
 
+    when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_CANCEL
+      configId = action.configId
+      _store = _store.deleteIn ['selectedProfiles', configId]
+      GanalStore.resetSelectedProfiles(configId)
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CONFIGURATION_LOAD_SUCCEES
       configId = action.configId
       data = Immutable.fromJS(action.data)
       _store = _store.setIn(['configs', configId], data)
-      if data.has('items') and data.get('items').count() > 0
-        mappedProfiles = data.get('items').map( (profile, key) ->
-          profile = profile.set 'id', profile.get 'googleId'
-          return profile).toMap()
-        #remap by googleId
-        _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
-
-          return profile.get 'googleId')
+      GanalStore.resetSelectedProfiles(configId)
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY

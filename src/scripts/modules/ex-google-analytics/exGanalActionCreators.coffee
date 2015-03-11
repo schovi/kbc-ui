@@ -6,6 +6,28 @@ exGanalStore = require './exGanalStore'
 
 module.exports =
 
+  saveSelectedProfiles: (configId) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE
+      configId: configId
+    profiles = exGanalStore.getSavingProfiles configId
+    profiles = profiles.map (profile, key) ->
+      googleId: profile.get 'id'
+      accountId: profile.get 'accountId'
+      webPropertyId: profile.get 'webPropertyId'
+      name: profile.get 'name'
+      accountName: profile.get 'accountName'
+      webPropertyName: profile.get 'webPropertyName'
+    exGanalApi.postProfiles(configId, profiles.toJS()).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE_SUCCESS
+        configId: configId
+
+  cancelSelectedProfiles: (configId) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_CANCEL
+      configId: configId
+
   selectProfile: (configId, profile) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE

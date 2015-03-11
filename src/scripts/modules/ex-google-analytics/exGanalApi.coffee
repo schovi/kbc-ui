@@ -33,12 +33,16 @@ module.exports =
     .promise().then (response) ->
       response.body
 
+  postProfiles: (configId, profiles) ->
+    createRequest('POST', "profiles/#{configId}")
+    .send(profiles)
+    .promise().then (response) ->
+      return response.body
+
   postConfig: (configId, data) ->
-    console.log 'data to POST', data
     configData =
       configuration: data
     createRequest('POST', "account/#{configId}")
     .send(configData)
     .promise().then (response) ->
-      console.log 'POST OK', response.body
       return response.body
