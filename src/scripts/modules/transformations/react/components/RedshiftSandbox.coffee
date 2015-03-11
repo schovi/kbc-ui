@@ -10,7 +10,7 @@ RedshiftCredentials = React.createFactory(require('../../../provisioning/react/c
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Spinner = React.createFactory(require '../../../../react/common/Spinner')
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
@@ -36,7 +36,7 @@ RedshiftSandbox = React.createClass
         RedshiftCredentials {credentials: @state.credentials}
     else
       if @state.pendingActions.get "create"
-        React.createElement Loader
+        React.createElement Spinner
       else
         button {className: 'btn btn-success', onClick: @_createCredentials},
         'Create Redshift Credentials'
@@ -62,7 +62,7 @@ RedshiftSandbox = React.createClass
         )
         if @state.pendingActions.get 'refresh'
           button {className: "btn btn-link", disabled: true},
-            React.createElement Loader
+            React.createElement Spinner
         else
           button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
           span {className: 'fa fa-refresh'}
