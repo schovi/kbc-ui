@@ -39,13 +39,17 @@ module.exports = React.createClass
 
   _renderProfiles: ->
     div className: 'col-md-6',
-      PanelGroup accordion: true,
-        if @state.profiles and @state.profiles.count() > 0
-          @state.profiles.map( (profileGroup, profileGroupName) =>
-            @_renderProfileGroup(profileGroup, profileGroupName)
-          ,@).toArray()
-        else
-          div className: 'well', 'No Profiles.'
+      Panel
+        header:
+          h3 className: 'text-center', "Profiles of #{@state.config.get('email')}"
+        ,
+          PanelGroup accordion: true,
+            if @state.profiles and @state.profiles.count() > 0
+              @state.profiles.map( (profileGroup, profileGroupName) =>
+                @_renderProfileGroup(profileGroup, profileGroupName)
+              ,@).toArray()
+            else
+              div className: 'well', 'No Profiles.'
 
   _renderProfileGroup: (profileGroup, profileGroupName) ->
     header = div
