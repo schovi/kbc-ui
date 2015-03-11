@@ -13,10 +13,12 @@ TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
 CodeMirror = React.createFactory(require 'react-code-mirror')
+RunComponentButton = require '../../../../components/react/components/RunComponentButton'
+
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
 
-{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
+{Tooltip, Confirm, Spinner} = require '../../../../../react/common/common'
 
 {div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p} = React.DOM
 
@@ -35,6 +37,7 @@ TransformationDetail = React.createClass
     tables: StorageTablesStore.getAll()
 
   render: ->
+    state = @state
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -114,9 +117,21 @@ TransformationDetail = React.createClass
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},
+            RunComponentButton(
+              title: "Run Transformation"
+              component: 'transformation'
+              mode: 'link'
+              runParams: ->
+                configBucketId: state.bucket.get('id')
+                transformations: [state.transformation.get('id')]
+            ,
+              "You are about to run transformation #{@state.transformation.get('friendlyName')}."
+            )
+          li {},
             a {},
               span className: 'fa fa-sitemap fa-fw'
               ' SQLDep'
+
           li {},
             a {},
               Confirm
