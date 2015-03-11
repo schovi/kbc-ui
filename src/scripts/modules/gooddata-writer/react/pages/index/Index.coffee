@@ -4,11 +4,10 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
 
-{Panel, PanelGroup} = require('react-bootstrap')
+{Panel, PanelGroup, Alert} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
-
-
+Alert = React.createFactory Alert
 
 TablesList = React.createFactory(require './BucketTablesList')
 ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
@@ -39,6 +38,9 @@ module.exports = React.createClass
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
           div className: 'col-sm-4 kbc-buttons',
+        if writer.get 'info'
+          Alert bsStyle: 'warning',
+            writer.get 'info'
         PanelGroup accordion: true,
           @state.tablesByBucket.map (tables, bucketId) ->
             @_renderBucketPanel bucketId, tables
