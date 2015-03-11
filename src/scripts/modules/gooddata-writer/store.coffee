@@ -193,6 +193,7 @@ dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store
         .setIn ['writers', action.configuration.id, 'isLoading'], false
+        .setIn ['writers', action.configuration.id, 'isDeleting'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
 
@@ -421,6 +422,30 @@ dispatcher.register (payload) ->
         ], List(), (actions) ->
           actions.delete(actions.indexOf('uploadTable'))
 
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_DELETE_START
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'isDeleting'
+      ], true
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_DELETE_ERROR
+      _store = _store.deleteIn [
+        'writers'
+        action.configurationId
+        'isDeleting'
+      ]
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_DELETE_SUCCESS
+      _store = _store.deleteIn [
+        'writers'
+        action.configurationId
+        'isDeleting'
+      ]
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore

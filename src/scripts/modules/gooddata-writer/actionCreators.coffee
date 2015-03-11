@@ -7,6 +7,7 @@ goodDataWriterStore = require './store'
 goodDataWriterApi = require './api'
 goodDataWriterConstants = require './constants'
 jobPoller = require '../../utils/jobPoller'
+installedComponentsApi = require '../components/InstalledComponentsApi'
 applicationStore = require '../../stores/ApplicationStore'
 applicationActionCreators = require '../../actions/ApplicationActionCreators'
 Link = require('react-router').Link
@@ -325,6 +326,29 @@ module.exports =
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_ERROR
+        configurationId: configurationId
+        error: e
+      throw e
+
+  deleteWriter: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_DELETE_START
+      configurationId: configurationId
+
+    goodDataWriterApi
+    .deleteWriter configurationId
+    .then ->
+      installedComponentsApi.deleteConfiguration 'gooddata-writer', configurationId
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DELETE_SUCCESS
+        configurationId: configurationId
+
+      applicationActionCreators.sendNotification 'Writer has been scheduled for removal!'
+
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DELETE_ERROR
         configurationId: configurationId
         error: e
       throw e

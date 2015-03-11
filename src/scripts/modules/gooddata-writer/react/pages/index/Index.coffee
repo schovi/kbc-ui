@@ -86,9 +86,26 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
+          li null,
+            Confirm
+              title: 'Delete Writer'
+              text: "Are you sure you want to delete writer with its GoodData project?"
+              buttonLabel: 'Delete'
+              onConfirm: @_handleProjectDelete
+            ,
+              a null,
+                span className: 'kbc-icon-cup'
+                ' Delete Writer'
+            if @state.writer.get 'isDeleting'
+              span null,
+                ' '
+                React.createElement Loader
 
   _handleProjectUpload: ->
     actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
+
+  _handleProjectDelete: ->
+    actionCreators.deleteWriter(@state.writer.getIn ['config', 'id'])
 
   _renderBucketPanel: (bucketId, tables) ->
 

@@ -37,4 +37,10 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
+  deleteConfiguration: (componentId, configurationId) ->
+    createRequest 'DELETE', "components/#{componentId}/configs/#{configurationId}"
+    .promise()
+    .then (response) ->
+      response.body
+
 module.exports = installedComponentsApi

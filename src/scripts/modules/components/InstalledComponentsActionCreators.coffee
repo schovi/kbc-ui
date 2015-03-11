@@ -101,6 +101,30 @@ module.exports =
         error: e
       throw e
 
+
+  deleteConfiguration: (componentId, configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_START
+      componentId: componentId
+      configurationId: configurationId
+
+    installedComponentsApi
+    .deleteConfiguration componentId, configurationId
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
+        componentId: componentId
+        configurationId: configurationId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_ERROR
+        componentId: componentId
+        configurationId: configurationId
+        error: e
+
+      throw e
+
+
   ###
     params:
       - component - id of component like ex-db
