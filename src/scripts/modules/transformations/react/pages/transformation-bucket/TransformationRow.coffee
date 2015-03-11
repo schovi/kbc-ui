@@ -49,10 +49,11 @@ TransformationRow = React.createClass(
       params: {transformationId: @props.transformation.get('id'), bucketId: @props.bucket.get('id')}
     ,
       span {className: 'td'},
+        h4 {},
         span {className: 'label kbc-label-rounded-small label-default pull-left'},
           @props.transformation.get('phase') || 1
-        h4 {},
-          @props.transformation.get('friendlyName') || @props.transformation.get('id')
+        ' '
+        @props.transformation.get('friendlyName') || @props.transformation.get('id')
       span {className: 'td'},
         small {}, @props.transformation.get('description') || em {}, 'No description'
       span {className: 'td'},
