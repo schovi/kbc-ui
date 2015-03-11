@@ -57,5 +57,5 @@ module.exports = React.createClass
           ,
             'Save'
   _handleConfirm: ->
-    actionCreators.saveOutputBucket(@props.configId, @state.outputBucket).then () =>
+    actionCreators.saveOutputBucket(@props.configId, @state.outputBucket).then  =>
       @props.onRequestHide()
