@@ -4,7 +4,9 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalStore = require '../../../exGanalStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 QueriesTable = React.createFactory(require('./QueriesTable'))
+OptionsModal = React.createFactory(require('./OptionsModal'))
 #RunExtraction = React.createFactory(require '../../components/RunExtraction')
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -46,6 +48,7 @@ module.exports = React.createClass
             'Add Query'
       if queries.count()
         QueriesTable
+          config: @state.config
           queries: queries
           profiles: @state.config.get 'items'
           configId: @state.configId
@@ -71,6 +74,15 @@ module.exports = React.createClass
           ,
             span className: 'fa fa-fw fa-check'
             'Select Profiles'
+        li null,
+          ModalTrigger
+            modal: OptionsModal
+              configId: @state.configId
+              outputBucket: ExGanalStore.getOutputBucket @state.configId
+          ,
+            span className: 'btn btn-link',
+              i className: 'fa fa-fw fa-gear'
+              ' Options'
 
         # li null,
         #   RunExtraction

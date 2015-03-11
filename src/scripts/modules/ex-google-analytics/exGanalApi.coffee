@@ -39,6 +39,14 @@ module.exports =
     .promise().then (response) ->
       return response.body
 
+  postOutputBucket: (configId, outbucket) ->
+    configData =
+      outputBucket: outbucket
+    createRequest('POST', "account/#{configId}")
+    .send(configData)
+    .promise().then (response) ->
+      return response.body
+
   postConfig: (configId, data) ->
     configData =
       configuration: data

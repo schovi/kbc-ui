@@ -6,6 +6,16 @@ exGanalStore = require './exGanalStore'
 
 module.exports =
 
+  saveOutputBucket: (configId, newBucket) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE
+      configId: configId
+      newBucket: newBucket
+    exGanalApi.postOutputBucket(configId, newBucket).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE_SUCCESS
+        configId: configId
+
   saveSelectedProfiles: (configId) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE

@@ -12,6 +12,7 @@ module.exports = React.createClass
   propTypes:
     queries: React.PropTypes.object
     profiles: React.PropTypes.object
+    config: React.PropTypes.object
     # configurationId: number
 
 
@@ -30,7 +31,7 @@ module.exports = React.createClass
         div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'
-        div className: 'td', queryName
+        div className: 'td', @props.config.get('outputBucket') + '.' + queryName
       ).toArray()
 
     div className: 'table table-striped table-hover',

@@ -17,10 +17,17 @@ _store = Map(
   profiles: Map() #confiId
   selectedProfiles: Map() #configId
   savingProfiles: Map() #configId
+  savingBucket: Map() #configId
 )
 
 
 GanalStore = StoreUtils.createStore
+  isSavingBucket: (configId) ->
+    _store.hasIn ['savingBucket', configId]
+  getSavingBucket: (configId) ->
+    _store.getIn ['savingBucket', configId]
+  getOutputBucket: (configId) ->
+    _store.getIn ['configs', configId, 'outputBucket']
   isSavingProfiles: (configId) ->
     _store.hasIn ['savingProfiles', configId]
   getSavingProfiles: (configId) ->
@@ -90,6 +97,18 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE
+      configId = action.configId
+      newBucket = action.newBucket
+      _store = _store.setIn ['savingBucket', configId], newBucket
+      GanalStore.emitChange()
+    when Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE_SUCCESS
+      configId = action.configId
+      newBucket = GanalStore.getSavingBucket configId
+      _store = _store.deleteIn ['savingBucket', configId]
+      _store = _store.setIn ['configs', configId, 'outputBucket'], newBucket
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE_SUCCESS
       configId = action.configId
       profiles = _store.getIn ['savingProfiles', configId]
