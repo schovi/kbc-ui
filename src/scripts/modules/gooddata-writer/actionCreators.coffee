@@ -107,6 +107,27 @@ module.exports =
         error: e
       throw e
 
+  resetProject: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_START
+      configurationId: configurationId
+
+    goodDataWriterApi
+    .resetProject configurationId
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_SUCCESS
+        configurationId: configurationId
+
+      applicationActionCreators.sendNotification 'Project has been scheduled to reset!
+      You can see progress TODO'
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_ERROR
+        configurationId: configurationId
+        error: e
+      throw e
+
   saveTableField: (configurationId, tableId, fieldName, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START

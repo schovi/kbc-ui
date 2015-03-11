@@ -99,6 +99,14 @@ module.exports =
     .then (response) ->
       response.body
 
+  resetProject: (configurationId) ->
+    createRequest('POST', 'reset-project')
+    .send
+      writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
   deleteWriter: (configurationId) ->
     createRequest('DELETE', 'writers')
     .query writerId: configurationId

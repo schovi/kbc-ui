@@ -129,8 +129,18 @@ module.exports = React.createClass
                   a null,
                     'Optimize SLI hash'
               li null,
-                a null,
-                  'Reset Project'
+                Confirm
+                  title: 'Reset Project'
+                  text: div null,
+                    p null,
+                      "You are about to create new GoodData project for the writer #{writer.get('id')}. "
+                      "The current GoodData project (#{writer.getIn(['gd', 'pid'])}) will be discarded. "
+                      "Are you sure you want to reset the project?"
+                  buttonLabel: 'Reset'
+                  onConfirm: @_handleProjectReset
+                ,
+                  a null,
+                    'Reset Project'
 
 
   _handleProjectUpload: ->
@@ -141,6 +151,9 @@ module.exports = React.createClass
 
   _handleOptimizeSLI: ->
     actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'])
+
+  _handleProjectReset: ->
+    actionCreators.resetProject(@state.writer.getIn ['config', 'id'])
 
   _renderBucketPanel: (bucketId, tables) ->
 
