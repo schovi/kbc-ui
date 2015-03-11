@@ -19,7 +19,7 @@ StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 MySqlSandbox = React.createClass
 
-  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, StorageTablesStore, StorageTablesStore)]
+  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, StorageTablesStore, StorageBucketsStore)]
 
   displayName: 'MySqlSandbox'
 
