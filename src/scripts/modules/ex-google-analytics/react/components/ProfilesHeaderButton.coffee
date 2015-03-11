@@ -19,7 +19,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
     currentConfigId: configId
-    isSaving:  ExGanalStore.isSavingProfiles configId
+    isSaving: ExGanalStore.isSavingProfiles configId
 
 
   _handleCancel: ->
