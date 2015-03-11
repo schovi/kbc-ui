@@ -62,6 +62,12 @@ module.exports =
     return Promise.resolve() if goodDataWriterStore.hasTableColumns(configurationId, tableId)
     @loadTableDetailForce(configurationId, tableId)
 
+  selectBucket: (configurationId, bucketId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_SELECT_BUCKET
+      configurationId: configurationId
+      bucketId: bucketId
+
   loadReferencableTablesForce: (configurationId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_START

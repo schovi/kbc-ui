@@ -42,7 +42,11 @@ module.exports = React.createClass
         if writer.get 'info'
           Alert bsStyle: 'warning',
             writer.get 'info'
-        PanelGroup accordion: true,
+        PanelGroup
+          accordion: true
+          activeKey: @state.writer.get 'openedBucket'
+          onSelect: @_handleBucketSelect
+        ,
           @state.tablesByBucket.map (tables, bucketId) ->
             @_renderBucketPanel bucketId, tables
           , @
@@ -142,6 +146,9 @@ module.exports = React.createClass
                   a null,
                     'Reset Project'
 
+  _handleBucketSelect: (selectedKey) ->
+    actionCreators.selectBucket @state.writer.getIn(['config', 'id']),
+      selectedKey
 
   _handleProjectUpload: ->
     actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])

@@ -195,6 +195,7 @@ dispatcher.register (payload) ->
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'isDeleting'], false
         .setIn ['writers', action.configuration.id, 'isOptimizingSLI'], false
+        .setIn ['writers', action.configuration.id, 'openedBucket'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
 
@@ -463,6 +464,30 @@ dispatcher.register (payload) ->
         action.configurationId
         'isOptimizingSLI'
       ]
+      GoodDataWriterStore.emitChange()
+
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_SELECT_BUCKET
+      currentSelected = _store.getIn [
+        'writers'
+        action.configurationId
+        'openedBucket'
+      ]
+
+      if currentSelected == action.bucketId
+        # close bucket
+        _store = _store.setIn [
+          'writers'
+          action.configurationId
+          'openedBucket'
+        ], false
+      else
+        # open bucket
+        _store = _store.setIn [
+          'writers'
+          action.configurationId
+          'openedBucket'
+        ], action.bucketId
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore
