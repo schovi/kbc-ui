@@ -35,7 +35,7 @@ GanalStore = StoreUtils.createStore
         return profile).toMap()
         #remap by googleId
       _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
-          return profile.get 'googleId')
+        return profile.get 'googleId')
 
   hasProfiles: (configId) ->
     _store.hasIn ['profiles', configId]
