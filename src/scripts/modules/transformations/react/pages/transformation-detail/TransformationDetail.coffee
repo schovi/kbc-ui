@@ -13,7 +13,8 @@ TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
 CodeMirror = React.createFactory(require 'react-code-mirror')
-RunComponentButton = require '../../../../components/react/components/RunComponentButton'
+RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -127,6 +128,15 @@ TransformationDetail = React.createClass
             ,
               "You are about to run transformation #{@state.transformation.get('friendlyName')}."
             )
+          li {},
+            ActivateDeactivateButton
+              mode: 'link'
+              activateTooltip: 'Enable Transformation'
+              deactivateTooltip: 'Disable Transformation'
+              isActive: !!@state.transformation.get('disabled')
+              isPending: @state.pendingActions.get('save')
+              onChange: ->
+
           li {},
             a {},
               span className: 'fa fa-sitemap fa-fw'
