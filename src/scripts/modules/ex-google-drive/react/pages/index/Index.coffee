@@ -6,7 +6,8 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction')
 
-DeleteConfigurationButton = React.createFactory(require '../../../../components/react/components/DeleteConfigurationButton')
+DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
+DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
