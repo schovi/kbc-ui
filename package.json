@@ -63,7 +63,8 @@
     "exorcist": "~0.1.6",
     "gulp-insert": "~0.4.0",
     "gulp-sourcemaps": "~1.5.0",
-    "vinyl-transform": "~1.0.0"
+    "vinyl-transform": "~1.0.0",
+    "gulp-add-src": "~0.2.0"
   },
   "scripts": {
     "test": "jest"
