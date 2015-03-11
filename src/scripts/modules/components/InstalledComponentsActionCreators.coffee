@@ -11,8 +11,10 @@ constants = require './Constants'
 componentRunner = require './ComponentRunner'
 InstalledComponentsStore = require './stores/InstalledComponentsStore'
 installedComponentsApi = require './InstalledComponentsApi'
+RoutesStore = require '../../stores/RoutesStore'
+ComponentsStore = require './stores/ComponentsStore'
 
-
+deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 
 
 module.exports =
@@ -108,13 +110,24 @@ module.exports =
       componentId: componentId
       configurationId: configurationId
 
-    installedComponentsApi
-    .deleteConfiguration componentId, configurationId
+    component = ComponentsStore.getComponent componentId
+    configuration = InstalledComponentsStore.getConfig componentId, configurationId
+    transitionTo = "#{component.get('type')}s"
+
+    notification = "Configuration #{configuration.get('name')} was deleted."
+
+    deleteComponentConfiguration componentId, configurationId
     .then (response) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
-        componentId: componentId
-        configurationId: configurationId
+      RoutesStore.getRouter().transitionTo transitionTo
+
+      setTimeout ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
+          componentId: componentId
+          configurationId: configurationId
+
+      ApplicationActionCreators.sendNotification notification
+
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_ERROR

@@ -35,7 +35,7 @@ module.exports = React.createClass
       if @props.isSaving
         span null,
           Loader()
-        ' '
+          ' '
       Button
         bsStyle: 'link'
         disabled: @props.isSaving

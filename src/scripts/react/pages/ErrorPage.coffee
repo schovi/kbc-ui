@@ -16,8 +16,9 @@ ErrorPage = React.createClass
   render: ->
     div className: 'container-fluid kbc-main-content',
       Alert bsStyle: 'danger',
-        p null, @state.error?.getText()
-        if @state.error?.getExceptionId()
-          p null, 'Exception id: ' + @state.error?.getExceptionId()
+        div null,
+          p null, @state.error?.getText()
+          if @state.error?.getExceptionId()
+            p null, 'Exception id: ' + @state.error?.getExceptionId()
 
 module.exports = ErrorPage

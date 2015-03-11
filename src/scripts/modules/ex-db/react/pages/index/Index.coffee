@@ -10,6 +10,8 @@ QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory ComponentDescription
 
+DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
+
 LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
@@ -90,6 +92,10 @@ module.exports = React.createClass
                 config: configurationId
             ,
               'You are about to run extraction.'
+          li null,
+            DeleteConfigurationButton
+              componentId: 'ex-db'
+              configId: @state.configuration.get 'id'
 
         div className: 'kbc-buttons',
           span null,

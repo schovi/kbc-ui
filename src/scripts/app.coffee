@@ -49,7 +49,11 @@ startApp = (appOptions) ->
   # error thrown during application live not on route chage
   Promise.onPossiblyUnhandledRejection (e) ->
     error = Error.create(e)
-    ApplicationActionCreators.sendNotification "Error: #{error.getTitle()}. #{error.getText()}", 'error'
+    notification = "Error: #{error.getTitle()}. #{error.getText()}"
+    if error.getExceptionId()
+      notification += " Exception id: #{error.getExceptionId()}"
+
+    ApplicationActionCreators.sendNotification notification, 'error'
     throw e
 
   # Show loading page before app is ready
