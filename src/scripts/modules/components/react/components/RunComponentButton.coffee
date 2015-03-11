@@ -5,7 +5,7 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Spinner = React.createFactory(require('../../../../react/common/Spinner'))
+Loader = React.createFactory(require('../../../../react/common/Loader'))
 
 {a, i, div, button} = React.DOM
 
@@ -100,6 +100,6 @@ module.exports = React.createClass
 
   _renderIcon: ->
     if @state.isLoading
-      Spinner {}
+      Loader {}
     else
       i className: 'fa fa-fw fa-play'

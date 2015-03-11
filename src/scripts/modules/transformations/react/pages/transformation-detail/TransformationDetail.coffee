@@ -19,7 +19,7 @@ ActivateDeactivateButton = React.createFactory(require '../../../../../react/com
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
 
-{Tooltip, Confirm, Spinner} = require '../../../../../react/common/common'
+{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
 {div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p} = React.DOM
 

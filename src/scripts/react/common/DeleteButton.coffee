@@ -5,7 +5,7 @@
 React = require 'react'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
-Spinner = React.createFactory(require './Spinner')
+Loader = React.createFactory(require './Loader')
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require './Confirm')
 
@@ -29,7 +29,7 @@ module.exports = React.createClass
   render: ->
     if @props.isPending
       React.DOM.span className: 'btn btn-link',
-        React.createElement Spinner
+        React.createElement Loader
     else if !@props.isEnabled
       React.DOM.span className: 'btn btn-link disabled',
         React.DOM.em className: 'kbc-icon-cup'

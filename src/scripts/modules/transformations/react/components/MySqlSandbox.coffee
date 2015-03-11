@@ -11,7 +11,7 @@ ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySqlSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-Spinner = React.createFactory(require '../../../../react/common/Spinner')
+Loader = React.createFactory(require '../../../../react/common/Loader')
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
@@ -37,7 +37,7 @@ MySqlSandbox = React.createClass
         MySqlCredentials {credentials: @state.credentials}
     else
       if @state.pendingActions.get "create"
-        React.createElement Spinner
+        React.createElement Loader
       else
         button {className: 'btn btn-success', onClick: @_createCredentials},
         'Create MySql Credentials'

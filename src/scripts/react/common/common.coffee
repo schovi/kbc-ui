@@ -19,4 +19,3 @@ module.exports =
   Protected: require './Protected'
   ActivateDeactivateButton: require './ActivateDeactivateButton'
   FileSize: require './FileSize'
-  Spinner: require './Spinner'

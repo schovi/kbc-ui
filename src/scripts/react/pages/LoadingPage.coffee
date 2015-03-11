@@ -1,6 +1,9 @@
 React = require 'react'
+Loader = React.createFactory(require '../common/Loader')
 
 {div, span} = React.DOM
+
+
 
 LoadingPage = React.createClass
   displayName: 'LoadingPage'
@@ -8,7 +11,7 @@ LoadingPage = React.createClass
   render: ->
     div className: 'container-fluid kbc-main-content',
       div className: 'kbc-main-loader',
-        span className: 'fa fa-spin fa-spinner'
+        Loader {}
         span null, 'Loading ...'
 
 module.exports = LoadingPage

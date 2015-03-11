@@ -1,6 +1,6 @@
 React = require 'react'
 
-Spinner = require './Spinner'
+Loader = require './Loader'
 Check = require './Check'
 
 {Tooltip, OverlayTrigger} = require('react-bootstrap')
@@ -22,7 +22,7 @@ module.exports = React.createClass
   render: ->
     if @props.isPending
       React.DOM.span className: 'btn btn-link',
-        React.createElement Spinner
+        React.createElement Loader
     else
       tooltip = if @props.isActive then @props.deactivateTooltip else @props.activateTooltip
 
