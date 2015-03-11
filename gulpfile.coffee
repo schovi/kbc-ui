@@ -27,6 +27,7 @@ sourcemaps = require 'gulp-sourcemaps'
 insert = require 'gulp-insert'
 concat = require 'gulp-concat'
 transform = require 'vinyl-transform'
+addsrc = require 'gulp-add-src'
 
 handleError = (err) ->
   gutil.log err
@@ -100,6 +101,8 @@ gulp.task 'watch', ->
 gulp.task 'less', ['clean'], ->
   gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
   .pipe(less())
+  .pipe(addsrc('./node_modules/codemirror/lib/codemirror.css'))
+  .pipe(addsrc('./node_modules/codemirror/theme/solarized.css'))
   .pipe(concat('app.css'))
   .pipe(gulp.dest('./tmp/styles'))
   .pipe(browserSync.reload( stream:true))
@@ -107,6 +110,8 @@ gulp.task 'less', ['clean'], ->
 gulp.task 'build-styles', ['clean'], ->
   gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
     .pipe(less())
+    .pipe(addsrc('./node_modules/codemirror/lib/codemirror.css'))
+    .pipe(addsrc('./node_modules/codemirror/theme/solarized.css'))
     .pipe(concat('app.css'))
     .pipe(rename('app.min.css'))
     .pipe(gulp.dest('./dist/styles'))

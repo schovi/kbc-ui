@@ -12,6 +12,9 @@ DeleteButton = React.createFactory(require '../../../../../react/common/DeleteBu
 TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
+CodeMirror = React.createFactory(require 'react-code-mirror')
+require('codemirror/mode/sql/sql')
+require('codemirror/mode/r/r')
 
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
@@ -32,7 +35,6 @@ TransformationDetail = React.createClass
     tables: StorageTablesStore.getAll()
 
   render: ->
-    console.log 'transformation', @state.transformation, @state.tables
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -68,7 +70,47 @@ TransformationDetail = React.createClass
             else
               p {}, small {}, 'No Output Mapping'
         div className: 'row',
-          h4 {}, 'Queries'
+
+          if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+            h4 {}, 'Script'
+            if @state.transformation.get('items').count()
+              CodeMirror
+                theme: 'solarized'
+                lineNumbers: true
+                defaultValue: @state.transformation.getIn ['items', 0, 'query']
+                readOnly: true
+                mode: 'text/x-rsrc'
+                lineWrapping: true
+            else
+              p {}, small {}, 'No R Script'
+          else
+            h4 {}, 'Queries'
+            if @state.transformation.get('items').count()
+              mode = 'text/text'
+              if @state.transformation.get('backend') == 'db'
+                mode = 'text/x-mysql'
+              else if @state.transformation.get('backend') == 'redshift'
+                mode = 'text/x-sql'
+              else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+                mode = 'text/x-rsrc'
+              div className: 'table table-striped table-hover',
+                span {className: 'tbody'},
+                  @state.transformation.get('items').map((item, index) ->
+                    span {className: 'tr'},
+                      span {className: 'td'},
+                        index + 1
+                      span {className: 'td'},
+                        CodeMirror
+                          theme: 'solarized'
+                          lineNumbers: false
+                          defaultValue: item.get 'query'
+                          readOnly: true
+                          mode: mode
+                          lineWrapping: true
+                  , @).toArray()
+            else
+              p {}, small {}, 'No SQL Queries'
+
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},
