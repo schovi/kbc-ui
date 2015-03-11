@@ -26,6 +26,7 @@ module.exports = React.createClass
     div null,
       @state.notifications.map (notification, index) ->
         Alert
+          key: index
           bsStyle: classMap[notification.get 'type']
           onDismiss: @_handleAlertDismiss.bind(@, index)
         ,
@@ -36,4 +37,3 @@ module.exports = React.createClass
               onClick: @_handleAlertDismiss.bind(@, index)
       , @
       .toArray()
-

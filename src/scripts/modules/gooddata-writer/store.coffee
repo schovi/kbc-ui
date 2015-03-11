@@ -194,6 +194,7 @@ dispatcher.register (payload) ->
         store
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'isDeleting'], false
+        .setIn ['writers', action.configuration.id, 'isOptimizingSLI'], false
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
 
@@ -445,6 +446,22 @@ dispatcher.register (payload) ->
         'writers'
         action.configurationId
         'isDeleting'
+      ]
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_SLI_START
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'isOptimizingSLI'
+      ], true
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS, constants.ActionTypes.GOOD_DATA_WRITER_SLI_ERROR
+      _store = _store.deleteIn [
+        'writers'
+        action.configurationId
+        'isOptimizingSLI'
       ]
       GoodDataWriterStore.emitChange()
 

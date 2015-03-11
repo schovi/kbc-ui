@@ -4,10 +4,11 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
 
-{Panel, PanelGroup, Alert} = require('react-bootstrap')
+{Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 Alert = React.createFactory Alert
+DropdownButton = React.createFactory DropdownButton
 
 TablesList = React.createFactory(require './BucketTablesList')
 ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
@@ -17,7 +18,7 @@ Link = React.createFactory(require('react-router').Link)
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
 
-{strong, br, ul, li, div, span, i, a, button} = React.DOM
+{strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
@@ -63,7 +64,7 @@ module.exports = React.createClass
                 href: "https://secure.gooddata.com/#s=/gdc/projects/#{writer.getIn(['gd', 'pid'])}|dataPage|"
                 target: '_blank'
               ,
-                span className: 'fa fa-bar-chart-o'
+                span className: 'fa fa-bar-chart-o fa-fw'
                 ' GoodData Project'
           li null,
             Confirm
@@ -96,18 +97,50 @@ module.exports = React.createClass
               onConfirm: @_handleProjectDelete
             ,
               a null,
-                span className: 'kbc-icon-cup'
+                span className: 'kbc-icon-cup fa-fw'
                 ' Delete Writer'
             if @state.writer.get 'isDeleting'
               span null,
                 ' '
                 React.createElement Loader
+          li null,
+            if @state.writer.get 'isOptimizingSLI'
+              span null,
+                ' '
+                React.createElement Loader
+            DropdownButton
+              title: span null,
+                span className: 'fa fa-cog fa-fw'
+                ' Advanced'
+              navItem: true
+            ,
+              li null,
+                Confirm
+                  title: 'Optimize SLI hash'
+                  text: div null,
+                    p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
+                    process which might damage your GD project.
+                    We insist on consluting with us before taking any further step. '
+                    p null, 'Please contact us on: support@keboola.com'
+                  buttonLabel: 'Optimize'
+                  buttonType: 'primary'
+                  onConfirm: @_handleOptimizeSLI
+                ,
+                  a null,
+                    'Optimize SLI hash'
+              li null,
+                a null,
+                  'Reset Project'
+
 
   _handleProjectUpload: ->
     actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
 
   _handleProjectDelete: ->
     actionCreators.deleteWriter(@state.writer.getIn ['config', 'id'])
+
+  _handleOptimizeSLI: ->
+    actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'])
 
   _renderBucketPanel: (bucketId, tables) ->
 

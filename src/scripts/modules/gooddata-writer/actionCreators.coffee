@@ -84,6 +84,29 @@ module.exports =
   loadReferenceableTables: (configurationId) ->
     @loadReferencableTablesForce(configurationId)
 
+  optimizeSLIHash: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_START
+      configurationId: configurationId
+
+    goodDataWriterApi
+    .optimizeSLIHash configurationId
+    .then (response) ->
+      console.log 'optimize', response
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
+        configurationId: configurationId
+
+      applicationActionCreators.sendNotification 'Optimalization of SLI hashes has been triggered!
+      You can see progress TODO'
+    .catch (e) ->
+      console.log 'error', e
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_ERROR
+        configurationId: configurationId
+        error: e
+      throw e
+
   saveTableField: (configurationId, tableId, fieldName, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START

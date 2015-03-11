@@ -91,6 +91,14 @@ module.exports =
     .then (response) ->
       response.body
 
+  optimizeSLIHash: (configurationId) ->
+    createRequest('POST', 'optimize-sli-hash')
+    .send
+      writerId: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
   deleteWriter: (configurationId) ->
     createRequest('DELETE', 'writers')
     .query writerId: configurationId
