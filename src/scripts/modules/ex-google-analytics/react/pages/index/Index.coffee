@@ -7,10 +7,12 @@ QueriesTable = React.createFactory(require('./QueriesTable'))
 OptionsModal = React.createFactory(require('./OptionsModal'))
 #RunExtraction = React.createFactory(require '../../components/RunExtraction')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
+DatePicker = require('react-datepicker')
+#DateRangePicker = React.createFactory require('react-bootstrap-daterangepicker')
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
@@ -83,12 +85,16 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-gear'
               ' Options'
+        li null,
+          RunButtonModal
+            title: 'Run Extraction'
+            mode: 'link'
+            component: 'ex-google-analytics'
+            runParams: =>
+              account: @state.configId
+          ,
+            'You are about to run extraction of this configuration.'
 
-        # li null,
-        #   RunExtraction
-        #     component: 'ex-google-analytics'
-        #     runParams:
-        #       account: @state.configId
       div className: 'kbc-buttons',
         span null,
           'Created By '

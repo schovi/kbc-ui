@@ -32,7 +32,8 @@
     "canvg": "git+https://git@github.com/keboola/canvg.git#f3e9fa2992d9a25fe4a46db3a59a208b5a8b86cb",
     "human-size": "~1.1.0",
     "react-code-mirror": "~3.0.3",
-    "typeahead": "0.2.0"
+    "typeahead": "0.2.0",
+    "react-datepicker": "git://github.com/iam4x/react-datepicker#fix-npm-use-webpack"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
