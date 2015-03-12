@@ -25,7 +25,7 @@ module.exports = React.createClass
         label className: 'col-sm-3 control-label', 'From Date:'
         div className: 'col-sm-6',
           DatePicker
-            key:'fromdate'
+            key: 'fromdate'
             onChange: (value) =>
               @setState
                 dateFrom: value
@@ -39,7 +39,7 @@ module.exports = React.createClass
         div className: 'col-sm-6',
           DatePicker
             dateFormat: "DD/MM/YYYY"
-            key:'untildate'
+            key: 'untildate'
             onChange: (value) =>
               @setState
                 dateUntil: value
