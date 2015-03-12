@@ -15,7 +15,6 @@
     "immutable": "~3.6.0",
     "moment": "~2.8.3",
     "object-assign": "^1.0.0",
-    "prettycron": "git+https://git@github.com/keboola/prettycron.git#fdc0a11ec63d9aa449c38ac8961c0d173e6eb920",
     "react": "^0.12.0",
     "react-bootstrap": "~0.13.0",
     "react-dnd": "~0.8.1",
@@ -33,7 +32,8 @@
     "human-size": "~1.1.0",
     "react-code-mirror": "~3.0.3",
     "typeahead": "0.2.0",
-    "react-datepicker": "git://github.com/iam4x/react-datepicker#fix-npm-use-webpack"
+    "react-datepicker": "git://github.com/iam4x/react-datepicker#fix-npm-use-webpack",
+    "prettycron": "~0.10.0"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
