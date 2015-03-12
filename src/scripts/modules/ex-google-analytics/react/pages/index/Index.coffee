@@ -12,7 +12,7 @@ ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
 RunDatePicker = React.createFactory require('../../components/DatePicker')
 moment = require 'moment'
-
+DeleteConfigurationButton = React.createFactory(require '../../../../components/react/components/DeleteConfigurationButton')
 {strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
@@ -109,7 +109,10 @@ module.exports = React.createClass
               onChangeUntil: (date) =>
                 @setState
                   until: date
-
+        li null,
+          DeleteConfigurationButton
+            componentId: 'ex-google-analytics'
+            configId: @state.configId
       div className: 'kbc-buttons',
         span null,
           'Created By '
