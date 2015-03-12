@@ -4,15 +4,14 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 Input = React.createFactory(require('react-bootstrap').Input)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
-Label = React.createFactory(require('react-bootstrap').Label)
-Select = React.createFactory(require('react-select'))
-fuzzy = require 'fuzzy'
+
 
 Loader = React.createFactory(require '../../../../../react/common/Loader')
 bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'
 actionCreators = require '../../../exGanalActionCreators'
+Typeahead = require '../../../../../react/common/Typeahead'
 
 {div, p, strong, form, input, label, div} = React.DOM
 
@@ -35,6 +34,7 @@ module.exports = React.createClass
       bucket.get('stage') != 'sys').map( (value,key) ->
       return key)
     isLoadingBuckets: bucketsStore.getIsLoading()
+    buckets: buckets
     optionsBuckets: buckets.map( (value, key) ->
       value: value
       label: value
@@ -61,22 +61,12 @@ module.exports = React.createClass
           div className: 'form-group',
             label className: 'control-label col-xs-4', 'Outbucket'
             div className: 'col-xs-8',
-              Select
+              React.createElement Typeahead,
                 value: @state.outputBucket
-                options: @state.optionsBuckets.toArray()
-                clearable: true
-                filterOptions: (options, filter, currentValues) =>
-                  result = @state.optionsBuckets.filter( (option) ->
-                    fuzzy.match(filter, option.value)
-                  )
-                  result = result.toList().unshift(
-                    value: filter
-                    label: filter
-                    ).toArray()
-                  result
-                onChange: (value) =>
+                onChange: (event) =>
                   @setState
-                    outputBucket: value
+                    outputBucket: event.target.value
+                options: @state.buckets.toArray()
 
       div className: 'modal-footer',
         ButtonToolbar null,
