@@ -2,9 +2,8 @@ React = require 'react'
 
 CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
+Typeahead = require '../../../../react/common/Typeahead'
 
-Select = require 'react-select'
-fuzzy = require 'fuzzy'
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input} = React.DOM
 
@@ -16,9 +15,9 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
 
-  _handleOutputTableChange: (newValue) ->
+  _handleOutputTableChange: (event) ->
     console.log 'change', newValue
-    @props.onChange(@props.query.set 'outputTable', newValue)
+    @props.onChange(@props.query.set 'outputTable', event.target.value)
 
   _handlePrimaryKeyChange: (event) ->
     @props.onChange(@props.query.set 'primaryKey', event.target.value)
@@ -37,12 +36,10 @@ module.exports = React.createClass
             div className: 'row',
               span className: 'col-md-3', 'Output table '
               strong className: 'col-md-9',
-                React.createElement Select,
+                React.createElement Typeahead,
                   value: @props.query.get 'outputTable'
-                  options: @_tableSelectOptions().toArray()
                   onChange: @_handleOutputTableChange
-                  filterOptions: @_filterOptions
-                  multi: false
+                  options: @_tableSelectOptions().toArray()
           div className: 'td',
             div className: 'row',
               span className: 'col-md-3', 'Primary key '
@@ -82,6 +79,7 @@ module.exports = React.createClass
     options
 
   _tableSelectOptions: ->
-    @props.tables.map (table) ->
-      value: table.get 'id'
-      label: table.get 'id'
+    @props.tables
+    .map (table) ->
+      table.get 'id'
+    .sortBy (val) -> val
