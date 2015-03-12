@@ -191,7 +191,7 @@ gulp.task 'release', ['copy-to-release'], ->
       s3basePath + 'scripts/bundle.min.js'
     ]
     styles: [
-      s3basePath + 'scripts/app.min.css'
+      s3basePath + 'styles/app.min.css'
     ]
 
   console.log 'Manifest URL: ', "#{s3basePath}manifest.json"
