@@ -4,6 +4,10 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 Input = React.createFactory(require('react-bootstrap').Input)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
+Label = React.createFactory(require('react-bootstrap').Label)
+Select = React.createFactory(require('react-select'))
+fuzzy = require 'fuzzy'
+
 Loader = React.createFactory(require '../../../../../react/common/Loader')
 bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
@@ -20,33 +24,59 @@ module.exports = React.createClass
     outputBucket: React.PropTypes.string.isRequired
 
   getInitialState: ->
-    storageActionCreators.loadBuckets()
     outputBucket: @props.outputBucket
 
+  componentDidMount: ->
+    storageActionCreators.loadBuckets()
+
   getStateFromStores: ->
-    console.log bucketsStore.getAll()
+    buckets = bucketsStore.getAll()
+    buckets = buckets.filter( (bucket) ->
+      bucket.get('stage') != 'sys').map( (value,key) ->
+      return key)
     isLoadingBuckets: bucketsStore.getIsLoading()
-    buckets: bucketsStore.getAll()
+    optionsBuckets: buckets.map( (value, key) ->
+      value: value
+      label: value
+      )
     isSavingBucket: analStore.isSavingBucket(@props.configId)
 
   render: ->
-    console.log 'rendering options'
     Modal
       title: 'Options'
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',
         form className: 'form-horizontal',
-          Input
-            label: 'Output Bucket'
-            tooltip: 'Common destination bucket for every table in the configuration'
-            type: 'text'
-            value: @state.outputBucket
-            labelClassName: 'col-xs-4'
-            wrapperClassName: 'col-xs-8'
-            onChange: (event) =>
-              @setState
-                outputBucket: event.target.value
+          # Input
+          #   label: 'Output Bucket'
+          #   tooltip: 'Common destination bucket for every table in the configuration'
+          #   type: 'text'
+          #   value: @state.outputBucket
+          #   labelClassName: 'col-xs-4'
+          #   wrapperClassName: 'col-xs-8'
+          #   onChange: (event) =>
+          #     @setState
+          #       outputBucket: event.target.value
+          div className: 'form-group',
+            label className: 'control-label col-xs-4', 'Outbucket'
+            div className: 'col-xs-8',
+              Select
+                value: @state.outputBucket
+                options: @state.optionsBuckets.toArray()
+                clearable: true
+                filterOptions: (options, filter, currentValues) =>
+                  result = @state.optionsBuckets.filter( (option) ->
+                    fuzzy.match(filter, option.value)
+                  )
+                  result = result.toList().unshift(
+                    value: filter
+                    label: filter
+                    ).toArray()
+                  result
+                onChange: (value) =>
+                  @setState
+                    outputBucket: value
 
       div className: 'modal-footer',
         ButtonToolbar null,
