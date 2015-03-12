@@ -5,14 +5,13 @@ ExGanalStore = require '../../../exGanalStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 QueriesTable = React.createFactory(require('./QueriesTable'))
 OptionsModal = React.createFactory(require('./OptionsModal'))
-#RunExtraction = React.createFactory(require '../../components/RunExtraction')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 Link = React.createFactory(require('react-router').Link)
-DatePicker = require('react-datepicker')
-#DateRangePicker = React.createFactory require('react-bootstrap-daterangepicker')
+RunDatePicker = React.createFactory require('../../components/DatePicker')
+moment = require 'moment'
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
@@ -24,6 +23,9 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     config: ExGanalStore.getConfig(configId)
     configId: configId
+    since: moment().subtract(4, 'day')
+    until: moment()
+
 
   render: ->
     console.log 'rendering', @state.config.toJS()
@@ -92,8 +94,18 @@ module.exports = React.createClass
             component: 'ex-google-analytics'
             runParams: =>
               account: @state.configId
+              since: @state.since.toISOString()
+              until: @state.until.toISOString()
           ,
-            'You are about to run extraction of this configuration.'
+            RunDatePicker
+              since: @state.since
+              until: @state.until
+              onChangeFrom: (date) =>
+                @setState
+                  since: date
+              onChangeUntil: (date) =>
+                @setState
+                  until: date
 
       div className: 'kbc-buttons',
         span null,
