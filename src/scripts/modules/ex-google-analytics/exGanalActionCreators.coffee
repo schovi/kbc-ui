@@ -5,6 +5,19 @@ exGanalApi = require './exGanalApi'
 exGanalStore = require './exGanalStore'
 
 module.exports =
+  deleteQuery: (configId, queryName) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_DELETE_QUERY
+      configId: configId
+      queryName: queryName
+    queries = exGanalStore.getDeletingQueries configId, queryName
+    exGanalApi.postConfig(configId, queries.toJS()).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_DELETE_QUERY_SUCCESS
+        configId: configId
+        queryName: queryName
+        newQueries: result
+
 
   saveOutputBucket: (configId, newBucket) ->
     dispatcher.handleViewAction

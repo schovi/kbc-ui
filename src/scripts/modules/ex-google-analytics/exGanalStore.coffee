@@ -18,10 +18,15 @@ _store = Map(
   selectedProfiles: Map() #configId
   savingProfiles: Map() #configId
   savingBucket: Map() #configId
+  deletingQueries: Map()
 )
 
 
 GanalStore = StoreUtils.createStore
+  isDeletingQueries: (configId, queryName) ->
+    _store.hasIn ['deletingQueries', configId, queryName]
+  getDeletingQueries: (configId, queryName) ->
+    _store.getIn ['deletingQueries', configId, queryName]
   isSavingBucket: (configId) ->
     _store.hasIn ['savingBucket', configId]
   getSavingBucket: (configId) ->
@@ -97,6 +102,23 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_DELETE_QUERY
+      configId = action.configId
+      queryName = action.queryName
+      config = GanalStore.getConfig configId
+      deletingQueries = config.get('configuration').filter (q, qname) ->
+        qname != queryName
+      _store = _store.setIn ['deletingQueries', configId, queryName], deletingQueries
+      GanalStore.emitChange()
+
+    when Constants.ActionTypes.EX_GANAL_DELETE_QUERY_SUCCESS
+      configId = action.configId
+      queryName = action.queryName
+      newQueries = action.newQueries
+      _store = _store.deleteIn ['deletingQueries', configId, queryName]
+      _store = _store.setIn ['configs', configId], Immutable.fromJS(newQueries)
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE
       configId = action.configId
       newBucket = action.newBucket

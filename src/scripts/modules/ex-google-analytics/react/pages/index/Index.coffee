@@ -56,6 +56,9 @@ module.exports = React.createClass
           queries: queries
           profiles: @state.config.get 'items'
           configId: @state.configId
+          isQueryDeleting: (queryName) =>
+            ExGanalStore.isDeletingQueries(@state.configId, queryName)
+
       else
         "no queries yet"
 

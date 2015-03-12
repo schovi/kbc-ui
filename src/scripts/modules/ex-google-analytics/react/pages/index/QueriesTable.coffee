@@ -2,9 +2,12 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Loader = React.createFactory(require '../../../../../react/common/Loader')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+DeleteQueryButton = React.createFactory require('../../components/DeleteQueryButton')
 {i, span, div, a, strong} = React.DOM
 _ = require 'underscore'
-
+RunDatePicker = React.createFactory require('../../components/DatePicker')
+moment = require 'moment'
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 
 module.exports = React.createClass
   displayName: 'QueriesTable'
@@ -13,7 +16,12 @@ module.exports = React.createClass
     queries: React.PropTypes.object
     profiles: React.PropTypes.object
     config: React.PropTypes.object
+    isQueryDeleting: React.PropTypes.func
     # configurationId: number
+
+  getInitialState: ->
+    since: moment().subtract(4, 'day')
+    until: moment()
 
 
   render: ->
@@ -32,6 +40,33 @@ module.exports = React.createClass
         div className: 'td',
           i className: 'fa fa-fw fa-long-arrow-right'
         div className: 'td', @props.config.get('outputBucket') + '.' + queryName
+        div className: 'td text-right',
+          if @_isQueryDeleting(queryName)
+            Loader()
+          else
+            DeleteQueryButton
+              queryName: queryName
+              configurationId: @props.configId
+
+          RunButtonModal
+            title: 'Run Single Query Extraction'
+            component: 'ex-google-analytics'
+            runParams: =>
+              account: @props.configId
+              since: @state.since.toISOString()
+              until: @state.until.toISOString()
+              dataset: queryName
+          ,
+            RunDatePicker
+              since: @state.since
+              until: @state.until
+              onChangeFrom: (date) =>
+                @setState
+                  since: date
+              onChangeUntil: (date) =>
+                @setState
+                  until: date
+
       ).toArray()
 
     div className: 'table table-striped table-hover',
@@ -51,6 +86,9 @@ module.exports = React.createClass
           span className: 'th' #actions buttons
       div className: 'tbody',
          children
+
+  _isQueryDeleting: (queryName) ->
+    @props.isQueryDeleting queryName
 
   _getProfileName: (profileId) ->
     profiles = @props.profiles
