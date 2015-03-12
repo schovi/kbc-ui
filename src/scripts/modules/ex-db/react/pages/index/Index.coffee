@@ -5,6 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 ExDbStore = require '../../../exDbStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -12,34 +13,18 @@ ComponentMetadata = require '../../../../components/react/components/ComponentMe
 
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 
-LatestJobs = React.createFactory(require '../../../../components/react/components/LatestJobs')
+LatestJobs = React.createFactory(require '../../../../components/react/components/SidebarJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
 
-jobs = [
-  id: 123
-  status: 'processing'
-  startTime: "2015-02-16T15:01:52+01:00"
-  endTime: null
-  token:
-    id: 234
-    description: "martin@keboola.com"
-,
-  id: 120
-  status: 'success'
-  startTime: "2015-02-16T16:01:52+01:00"
-  endTime: "2015-02-16T15:02:23+00:00"
-  token:
-    id: 235
-    description: "Orchestrator new"
-]
+
 
 {div, table, tbody, tr, td, ul, li, i, a, span, h2, p, strong, br} = React.DOM
 
 
 module.exports = React.createClass
   displayName: 'ExDbIndex'
-  mixins: [createStoreMixin(ExDbStore)]
+  mixins: [createStoreMixin(ExDbStore, LatestJobsStore)]
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
@@ -48,6 +33,7 @@ module.exports = React.createClass
     config = RoutesStore.getRouterState().getIn ['params', 'config']
     configuration: ExDbStore.getConfig config
     deletingQueries: ExDbStore.getDeletingQueries config
+    latestJobs: LatestJobsStore.getJobs 'ex-db', config
 
   render: ->
     configurationId = @state.configuration.get('id')
@@ -102,4 +88,4 @@ module.exports = React.createClass
           configId: @state.configuration.get 'id'
 
         LatestJobs
-          jobs: Immutable.fromJS jobs
+          jobs: @state.latestJobs

@@ -10,6 +10,7 @@ ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderBut
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons'
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
 
+JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
 
 module.exports =
@@ -23,6 +24,10 @@ module.exports =
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Database - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
+  poll:
+    interval: 5
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('ex-db', params.config)
   defaultRouteHandler: ExDbIndex
   childRoutes: [
     name: 'ex-db-query'

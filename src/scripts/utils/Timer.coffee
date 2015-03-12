@@ -14,6 +14,7 @@ class Timer
   ###
   poll: (callback, interval = 30) ->
     timer = @
+    timer._runAction callback
     @_timers.push
       callback: callback
       intervalId: setInterval(->

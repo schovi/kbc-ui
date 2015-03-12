@@ -57,3 +57,26 @@ module.exports =
       type: constants.ActionTypes.JOB_LOAD_SUCCESS
       job: jobDetail
 
+  loadComponentConfigurationLatestJobs: (componentId, configurationId) ->
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.JOBS_LATEST_LOAD_START
+      componentId: componentId
+      configurationId: configurationId
+
+    query = "component:#{componentId} AND params.config:#{configurationId}"
+    jobsApi
+    .getJobsParametrized(query, 10, 0)
+    .then (jobs) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.JOBS_LATEST_LOAD_SUCCESS
+        componentId: componentId
+        configurationId: configurationId
+        jobs: jobs
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.JOBS_LATEST_LOAD_ERROR
+        componentId: componentId
+        configurationId: configurationId
+        error: e
+      throw e
