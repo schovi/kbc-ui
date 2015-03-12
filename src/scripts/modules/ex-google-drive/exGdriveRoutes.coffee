@@ -7,6 +7,7 @@ authorizePage = require './react/pages/authorize/authorize'
 ExGdriveSheetHeaderButtons = require './react/components/SheetHeaderButtons'
 sheetsPicker = require './react/pages/sheets-picker/SheetsPicker'
 ExGdriveSheetSelectionHeader = require './react/components/SaveSelectedSheetsHeader'
+JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'ex-google-drive'
@@ -17,7 +18,10 @@ module.exports =
     (params) ->
       ExGoogleDriveActionCreators.loadConfiguration params.config
   ]
-
+  poll:
+    interval: 5
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('ex-google-drive', params.config)
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Google Drive extractor - ' + IntalledComponentsStore.getConfig('ex-google-drive', configId).get 'name'

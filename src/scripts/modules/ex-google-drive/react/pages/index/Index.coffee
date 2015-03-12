@@ -3,11 +3,14 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGdriveStore = require '../../../exGdriveStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction')
 
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -19,12 +22,13 @@ ItemsTable = React.createFactory(require './ItemsTable')
 
 module.exports = React.createClass
   displayName: 'ExGdriveIndex'
-  mixins: [createStoreMixin(ExGdriveStore)]
+  mixins: [createStoreMixin(ExGdriveStore, LatestJobsStore)]
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     configuration: ExGdriveStore.getConfig(config)
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
+    latestJobs: LatestJobsStore.getJobs 'ex-google-drive', config
 
   render: ->
     #console.log @state.configuration.toJS()
@@ -77,11 +81,10 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-drive'
             configId: @state.configuration.get 'id'
-      div className: 'kbc-buttons',
-        span null,
-          'Created By '
-        strong null, 'Damien Dickhead'
-        br null
-        span null,
-          'Created On '
-        strong null, '2014-05-07 09:24 '
+
+      React.createElement ComponentMetadata,
+        componentId: 'ex-google-drive'
+        configId: @state.configuration.get 'id'
+
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
