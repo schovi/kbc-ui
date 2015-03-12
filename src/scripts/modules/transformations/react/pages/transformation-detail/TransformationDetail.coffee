@@ -106,13 +106,14 @@ TransformationDetail = React.createClass
                       span {className: 'td'},
                         index + 1
                       span {className: 'td'},
-                        CodeMirror
-                          theme: 'solarized'
-                          lineNumbers: false
-                          defaultValue: item.get 'query'
-                          readOnly: true
-                          mode: mode
-                          lineWrapping: true
+                        span {className: 'static'},
+                          CodeMirror
+                            theme: 'solarized'
+                            lineNumbers: false
+                            defaultValue: item.get 'query'
+                            readOnly: true
+                            mode: mode
+                            lineWrapping: true
                   , @).toArray()
             else
               p {}, small {}, 'No SQL Queries'
