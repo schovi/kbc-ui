@@ -8,7 +8,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
-ComponentDescription = React.createFactory ComponentDescription
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 
@@ -55,7 +55,7 @@ module.exports = React.createClass
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           div className: 'col-sm-8',
-            ComponentDescription
+            React.createElement ComponentDescription,
               componentId: 'ex-db'
               configId: @state.configuration.get('id')
           div className: 'col-sm-4 kbc-buttons',
@@ -97,14 +97,9 @@ module.exports = React.createClass
               componentId: 'ex-db'
               configId: @state.configuration.get 'id'
 
-        div className: 'kbc-buttons',
-          span null,
-            'Created By '
-          strong null, 'Martin Halamíček'
-          br null
-          span null,
-            'Created On '
-          strong null, '2014-05-07 09:24 '
+        React.createElement ComponentMetadata,
+          componentId: 'ex-db'
+          configId: @state.configuration.get 'id'
 
         LatestJobs
           jobs: Immutable.fromJS jobs
