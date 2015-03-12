@@ -7,9 +7,7 @@ assign = require 'object-assign'
 
 class Graph
 
-  constructor: (@data, wrapperElement, localScope) ->
-
-    @localScope = localScope
+  constructor: (@data, wrapperElement) ->
 
     @zoom =
       scale: 1
@@ -20,11 +18,19 @@ class Graph
 
     @spacing = 2
 
+    @styles = {}
+
     @dimensions =
       height: 0
       width: 0
 
-    @direction = 'reverse'
+    @position =
+      x: 0
+      y: 0
+
+    @defaultPosition =
+      x: 0
+      y: 0
 
     @svgTemplate = """
        <svg width="0" height="0" id="svgGraph" class="kb-graph">
@@ -63,31 +69,12 @@ class Graph
           label: '<a href="' + @data.nodes[i].link + '">' + @data.nodes[i].label + '</a>'
 
     for i of @data.transitions
-      if (@direction == 'reverse')
-        data.addEdge null, @data.transitions[i].target, @data.transitions[i].source,
-          type: if @data.transitions[i].transitive then 'transitive' else ''
-      else
-        data.addEdge null, @data.transitions[i].source, @data.transitions[i].target,
-          type: if @data.transitions[i].transitive then 'transitive' else ''
+      data.addEdge null, @data.transitions[i].source, @data.transitions[i].target,
+        type: @data.transitions[i].type
     return data
 
-  # add classes to paths
-  getEdgeType: (edges, id, type) ->
-    result = false
-    _.map edges, (dataEdge, key) ->
-      if key == id && dataEdge.value.type == type
-        result = true
-    result
-
-  # add classes to nodes
-  getNodeType: (nodes, id, type) ->
-    result = false
-    nodes.forEach (dataNode) ->
-      if dataNode.node == id && dataNode.type == type
-        result = true
-    result
-
-  createSvg: (svg, data, config) =>
+  createSvg: (svg, data, config, centerNodeId) =>
+    svg.selectAll("*").remove()
     config = assign({noLinks: false}, config)
     renderer = new dagreD3.Renderer()
     graph = @
@@ -124,19 +111,41 @@ class Graph
     layoutConfig = dagreD3.layout().rankDir("LR").nodeSep(10 * @spacing).edgeSep(10 * @spacing).rankSep(20 * @spacing)
     layout = renderer.zoom(false).layout(layoutConfig).run data, svg.append("g")
 
-    d3.selectAll("g.node").classed({"dataset": (gNode) ->
-      graph.getNodeType(graph.data.nodes, gNode, 'dataset')
-    , "dimension": (gNode) ->
-      graph.getNodeType(graph.data.nodes, gNode, 'dimension')
-    })
+    # assign edge classes according to node types
+    transitionClassMap = []
+    _.each(_.uniq(_.pluck(graph.data.transitions, 'type')), (transitionType) ->
+      transitionClassMap[transitionType] = (id) ->
+        gEdges[id].value.type == transitionType
+    )
+    d3.selectAll("g.edgePath").classed(transitionClassMap)
 
-    d3.selectAll("g.edgePath").classed({"transitive": (gPath) ->
-      graph.getEdgeType(gEdges, gPath, 'transitive')
-    })
+    # assign node classes according to node types
+    nodeClassMap = []
+    _.each(_.uniq(_.pluck(graph.data.nodes, 'type')), (nodeType) ->
+      nodeClassMap[nodeType] = (id) ->
+        result = false
+        graph.data.nodes.forEach (dataNode) ->
+          if dataNode.node == id && dataNode.type == nodeType
+            result = true
+        result
+    )
+    d3.selectAll("g.node").classed(nodeClassMap)
+
+    # apply styeles
+    _.each(@styles, (styles, selector) ->
+      _.each(styles, (value, property) ->
+        d3.selectAll(selector).style(property, value)
+      )
+    )
 
     @dimensions =
       width: layout.graph().width
       height: layout.graph().height
+
+    if centerNodeId && layout._nodes[centerNodeId]
+      @defaultPosition.x = -layout._nodes[centerNodeId].value.x + (@getCanvasWidth() / 2)
+      @defaultPosition.y = -layout._nodes[centerNodeId].value.y + (@getCanvasHeight() / 2)
+
 
   zoomIn: ->
     prevZoomScale = @zoom.scale
@@ -145,10 +154,7 @@ class Graph
     if (factor != 1)
       @position.x = (@position.x - @getCanvasWidth() / 2) * factor + @getCanvasWidth() / 2
       @position.y = (@position.y - @getCanvasHeight() / 2) * factor + @getCanvasHeight() / 2
-    d3
-    .select(@element)
-    .select("g")
-    .attr "transform", "translate(" + [@position.x, @position.y] + "), scale(" + @zoom.scale + ")"
+    @setTransform()
 
   zoomOut: ->
     prevZoomScale = @zoom.scale
@@ -157,27 +163,25 @@ class Graph
     if (factor != 1)
       @position.x = (@position.x - @getCanvasWidth() / 2) * factor + @getCanvasWidth() / 2
       @position.y = (@position.y - @getCanvasHeight() / 2) * factor + @getCanvasHeight() / 2
-    d3
-    .select(@element)
-    .select("g")
-    .attr "transform", "translate(" + [@position.x, @position.y] + "), scale(" + @zoom.scale + ")"
+    @setTransform()
 
   reset: ->
-    @position.x = 0
-    @position.y = 0
+    @position.x = @defaultPosition.x
+    @position.y = @defaultPosition.y
     @zoom.scale = 1
-    d3
-    .select(@element)
-    .select("g")
-    .attr "transform", "translate(" + [@position.x, @position.y] + "), scale(" + @zoom.scale + ")"
+    @setTransform()
 
   getCanvasHeight: ->
     Math.min(500, Math.max(200, @dimensions.height * @zoom.scale))
 
   getCanvasWidth: ->
-    width =  @element.parentNode.offsetWidth
-    console.log 'width', width
-    width
+    @element.parentNode.offsetWidth
+
+  setTransform: ->
+    translateExpression = "translate(" + [@position.x, @position.y] + "), scale(" + @zoom.scale + ")"
+    d3.select(@element).select("g").attr "transform", translateExpression
+    # adjust canvas height
+    d3.select(@element).attr "height", @getCanvasHeight()
 
   adjustCanvasWidth: ->
     d3.select(@element).attr "width", @getCanvasWidth()
@@ -192,41 +196,11 @@ class Graph
       document.body.appendChild svgElement
       dimensions = @createSvg(d3.select("#svgDownload"), data, config)
 
-      console.log 'download dims', dimensions
       svgElement = document.getElementById('svgDownload')
       # detect height and width
 
-      d3.select(svgElement).attr "width", dimensions.width * @zoom.scale + 10
-      d3.select(svgElement).attr "height", dimensions.height * @zoom.scale + 10
-
-
-      # add styles
-      d3.select(svgElement).selectAll("g.edgePath")
-        .style("fill", "none")
-        .style("stroke", "grey")
-        .style("stroke-width", "1.5px")
-
-      d3.select(svgElement).selectAll("g.edgePath.transitive")
-        .style("stroke-dasharray", "5, 5")
-
-
-      d3.select(svgElement).selectAll("g.node text")
-        .style("color", "#ffffff")
-        .style("fill", "#ffffff")
-        .style("display", "inline-block")
-        .style("padding", "2px 4px")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .style("line-height", "14px")
-        .style("text-shadow", "0 -1px 0 rgba(0, 0, 0, 0.25)")
-        .style("white-space", "nowrap")
-        .style("vertical-align", "baseline")
-
-      d3.select(svgElement).selectAll(".node.dataset rect")
-        .style("fill", "#468847")
-
-      d3.select(svgElement).selectAll(".node.dimension rect")
-        .style("fill", "#428bca")
+      d3.select(svgElement).attr "width", @dimensions.width * @zoom.scale + 10
+      d3.select(svgElement).attr "height", @dimensions.height * @zoom.scale + 10
 
       # apply zoom
       d3.select(svgElement).select("g").attr "transform", "translate(" + [5 , 5] + "), scale(" + @zoom.scale + ")"
@@ -239,7 +213,6 @@ class Graph
       # conver canvast to img
       xml = new XMLSerializer().serializeToString(svgElement)
 
-      console.log 'canvg', canvg
       canvg('canvasDownload', xml, { ignoreMouse: true, ignoreAnimation: true })
       canvas = document.getElementById("canvasDownload")
 
@@ -249,17 +222,17 @@ class Graph
       svgElement.parentNode.removeChild(svgElement)
       canvasElement.parentNode.removeChild(canvasElement)
 
-  render: ->
+  render: (centerNodeId) ->
     data = @getData()
 
-    d3.select(@element).attr "width", @element.parentNode.offsetWidth
-    d3.select(@element).attr "height", 500
+    @adjustCanvasWidth()
 
     if data
       svg = d3.select(@element)
       graph = @
 
-      @createSvg(svg, data)
+      @createSvg(svg, data, {}, centerNodeId)
+      @reset()
 
       # init position + dragging
       svg.call d3.behavior.drag().origin(->

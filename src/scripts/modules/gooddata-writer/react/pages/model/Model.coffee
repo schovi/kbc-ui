@@ -21,7 +21,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'col-sm-8',
+      div className: 'col-sm-12',
         p null,
           'This graph represents the model defined in Keboola Connection.'
           'To see the current model in GoodData, open the '

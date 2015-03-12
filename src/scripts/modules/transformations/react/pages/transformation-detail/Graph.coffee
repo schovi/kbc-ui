@@ -2,27 +2,23 @@ React = require 'react'
 
 GraphCanvas = React.createFactory(require '../../../../../react/common/GraphCanvas')
 {Button} = require 'react-bootstrap'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+PureRenderMixin = require('react/addons').addons.PureRenderMixin
+
 
 module.exports = React.createClass
   displayName: 'Graph'
   propTypes:
     model: React.PropTypes.object.isRequired
-  mixins: [ImmutableRenderMixin]
-
-  getInitialState: ->
-    direction: 'reverse'
+    centerNodeId: React.PropTypes.string
+    showDisabled: React.PropTypes.bool.isRequired
+    disabledTransformation: React.PropTypes.bool.isRequired
+    showDisabledHandler: React.PropTypes.func.isRequired
 
   _modelData: ->
     model = @props.model.toJS()
-    for i of model.transitions
-      if (@state.direction == 'reverse')
-        source = model.transitions[i].source
-        target = model.transitions[i].target
-        model.transitions[i].source = target
-        model.transitions[i].target = source
-      if model.transitions[i].transitive
-        model.transitions[i].type = model.transitions[i].type + ' transitive'
+    for i of model.nodes
+      if model.nodes[i].type == 'transformation' || model.nodes[i].type == 'remote-transformation'
+        model.nodes[i].label = model.nodes[i].label.substring(model.nodes[i].label.indexOf("] ") + 2)
     model
 
   _renderGraph: ->
@@ -34,7 +30,7 @@ module.exports = React.createClass
         "fill": "none"
         "stroke": "grey"
         "stroke-width": "1.5px"
-      "g.edgePath.transitive":
+      "g.edgePath.alias":
         "stroke-dasharray": "5, 5"
       "g.node text":
         "color": "#ffffff"
@@ -47,12 +43,17 @@ module.exports = React.createClass
         "text-shadow": "0 -1px 0 rgba(0, 0, 0, 0.25)"
         "white-space": "nowrap"
         "vertical-align": "baseline"
-      "g.node.dataset rect":
+      ".node.transformation rect":
+        "fill": "#363636"
+      ".node.remote-transformation rect":
+        "fill": "#999999"
+      ".node.writer rect":
+        "fill": "#faa732"
+      ".node.input rect":
         "fill": "#468847"
-      "g.node.dimension rect":
-        "fill": "#428bca"
-    @graph.render()
-
+      ".node.output rect":
+        "fill": "#3a87ad"
+    @graph.render(@props.centerNodeId)
 
   componentWillUnmount: ->
     window.removeEventListener('resize', @handleResize)
@@ -60,6 +61,9 @@ module.exports = React.createClass
   componentDidMount: ->
     window.addEventListener('resize', @handleResize)
     @graph = new GraphCanvas {}, @refs.graph.getDOMNode()
+    @_renderGraph()
+
+  componentDidUpdate: ->
     @_renderGraph()
 
   _handleZoomIn: ->
@@ -74,16 +78,12 @@ module.exports = React.createClass
   _handleDownload: ->
     @graph.download()
 
-  handleResize: ->
+  handleResize: (e) ->
     @graph.adjustCanvasWidth()
 
-  _handleChangeDirection: (e) ->
-    direction = e.target.value
-    @setState
-      direction: direction
-    ,
-      ->
-        @_renderGraph()
+  _handleChangeShowDisabled: (e) ->
+    showDisabled = e.target.checked
+    @props.showDisabledHandler(showDisabled)
 
   render: ->
     React.DOM.div null,
@@ -113,16 +113,18 @@ module.exports = React.createClass
           ,
             React.DOM.span className: 'fa fa-arrow-circle-o-down'
             ' Download'
-          React.DOM.select
-            className: 'form-control pull-right'
-            label: 'Direction'
-            value: @state.direction
-            onChange: @_handleChangeDirection
-          ,
-            React.DOM.option value: 'regular',
-              'Regular'
-            React.DOM.option value: 'reverse',
-              'GoodData'
+          React.DOM.span className: 'pull-right',
+            if @props.disabledTransformation
+              React.DOM.small {},
+                'Showing all disabled transformations'
+            else
+              React.DOM.label className: 'control-label',
+                React.DOM.input
+                  type: 'checkbox'
+                  onChange: @_handleChangeShowDisabled
+                  checked: @props.showDisabled
+                  ref: 'showDisabled'
+                'Show disabled transformations'
 
       React.DOM.div null,
         React.DOM.div

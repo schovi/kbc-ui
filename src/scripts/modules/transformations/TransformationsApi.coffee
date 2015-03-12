@@ -46,5 +46,15 @@ transformationsApi =
     .send()
     .promise()
 
+  getGraph: (configuration) ->
+    path = "graph?table=#{configuration.tableId}"
+    path = path + "&direction=#{configuration.direction}"
+    path = path + "&showDisabled=" + (if configuration.showDisabled then '1' else '0')
+    path = path + '&limit=' + JSON.stringify(configuration.limit)
+    createRequest('GET', path)
+    .promise()
+    .then((response) ->
+      response.body
+    )
 
 module.exports = transformationsApi

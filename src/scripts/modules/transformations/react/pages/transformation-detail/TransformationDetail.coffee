@@ -15,6 +15,7 @@ OutputMappingRow = React.createFactory(require './OutputMappingRow')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+GraphContainer = require './GraphContainer'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -48,6 +49,7 @@ TransformationDetail = React.createClass
           #  transformation: @state.transformation.get 'id'
         div className: 'row',
           h4 {}, 'Overview'
+          GraphContainer transformation: @state.transformation
         div className: 'row',
           h4 {}, 'Input Mapping'
             if @state.transformation.get('input').count()
@@ -133,7 +135,7 @@ TransformationDetail = React.createClass
               mode: 'link'
               activateTooltip: 'Enable Transformation'
               deactivateTooltip: 'Disable Transformation'
-              isActive: !!@state.transformation.get('disabled')
+              isActive: !parseInt(@state.transformation.get('disabled'))
               isPending: @state.pendingActions.get('save')
               onChange: ->
 
