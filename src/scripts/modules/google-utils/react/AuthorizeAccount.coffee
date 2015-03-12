@@ -2,13 +2,13 @@ React = require('react')
 ComponentsStore = require '../../components/stores/ComponentsStore'
 RoutesStore = require '../../../stores/RoutesStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
-
+ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
 Loader = React.createFactory(require '../../../react/common/Loader')
-{div, span, form } = React.DOM
+{textarea, label, div, span, form, pre } = React.DOM
 
 module.exports = React.createClass
   displayName: 'authorize'
@@ -17,8 +17,9 @@ module.exports = React.createClass
     componentName: React.PropTypes.string.isRequired
     isGeneratingExtLink: React.PropTypes.bool.isRequired
     extLink: React.PropTypes.string.isRequired
-    refererUrlxs: React.PropTypes.string.isRequired
+    refererUrl: React.PropTypes.string.isRequired
     generateExternalLinkFn: React.PropTypes.func.isRequired
+    sendEmailFn: React.PropTypes.func.isRequired
 
 
   getInitialState: ->
@@ -64,8 +65,49 @@ module.exports = React.createClass
                     'Generate External Link'
               Loader() if @props.isGeneratingExtLink
 
+
   _renderExtLink: ->
-    div className: 'pre', @props.extLink.get('link')
+    form className: 'form-horizontal',
+      div className: 'pre',
+      div className: 'form-group',
+        label className: 'col-sm-12', 'External Authorization Link'
+        div className: 'col-sm-12',
+          pre className: 'form-control-static', @props.extLink.get('link')
+        if @props.sendEmailFn
+          div null,
+            Input
+              wrapperClassName: 'col-sm-9'
+              labelClassName: 'col-sm-3'
+              label: 'Email Link To:'
+              className: 'form-control'
+              type: 'text'
+              value: @state.email
+              placeholder: 'email address of the recipient'
+              onChange: (event) =>
+                @setState
+                  email: event.target.value
+            div className: 'form-group',
+              label className: 'col-sm-3 control-label', 'Message:'
+              div className: 'col-sm-9',
+                textarea
+                  className: 'form-control'
+                  value: @state.message
+                  placeholder: 'message for the link recipient'
+                  onChange: (event) =>
+                    @setState
+                      message: event.target.value
+            Button
+              bsStyle: 'primary'
+              className: 'col-sm-offset-3 col-sm-2'
+              onClick: =>
+                @props.sendEmailFn(@state.email, @state.message)
+            ,
+              'Send Email'
+
+
+
+
+
 
   _generateExternalLink: ->
     @props.generateExternalLinkFn()
