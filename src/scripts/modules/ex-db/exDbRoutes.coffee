@@ -10,6 +10,8 @@ ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderBut
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons'
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
 
+StorageActionCreators = require('../components/StorageActionCreators')
+
 module.exports =
   name: 'ex-db'
   path: 'ex-db/:config'
@@ -27,6 +29,10 @@ module.exports =
     path: 'query/:query'
     title: ->
       'query'
+    requireData: [
+      ->
+        StorageActionCreators.loadTables()
+    ]
     handler: ExDbQueryDetail
     headerButtonsHandler: ExDbQueryHeaderButtons
   ,
@@ -34,6 +40,10 @@ module.exports =
     path: 'new-query'
     title: ->
       'New query'
+    requireData: [
+      ->
+        StorageActionCreators.loadTables()
+    ]
     handler: ExDbNewQuery
     headerButtonsHandler: ExDbNewQueryHeaderButtons
   ,

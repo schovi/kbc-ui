@@ -3,6 +3,7 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 ExDbStore = require '../../../exDbStore'
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
 ExDbActionCreators = require '../../../exDbActionCreators'
@@ -16,7 +17,7 @@ QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetail'
-  mixins: [createStoreMixin(ExDbStore)]
+  mixins: [createStoreMixin(ExDbStore, StorageTablesStore)]
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
@@ -29,6 +30,7 @@ module.exports = React.createClass
     query: ExDbStore.getConfigQuery configId, queryId
     editingQuery: ExDbStore.getEditingQuery configId, queryId
     isEditing: isEditing
+    tables: StorageTablesStore.getAll()
 
   _handleQueryChange: (newQuery) ->
     ExDbActionCreators.updateEditingQuery @state.configId, newQuery
@@ -37,6 +39,7 @@ module.exports = React.createClass
     if @state.isEditing
       QueryEditor
         query: @state.editingQuery
+        tables: @state.tables
         onChange: @_handleQueryChange
     else
       QueryDetailStatic

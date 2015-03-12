@@ -5,6 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExDbStore = require '../../../exDbStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ExDbActionCreators = require '../../../exDbActionCreators'
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
@@ -13,12 +14,13 @@ QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
 module.exports = React.createClass
   displayName: 'ExDbNewQuery'
-  mixins: [createStoreMixin(ExDbStore)]
+  mixins: [createStoreMixin(ExDbStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getRouterState().getIn ['params', 'config']
     configId: configId
     newQuery: ExDbStore.getNewQuery configId
+    tables: StorageTablesStore.getAll()
 
   _handleQueryChange: (newQuery) ->
     ExDbActionCreators.updateNewQuery @state.configId, newQuery
@@ -26,4 +28,5 @@ module.exports = React.createClass
   render: ->
     QueryEditor
       query: @state.newQuery
+      tables: @state.tables
       onChange: @_handleQueryChange
