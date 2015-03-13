@@ -107,8 +107,9 @@ TransformationDetail = React.createClass
                   , @).toArray()
             else
               p {}, small {}, 'No Output Mapping'
-        p {},
-          if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+
+        if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+          p {},
             h4 {}, 'Script'
             if @state.transformation.get('items').count()
               CodeMirror
@@ -119,8 +120,9 @@ TransformationDetail = React.createClass
                 mode: 'text/x-rsrc'
                 lineWrapping: true
             else
-              p {}, small {}, 'No R Script'
-          else
+              small {}, 'No R Script'
+        else
+          p {},
             h4 {}, 'Queries'
             if @state.transformation.get('items').count()
               mode = 'text/text'
@@ -147,7 +149,7 @@ TransformationDetail = React.createClass
                             lineWrapping: true
                   , @).toArray()
             else
-              p {}, small {}, 'No SQL Queries'
+              small {}, 'No SQL Queries'
 
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
