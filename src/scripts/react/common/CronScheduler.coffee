@@ -21,7 +21,20 @@ PERIOD_OPTIONS = [
   label: 'Year'
 ]
 
-MONTHS = ['January', 'February', 'March']
+MONTHS = [
+  'January'
+  'February'
+  'March'
+  'April'
+  'May'
+  'June'
+  'July'
+  'August'
+  'September'
+  'October'
+  'November'
+  'December'
+]
 
 DAYS = [
   'Sunday'
@@ -39,6 +52,8 @@ lpad = (value, padding) ->
 
   (zeroes + value).slice(padding * -1)
 
+{div, label, p} = React.DOM
+
 Scheduler = React.createClass
   displayName: 'CronScheduler'
   propTypes:
@@ -52,31 +67,64 @@ Scheduler = React.createClass
     onPeriodChange: React.PropTypes.func.isRequired
   render: ->
     currentPeriod = @props.period
-    React.DOM.div null,
-      @props.crontabRecord
-      'Every '
-      @_periodSelect()
-      if currentPeriod == later.year.name
-        React.DOM.span null,
-          ' on the '
-          @_daySelect()
-          ' of '
-          @_monthSelect()
-      else if currentPeriod == later.month.name
-        React.DOM.span null,
-          ' on the '
-          @_daySelect()
+    div
+      className: 'form'
+    ,
+      div className: 'form-group',
+        label null,
+          'Every '
+        div null,
+          @_periodSelect()
+      switch currentPeriod
+        when later.year.name
+          div key: 'year',
+            div className: 'form-group',
+              label null,
+                ' on the '
+              @_daySelect()
+            div className: 'form-group',
+              label null,
+                ' of '
+              @_monthSelect()
+            @_hoursAndMinutes()
+        when later.month.name
+          React.DOM.div key: 'month',
+            div className: 'form-group',
+              label null,
+                ' on the '
+              @_daySelect()
+            @_hoursAndMinutes()
+        when later.dayOfWeek.name
+          React.DOM.div key: 'dayOfWeek',
+            div className: 'form-group',
+              label null,
+              ' on '
+              @_dayOfWeekSelect()
+            @_hoursAndMinutes()
+        when later.day.name
+          React.DOM.div  key: 'day',
+            @_hoursAndMinutes()
+        else
+          div className: 'form-group',
+            label null,
+              'at'
+            @_minuteSelect()
+
+  _hoursAndMinutes: ->
+    div null,
+      div className: 'form-group',
+        label null,
           ' at '
-      else if currentPeriod == later.dayOfWeek.name
         React.DOM.span null,
-          ' on '
-          @_dayOfWeekSelect()
-          ' at '
-      if currentPeriod != later.hour.name
-        React.DOM.span null,
-          @_hourSelect()
+        @_hourSelect()
+        p className: 'help-block',
+          'Hours (UTC)'
+      div className: 'form-group',
+        label null,
           ' : '
-      @_minuteSelect()
+        @_minuteSelect()
+        p className: 'help-block',
+          'Minutes'
 
   _periodSelect: ->
     React.createElement Select,
@@ -144,8 +192,6 @@ Scheduler = React.createClass
 
   _handleChange: (propName, newValue) ->
     @props.onChange propName, newValue
-
-
 
 module.exports = React.createClass
   displayName: 'CronSchedulerWrapper'

@@ -26,10 +26,10 @@ OrchestrationDetailButtons = React.createClass
     React.DOM.span null,
       OrchestrationActiveButton
         orchestration: @state.orchestration
-        isPending: @state.pendingActions.get 'active'
+        isPending: @state.pendingActions.get 'active', false
       OrchestrationDeleteButton
         orchestration: @state.orchestration
-        isPending: @state.pendingActions.get 'delete'
+        isPending: @state.pendingActions.get 'delete', false
       OrchestrationRunButton
         orchestration: @state.orchestration
 

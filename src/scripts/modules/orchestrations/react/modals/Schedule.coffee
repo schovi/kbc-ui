@@ -21,6 +21,7 @@ module.exports = React.createClass
   render: ->
     React.createElement Modal,
       title: "Orchestration Schedule"
+      keyboard: false
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',
