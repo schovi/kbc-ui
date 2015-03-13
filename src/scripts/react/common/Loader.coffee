@@ -3,4 +3,5 @@ React = require 'react'
 module.exports = React.createClass
   displayName: 'Loader'
   render: ->
-    React.DOM.span className: 'fa fa-fw fa-spin fa-spinner'
+    className = if @props.className then @props.className else ''
+    React.DOM.span className: "fa fa-spin fa-spinner #{className}"
