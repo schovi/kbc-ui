@@ -92,16 +92,11 @@ module.exports =
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
       configId: configId
-    dispatcher.handleViewAction
-      type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
-      configId: configId
-      extLink:
-        link: "https://syrup.keboola.com/ex-google-analytics/external-auth#{Math.random() * 100}"
-    # exGanalApi.getExtLink(configId).then (result) ->
-    #   dispatcher.handleViewAction
-    #     type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
-    #     configId: configId
-    #     extLink: result
+    exGanalApi.getExtLink(configId).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
+        configId: configId
+        extLink: result
 
   loadConfiguration: (configId) ->
     if exGanalStore.hasConfig(configId)
