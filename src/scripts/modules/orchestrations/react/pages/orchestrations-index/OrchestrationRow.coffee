@@ -46,15 +46,6 @@ OrchestrationRow = React.createClass(
 
     buttons
 
-  cron: ->
-    if @props.orchestration.get('crontabRecord')
-      (span {className: 'inline-edit crontab-record'},
-        (CronRecord {crontabRecord: @props.orchestration.get('crontabRecord')})
-      )
-    else
-      (span {className: 'param-value pull-left'}, 'No schedule')
-
-
   render: ->
     lastExecutedJob = @props.orchestration.get('lastExecutedJob')
     if lastExecutedJob && lastExecutedJob.get 'startTime'
@@ -78,7 +69,8 @@ OrchestrationRow = React.createClass(
         duration
       ),
       (span {className: 'td'},
-        @cron()
+        CronRecord
+          crontabRecord: @props.orchestration.get 'crontabRecord'
       ),
       (span {className: 'td text-right'},
         @buttons()

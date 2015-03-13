@@ -12,8 +12,6 @@ Cron = React.createClass(
     nextProps.crontabRecord != @props.crontabRecord
 
   cronUTCtext: (crontab) ->
-    if !crontab
-      return ""
     cArray = crontab.split(" ")
     if cArray and cArray[1] != "*"
       return " (UTC) "
@@ -21,8 +19,11 @@ Cron = React.createClass(
 
   render: ->
     span null,
-      span null, prettyCron.toString(@props.crontabRecord),
-        span null, @cronUTCtext(@props.crontabRecord)
+      if @props.crontabRecord
+        span null, prettyCron.toString(@props.crontabRecord),
+          span null, @cronUTCtext(@props.crontabRecord)
+      else
+        'No Schedule'
 )
 
 module.exports = Cron
