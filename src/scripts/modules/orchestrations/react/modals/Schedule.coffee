@@ -1,5 +1,5 @@
 React = require 'react'
-{Modal} = require('react-bootstrap')
+{Modal, Button} = require('react-bootstrap')
 ConfirmButtons = require '../../../../react/common/ConfirmButtons'
 CronScheduler = require '../../../../react/common/CronScheduler'
 
@@ -15,7 +15,7 @@ module.exports = React.createClass
     crontabRecord: React.PropTypes.string.isRequired
 
   getInitialState: ->
-    crontabRecord: @props.crontabRecord
+    crontabRecord: @props.crontabRecord || '0 0 * * *'
     isSaving: false
 
   render: ->
@@ -28,19 +28,35 @@ module.exports = React.createClass
           crontabRecord: @state.crontabRecord
           onChange: @_handleCrontabChange
       div className: 'modal-footer',
-        React.createElement ConfirmButtons,
-          isSaving: @state.isSaving
-          isDisabled: false
-          onCancel: @props.onRequestHide
-          onSave: @_handleSave
+        div null,
+          div className: 'col-sm-6',
+            Button
+              className: 'pull-left'
+              bsStyle: 'danger'
+              onClick: @_handleRemoveSchedule
+              disabled: @state.isSaving
+            ,
+              'Remove Schedule'
+          div className: 'col-sm-6',
+            React.createElement ConfirmButtons,
+              isSaving: @state.isSaving
+              isDisabled: false
+              onCancel: @props.onRequestHide
+              onSave: @_handleSave
+
+  _handleRemoveSchedule: ->
+    @_save null
 
   _handleSave: ->
+    @_save @state.crontabRecord
+
+  _save: (crontabRecord) ->
     @setState
       isSaving: true
 
     OrchestrationsApi
     .updateOrchestration @props.orchestrationId,
-      crontabRecord: @state.crontabRecord
+      crontabRecord: crontabRecord
     .then @_handleSaveSuccess
     .catch (e) ->
       console.log 'error', e
