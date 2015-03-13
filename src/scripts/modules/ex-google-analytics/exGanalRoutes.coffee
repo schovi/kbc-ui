@@ -2,6 +2,8 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 
 ExGanalIndex = require './react/pages/index/Index'
 ExGanalActionCreators = require './exGanalActionCreators'
+JobsActionCreators = require '../jobs/ActionCreators'
+
 #authorizePage = require './react/pages/authorize/authorize'
 #ExGanalSheetHeaderButtons = require './react/components/SheetHeaderButtons'
 ExGanalNewQuery = require './react/pages/new-query/NewQuery'
@@ -20,7 +22,10 @@ module.exports =
     (params) ->
       ExGanalActionCreators.loadConfiguration params.config
   ]
-
+  poll:
+    interval: 7
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('ex-google-analytics', params.config)
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'Google Analytics extractor - ' + IntalledComponentsStore.getConfig('ex-google-analytics', configId).get 'name'

@@ -1,5 +1,6 @@
 React = require 'react'
-
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalStore = require '../../../exGanalStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -14,11 +15,13 @@ RunDatePicker = React.createFactory require('../../components/DatePicker')
 moment = require 'moment'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+
 {strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalIndex'
-  mixins: [createStoreMixin(ExGanalStore)]
+  mixins: [createStoreMixin(ExGanalStore, LatestJobsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -26,7 +29,7 @@ module.exports = React.createClass
     configId: configId
     since: moment().subtract(4, 'day')
     until: moment()
-
+    latestJobs: LatestJobsStore.getJobs 'ex-google-analytics', configId
 
   render: ->
     console.log 'rendering', @state.config.toJS()
@@ -114,11 +117,9 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-analytics'
             configId: @state.configId
-      div className: 'kbc-buttons',
-        span null,
-          'Created By '
-        strong null, 'Damien Dickhead'
-        br null
-        span null,
-          'Created On '
-        strong null, '2014-05-07 09:24 '
+      React.createElement ComponentMetadata,
+        componentId: 'ex-google-analytics'
+        configId: @state.configId
+
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
