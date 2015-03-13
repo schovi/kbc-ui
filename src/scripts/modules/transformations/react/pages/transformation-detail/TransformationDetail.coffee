@@ -21,6 +21,7 @@ GraphContainer = require './GraphContainer'
 Panel  = React.createFactory Panel
 Accordion = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
+TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -47,6 +48,15 @@ TransformationDetail = React.createClass
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           @state.transformation.get 'description'
+          span {className: 'pull-right'},
+            span {className: 'label kbc-label-rounded-small label-default'},
+              @state.transformation.get 'phase'
+            ' '
+            TransformationTypeLabel
+              backend: @state.transformation.get 'backend'
+              type: @state.transformation.get 'type'
+
+
           #TransformationDescription
           #  bucketId: @state.bucket.get 'id'
           #  transformation: @state.transformation.get 'id'
