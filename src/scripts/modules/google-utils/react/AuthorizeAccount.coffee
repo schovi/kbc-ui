@@ -16,7 +16,7 @@ module.exports = React.createClass
   propTypes:
     componentName: React.PropTypes.string.isRequired
     isGeneratingExtLink: React.PropTypes.bool.isRequired
-    extLink: React.PropTypes.string.isRequired
+    extLink: React.PropTypes.object
     refererUrl: React.PropTypes.string.isRequired
     generateExternalLinkFn: React.PropTypes.func.isRequired
     sendEmailFn: React.PropTypes.func.isRequired
@@ -69,7 +69,7 @@ module.exports = React.createClass
               Loader() if @props.isGeneratingExtLink
 
   _renderExtLink: ->
-    form className: 'form-horizontal',
+    div className: 'form-horizontal',
       div className: 'form-group',
         label className: 'col-sm-3 control-label', 'External Authorization Link:'
         div className: 'col-sm-9',
