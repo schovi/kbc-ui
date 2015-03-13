@@ -7,6 +7,7 @@ TransformationTableTypeLabel = React.createFactory(require '../../components/Tra
 FileSize = React.createFactory(require '../../../../../react/common/FileSize')
 Check = React.createFactory(require '../../../../../react/common/Check')
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
+numeral = require 'numeral'
 
 InputMappingDetail = React.createClass(
   displayName: 'InputMappingDetail'
@@ -35,7 +36,10 @@ InputMappingDetail = React.createClass(
           span {className: 'td'},
             'Source table rows'
           span {className: 'td'},
-            @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCoount'], 'N/A'
+            if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
+              numeral(@props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']).format('0,0')
+            else
+              'N/A'
 
         span {className: 'tr'},
           span {className: 'td'},
