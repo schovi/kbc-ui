@@ -15,6 +15,7 @@ module.exports = React.createClass
     configId: configId
     isGeneratingExtLink: exGanalStore.isGeneratingExtLink(configId)
     extLink: exGanalStore.getExtLink(configId)
+    isSendingEmail: exGanalStore.isSendingEmail configId
 
   render: ->
     AuthorizeAccount
@@ -24,6 +25,15 @@ module.exports = React.createClass
       refererUrl: @_getReferrer()
       generateExternalLinkFn: =>
         ActionCreators.generateExternalLink(@state.configId)
+      sendingLink: exGanalStore.isSendingEmail(@state.configId)
+      sendEmailFn: (user, email, message, url) =>
+        ActionCreators.sendLinkEmail(
+          user: user
+          email: email
+          message: message
+          url: url
+        ,
+          @state.configId)
 
 
   _getReferrer: ->

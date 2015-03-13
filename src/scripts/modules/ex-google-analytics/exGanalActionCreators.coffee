@@ -3,8 +3,20 @@ Constants = require('./exGanalConstants')
 Promise = require('bluebird')
 exGanalApi = require './exGanalApi'
 exGanalStore = require './exGanalStore'
-
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 module.exports =
+
+  sendLinkEmail: (emailObject, configId) ->
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_SEND_LINK
+      configId: configId
+      emailObject: emailObject
+    exGanalApi.sendLinkEmail(emailObject).then (result) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_SEND_LINK_SUCCESS
+        configId: configId
+      ApplicationActionCreators.sendNotification "Email has been succesfully sent to #{emailObject.email}"
+
   deleteQuery: (configId, queryName) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_DELETE_QUERY
@@ -80,11 +92,16 @@ module.exports =
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
       configId: configId
-    exGanalApi.getExtLink(configId).then (result) ->
-      dispatcher.handleViewAction
-        type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
-        configId: configId
-        extLink: result
+    dispatcher.handleViewAction
+      type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
+      configId: configId
+      extLink:
+        link : "https://syrup.keboola.com/ex-google-analytics/external-auth#{Math.random()*100}"
+    # exGanalApi.getExtLink(configId).then (result) ->
+    #   dispatcher.handleViewAction
+    #     type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
+    #     configId: configId
+    #     extLink: result
 
   loadConfiguration: (configId) ->
     if exGanalStore.hasConfig(configId)

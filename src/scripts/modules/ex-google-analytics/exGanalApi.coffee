@@ -19,6 +19,13 @@ module.exports =
     .promise().then (response) ->
       response.body
 
+  sendLinkEmail: (emailObject) ->
+    createRequest('POST', "send-external-link")
+    .send(emailObject)
+    .promise().then (response) ->
+      return response.body
+
+
   getExtLink: (configId) ->
     data =
       'account': configId

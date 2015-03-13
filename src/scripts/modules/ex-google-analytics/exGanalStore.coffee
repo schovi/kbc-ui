@@ -19,10 +19,13 @@ _store = Map(
   savingProfiles: Map() #configId
   savingBucket: Map() #configId
   deletingQueries: Map()
+  sendingLink: Map() #configId, emailObject
 )
 
 
 GanalStore = StoreUtils.createStore
+  isSendingEmail: (configId) ->
+    _store.hasIn ['sendingLink', configId]
   isDeletingQueries: (configId, queryName) ->
     _store.hasIn ['deletingQueries', configId, queryName]
   getDeletingQueries: (configId, queryName) ->
@@ -102,6 +105,17 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_SEND_LINK
+      configId = action.configId
+      emailObject = Immutable.fromJS action.emailObject
+      _store = _store.setIn ['sendingLink', configId], emailObject
+      GanalStore.emitChange()
+
+    when Constants.ActionTypes.EX_GANAL_SEND_LINK_SUCCESS
+      configId = action.configId
+      _store = _store.deleteIn ['sendingLink', configId]
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_DELETE_QUERY
       configId = action.configId
       queryName = action.queryName
