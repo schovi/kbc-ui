@@ -24,13 +24,16 @@ Writers = React.createClass
 Home = React.createClass
   displayName: 'Home'
   getInitialState: ->
-    crontabRecord: '0,45 0 17 1 *'
+    crontabRecord: '0 0 * * 2'
   render: ->
     React.DOM.div className: 'container-fluid kbc-main-content',
       'Home'
       React.createElement CronScheduler,
         crontabRecord: @state.crontabRecord
         onChange: @_handleChange
+
+
+
 
   _handleChange: (crontabRecord) ->
     console.log 'changed', crontabRecord
