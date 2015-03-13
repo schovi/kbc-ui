@@ -59,18 +59,18 @@ module.exports =
 
     orchestrationsApi
     .getOrchestration(id)
-    .then((orchestration) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
-        orchestration: orchestration
-      )
-      return
-    )
+    .then @receiveOrchestration
     .catch((error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.ORCHESTRATION_LOAD_ERROR
       )
       throw error
+    )
+
+  receiveOrchestration: (orchestration) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
+      orchestration: orchestration
     )
 
   loadOrchestration: (id) ->

@@ -160,7 +160,6 @@ module.exports = React.createClass
   render: ->
     schedule = @_getSchedule()
     React.DOM.div null,
-      @props.crontabRecord
       React.createElement Scheduler,
         period: @state.period
         M: schedule.M || []

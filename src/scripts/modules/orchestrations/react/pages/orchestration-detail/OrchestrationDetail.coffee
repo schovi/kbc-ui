@@ -16,6 +16,8 @@ SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
 Link = React.createFactory(require('react-router').Link)
 TasksSummary = React.createFactory(require './TasksSummary')
 CronRecord = React.createFactory(require '../../components/CronRecord')
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+ScheduleModal = React.createFactory(require('../../modals/Schedule'))
 
 {div, h2, span, strong} = React.DOM
 
@@ -60,9 +62,14 @@ OrchestrationDetail = React.createClass
                 span className: 'col-md-3', 'Schedule '
                 strong className: 'col-md-9',
                   CronRecord crontabRecord: @state.orchestration.get('crontabRecord')
-                  span null,
-                    span className: 'fa fa-edit'
-                    ' Edit schedule'
+                  ModalTrigger
+                    modal: ScheduleModal
+                      crontabRecord: @state.orchestration.get 'crontabRecord'
+                      orchestrationId: @state.orchestration.get 'id'
+                  ,
+                    span className: 'btn btn-link',
+                      span className: 'fa fa-edit'
+                      ' Edit schedule'
               div className: 'row',
                 span className: 'col-md-3', 'Assigned Token'
                 strong className: 'col-md-9', @state.orchestration.getIn ['token', 'description']

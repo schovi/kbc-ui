@@ -8,42 +8,37 @@
 React = require 'react'
 
 Loader = require './Loader'
-ConfirmButtons = require './ConfirmButtons'
 Button = require('react-bootstrap').Button
 
 module.exports = React.createClass
-  displayName: 'EditButtons'
+  displayName: 'ConfirmButtons'
   propTypes:
-    isEditing: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
     isDisabled: React.PropTypes.bool
-    editLabel: React.PropTypes.string
     cancelLabel: React.PropTypes.string
     saveLabel: React.PropTypes.string
     onCancel: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
-    onEditStart: React.PropTypes.func.isRequired
 
 
   getDefaultProps: ->
-    editLabel: 'Edit'
     saveLabel: 'Save'
     cancelLabel: 'Cancel'
     isDisabled: false
 
   render: ->
-    if @props.isEditing
-      ConfirmButtons
-        isSaving: @props.isSaving
-        isDisabled: @props.isDisabled
-        cancelLabel: @props.cancelLabel
-        saveLabel: @props.saveLabel
-        onCancel: @props.onCancel
-        onSave: @props.onSave
-    else
-      React.DOM.div null,
-        React.createElement Button,
-          bsStyle: 'success'
-          onClick: @props.onEditStart
-        ,
-          @props.editLabel
+    React.DOM.div className: 'kbc-buttons',
+      if @props.isSaving
+        React.createElement Loader
+      React.createElement Button,
+        bsStyle: 'link'
+        disabled: @props.isSaving
+        onClick: @props.onCancel
+      ,
+        @props.cancelLabel
+      React.createElement Button,
+        bsStyle: 'success'
+        disabled: @props.isSaving || @props.isDisabled
+        onClick: @props.onSave
+      ,
+        @props.saveLabel
