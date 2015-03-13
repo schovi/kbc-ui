@@ -52,7 +52,7 @@ module.exports = React.createClass
             title: 'Run Single Query Extraction'
             component: 'ex-google-analytics'
             runParams: =>
-              account: @props.configId
+              config: @props.configId
               since: @state.since.toISOString()
               until: @state.until.toISOString()
               dataset: queryName

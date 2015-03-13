@@ -6,6 +6,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
 RunExtraction = React.createFactory(require '../../components/RunExtraction')
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
@@ -73,10 +74,15 @@ module.exports = React.createClass
             i className: 'fa fa-fw fa-user'
             ' Authorize'
         li null,
-          RunExtraction
+          RunButtonModal
+            title: 'Run Extraction'
+            mode: 'link'
             component: 'ex-google-drive'
-            runParams:
-              account: @state.configuration.get 'id'
+            runParams: =>
+              config: @state.configuration.get 'id'
+          ,
+            'You are about to run the extraction of this configuration.'
+
         li null,
           DeleteConfigurationButton
             componentId: 'ex-google-drive'

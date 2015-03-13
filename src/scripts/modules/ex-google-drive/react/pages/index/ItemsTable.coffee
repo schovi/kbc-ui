@@ -45,7 +45,7 @@ module.exports = React.createClass
             runParams: ->
               sheetId: row.get 'sheetId'
               googleId: row.get 'googleId'
-              account: configurationId
+              config: configurationId
           ,
             'You are about to run extraction.'
 

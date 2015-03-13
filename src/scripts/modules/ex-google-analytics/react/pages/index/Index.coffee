@@ -97,7 +97,7 @@ module.exports = React.createClass
             mode: 'link'
             component: 'ex-google-analytics'
             runParams: =>
-              account: @state.configId
+              config: @state.configId
               since: @state.since.toISOString()
               until: @state.until.toISOString()
           ,
