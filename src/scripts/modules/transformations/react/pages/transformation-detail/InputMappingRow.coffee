@@ -17,20 +17,21 @@ InputMappingRow = React.createClass(
     tables: React.PropTypes.object.isRequired
 
   render: ->
-    div {className: 'tr'},
-      span {className: 'td'},
-        TableSizeLabel {size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']}
-        ' '
-        TableBackendLabel {backend: @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']}
-      span {className: 'td'},
-        @props.inputMapping.get 'source'
-      span {className: 'td'},
-        span {className: 'fa fa-chevron-right fa-fw'}
-        ' '
-        TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
-        ' '
-        @props.inputMapping.get 'destination'
+    span {className: 'table'},
+      span {className: 'tbody'},
+        span {className: 'tr'},
+          span {className: 'td'},
+            TableSizeLabel {size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']}
+            ' '
+            TableBackendLabel {backend: @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']}
+          span {className: 'td'},
+            @props.inputMapping.get 'source'
+          span {className: 'td'},
+            span {className: 'fa fa-chevron-right fa-fw'}
+            ' '
+            TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
+            ' '
+            @props.inputMapping.get 'destination'
 )
 
 module.exports = InputMappingRow
-

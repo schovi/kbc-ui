@@ -5,7 +5,7 @@ TransformationBucketsStore = require './stores/TransformationBucketsStore'
 TransformationsStore = require './stores/TransformationsStore'
 InstalledComponentsActionCreators = require '../components/InstalledComponentsActionCreators'
 Promise = require 'bluebird'
-
+_ = require 'underscore'
 
 module.exports =
 
@@ -138,4 +138,3 @@ module.exports =
       )
       throw error
     )
-

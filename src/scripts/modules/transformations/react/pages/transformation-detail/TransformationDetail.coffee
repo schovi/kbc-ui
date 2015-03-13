@@ -11,16 +11,19 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
+InputMappingDetail = React.createFactory(require './InputMappingDetail')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 GraphContainer = require './GraphContainer'
+{Panel, Accordion} = require('react-bootstrap')
+Panel  = React.createFactory Panel
+Accordion = React.createFactory Accordion
+{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
-
-{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 
 {div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p} = React.DOM
 
@@ -47,23 +50,42 @@ TransformationDetail = React.createClass
           #TransformationDescription
           #  bucketId: @state.bucket.get 'id'
           #  transformation: @state.transformation.get 'id'
-        div className: 'row',
+        p {},
           h4 {}, 'Overview'
           GraphContainer transformation: @state.transformation
-        div className: 'row',
+        p {},
           h4 {}, 'Input Mapping'
-            if @state.transformation.get('input').count()
-              div className: 'table table-striped table-hover',
-                span {className: 'tbody'},
-                  @state.transformation.get('input').map((input) ->
-                    InputMappingRow
-                      transformationBackend: @state.transformation.get('backend')
-                      inputMapping: input,
-                      tables: @state.tables
-                  , @).toArray()
-            else
-              p {}, small {}, 'No Input Mapping'
-        div className: 'row',
+          if @state.transformation.get('input').count()
+            Accordion {},
+              @state.transformation.get('input').map((input, key) ->
+                Panel
+                  header:
+                    span {},
+                      InputMappingRow
+                        transformationBackend: @state.transformation.get('backend')
+                        inputMapping: input,
+                        tables: @state.tables
+                  eventKey: key
+                ,
+                  InputMappingDetail
+                    transformationBackend: @state.transformation.get('backend')
+                    inputMapping: input,
+                    tables: @state.tables
+
+              , @).toArray()
+            ###
+            div className: 'table table-striped table-hover',
+              span {className: 'tbody'},
+                @state.transformation.get('input').map((input) ->
+                  InputMappingRow
+                    transformationBackend: @state.transformation.get('backend')
+                    inputMapping: input,
+                    tables: @state.tables
+                , @).toArray()
+            ###
+          else
+            p {}, small {}, 'No Input Mapping'
+        p {},
           h4 {}, 'Output Mapping'
             if @state.transformation.get('output').count()
               div className: 'table table-striped table-hover',
@@ -75,8 +97,7 @@ TransformationDetail = React.createClass
                   , @).toArray()
             else
               p {}, small {}, 'No Output Mapping'
-        div className: 'row',
-
+        p {},
           if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
             h4 {}, 'Script'
             if @state.transformation.get('items').count()
