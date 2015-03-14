@@ -27,7 +27,7 @@ TransformationTypeLabel = React.createFactory(require '../../components/Transfor
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
 
-{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p} = React.DOM
+{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p, code} = React.DOM
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
@@ -51,6 +51,7 @@ TransformationDetail = React.createClass
           @state.transformation.get 'description'
           span {className: 'pull-right'},
             span {className: 'label kbc-label-rounded-small label-default'},
+              'Phase: '
               @state.transformation.get 'phase'
             ' '
             TransformationTypeLabel
@@ -61,10 +62,10 @@ TransformationDetail = React.createClass
           #TransformationDescription
           #  bucketId: @state.bucket.get 'id'
           #  transformation: @state.transformation.get 'id'
-        p {},
+        div {},
           h4 {}, 'Overview'
           GraphContainer transformation: @state.transformation
-        p {},
+        div {},
           h4 {}, 'Input Mapping'
           if @state.transformation.get('input').count()
             Accordion {},
@@ -88,7 +89,7 @@ TransformationDetail = React.createClass
               , @).toArray()
           else
             p {}, small {}, 'No Input Mapping'
-        p {},
+        div {},
           h4 {}, 'Output Mapping'
             if @state.transformation.get('output').count()
               Accordion {},
@@ -114,7 +115,29 @@ TransformationDetail = React.createClass
               p {}, small {}, 'No Output Mapping'
 
         if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-          p {},
+          div {},
+            h4 {}, 'Packages'
+            p {},
+              if @state.transformation.get('packages').count()
+                @state.transformation.get('packages').map((packageName, key) ->
+                  span {},
+                    span {className: 'label label-default'},
+                      packageName
+                    ' '
+                , @).toArray()
+              else
+                small {},
+                'No packages will installed'
+
+            if @state.transformation.get('packages').count()
+              p {}, small {},
+                  'These packages will be installed in the Docker container running the R script. '
+                  'Do not forget to load them using '
+                  code {}, 'library()'
+                  '.'
+
+        if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+          div {},
             h4 {}, 'Script'
             if @state.transformation.get('items').count()
               CodeMirror
@@ -125,9 +148,9 @@ TransformationDetail = React.createClass
                 mode: 'text/x-rsrc'
                 lineWrapping: true
             else
-              small {}, 'No R Script'
+              p {}, small {}, 'No R Script'
         else
-          p {},
+          div {},
             h4 {}, 'Queries'
             if @state.transformation.get('items').count()
               mode = 'text/text'
@@ -154,7 +177,7 @@ TransformationDetail = React.createClass
                             lineWrapping: true
                   , @).toArray()
             else
-              small {}, 'No SQL Queries'
+              p {}, small {}, 'No SQL Queries'
 
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',

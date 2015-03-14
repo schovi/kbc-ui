@@ -56,7 +56,6 @@ OutputMappingDetail = React.createClass(
             else
               'N/A'
 
-
         span {className: 'tr'},
           span {className: 'td'},
             'Incremental'
