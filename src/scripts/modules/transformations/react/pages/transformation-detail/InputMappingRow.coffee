@@ -31,7 +31,10 @@ InputMappingRow = React.createClass(
             ' '
             TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
             ' '
-            @props.inputMapping.get 'destination'
+            if @props.transformationBackend == 'docker'
+              'in/tables/' + @props.inputMapping.get 'destination'
+            else
+              @props.inputMapping.get 'destination'
 )
 
 module.exports = InputMappingRow
