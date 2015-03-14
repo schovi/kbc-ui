@@ -20,9 +20,9 @@ OutputMappingRow = React.createClass(
         span {className: 'tr'},
           span {className: 'td'},
             if @props.transformationBackend == 'docker'
-              'in/tables/' + @props.inputMapping.get 'source'
+              'in/tables/' + @props.outputMapping.get 'source'
             else
-              @props.inputMapping.get 'source'
+              @props.outputMapping.get 'source'
           span {className: 'td'},
             span {className: 'fa fa-chevron-right fa-fw'}
             ' '

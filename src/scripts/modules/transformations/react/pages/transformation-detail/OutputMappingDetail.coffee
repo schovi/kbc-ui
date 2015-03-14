@@ -19,7 +19,7 @@ OutputMappingDetail = React.createClass(
     tables: React.PropTypes.object.isRequired
 
   _isDestinationTableInRedshift: ->
-    @props.tables.getIn([@props.inputMapping.get('destination'), 'bucket', 'backend']) == 'redshift'
+    @props.tables.getIn([@props.outputMapping.get('destination'), 'bucket', 'backend']) == 'redshift'
 
   render: ->
     div className: 'table table-striped',
