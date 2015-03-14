@@ -13,6 +13,7 @@ TransformationsActionCreators = require '../../../ActionCreators'
 InputMappingRow = React.createFactory(require './InputMappingRow')
 InputMappingDetail = React.createFactory(require './InputMappingDetail')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
+OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
@@ -67,44 +68,48 @@ TransformationDetail = React.createClass
           h4 {}, 'Input Mapping'
           if @state.transformation.get('input').count()
             Accordion {},
-              @state.transformation.get('input').map((input, key) ->
+              @state.transformation.get('input').sortBy((inputMapping) ->
+                inputMapping.get('source').toLowerCase()
+              ).map((input, key) ->
                 Panel
                   header:
                     span {},
                       InputMappingRow
                         transformationBackend: @state.transformation.get('backend')
-                        inputMapping: input,
+                        inputMapping: input
                         tables: @state.tables
                   eventKey: key
                 ,
                   InputMappingDetail
                     transformationBackend: @state.transformation.get('backend')
-                    inputMapping: input,
+                    inputMapping: input
                     tables: @state.tables
 
               , @).toArray()
-            ###
-            div className: 'table table-striped table-hover',
-              span {className: 'tbody'},
-                @state.transformation.get('input').map((input) ->
-                  InputMappingRow
-                    transformationBackend: @state.transformation.get('backend')
-                    inputMapping: input,
-                    tables: @state.tables
-                , @).toArray()
-            ###
           else
             p {}, small {}, 'No Input Mapping'
         p {},
           h4 {}, 'Output Mapping'
             if @state.transformation.get('output').count()
-              div className: 'table table-striped table-hover',
-                span {className: 'tbody'},
-                  @state.transformation.get('output').map((output) ->
-                    OutputMappingRow
-                      outputMapping: output,
+              Accordion {},
+                @state.transformation.get('output').sortBy((outputMapping) ->
+                  outputMapping.get('source').toLowerCase()
+                ).map((output, key) ->
+                  Panel
+                    header:
+                      span {},
+                        OutputMappingRow
+                          transformationBackend: @state.transformation.get('backend')
+                          outputMapping: output
+                          tables: @state.tables
+                    eventKey: key
+                  ,
+                    OutputMappingDetail
+                      transformationBackend: @state.transformation.get('backend')
+                      outputMapping: output
                       tables: @state.tables
-                  , @).toArray()
+
+                , @).toArray()
             else
               p {}, small {}, 'No Output Mapping'
 

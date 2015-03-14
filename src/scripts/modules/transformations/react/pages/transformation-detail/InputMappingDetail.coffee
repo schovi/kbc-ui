@@ -106,7 +106,7 @@ InputMappingDetail = React.createClass(
                 ' days'
 
             if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
-              'No filters set'
+              'N/A'
 
         if (@props.transformationBackend == 'db')
           span {className: 'tr'},
@@ -121,7 +121,7 @@ InputMappingDetail = React.createClass(
                     ' '
                 , @).toArray()
               else
-                'No indexes set'
+                'N/A'
 
         if (@props.transformationBackend == 'db' || @props.inputMapping.get('type') == 'table')
           span {className: 'tr'},

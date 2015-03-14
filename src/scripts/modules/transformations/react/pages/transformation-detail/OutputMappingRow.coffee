@@ -15,18 +15,21 @@ OutputMappingRow = React.createClass(
     tables: React.PropTypes.object.isRequired
 
   render: ->
-    div {className: 'tr'},
-      span {className: 'td'},
-        @props.outputMapping.get 'source'
-      span {className: 'td'},
-        span {className: 'fa fa-chevron-right fa-fw'}
-        ' '
-        TableSizeLabel {size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']}
-        ' '
-        TableBackendLabel {backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']}
-      span {className: 'td'},
-        @props.outputMapping.get 'destination'
+    span {className: 'table'},
+      span {className: 'tbody'},
+        span {className: 'tr'},
+          span {className: 'td'},
+            @props.outputMapping.get 'source'
+          span {className: 'td'},
+            span {className: 'fa fa-chevron-right fa-fw'}
+            ' '
+            TableSizeLabel
+              size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
+            ' '
+            TableBackendLabel
+              backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
+          span {className: 'td'},
+            @props.outputMapping.get 'destination'
 )
 
 module.exports = OutputMappingRow
-
