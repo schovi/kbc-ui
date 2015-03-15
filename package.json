@@ -35,7 +35,8 @@
     "react-datepicker": "git://github.com/iam4x/react-datepicker#fix-npm-use-webpack",
     "prettycron": "~0.10.0",
     "later": "~1.1.6",
-    "numeral": "~1.5.3"
+    "numeral": "~1.5.3",
+    "react-radio-group": "~1.0.0"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

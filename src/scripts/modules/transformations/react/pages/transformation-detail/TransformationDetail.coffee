@@ -23,6 +23,7 @@ Panel  = React.createFactory Panel
 Accordion = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
+ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -31,10 +32,12 @@ require('codemirror/mode/r/r')
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
+
   mixins: [
     createStoreMixin(TransformationsStore, TransformationBucketsStore, StorageTablesStore),
     Router.Navigation
   ]
+
   getStateFromStores: ->
     bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
@@ -42,9 +45,12 @@ TransformationDetail = React.createClass
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
     tables: StorageTablesStore.getAll()
+    bucketId: bucketId
+    transformationId: transformationId
 
   render: ->
     state = @state
+    sandboxConfiguration = {}
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
@@ -200,7 +206,22 @@ TransformationDetail = React.createClass
               isActive: !parseInt(@state.transformation.get('disabled'))
               isPending: @state.pendingActions.get('save')
               onChange: ->
-
+          li {},
+            RunComponentButton(
+              icon: 'fa-wrench'
+              title: "Create Sandbox"
+              component: 'transformation'
+              method: 'run'
+              mode: 'link'
+              runParams: ->
+                sandboxConfiguration
+            ,
+              ConfigureTransformationSandbox
+                bucketId: @state.bucketId
+                transformationId: @state.transformationId
+                onChange: (params) ->
+                  sandboxConfiguration = params
+            )
           li {},
             a {},
               span className: 'fa fa-sitemap fa-fw'
