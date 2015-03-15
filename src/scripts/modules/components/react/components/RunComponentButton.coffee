@@ -43,10 +43,12 @@ module.exports = React.createClass
     component: React.PropTypes.string.isRequired
     runParams: React.PropTypes.func.isRequired
     method: React.PropTypes.string.isRequired
+    icon: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     mode: 'button'
     method: 'run'
+    icon: 'fa-play'
 
   getInitialState: ->
     isLoading: false
@@ -102,4 +104,4 @@ module.exports = React.createClass
     if @state.isLoading
       Loader {}
     else
-      i className: 'fa fa-fw fa-play'
+      i className: "fa fa-fw #{@props.icon}"
