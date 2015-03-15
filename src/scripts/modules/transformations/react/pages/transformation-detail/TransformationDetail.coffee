@@ -24,6 +24,7 @@ Accordion = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
+SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -159,29 +160,40 @@ TransformationDetail = React.createClass
           div {},
             h4 {}, 'Queries'
             if @state.transformation.get('items').count()
-              mode = 'text/text'
-              if @state.transformation.get('backend') == 'db'
-                mode = 'text/x-mysql'
-              else if @state.transformation.get('backend') == 'redshift'
-                mode = 'text/x-sql'
-              else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-                mode = 'text/x-rsrc'
-              div className: 'table table-striped table-hover',
-                span {className: 'tbody'},
-                  @state.transformation.get('items').map((item, index) ->
-                    span {className: 'tr'},
-                      span {className: 'td'},
-                        index + 1
-                      span {className: 'td'},
-                        span {className: 'static'},
-                          CodeMirror
-                            theme: 'solarized'
-                            lineNumbers: false
-                            defaultValue: item.get 'query'
-                            readOnly: true
-                            mode: mode
-                            lineWrapping: true
-                  , @).toArray()
+              span {},
+                mode = 'text/text'
+                if @state.transformation.get('backend') == 'db'
+                  mode = 'text/x-mysql'
+                else if @state.transformation.get('backend') == 'redshift'
+                  mode = 'text/x-sql'
+                else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+                  mode = 'text/x-rsrc'
+                div className: 'table table-striped table-hover',
+                  span {className: 'tbody'},
+                    @state.transformation.get('items').map((item, index) ->
+                      span {className: 'tr'},
+                        span {className: 'td'},
+                          index + 1
+                        span {className: 'td'},
+                          span {className: 'static'},
+                            CodeMirror
+                              theme: 'solarized'
+                              lineNumbers: false
+                              defaultValue: item.get 'query'
+                              readOnly: true
+                              mode: mode
+                              lineWrapping: true
+                    , @).toArray()
+                if @state.transformation.get('backend') == 'redshift' or
+                    @state.transformation.get('backend') == 'db' && @state.transformation.get('type') == 'simple'
+                  SqlDepModalTrigger
+                    backend: @state.transformation.get('backend')
+                    bucketId: @state.bucketId
+                    transformationId: @state.transformationId
+                  ,
+                    a {},
+                      span className: 'fa fa-sitemap fa-fw'
+                      ' SQLDep'
             else
               p {}, small {}, 'No SQL Queries'
 
@@ -222,10 +234,18 @@ TransformationDetail = React.createClass
                 onChange: (params) ->
                   sandboxConfiguration = params
             )
-          li {},
-            a {},
-              span className: 'fa fa-sitemap fa-fw'
-              ' SQLDep'
+
+          if @state.transformation.get('backend') == 'redshift' or
+              @state.transformation.get('backend') == 'db' && @state.transformation.get('type') == 'simple'
+            li {},
+              SqlDepModalTrigger
+                backend: @state.transformation.get('backend')
+                bucketId: @state.bucketId
+                transformationId: @state.transformationId
+              ,
+                a {},
+                  span className: 'fa fa-sitemap fa-fw'
+                  ' SQLDep'
 
           li {},
             a {},

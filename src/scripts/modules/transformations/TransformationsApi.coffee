@@ -57,4 +57,12 @@ transformationsApi =
       response.body
     )
 
+  getSqlDep: (configuration) ->
+    createRequest('POST', 'sqldep')
+    .send(configuration)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
 module.exports = transformationsApi
