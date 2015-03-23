@@ -146,11 +146,11 @@ TransformationDetail = React.createClass
         if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
           div {},
             h4 {}, 'Script'
-            if @state.transformation.get('items').count()
+            if @state.transformation.get('queries').count()
               CodeMirror
                 theme: 'solarized'
                 lineNumbers: true
-                defaultValue: @state.transformation.getIn ['items', 0, 'query']
+                defaultValue: @state.transformation.getIn ['queries', 0]
                 readOnly: true
                 mode: 'text/x-rsrc'
                 lineWrapping: true
@@ -159,10 +159,10 @@ TransformationDetail = React.createClass
         else
           div {},
             h4 {}, 'Queries'
-            if @state.transformation.get('items').count()
+            if @state.transformation.get('queries').count()
               span {},
                 mode = 'text/text'
-                if @state.transformation.get('backend') == 'db'
+                if @state.transformation.get('backend') == 'mysql'
                   mode = 'text/x-mysql'
                 else if @state.transformation.get('backend') == 'redshift'
                   mode = 'text/x-sql'
@@ -170,7 +170,7 @@ TransformationDetail = React.createClass
                   mode = 'text/x-rsrc'
                 div className: 'table table-striped table-hover',
                   span {className: 'tbody'},
-                    @state.transformation.get('items').map((item, index) ->
+                    @state.transformation.get('queries').map((query, index) ->
                       span {className: 'tr'},
                         span {className: 'td'},
                           index + 1
@@ -179,13 +179,13 @@ TransformationDetail = React.createClass
                             CodeMirror
                               theme: 'solarized'
                               lineNumbers: false
-                              defaultValue: item.get 'query'
+                              defaultValue: query
                               readOnly: true
                               mode: mode
                               lineWrapping: true
                     , @).toArray()
                 if @state.transformation.get('backend') == 'redshift' or
-                    @state.transformation.get('backend') == 'db' && @state.transformation.get('type') == 'simple'
+                    @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
                   SqlDepModalTrigger
                     backend: @state.transformation.get('backend')
                     bucketId: @state.bucketId
@@ -236,7 +236,7 @@ TransformationDetail = React.createClass
             )
 
           if @state.transformation.get('backend') == 'redshift' or
-              @state.transformation.get('backend') == 'db' && @state.transformation.get('type') == 'simple'
+              @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
             li {},
               SqlDepModalTrigger
                 backend: @state.transformation.get('backend')

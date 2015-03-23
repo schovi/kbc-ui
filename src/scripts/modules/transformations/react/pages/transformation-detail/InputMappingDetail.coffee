@@ -47,7 +47,7 @@ InputMappingDetail = React.createClass(
           span {className: 'td'},
             @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
 
-        if (@props.transformationBackend == 'db' || @props.transformationBackend == 'redshift')
+        if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
           span {className: 'tr'},
             span {className: 'td'},
               'Optional'
@@ -108,7 +108,7 @@ InputMappingDetail = React.createClass(
             if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
               'N/A'
 
-        if (@props.transformationBackend == 'db')
+        if (@props.transformationBackend == 'mysql')
           span {className: 'tr'},
             span {className: 'td'},
               'Columns'
@@ -123,7 +123,7 @@ InputMappingDetail = React.createClass(
               else
                 'N/A'
 
-        if (@props.transformationBackend == 'db' || @props.inputMapping.get('type') == 'table')
+        if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
           span {className: 'tr'},
             span {className: 'td'},
               'Data types'

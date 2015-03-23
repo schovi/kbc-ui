@@ -32,7 +32,7 @@ TransformationsStore = StoreUtils.createStore
       .getIn(['transformationsByBucketId', bucketId], List())
       .sortBy((transformation) ->
         phase = transformation.get('phase')
-        name = transformation.get('friendlyName')
+        name = transformation.get('name')
         phase + name.toLowerCase()
       )
   ###

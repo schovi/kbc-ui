@@ -12,10 +12,10 @@ TransformationTypeLabel = React.createClass
     type: React.PropTypes.string
 
   render: ->
-    if @props.backend == 'db' && @props.type == 'simple'
+    if @props.backend == 'mysql' && @props.type == 'simple'
       span {className: 'label label-default'},
         'mysql'
-    else if @props.backend == 'db'
+    else if @props.backend == 'mysql'
       span {className: 'label label-default'},
         'mysql ' + @props.type
     else if @props.backend == 'redshift' && @props.type == 'simple'
