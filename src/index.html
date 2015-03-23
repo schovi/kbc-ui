@@ -57,6 +57,16 @@
             "data": {
                 "components": components,
                 "organizations": organizations,
+                "maintainers": [
+                  {
+                    "id": 1,
+                    "name": "Keboola Testing"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Keboola Data"
+                  }
+                ],
                 "sapi": {
                     "url": "https://connection.keboola.com",
                     "token": {
@@ -71,14 +81,19 @@
                     "projectBaseUrl": "/",
                     "scriptsBasePath": "/",
                     "canCreateProject": true,
+                    "canManageApps": true,
                     "xsrfToken": "hovno",
                     "urlTemplates": {
                         "createProject": "/admin/projects-new/create-project",
                         "home": "/admin/projects",
+                        "manageApps": "/admin/manage-apps",
+                        "logout": "/admin/auth/logout",
+                        "changePassword": "/admin/account/change-password",
                         "project": "/admin/projects/<%= projectId %>/",
                         "legacyExtractorDetail": "/admin/projects/<%= projectId %>/extractor/?app=<%= appId %>#/?config=<%= configId %>",
                         "legacyWriterDetail": "/admin/projects/<%= projectId %>/writer/?app=<%= appId %>#/?config=<%= configId %>",
-                        "organization": "/admin/organizations/<%= organizationId %>"
+                        "organization": "/admin/organizations/<%= organizationId %>",
+                        "maintainer": "/admin/maintainers/<%= maintainerId %>"
                     },
                     "adminEmails": ["martin@keboola.com"],
                     "goodDataTokens": {

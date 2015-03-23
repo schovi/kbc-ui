@@ -33,6 +33,7 @@ startApp = (appOptions) ->
     sapiUrl: appOptions.data.sapi.url
     sapiToken: appOptions.data.sapi.token
     organizations: appOptions.data.organizations
+    maintainers: appOptions.data.maintainers
     kbc: appOptions.data.kbc
   )
 

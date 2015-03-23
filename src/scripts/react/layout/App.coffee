@@ -22,11 +22,13 @@ App = React.createClass
     isLoading: React.PropTypes.bool
   getInitialState: ->
     organizations: ApplicationStore.getOrganizations()
+    maintainers: ApplicationStore.getMaintainers()
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
     xsrf: ApplicationStore.getXsrfToken()
     canCreateProject: ApplicationStore.getCanCreateProject()
+    canManageApps: ApplicationStore.getKbcVars().get 'canManageApps'
     homeUrl: ApplicationStore.getUrlTemplates().get 'home'
   render: ->
     div null,
@@ -44,7 +46,11 @@ App = React.createClass
               canCreateProject: @state.canCreateProject
             Sidebar()
             div className: 'kbc-sidebar-footer',
-              User user: @state.currentAdmin
+              User
+                user: @state.currentAdmin
+                maintainers: @state.maintainers
+                urlTemplates: @state.urlTemplates
+                canManageApps: @state.canManageApps
               UserLinks()
           div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
             Notifications()

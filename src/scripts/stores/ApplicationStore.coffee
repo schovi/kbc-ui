@@ -22,6 +22,9 @@ ApplicationStore =
   getOrganizations: ->
     _store.get 'organizations'
 
+  getMaintainers: ->
+    _store.get 'maintainers'
+
   getCurrentProjectId: ->
     _store.getIn ['sapiToken', 'owner', 'id']
 
@@ -64,5 +67,6 @@ Dispatcher.register (payload) ->
           .set 'sapiUrl', action.applicationData.sapiUrl
           .set 'kbc', Immutable.fromJS(action.applicationData.kbc)
           .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
+          .set 'maintainers', Immutable.fromJS(action.applicationData.maintainers)
 
 module.exports = ApplicationStore
