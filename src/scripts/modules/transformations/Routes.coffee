@@ -44,7 +44,7 @@ routes =
           title: (routerState) ->
             bucketId = routerState.getIn(['params', 'bucketId'])
             transformationId = routerState.getIn(['params', 'transformationId'])
-            name = TransformationsStore.getTransformation(bucketId, transformationId).get 'friendlyName'
+            name = TransformationsStore.getTransformation(bucketId, transformationId).get 'name'
             "Transformation " + name
           defaultRouteHandler: TransformationDetail
           requireData: [

@@ -161,13 +161,6 @@ TransformationDetail = React.createClass
             h4 {}, 'Queries'
             if @state.transformation.get('queries').count()
               span {},
-                mode = 'text/text'
-                if @state.transformation.get('backend') == 'mysql'
-                  mode = 'text/x-mysql'
-                else if @state.transformation.get('backend') == 'redshift'
-                  mode = 'text/x-sql'
-                else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-                  mode = 'text/x-rsrc'
                 div className: 'table table-striped table-hover',
                   span {className: 'tbody'},
                     @state.transformation.get('queries').map((query, index) ->
@@ -181,7 +174,7 @@ TransformationDetail = React.createClass
                               lineNumbers: false
                               defaultValue: query
                               readOnly: true
-                              mode: mode
+                              mode: @_codeMirrorMode()
                               lineWrapping: true
                     , @).toArray()
                 if @state.transformation.get('backend') == 'redshift' or
@@ -208,7 +201,7 @@ TransformationDetail = React.createClass
                 configBucketId: state.bucket.get('id')
                 transformations: [state.transformation.get('id')]
             ,
-              "You are about to run transformation #{@state.transformation.get('friendlyName')}."
+              "You are about to run transformation #{@state.transformation.get('name')}."
             )
           li {},
             ActivateDeactivateButton
@@ -251,7 +244,7 @@ TransformationDetail = React.createClass
             a {},
               Confirm
                 text: 'Delete Transformation'
-                title: "Do you really want to delete transformation #{@state.transformation.get('friendlyName')}?"
+                title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
                 buttonLabel: 'Delete'
                 buttonType: 'danger'
                 onConfirm: @_deleteTransformation
@@ -266,5 +259,15 @@ TransformationDetail = React.createClass
     TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
     @transitionTo 'transformationBucket',
       bucketId: bucketId
+
+  _codeMirrorMode: ->
+    mode = 'text/text'
+    if @state.transformation.get('backend') == 'mysql'
+      mode = 'text/x-mysql'
+    else if @state.transformation.get('backend') == 'redshift'
+      mode = 'text/x-sql'
+    else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
+      mode = 'text/x-rsrc'
+    return mode
 
 module.exports = TransformationDetail

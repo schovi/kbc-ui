@@ -22,14 +22,14 @@ TransformationRow = React.createClass(
     props = @props
 
     buttons.push(RunComponentButton(
-      title: "Run #{@props.transformation.get('friendlyName')}"
+      title: "Run #{@props.transformation.get('name')}"
       component: 'transformation'
       mode: 'button'
       runParams: ->
         configBucketId: props.bucket.get('id')
         transformations: [props.transformation.get('id')]
     ,
-      "You are about to run transformation #{@props.transformation.get('friendlyName')}."
+      "You are about to run transformation #{@props.transformation.get('name')}."
     ))
 
     buttons.push(DeleteButton
@@ -37,7 +37,7 @@ TransformationRow = React.createClass(
       isPending: @props.pendingActions.get 'delete'
       confirm:
         title: 'Delete Transformation'
-        text: "Do you really want to delete transformation #{@props.transformation.get('friendlyName')}?"
+        text: "Do you really want to delete transformation #{@props.transformation.get('name')}?"
         onConfirm: @_deleteTransformation
     )
     buttons
@@ -53,7 +53,7 @@ TransformationRow = React.createClass(
         span {className: 'label kbc-label-rounded-small label-default pull-left'},
           @props.transformation.get('phase') || 1
         ' '
-        @props.transformation.get('friendlyName') || @props.transformation.get('id')
+        @props.transformation.get('name')
       span {className: 'td'},
         small {}, @props.transformation.get('description') || em {}, 'No description'
       span {className: 'td'},
