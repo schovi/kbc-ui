@@ -2,6 +2,8 @@
   Orchestrations module routing
 ###
 
+React = require 'react'
+
 # pages and components
 OrchestrationsIndex = require './react/pages/orchestrations-index/OrchestrationsIndex'
 OrchestrationDetail = require './react/pages/orchestration-detail/OrchestrationDetail'
@@ -13,6 +15,7 @@ NewOrchestrationButton = require './react/components/NewOrchestionButton'
 OrchestrationReloaderButton = require './react/components/OrchestrationReloaderButton'
 JobReloaderButton = require './react/components/JobReloaderButton'
 OrchestrationDetailButtons = require './react/components/OrchestrationDetailButtons'
+OrchestrationNameEdit = require './react/components/OrchestrationNameEdit'
 
 # stores
 OrchestrationsStore = require './stores/OrchestrationsStore'
@@ -33,6 +36,9 @@ routes =
     OrchestrationsActionCreators.loadOrchestrations()
   childRoutes: [
     name: 'orchestration'
+    nameEdit: (params) ->
+      React.createElement OrchestrationNameEdit,
+        orchestrationId: parseInt params.orchestrationId
     path: ':orchestrationId'
     reloaderHandler: OrchestrationReloaderButton
     headerButtonsHandler: OrchestrationDetailButtons

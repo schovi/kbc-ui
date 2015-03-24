@@ -18,7 +18,6 @@ TasksSummary = React.createFactory(require './TasksSummary')
 CronRecord = React.createFactory(require '../../components/CronRecord')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 ScheduleModal = React.createFactory(require('../../modals/Schedule'))
-OrchestrationNameEdit = React.createFactory(require '../../components/OrchestrationNameEdit')
 
 {div, h2, span, strong} = React.DOM
 
@@ -50,9 +49,6 @@ OrchestrationDetail = React.createClass
   render: ->
     div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
-        div null,
-          OrchestrationNameEdit
-            orchestrationId: @state.orchestration.get 'id'
         div {className: 'kbc-container'},
           SearchRow(onChange: @_handleFilterChange, query: @state.filter)
           OrchestrationsNav

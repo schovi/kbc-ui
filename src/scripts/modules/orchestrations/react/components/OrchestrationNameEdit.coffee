@@ -42,7 +42,7 @@ module.exports = React.createClass
       placeholder: 'Describe the component ...'
       isSaving: @state.isSaving
       isEditing: @state.isEditing
-      isValid: @state.isValid
+      isValid: @state.editValue?.trim() != ''
       onEditStart: @_handleEditStart
       onEditCancel: @_handleEditCancel
       onEditChange: @_handleEditChange
