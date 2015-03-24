@@ -115,7 +115,6 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
 
-
     when Constants.ActionTypes.ORCHESTRATION_ACTIVE_CHANGE_START
       _store = _store.setIn ['orchestrationsPendingActions', action.orchestrationId, 'active'], true
       OrchestrationStore.emitChange()
@@ -203,6 +202,36 @@ Dispatcher.register (payload) ->
       if latestJob
         _store = setLastExecutedJob(_store, parseInt(action.orchestrationId), latestJob)
         OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_START
+      console.log 'start edit'
+      _store = _store.setIn ['editing', action.orchestrationId, action.field],
+        OrchestrationStore.get(action.orchestrationId).get action.field
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_CANCEL
+      _store = _store.deleteIn ['editing', action.orchestrationId, action.field]
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_UPDATE
+      _store = _store.setIn ['editing', action.orchestrationId, action.field], action.value
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_START
+      _store = _store.setIn ['saving', action.orchestrationId, action.field], true
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_ERROR
+      _store = _store.deleteIn ['saving', action.orchestrationId, action.field],
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .setIn ['orchestrationsById', action.orchestrationId], Immutable.fromJS(action.orchestration)
+        .deleteIn ['saving', action.orchestrationId, action.field]
+        .deleteIn ['editing', action.orchestrationId, action.field]
+      OrchestrationStore.emitChange()
 
 
 

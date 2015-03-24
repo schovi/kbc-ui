@@ -7,7 +7,6 @@ OrchestrationStore = require './stores/OrchestrationsStore'
 OrchestrationJobsStore = require './stores/OrchestrationJobsStore'
 Promise = require 'bluebird'
 
-
 module.exports =
 
   ###
@@ -203,6 +202,56 @@ module.exports =
         orchestrationId: orchestrationId
       )
       throw e
+
+  ###
+    Editing orchestration field
+  ###
+  startOrchestrationFieldEdit: (orchestrationId, fieldName) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_START
+      orchestrationId: orchestrationId
+      field: fieldName
+
+  cancelOrchestrationFieldEdit: (orchestrationId, fieldName) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_CANCEL
+      orchestrationId: orchestrationId
+      field: fieldName
+
+  updateOrchestrationFieldEdit: (orchestrationId, fieldName, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_UPDATE
+      orchestrationId: orchestrationId
+      field: fieldName
+      value: newValue
+
+  saveOrchestrationField: (orchestrationId, fieldName) ->
+    value = OrchestrationStore.getEditingValue orchestrationId, fieldName
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_START
+      orchestrationId: orchestrationId
+      field: fieldName
+
+    data = {}
+    data[fieldName] = value
+
+    orchestrationsApi
+    .updateOrchestration orchestrationId, data
+    .then (orchestration) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_SUCCESS
+        orchestrationId: orchestrationId
+        field: fieldName
+        orchestration: orchestration
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_ERROR
+        orchestrationId: orchestrationId
+        field: fieldName
+        error: e
+      throw e
+
 
   ###
     Editing orchestration tasks
