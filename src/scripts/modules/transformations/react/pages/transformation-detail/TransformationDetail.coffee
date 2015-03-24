@@ -71,7 +71,10 @@ TransformationDetail = React.createClass
           #  transformation: @state.transformation.get 'id'
         div {},
           h4 {}, 'Overview'
-          GraphContainer transformation: @state.transformation
+          GraphContainer
+            bucketId: @state.bucketId
+            transformationId: @state.transformationId
+            disabled: @state.transformation.get("disabled", false)
         div {},
           h4 {}, 'Input Mapping'
           if @state.transformation.get('input').count()

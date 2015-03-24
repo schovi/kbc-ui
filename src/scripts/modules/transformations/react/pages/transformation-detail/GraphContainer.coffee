@@ -5,66 +5,48 @@ api = require '../../../TransformationsApi.coffee'
 
 Loader = require '../../../../../react/common/Loader'
 Graph = React.createFactory (require './Graph')
-
-PureRenderMixin = require('react/addons').addons.PureRenderMixin
+TransformationsStore  = require('../../../stores/TransformationsStore')
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+TransformationsActionCreators = require '../../../ActionCreators'
+immutableMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 module.exports = React.createClass
   displayName: 'GraphContainer'
-  mixins: [PureRenderMixin]
+  mixins: [createStoreMixin(TransformationsStore), immutableMixin]
 
   propTypes:
-    transformation: React.PropTypes.object.isRequired
+    bucketId: React.PropTypes.string.isRequired
+    transformationId: React.PropTypes.string.isRequired
+    disabled: React.PropTypes.bool.isRequired
 
-  getInitialState: ->
-    isLoading: true
-    model: null
-    showDisabled: if @props.transformation.get('disabled') == "1" then true else false
-    disabledTransformation: if @props.transformation.get('disabled') == "1" then true else false
+  getStateFromStores: ->
+    showDisabled: TransformationsStore.isShowDisabledInOverview(@props.bucketId, @props.transformationId)
+    isLoading: TransformationsStore.isOverviewLoading(@props.bucketId, @props.transformationId)
+    model: TransformationsStore.getOverview(@props.bucketId, @props.transformationId)
 
   componentDidMount: ->
     @_loadData()
 
   _loadData: ->
-    tableId = @props.transformation.get 'fullId'
-    api
-    .getGraph
-      tableId: tableId
-      direction: 'around'
-      showDisabled: @state.showDisabled
-      limit: {sys: [tableId.substring(0, tableId.lastIndexOf("."))]}
-    .then @_handleDataReceive
-    .catch @_handleReceiveError
-
-  _handleReceiveError: (e) ->
-    @setState
-      isLoading: false
-    throw e
-
-  _handleDataReceive: (model) ->
-    @setState
-      isLoading: false
-      model: Immutable.fromJS model
+    TransformationsActionCreators.loadTransformationOverview(
+      @props.bucketId, @props.transformationId, @state.showDisabled
+    )
 
   _handleChangeShowDisabled: (val) ->
-    @setState
-      isLoading: true
-      showDisabled: val
-    ,
-      ->
-        @_loadData()
+    TransformationsActionCreators.showTransformationOverviewDisabled(@props.bucketId, @props.transformationId, val)
 
   render: ->
     React.DOM.div className: 'kb-graph',
       if @state.isLoading
         React.DOM.div className: 'well',
           React.createElement Loader
-      else if !@state.model.get('nodes').count()
+      else if !@state.model || !@state.model.get('nodes').count()
         React.DOM.div className: 'well',
-          'No datasets defined.'
+          'No nodes found.'
       else
         Graph
           model: @state.model
-          centerNodeId: @props.transformation.get 'fullId'
-          disabledTransformation: @state.disabledTransformation
+          centerNodeId: @props.bucketId + "." + @props.transformationId
+          disabledTransformation: @props.disabled
           showDisabled: @state.showDisabled
           showDisabledHandler: @_handleChangeShowDisabled

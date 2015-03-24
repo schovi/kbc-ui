@@ -12,6 +12,9 @@ _store = Map(
   transformationsByBucketId: Map()
   loadingTransformationBuckets: List()
   pendingActions: Map()
+  overviews: Map()
+  loadingOverviews: Map()
+  showDisabledOverviews: Map()
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -62,6 +65,19 @@ TransformationsStore = StoreUtils.createStore
   getTransformationPendingActions: (bucketId, transformationId) ->
     _store.getIn ['pendingActions', bucketId, transformationId], Map()
 
+  getOverview: (bucketId, transformationId) ->
+    _store.getIn ['overviews', bucketId, transformationId]
+
+  isOverviewLoading: (bucketId, transformationId) ->
+    !!_store.getIn ['loadingOverviews', bucketId, transformationId]
+
+  isShowDisabledInOverview: (bucketId, transformationId) ->
+    if _store.getIn(['showDisabledOverviews', bucketId, transformationId]) == true
+      return true
+    if _store.getIn(['showDisabledOverviews', bucketId, transformationId]) == false
+      return false
+    _store.getIn(['transformationsByBucketId', bucketId, transformationId, "disabled"], false)
+
 Dispatcher.register (payload) ->
   action = payload.action
 
@@ -83,6 +99,27 @@ Dispatcher.register (payload) ->
         )
         store = removeFromLoadingBuckets(store, action.bucketId)
       )
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD
+      _store = _store.setIn ['loadingOverviews', action.bucketId, action.transformationId], true
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_OVEWVIEW_LOAD_ERROR
+      _store = _store.setIn ['loadingOverviews', action.bucketId, action.transformationId], false
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD_SUCCESS
+      _store = _store.withMutations((store) ->
+        store = store.setIn(['overviews', action.bucketId, action.transformationId],
+          Immutable.fromJS(action.model)
+        )
+        store = store.setIn ['loadingOverviews', action.bucketId, action.transformationId], false
+      )
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_OVERVIEW_SHOW_DISABLED
+      _store = _store.setIn ['showDisabledOverviews', action.bucketId, action.transformationId], action.showDisabled
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_DELETE

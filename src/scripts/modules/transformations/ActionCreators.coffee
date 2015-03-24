@@ -138,3 +138,52 @@ module.exports =
       )
       throw error
     )
+
+  ###
+    Request overview load from server
+  ###
+  loadTransformationOverview: (bucketId, transformationId, showDisabled) ->
+    actions = @
+
+    # trigger load initialized
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD
+      transformationId: transformationId
+      bucketId: bucketId
+    )
+
+    tableId = bucketId + "." + transformationId
+    # init load
+    transformationsApi
+    .getGraph
+      tableId: tableId
+      direction: 'around'
+      showDisabled: showDisabled
+      limit: {sys: [bucketId]}
+    .then((graphData) ->
+      # load success
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        model: graphData
+      )
+
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+      )
+      throw error
+    )
+
+  showTransformationOverviewDisabled: (bucketId, transformationId, showDisabled) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_OVERVIEW_SHOW_DISABLED
+      transformationId: transformationId
+      bucketId: bucketId
+      showDisabled: showDisabled
+    )
+    @loadTransformationOverview(bucketId, transformationId, showDisabled)
