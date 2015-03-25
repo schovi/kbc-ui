@@ -18,9 +18,10 @@ CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 GraphContainer = require './GraphContainer'
-{Panel, Accordion} = require('react-bootstrap')
+{Panel, Accordion, PanelGroup} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 Accordion = React.createFactory Accordion
+PanelGroup = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
@@ -48,9 +49,19 @@ TransformationDetail = React.createClass
     tables: StorageTablesStore.getAll()
     bucketId: bucketId
     transformationId: transformationId
+    openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
+    openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
+
+  _toggleInputMapping: (index) ->
+    TransformationsActionCreators.toggleOpenInputMapping(@state.bucketId, @state.transformationId, index)
+
+  _toggleOutputMapping: (index) ->
+    TransformationsActionCreators.toggleOpenOutputMapping(@state.bucketId, @state.transformationId, index)
+
 
   render: ->
     state = @state
+    component = @
     sandboxConfiguration = {}
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
@@ -78,37 +89,39 @@ TransformationDetail = React.createClass
         div {},
           h4 {}, 'Input Mapping'
           if @state.transformation.get('input').count()
-            Accordion {},
+            div {},
               @state.transformation.get('input').sortBy((inputMapping) ->
                 inputMapping.get('source').toLowerCase()
               ).map((input, key) ->
                 Panel
+                  collapsable: true
+                  defaultExpanded: state.openInputMappings.get(key, false)
                   header:
-                    span {},
+                    span {onClick: -> component._toggleInputMapping(key)},
                       InputMappingRow
                         transformationBackend: @state.transformation.get('backend')
                         inputMapping: input
                         tables: @state.tables
-                  eventKey: key
                 ,
                   InputMappingDetail
                     transformationBackend: @state.transformation.get('backend')
                     inputMapping: input
                     tables: @state.tables
-
               , @).toArray()
           else
             p {}, small {}, 'No Input Mapping'
         div {},
           h4 {}, 'Output Mapping'
             if @state.transformation.get('output').count()
-              Accordion {},
+              div {},
                 @state.transformation.get('output').sortBy((outputMapping) ->
                   outputMapping.get('source').toLowerCase()
                 ).map((output, key) ->
                   Panel
+                    collapsable: true
+                    defaultExpanded: state.openOutputMappings.get(key, false)
                     header:
-                      span {},
+                      span {onClick: -> component._toggleOutputMapping(key)},
                         OutputMappingRow
                           transformationBackend: @state.transformation.get('backend')
                           outputMapping: output

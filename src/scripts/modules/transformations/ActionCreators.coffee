@@ -187,3 +187,19 @@ module.exports =
       showDisabled: showDisabled
     )
     @loadTransformationOverview(bucketId, transformationId, showDisabled)
+
+  toggleOpenInputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_INPUT_MAPPING_OPEN_TOGGLE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )
+
+  toggleOpenOutputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_OUTPUT_MAPPING_OPEN_TOGGLE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )

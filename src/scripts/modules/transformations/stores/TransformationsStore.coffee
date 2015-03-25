@@ -15,6 +15,8 @@ _store = Map(
   overviews: Map()
   loadingOverviews: Map()
   showDisabledOverviews: Map()
+  openInputMappings: Map()
+  closedInputMappings: Map()
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -78,6 +80,19 @@ TransformationsStore = StoreUtils.createStore
       return false
     _store.getIn(['transformationsByBucketId', bucketId, transformationId, "disabled"], false)
 
+  isInputMappingOpen: (bucketId, transformationId, index) ->
+    _store.getIn(['openInputMappings', bucketId, transformationId, index], false)
+
+  isInputMappingClosed: (bucketId, transformationId, index) ->
+    _store.getIn(['openOutputMappings', bucketId, transformationId, index], false)
+
+  getOpenInputMappings: (bucketId, transformationId) ->
+    _store.getIn(['openInputMappings', bucketId, transformationId], Map())
+
+  getOpenOutputMappings: (bucketId, transformationId) ->
+    _store.getIn(['openOutputMappings', bucketId, transformationId], Map())
+
+
 Dispatcher.register (payload) ->
   action = payload.action
 
@@ -137,5 +152,20 @@ Dispatcher.register (payload) ->
       _store = _store.removeIn ['pendingActions', action.bucketId, action.transformationId, 'delete']
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_INPUT_MAPPING_OPEN_TOGGLE
+      if (_store.getIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false))
+        console.log "close"
+        _store = _store.setIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false)
+      else
+        console.log "open"
+        _store = _store.setIn(['openInputMappings', action.bucketId, action.transformationId, action.index], true)
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_OUTPUT_MAPPING_OPEN_TOGGLE
+      if (_store.getIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], false))
+        _store = _store.setIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], false)
+      else
+        _store = _store.setIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], true)
+      TransformationsStore.emitChange()
 
 module.exports = TransformationsStore
