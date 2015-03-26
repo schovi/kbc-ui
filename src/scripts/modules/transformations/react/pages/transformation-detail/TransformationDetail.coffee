@@ -1,36 +1,22 @@
 React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
-Immutable = require('immutable')
+
+TransformationDetailStatic = React.createFactory(require './TransformationDetailStatic')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
 TransformationBucketsStore  = require('../../../stores/TransformationBucketsStore')
 StorageTablesStore  = require('../../../../components/stores/StorageTablesStore')
 RoutesStore = require '../../../../../stores/RoutesStore'
-DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationsActionCreators = require '../../../ActionCreators'
-InputMappingRow = React.createFactory(require './InputMappingRow')
-InputMappingDetail = React.createFactory(require './InputMappingDetail')
-OutputMappingRow = React.createFactory(require './OutputMappingRow')
-OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
-CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
-GraphContainer = require './GraphContainer'
-{Panel, Accordion, PanelGroup} = require('react-bootstrap')
-Panel  = React.createFactory Panel
-Accordion = React.createFactory Accordion
-PanelGroup = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
 SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
 
-require('codemirror/mode/sql/sql')
-require('codemirror/mode/r/r')
-
-{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p, code, em} = React.DOM
+{div, span, ul, li, a, em} = React.DOM
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
@@ -52,160 +38,21 @@ TransformationDetail = React.createClass
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
 
-  _toggleInputMapping: (index) ->
-    TransformationsActionCreators.toggleOpenInputMapping(@state.bucketId, @state.transformationId, index)
-
-  _toggleOutputMapping: (index) ->
-    TransformationsActionCreators.toggleOpenOutputMapping(@state.bucketId, @state.transformationId, index)
-
-
   render: ->
-    state = @state
-    component = @
-    sandboxConfiguration = {}
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           @state.transformation.get('description') || em {}, 'No description'
-
-          #TransformationDescription
-          #  bucketId: @state.bucket.get 'id'
-          #  transformation: @state.transformation.get 'id'
-        p {className: 'text-right'},
-          span {className: 'label kbc-label-rounded-small label-default'},
-            'Phase: '
-            @state.transformation.get 'phase'
-          ' '
-          TransformationTypeLabel
-            backend: @state.transformation.get 'backend'
-            type: @state.transformation.get 'type'
-
         div {},
-          h4 {}, 'Overview'
-          GraphContainer
+          TransformationDetailStatic
+            bucket: @state.bucket
+            transformation: @state.transformation
+            pendingActions: @state.pendingActions
+            tables: @state.tables
             bucketId: @state.bucketId
             transformationId: @state.transformationId
-            disabled: @state.transformation.get("disabled", false)
-        div {},
-          h4 {}, 'Input Mapping'
-          if @state.transformation.get('input').count()
-            div {},
-              @state.transformation.get('input').sortBy((inputMapping) ->
-                inputMapping.get('source').toLowerCase()
-              ).map((input, key) ->
-                Panel
-                  collapsable: true
-                  defaultExpanded: state.openInputMappings.get(key, false)
-                  header:
-                    span {onClick: -> component._toggleInputMapping(key)},
-                      InputMappingRow
-                        transformationBackend: @state.transformation.get('backend')
-                        inputMapping: input
-                        tables: @state.tables
-                ,
-                  InputMappingDetail
-                    transformationBackend: @state.transformation.get('backend')
-                    inputMapping: input
-                    tables: @state.tables
-              , @).toArray()
-          else
-            p {}, small {}, 'No Input Mapping'
-        div {},
-          h4 {}, 'Output Mapping'
-            if @state.transformation.get('output').count()
-              div {},
-                @state.transformation.get('output').sortBy((outputMapping) ->
-                  outputMapping.get('source').toLowerCase()
-                ).map((output, key) ->
-                  Panel
-                    collapsable: true
-                    defaultExpanded: state.openOutputMappings.get(key, false)
-                    header:
-                      span {onClick: -> component._toggleOutputMapping(key)},
-                        OutputMappingRow
-                          transformationBackend: @state.transformation.get('backend')
-                          outputMapping: output
-                          tables: @state.tables
-                    eventKey: key
-                  ,
-                    OutputMappingDetail
-                      transformationBackend: @state.transformation.get('backend')
-                      outputMapping: output
-                      tables: @state.tables
-
-                , @).toArray()
-            else
-              p {}, small {}, 'No Output Mapping'
-
-        if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-          div {},
-            h4 {}, 'Packages'
-            p {},
-              if @state.transformation.get('packages').count()
-                @state.transformation.get('packages').map((packageName, key) ->
-                  span {},
-                    span {className: 'label label-default'},
-                      packageName
-                    ' '
-                , @).toArray()
-              else
-                small {},
-                'No packages will installed'
-
-            if @state.transformation.get('packages').count()
-              p {}, small {},
-                  'These packages will be installed in the Docker container running the R script. '
-                  'Do not forget to load them using '
-                  code {}, 'library()'
-                  '.'
-
-        if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-          div {},
-            h4 {}, 'Script'
-            if @state.transformation.get('queries').count()
-              CodeMirror
-                theme: 'solarized'
-                lineNumbers: true
-                defaultValue: @state.transformation.getIn ['queries', 0]
-                readOnly: true
-                mode: 'text/x-rsrc'
-                lineWrapping: true
-            else
-              p {}, small {}, 'No R Script'
-        else
-          div {},
-            h4 {}, 'Queries'
-            if @state.transformation.get('queries').count()
-              span {},
-                div className: 'table table-striped table-hover',
-                  span {className: 'tbody'},
-                    @state.transformation.get('queries').map((query, index) ->
-                      span {className: 'tr'},
-                        span {className: 'td'},
-                          index + 1
-                        span {className: 'td'},
-                          span {className: 'static'},
-                            CodeMirror
-                              theme: 'solarized'
-                              lineNumbers: false
-                              defaultValue: query
-                              readOnly: true
-                              mode: @_codeMirrorMode()
-                              lineWrapping: true
-                    , @).toArray()
-                if @state.transformation.get('backend') == 'redshift' or
-                    @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
-                  SqlDepModalTrigger
-                    backend: @state.transformation.get('backend')
-                    bucketId: @state.bucketId
-                    transformationId: @state.transformationId
-                  ,
-                    a {},
-                      span className: 'fa fa-sitemap fa-fw'
-                      ' SQLDep'
-            else
-              p {}, small {}, 'No SQL Queries'
-
+            openInputMappings: @state.openInputMappings
+            openOutputMappings: @state.openOutputMappings
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},
@@ -214,8 +61,8 @@ TransformationDetail = React.createClass
               component: 'transformation'
               mode: 'link'
               runParams: ->
-                configBucketId: state.bucket.get('id')
-                transformations: [state.transformation.get('id')]
+                configBucketId: props.bucket.get('id')
+                transformations: [props.transformation.get('id')]
             ,
               "You are about to run transformation #{@state.transformation.get('name')}."
             )
@@ -268,22 +115,5 @@ TransformationDetail = React.createClass
                 span {},
                   span className: 'fa kbc-icon-cup fa-fw'
                   ' Delete transformation'
-
-  _deleteTransformation: ->
-    transformationId = @state.transformation.get('id')
-    bucketId = @state.bucket.get('id')
-    TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
-    @transitionTo 'transformationBucket',
-      bucketId: bucketId
-
-  _codeMirrorMode: ->
-    mode = 'text/text'
-    if @state.transformation.get('backend') == 'mysql'
-      mode = 'text/x-mysql'
-    else if @state.transformation.get('backend') == 'redshift'
-      mode = 'text/x-sql'
-    else if @state.transformation.get('backend') == 'docker' && @state.transformation.get('type') == 'r'
-      mode = 'text/x-rsrc'
-    return mode
 
 module.exports = TransformationDetail
