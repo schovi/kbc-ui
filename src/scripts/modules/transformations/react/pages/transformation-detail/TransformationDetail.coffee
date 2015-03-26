@@ -30,7 +30,7 @@ SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
 
-{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p, code} = React.DOM
+{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p, code, em} = React.DOM
 
 TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
@@ -66,20 +66,20 @@ TransformationDetail = React.createClass
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
-          @state.transformation.get 'description'
-          span {className: 'pull-right'},
-            span {className: 'label kbc-label-rounded-small label-default'},
-              'Phase: '
-              @state.transformation.get 'phase'
-            ' '
-            TransformationTypeLabel
-              backend: @state.transformation.get 'backend'
-              type: @state.transformation.get 'type'
-
+          @state.transformation.get('description') || em {}, 'No description'
 
           #TransformationDescription
           #  bucketId: @state.bucket.get 'id'
           #  transformation: @state.transformation.get 'id'
+        p {className: 'text-right'},
+          span {className: 'label kbc-label-rounded-small label-default'},
+            'Phase: '
+            @state.transformation.get 'phase'
+          ' '
+          TransformationTypeLabel
+            backend: @state.transformation.get 'backend'
+            type: @state.transformation.get 'type'
+
         div {},
           h4 {}, 'Overview'
           GraphContainer
