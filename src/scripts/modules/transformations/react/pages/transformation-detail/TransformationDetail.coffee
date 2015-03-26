@@ -15,6 +15,7 @@ ActivateDeactivateButton = React.createFactory(require '../../../../../react/com
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
 SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
+EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
 {div, span, ul, li, a, em} = React.DOM
 
@@ -37,12 +38,41 @@ TransformationDetail = React.createClass
     transformationId: transformationId
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
+    isEditing: TransformationsStore.isEditing(bucketId, transformationId)
+    isSaving: TransformationsStore.isSaving(bucketId, transformationId)
+
+  _handleEditStart: ->
+    TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
+
+  _handleEditSave: ->
+    TransformationsActionCreators.saveTransformationEdit(@state.bucketId, @state.transformationId)
+
+  _handleEditCancel: ->
+    TransformationsActionCreators.cancelTransformationEdit(@state.bucketId, @state.transformationId)
+
+  _deleteTransformation: ->
+    transformationId = @state.transformation.get('id')
+    bucketId = @state.bucket.get('id')
+    TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
+    @transitionTo 'transformationBucket',
+      bucketId: bucketId
 
   render: ->
+    console.log @state
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           @state.transformation.get('description') || em {}, 'No description'
+          div {className: 'pull-right'},
+            EditButtons
+              isEditing: @state.isEditing
+              isSaving: @state.isSaving
+              isDisabled: false
+              onCancel: @_handleEditCancel
+              onSave: @_handleEditSave
+              onEditStart: @_handleEditStart
+              editLabel: 'Edit transformation'
+
         div {},
           TransformationDetailStatic
             bucket: @state.bucket

@@ -17,6 +17,8 @@ _store = Map(
   showDisabledOverviews: Map()
   openInputMappings: Map()
   closedInputMappings: Map()
+  editingTransformations: Map()
+  savingTransformations: Map()
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -92,6 +94,11 @@ TransformationsStore = StoreUtils.createStore
   getOpenOutputMappings: (bucketId, transformationId) ->
     _store.getIn(['openOutputMappings', bucketId, transformationId], Map())
 
+  isEditing: (bucketId, transformationId) ->
+    _store.getIn(['editingTransformations', bucketId, transformationId], false)
+
+  isSaving: (bucketId, transformationId) ->
+    _store.getIn(['savingTransformations', bucketId, transformationId], false)
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -154,10 +161,8 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.TRANSFORMATION_INPUT_MAPPING_OPEN_TOGGLE
       if (_store.getIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false))
-        console.log "close"
         _store = _store.setIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false)
       else
-        console.log "open"
         _store = _store.setIn(['openInputMappings', action.bucketId, action.transformationId, action.index], true)
       TransformationsStore.emitChange()
 
@@ -167,5 +172,30 @@ Dispatcher.register (payload) ->
       else
         _store = _store.setIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], true)
       TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_START
+      _store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], true
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
+      _store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      _store = _store.setIn ['savingTransformations', action.bucketId, action.transformationId], true
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
+        store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+      _store = _store.withMutations (store) ->
+        store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
+        store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+      TransformationsStore.emitChange()
+
 
 module.exports = TransformationsStore

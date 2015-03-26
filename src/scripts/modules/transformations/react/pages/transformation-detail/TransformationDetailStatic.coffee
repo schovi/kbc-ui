@@ -195,13 +195,6 @@ TransformationDetail = React.createClass
           else
             p {}, small {}, 'No SQL Queries'
 
-  _deleteTransformation: ->
-    transformationId = @props.transformation.get('id')
-    bucketId = @props.bucket.get('id')
-    TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
-    @transitionTo 'transformationBucket',
-      bucketId: bucketId
-
   _codeMirrorMode: ->
     mode = 'text/text'
     if @props.transformation.get('backend') == 'mysql'

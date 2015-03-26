@@ -203,3 +203,29 @@ module.exports =
       bucketId: bucketId
       index: index
     )
+
+  startTransformationEdit: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_START
+      transformationId: transformationId
+      bucketId: bucketId
+    )
+
+  cancelTransformationEdit: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
+      transformationId: transformationId
+      bucketId: bucketId
+    )
+
+  saveTransformationEdit: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+    )
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+      transformationId: transformationId
+      bucketId: bucketId
+    )
