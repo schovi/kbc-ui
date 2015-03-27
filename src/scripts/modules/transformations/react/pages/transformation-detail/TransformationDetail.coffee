@@ -3,6 +3,7 @@ Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 
 TransformationDetailStatic = React.createFactory(require './TransformationDetailStatic')
+TransformationDetailEdit = React.createFactory(require './TransformationDetailEdit')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
@@ -40,6 +41,7 @@ TransformationDetail = React.createClass
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
     isEditing: TransformationsStore.isEditing(bucketId, transformationId)
     isSaving: TransformationsStore.isSaving(bucketId, transformationId)
+    editValue: TransformationsStore.getEditingTransformationData(bucketId, transformationId)
 
   _handleEditStart: ->
     TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
@@ -57,32 +59,40 @@ TransformationDetail = React.createClass
     @transitionTo 'transformationBucket',
       bucketId: bucketId
 
+  _handleEditChange: (data) ->
+    TransformationsActionCreators.updateTransformationEdit(@state.bucketId, @state.transformationId, data)
+
   render: ->
-    console.log @state
+    component = @
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
-        div className: 'row kbc-header',
-          @state.transformation.get('description') || em {}, 'No description'
-          div {className: 'pull-right'},
-            EditButtons
-              isEditing: @state.isEditing
-              isSaving: @state.isSaving
-              isDisabled: false
-              onCancel: @_handleEditCancel
-              onSave: @_handleEditSave
-              onEditStart: @_handleEditStart
-              editLabel: 'Edit transformation'
-
+        div {className: 'text-right'},
+          EditButtons
+            isEditing: @state.isEditing
+            isSaving: @state.isSaving
+            isDisabled: false
+            onCancel: @_handleEditCancel
+            onSave: @_handleEditSave
+            onEditStart: @_handleEditStart
+            editLabel: 'Edit transformation'
         div {},
-          TransformationDetailStatic
-            bucket: @state.bucket
-            transformation: @state.transformation
-            pendingActions: @state.pendingActions
-            tables: @state.tables
-            bucketId: @state.bucketId
-            transformationId: @state.transformationId
-            openInputMappings: @state.openInputMappings
-            openOutputMappings: @state.openOutputMappings
+          if (!@state.isEditing)
+            TransformationDetailStatic
+              bucket: @state.bucket
+              transformation: @state.transformation
+              pendingActions: @state.pendingActions
+              tables: @state.tables
+              bucketId: @state.bucketId
+              transformationId: @state.transformationId
+              openInputMappings: @state.openInputMappings
+              openOutputMappings: @state.openOutputMappings
+          else
+            TransformationDetailEdit
+              transformation: @state.editValue
+              tables: @state.tables
+              isSaving: @state.isSaving
+              onChange: @_handleEditChange
+
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},

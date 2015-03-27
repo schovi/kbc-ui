@@ -224,8 +224,30 @@ module.exports =
       transformationId: transformationId
       bucketId: bucketId
     )
+    data = TransformationsStore.getEditingTransformationData(bucketId, transformationId).toJS()
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, data)
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        data: response
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        error: error
+      )
+      throw error
+
+
+  updateTransformationEdit: (bucketId, transformationId, data) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
       transformationId: transformationId
       bucketId: bucketId
+      data: data
     )

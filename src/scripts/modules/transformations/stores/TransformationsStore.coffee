@@ -19,6 +19,7 @@ _store = Map(
   closedInputMappings: Map()
   editingTransformations: Map()
   savingTransformations: Map()
+  editingTransformationsData: Map()
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -100,6 +101,9 @@ TransformationsStore = StoreUtils.createStore
   isSaving: (bucketId, transformationId) ->
     _store.getIn(['savingTransformations', bucketId, transformationId], false)
 
+  getEditingTransformationData: (bucketId, transformationId) ->
+    _store.getIn(['editingTransformationsData', bucketId, transformationId], Map())
+
 Dispatcher.register (payload) ->
   action = payload.action
 
@@ -174,11 +178,20 @@ Dispatcher.register (payload) ->
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_START
-      _store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], true
+      _store = _store.withMutations (store) ->
+        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], true
+        store = store.setIn [
+            'editingTransformationsData',
+            action.bucketId,
+            action.transformationId,
+          ], TransformationsStore.getTransformation(action.bucketId, action.transformationId)
+        return store
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
-      _store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+      _store = _store.withMutations (store) ->
+        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
@@ -188,14 +201,21 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
-        store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
+        tObj = Immutable.fromJS(action.data)
+        store = store.setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
       _store = _store.withMutations (store) ->
         store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
-        store = _store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
+        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
+      _store = _store.setIn ['editingTransformationsData', action.bucketId, action.transformationId], action.data
+      TransformationsStore.emitChange()
 
 module.exports = TransformationsStore

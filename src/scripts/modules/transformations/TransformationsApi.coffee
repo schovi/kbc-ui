@@ -46,6 +46,13 @@ transformationsApi =
     .send()
     .promise()
 
+  saveTransformation: (bucketId, transformationId, data) ->
+    createRequest('PUT', "configs/#{bucketId}/items/#{transformationId}")
+    .send(data)
+    .promise()
+    .then (response) ->
+      response.body
+
   getGraph: (configuration) ->
     path = "graph?table=#{configuration.tableId}"
     path = path + "&direction=#{configuration.direction}"
