@@ -42,6 +42,7 @@ TransformationDetail = React.createClass
     isEditing: TransformationsStore.isEditing(bucketId, transformationId)
     isSaving: TransformationsStore.isSaving(bucketId, transformationId)
     editValue: TransformationsStore.getEditingTransformationData(bucketId, transformationId)
+    transformations: TransformationsStore.getTransformations(bucketId)
 
   _handleEditStart: ->
     TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
@@ -88,6 +89,7 @@ TransformationDetail = React.createClass
               openOutputMappings: @state.openOutputMappings
           else
             TransformationDetailEdit
+              transformations: @state.transformations
               transformation: @state.editValue
               tables: @state.tables
               isSaving: @state.isSaving
