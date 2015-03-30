@@ -180,11 +180,16 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.TRANSFORMATION_EDIT_START
       _store = _store.withMutations (store) ->
         store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], true
+        transformation = TransformationsStore.getTransformation(action.bucketId, action.transformationId)
+        if transformation.get("backend") == 'mysql' || transformation.get("backend") == 'redshift'
+          transformation = transformation.set("queries", transformation.get("queries").join("\n\n"))
+        else
+          transformation = transformation.set("queries", transformation.getIn(["queries", 0]))
         store = store.setIn [
             'editingTransformationsData',
             action.bucketId,
             action.transformationId,
-          ], TransformationsStore.getTransformation(action.bucketId, action.transformationId)
+          ], transformation
         return store
       TransformationsStore.emitChange()
 

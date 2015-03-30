@@ -141,7 +141,7 @@ TransformationDetailStatic = React.createClass
 
             if @props.transformation.get('packages').count()
               p {}, small {},
-                  'These packages will be installed in the Docker container running the R script. '
+                  'These packages will be installed into the Docker container running the R script. '
                   'Do not forget to load them using '
                   code {}, 'library()'
                   '.'

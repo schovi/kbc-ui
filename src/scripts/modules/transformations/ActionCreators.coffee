@@ -225,7 +225,26 @@ module.exports =
       transformationId: transformationId
       bucketId: bucketId
     )
+
     data = TransformationsStore.getEditingTransformationData(bucketId, transformationId).toJS()
+
+    # parse queries
+    if (data.backend == 'mysql' || data.backend == 'redshift')
+      # taken and modified from
+      # http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
+      # removed multiline comment part
+      regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\#.*|--.*|[^"\';#])+(?:;|$))'
+      re = new RegExp(regex, 'g')
+      matches = data.queries.match(re)
+      matches = _.map(_.filter(matches, (line) ->
+        line.trim() != ''
+      ), (line) ->
+        line.trim()
+      )
+      data.queries = matches
+    else
+      data.queries = [data.queries]
+
     transformationsApi
     .saveTransformation(bucketId, transformationId, data)
     .then (response) ->
