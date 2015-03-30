@@ -18,6 +18,27 @@ module.exports = React.createClass
       if @props.transformation.get("backend") == "mysql" || @props.transformation.get("backend") == "redshift"
         React.DOM.p {className: "well"},
           "Keboola Connection does not support functions or stored procedures."
+      if @props.transformation.get("backend") == "docker" && @props.transformation.get("type") == "r"
+        React.DOM.p {className: "well"},
+          "Read on "
+          React.DOM.a
+            href: "https://sites.google.com/a/keboola.com/wiki/home/keboola-connection" +
+              "/devel-space/transformations/backends/docker/r-limitations-and-best-practices"
+          ,
+            "R limitations and best practices"
+          "."
+      if @props.transformation.get("backend") == "docker" && @props.transformation.get("type") == "r"
+        React.DOM.p {className: "well"},
+          "All source tables are stored in "
+          React.DOM.code {}, "/data/in/tables"
+          "(relative path "
+          React.DOM.code {}, "in/tables"
+          "), save all tables for output mapping to "
+          React.DOM.code {}, "/data/out/tables"
+          " (relative path "
+          React.DOM.code {}, "out/tables"
+          ")."
+
       QueryEditor
         mode: @_codeMirrorMode()
         value: @props.transformation.get("queries", "")
