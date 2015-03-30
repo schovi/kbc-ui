@@ -1,5 +1,5 @@
 React = require 'react'
-Immutable = require 'Immutable'
+Immutable = require 'immutable'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 PackagesEditor = React.createFactory(require('./PackagesEditor'))
 _ = require('underscore')

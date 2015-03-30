@@ -1,6 +1,5 @@
 React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-Select = React.createFactory(require('react-select'))
 _ = require('underscore')
 Immutable = require('immutable')
 
