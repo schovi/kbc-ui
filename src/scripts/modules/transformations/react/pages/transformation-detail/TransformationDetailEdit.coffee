@@ -17,6 +17,7 @@ Select = React.createFactory(require('react-select'))
 _ = require('underscore')
 SelectRequires = React.createFactory(require('./SelectRequires'))
 QueryEditorContainer = React.createFactory(require('./QueryEditorContainer'))
+PackagesEditorContainer = React.createFactory(require('./PackagesEditorContainer'))
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -114,6 +115,20 @@ TransformationDetailEdit = React.createClass
                 disabled: @props.isSaving
               span {className: "help-block"},
                 "Transformations that will be executed before this transformation"
+        div className: "row col-md-12",
+          h4 {}, "Packages"
+          div className: 'form-group',
+            div className: 'col-xs-12',
+              PackagesEditorContainer
+                name: "packages"
+                value: @props.transformation.get("packages")
+                input: @props.transformation.get("packagesInput", "")
+                disabled: @props.isSaving
+                onChangeValue: (value) ->
+                  component._handleChangeProperty("packages", value)
+                onChangeInput: (value) ->
+                  component._handleChangeProperty("packagesInput", value)
+
         div className: "row col-md-12",
           h4 {}, if @props.transformation.get("backend") == 'docker' then "Script" else "Queries"
           div className: 'form-group',
