@@ -22,7 +22,7 @@ storageApi =
     )
 
   getTables: ->
-    createRequest('GET', 'tables')
+    createRequest('GET', 'tables?include=attributes,buckets,columns')
     .promise()
     .then((response) ->
       response.body
