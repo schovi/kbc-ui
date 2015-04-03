@@ -115,7 +115,6 @@ TransformationDetailStatic = React.createClass
                         transformationBackend: @props.transformation.get('backend')
                         outputMapping: output
                         tables: @props.tables
-                    eventKey: key
                   ,
                     OutputMappingDetail
                       transformationBackend: @props.transformation.get('backend')
