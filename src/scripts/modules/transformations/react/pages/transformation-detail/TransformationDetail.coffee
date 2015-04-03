@@ -39,6 +39,8 @@ TransformationDetail = React.createClass
     transformationId: transformationId
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
+    openEditingInputMappings: TransformationsStore.getOpenEditingInputMappings(bucketId, transformationId)
+    openEditingOutputMappings: TransformationsStore.getOpenEditingOutputMappings(bucketId, transformationId)
     isEditing: TransformationsStore.isEditing(bucketId, transformationId)
     isSaving: TransformationsStore.isSaving(bucketId, transformationId)
     editValue: TransformationsStore.getEditingTransformationData(bucketId, transformationId)
@@ -94,6 +96,26 @@ TransformationDetail = React.createClass
               tables: @state.tables
               isSaving: @state.isSaving
               onChange: @_handleEditChange
+              openInputMappings: @state.openEditingInputMappings
+              openOutputMappings: @state.openEditingOutputMappings
+              onAddInputMapping: ->
+                TransformationsActionCreators.addInputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId
+                )
+              onDeleteInputMapping: (key) ->
+                TransformationsActionCreators.deleteInputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId,
+                  key
+                )
+              toggleOpenInputMapping: (key) ->
+                TransformationsActionCreators.toggleOpenEditingInputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId,
+                  key
+                )
+
 
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',

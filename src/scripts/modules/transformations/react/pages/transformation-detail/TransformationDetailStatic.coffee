@@ -82,13 +82,14 @@ TransformationDetailStatic = React.createClass
               ).map((input, key) ->
                 Panel
                   collapsable: true
-                  defaultExpanded: props.openInputMappings.get(key, false)
+                  eventKey: key
+                  onSelect: (key) -> component._toggleInputMapping(key)
+                  expanded: props.openInputMappings.get(key, false)
                   header:
-                    span {onClick: -> component._toggleInputMapping(key)},
-                      InputMappingRow
-                        transformationBackend: @props.transformation.get('backend')
-                        inputMapping: input
-                        tables: @props.tables
+                    InputMappingRow
+                      transformationBackend: @props.transformation.get('backend')
+                      inputMapping: input
+                      tables: @props.tables
                 ,
                   InputMappingDetail
                     transformationBackend: @props.transformation.get('backend')
@@ -106,13 +107,14 @@ TransformationDetailStatic = React.createClass
                 ).map((output, key) ->
                   Panel
                     collapsable: true
-                    defaultExpanded: props.openOutputMappings.get(key, false)
+                    eventKey: key
+                    onSelect: (key) -> component._toggleInputMapping(key)
+                    expanded: props.openOutputMappings.get(key, false)
                     header:
-                      span {onClick: -> component._toggleOutputMapping(key)},
-                        OutputMappingRow
-                          transformationBackend: @props.transformation.get('backend')
-                          outputMapping: output
-                          tables: @props.tables
+                      OutputMappingRow
+                        transformationBackend: @props.transformation.get('backend')
+                        outputMapping: output
+                        tables: @props.tables
                     eventKey: key
                   ,
                     OutputMappingDetail

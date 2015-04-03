@@ -271,3 +271,34 @@ module.exports =
       bucketId: bucketId
       data: data
     )
+
+  toggleOpenEditingInputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_OPEN_TOGGLE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )
+
+  toggleOpenEditingOutputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_OPEN_TOGGLE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )
+
+  deleteInputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_DELETE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )
+
+  addInputMapping: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_ADD
+      transformationId: transformationId
+      bucketId: bucketId
+    )

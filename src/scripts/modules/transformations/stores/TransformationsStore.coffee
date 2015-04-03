@@ -16,10 +16,13 @@ _store = Map(
   loadingOverviews: Map()
   showDisabledOverviews: Map()
   openInputMappings: Map()
-  closedInputMappings: Map()
+  openOutputMappings: Map()
   editingTransformations: Map()
   savingTransformations: Map()
   editingTransformationsData: Map()
+  openEditingInputMappings: Map()
+  openEditingOutputMappings: Map()
+
 )
 
 addToLoadingBuckets = (store, bucketId) ->
@@ -103,6 +106,12 @@ TransformationsStore = StoreUtils.createStore
 
   getEditingTransformationData: (bucketId, transformationId) ->
     _store.getIn(['editingTransformationsData', bucketId, transformationId], Map())
+
+  getOpenEditingInputMappings: (bucketId, transformationId) ->
+    _store.getIn(['openEditingInputMappings', bucketId, transformationId], Map())
+
+  getOpenEditingOutputMappings: (bucketId, transformationId) ->
+    _store.getIn(['openEditingOutputMappings', bucketId, transformationId], Map())
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -222,5 +231,76 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
       _store = _store.setIn ['editingTransformationsData', action.bucketId, action.transformationId], action.data
       TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_OPEN_TOGGLE
+      if (_store.getIn(['openEditingInputMappings', action.bucketId, action.transformationId, action.index], false))
+        _store = _store.setIn([
+          'openEditingInputMappings',
+          action.bucketId,
+          action.transformationId,
+          action.index
+        ], false)
+      else
+        _store = _store.setIn([
+          'openEditingInputMappings',
+          action.bucketId,
+          action.transformationId,
+          action.index
+        ], true)
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_OPEN_TOGGLE
+      if (_store.getIn([
+        'openEditingOutputMappings',
+        action.bucketId,
+        action.transformationId,
+        action.index
+      ], false))
+        _store = _store.setIn([
+          'openEditingOutputMappings',
+          action.bucketId,
+          action.transformationId,
+          action.index
+        ], false)
+      else
+        _store = _store.setIn([
+          'openEditingOutputMappings',
+          action.bucketId,
+          action.transformationId,
+          action.index
+        ], true)
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_DELETE
+      _store = _store.deleteIn [
+        'editingTransformationsData',
+        action.bucketId,
+        action.transformationId,
+        "input",
+        action.index
+      ]
+
+      _store = _store.deleteIn [
+        'openEditingInputMappings',
+        action.bucketId,
+        action.transformationId,
+        action.index
+      ]
+
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_ADD
+      _store = _store.withMutations (store) ->
+        inputs = store.getIn ['editingTransformationsData', action.bucketId, action.transformationId, "input"], List()
+        inputs = inputs.push(new Map())
+        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, "input"], inputs
+        store = store.setIn [
+          'openEditingInputMappings',
+          action.bucketId,
+          action.transformationId,
+          inputs.count() - 1
+        ], true
+      TransformationsStore.emitChange()
+
 
 module.exports = TransformationsStore

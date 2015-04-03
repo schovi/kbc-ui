@@ -43,6 +43,7 @@ TransformationRow = React.createClass(
     buttons
 
   render: ->
+    # TODO - no detail for unsupported transformations! (remote, db/snapshot, ...)
     Link
       className: 'tr'
       to: 'transformationDetail'
