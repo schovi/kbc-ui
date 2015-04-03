@@ -35,42 +35,39 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
+  _handleChangeColumns: (string, array) ->
+    value = @props.value.set("columns", Immutable.fromJS(_.pluck(array, "value")))
+    @props.onChange(value)
+
   _getTables: ->
     props = @props
     _.sortBy(
       _.map(
-        _.filter(props.tables.toArray(), (table) ->
-          table.getIn(["bucket", "id"]).substr(0, 3) == "in." || table.getIn(["bucket", "id"]).substr(0, 4) == "out."
+        _.filter(props.tables.toJS(), (table) ->
+          table.bucket.id.substr(0, 3) == "in." || table.bucket.id.substr(0, 4) == "out."
         ), (table) -> {
-          label: table.get("id")
-          value: table.get("id")
+          label: table.id
+          value: table.id
         }
       ), (option) ->
         option.label.toLowerCase()
   )
 
   _getColumns: ->
-    return []
     if !@props.value.get("source")
       return []
-    ###
     props = @props
     table = _.find(
-      @props.tables.toArray(), (table) ->
-        table.get("id") == props.value.get("source")
+      @props.tables.toJS(), (table) ->
+        table.id == props.value.get("source")
     )
-    console.log "table", table
-    columns = _.map(
-      table.get("columns"), (column) ->
+    _.map(
+      table.columns, (column) ->
         {
           label: column
           value: column
         }
     )
-    console.log "columns", columns
-    return columns
-    ###
-
 
   render: ->
     console.log "render", @props.value.toJS()
@@ -119,10 +116,10 @@ module.exports = React.createClass
             Select
               multi: true
               name: 'columns'
-              value: @props.value.get("columns", Immutable.List()).toArray()
+              value: @props.value.get("columns", Immutable.List()).toJS()
               disabled: @props.disabled || !@props.value.get("source")
               placeholder: "All columns will be imported"
-              onChange: @_handleChangeSource
+              onChange: @_handleChangeColumns
               options: @_getColumns()
             React.DOM.div
               className: "help-block"
