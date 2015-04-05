@@ -5,6 +5,7 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
+MySqlIndexesContainer = React.createFactory(require("./MySqlIndexesContainer"))
 
 module.exports = React.createClass
   displayName: 'InputMappingRowMySqlEditor'
@@ -39,6 +40,10 @@ module.exports = React.createClass
     value = @props.value.set("columns", Immutable.fromJS(_.pluck(array, "value")))
     @props.onChange(value)
 
+  _handleChangeIndexes: (indexes) ->
+    value = @props.value.set("indexes", indexes)
+    @props.onChange(value)
+
   _getTables: ->
     props = @props
     _.sortBy(
@@ -61,8 +66,12 @@ module.exports = React.createClass
       @props.tables.toJS(), (table) ->
         table.id == props.value.get("source")
     )
+    table.columns
+
+  _getColumnsOptions: ->
+    columns = @_getColumns()
     _.map(
-      table.columns, (column) ->
+      columns, (column) ->
         {
           label: column
           value: column
@@ -120,7 +129,7 @@ module.exports = React.createClass
               disabled: @props.disabled || !@props.value.get("source")
               placeholder: "All columns will be imported"
               onChange: @_handleChangeColumns
-              options: @_getColumns()
+              options: @_getColumnsOptions()
             React.DOM.div
               className: "help-block"
             ,
@@ -138,6 +147,15 @@ module.exports = React.createClass
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.h5 {}, "Indexes"
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
+          React.DOM.div className: 'col-xs-10',
+            MySqlIndexesContainer
+              value: @props.value.get("indexes", Immutable.List())
+              disabled: @props.disabled || !@props.value.get("source")
+              onChange: @_handleChangeIndexes
+              columnsOptions: @_getColumnsOptions()
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.h5 {}, "Data Types"

@@ -2,6 +2,8 @@ React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
 Immutable = require('immutable')
+{Button} = require('react-bootstrap')
+Button = React.createFactory Button
 
 module.exports = React.createClass
   displayName: 'PackagesEditor'
@@ -56,12 +58,12 @@ module.exports = React.createClass
           value: @props.input
           disabled: @props.disabled
       React.DOM.div {className: "col-xs-6"},
-        React.DOM.button
-          className: "btn btn-sm btn-success"
+        Button
+          bsStyle: "success"
           onClick: @_handleClickAddButton
           disabled: @props.disabled || @props.input.trim() == ''
         ,
-          React.DOM.i {className: "glyphicon glyphicon-plus"}
+          React.DOM.i {className: "kbc-icon-plus"}
           " Add"
 
   render: ->
