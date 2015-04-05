@@ -22,6 +22,10 @@ module.exports = React.createClass
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", value)
+      mapping = mapping.set("indexes", Immutable.List())
+      mapping = mapping.set("datatypes", Immutable.Map())
+      mapping = mapping.set("whereColumn", "")
+      mapping = mapping.set("columns", Immutable.List())
     @props.onChange(immutable)
 
   _handleChangeDestination: (e) ->
@@ -53,7 +57,8 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeWhereValues: (e) ->
-    value = @props.value.set("whereValues", Immutable.fromJS(e.target.value.split(",")))
+    parsedValues = _.invoke(e.target.value.split(","), "trim")
+    value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
     @props.onChange(value)
 
   _getWhereValues: ->
@@ -97,8 +102,7 @@ module.exports = React.createClass
     console.log "render", @props.value.toJS()
     component = @
     React.DOM.div {},
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.h5 {}, "Mapping"
+
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Source'
@@ -129,9 +133,6 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.h5 {}, "Data Filters"
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
@@ -190,8 +191,6 @@ module.exports = React.createClass
               placeholder: "Comma separated values"
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.h5 {}, "Indexes"
-      React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
           React.DOM.div className: 'col-xs-10',
@@ -201,8 +200,6 @@ module.exports = React.createClass
               onChange: @_handleChangeIndexes
               columnsOptions: @_getColumnsOptions()
 
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.h5 {}, "Data Types"
 
       React.DOM.div {className: "row col-md-12 text-right"},
         React.DOM.button
