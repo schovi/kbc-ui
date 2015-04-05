@@ -44,6 +44,21 @@ module.exports = React.createClass
     value = @props.value.set("indexes", indexes)
     @props.onChange(value)
 
+  _handleChangeWhereColumn: (string) ->
+    value = @props.value.set("whereColumn", string)
+    @props.onChange(value)
+
+  _handleChangeWhereOperator: (e) ->
+    value = @props.value.set("whereOperator", e.target.value)
+    @props.onChange(value)
+
+  _handleChangeWhereValues: (e) ->
+    value = @props.value.set("whereValues", Immutable.fromJS(e.target.value.split(",")))
+    @props.onChange(value)
+
+  _getWhereValues: ->
+    @props.value.get("whereValues").join(",")
+
   _getTables: ->
     props = @props
     _.sortBy(
@@ -144,6 +159,35 @@ module.exports = React.createClass
           onChange: @_handleChangeDays
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-4'
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
+          React.DOM.div className: 'col-xs-4',
+            Select
+              name: 'whereColumn'
+              value: @props.value.get("whereColumn")
+              disabled: @props.disabled || !@props.value.get("source")
+              placeholder: "Select column"
+              onChange: @_handleChangeWhereColumn
+              options: @_getColumnsOptions()
+          React.DOM.div className: 'col-xs-2',
+            Input
+              type: 'select'
+              name: 'whereOperator'
+              value: @props.value.get("whereOperator")
+              disabled: @props.disabled
+              onChange: @_handleChangeWhereOperator
+            ,
+              React.DOM.option {value: "eq"}, "= (IN)"
+              React.DOM.option {value: "ne"}, "!= (NOT IN)"
+          React.DOM.div className: 'col-xs-4',
+            Input
+              type: 'text'
+              name: 'whereValues'
+              value: @_getWhereValues()
+              disabled: @props.disabled
+              onChange: @_handleChangeWhereValues
+              placeholder: "Comma separated values"
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.h5 {}, "Indexes"
