@@ -65,19 +65,26 @@ TransformationDetail = React.createClass
   _handleEditChange: (data) ->
     TransformationsActionCreators.updateTransformationEdit(@state.bucketId, @state.transformationId, data)
 
+  _showDetails: ->
+    @state.transformation.get("backend") == 'mysql' and @state.transformation.get("type") == 'simple' or
+    @state.transformation.get("backend") == 'redshift' and @state.transformation.get("type") == 'simple' or
+    @state.transformation.get("backend") == 'docker' and @state.transformation.get("type") == 'r'
+
+
   render: ->
     component = @
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
-        div {className: 'text-right'},
-          EditButtons
-            isEditing: @state.isEditing
-            isSaving: @state.isSaving
-            isDisabled: false
-            onCancel: @_handleEditCancel
-            onSave: @_handleEditSave
-            onEditStart: @_handleEditStart
-            editLabel: 'Edit transformation'
+        if @_showDetails()
+          div {className: 'text-right'},
+            EditButtons
+              isEditing: @state.isEditing
+              isSaving: @state.isSaving
+              isDisabled: false
+              onCancel: @_handleEditCancel
+              onSave: @_handleEditSave
+              onEditStart: @_handleEditStart
+              editLabel: 'Edit transformation'
         div {},
           if (!@state.isEditing)
             TransformationDetailStatic
@@ -89,6 +96,7 @@ TransformationDetail = React.createClass
               transformationId: @state.transformationId
               openInputMappings: @state.openInputMappings
               openOutputMappings: @state.openOutputMappings
+              showDetails: @_showDetails()
           else
             TransformationDetailEdit
               transformations: @state.transformations

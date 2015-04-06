@@ -42,6 +42,7 @@ TransformationDetailStatic = React.createClass
     transformationId: React.PropTypes.string.isRequired
     openInputMappings: React.PropTypes.object.isRequired
     openOutputMappings: React.PropTypes.object.isRequired
+    showDetails: React.PropTypes.bool.isRequired
 
   _toggleInputMapping: (index) ->
     TransformationsActionCreators.toggleOpenInputMapping(@props.bucketId, @props.transformationId, index)
@@ -71,134 +72,140 @@ TransformationDetailStatic = React.createClass
             bucketId: @props.bucketId
             transformationId: @props.transformationId
             disabled: @props.transformation.get("disabled", false)
-        div {},
-          h4 {}, 'Input Mapping'
-          if @props.transformation.get('input').count()
-            div {},
-              @props.transformation.get('input').sortBy((inputMapping) ->
-                inputMapping.get('source').toLowerCase()
-              ).map((input, key) ->
-                Panel
-                  key: key
-                  collapsable: true
-                  eventKey: key
-                  expanded: props.openInputMappings.get(key, false)
-                  header:
-                    div
-                      onClick: ->
-                        component._toggleInputMapping(key)
-                    ,
-                      InputMappingRow
-                        transformationBackend: @props.transformation.get('backend')
-                        inputMapping: input
-                        tables: @props.tables
-                ,
-                  InputMappingDetail
-                    transformationBackend: @props.transformation.get('backend')
-                    inputMapping: input
-                    tables: @props.tables
-              , @).toArray()
-          else
-            p {}, small {}, 'No Input Mapping'
-        div {},
-          h4 {}, 'Output Mapping'
-            if @props.transformation.get('output').count()
+        if !@props.showDetails
+          div {},
+            div {className: 'well'},
+              "This transformation is not supported in UI."
+
+        else
+          div {},
+            h4 {}, 'Input Mapping'
+            if @props.transformation.get('input').count()
               div {},
-                @props.transformation.get('output').sortBy((outputMapping) ->
-                  outputMapping.get('source').toLowerCase()
-                ).map((output, key) ->
+                @props.transformation.get('input').sortBy((inputMapping) ->
+                  inputMapping.get('source').toLowerCase()
+                ).map((input, key) ->
                   Panel
                     key: key
                     collapsable: true
                     eventKey: key
-                    expanded: props.openOutputMappings.get(key, false)
+                    expanded: props.openInputMappings.get(key, false)
                     header:
                       div
                         onClick: ->
-                          component._toggleOutputMapping(key)
+                          component._toggleInputMapping(key)
                       ,
-                        OutputMappingRow
+                        InputMappingRow
                           transformationBackend: @props.transformation.get('backend')
-                          outputMapping: output
+                          inputMapping: input
                           tables: @props.tables
                   ,
-                    OutputMappingDetail
+                    InputMappingDetail
                       transformationBackend: @props.transformation.get('backend')
-                      outputMapping: output
+                      inputMapping: input
                       tables: @props.tables
-
                 , @).toArray()
             else
-              p {}, small {}, 'No Output Mapping'
-
-        if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+              p {}, small {}, 'No Input Mapping'
           div {},
-            h4 {}, 'Packages'
-            p {},
-              if @props.transformation.get('packages').count()
-                @props.transformation.get('packages').map((packageName, key) ->
-                  span {},
-                    span {className: 'label label-default'},
-                      packageName
-                    ' '
-                , @).toArray()
+            h4 {}, 'Output Mapping'
+              if @props.transformation.get('output').count()
+                div {},
+                  @props.transformation.get('output').sortBy((outputMapping) ->
+                    outputMapping.get('source').toLowerCase()
+                  ).map((output, key) ->
+                    Panel
+                      key: key
+                      collapsable: true
+                      eventKey: key
+                      expanded: props.openOutputMappings.get(key, false)
+                      header:
+                        div
+                          onClick: ->
+                            component._toggleOutputMapping(key)
+                        ,
+                          OutputMappingRow
+                            transformationBackend: @props.transformation.get('backend')
+                            outputMapping: output
+                            tables: @props.tables
+                    ,
+                      OutputMappingDetail
+                        transformationBackend: @props.transformation.get('backend')
+                        outputMapping: output
+                        tables: @props.tables
+
+                  , @).toArray()
               else
-                small {},
-                'No packages will installed'
+                p {}, small {}, 'No Output Mapping'
 
-            if @props.transformation.get('packages').count()
-              p {}, small {},
-                  'These packages will be installed into the Docker container running the R script. '
-                  'Do not forget to load them using '
-                  code {}, 'library()'
-                  '.'
+          if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+            div {},
+              h4 {}, 'Packages'
+              p {},
+                if @props.transformation.get('packages').count()
+                  @props.transformation.get('packages').map((packageName, key) ->
+                    span {},
+                      span {className: 'label label-default'},
+                        packageName
+                      ' '
+                  , @).toArray()
+                else
+                  small {},
+                  'No packages will installed'
 
-        if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
-          div {},
-            h4 {}, 'Script'
-            if @props.transformation.get('queries').count()
-              CodeMirror
-                theme: 'solarized'
-                lineNumbers: true
-                defaultValue: @props.transformation.getIn ['queries', 0]
-                readOnly: true
-                mode: 'text/x-rsrc'
-                lineWrapping: true
-            else
-              p {}, small {}, 'No R Script'
-        else
-          div {},
-            h4 {}, 'Queries'
-            if @props.transformation.get('queries').count()
-              span {},
-                div className: 'table table-striped table-hover',
-                  span {className: 'tbody'},
-                    @props.transformation.get('queries').map((query, index) ->
-                      span {className: 'tr'},
-                        span {className: 'td'},
-                          index + 1
-                        span {className: 'td'},
-                          span {className: 'static'},
-                            CodeMirror
-                              theme: 'solarized'
-                              lineNumbers: false
-                              defaultValue: query
-                              readOnly: true
-                              mode: @_codeMirrorMode()
-                              lineWrapping: true
-                    , @).toArray()
-                if @props.transformation.get('backend') == 'redshift' or
-                    @props.transformation.get('backend') == 'mysql' && @props.transformation.get('type') == 'simple'
-                  SqlDepModalTrigger
-                    backend: @props.transformation.get('backend')
-                    bucketId: @props.bucketId
-                    transformationId: @props.transformationId
-                  ,
-                    a {},
-                      span className: 'fa fa-sitemap fa-fw'
-                      ' SQLDep'
-            else
-              p {}, small {}, 'No SQL Queries'
+              if @props.transformation.get('packages').count()
+                p {}, small {},
+                    'These packages will be installed into the Docker container running the R script. '
+                    'Do not forget to load them using '
+                    code {}, 'library()'
+                    '.'
+
+          if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+            div {},
+              h4 {}, 'Script'
+              if @props.transformation.get('queries').count()
+                CodeMirror
+                  theme: 'solarized'
+                  lineNumbers: true
+                  defaultValue: @props.transformation.getIn ['queries', 0]
+                  readOnly: true
+                  mode: 'text/x-rsrc'
+                  lineWrapping: true
+              else
+                p {}, small {}, 'No R Script'
+          else
+            div {},
+              h4 {}, 'Queries'
+              if @props.transformation.get('queries').count()
+                span {},
+                  div className: 'table table-striped table-hover',
+                    span {className: 'tbody'},
+                      @props.transformation.get('queries').map((query, index) ->
+                        span {className: 'tr'},
+                          span {className: 'td'},
+                            index + 1
+                          span {className: 'td'},
+                            span {className: 'static'},
+                              CodeMirror
+                                theme: 'solarized'
+                                lineNumbers: false
+                                defaultValue: query
+                                readOnly: true
+                                mode: @_codeMirrorMode()
+                                lineWrapping: true
+                      , @).toArray()
+                  if @props.transformation.get('backend') == 'redshift' or
+                      @props.transformation.get('backend') == 'mysql' && @props.transformation.get('type') == 'simple'
+                    SqlDepModalTrigger
+                      backend: @props.transformation.get('backend')
+                      bucketId: @props.bucketId
+                      transformationId: @props.transformationId
+                    ,
+                      a {},
+                        span className: 'fa fa-sitemap fa-fw'
+                        ' SQLDep'
+              else
+                p {}, small {}, 'No SQL Queries'
 
   _codeMirrorMode: ->
     mode = 'text/text'
