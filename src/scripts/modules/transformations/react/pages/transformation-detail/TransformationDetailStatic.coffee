@@ -142,8 +142,8 @@ TransformationDetailStatic = React.createClass
             div {},
               h4 {}, 'Packages'
               p {},
-                if @props.transformation.get('packages').count()
-                  @props.transformation.get('packages').map((packageName, key) ->
+                if @props.transformation.get('packages', Immutable.List()).count()
+                  @props.transformation.get('packages', Immutable.List()).map((packageName, key) ->
                     span {},
                       span {className: 'label label-default'},
                         packageName
@@ -153,7 +153,7 @@ TransformationDetailStatic = React.createClass
                   small {},
                   'No packages will installed'
 
-              if @props.transformation.get('packages').count()
+              if @props.transformation.get('packages', Immutable.List()).count()
                 p {}, small {},
                     'These packages will be installed into the Docker container running the R script. '
                     'Do not forget to load them using '
