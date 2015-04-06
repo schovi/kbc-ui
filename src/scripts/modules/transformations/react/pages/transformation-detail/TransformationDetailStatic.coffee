@@ -16,10 +16,8 @@ CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 GraphContainer = require './GraphContainer'
-{Panel, Accordion, PanelGroup} = require('react-bootstrap')
+{Panel} = require('react-bootstrap')
 Panel  = React.createFactory Panel
-Accordion = React.createFactory Accordion
-PanelGroup = React.createFactory Accordion
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
@@ -81,15 +79,19 @@ TransformationDetailStatic = React.createClass
                 inputMapping.get('source').toLowerCase()
               ).map((input, key) ->
                 Panel
+                  key: key
                   collapsable: true
                   eventKey: key
-                  onSelect: (key) -> component._toggleInputMapping(key)
                   expanded: props.openInputMappings.get(key, false)
                   header:
-                    InputMappingRow
-                      transformationBackend: @props.transformation.get('backend')
-                      inputMapping: input
-                      tables: @props.tables
+                    div
+                      onClick: ->
+                        component._toggleInputMapping(key)
+                    ,
+                      InputMappingRow
+                        transformationBackend: @props.transformation.get('backend')
+                        inputMapping: input
+                        tables: @props.tables
                 ,
                   InputMappingDetail
                     transformationBackend: @props.transformation.get('backend')
@@ -106,15 +108,19 @@ TransformationDetailStatic = React.createClass
                   outputMapping.get('source').toLowerCase()
                 ).map((output, key) ->
                   Panel
+                    key: key
                     collapsable: true
                     eventKey: key
-                    onSelect: (key) -> component._toggleInputMapping(key)
                     expanded: props.openOutputMappings.get(key, false)
                     header:
-                      OutputMappingRow
-                        transformationBackend: @props.transformation.get('backend')
-                        outputMapping: output
-                        tables: @props.tables
+                      div
+                        onClick: ->
+                          component._toggleOutputMapping(key)
+                      ,
+                        OutputMappingRow
+                          transformationBackend: @props.transformation.get('backend')
+                          outputMapping: output
+                          tables: @props.tables
                   ,
                     OutputMappingDetail
                       transformationBackend: @props.transformation.get('backend')
