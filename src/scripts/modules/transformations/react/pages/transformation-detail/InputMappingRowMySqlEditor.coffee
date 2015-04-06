@@ -55,7 +55,7 @@ module.exports = React.createClass
       mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
 
       indexes = _.filter(mapping.get("indexes").toJS(), (index) ->
-        _.filter(index, (indexPart) ->
+        _.filter(index.split(","), (indexPart) ->
           _.contains(mapping.get("columns").toJS(), indexPart)
         ).length == index.length
       )
@@ -89,31 +89,29 @@ module.exports = React.createClass
 
   _getTables: ->
     props = @props
-    _.sortBy(
-      _.map(
-        _.filter(props.tables.toJS(), (table) ->
-          table.bucket.id.substr(0, 3) == "in." || table.bucket.id.substr(0, 4) == "out."
-        ), (table) -> {
-          label: table.id
-          value: table.id
-        }
-      ), (option) ->
-        option.label.toLowerCase()
-  )
+    inOutTables = @props.tables.filter((table) ->
+      table.get("id").substr(0, 3) == "in." || table.get("id").substr(0, 4) == "out."
+    )
+    map = inOutTables.map((table) ->
+      {
+        label: table.get("id")
+        value: table.get("id")
+      }
+    )
+    map.toList().toJS()
 
   _getColumns: ->
     if !@props.value.get("source")
       return []
     props = @props
-    table = _.find(
-      @props.tables.toJS(), (table) ->
-        table.id == props.value.get("source")
+    table = @props.tables.find((table) ->
+      table.get("id") == props.value.get("source")
     )
-    table.columns
+    table.get("columns").toJS()
 
   _getColumnsOptions: ->
     columns = @_getColumns()
-    _.map(
+    map = _.map(
       columns, (column) ->
         {
           label: column
