@@ -26,6 +26,8 @@ module.exports = React.createClass
       mapping = mapping.set("indexes", Immutable.List())
       mapping = mapping.set("datatypes", Immutable.Map())
       mapping = mapping.set("whereColumn", "")
+      mapping = mapping.set("whereValues", Immutable.List())
+      mapping = mapping.set("whereOperator", "eq")
       mapping = mapping.set("columns", Immutable.List())
     @props.onChange(immutable)
 
@@ -42,8 +44,24 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeColumns: (string, array) ->
-    value = @props.value.set("columns", Immutable.fromJS(_.pluck(array, "value")))
-    @props.onChange(value)
+    immutable = @props.value.withMutations (mapping) ->
+      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
+      if !_.contains(mapping.get("columns").toJS(), mapping.get("whereColumn"))
+        mapping = mapping.set("whereColumn", "")
+        mapping = mapping.set("whereValues", Immutable.List())
+        mapping = mapping.set("whereOperator", "eq")
+
+      datatypes = _.pick(mapping.get("datatypes").toJS(), mapping.get("columns").toJS())
+      mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
+
+      indexes = _.filter(mapping.get("indexes").toJS(), (index) ->
+        _.filter(index, (indexPart) ->
+          _.contains(mapping.get("columns").toJS(), indexPart)
+        ).length == index.length
+      )
+      mapping = mapping.set("indexes", Immutable.fromJS(indexes || Immutable.List()))
+
+    @props.onChange(immutable)
 
   _handleChangeIndexes: (indexes) ->
     value = @props.value.set("indexes", indexes)
@@ -103,8 +121,20 @@ module.exports = React.createClass
         }
     )
 
+  _getFilteredColumnsOptions: ->
+    if @props.value.get("columns").count()
+      columns = @props.value.get("columns").toJS()
+    else
+      columns = @_getColumns()
+    _.map(
+      columns, (column) ->
+        {
+          label: column
+          value: column
+        }
+    )
+
   render: ->
-    console.log "render", @props.value.toJS()
     component = @
     React.DOM.div {},
 
@@ -203,7 +233,7 @@ module.exports = React.createClass
               value: @props.value.get("indexes", Immutable.List())
               disabled: @props.disabled || !@props.value.get("source")
               onChange: @_handleChangeIndexes
-              columnsOptions: @_getColumnsOptions()
+              columnsOptions: @_getFilteredColumnsOptions()
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
@@ -213,7 +243,7 @@ module.exports = React.createClass
               value: @props.value.get("datatypes", Immutable.Map())
               disabled: @props.disabled || !@props.value.get("source")
               onChange: @_handleChangeDataTypes
-              columnsOptions: @_getColumnsOptions()
+              columnsOptions: @_getFilteredColumnsOptions()
 
       React.DOM.div {className: "row col-md-12 text-right"},
         React.DOM.button

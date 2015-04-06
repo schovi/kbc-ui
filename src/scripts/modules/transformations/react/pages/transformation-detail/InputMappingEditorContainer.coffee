@@ -45,6 +45,7 @@ module.exports = React.createClass
         @props.value.map(
           (mapping, key) ->
             Panel
+              key: key
               collapsable: true
               expanded: component.props.openInputMappings.get(key, false)
               eventKey: key
@@ -58,7 +59,6 @@ module.exports = React.createClass
                   ")"
             ,
               InputMappingRowMySqlEditor
-                key: key
                 value: mapping
                 tables: component.props.tables
                 onChange: (value) ->
