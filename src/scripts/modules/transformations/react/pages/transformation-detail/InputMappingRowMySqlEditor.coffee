@@ -6,6 +6,7 @@ Immutable = require('immutable')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
 MySqlIndexesContainer = React.createFactory(require("./MySqlIndexesContainer"))
+MySqlDataTypesContainer = React.createFactory(require("./MySqlDataTypesContainer"))
 
 module.exports = React.createClass
   displayName: 'InputMappingRowMySqlEditor'
@@ -59,6 +60,10 @@ module.exports = React.createClass
   _handleChangeWhereValues: (e) ->
     parsedValues = _.invoke(e.target.value.split(","), "trim")
     value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
+    @props.onChange(value)
+
+  _handleChangeDataTypes: (datatypes) ->
+    value = @props.value.set("datatypes", datatypes)
     @props.onChange(value)
 
   _getWhereValues: ->
@@ -200,6 +205,15 @@ module.exports = React.createClass
               onChange: @_handleChangeIndexes
               columnsOptions: @_getColumnsOptions()
 
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
+          React.DOM.div className: 'col-xs-10',
+            MySqlDataTypesContainer
+              value: @props.value.get("datatypes", Immutable.Map())
+              disabled: @props.disabled || !@props.value.get("source")
+              onChange: @_handleChangeDataTypes
+              columnsOptions: @_getColumnsOptions()
 
       React.DOM.div {className: "row col-md-12 text-right"},
         React.DOM.button
