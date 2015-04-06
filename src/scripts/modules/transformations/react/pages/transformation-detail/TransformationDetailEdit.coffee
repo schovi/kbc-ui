@@ -19,6 +19,7 @@ SelectRequires = React.createFactory(require('./SelectRequires'))
 QueryEditorContainer = React.createFactory(require('./QueryEditorContainer'))
 PackagesEditorContainer = React.createFactory(require('./PackagesEditorContainer'))
 InputMappingEditorContainer = React.createFactory(require('./InputMappingEditorContainer'))
+OutputMappingEditorContainer = React.createFactory(require('./OutputMappingEditorContainer'))
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -40,6 +41,10 @@ TransformationDetailEdit = React.createClass
     toggleOpenInputMapping: React.PropTypes.func.isRequired
     onAddInputMapping: React.PropTypes.func.isRequired
     onDeleteInputMapping: React.PropTypes.func.isRequired
+    openOutputMappings: React.PropTypes.object.isRequired
+    toggleOpenOutputMapping: React.PropTypes.func.isRequired
+    onAddOutputMapping: React.PropTypes.func.isRequired
+    onDeleteOutputMapping: React.PropTypes.func.isRequired
 
   _handleChangeProperty: (property, value) ->
     if !Array.isArray(property)
@@ -137,6 +142,19 @@ TransformationDetailEdit = React.createClass
 
         div className: "row col-md-12",
           h4 {}, 'Output Mapping'
+        OutputMappingEditorContainer
+          value: @props.transformation.get("output")
+          tables: @props.tables
+          backend: @props.transformation.get("backend")
+          type: @props.transformation.get("type")
+          disabled: @props.isSaving
+          onChange: (value) ->
+            component._handleChangeProperty("output", value)
+          onAddOutputMapping: @props.onAddOutputMapping
+          onDeleteOutputMapping: @props.onDeleteOutputMapping
+          openOutputMappings: @props.openOutputMappings
+          toggleOpenOutputMapping: @props.toggleOpenOutputMapping
+          
         if @props.transformation.get("backend") == 'docker' && @props.transformation.get("type") == "r"
           div className: "row col-md-12",
             h4 {}, "Packages"

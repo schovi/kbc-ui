@@ -302,3 +302,19 @@ module.exports =
       transformationId: transformationId
       bucketId: bucketId
     )
+
+
+  deleteOutputMapping: (bucketId, transformationId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_DELETE
+      transformationId: transformationId
+      bucketId: bucketId
+      index: index
+    )
+
+  addOutputMapping: (bucketId, transformationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_ADD
+      transformationId: transformationId
+      bucketId: bucketId
+    )

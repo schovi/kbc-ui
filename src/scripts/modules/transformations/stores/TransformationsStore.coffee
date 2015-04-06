@@ -302,5 +302,36 @@ Dispatcher.register (payload) ->
         ], true
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_DELETE
+      _store = _store.deleteIn [
+        'editingTransformationsData',
+        action.bucketId,
+        action.transformationId,
+        "output",
+        action.index
+      ]
+
+      _store = _store.deleteIn [
+        'openEditingOutputMappings',
+        action.bucketId,
+        action.transformationId,
+        action.index
+      ]
+
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_ADD
+      _store = _store.withMutations (store) ->
+        inputs = store.getIn ['editingTransformationsData', action.bucketId, action.transformationId, "output"], List()
+        inputs = inputs.push(new Map())
+        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, "output"], inputs
+        store = store.setIn [
+          'openEditingOutputMappings',
+          action.bucketId,
+          action.transformationId,
+          inputs.count() - 1
+        ], true
+      TransformationsStore.emitChange()
+
 
 module.exports = TransformationsStore

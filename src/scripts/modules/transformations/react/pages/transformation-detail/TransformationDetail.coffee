@@ -115,6 +115,23 @@ TransformationDetail = React.createClass
                   component.state.transformationId,
                   key
                 )
+              onAddOutputMapping: ->
+                TransformationsActionCreators.addOutputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId
+                )
+              onDeleteOutputMapping: (key) ->
+                TransformationsActionCreators.deleteOutputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId,
+                  key
+                )
+              toggleOpenOutputMapping: (key) ->
+                TransformationsActionCreators.toggleOpenEditingOutputMapping(
+                  component.state.bucketId,
+                  component.state.transformationId,
+                  key
+                )
 
 
       div className: 'col-md-3 kbc-main-sidebar',

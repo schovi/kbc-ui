@@ -18,8 +18,14 @@ OutputMappingDetail = React.createClass(
     outputMapping: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
 
-  _isDestinationTableInRedshift: ->
-    @props.tables.getIn([@props.outputMapping.get('destination'), 'bucket', 'backend']) == 'redshift'
+  _getTableBackend: (tableId) ->
+    table = @props.tables.find((table) ->
+      table.getIn(["bucket", "id"]) == tableId.substr(0, tableId.lastIndexOf("."))
+    )
+    if table
+      return table.getIn(['bucket', 'backend'])
+    else
+      return "N/A"
 
   render: ->
     div className: 'table table-striped',
@@ -45,7 +51,8 @@ OutputMappingDetail = React.createClass(
           span {className: 'td'},
             'Storage type'
           span {className: 'td'},
-            @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
+            @_getTableBackend @props.outputMapping.get('destination')
+
 
         span {className: 'tr'},
           span {className: 'td'},

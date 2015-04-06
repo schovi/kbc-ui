@@ -85,7 +85,7 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _getWhereValues: ->
-    @props.value.get("whereValues").join(",")
+    @props.value.get("whereValues", Immutable.List()).join(",")
 
   _getTables: ->
     props = @props
