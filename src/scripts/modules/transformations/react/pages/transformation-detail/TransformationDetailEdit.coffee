@@ -154,7 +154,7 @@ TransformationDetailEdit = React.createClass
           onDeleteOutputMapping: @props.onDeleteOutputMapping
           openOutputMappings: @props.openOutputMappings
           toggleOpenOutputMapping: @props.toggleOpenOutputMapping
-          
+
         if @props.transformation.get("backend") == 'docker' && @props.transformation.get("type") == "r"
           div className: "row col-md-12",
             h4 {}, "Packages"

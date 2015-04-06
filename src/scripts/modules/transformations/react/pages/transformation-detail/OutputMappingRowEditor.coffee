@@ -16,6 +16,8 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     onDelete: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+    backend: React.PropTypes.string.isRequired
+    type: React.PropTypes.string.isRequired
 
   _handleChangeSource: (e) ->
     immutable = @props.value.withMutations (mapping) ->
@@ -79,16 +81,31 @@ module.exports = React.createClass
     component = @
     React.DOM.div {},
       React.DOM.div {className: "row col-md-12"},
-        Input
-          type: 'text'
-          name: 'source'
-          label: 'Source'
-          value: @props.value.get("source")
-          disabled: @props.disabled
-          placeholder: "Source table in transformation DB"
-          onChange: @_handleChangeSource
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-10'
+        if @props.backend == 'docker' && @props.type == 'r'
+          Input
+            type: 'text'
+            name: 'source'
+            label: 'File'
+            value: @props.value.get("source")
+            disabled: @props.disabled
+            placeholder: "File name"
+            onChange: @_handleChangeSource
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            help: React.DOM.span {},
+              "File will be uploaded from"
+              React.DOM.code {}, "/data/out/tables"
+        else
+          Input
+            type: 'text'
+            name: 'source'
+            label: 'Source'
+            value: @props.value.get("source")
+            disabled: @props.disabled
+            placeholder: "Source table in transformation DB"
+            onChange: @_handleChangeSource
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Destination'

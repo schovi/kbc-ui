@@ -34,7 +34,7 @@ module.exports = React.createClass
     component = @
     React.DOM.div {className: "col-xs-10 col-xs-offset-2"},
       @props.value.map((packageName, key) ->
-        React.DOM.span {},
+        React.DOM.span {key: key},
           React.DOM.span {className: 'label label-default'},
             React.DOM.span
               className: "kbc-icon-cup"

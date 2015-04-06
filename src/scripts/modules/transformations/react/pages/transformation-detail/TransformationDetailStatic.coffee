@@ -144,7 +144,7 @@ TransformationDetailStatic = React.createClass
               p {},
                 if @props.transformation.get('packages', Immutable.List()).count()
                   @props.transformation.get('packages', Immutable.List()).map((packageName, key) ->
-                    span {},
+                    span {key: key},
                       span {className: 'label label-default'},
                         packageName
                       ' '

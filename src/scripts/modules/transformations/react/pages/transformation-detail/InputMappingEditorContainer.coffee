@@ -3,6 +3,7 @@ Immutable = require 'immutable'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
 InputMappingRowMySqlEditor = React.createFactory(require './InputMappingRowMySqlEditor')
+InputMappingRowDockerEditor = React.createFactory(require './InputMappingRowDockerEditor')
 {Panel} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 
@@ -58,14 +59,22 @@ module.exports = React.createClass
                   if mapping.get("destination") then mapping.get("destination") else "Undefined"
                   ")"
             ,
-              InputMappingRowMySqlEditor
-                value: mapping
-                tables: component.props.tables
-                onChange: (value) ->
-                  component._handleChangeInputMapping(key, value)
-                onDelete: ->
-                  component.props.onDeleteInputMapping(key)
-                disabled: component.props.disabled
+              if component.props.backend == "mysql" && component.props.type == "simple"
+                InputMappingRowMySqlEditor
+                  value: mapping
+                  tables: component.props.tables
+                  onChange: (value) ->
+                    component._handleChangeInputMapping(key, value)
+                  onDelete: ->
+                    component.props.onDeleteInputMapping(key)
+                  disabled: component.props.disabled
+              else if component.props.backend == "docker" && component.props.type == "r"
+                InputMappingRowDockerEditor
+                  value: mapping
+                  tables: component.props.tables
+                  onChange: (value) ->
+                    component._handleChangeInputMapping(key, value)
+                  onDelete: ->
+                    component.props.onDeleteInputMapping(key)
+                  disabled: component.props.disabled
         ).toArray()
-        # cycle input mapping editor row redshift/mysql/r
-        # add input mapping button

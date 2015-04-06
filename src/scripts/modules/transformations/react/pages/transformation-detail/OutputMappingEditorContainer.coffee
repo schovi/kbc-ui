@@ -66,4 +66,6 @@ module.exports = React.createClass
                 onDelete: ->
                   component.props.onDeleteOutputMapping(key)
                 disabled: component.props.disabled
+                backend: component.props.backend
+                type: component.props.type
         ).toArray()
