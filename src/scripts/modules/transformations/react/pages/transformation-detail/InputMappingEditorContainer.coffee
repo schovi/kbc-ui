@@ -4,6 +4,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 _ = require('underscore')
 InputMappingRowMySqlEditor = React.createFactory(require './InputMappingRowMySqlEditor')
 InputMappingRowDockerEditor = React.createFactory(require './InputMappingRowDockerEditor')
+InputMappingRowRedshiftEditor = React.createFactory(require './InputMappingRowRedshiftEditor')
 {Panel} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 
@@ -68,6 +69,16 @@ module.exports = React.createClass
                   onDelete: ->
                     component.props.onDeleteInputMapping(key)
                   disabled: component.props.disabled
+              else if component.props.backend == "redshift" && component.props.type == "simple"
+                InputMappingRowRedshiftEditor
+                  value: mapping
+                  tables: component.props.tables
+                  onChange: (value) ->
+                    component._handleChangeInputMapping(key, value)
+                  onDelete: ->
+                    component.props.onDeleteInputMapping(key)
+                  disabled: component.props.disabled
+
               else if component.props.backend == "docker" && component.props.type == "r"
                 InputMappingRowDockerEditor
                   value: mapping

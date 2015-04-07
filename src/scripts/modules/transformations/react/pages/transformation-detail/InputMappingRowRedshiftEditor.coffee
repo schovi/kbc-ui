@@ -5,11 +5,10 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
-MySqlIndexesContainer = React.createFactory(require("./MySqlIndexesContainer"))
-MySqlDataTypesContainer = React.createFactory(require("./MySqlDataTypesContainer"))
+RedshiftDataTypesContainer = React.createFactory(require("./RedshiftDataTypesContainer"))
 
 module.exports = React.createClass
-  displayName: 'InputMappingRowMySqlEditor'
+  displayName: 'InputMappingRowRedshiftEditor'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
@@ -19,16 +18,31 @@ module.exports = React.createClass
     onDelete: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
 
+  distStyleOptions: [
+      label: "EVEN"
+      value: "EVEN"
+    ,
+      label: "KEY"
+      value: "KEY"
+    ,
+      label: "ALL"
+      value: "ALL"
+  ]
+
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", value)
-      mapping = mapping.set("indexes", Immutable.List())
+      mapping = mapping.set("persistent", false)
+      mapping = mapping.set("type", "table")
       mapping = mapping.set("datatypes", Immutable.Map())
       mapping = mapping.set("whereColumn", "")
       mapping = mapping.set("whereValues", Immutable.List())
       mapping = mapping.set("whereOperator", "eq")
       mapping = mapping.set("columns", Immutable.List())
+      mapping = mapping.set("sortKey", "")
+      mapping = mapping.set("distKey", "")
+      mapping = mapping.set("copyOptions", "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS")
     @props.onChange(immutable)
 
   _handleChangeDestination: (e) ->
@@ -39,33 +53,40 @@ module.exports = React.createClass
     value = @props.value.set("optional", e.target.value)
     @props.onChange(value)
 
+  _handleChangePersistent: (e) ->
+    value = @props.value.set("persistent", e.target.value)
+    @props.onChange(value)
+
+  _handleChangeType: (e) ->
+    value = @props.value.set("type", e.target.value)
+    @props.onChange(value)
+
   _handleChangeDays: (e) ->
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
   _handleChangeColumns: (string, array) ->
+    component = @
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
-      if !_.contains(mapping.get("columns").toJS(), mapping.get("whereColumn"))
-        mapping = mapping.set("whereColumn", "")
-        mapping = mapping.set("whereValues", Immutable.List())
-        mapping = mapping.set("whereOperator", "eq")
+      if array.length
 
-      datatypes = _.pick(mapping.get("datatypes").toJS(), mapping.get("columns").toJS())
-      mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
+        columns = mapping.get("columns").toJS()
+        if !_.contains(columns, mapping.get("whereColumn"))
+          mapping = mapping.set("whereColumn", "")
+          mapping = mapping.set("whereValues", Immutable.List())
+          mapping = mapping.set("whereOperator", "eq")
 
-      indexes = _.filter(mapping.get("indexes").toJS(), (index) ->
-        _.filter(index.split(","), (indexPart) ->
-          _.contains(mapping.get("columns").toJS(), indexPart)
-        ).length == index.length
-      )
-      mapping = mapping.set("indexes", Immutable.fromJS(indexes || Immutable.List()))
+        datatypes = _.pick(mapping.get("datatypes").toJS(), columns)
+        mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
+
+        if !_.contains(columns, mapping.get("distKey"))
+          mapping = mapping.set("distKey", "")
+          mapping = mapping.set("distStyle", "")
+
+        mapping = mapping.set("sortKey", _.intersection(columns, component._getSortKeyValues()).join(","))
 
     @props.onChange(immutable)
-
-  _handleChangeIndexes: (indexes) ->
-    value = @props.value.set("indexes", indexes)
-    @props.onChange(value)
 
   _handleChangeWhereColumn: (string) ->
     value = @props.value.set("whereColumn", string)
@@ -84,8 +105,29 @@ module.exports = React.createClass
     value = @props.value.set("datatypes", datatypes)
     @props.onChange(value)
 
+  _handleChangeSortKey: (string) ->
+    value = @props.value.set("sortKey", string)
+    @props.onChange(value)
+
+  _handleChangeDistKey: (string) ->
+    value = @props.value.set("distKey", string)
+    @props.onChange(value)
+
+  _handleChangeDistStyle: (string) ->
+    value = @props.value.set("distStyle", string)
+    @props.onChange(value)
+
+  _handleChangeCopyOptions: (e) ->
+    value = @props.value.set("copyOptions", e.target.value)
+    @props.onChange(value)
+
   _getWhereValues: ->
     @props.value.get("whereValues", Immutable.List()).join(",")
+
+  _getSortKeyValues: ->
+    _.filter(_.invoke(@props.value.get("sortKey", "").split(","), "trim"), (item) ->
+      item != ""
+    )
 
   _getTables: ->
     props = @props
@@ -132,10 +174,19 @@ module.exports = React.createClass
         }
     )
 
+  _isSourceTableRedshift: ->
+    props = @props
+    table = @props.tables.find((table) ->
+      table.get("id") == props.value.get("source")
+    )
+    if !table
+      return false
+    else
+      return table.getIn(["bucket", "backend"]) == "redshift"
+
   render: ->
     component = @
     React.DOM.div {},
-
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Source'
@@ -166,6 +217,38 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
+      if (@_isSourceTableRedshift())
+        Input
+          type: 'select'
+          name: 'type'
+          label: 'Type'
+          value: @props.value.get("type", "table")
+          disabled: @props.disabled
+          onChange: @_handleChangeType
+          labelClassName: 'col-xs-2'
+          wrapperClassName: 'col-xs-10'
+          help:
+            React.DOM.span {},
+              React.DOM.div {},
+               React.DOM.code {}, "table"
+               "Input mapping is created as a physical table, takes longer to process"
+              React.DOM.div {},
+               React.DOM.code {}, "view"
+               "Input mapping is created as a view, will consume more memory when materializing"
+        ,
+          React.DOM.option {value: "table"}, "Table"
+          React.DOM.option {value: "view"}, "View"
+      if (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            type: 'checkbox'
+            label: 'Persistent'
+            value: @props.value.get("persistent")
+            disabled: @props.disabled
+            onChange: @_handleChangePersistent
+            wrapperClassName: 'col-xs-offset-2 col-xs-10'
+            help: "Try to keep the table in Redshift DB. STATUPDATE and COMPUPDATE
+              will be processed only in the first run."
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
@@ -225,23 +308,78 @@ module.exports = React.createClass
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
-          React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
-          React.DOM.div className: 'col-xs-10',
-            MySqlIndexesContainer
-              value: @props.value.get("indexes", Immutable.List())
-              disabled: @props.disabled || !@props.value.get("source")
-              onChange: @_handleChangeIndexes
-              columnsOptions: @_getFilteredColumnsOptions()
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
           React.DOM.div className: 'col-xs-10',
-            MySqlDataTypesContainer
+            RedshiftDataTypesContainer
               value: @props.value.get("datatypes", Immutable.Map())
               disabled: @props.disabled || !@props.value.get("source")
               onChange: @_handleChangeDataTypes
               columnsOptions: @_getFilteredColumnsOptions()
+
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-xs-2 control-label', 'Sort Key'
+          React.DOM.div className: 'col-xs-10',
+            Select
+              multi: true
+              name: 'sortKey'
+              value: @_getSortKeyValues()
+              disabled: @props.disabled || !@props.value.get("source")
+              placeholder: "No sortkey"
+              onChange: @_handleChangeSortKey
+              options: @_getFilteredColumnsOptions()
+            React.DOM.div
+              className: "help-block"
+            ,
+              "SORTKEY option for creating table in Redshift DB.
+                You can create a compound sort key."
+
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-xs-2 control-label', 'Dist Key'
+          React.DOM.div className: 'col-xs-7',
+            Select
+              name: 'distKey'
+              value: @props.value.get("distKey")
+              disabled: @props.disabled || !@props.value.get("source")
+              placeholder: "Select column"
+              onChange: @_handleChangeDistKey
+              options: @_getFilteredColumnsOptions()
+          React.DOM.div className: 'col-xs-3',
+            Select
+              name: 'distStyle'
+              value: @props.value.get("distStyle")
+              disabled: @props.disabled || !@props.value.get("source")
+              placeholder: "Style"
+              onChange: @_handleChangeDistStyle
+              options: @distStyleOptions
+
+          React.DOM.div
+            className: "col-xs-offset-2 col-xs-10 help-block"
+          ,
+            "DISTKEY and DISTSTYLE options used for
+              CREATE TABLE query in Redshift."
+
+      if (!@_isSourceTableRedshift())
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            type: 'text'
+            label: 'COPY options'
+            value: @props.value.get("copyOptions")
+            disabled: @props.disabled
+            placeholder: "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
+            onChange: @_handleChangeCopyOptions
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            help:
+              React.DOM.span {},
+                "Additional options for COPY command, multiple values separated by comma. "
+                React.DOM.a
+                  href: "http://wiki.keboola.com/home/keboola-connection/devel-space/
+                    transformations/backends/redshift#COPY_command"
+                ,
+                  "Default options"
+                "."
 
       React.DOM.div {className: "row col-md-12 text-right"},
         React.DOM.button

@@ -66,10 +66,9 @@ TransformationDetail = React.createClass
     TransformationsActionCreators.updateTransformationEdit(@state.bucketId, @state.transformationId, data)
 
   _showDetails: ->
-    @state.transformation.get("backend") == 'mysql' and @state.transformation.get("type") == 'simple' or
-    @state.transformation.get("backend") == 'redshift' and @state.transformation.get("type") == 'simple' or
-    @state.transformation.get("backend") == 'docker' and @state.transformation.get("type") == 'r'
-
+    @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or
+    @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
+    @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
   render: ->
     component = @
