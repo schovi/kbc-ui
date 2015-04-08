@@ -29,7 +29,13 @@ module.exports =
         response.body
 
     getJobDetail: (jobId) ->
-      createRequest('GET','job/' + jobId)
+      createRequest('GET','jobs/' + jobId)
+      .promise()
+      .then (response) ->
+        response.body
+
+    terminateJob: (jobId) ->
+      createRequest('POST', "jobs/#{jobId}/kill")
       .promise()
       .then (response) ->
         response.body

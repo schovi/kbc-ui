@@ -57,6 +57,25 @@ module.exports =
       type: constants.ActionTypes.JOB_LOAD_SUCCESS
       job: jobDetail
 
+  terminateJob: (jobId) ->
+    actions = @
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.JOB_TERMINATE_START
+      jobId: jobId
+
+    jobsApi
+    .terminateJob jobId
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.JOB_TERMINATE_SUCCESS
+        jobId: jobId
+      actions.loadJobDetailForce jobId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.JOB_TERMINATE_ERROR
+        jobId: jobId
+      throw e
+
   loadComponentConfigurationLatestJobs: (componentId, configurationId) ->
 
     dispatcher.handleViewAction

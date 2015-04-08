@@ -11,6 +11,10 @@ module.exports =
     JOB_LOAD: null
     JOB_LOAD_SUCCESS: null
 
+    JOB_TERMINATE_START: null
+    JOB_TERMINATE_ERROR: null
+    JOB_TERMINATE_SUCCESS: null
+
     JOBS_LATEST_LOAD_START: null
     JOBS_LATEST_LOAD_SUCCESS: null
     JOBS_LATEST_LOAD_ERROR: null

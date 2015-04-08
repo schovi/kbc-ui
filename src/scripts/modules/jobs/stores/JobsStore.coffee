@@ -10,6 +10,7 @@ List = Immutable.List
 _store = Map(
   jobsById: Map()
   loadingJobs: List()
+  terminatingJobs: List() # waiting for terminate request send
   query: ''
   isLoading: false
   isLoaded: false
@@ -61,6 +62,9 @@ JobsStore = StoreUtils.createStore
 
   getIsJobLoading: (jobId) ->
     _store.get('loadingJobs').contains jobId
+
+  getIsJobTerminating: (jobId) ->
+    _store.get('terminatingJobs').contains jobId
 
 
 
@@ -121,5 +125,16 @@ Dispatcher.register (payload) ->
             loadingJobs.remove(loadingJobs.indexOf(action.job.id))
 
       JobsStore.emitChange()
+
+    when Constants.ActionTypes.JOB_TERMINATE_START
+      _store = _store.update 'terminatingJobs', (jobs) ->
+        jobs.push action.jobId
+      JobsStore.emitChange()
+
+    when Constants.ActionTypes.JOB_TERMINATE_SUCCESS, Constants.ActionTypes.JOB_TERMINATE_ERROR
+      _store = _store.update 'terminatingJobs', (jobs) ->
+        jobs.remove(jobs.indexOf(action.jobId))
+      JobsStore.emitChange()
+
 
 module.exports = JobsStore

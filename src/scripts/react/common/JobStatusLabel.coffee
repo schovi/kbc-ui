@@ -11,6 +11,8 @@ JobStatusLabel = React.createClass(
       processing: 'label-warning'
       canceled: 'label-canceled'
       cancelled: 'label-canceled'
+      terminated: 'label-canceled'
+      terminating: 'label-canceled'
       waiting: 'label-default'
       warn: 'label-danger'
 

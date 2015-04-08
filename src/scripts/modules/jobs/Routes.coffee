@@ -4,6 +4,7 @@ JobsIndex = require('./react/pages/jobs-index/JobsIndex')
 JobsActionCreators = require('./ActionCreators')
 JobsReloaderButton = require('./react/components/JobsReloaderButton')
 JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton')
+JobTerminateButton = require './react/components/JobTerminateButton'
 JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel')
 JobsStore = require('./stores/JobsStore')
 
@@ -29,13 +30,14 @@ routes =
           "Job " + jobId
         reloaderHandler: JobDetailReloaderButton
         handler: JobDetail
+        headerButtonsHandler: JobTerminateButton
         poll:
-          interval: 10
+          interval: 2
           action: (params) ->
             jobId = parseInt(params.jobId)
             job = JobsStore.get jobId
-            if job and job.get('status') in ['waiting','processing']
-              JobsActionCreators.loadJobDetail(jobId)
+            if job and job.get('status') in ['waiting','processing','terminating']
+              JobsActionCreators.loadJobDetailForce(jobId)
         requireData: [
           (params) ->
             JobsActionCreators.loadJobDetail(parseInt(params.jobId))

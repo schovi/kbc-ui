@@ -8,6 +8,8 @@ statusColorMap =
   processing: 'orange'
   cancelled: 'grey'
   waiting: 'grey'
+  terminating: 'grey'
+  terminated: 'grey'
 
 JobStatusCircle = React.createClass
   displayName: 'JobStatusCircle'
