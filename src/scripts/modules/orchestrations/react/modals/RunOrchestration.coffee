@@ -2,6 +2,7 @@ React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
+ConfirmButtons = require '../../../../react/common/ConfirmButtons'
 
 OrchestrationActionCreators = require '../../ActionCreators'
 
@@ -23,11 +24,12 @@ RunOrchestration = React.createClass
            strong null, @props.orchestration.get('name'),
            ' manually and the notifications will be sent only to you.'
       div className: 'modal-footer',
-        ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
-            'Cancel'
-          Button bsStyle: 'primary', onClick: @_handleRun, disabled: @state.isLoading,
-            'Run'
+        React.createElement ConfirmButtons,
+          isSaving: @state.isLoading
+          isDisabled: false
+          saveLabel: 'Run'
+          onCancel: @props.onRequestHide
+          onSave: @_handleRun
 
   _handleRun: ->
 

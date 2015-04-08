@@ -42,6 +42,7 @@ module.exports = React.createClass
             React.createElement ConfirmButtons,
               isSaving: @state.isSaving
               isDisabled: false
+              saveLabel: 'Save'
               onCancel: @props.onRequestHide
               onSave: @_handleSave
 

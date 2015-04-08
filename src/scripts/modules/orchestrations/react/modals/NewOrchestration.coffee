@@ -1,7 +1,6 @@
 React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
-ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Button = React.createFactory(require('react-bootstrap').Button)
+ConfirmButtons = require '../../../../react/common/ConfirmButtons'
 
 OrchestrationActionCreators = require '../../ActionCreators'
 
@@ -32,14 +31,14 @@ NewOrchestration = React.createClass
                 onChange: @_setName
                 ref: 'name'
       div className: 'modal-footer',
-        ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
-            'Cancel'
-          Button bsStyle: 'primary', onClick: @_handleCreate, disabled: @state.isLoading || !@state.isValid,
-            'Create'
+        React.createElement ConfirmButtons,
+          isSaving: @state.isLoading
+          isDisabled: !@state.isValid
+          saveLabel: 'Create'
+          onCancel: @props.onRequestHide
+          onSave: @_handleCreate
 
   _handleCreate: ->
-
     @setState
       isLoading: true
 
