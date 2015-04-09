@@ -76,7 +76,15 @@ OrchestrationDetail = React.createClass
             div className: 'td',
               div className: 'row',
                 span className: 'col-md-3', 'Notifications '
-                strong className: 'col-md-9', 'TODO'
+                strong className: 'col-md-9',
+                  Link
+                    to: 'orchestrationNotifications'
+                    params:
+                      orchestrationId: @state.orchestration.get('id')
+                  ,
+                    ' '
+                    span className: 'fa fa-edit'
+                    ' Configure Notifications'
               div className: 'row',
                 span className: 'col-md-3', 'Tasks '
                 strong className: 'col-md-9',
@@ -86,7 +94,7 @@ OrchestrationDetail = React.createClass
                   ,
                     ' '
                     span className: 'fa fa-edit'
-                    ' Configure tasks'
+                    ' Configure Tasks'
         (JobsGraph(jobs: @state.jobs) if @state.jobs.size >= 2)
         JobsTable(
           jobs: @state.jobs
