@@ -43,15 +43,6 @@ OrchestrationTasks = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
-  _handleTasksSave: ->
-    OrchestrationsActionCreators.saveOrchestrationTasks(@state.orchestration.get 'id')
-
-  _handleReset: ->
-    OrchestrationsActionCreators.cancelOrchestrationTasksEdit(@state.orchestration.get 'id')
-
-  _startEditing: ->
-    OrchestrationsActionCreators.startOrchestrationTasksEdit(@state.orchestration.get 'id')
-
   _handleTasksChange: (newTasks) ->
     OrchestrationsActionCreators.updateOrchestrationsTasksEdit(@state.orchestration.get('id'), newTasks)
 
@@ -70,16 +61,12 @@ OrchestrationTasks = React.createClass
               tasks: @state.tasks
               isSaving: @state.isSaving
               components: @state.components
-              onSave: @_handleTasksSave
               onChange: @_handleTasksChange
-              onCancel: @_handleReset
         else
           div null,
             TasksTable
               tasks: @state.tasks
               components: @state.components
-            button onClick: @_startEditing, className: 'btn btn-primary',
-              'Edit tasks'
 
 
 module.exports = OrchestrationTasks

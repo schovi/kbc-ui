@@ -18,9 +18,7 @@ TasksEditor = React.createClass
     tasks: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
     isSaving: React.PropTypes.bool.isRequired
-    onSave: React.PropTypes.func.isRequired
     onChange: React.PropTypes.func.isRequired
-    onCancel: React.PropTypes.func.isRequired
 
   render: ->
     div null,
@@ -37,26 +35,6 @@ TasksEditor = React.createClass
           disabled: @props.isSaving
         ,
           'Add task'
-      ButtonToolbar null,
-        Button
-          bsStyle: 'link'
-          disabled: @props.isSaving
-          onClick: ( ->
-            @props.onCancel()).bind(@)
-        ,
-          'Cancel',
-        Button
-          bsStyle: 'primary'
-          disabled: @props.isSaving
-          onClick: ( ->
-            @props.onSave()
-          ).bind(@)
-        ,
-          'Save'
-        if @props.isSaving
-          span null,
-            ' '
-            Loader()
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(
@@ -113,4 +91,3 @@ TasksEditor = React.createClass
 
 
 module.exports = TasksEditor
-

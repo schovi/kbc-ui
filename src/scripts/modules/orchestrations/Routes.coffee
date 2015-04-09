@@ -17,6 +17,7 @@ OrchestrationReloaderButton = require './react/components/OrchestrationReloaderB
 JobReloaderButton = require './react/components/JobReloaderButton'
 JobTerminateButton = require './react/components/JobTerminateButton'
 OrchestrationDetailButtons = require './react/components/OrchestrationDetailButtons'
+OrchestrationTasksButtons = require './react/components/OrchestrationTasksButtons'
 OrchestrationNameEdit = require './react/components/OrchestrationNameEdit'
 
 # stores
@@ -79,6 +80,7 @@ routes =
       title: 'Tasks'
       path: 'tasks'
       handler: OrchestrationTasks
+      headerButtonsHandler: OrchestrationTasksButtons
     ,
       name: 'orchestrationNotifications'
       title: 'Notifications'
