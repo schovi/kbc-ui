@@ -1,6 +1,6 @@
 React = require 'react'
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
-JobsStore = require('../../stores/JobsStore')
+JobsStore = require('../../stores/OrchestrationJobsStore')
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
 TerminateButton = require '../../../../react/common/JobTerminateButton'
@@ -16,7 +16,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     jobId = @_getJobId()
-    job: JobsStore.get jobId
+    job: JobsStore.getJob jobId
     isTerminating: JobsStore.getIsJobTerminating jobId
 
   _handleTerminate: ->

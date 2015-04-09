@@ -10,6 +10,7 @@ _store = Map(
   jobsByOrchestrationId: Map()
   loadingOrchestrationJobs: List()
   loadingJobs: List()
+  terminatingJobs: List()
 )
 
 addToLoadingOrchestrations = (store, orchestrationId) ->
@@ -27,6 +28,14 @@ addToLoadingJobs = (store, jobId) ->
 removeFromLoadingJobs = (store, jobId) ->
   store.update 'loadingJobs', (loadingJobs) ->
     loadingJobs.remove(loadingJobs.indexOf(jobId))
+
+addToTerminatingJobs = (store, jobId) ->
+  store.update 'terminatingJobs', (jobs) ->
+    jobs.push jobId
+
+removeFromTerminatingJobs = (store, jobId) ->
+  store.update 'terminatingJobs', (jobs) ->
+    jobs.remove(jobs.indexOf(jobId))
 
 setOrchestrationJob = (store, orchestrationId, job) ->
   jobId = job.get 'id'
@@ -61,6 +70,9 @@ OrchestrationJobsStore = StoreUtils.createStore
     _store.get('jobsByOrchestrationId').find (jobs) ->
       foundJob = jobs.find (job) -> job.get('id') == id
     foundJob
+
+  getIsJobTerminating: (id) ->
+    _store.get('terminatingJobs').contains id
 
   ###
     Test if job is currently being loaded
@@ -109,5 +121,14 @@ Dispatcher.register (payload) ->
       )
       OrchestrationJobsStore.emitChange()
 
+    when Constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_START
+      _store = addToTerminatingJobs _store, action.jobId
+      OrchestrationJobsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_ERROR, \
+        Constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_SUCCESS
+
+      _store = removeFromTerminatingJobs _store, action.jobId
+      OrchestrationJobsStore.emitChange()
 
 module.exports = OrchestrationJobsStore

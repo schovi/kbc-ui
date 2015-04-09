@@ -3,6 +3,7 @@
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 orchestrationsApi = require './OrchestrationsApi'
+jobsApi = require '../jobs/JobsApi'
 OrchestrationStore = require './stores/OrchestrationsStore'
 OrchestrationJobsStore = require './stores/OrchestrationJobsStore'
 Promise = require 'bluebird'
@@ -312,3 +313,22 @@ module.exports =
         job: newJob
       )
     )
+
+  terminateJob: (jobId) ->
+    actions = @
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_START
+      jobId: jobId
+
+    jobsApi
+    .terminateJob jobId
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_SUCCESS
+        jobId: jobId
+      actions.loadJobForce jobId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_ERROR
+        jobId: jobId
+      throw e

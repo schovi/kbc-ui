@@ -14,6 +14,7 @@ OrchestrationsReloaderButton = require './react/components/OrchestrationsReloade
 NewOrchestrationButton = require './react/components/NewOrchestionButton'
 OrchestrationReloaderButton = require './react/components/OrchestrationReloaderButton'
 JobReloaderButton = require './react/components/JobReloaderButton'
+JobTerminateButton = require './react/components/JobTerminateButton'
 OrchestrationDetailButtons = require './react/components/OrchestrationDetailButtons'
 OrchestrationNameEdit = require './react/components/OrchestrationNameEdit'
 
@@ -62,7 +63,7 @@ routes =
       name: 'orchestrationJob'
       reloaderHandler: JobReloaderButton
       poll:
-        interval: 10
+        interval: 2
         action: (params) ->
           OrchestrationsActionCreators.loadJobForce(parseInt(params.jobId))
       requireData: (params) ->
@@ -71,6 +72,7 @@ routes =
         'Job ' +  routerState.getIn ['params', 'jobId']
       path: 'jobs/:jobId'
       handler: OrchestrationJobDetail
+      headerButtonsHandler: JobTerminateButton
     ,
       name: 'orchestrationTasks'
       title: 'Tasks'
