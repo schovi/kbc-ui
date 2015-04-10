@@ -34,8 +34,10 @@ module.exports = React.createClass
     onNotificationsChange: React.PropTypes.func.isRequired
     onInputChange: React.PropTypes.func.isRequired
   render: ->
+    console.log 'render', @props.notifications.toJS()
     errorEmails = @_getNotificationsForChannel 'error'
     processingEmails = @_getNotificationsForChannel 'processing'
+
     div null,
       div null,
         p null,
@@ -51,13 +53,31 @@ module.exports = React.createClass
               emails: errorEmails
       div null,
         h2 null, 'Processing'
+        if @props.isEditing && processingEmails.count()
           p null,
-            'Notified when job is still processing, abnormally longer than usually.'
-          if @props.isEditing
-            @_renderNotificationsEditor 'processing', processingEmails
-          else
-            React.createElement SubscribersList,
-              emails: processingEmails
+            'Notified when job is processing '
+            @_renderToleranceInput()
+            ' % longer than usually.'
+        else
+          p null,
+            'Notified when job is processing '
+            @_getTolerance()
+            '% longer than usually.'
+        if @props.isEditing
+          @_renderNotificationsEditor 'processing', processingEmails
+        else
+          React.createElement SubscribersList,
+            emails: processingEmails
+
+  _renderToleranceInput: ->
+    React.DOM.input
+      type: 'number'
+      value: @_getTolerance()
+      onChange: @_onToleranceChange
+      className: 'form-control'
+      style:
+        width: '50px'
+        display: 'inline-block'
 
   _renderNotificationsEditor: (channelName, emails) ->
     React.createElement ItemsListEditor,
@@ -73,11 +93,13 @@ module.exports = React.createClass
     @props.onInputChange channelName, newValue
 
   _onChannelChange: (channelName, newEmails) ->
+    tolerance = @_getTolerance()
     newNotifications = newEmails.map (email) ->
       Map
         email: email
         channel: channelName
-        parameters: {}
+        parameters: Map
+          tolerance: tolerance if channelName == 'processing'
 
     newNotifications = @props.notifications.filter (notification) ->
       notification.get('channel') != channelName
@@ -85,6 +107,23 @@ module.exports = React.createClass
 
     @props.onNotificationsChange newNotifications
 
+  _onToleranceChange: (e) ->
+    tolerance = parseInt(e.target.value)
+    newNotifications = @props.notifications.map (notification) ->
+      if notification.get('channel') != 'processing'
+        notification
+      else
+        notification.setIn ['parameters', 'tolerance'], tolerance
+    @props.onNotificationsChange newNotifications
+
+  _getTolerance: ->
+    notifications = @_getNotificationsForChannel('processing').filter (notification) ->
+      notification.hasIn(['parameters', 'tolerance'])
+
+    if !notifications.count()
+      20
+    else
+      notifications.first().getIn(['parameters', 'tolerance'])
 
   _getNotificationsForChannel: (channelName) ->
     @props.notifications.filter (notification) ->
