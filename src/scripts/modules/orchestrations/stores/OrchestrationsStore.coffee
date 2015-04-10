@@ -222,7 +222,7 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_ERROR
-      _store = _store.deleteIn ['saving', action.orchestrationId, action.field],
+      _store = _store.deleteIn ['saving', action.orchestrationId, action.field]
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_SUCCESS
