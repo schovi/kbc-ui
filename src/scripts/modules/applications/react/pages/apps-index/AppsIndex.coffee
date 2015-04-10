@@ -1,5 +1,4 @@
 React = require  'react'
-_ = require 'underscore'
 
 Link = React.createFactory(require('react-router').Link)
 
@@ -8,38 +7,28 @@ App = React.createFactory(require('./AppItem'))
 
 {div, span,input, strong, form, button} = React.DOM
 
-AppsIndex = React.createClass
+module.exports = React.createClass
   displayName: 'Applications'
+
+  getInitialState: ->
+    components: AppsStore.getKbcApps()
+
   render: ->
-    apps = @_prepareApps(@_getApps())
-    appRows = _.map(apps, (appsInRow) ->
-      @_renderAppsRow(appsInRow)
-    , @)
+    div className: 'container-fluid kbc-main-content',
+      @state.components
+      .toIndexedSeq()
+      .sortBy (component) -> component.get('name')
+      .groupBy (component, i) -> Math.floor(i / 3)
+      .map @_renderAppsRow, @
+      .toArray()
 
-    (div className: 'container kbc-applications',
-      (div className: 'row',
-        (div className: 'col-md-12',
-          appRows
-        )
-      )
-    )
-
-  _getApps: ->
-    AppsStore.getKbcApps()
-
-  _renderAppsRow: (apps) ->
-    appElements = _.map(apps, (app) ->
-      App(app: app)
-    , @)
-
-    (div className: 'row', appElements)
-
-  _prepareApps: (apps) ->
-    _.chain(apps.toJS())
-    .sortBy('id')
-    .groupBy (index) ->
-      Math.floor(index++ / 3)
-    .toArray()
-    .value()
-
-module.exports = AppsIndex
+  _renderAppsRow: (apps, key) ->
+    div
+      className: 'row kbc-extractors-select'
+      key: key
+    ,
+      apps.map (app) ->
+        App
+          app: app
+          key: app.get 'id'
+      .toArray()

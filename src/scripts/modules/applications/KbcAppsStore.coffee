@@ -1,7 +1,7 @@
 Immutable = require('immutable')
 {Map, List} = Immutable
 
-_store = List(
+_store = Immutable.fromJS(
   [
     id: 'tagging'
     name: 'Tagging'
@@ -14,7 +14,6 @@ _store = List(
     ui: 'kbc.docToolRecipes'
   ]
 )
-
 
 KbcAppsStore =
   getKbcApps: ->
