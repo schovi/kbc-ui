@@ -24,7 +24,6 @@ module.exports = React.createClass
     onSave: React.PropTypes.func.isRequired
     onEditStart: React.PropTypes.func.isRequired
 
-
   getDefaultProps: ->
     editLabel: 'Edit'
     saveLabel: 'Save'
@@ -33,7 +32,7 @@ module.exports = React.createClass
 
   render: ->
     if @props.isEditing
-      ConfirmButtons
+      React.createElement ConfirmButtons,
         isSaving: @props.isSaving
         isDisabled: @props.isDisabled
         cancelLabel: @props.cancelLabel
