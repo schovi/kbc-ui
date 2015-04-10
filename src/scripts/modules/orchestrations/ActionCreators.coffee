@@ -302,6 +302,46 @@ module.exports =
       )
       throw e
 
+  ###
+    Editing notifications
+  ###
+  startOrchestrationNotificationsEdit: (id) ->
+    @startOrchestrationFieldEdit id, 'notifications'
+
+  cancelOrchestrationNotificationsEdit: (id) ->
+    @cancelOrchestrationFieldEdit id, 'notifications'
+
+  updateOrchestrationNotificationsEdit: (id, newNotifications) ->
+    @updateOrchestrationFieldEdit id, 'notifications', newNotifications
+
+  saveOrchestrationNotificationsEdit: (id) ->
+    notifications = OrchestrationStore.getEditingValue(id, 'notifications')
+
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_START
+      orchestrationId: id
+      field: 'notifications'
+
+    orchestrationsApi
+    .saveOrchestrtionNotifications id, notifications.toJS()
+    .then (notifications) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_SUCCESS
+        orchestrationId: id
+        field: 'notifications'
+        notifications: notifications
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_ERROR
+        orchestrationId: id
+        field: 'notifications'
+        error: e
+      throw e
+
+  ###
+    Run and termination
+  ###
+
   runOrchestration: (id) ->
 
     orchestrationsApi

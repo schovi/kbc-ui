@@ -6,7 +6,7 @@ OrchestrationsActionCreators = require '../../ActionCreators'
 EditButtons = React.createFactory(require '../../../../react/common/EditButtons')
 
 module.exports = React.createClass
-  displayName: 'OrchestrationTasksButtons'
+  displayName: 'OrchestrationNotificationsButtons'
   mixins: [createStoreMixin(OrchestrationsStore)]
 
   componentWillReceiveProps: ->
@@ -15,23 +15,23 @@ module.exports = React.createClass
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
     orchestrationId: orchestrationId
-    isEditing: OrchestrationsStore.isEditing(orchestrationId, 'tasks')
-    isSaving: OrchestrationsStore.isSaving(orchestrationId, 'tasks')
+    isEditing: OrchestrationsStore.isEditing(orchestrationId, 'notifications')
+    isSaving: OrchestrationsStore.isSaving(orchestrationId, 'notifications')
 
   _handleSave: ->
-    OrchestrationsActionCreators.saveOrchestrationTasks(@state.orchestrationId)
+    OrchestrationsActionCreators.saveOrchestrationNotificationsEdit(@state.orchestrationId)
 
   _handleCancel: ->
-    OrchestrationsActionCreators.cancelOrchestrationTasksEdit(@state.orchestrationId)
+    OrchestrationsActionCreators.cancelOrchestrationNotificationsEdit(@state.orchestrationId)
 
   _handleStart: ->
-    OrchestrationsActionCreators.startOrchestrationTasksEdit(@state.orchestrationId)
+    OrchestrationsActionCreators.startOrchestrationNotificationsEdit(@state.orchestrationId)
 
   render: ->
     EditButtons
       isEditing: @state.isEditing
       isSaving: @state.isSaving
-      editLabel: 'Edit Tasks'
+      editLabel: 'Edit Notifications'
       onCancel: @_handleCancel
       onSave: @_handleSave
       onEditStart: @_handleStart

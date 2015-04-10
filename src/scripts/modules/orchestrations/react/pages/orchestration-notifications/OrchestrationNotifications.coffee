@@ -1,4 +1,5 @@
 React = require 'react'
+{Map} = require 'immutable'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
@@ -10,6 +11,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 # React components
 OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
+Notifications = require './Notifications'
 
 {div, button} = React.DOM
 
@@ -17,12 +19,26 @@ module.exports = React.createClass
   displayName: 'OrchestrationNofitications'
   mixins: [createStoreMixin(OrchestrationStore)]
 
+
+  getInitialState: ->
+    inputs: Map
+      error: ''
+      processing: ''
+      waiting: ''
+
+
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    orchestration = OrchestrationStore.get orchestrationId
     isEditing = OrchestrationStore.isEditing(orchestrationId, 'notifications')
 
+    if isEditing
+      notifications = OrchestrationStore.getEditingValue orchestrationId, 'notifications'
+    else
+      notifications = orchestration.get 'notifications'
     return {
-      orchestration: OrchestrationStore.get orchestrationId
+      orchestration: orchestration
+      notifications: notifications
       filter: OrchestrationStore.getFilter()
       isEditing: isEditing
       isSaving: OrchestrationStore.isSaving(orchestrationId, 'notifications')
@@ -35,17 +51,13 @@ module.exports = React.createClass
   _handleFilterChange: (query) ->
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
-  _handleSave: ->
-    console.log 'todo save'
+  _handleNotificationsChange: (newNotifications) ->
+    OrchestrationsActionCreators.updateOrchestrationNotificationsEdit @state.orchestration.get('id'),
+      newNotifications
 
-  _handleReset: ->
-    console.log 'todo reset'
-
-  _startEditing: ->
-    console.log 'todo start'
-
-  _handleTasksChange: (newTasks) ->
-    console.log 'todo change'
+  _handleInputChange: (channelName, newValue) ->
+    @setState
+      inputs: @state.inputs.set channelName, newValue
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -56,4 +68,9 @@ module.exports = React.createClass
             orchestrations: @state.filteredOrchestrations
             activeOrchestrationId: @state.orchestration.get 'id'
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
-        'TODO'
+        React.createElement Notifications,
+          notifications: @state.notifications
+          inputs: @state.inputs
+          isEditing: @state.isEditing
+          onNotificationsChange: @_handleNotificationsChange
+          onInputChange: @_handleInputChange

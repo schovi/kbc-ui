@@ -227,8 +227,14 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.ORCHESTRATION_FIELD_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
+        if action.orchestration
+          store = store
+          .setIn ['orchestrationsById', action.orchestrationId], Immutable.fromJS(action.orchestration)
+        else if action[action.field]
+          store = store
+          .setIn ['orchestrationsById', action.orchestrationId, action.field],
+            Immutable.fromJS(action[action.field])
         store
-        .setIn ['orchestrationsById', action.orchestrationId], Immutable.fromJS(action.orchestration)
         .deleteIn ['saving', action.orchestrationId, action.field]
         .deleteIn ['editing', action.orchestrationId, action.field]
       OrchestrationStore.emitChange()
