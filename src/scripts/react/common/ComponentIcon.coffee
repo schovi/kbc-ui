@@ -13,6 +13,7 @@ ComponentIcon = React.createClass(
     extractor: 'fa-cloud-download'
     writer: 'fa-cloud-upload'
     transformation: 'fa-cogs'
+    recipe: 'fa-cogs'
     other: 'fa-cogs'
 
   getDefaultProps: ->
