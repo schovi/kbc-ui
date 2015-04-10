@@ -43,10 +43,11 @@ AddTaskModal = React.createClass
 
       div className: 'modal-footer',
         ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
+          Button
+            bsStyle: 'link'
+            onClick: @props.onRequestHide
+          ,
             'Cancel'
-          Button bsStyle: 'primary',
-            'Run'
 
   _handleComponentSelect: (component) ->
     @setState
