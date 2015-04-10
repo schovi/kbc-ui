@@ -13,7 +13,7 @@ ComponentSelect = React.createClass
     div null,
       @_renderSection('Extractors', @_getComponentsForType('extractor')),
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
-      @_renderSection('Recipes', @_getComponentsForType('recipes'))
+      @_renderSection('Recipes', @_getComponentsForType('recipe'))
       @_renderSection('Writers', @_getComponentsForType('writer'))
 
   _renderSection: (title, components) ->
