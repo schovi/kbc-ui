@@ -77,6 +77,12 @@ OrchestrationDetail = React.createClass
               div className: 'row',
                 span className: 'col-md-3', 'Notifications '
                 strong className: 'col-md-9',
+                  if @state.orchestration.get('notifications').count()
+                    span className: 'badge',
+                      @state.orchestration.get('notifications').count()
+                  else
+                    span null,
+                      'No notifications set yet'
                   Link
                     to: 'orchestrationNotifications'
                     params:
