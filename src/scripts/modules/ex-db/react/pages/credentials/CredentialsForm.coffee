@@ -12,6 +12,7 @@ _drivers =
   mysql: 'MySQL'
   mssql: 'MSSQL'
   pgsql: 'Postgre SQL'
+  oracle: 'Oracle'
 
 module.exports = React.createClass
   displayName: 'ExDbCredentialsForm'
