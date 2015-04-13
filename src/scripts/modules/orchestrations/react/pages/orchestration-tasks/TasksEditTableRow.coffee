@@ -26,23 +26,21 @@ TasksEditTableRow = React.createClass
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
 
-
-  configureDragDrop: (registerType) ->
-    row = @
-    registerType('task',
-      dragSource:
-        beginDrag: ->
-          item: @props.task
-      dropTarget:
-        over: (task) ->
-          @props.onTaskMove task.get('id'), @props.task.get('id')
-    )
+  statics:
+    configureDragDrop: (register) ->
+      register 'task',
+        dragSource:
+          beginDrag: (component) ->
+            item: component.props.task
+        dropTarget:
+          over: (component, task) ->
+            component.props.onTaskMove task.get('id'), component.props.task.get('id')
 
   render: ->
     isDragging = @getDragState('task').isDragging
     style =
       cursor: 'move'
-      opacity: if isDragging then 0 else
+      opacity: if isDragging then 0.5 else 1
 
     tr _.extend({style: style}, @dragSourceFor('task'), @dropTargetFor('task')),
       td null,
