@@ -17,7 +17,9 @@ _store = Map(
 InstalledComponentsStore = StoreUtils.createStore
 
   getAll: ->
-    _store.get 'components'
+    _store
+    .get 'components'
+    .sortBy (component) -> component.get 'name'
 
   getAllForType: (type) ->
     @getAll().filter (component) ->
