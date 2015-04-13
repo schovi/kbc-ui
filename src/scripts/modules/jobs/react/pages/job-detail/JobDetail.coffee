@@ -1,4 +1,5 @@
 React = require('react')
+SoundNotifications = require '../../../../../utils/SoundNotifications'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 JobsStore = require('../../../stores/JobsStore')
@@ -16,6 +17,18 @@ JobDetail = React.createClass
 
   getStateFromStores: ->
     job: JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
+
+  componentDidUpdate: (prevProps, prevState) ->
+    currentStatus = @state.job.get 'status'
+    prevStatus = prevState.job.get 'status'
+    console.log 'receive', currentStatus, prevStatus
+    return if currentStatus == prevStatus
+    switch currentStatus
+      when 'success'
+        SoundNotifications.success()
+      when 'error', 'cancelled', 'canceled', 'terminated'
+        SoundNotifications.crash()
+
 
   _renderRunInfoRow: (job) ->
     jobStarted = ->
@@ -90,7 +103,6 @@ JobDetail = React.createClass
 
   render: ->
     job = @state.job
-    console.log 'job render', job.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)

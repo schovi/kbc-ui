@@ -127,6 +127,9 @@ gulp.task 'copy', ['clean'], ->
   gulp.src('./bower_components/kbc-bootstrap/dist/img/**')
   .pipe(gulp.dest('./dist/images'))
 
+  gulp.src('./src/media/**')
+  .pipe(gulp.dest('./dist/media'))
+
   gulp.src('./src/index.dist.html')
   .pipe(rename('index.html'))
   .pipe(gulp.dest('./dist'))
