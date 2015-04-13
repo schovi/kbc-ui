@@ -109,6 +109,11 @@ gulp.task 'less', ['clean'], ->
   .pipe(gulp.dest('./tmp/styles'))
   .pipe(browserSync.reload( stream:true))
 
+  gulp.src(['./src/styles/kbc.less'])
+  .pipe(less())
+  .pipe(gulp.dest('./tmp/styles'))
+  .pipe(browserSync.reload( stream:true))
+
 gulp.task 'build-styles', ['clean'], ->
   gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
     .pipe(less())
