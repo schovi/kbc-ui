@@ -36,7 +36,8 @@
     "prettycron": "~0.10.0",
     "later": "~1.1.6",
     "numeral": "~1.5.3",
-    "react-radio-group": "~1.0.0"
+    "react-radio-group": "~1.0.0",
+    "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
@@ -78,7 +79,11 @@
     "style-loader": "~0.10.1",
     "json-loader": "~0.5.1",
     "less": "~2.5.0",
-    "less-loader": "~2.2.0"
+    "less-loader": "~2.2.0",
+    "bootstrap": "~3.3.4",
+    "url-loader": "~0.5.5",
+    "file-loader": "~0.8.1",
+    "map-stream": "0.0.5"
   },
   "scripts": {
     "test": "jest"
