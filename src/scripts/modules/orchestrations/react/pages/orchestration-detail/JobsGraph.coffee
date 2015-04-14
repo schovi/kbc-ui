@@ -20,6 +20,7 @@ JobsGraph = React.createClass
     chart.assignColor("error", "red")
     chart.assignColor("success", "#96d130")
     chart.assignColor("warn", "red")
+    chart.assignColor("terminated", "black")
     chart.draw()
     @chart = chart
 
