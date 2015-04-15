@@ -7,8 +7,6 @@ images =
   orange: require 'kbc-bootstrap/img/status-orange.svg'
   red: require 'kbc-bootstrap/img/status-red.svg'
 
-console.log('images', images);
-
 statusColorMap =
   success: 'green'
   error: 'red'

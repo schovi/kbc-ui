@@ -54,7 +54,17 @@ module.exports = function (options) {
         resolve: {
             extensions: ['', '.js', '.jsx', '.coffee']
         },
+        coffeelint: {
+            configFile: 'coffeelint.json'
+        },
         module: {
+          preLoaders: [
+                {
+                    test: /\.coffee$/,
+                    loader: "coffee-lint-loader",
+                    exclude: /node_modules/
+                }
+            ],
             loaders: [
                 {
                     test: /\.jsx$/,
