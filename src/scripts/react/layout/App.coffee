@@ -15,6 +15,8 @@ UserLinks = React.createFactory(require './UserLinks')
 
 {div} = React.DOM
 
+require '../../../styles/app.less'
+
 App = React.createClass
   displayName: 'App'
   propTypes:
