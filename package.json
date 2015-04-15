@@ -54,7 +54,8 @@
     "extract-text-webpack-plugin": "~0.5.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --port 3000 --inline"
+    "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --port 3000 --inline",
+    "build": "webpack --config webpack/production.config.js --progress --profile --colors && node webpack/generate-manifest.js"
   },
   "author": "Martin Halamicek",
   "jest": {

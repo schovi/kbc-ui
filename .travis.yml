@@ -5,13 +5,11 @@ branches:
   only:
   - master
 install:
-- time npm install -g gulp bower
 - time npm install
-- bower --version
-- time bower install --dev
 - git --version
 - git describe --tags
-script: NODE_ENV=production gulp release
+- export KBC_REVISION=`git describe --tags`
+script: npm run build
 sudo: false
 cache:
   bundler: true
@@ -43,11 +41,10 @@ deploy:
   on:
     repo: keboola/kbc-ui
 after_deploy:
-- CURRENT_TAG=`git describe --tags HEAD`
-- echo $CURRENT_TAG
-- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json
+- echo $KBC_REVISION
+- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$KBC_REVISION/manifest.json
   -H X-Token:$KBC_ADMIN_TOKEN_DEVEL https://martin-connection-devel.keboola.com/admin/manage-apps-api/register
-- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$CURRENT_TAG/manifest.json
+- curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$KBC_REVISION/manifest.json
   -H X-Token:$KBC_ADMIN_TOKEN_PROD https://connection.keboola.com/admin/manage-apps-api/register
 notifications:
   slack:
