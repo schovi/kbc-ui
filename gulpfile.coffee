@@ -41,15 +41,15 @@ gulp.task 'server', ->
     server:
       baseDir: [path.join(__dirname, 'src'), path.join(__dirname, 'tmp')]
       routes:
-        "/bower_components": path.join(__dirname, 'bower_components')
-        "/fonts": path.join(__dirname, 'bower_components/kbc-bootstrap/dist/fonts')
-        "/images": path.join(__dirname, 'bower_components/kbc-bootstrap/dist/img')
+        "/node_modules": path.join(__dirname, 'node_components')
+        "/fonts": path.join(__dirname, 'node_modules/kbc-bootstrap/dist/fonts')
+        "/images": path.join(__dirname, 'node_modules/kbc-bootstrap/dist/img')
       # handles pushstate rewrite
       middleware: (req, res, next) ->
         fileName = parse(req.url)
         fileName = fileName.href.split(fileName.search).join("")
         fileExists = fs.existsSync(path.join(__dirname, 'src') + fileName) || fileExists = fs.existsSync(path.join(__dirname, 'tmp') + fileName)
-        if !fileExists && fileName.indexOf("browser-sync-client") < 0 && fileName.indexOf("bower_components") < 0 && fileName.indexOf("fonts") < 0 && fileName.indexOf("images") < 0
+        if !fileExists && fileName.indexOf("browser-sync-client") < 0 && fileName.indexOf("node_modules") < 0 && fileName.indexOf("fonts") < 0 && fileName.indexOf("images") < 0
           req.url = "/" + defaultFile
         next()
 
@@ -96,7 +96,7 @@ gulp.task 'watch', ->
 
   .emit 'update'
 
-  gulp.watch ['./src/styles/app.less', './bower_components/kbc-bootstrap/dist/**'], ['less']
+  gulp.watch ['./src/styles/app.less', './node_modules/kbc-bootstrap/dist/**'], ['less']
 
 gulp.task 'less', ['clean'], ->
   gulp.src(['./src/styles/app.less', './node_modules/react-select/less/default.less'])
@@ -126,10 +126,10 @@ gulp.task 'build-styles', ['clean'], ->
     .pipe(gulp.dest('./dist/styles'))
 
 gulp.task 'copy', ['clean'], ->
-  gulp.src('./bower_components/kbc-bootstrap/dist/fonts/**')
+  gulp.src('./node_modules/kbc-bootstrap/dist/fonts/**')
   .pipe(gulp.dest('./dist/fonts'))
 
-  gulp.src('./bower_components/kbc-bootstrap/dist/img/**')
+  gulp.src('./node_modules/kbc-bootstrap/dist/img/**')
   .pipe(gulp.dest('./dist/images'))
 
   gulp.src('./src/media/**')

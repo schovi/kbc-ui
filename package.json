@@ -37,7 +37,7 @@
     "later": "~1.1.6",
     "numeral": "~1.5.3",
     "react-radio-group": "~1.0.0",
-    "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap"
+    "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git"
   },
   "devDependencies": {
     "browserify": "^6.2.0",
