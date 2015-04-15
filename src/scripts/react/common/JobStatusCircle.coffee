@@ -1,6 +1,14 @@
 React = require 'react'
 ApplicationStore = require '../../stores/ApplicationStore'
 
+images =
+  green: require 'kbc-bootstrap/img/status-green.svg'
+  grey: require 'kbc-bootstrap/img/status-grey.svg'
+  orange: require 'kbc-bootstrap/img/status-orange.svg'
+  red: require 'kbc-bootstrap/img/status-red.svg'
+
+console.log('images', images);
+
 statusColorMap =
   success: 'green'
   error: 'red'
@@ -23,6 +31,6 @@ JobStatusCircle = React.createClass
       src: @_getPathForColor color
 
   _getPathForColor: (color) ->
-    ApplicationStore.getScriptsBasePath() + "images/status-#{color}.svg"
+    ApplicationStore.getScriptsBasePath() + images[color]
 
 module.exports = JobStatusCircle

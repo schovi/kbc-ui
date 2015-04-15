@@ -4,7 +4,7 @@ paths =
   success: require '../../media/success.mp3'
   crash: require '../../media/crash.mp3'
 
-console.log 'paths', paths
+
 soundElements = {}
 
 getSoundElement = (name) ->
