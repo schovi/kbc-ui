@@ -8,10 +8,10 @@ var manifest = {
     "version": revision,
     basePath: s3basePath,
     "scripts": [
-        s3basePath + 'app.min.js'
+        s3basePath + 'bundle.min.js'
     ],
     "styles": [
-        s3basePath + 'app.min.css'
+        s3basePath + 'bundle.min.css'
     ]
 };
 

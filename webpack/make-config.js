@@ -21,7 +21,7 @@ module.exports = function (options) {
         plugins.push(
             new webpack.PrefetchPlugin("react"),
             new webpack.PrefetchPlugin("react/lib/ReactComponentBrowserEnvironment"),
-            new ExtractTextPlugin('app.min.css', {
+            new ExtractTextPlugin('bundle.min.css', {
                 allChunks: true
             }),
             new webpack.optimize.UglifyJsPlugin(),
