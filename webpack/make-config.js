@@ -48,7 +48,7 @@ module.exports = function (options) {
         output: {
             path: isDevelopment ? './dist' : './dist/' + process.env.KBC_REVISION,
             filename: isDevelopment ? 'bundle.js' : 'bundle.min.js',
-            publicPath: '/scripts/'
+            publicPath: isDevelopment ? '/scripts/' : ''
         },
         plugins: plugins,
         resolve: {
