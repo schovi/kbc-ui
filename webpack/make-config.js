@@ -57,9 +57,8 @@ module.exports = function (options) {
         module: {
             loaders: [
                 {
-                    test: /\.jsx?$/,
-                    loaders: isDevelopment ? ['react-hot', 'babel'] : ['babel'],
-                    include: path.join(__dirname, 'scripts')
+                    test: /\.jsx$/,
+                    loaders: isDevelopment ? ['react-hot', 'babel'] : ['babel']
                 },
                 {
                     test: /\.coffee$/,
