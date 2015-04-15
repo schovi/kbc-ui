@@ -1,8 +1,8 @@
 ApplicationStore = require '../stores/ApplicationStore'
 
 paths =
-  success: require '../../media/success.mp3'
-  crash: require '../../media/crash.mp3'
+  success: ApplicationStore.getScriptsBasePath() + require '../../media/success.mp3'
+  crash: ApplicationStore.getScriptsBasePath() + require '../../media/crash.mp3'
 
 
 soundElements = {}
