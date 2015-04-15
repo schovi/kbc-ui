@@ -39,7 +39,7 @@ module.exports = function (options) {
                 },
                 {
                     loader: 'file-loader',
-                    test: /.(png|woff|woff2|eot|ttf|svg|jpg)/
+                    test: /.(png|woff|woff2|eot|ttf|svg|jpg|mp3)/
                 },
                 {
                     test: /\.json$/,
