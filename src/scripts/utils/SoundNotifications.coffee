@@ -1,15 +1,15 @@
 ApplicationStore = require '../stores/ApplicationStore'
 
 paths =
-  success: ApplicationStore.getScriptsBasePath() + require '../../media/success.mp3'
-  crash: ApplicationStore.getScriptsBasePath() + require '../../media/crash.mp3'
+  success: require '../../media/success.mp3'
+  crash: require '../../media/crash.mp3'
 
 
 soundElements = {}
 
 getSoundElement = (name) ->
   if !soundElements[name]
-    soundElements[name] = new Audio(paths[name])
+    soundElements[name] = new Audio(ApplicationStore.getScriptsBasePath() + paths[name])
   soundElements[name]
 
 module.exports =
