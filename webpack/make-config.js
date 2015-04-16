@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = function (options) {
     var isDevelopment = options.isDevelopment;
@@ -29,7 +30,13 @@ module.exports = function (options) {
                 warnings: false
               }
             }),
-            new webpack.optimize.DedupePlugin()
+            new webpack.optimize.DedupePlugin(),
+            new CompressionPlugin({
+                asset: "{file}.gz",
+                algorithm: "gzip",
+                regExp: /\.js$/,
+                minRatio: 0.8
+            })
         );
     }
 
