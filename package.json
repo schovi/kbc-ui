@@ -5,7 +5,6 @@
   "main": "src/scripts/app",
   "dependencies": {
     "bluebird": "~2.3.11",
-    "brace": "~0.4.0",
     "d3": "~3.5.2",
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "filesize": "~2.0.4",
@@ -59,7 +58,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --port 3000 --inline",
-    "build": "webpack --config webpack/production.config.js --progress --profile --colors && node webpack/generate-manifest.js"
+    "build": "webpack --config webpack/production.config.js --profile --colors && node webpack/generate-manifest.js"
   },
   "author": "Martin Halamicek",
   "jest": {
