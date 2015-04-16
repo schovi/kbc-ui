@@ -24,7 +24,11 @@ module.exports = function (options) {
             new ExtractTextPlugin('bundle.min.css', {
                 allChunks: true
             }),
-            new webpack.optimize.UglifyJsPlugin(),
+            new webpack.optimize.UglifyJsPlugin({
+              compress: {
+                warnings: false
+              }
+            }),
             new webpack.optimize.DedupePlugin()
         );
     }
