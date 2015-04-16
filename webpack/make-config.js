@@ -32,7 +32,7 @@ module.exports = function (options) {
             }),
             new webpack.optimize.DedupePlugin(),
             new CompressionPlugin({
-                asset: "{file}.gz",
+                asset: "{file}",
                 algorithm: "gzip",
                 regExp: /\.js$/,
                 minRatio: 0.8
