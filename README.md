@@ -24,7 +24,7 @@ Application will be opened in your browser and will be hot reloaded after each c
 Whole application is bundled by Webpack, not just js and coffee script files but also stylesheets (less, css), media and image files.
 Assets should be loaded by `require` or `import` function.
 
-**Exaples:**
+**Examples:**
 
  * [CSS include](https://github.com/keboola/kbc-ui/blob/b6f8568ff3f5ac76e3c5063d6327b33ae543da24/src/scripts/react/layout/App.coffee#L18)
  * [Image](https://github.com/keboola/kbc-ui/blob/b6f8568ff3f5ac76e3c5063d6327b33ae543da24/src/scripts/react/common/JobStatusCircle.coffee#L5)
