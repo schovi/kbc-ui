@@ -48,6 +48,7 @@ module.exports = React.createClass
     ActionCreators.searchQueryChange(@state.configId, newValue)
 
   _renderGdriveFiles: ->
+    component = @
     div className: 'col-sm-6',
       SearchRow
         query: @state.searchQuery
@@ -55,11 +56,11 @@ module.exports = React.createClass
     ,
       TabbedArea defaultActiveKey: 'mydrive', animation: false,
         TabPane eventKey: 'mydrive', tab: 'My Drive',
-          @_renderFilePanel (file) =>
-            @_isFileOwner(file)
+          @_renderFilePanel (file) ->
+            component._isFileOwner(file)
         TabPane eventKey: 'shared', tab: 'Shared With Me',
-          @_renderFilePanel (file) =>
-            not @_isFileOwner(file)
+          @_renderFilePanel (file) ->
+            not component._isFileOwner(file)
         TabPane eventKey: 'all', tab: 'All Sheets',
           @_renderFilePanel()
       if @state.nextPageToken
@@ -91,14 +92,14 @@ module.exports = React.createClass
       selectedSheets: @state.selectedSheets
       configuredSheets: @state.config.get 'items'
       loadingFiles: @state.loadingFiles
-      files: @state.files.filter( (file) =>
+      files: @state.files.filter( (file) ->
         fileTitle = file.get('title').toLowerCase()
         containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
         if @state.searchQuery == '' or containsQuery >= 0
           return filterFn(file)
         else
           return false
-        )
+      , @)
 
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)
@@ -118,7 +119,7 @@ module.exports = React.createClass
 
   _getPath: (fileId) ->
     file = @state.files.getIn [fileId]
-    if @_isFileOwner(file)
+    if file && @_isFileOwner(file)
       return 'My Drive'
     else
       return 'Shared With Me'
