@@ -34,7 +34,7 @@ module.exports = function (options) {
             new CompressionPlugin({
                 asset: "{file}",
                 algorithm: "gzip",
-                regExp: /\.js$/,
+                regExp: /\.js$|\.css/,
                 minRatio: 0.8
             })
         );
