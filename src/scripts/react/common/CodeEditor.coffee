@@ -1,7 +1,7 @@
 React = require 'react'
-ace = require('brace')
-require 'brace/theme/chrome'
-require 'brace/mode/mysql'
+CodeMirror = require 'react-code-mirror'
+require('codemirror/mode/sql/sql')
+
 
 module.exports = React.createClass
   displayName: 'CodeEditor'
@@ -9,37 +9,25 @@ module.exports = React.createClass
     value: React.PropTypes.string.isRequired
     readOnly: React.PropTypes.bool
     onChange: React.PropTypes.func
+    mode: React.PropTypes.string
 
   getDefaultProps: ->
-    readOnly: false
-    onChange: ->
+    mode: 'text/x-mysql'
 
-  componentDidMount: ->
-    editor = ace.edit(@getDOMNode())
-    editor.getSession().setMode 'ace/mode/mysql'
-    editor.setTheme 'ace/theme/chrome'
-    editor.setValue @props.value
-    editor.setReadOnly @props.readOnly
-    editor.setHighlightActiveLine !@props.readOnly
-    editor.setShowPrintMargin false
-    # hide cursor in read-only mode
-    editor.renderer.$cursorLayer.element.style.opacity = 0 if @props.readOnly
-    editor.clearSelection()
-    editor.getSession().on 'change', @_handleChange
-
-    @editor = editor
-
-  componentWillUnmount: ->
-    @editor.destroy()
-
-  _handleChange: ->
+  _handleChange: (e) ->
     @props.onChange
-      value: @editor.getValue()
+      value: e.target.value
 
   render: ->
-    React.DOM.div
+    console.log 'props', @props
+    React.createElement CodeMirror,
+      value: @props.value
+      theme: 'solarized'
+      lineNumbers: true
+      mode: @props.mode
+      lineWrapping: false
+      onChange: @_handleChange
+      readOnly: @props.readOnly
       style:
         width: '100%'
         height: '90vh'
-    ,
-      'ace editor'
