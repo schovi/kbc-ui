@@ -1,7 +1,21 @@
 import React from 'react';
-import JobStatusLabel from '../../../react/common/JobStatusLabel'
+import JobStatusLabel from '../../../react/common/JobStatusLabel';
+import ApplicationStore from '../../../stores/ApplicationStore';
+import filesize from 'filesize';
+import string from 'underscore.string';
 
 export default React.createClass({
+
+    getInitialState() {
+        const currentProject = ApplicationStore.getCurrentProject();
+        return {
+            "data": {
+                "sizeBytes": currentProject.get('dataSizeBytes'),
+                "rowsCount": currentProject.get('rowsCount')
+            }
+        }
+    },
+
     render() {
         return (
             <div className = "container-fluid kbc-main-content">
@@ -10,8 +24,8 @@ export default React.createClass({
                         <div className="panel">
                             <div className="panel-body text-center">
                                 <h2>Size</h2>
-                                <h3>34.4TB <small className="badge" >+12% / week</small></h3>
-                                <h3>250M rows <small className="badge" >+3% / week</small></h3>
+                                <h3>{filesize(this.state.data.sizeBytes)}</h3>
+                                <h3>{string.numberFormat(this.state.data.rowsCount)} rows</h3>
                             </div>
                         </div>
                     </div>
