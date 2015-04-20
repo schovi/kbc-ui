@@ -1,5 +1,5 @@
 React = require 'react'
-humanSize = require 'human-size'
+filesize = require 'filesize'
 
 {span} = React.DOM
 
@@ -11,7 +11,7 @@ FileSize = React.createClass
   render: ->
     span {},
       if (@props.size)
-        humanSize(@props.size)
+        filesize(@props.size)
       else
         'N/A'
 
