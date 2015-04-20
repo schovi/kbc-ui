@@ -10,8 +10,8 @@ export default React.createClass({
                         <div className="panel">
                             <div className="panel-body text-center">
                                 <h2>Size</h2>
-                                <h3>34.4TB <small className="badge" style="{{backgroundColor:""}}">+12% / week</small></h3>
-                                <h3>250M rows <small className="badge">+3% / week</small></h3>
+                                <h3>34.4TB <small className="badge" >+12% / week</small></h3>
+                                <h3>250M rows <small className="badge" >+3% / week</small></h3>
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@ export default React.createClass({
                                             <JobStatusLabel status="success"></JobStatusLabel>
                                         </div>
                                         <div className="td">
-                                            42 / 82 hours total
+                                            42 / 82 hours total <small className="badge">+3% </small>
                                         </div>
                                     </div>
                                     <div className="tr">
@@ -51,7 +51,7 @@ export default React.createClass({
                                             <JobStatusLabel status="error"></JobStatusLabel>
                                         </div>
                                         <div className="td">
-                                            4 / 3 hours total
+                                            4 / 3 hours total <small className="badge">-6% </small>
                                         </div>
                                     </div>
 
