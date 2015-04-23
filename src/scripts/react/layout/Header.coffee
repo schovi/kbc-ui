@@ -29,6 +29,7 @@ Header = React.createClass
     currentRouteComponentId: RoutesStore.getCurrentRouteComponentId()
     component: component
     currentRouteParams: RoutesStore.getRouterState().get 'params'
+    currentRouteQuery: RoutesStore.getRouterState().get 'query'
 
 
   render: ->
@@ -64,6 +65,7 @@ Header = React.createClass
           key: part.get('name')
           to: part.getIn(['link', 'to'])
           params: part.getIn(['link', 'params']).toJS()
+          query: @state.currentRouteQuery.toJS() # keep query
         ,
           part.get 'title'
         breadcrumbs.push partElement

@@ -72,7 +72,7 @@ JobsIndex = React.createClass
     if not rowComponent
       rowComponent = @_unknownComponent(row.get 'component')
 
-    Link {className: 'tr', to: 'jobDetail', params: {jobId: row.get('id')}},
+    Link {className: 'tr', to: 'jobDetail', params: {jobId: row.get('id')}, query: {q: @state.query}},
       div className: 'td', row.get('id')
       div className: 'td', JobStatusLabel {status: row.get 'status'}
       div className: 'td',

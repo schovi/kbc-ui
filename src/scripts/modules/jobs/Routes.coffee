@@ -7,10 +7,12 @@ JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton')
 JobTerminateButton = require './react/components/JobTerminateButton'
 JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel')
 JobsStore = require('./stores/JobsStore')
+Promise = require('bluebird')
 
 routes =
       name: 'jobs'
       title: 'Jobs'
+      path: 'jobs'
       defaultRouteHandler: JobsIndex
       reloaderHandler: JobsReloaderButton
       poll:
@@ -19,10 +21,14 @@ routes =
           JobsActionCreators.reloadJobs()
       requireData: [
         (params, query) ->
-          if query.q
-            JobsActionCreators.filterJobs query.q
+          currentQuery = JobsStore.getQuery()
+          if params.jobId
+            # job detail
+            Promise.resolve()
+          else if query.q != currentQuery
+            JobsActionCreators.filterJobs(query.q || "")
           else
-            JobsActionCreators.filterJobs ''
+            JobsActionCreators.loadJobs()
         ]
 
       childRoutes: [
