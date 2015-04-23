@@ -23,7 +23,7 @@ export default React.createClass({
                     <div className="col-sm-3">
                         <div className="panel">
                             <div className="panel-body text-center">
-                                <h2>Size</h2>
+                                <h2>Storage</h2>
                                 <h3>{filesize(this.state.data.sizeBytes)}</h3>
                                 <h3>{string.numberFormat(this.state.data.rowsCount)} rows</h3>
                             </div>
