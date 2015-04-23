@@ -35,10 +35,15 @@ JobTasks = React.createClass
       span className: 'table',
         span className: 'tbody',
           span className: 'tr',
-            span className: 'td',
-              ComponentIcon size: '32', component: component
-              ' '
-              ComponentName component: component
+            if component
+              span className: 'td',
+
+                ComponentIcon size: '32', component: component
+                ' '
+                ComponentName component: component
+            else
+              span className: 'td',
+                task.get 'componentUrl'
             span className: 'td',
               Duration startTime: task.get('startTime'), endTime: task.get('endTime')
             span className: 'td text-right',
