@@ -26,7 +26,8 @@ routes =
             # job detail
             Promise.resolve()
           else if query.q != currentQuery
-            JobsActionCreators.filterJobs(query.q || "")
+            JobsActionCreators.setQuery(query.q || "")
+            JobsActionCreators.loadJobsForce(0, true, false)
           else
             JobsActionCreators.loadJobs()
         ]

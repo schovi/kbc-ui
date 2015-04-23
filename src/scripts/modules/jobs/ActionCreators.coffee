@@ -31,10 +31,10 @@ module.exports =
     RoutesStore.getRouter().transitionTo 'jobs', null,
       q: query
 
+  setQuery: (query) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_SET_QUERY
       query: query
-    @loadJobsForce(0, true, false)
 
   loadJobDetail: (jobId) ->
     return Promise.resolve() if JobsStore.has(jobId)
