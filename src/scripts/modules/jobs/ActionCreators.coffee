@@ -3,7 +3,7 @@ JobsStore = require('./stores/JobsStore')
 Promise = require('bluebird')
 constants = require('./Constants')
 jobsApi = require('./JobsApi')
-
+RoutesStore = require '../../stores/RoutesStore'
 
 module.exports =
   loadJobs: ->
@@ -28,6 +28,9 @@ module.exports =
       actions.recieveJobs(jobs, offset, resetJobs)
 
   filterJobs: (query) ->
+    RoutesStore.getRouter().transitionTo 'jobs', null,
+      q: query
+
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_SET_QUERY
       query: query

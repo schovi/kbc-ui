@@ -62,6 +62,14 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-clock-o fa-fw'
               ' Date Dimensions'
+          li null,
+            Link
+              to: 'jobs'
+              query:
+                q: '+component:gooddata-writer-async +params.writerId:KB_PM'
+            ,
+              span className: 'fa fa-tasks fa-fw'
+              ' Jobs Queue'
           if writer.getIn(['gd', 'pid']) && !writer.get('toDelete')
             li null,
               a

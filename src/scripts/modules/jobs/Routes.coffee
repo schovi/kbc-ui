@@ -18,8 +18,11 @@ routes =
         action: (params) ->
           JobsActionCreators.reloadJobs()
       requireData: [
-        (params) ->
-          JobsActionCreators.loadJobs()
+        (params, query) ->
+          if query.q
+            JobsActionCreators.filterJobs query.q
+          else
+            JobsActionCreators.filterJobs ''
         ]
 
       childRoutes: [

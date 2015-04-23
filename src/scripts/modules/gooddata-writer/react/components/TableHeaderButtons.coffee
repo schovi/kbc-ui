@@ -70,7 +70,5 @@ module.exports = React.createClass
           ,
             React.DOM.span null, 'Reset table'
       React.createElement Button, null,
-        span className: 'fa fa-tasks fa-fw'
-      React.createElement Button, null,
         span ClassName: 'fa fa-upload fa-fw'
         ' Upload table'

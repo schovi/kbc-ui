@@ -88,7 +88,7 @@ startApp = (appOptions) ->
     promises = RoutesStore
       .getRequireDataFunctionsForRouterState(state.routes)
       .map((requireData) ->
-        requireData(state.params)
+        requireData(state.params, state.query)
       ).toArray()
 
     # wait for data and trigger render

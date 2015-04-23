@@ -5,6 +5,7 @@ Immutable = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
+RoutesStore = require '../../../../../stores/RoutesStore'
 ActionCreators = require('../../../ActionCreators')
 
 
@@ -29,7 +30,6 @@ JobsIndex = React.createClass
 
   _search: (query) ->
     ActionCreators.filterJobs(query)
-    return
 
   _loadMore: ->
     ActionCreators.loadMoreJobs()
