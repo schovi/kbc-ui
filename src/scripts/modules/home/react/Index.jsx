@@ -19,8 +19,8 @@ export default React.createClass({
     render() {
         return (
             <div className = "container-fluid kbc-main-content">
-                <div className="row kbc-extractors-select">
-                    <div className="col-sm-4">
+                <div className="row kbc-extractors-select kbc-overview">
+                    <div className="col-sm-3">
                         <div className="panel">
                             <div className="panel-body text-center">
                                 <h2>Size</h2>
@@ -29,51 +29,40 @@ export default React.createClass({
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-3">
                         <div className="panel">
                             <div className="panel-body text-center">
-                                <h2>Activity</h2>
-                                <div style={{"text-align": "left"}} className="table">
-                                    <div className="text-muted">Current</div>
-                                    <div className="tr">
-                                        <div className="td">
-                                            <JobStatusLabel status="waiting"></JobStatusLabel>
-                                        </div>
-                                        <div className="td">
-                                            1
-                                        </div>
-                                    </div>
-                                    <div className="tr">
-                                        <div className="td">
-                                            <JobStatusLabel status="processing"></JobStatusLabel>
-                                        </div>
-                                        <div className="td">
-                                            6
-                                        </div>
-                                    </div>
-                                    <div className="text-muted">Last Week</div>
-                                    <div className="tr">
-                                        <div className="td">
-                                            <JobStatusLabel status="success"></JobStatusLabel>
-                                        </div>
-                                        <div className="td">
-                                            42 / 82 hours total <small className="badge">+3% </small>
-                                        </div>
-                                    </div>
-                                    <div className="tr">
-                                        <div className="td">
-                                            <JobStatusLabel status="error"></JobStatusLabel>
-                                        </div>
-                                        <div className="td">
-                                            4 / 3 hours total <small className="badge">-6% </small>
-                                        </div>
-                                    </div>
+                                <h2>Orchestrations</h2>
+                                <h4>6 configured</h4>
+                                <p className="">2 processing and 1 waiting</p>
+                                <p className="">
+                                    12 success runs <span className="text-muted">/week</span>
+                                </p>
+                                <p className="">
+                                    6 errors <span className="text-muted">/week</span> <span className="badge" style={{backgroundColor: 'red'}}>+12% </span>
+                                </p>
 
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-3">
+                        <div className="panel">
+                            <div className="panel-body text-center">
+                                <h2>Components</h2>
+                                <h4>12 extractors, 3 writers</h4>
+                                <h4>2 transformation buckets and 3 others</h4>
+                                <p className="">12 processing and 1 waiting</p>
+                                <p className="">
+                                    82 success runs <span className="text-muted">/week</span>
+                                </p>
+                                <p className="">
+                                    6 errors <span className="text-muted">/week</span> <span className="badge" style={{backgroundColor: '#96d130'}}>-6% </span>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-3">
                         <div className="panel">
                             <div className="panel-body text-center">
                                 <h2>Access</h2>
