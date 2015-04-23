@@ -12,6 +12,10 @@ RunOrchestration = React.createClass
   displayName: 'RunOrchestration'
   propTypes:
     orchestration: React.PropTypes.object.isRequired
+    notify: React.PropTypes.bool
+
+  getDefaultProps: ->
+    notify: false
 
   getInitialState: ->
     isLoading: false
@@ -37,7 +41,7 @@ RunOrchestration = React.createClass
       isLoading: true
 
     OrchestrationActionCreators
-    .runOrchestration(@props.orchestration.get('id'))
+    .runOrchestration(@props.orchestration.get('id'), @props.notify)
     .then(@props.onRequestHide)
 
 

@@ -15,6 +15,10 @@ OrchestrationRunButton = React.createClass
   displayName: 'OrchestrationRunButton'
   propTypes:
     orchestration: React.PropTypes.object.isRequired
+    notify: React.PropTypes.bool
+
+  getDefaultProps: ->
+    notify: false
 
   render: ->
     OverlayTrigger
@@ -23,7 +27,10 @@ OrchestrationRunButton = React.createClass
       placement: 'top'
 
     ,
-      ModalTrigger modal: RunOrchestrationModal(orchestration: @props.orchestration),
+      ModalTrigger modal: RunOrchestrationModal(
+        orchestration: @props.orchestration
+        notify: @props.notify
+      ),
         button
           className: 'btn btn-link'
           onClick: @_runOrchestrationModal

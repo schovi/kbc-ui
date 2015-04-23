@@ -7,6 +7,9 @@ jobsApi = require '../jobs/JobsApi'
 OrchestrationStore = require './stores/OrchestrationsStore'
 OrchestrationJobsStore = require './stores/OrchestrationJobsStore'
 Promise = require 'bluebird'
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
+React = require 'react'
+{Link} = require 'react-router'
 
 module.exports =
 
@@ -342,7 +345,7 @@ module.exports =
     Run and termination
   ###
 
-  runOrchestration: (id) ->
+  runOrchestration: (id, notify = false) ->
 
     orchestrationsApi
     .runOrchestration(id)
@@ -352,6 +355,20 @@ module.exports =
         orchestrationId: newJob.orchestrationId
         job: newJob
       )
+      if notify
+        ApplicationActionCreators.sendNotification React.createClass
+          render: ->
+            React.DOM.span null,
+              "Orchestration scheduled. You can track the progress "
+              React.createElement Link,
+                to: 'orchestrationJob'
+                params:
+                  jobId: newJob.id
+                  orchestrationId: id
+                onClick: @props.onClick
+              ,
+                'here'
+
     )
 
   terminateJob: (jobId) ->

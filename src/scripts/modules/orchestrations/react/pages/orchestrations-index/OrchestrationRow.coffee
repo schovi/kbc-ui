@@ -41,6 +41,7 @@ OrchestrationRow = React.createClass(
 
     buttons.push(OrchestrationRunButton(
       orchestration: @props.orchestration
+      notify: true
       key: 'run'
     ))
 
