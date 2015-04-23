@@ -148,9 +148,9 @@ TransformationDetail = React.createClass
               title: "Run Transformation"
               component: 'transformation'
               mode: 'link'
-              runParams: ->
-                configBucketId: props.bucket.get('id')
-                transformations: [props.transformation.get('id')]
+              runParams: =>
+                configBucketId: @state.bucketId
+                transformations: [@state.transformation.get('id')]
             ,
               "You are about to run transformation #{@state.transformation.get('name')}."
             )
