@@ -3,8 +3,9 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
 RoutesStore = require '../../../../stores/RoutesStore'
+Loader = require '../../../../react/common/Loader'
 
-{ButtonGroup, Button, DropdownButton, MenuItem} = require 'react-bootstrap'
+{ButtonGroup, Button, DropdownButton, MenuItem, Tooltip} = require 'react-bootstrap'
 
 Confirm = require '../../../../react/common/Confirm'
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
@@ -36,6 +37,9 @@ module.exports = React.createClass
     actionCreators.resetTable @state.configurationId,
       @state.table.get 'id'
 
+  _handleUpload: ->
+    actionCreators.uploadToGoodData @state.configurationId, @state.table.get('id')
+
   render: ->
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
@@ -48,6 +52,11 @@ module.exports = React.createClass
       Are you sure you want to reset table '
       React.DOM.strong null, @state.table.getIn ['data', 'name']
       ' ?'
+
+    uploadTableText = React.DOM.span null,
+      'Are you sure you want to upload '
+      @state.table.getIn ['data', 'name']
+      ' to GoodData project?'
 
     React.createElement ButtonGroup, null,
       React.createElement DropdownButton, null,
@@ -69,6 +78,19 @@ module.exports = React.createClass
             onConfirm: @_handleResetTable
           ,
             React.DOM.span null, 'Reset table'
-      React.createElement Button, null,
-        span ClassName: 'fa fa-upload fa-fw'
-        ' Upload table'
+      if @state.table.get('pendingActions').contains 'uploadTable'
+        React.createElement Button, null,
+          React.createElement Loader, className: 'fa-fw'
+          ' Upload table'
+      else
+        React.createElement Confirm,
+          text: uploadTableText
+          title: 'Upload Table'
+          buttonLabel: 'Upload'
+          buttonType: 'success'
+          onConfirm: @_handleUpload
+        ,
+          React.createElement Button, null,
+            span className: 'fa fa-upload fa-fw'
+            ' Upload table'
+
