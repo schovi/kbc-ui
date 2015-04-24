@@ -125,8 +125,6 @@ Scheduler = React.createClass
             moment().tz('UTC').format('hh:mm')
             ' UTC)'
       div className: 'form-group',
-        label null,
-          ' : '
         @_minuteSelect()
         p className: 'help-block',
           'Minutes'
