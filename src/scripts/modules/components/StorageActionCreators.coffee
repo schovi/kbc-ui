@@ -2,7 +2,6 @@ Promise = require 'bluebird'
 React = require 'react'
 _ = require 'underscore'
 Link = require('react-router').Link
-console.log 'Link', Link
 
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
@@ -12,6 +11,7 @@ constants = require './Constants'
 componentRunner = require './ComponentRunner'
 StorageBucketsStore = require './stores/StorageBucketsStore'
 StorageTablesStore = require './stores/StorageTablesStore'
+StorageTokensStore = require './stores/StorageTokensStore'
 storageApi = require './StorageApi'
 
 module.exports =
@@ -67,3 +67,24 @@ module.exports =
   loadTables: ->
     return Promise.resolve() if StorageTablesStore.getIsLoaded()
     @loadTablesForce()
+
+  loadTokensForce: ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_TOKENS_LOAD
+
+    storageApi
+    .getTokens()
+    .then (tokens) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TOKENS_LOAD_SUCCESS
+        tokens: tokens
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TOKENS_LOAD_ERROR
+        errors: error
+      throw error
+
+  loadTokens: ->
+    return Promise.resolve() if StorageTokensStore.getIsLoaded()
+    @loadTokensForce()
+

@@ -42,6 +42,10 @@ module.exports =
     STORAGE_TABLES_LOAD_SUCCESS: null
     STORAGE_TABLES_LOAD_ERROR: null
 
+    STORAGE_TOKENS_LOAD: null
+    STORAGE_TOKENS_LOAD_SUCCESS: null
+    STORAGE_TOKENS_LOAD_ERROR: null
+
 
   GoodDataWriterModes: keyMirror
     NEW: null

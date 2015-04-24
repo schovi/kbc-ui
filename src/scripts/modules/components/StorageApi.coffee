@@ -28,6 +28,12 @@ storageApi =
       response.body
     )
 
+  getTokens: ->
+    createRequest 'GET', 'tokens'
+    .promise()
+    .then (response) ->
+      response.body
+
   ###
     Returns parsed CSV info plain arrays
     [

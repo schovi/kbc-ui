@@ -10,6 +10,8 @@ jobsRoutes = require './modules/jobs/Routes'
 transformationsRoutes = require './modules/transformations/Routes'
 applications = require './modules/applications/Routes'
 
+StorageActionCreators = require './modules/components/StorageActionCreators'
+
 
 # Custom routing configuration object
 routes =
@@ -20,6 +22,8 @@ routes =
   defaultRouteHandler: Home
   defaultRouteName: 'home'
   notFoundRouteHandler: ErrorPage
+  requireData: ->
+    StorageActionCreators.loadTokens()
   childRoutes: [
       orchestrationsRoutes
     ,
