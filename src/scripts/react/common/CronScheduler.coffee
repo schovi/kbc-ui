@@ -2,6 +2,7 @@ React = require 'react'
 later = require 'later'
 _ = require 'underscore'
 Select = require 'react-select'
+moment = require 'moment-timezone'
 
 
 PERIOD_OPTIONS = [
@@ -118,7 +119,11 @@ Scheduler = React.createClass
         React.DOM.span null,
         @_hourSelect()
         p className: 'help-block',
-          'Hours (UTC)'
+          'Hours UTC'
+          React.DOM.span className: 'text-muted',
+            ' (Current time is '
+            moment().tz('UTC').format('hh:mm')
+            ' UTC)'
       div className: 'form-group',
         label null,
           ' : '
