@@ -3,6 +3,7 @@ later = require 'later'
 _ = require 'underscore'
 Select = require 'react-select'
 moment = require 'moment-timezone'
+date = require '../../utils/date'
 
 
 PERIOD_OPTIONS = [
@@ -64,6 +65,7 @@ Scheduler = React.createClass
     h: React.PropTypes.array.isRequired
     m: React.PropTypes.array.isRequired
     period: React.PropTypes.string.isRequired
+    next: React.PropTypes.array.isRequired
     onChange: React.PropTypes.func.isRequired
     onPeriodChange: React.PropTypes.func.isRequired
   render: ->
@@ -110,6 +112,15 @@ Scheduler = React.createClass
             label null,
               'at'
             @_minuteSelect()
+      div null,
+        React.DOM.h3 null,
+          'Next Schedules '
+          React.DOM.small null,
+            '(In your local time)'
+        React.DOM.ul null,
+          @props.next.map (time) ->
+            React.DOM.li key: time,
+              date.format time
 
   _hoursAndMinutes: ->
     div null,
@@ -119,10 +130,11 @@ Scheduler = React.createClass
         React.DOM.span null,
         @_hourSelect()
         p className: 'help-block',
-          'Hours UTC'
+          'Hours '
+          React.DOM.strong null, 'UTC'
           React.DOM.span className: 'text-muted',
             ' (Current time is '
-            moment().tz('UTC').format('hh:mm')
+            moment().tz('UTC').format('HH:mm')
             ' UTC)'
       div className: 'form-group',
         @_minuteSelect()
@@ -203,8 +215,8 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
 
   getInitialState: ->
-    schedule = later.parse.cron(@props.crontabRecord).schedules[0]
-    period: @_getPeriodForSchedule schedule
+    schedules = later.parse.cron(@props.crontabRecord)
+    period: @_getPeriodForSchedule schedules.schedules[0]
 
   render: ->
     schedule = @_getSchedule()
@@ -216,6 +228,7 @@ module.exports = React.createClass
         d: schedule.d || []
         h: schedule.h || []
         m: schedule.m || []
+        next: @_getNext()
         onChange: @_handleChange
         onPeriodChange: @_handlePeriodChange
 
@@ -258,14 +271,20 @@ module.exports = React.createClass
     return later.hour.name
 
   _getSchedule: ->
+    later.date.UTC()
     later.parse.cron(@props.crontabRecord).schedules[0]
+
+  _getNext: ->
+    later.schedule(later.parse.cron(@props.crontabRecord)).next 5
 
   _scheduleToCron: (schedule) ->
     flatten = (part) ->
       if !part
         return '*'
       else
-        return part.join(',')
+        return _.sortBy part, (item) ->
+          parseInt item
+        .join ','
 
     flattenDayOfWeek = (part) ->
       if !part
