@@ -1,4 +1,4 @@
-
+React = require 'react'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 
 ExDbActionCreators = require '../ex-db/exDbActionCreators'
@@ -9,9 +9,12 @@ ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons'
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
+ExDbQueryName = require './react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
+
+ExDbStore = require './exDbStore'
 
 module.exports =
   name: 'ex-db'
@@ -32,8 +35,14 @@ module.exports =
   childRoutes: [
     name: 'ex-db-query'
     path: 'query/:query'
-    title: ->
-      'query'
+    title: (routerState) ->
+      configId = routerState.getIn ['params', 'config']
+      queryId = routerState.getIn ['params', 'query']
+      'Query ' + ExDbStore.getConfigQuery(configId, parseInt(queryId)).get 'name'
+    nameEdit: (params) ->
+      React.createElement ExDbQueryName,
+        configId: params.config
+        queryId: parseInt params.query
     requireData: [
       ->
         StorageActionCreators.loadTables()

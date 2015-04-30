@@ -14,6 +14,10 @@ module.exports = React.createClass
     query: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
+    showOutputTable: React.PropTypes.bool
+
+  getDefaultProps: ->
+    showOutputTable: false
 
   _handleOutputTableChange: (event) ->
     console.log 'change', newValue
@@ -28,18 +32,31 @@ module.exports = React.createClass
   _handleQueryChange: (data) ->
     @props.onChange(@props.query.set 'query', data.value)
 
+  _handleNameChange: (event) ->
+    @props.onChange(@props.query.set 'name', event.target.value)
+
   render: ->
     div className: 'container-fluid kbc-main-content',
       div className: 'table kbc-table-border-vertical kbc-detail-table',
         div className: 'tr',
           div className: 'td',
             div className: 'row',
-              span className: 'col-md-3', 'Output table '
+              span className: 'col-md-3', 'Name '
               strong className: 'col-md-9',
-                React.createElement Typeahead,
-                  value: @props.query.get 'outputTable'
-                  onChange: @_handleOutputTableChange
-                  options: @_tableSelectOptions().toArray()
+                input
+                  className: 'form-control'
+                  type: 'text'
+                  value: @props.query.get 'name'
+                  placeholder: 'Untitled Query'
+                  onChange: @_handleNameChange
+            if @props.showOutputTable
+              div className: 'row',
+                span className: 'col-md-3', 'Output table '
+                strong className: 'col-md-9',
+                  React.createElement Typeahead,
+                    value: @props.query.get 'outputTable'
+                    onChange: @_handleOutputTableChange
+                    options: @_tableSelectOptions().toArray()
           div className: 'td',
             div className: 'row',
               span className: 'col-md-3', 'Primary key '
@@ -48,6 +65,7 @@ module.exports = React.createClass
                   className: 'form-control'
                   type: 'text'
                   value: @props.query.get 'primaryKey'
+                  placeholder: 'No primary key'
                   onChange: @_handlePrimaryKeyChange
             div className: 'row',
               span className: 'col-md-3', 'Incremental '

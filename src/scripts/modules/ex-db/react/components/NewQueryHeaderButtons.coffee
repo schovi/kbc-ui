@@ -20,6 +20,7 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam 'config'
     currentConfigId: configId
     isSaving: ExDbStore.isSavingNewQuery configId
+    isValid: ExDbStore.isValidNewQuery configId
 
   _handleCancel: ->
     ExDbActionCreators.resetNewQuery @state.currentConfigId
@@ -46,7 +47,7 @@ module.exports = React.createClass
       button
         className: 'btn btn-success'
         onClick: @_handleCreate
-        disabled: @state.isSaving
+        disabled: @state.isSaving || !@state.isValid
       ,
         'Save'
 

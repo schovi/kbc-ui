@@ -21,6 +21,7 @@ module.exports = React.createClass
     currentQueryId: queryId
     isEditing: ExDbStore.isEditingQuery configId, queryId
     isSaving: ExDbStore.isSavingQuery configId, queryId
+    isValid: ExDbStore.isEditingQueryValid configId, queryId
 
   _handleEditStart: ->
     ExDbActionCreators.editQuery @state.currentConfigId, @state.currentQueryId
@@ -35,6 +36,7 @@ module.exports = React.createClass
     EditButtons
       isEditing: @state.isEditing
       isSaving: @state.isSaving
+      isDisabled: !@state.isValid
       onCancel: @_handleCancel
       onSave: @_handleCreate
       onEditStart: @_handleEditStart

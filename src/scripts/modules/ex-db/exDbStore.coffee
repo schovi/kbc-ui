@@ -14,6 +14,11 @@ _store = Map
   savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId]['query'] - query [configId]['isSaving'] = true or not set
 
+
+
+isValidQuery = (query) ->
+  query.get('name', '').trim().length > 0
+
 ExDbStore = StoreUtils.createStore
 
   getConfig: (configId) ->
@@ -31,6 +36,11 @@ ExDbStore = StoreUtils.createStore
   isEditingQuery: (configId, queryId) ->
     _store.hasIn ['editingQueries', configId, queryId]
 
+  isEditingQueryValid: (configId, queryId) ->
+    editingQuery = @getEditingQuery(configId, queryId)
+    return false if !editingQuery
+    isValidQuery editingQuery
+
   isSavingQuery: (configId, queryId) ->
     _store.hasIn ['savingQueries', configId, queryId]
 
@@ -47,6 +57,9 @@ ExDbStore = StoreUtils.createStore
       primaryKey: ''
       query: ''
     )
+
+  isValidNewQuery: (configId) ->
+    isValidQuery(@getNewQuery(configId))
 
   isEditingCredentials: (configId) ->
     _store.hasIn ['editingCredentials', configId]

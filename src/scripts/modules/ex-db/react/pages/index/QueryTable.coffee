@@ -28,6 +28,8 @@ module.exports = React.createClass
       div className: 'thead', key: 'table-header',
         div className: 'tr',
           span className: 'th',
+            strong null, 'Name'
+          span className: 'th',
             strong null, 'Output table'
           span className: 'th',
             strong null, 'Incremental'

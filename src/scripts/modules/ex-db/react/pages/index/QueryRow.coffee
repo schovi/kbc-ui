@@ -27,6 +27,12 @@ module.exports = React.createClass
         query: @props.query.get 'id'
     ,
       span className: 'td',
+        if @props.query.get 'name'
+          @props.query.get 'name'
+        else
+          span className: 'text-muted',
+            'Untitled'
+      span className: 'td',
         @props.query.get 'outputTable'
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
