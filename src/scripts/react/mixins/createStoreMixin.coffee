@@ -18,7 +18,8 @@ createStoreMixin = (stores...) ->
       , @)
 
     _handleStoreChanged: ->
-      @setState(@getStateFromStores(@props))
+      if @isMounted()
+        @setState(@getStateFromStores(@props))
 
   StoreMixin
 

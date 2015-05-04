@@ -67,8 +67,9 @@ module.exports = React.createClass
     .then @_handleStarted
 
   _handleStarted: ->
-    @setState
-      isLoading: false
+    if @isMounted()
+      @setState
+        isLoading: false
 
   render: ->
     ModalTrigger
