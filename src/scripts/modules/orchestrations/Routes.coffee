@@ -85,6 +85,7 @@ routes =
     ,
       name: 'orchestrationNotifications'
       title: 'Notifications'
+      path: 'notifications'
       handler: OrchestrationNotifications
       headerButtonsHandler: OrchestrationNotificationsButtons
     ]
