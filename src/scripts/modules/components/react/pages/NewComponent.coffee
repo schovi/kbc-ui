@@ -55,6 +55,14 @@ createNewComponentPage = (type) ->
       div className: 'container-fluid kbc-main-content',
         SearchRow(className: 'row kbc-search-row', onChange: @_handleFilterChange, query: @state.filter)
         @renderComponents()
+        div className: 'row',
+          div className: 'text-center',
+            h2 null, 'Haven\'t found what you were looking for?'
+            a
+              className: 'btn btn-primary'
+              href: 'mailto:support@keboola.com'
+            ,
+              'Let us know'
 
     _handleFilterChange: (query) ->
       ComponentsActionCreators.setComponentsFilter(query, type)
