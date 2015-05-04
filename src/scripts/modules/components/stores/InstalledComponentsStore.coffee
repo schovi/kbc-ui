@@ -70,8 +70,6 @@ Dispatcher.register (payload) ->
       _store = _store.set 'isLoading', false
       InstalledComponentsStore.emitChange()
 
-
-
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_START
       _store = _store.withMutations (store) ->
         store.setIn ['editingConfigurations', action.componentId, action.configurationId, action.field],
@@ -98,6 +96,10 @@ Dispatcher.register (payload) ->
         store
         .deleteIn ['components', action.componentId, 'configurations', action.configurationId]
         .deleteIn ['deletingConfigurations', action.componentId, action.configurationId]
+
+        if !store.getIn(['components', action.componentId, 'configurations']).count()
+          store = store.deleteIn ['components', action.componentId]
+          
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_ERROR
@@ -144,8 +146,12 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
-      _store = _store.setIn ['components', action.componentId, 'configurations', action.configuration.id],
-        Immutable.fromJS action.configuration
+      _store = _store.withMutations (store) ->
+        if !store.hasIn ['components', action.componentId]
+          store = store.setIn(['components', action.componentId], action.component.set('configurations', Map()))
+
+        store.setIn ['components', action.componentId, 'configurations', action.configuration.id],
+          Immutable.fromJS action.configuration
 
       InstalledComponentsStore.emitChange()
 

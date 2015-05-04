@@ -38,10 +38,10 @@ module.exports =
 
     createComponentConfiguration componentId, configuration
     .then (response) ->
-      console.log 'created', response
       dispatcher.handleViewAction
         type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
         componentId: componentId
+        component: ComponentsStore.getComponent(componentId)
         configuration: response
       transitionToComponentConfiguration(componentId, response.id)
     .catch (e) ->

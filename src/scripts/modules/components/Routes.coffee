@@ -26,7 +26,7 @@ routes =
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
     defaultRouteHandler: createComponentsIndex('extractor')
-    headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor')
+    headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor', 'extractor')
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
       name: 'new-extractor'
