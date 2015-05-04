@@ -7,6 +7,8 @@ ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
 Promise = require 'bluebird'
 
+COMPONENTS_WITHOUT_API = ['tde-exporter']
+
 createConfigByApi = (componentId, configuration) ->
   syrupApi
   .createRequest(componentId, 'POST', "configs")
@@ -58,13 +60,12 @@ module.exports = (componentId, configuration) ->
 
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
-  else if component.get 'uri'
+  else if component.get 'uri' && COMPONENTS_WITHOUT_API.indexOf(component.get('id')) < 0
     promise = createConfigByApi(componentId, configuration)
   else
-    promise = createConfigByApi(configuration)
+    promise = createConfigManually(configuration)
 
   promise.then (response) ->
-    console.log 'resposne', response
     installedComponentsApi
     .createConfiguration componentId,
       name: configuration.get 'name'
