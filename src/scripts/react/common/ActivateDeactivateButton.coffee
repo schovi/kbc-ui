@@ -22,7 +22,7 @@ module.exports = React.createClass
   render: ->
     if @props.isPending
       React.DOM.span className: 'btn btn-link',
-        React.createElement Loader
+        React.createElement Loader, className: 'fa-fw'
     else
       tooltip = if @props.isActive then @props.deactivateTooltip else @props.activateTooltip
 

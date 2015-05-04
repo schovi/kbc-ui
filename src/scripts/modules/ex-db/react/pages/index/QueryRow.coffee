@@ -2,10 +2,12 @@ React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
-Loader = React.createFactory(require '../../../../../react/common/Loader')
 Check = React.createFactory(require('../../../../../react/common/common').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+
+actionCreators = require '../../../exDbActionCreators'
 
 {span, div, a, button, i} = React.DOM
 
@@ -14,8 +16,11 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
   propTypes:
     query: React.PropTypes.object.isRequired
-    isDeleting: React.PropTypes.bool.isRequired
+    pendingActions: React.PropTypes.object.isRequired
     configurationId: React.PropTypes.string.isRequired
+
+  _handleActiveChange: (newValue) ->
+    actionCreators.changeQueryEnabledState(@props.configurationId, @props.query.get('id'), newValue)
 
   render: ->
     props = @props
@@ -39,12 +44,16 @@ module.exports = React.createClass
       span className: 'td',
         @props.query.get 'primaryKey'
       span className: 'td text-right',
-        if @props.isDeleting
-          Loader()
-        else
-          QueryDeleteButton
-            query: @props.query
-            configurationId: @props.configurationId
+        QueryDeleteButton
+          query: @props.query
+          configurationId: @props.configurationId
+          isPending: @props.pendingActions.has 'deleteQuery'
+        ActivateDeactivateButton
+          activateTooltip: 'Enable Query'
+          deactivateTooltip: 'Disable Query'
+          isActive: @props.query.get('enabled')
+          isPending: @props.pendingActions.has 'enabled'
+          onChange: @_handleActiveChange
         RunExtractionButton
           title: 'Run Extraction'
           component: 'ex-db'

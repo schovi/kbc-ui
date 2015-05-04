@@ -1,5 +1,6 @@
 React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+{Map} = require 'immutable'
 
 QueryRow = React.createFactory(require './QueryRow')
 Link = React.createFactory(require('react-router').Link)
@@ -13,13 +14,13 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
   propTypes:
     configuration: React.PropTypes.object
-    deletingQueries: React.PropTypes.object
+    pendingActions: React.PropTypes.object
 
   render: ->
     childs = @props.configuration.get('queries').map((query) ->
       QueryRow
         query: query
-        isDeleting: @props.deletingQueries.has query.get('id')
+        pendingActions: @props.pendingActions.get query.get('id'), Map()
         configurationId: @props.configuration.get 'id'
         key: query.get('id')
     , @).toArray()

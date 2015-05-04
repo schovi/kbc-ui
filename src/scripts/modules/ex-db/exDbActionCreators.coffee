@@ -25,6 +25,33 @@ module.exports =
     return Promise.resolve() if exDbStore.hasConfig configurationId
     @loadConfigurationForce(configurationId)
 
+
+  changeQueryEnabledState: (configurationId, queryId, newValue) ->
+    console.log 'change enabled', configurationId, queryId, newValue
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_QUERY_CHANGE_ENABLED_START
+      configurationId: configurationId
+      queryId: queryId
+
+    query = exDbStore.getConfigQuery(configurationId, queryId).set('enabled', newValue)
+    exDbApi
+    .saveQuery(configurationId, query.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_CHANGE_ENABLED_SUCCESS
+        configurationId: configurationId
+        queryId: queryId
+        query: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_QUERY_CHANGE_ENABLED_ERROR
+        configurationId: configurationId
+        queryId: queryId
+        error: e
+      throw e
+
+
+
   updateEditingQuery: (configurationId, query) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_QUERY_EDIT_UPDATE

@@ -1,5 +1,6 @@
 React = require 'react'
 Immutable = require 'immutable'
+{Map} = Immutable
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
@@ -32,7 +33,7 @@ module.exports = React.createClass
   getStateFromStores: ->
     config = RoutesStore.getRouterState().getIn ['params', 'config']
     configuration: ExDbStore.getConfig config
-    deletingQueries: ExDbStore.getDeletingQueries config
+    pendingActions: ExDbStore.getQueriesPendingActions config
     latestJobs: LatestJobsStore.getJobs 'ex-db', config
 
   render: ->
@@ -56,7 +57,7 @@ module.exports = React.createClass
         if @state.configuration.get('queries').count()
           QueryTable
             configuration: @state.configuration
-            deletingQueries: @state.deletingQueries
+            pendingActions: @state.pendingActions
         else
           'No queries yet'
       div className: 'col-md-3 kbc-main-sidebar',
