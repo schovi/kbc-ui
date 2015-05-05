@@ -5,3 +5,4 @@ module.exports =
   filesize: require 'filesize'
   timer: require './Timer'
   jobPoller: require './jobPoller'
+  duration: require './duration'

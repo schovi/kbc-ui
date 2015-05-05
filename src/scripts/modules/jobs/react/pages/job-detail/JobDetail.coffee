@@ -9,6 +9,7 @@ Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
+JobStats = require './JobStatsContainer'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -132,6 +133,8 @@ JobDetail = React.createClass
       @_renderRunInfoRow(job)
       @_renderRunTimesRow(job)
       @_renderParamsRow(job)
+      React.createElement JobStats,
+        runId: job.get 'runId'
       @_renderLogRow(job)
 
 

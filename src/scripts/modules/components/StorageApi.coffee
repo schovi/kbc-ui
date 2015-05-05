@@ -34,6 +34,13 @@ storageApi =
     .then (response) ->
       response.body
 
+  getRunIdStats: (runId) ->
+    createRequest 'GET', 'stats'
+    .query runId: runId
+    .promise()
+    .then (response) ->
+      response.body
+
   ###
     Returns parsed CSV info plain arrays
     [
