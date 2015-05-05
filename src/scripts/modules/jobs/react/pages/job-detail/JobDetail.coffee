@@ -4,24 +4,35 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
+
+ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
+
 date = require '../../../../../utils/date'
 Tree = require '../../../../../react/common/Tree'
 {strong,div, h2, span, h4, section, p} = React.DOM
 
 JobDetail = React.createClass
-  mixins: [createStoreMixin(JobsStore)]
+  mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
-    job: JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
+    job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
+
+    configuration = null
+    if job.hasIn ['params', 'config']
+      config = job.getIn ['params', 'config']
+      configuration = InstalledComponentsStore.getConfig(job.get('component'), config)
+
+    job: job
+    configuration: configuration
 
   componentDidUpdate: (prevProps, prevState) ->
     currentStatus = @state.job.get 'status'
     prevStatus = prevState.job.get 'status'
-    console.log 'receive', currentStatus, prevStatus
     return if currentStatus == prevStatus
     switch currentStatus
       when 'success'
@@ -75,14 +86,26 @@ JobDetail = React.createClass
 
 
   _renderGeneralInfoRow: (job) ->
-    console.log 'job', job.toJS()
     component = ComponentsStore.getComponent(job.get 'component')
+
+    if @state.configuration
+      configurationLink = span null,
+        ' - '
+        React.createElement ComponentConfigurationLink,
+          componentId: component.get 'id'
+          configId: @state.configuration.get 'id'
+        ,
+          @state.configuration.get 'name'
+    else
+      configurationLink = null
+
     div {className: 'row'},
       div {className: 'col-md-6'},
         span {className: 'form-control-static'},
           ComponentIcon {component: component, size: '32'}
           ' '
           ComponentName {component: component}
+        configurationLink
         ' '
         span {className: 'label label-info'},job.get('command')
       div {className: 'col-md-6'},
@@ -102,6 +125,7 @@ JobDetail = React.createClass
 
 
   render: ->
+    console.log 'configuration', @state.configuration?.toJS()
     job = @state.job
     div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)

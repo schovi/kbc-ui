@@ -99,7 +99,7 @@ Dispatcher.register (payload) ->
 
         if !store.getIn(['components', action.componentId, 'configurations']).count()
           store = store.deleteIn ['components', action.componentId]
-          
+
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_ERROR
