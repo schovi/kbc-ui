@@ -1,6 +1,7 @@
 import React from 'react';
 import {addons} from 'react/addons';
 import Loader from '../../../../../react/common/Loader';
+import {Map} from 'immutable';
 
 import {filesize} from '../../../../../utils/utils';
 import TablesList from './TablesList';
@@ -26,7 +27,14 @@ export default React.createClass({
     },
 
     pieData() {
-        return this.props.stats.getIn(['files', 'tags', 'tags']);
+        return this.props.stats
+            .getIn(['files', 'tags', 'tags'])
+            .map((tag) => {
+                return Map({
+                    Tag: tag.get('tag'),
+                    Size: tag.getIn(['dataSizeBytes', 'total'])
+                });
+            });
     },
 
     render() {
