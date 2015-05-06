@@ -28,7 +28,6 @@ export default React.createClass({
     },
 
     componentWillUnmount() {
-        console.log('unmount', this.timeout);
         this.stopPolling();
     },
 

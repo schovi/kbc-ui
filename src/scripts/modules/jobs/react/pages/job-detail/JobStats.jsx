@@ -4,6 +4,7 @@ import Loader from '../../../../../react/common/Loader';
 
 import {filesize} from '../../../../../utils/utils';
 import TablesList from './TablesList';
+import FilesPie from './FilesPie';
 
 export default React.createClass({
     propTypes: {
@@ -24,8 +25,11 @@ export default React.createClass({
        return this.props.isLoading ? <Loader/> : '';
     },
 
+    pieData() {
+        return this.props.stats.getIn(['files', 'tags', 'tags']);
+    },
+
     render() {
-        console.log('stats', this.props.stats.toJS());
         return (
             <div className="row clearfix">
                 <div className="col-md-4">
@@ -38,9 +42,12 @@ export default React.createClass({
                     <h4>Exported Tables <small>{this.props.stats.getIn(['tables', 'export', 'totalCount'])} exports total</small></h4>
                     <TablesList tables={this.props.stats.getIn(['tables', 'export'])}/>
                 </div>
-                <div className="col-md-4">
-                    <h4>Data Transfer</h4>
-                    <span>{this.dataSize()} / {this.filesCount()} files</span>
+                <div className="col-md-3">
+                    <h4>Data Transfer <small>{this.filesCount()} files total</small></h4>
+                    <div className="text-center">
+                        <h1>{this.dataSize()}</h1>
+                        <FilesPie data={this.pieData()} />
+                    </div>
                 </div>
             </div>
         );

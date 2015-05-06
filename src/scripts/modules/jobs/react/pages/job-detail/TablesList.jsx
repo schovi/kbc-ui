@@ -41,8 +41,15 @@ export default React.createClass({
     },
 
     render() {
-        return(
-            <ul>{this.rows()}</ul>
-        );
+        const rows = this.rows();
+        if (rows.length) {
+            return(
+                <ul>{this.rows()}</ul>
+            );
+        } else {
+            return(
+              <div className="text-muted">No tables.</div>
+            );
+        }
     }
 });
