@@ -106,6 +106,7 @@ JobDetail = React.createClass
       ,
         React.createElement JobStats,
           runId: job.get 'runId'
+          autoRefresh: !job.get 'endTime'
 
   _renderParamsRow: (job) ->
     status = job.get 'status'
