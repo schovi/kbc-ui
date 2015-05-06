@@ -10,7 +10,6 @@ ComponentName = React.createFactory(require '../../../../../react/common/Compone
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
-CollabsibleRow = require './CollabsibleRow'
 {PanelGroup, Panel} = require 'react-bootstrap'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
@@ -19,8 +18,26 @@ date = require '../../../../../utils/date'
 Tree = require '../../../../../react/common/Tree'
 {strong,div, h2, span, h4, section, p} = React.DOM
 
+
+accordionHeader = (text, isActive) ->
+  span null,
+    span className: 'table',
+      span className: 'tbody',
+        span className: 'tr',
+            span className: 'td',
+              h4  null,
+                if isActive
+                  span className: 'fa fa-fw fa-angle-down'
+                else
+                  span className: 'fa fa-fw fa-angle-right'
+                text
+
 JobDetail = React.createClass
   mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
+
+
+  getInitialState: ->
+    activeAccordion: 'stats'
 
   getStateFromStores: ->
     job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
@@ -43,6 +60,9 @@ JobDetail = React.createClass
       when 'error', 'cancelled', 'canceled', 'terminated'
         SoundNotifications.crash()
 
+  _handleChangeActiveAccordion: (activeKey) ->
+    @setState
+      activeAccordion: if activeKey == @state.activeAccordion then null else activeKey
 
   _renderRunInfoRow: (job) ->
     jobStarted = ->
@@ -71,15 +91,17 @@ JobDetail = React.createClass
   _renderAccordion: (job) ->
     React.createElement PanelGroup,
       accordion: true
-      defaultActiveKey: 'stats'
+      className: 'kbc-accordion'
+      activeKey: @state.activeAccordion
+      onSelect: @_handleChangeActiveAccordion
     ,
       React.createElement Panel,
-        header: 'Params and Results',
+        header: accordionHeader('Parameters & Results', @state.activeAccordion == 'params')
         eventKey: 'params'
       ,
         @_renderParamsRow(job)
       React.createElement Panel,
-        header: 'Stats'
+        header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
         eventKey: 'stats'
       ,
         React.createElement JobStats,
