@@ -15,7 +15,7 @@ module.exports = React.createClass
     isPending: React.PropTypes.bool.isRequired
 
   render: ->
-    ActivateDeactivateButton
+    React.createElement ActivateDeactivateButton,
       activateTooltip: 'Enable Orchestration'
       deactivateTooltip: 'Disable Orchestration'
       isActive: @props.orchestration.get('active')

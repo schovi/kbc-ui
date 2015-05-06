@@ -80,7 +80,7 @@ module.exports = React.createClass
             ,
               'You are about to run extraction.'
           li null,
-            DeleteConfigurationButton
+            React.createElement DeleteConfigurationButton,
               componentId: 'ex-db'
               configId: @state.configuration.get 'id'
 

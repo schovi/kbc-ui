@@ -79,7 +79,7 @@ module.exports = React.createClass
                 span className: 'fa fa-bar-chart-o fa-fw'
                 ' GoodData Project'
           li null,
-            Confirm
+            React.createElement Confirm,
               text: 'Upload project'
               title: 'Are you sure you want to upload all tables to GoodData project?'
               buttonLabel: 'Upload'
@@ -102,7 +102,7 @@ module.exports = React.createClass
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
           li null,
-            Confirm
+            React.createElement Confirm,
               title: 'Delete Writer'
               text: "Are you sure you want to delete writer with its GoodData project?"
               buttonLabel: 'Delete'
@@ -127,7 +127,7 @@ module.exports = React.createClass
               navItem: true
             ,
               li null,
-                Confirm
+                React.createElement Confirm,
                   title: 'Optimize SLI hash'
                   text: div null,
                     p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
@@ -141,7 +141,7 @@ module.exports = React.createClass
                   a null,
                     'Optimize SLI hash'
               li null,
-                Confirm
+                React.createElement Confirm,
                   title: 'Reset Project'
                   text: div null,
                     p null,

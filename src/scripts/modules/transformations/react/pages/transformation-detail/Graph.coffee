@@ -1,7 +1,7 @@
 React = require 'react'
 
-GraphCanvas = React.createFactory(require '../../../../../react/common/GraphCanvas')
-{Button} = require 'react-bootstrap'
+GraphCanvas = require '../../../../../react/common/GraphCanvas'
+Button = React.createFactory(require('react-bootstrap').Button)
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 

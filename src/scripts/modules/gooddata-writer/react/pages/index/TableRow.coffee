@@ -41,7 +41,7 @@ module.exports = React.createClass
           React.createElement Tooltip,
             tooltip: 'Upload table to GoodData'
           ,
-            Confirm
+            React.createElement Confirm,
               text: @_uploadText()
               title: 'Upload Table'
               buttonLabel: 'Upload'

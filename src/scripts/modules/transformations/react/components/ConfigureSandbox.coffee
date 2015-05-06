@@ -2,7 +2,7 @@ React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
-Select = require('react-select')
+Select = React.createFactory(require('react-select'))
 _ = require('underscore')
 InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
 

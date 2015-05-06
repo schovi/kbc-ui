@@ -14,8 +14,8 @@ TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
-SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
+ConfigureTransformationSandbox = React.createFactory(require '../../components/ConfigureTransformationSandbox')
+SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
 {div, span, ul, li, a, em} = React.DOM
@@ -193,7 +193,7 @@ TransformationDetail = React.createClass
 
           li {},
             a {},
-              Confirm
+              React.createElement Confirm,
                 text: 'Delete Transformation'
                 title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
                 buttonLabel: 'Delete'

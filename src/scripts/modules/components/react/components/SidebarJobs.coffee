@@ -21,7 +21,7 @@ module.exports = React.createClass
     React.DOM.div null,
       React.DOM.h3 null,
         'Last runs'
-        Loader() if @props.jobs.get 'isLoading'
+        React.createElement(Loader) if @props.jobs.get 'isLoading'
       React.DOM.div null,
         @props.jobs.get('jobs').map (job) ->
           React.createElement JobRow,

@@ -15,13 +15,13 @@ OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
-GraphContainer = require './GraphContainer'
+GraphContainer = React.createFactory(require './GraphContainer')
 {Panel} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
-SqlDepModalTrigger = require '../../modals/SqlDepModalTrigger.coffee'
+SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')

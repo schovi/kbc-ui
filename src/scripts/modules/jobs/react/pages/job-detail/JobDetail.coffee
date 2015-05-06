@@ -93,7 +93,7 @@ JobDetail = React.createClass
     div null,
       div {className: 'col-md-6'},
         h4 null, 'Params '
-        Tree {data: job.get('params')}
+        React.createElement Tree, {data: job.get('params')}
       div {className: 'col-md-6'},
         h4 null,'Results '
         if status == 'error'
@@ -102,7 +102,7 @@ JobDetail = React.createClass
               span null, 'ExceptionId ' + exceptionId
             p null, message
         else
-          Tree {data: result} if result
+          React.createElement Tree, {data: result} if result
 
 
   _renderGeneralInfoRow: (job) ->
