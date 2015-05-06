@@ -36,7 +36,8 @@
     "numeral": "~1.5.3",
     "react-radio-group": "~1.0.0",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",
-    "moment-timezone": "~0.3.1"
+    "moment-timezone": "~0.3.1",
+    "classnames": "~2.1.0"
   },
   "devDependencies": {
     "webpack": "~1.8.4",

@@ -10,6 +10,8 @@ ComponentName = React.createFactory(require '../../../../../react/common/Compone
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
+CollabsibleRow = require './CollabsibleRow'
+{PanelGroup, Panel} = require 'react-bootstrap'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -66,12 +68,29 @@ JobDetail = React.createClass
       div {className: 'col-md-6'}, 'End ',
         renderDate(job.get('endTime'))
 
+  _renderAccordion: (job) ->
+    React.createElement PanelGroup,
+      accordion: true
+      defaultActiveKey: 'stats'
+    ,
+      React.createElement Panel,
+        header: 'Params and Results',
+        eventKey: 'params'
+      ,
+        @_renderParamsRow(job)
+      React.createElement Panel,
+        header: 'Stats'
+        eventKey: 'stats'
+      ,
+        React.createElement JobStats,
+          runId: job.get 'runId'
+
   _renderParamsRow: (job) ->
     status = job.get 'status'
     result = job.get 'result'
     exceptionId = job.getIn ['result', 'exceptionId'] if result
     message =  job.getIn ['result', 'message'] if result
-    div {className: 'row'},
+    div null,
       div {className: 'col-md-6'},
         h4 null, 'Params '
         Tree {data: job.get('params')}
@@ -132,9 +151,7 @@ JobDetail = React.createClass
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)
       @_renderRunTimesRow(job)
-      @_renderParamsRow(job)
-      React.createElement JobStats,
-        runId: job.get 'runId'
+      @_renderAccordion(job)
       @_renderLogRow(job)
 
 

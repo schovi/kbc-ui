@@ -19,7 +19,7 @@ export default React.createClass({
     render() {
         console.log('stats', this.props.stats.toJS());
         return (
-            <div className="row">
+            <div className="row clearfix">
                 <div className="col-md-4">
                     <h4>Imported Tables</h4>
                     <TablesList tables={this.props.stats.getIn(['tables', 'import'])}/>
@@ -31,6 +31,9 @@ export default React.createClass({
                 <div className="col-md-4">
                     <h4>Data Transfer</h4>
                     <span>{this.dataSize()} / {this.filesCount()} files</span>
+                </div>
+                <div className="col-md-4">
+                    TODO
                 </div>
             </div>
         );
