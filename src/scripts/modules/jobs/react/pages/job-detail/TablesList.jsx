@@ -13,8 +13,11 @@ export default React.createClass({
     },
 
     rows() {
-        return this.props.tables
+        const limit = 10;
+        let rows = this.props.tables
             .get('tables')
+            .toSeq()
+            .slice(0, limit)
             .map((table) => {
                 return (
                     <li key={table.get('id')}>
@@ -23,11 +26,22 @@ export default React.createClass({
                         </TableLink>
                     </li>
                 );
-            }).toArray();
+            })
+            .toArray();
+
+        const tablesCount = this.props.tables.get('tables').count();
+        if (tablesCount > limit) {
+            const message = tablesCount == 100 ? `More than ${tablesCount - limit} others.` : `${tablesCount - limit} others`;
+            rows.push(
+              <li><span>{message}</span></li>
+            );
+        }
+
+        return rows;
     },
 
     render() {
-        return (
+        return(
             <ul>{this.rows()}</ul>
         );
     }

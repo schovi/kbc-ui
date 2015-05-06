@@ -42,9 +42,6 @@ export default React.createClass({
                     <h4>Data Transfer</h4>
                     <span>{this.dataSize()} / {this.filesCount()} files</span>
                 </div>
-                <div className="col-md-4">
-                    TODO
-                </div>
             </div>
         );
     }
