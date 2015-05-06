@@ -62,7 +62,7 @@ JobDetail = React.createClass
 
   _handleChangeActiveAccordion: (activeKey) ->
     @setState
-      activeAccordion: if activeKey == @state.activeAccordion then null else activeKey
+      activeAccordion: if activeKey == @state.activeAccordion then '' else activeKey
 
   _renderRunInfoRow: (job) ->
     jobStarted = ->
