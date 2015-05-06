@@ -9,7 +9,7 @@ export default React.createClass({
     },
 
     tableUrl() {
-        return ApplicationStore.getProjectBaseUrl() + `storage#/tables/${this.props.tableId}`;
+        return ApplicationStore.getProjectBaseUrl() + `/storage#/tables/${this.props.tableId}`;
     },
 
     render() {
