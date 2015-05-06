@@ -21,11 +21,11 @@ export default React.createClass({
         return (
             <div className="row clearfix">
                 <div className="col-md-4">
-                    <h4>Imported Tables</h4>
+                    <h4>Imported Tables <small>{this.props.stats.getIn(['tables', 'import', 'totalCount'])} imports total</small></h4>
                     <TablesList tables={this.props.stats.getIn(['tables', 'import'])}/>
                 </div>
                 <div className="col-md-4">
-                    <h4>Exported Tables</h4>
+                    <h4>Exported Tables <small>{this.props.stats.getIn(['tables', 'export', 'totalCount'])} exports total</small></h4>
                     <TablesList tables={this.props.stats.getIn(['tables', 'export'])}/>
                 </div>
                 <div className="col-md-4">

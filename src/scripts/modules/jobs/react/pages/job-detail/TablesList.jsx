@@ -8,6 +8,10 @@ export default React.createClass({
         tables: React.PropTypes.object.isRequired
     },
 
+    duration(durationSeconds) {
+        return duration(Math.round(durationSeconds));
+    },
+
     rows() {
         return this.props.tables
             .get('tables')
@@ -15,7 +19,7 @@ export default React.createClass({
                 return (
                     <li key={table.get('id')}>
                         <TableLink tableId={table.get('id')}>
-                            {table.get('id')} <span className="text-muted">{duration(table.get('durationTotalSeconds'), true)}</span>
+                            {table.get('id')} <span className="text-muted">{this.duration(table.get('durationTotalSeconds'))}</span>
                         </TableLink>
                     </li>
                 );
