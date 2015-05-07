@@ -26,7 +26,6 @@ export default React.createClass({
         const ring = chart.addSeries("Tag", dimple.plot.pie);
         ring.innerRadius = "50%";
         ring.getTooltipText = (e) => {
-            console.log('tooltip', e, e.seriesValue);
             return [
                 `Tag: ${e.aggField[0]}`,
                 `Size: ${filesize(e.pValueList[0])}`
