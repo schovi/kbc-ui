@@ -14,7 +14,7 @@ TransformationBucketButtons = React.createClass
       Link to: 'sandbox',
         button className: 'btn btn-link',
           span className: 'kbc-icon-cog'
-          'Sandbox'
+          ' Sandbox'
       ModalTrigger modal: NewTransformationBucketModal(),
         button className: 'btn btn-success',
           span className: 'kbc-icon-plus'

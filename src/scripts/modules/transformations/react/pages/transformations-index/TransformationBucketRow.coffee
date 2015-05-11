@@ -50,7 +50,7 @@ TransformationBucketRow = React.createClass(
         h4 {}, @props.bucket.get('name')
       span {className: 'td'},
         small {}, @props.description || em {}, 'No description'
-      span {className: 'td'},
+      span {className: 'td text-right'},
         @buttons()
 
   _deleteTransformationBucket: ->
