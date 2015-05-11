@@ -6,7 +6,7 @@ RunComponentButton = React.createFactory(require '../../../../components/react/c
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationActionCreators = require '../../../ActionCreators'
 
-{span, div, a, button, i, h4, small} = React.DOM
+{span, div, a, button, i, h4, small, em} = React.DOM
 
 TransformationBucketRow = React.createClass(
   displayName: 'TransformationBucketRow'
