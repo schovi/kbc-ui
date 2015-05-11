@@ -10,7 +10,9 @@ ComponentName = React.createClass
     span null,
       @props.component.get('name'),
       ' ',
-      small(null, @props.component.get('type')) if @props.component.get('type') != 'transformation'
+      small(null, @props.component.get('type')) if @canShowType()
 
+  canShowType: ->
+    @props.component.get('type') == 'extractor' || @props.component.get('type') == 'writer'
 
 module.exports = ComponentName
