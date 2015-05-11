@@ -5,7 +5,7 @@ InstalledComponentsActionCreators = require '../../InstalledComponentsActionCrea
 InstalledComponetsStore = require '../../stores/InstalledComponentsStore'
 RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
 
-ComponentsReloaderButton = React.createClass
+module.exports = React.createClass
   displayName: 'ComponentsReloaderButton'
   mixins: [createStoreMixin(InstalledComponetsStore)]
 
@@ -17,6 +17,3 @@ ComponentsReloaderButton = React.createClass
 
   render: ->
     RefreshIcon isLoading: @state.isLoading, onClick: @_handleRefreshClick
-
-
-module.exports = ComponentsReloaderButton
