@@ -20,27 +20,21 @@ export default  React.createClass({
   render() {
     return (
         <span title={this.props.title}>
-          {this.loaderLeft()}  <span {...this.props} className="kbc-refresh kbc-icon-cw"></span> {this.loaderRight()}
+          {this.props.isLoading ? this.loader() : this.refreshIcon()}
         </span>
     );
   },
 
-  loaderLeft() {
-    if (this.props.loaderPosition == LEFT) {
-      return this.loader();
-    }
-  },
-
-  loaderRight() {
-    if (this.props.loaderPosition == RIGHT) {
-      return this.loader();
-    }
-  },
-
   loader() {
-    if (this.props.isLoading) {
-      return (<Loader/>);
-    }
+    return (
+        <Loader/>
+    );
+  },
+
+  refreshIcon() {
+    return (
+        <span {...this.props} className="kbc-refresh kbc-icon-cw"></span>
+    );
   }
 
 });

@@ -1,10 +1,10 @@
-import react from 'react';
-import classnames from 'classnames';
+import React from 'react';
+import classNames from 'classnames';
 
 export default  React.createClass({
   render() {
     return (
-        <span className={classnames('fa fa-spin fa-spinner', this.props.className)}/>
+        <span className={classNames('fa fa-spin fa-spinner', this.props.className)}/>
     );
   }
 
