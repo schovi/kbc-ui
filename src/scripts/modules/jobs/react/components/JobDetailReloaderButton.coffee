@@ -1,7 +1,7 @@
 React = require('react')
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 JobsStore = require('../../stores/JobsStore')
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+Loader = React.createFactory(require '../../../../react/common/Loader')
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
 JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel')
@@ -20,7 +20,10 @@ JobDetailReloaderButton = React.createClass
   render: ->
     React.DOM.span null,
       JobStatusLabel {status: @state.job.get 'status'}
-      RefreshIcon {isLoading: true} if @state.jobLoading
+      if @state.jobLoading
+        React.DOM.span null,
+          ' '
+          Loader()
 
 
 module.exports = JobDetailReloaderButton

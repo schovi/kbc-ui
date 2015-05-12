@@ -1,6 +1,6 @@
 React = require 'react'
 TableRow = React.createFactory(require './EventsTableRow')
-RefreshIcon = React.createFactory(require('../../../react/common/common').RefreshIcon)
+Loader = React.createFactory(require('../../../react/common/common').Loader)
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
 {table, thead, tbody, tr, th, td} = React.DOM
@@ -20,7 +20,8 @@ module.exports = React.createClass
           th null, 'Created'
           th null,
             'Event'
-            (RefreshIcon(isLoading: true) if @props.isLoading)
+            ' '
+            (Loader() if @props.isLoading)
       tbody null,
         @props.events.map( (event) ->
           TableRow
