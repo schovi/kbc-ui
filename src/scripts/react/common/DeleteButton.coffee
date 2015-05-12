@@ -29,7 +29,7 @@ module.exports = React.createClass
   render: ->
     if @props.isPending
       React.DOM.span className: 'btn btn-link',
-        React.createElement Loader
+        Loader()
     else if !@props.isEnabled
       React.DOM.span className: 'btn btn-link disabled',
         React.DOM.em className: 'kbc-icon-cup'

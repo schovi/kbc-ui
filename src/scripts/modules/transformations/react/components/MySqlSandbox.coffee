@@ -37,7 +37,7 @@ MySqlSandbox = React.createClass
         MySqlCredentials {credentials: @state.credentials}
     else
       if @state.pendingActions.get "create"
-        React.createElement Loader
+        Loader()
       else
         button {className: 'btn btn-success', onClick: @_createCredentials},
         'Create MySql Credentials'
@@ -71,8 +71,11 @@ MySqlSandbox = React.createClass
             title: 'Delete MySQL Sandbox'
             text: 'Do you really want to delete MySQL sandbox?'
             onConfirm: @_dropCredentials
+    else
+      false
 
   render: ->
+    console.log 'render mysql', @state
     div {className: 'table kbc-table-border-vertical kbc-detail-table'},
       div {className: 'tr'},
         div {className: 'td'},
