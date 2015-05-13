@@ -8,23 +8,23 @@ import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
 
 export default React.createClass({
-    mixins: [createStoreMixin(TransformationBucketsStore)],
+  mixins: [createStoreMixin(TransformationBucketsStore)],
 
-    getStateFromStores() {
-      return {
-        bucket: TransformationBucketsStore.get(RoutesStore.getCurrentRouteParam('bucketId'))
-      };
-    },
+  getStateFromStores() {
+    return {
+      bucket: TransformationBucketsStore.get(RoutesStore.getCurrentRouteParam('bucketId'))
+    };
+  },
 
-    render() {
-        return (
-            <span>
-                <ModalTrigger modal={<NewTransformationModal bucket={this.state.bucket}/>}>
-                    <button className="btn btn-success">
-                        <span className="kbc-icon-plus"></span> Add Transformation
-                    </button>
-                </ModalTrigger>
-            </span>
-        );
-    }
+  render() {
+    return (
+      <span>
+        <ModalTrigger modal={<NewTransformationModal bucket={this.state.bucket}/>}>
+          <button className="btn btn-success">
+            <span className="kbc-icon-plus"></span> Add Transformation
+          </button>
+        </ModalTrigger>
+      </span>
+    );
+  }
 });

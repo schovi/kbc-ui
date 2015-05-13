@@ -8,20 +8,20 @@ export default React.createClass({
   },
 
   render() {
-   return this.state.isProtected ? this.renderProtected() : this.renderRevealed();
+    return this.state.isProtected ? this.renderProtected() : this.renderRevealed();
   },
 
   renderProtected() {
     return (
-        <span className="fa fa-fw fa-lock kbc-protected"
-              title="Protected content, click to reveal"
-              onClick={this.show}/>
+      <span className="fa fa-fw fa-lock kbc-protected"
+            title="Protected content, click to reveal"
+            onClick={this.show} />
     );
   },
 
   renderRevealed() {
     return (
-        <span>{this.props.children}</span>
+      <span>{this.props.children}</span>
     );
   },
 

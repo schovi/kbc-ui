@@ -11,58 +11,58 @@ import date from '../../../../../utils/date';
 import getComponentId from '../../../getJobComponentId';
 
 export default React.createClass({
-    mixins: [addons.PureRenderMixin],
+  mixins: [addons.PureRenderMixin],
 
-    propTypes: {
-        job: React.PropTypes.object.isRequired,
-        query: React.PropTypes.string.isRequired
-    },
+  propTypes: {
+    job: React.PropTypes.object.isRequired,
+    query: React.PropTypes.string.isRequired
+  },
 
-    render() {
-        const component = this.getComponent();
-        return (
-            <Link className="tr" to="jobDetail" params={this.linkParams()} query={this.linkQuery()}>
-                <div className="td">
-                    {this.props.job.get('id')}
-                </div>
-                <div className="td">
-                    <JobStatusLabel status={this.props.job.get('status')}/>
-                </div>
-                <div className="td">
-                    <ComponentIcon component={component} size="32"/> <ComponentName component={component} />
-                </div>
-                <div className="td">
-                    {this.props.job.get('command')}
-                </div>
-                <div className="td">
-                    {this.props.job.getIn(['token', 'description'])}
-                </div>
-                <div className="td">
-                    {date.format(this.props.job.get('createdTime'))}
-                </div>
-                <div className="td">
-                    <Duration startTime={this.props.job.get('startTime')} endTime={this.props.job.get('endTime')} />
-                </div>
-            </Link>
-        );
-    },
+  render() {
+    const component = this.getComponent();
+    return (
+      <Link className="tr" to="jobDetail" params={this.linkParams()} query={this.linkQuery()}>
+        <div className="td">
+          {this.props.job.get('id')}
+        </div>
+        <div className="td">
+          <JobStatusLabel status={this.props.job.get('status')}/>
+        </div>
+        <div className="td">
+          <ComponentIcon component={component} size="32"/> <ComponentName component={component}/>
+        </div>
+        <div className="td">
+          {this.props.job.get('command')}
+        </div>
+        <div className="td">
+          {this.props.job.getIn(['token', 'description'])}
+        </div>
+        <div className="td">
+          {date.format(this.props.job.get('createdTime'))}
+        </div>
+        <div className="td">
+          <Duration startTime={this.props.job.get('startTime')} endTime={this.props.job.get('endTime')}/>
+        </div>
+      </Link>
+    );
+  },
 
-    linkParams() {
-        return {
-            jobId: this.props.job.get('id')
-        };
-    },
+  linkParams() {
+    return {
+      jobId: this.props.job.get('id')
+    };
+  },
 
-    linkQuery() {
-        return {
-            q: this.props.query
-        };
-    },
+  linkQuery() {
+    return {
+      q: this.props.query
+    };
+  },
 
-    getComponent() {
-        const componentId = getComponentId(this.props.job);
-        const component = ComponentsStore.getComponent(componentId);
-        return component ? component : ComponentsStore.unknownComponent(componentId);
-    }
+  getComponent() {
+    const componentId = getComponentId(this.props.job);
+    const component = ComponentsStore.getComponent(componentId);
+    return component ? component : ComponentsStore.unknownComponent(componentId);
+  }
 
 });

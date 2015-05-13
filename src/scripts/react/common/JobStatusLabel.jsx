@@ -20,9 +20,9 @@ export default React.createClass({
 
   render() {
     return (
-        <span className={this.classes()}>
-          {this.props.status}
-        </span>
+      <span className={this.classes()}>
+        {this.props.status}
+      </span>
     );
   },
 

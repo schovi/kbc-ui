@@ -4,6 +4,6 @@
  * @param job
  * @returns {any|*}
  */
-export default function(job) {
-    return job.getIn(['params', 'component'], job.get('component'));
+export default function (job) {
+  return job.getIn(['params', 'component'], job.get('component'));
 }
