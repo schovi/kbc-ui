@@ -8,6 +8,7 @@ import Duration from '../../../../../react/common/Duration';
 
 import ComponentsStore from '../../../../components/stores/ComponentsStore';
 import date from '../../../../../utils/date';
+import getComponentId from '../../../getJobComponentId';
 
 export default React.createClass({
     mixins: [addons.PureRenderMixin],
@@ -59,7 +60,9 @@ export default React.createClass({
     },
 
     getComponent() {
-        const component = ComponentsStore.getComponent(this.props.job.get('component'));
-        return component ? component : ComponentsStore.unknownComponent(this.props.job.get('component'));
+        const componentId = getComponentId(this.props.job);
+        const component = ComponentsStore.getComponent(componentId);
+        return component ? component : ComponentsStore.unknownComponent(componentId);
     }
+
 });

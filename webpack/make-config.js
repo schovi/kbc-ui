@@ -78,10 +78,12 @@ module.exports = function (options) {
             ],
             loaders: [
                 {
-                    test: /\.jsx$/,
+                    exclude: /node_modules/,
+                    test: /\.jsx?$/,
                     loaders: isDevelopment ? ['react-hot', 'babel'] : ['babel']
                 },
                 {
+                    exclude: /node_modules/,
                     test: /\.coffee$/,
                     loaders: isDevelopment ? ['react-hot', 'coffee'] : ['coffee']
                 },

@@ -11,6 +11,7 @@ ComponentIcon = React.createFactory(require('../../../../../react/common/Compone
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
 {PanelGroup, Panel} = require 'react-bootstrap'
+getComponentId = require '../../../getJobComponentId'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -32,7 +33,7 @@ accordionHeader = (text, isActive) ->
                   span className: 'fa fa-fw fa-angle-right'
                 text
 
-JobDetail = React.createClass
+module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
 
 
@@ -63,6 +64,16 @@ JobDetail = React.createClass
   _handleChangeActiveAccordion: (activeKey) ->
     @setState
       activeAccordion: if activeKey == @state.activeAccordion then '' else activeKey
+
+  render: ->
+    job = @state.job
+    div {className: 'container-fluid kbc-main-content'},
+      @_renderGeneralInfoRow(job)
+      @_renderRunInfoRow(job)
+      @_renderRunTimesRow(job)
+      @_renderAccordion(job)
+      @_renderLogRow(job)
+
 
   _renderRunInfoRow: (job) ->
     jobStarted = ->
@@ -129,7 +140,9 @@ JobDetail = React.createClass
 
 
   _renderGeneralInfoRow: (job) ->
-    component = ComponentsStore.getComponent(job.get 'component')
+    componentId = getComponentId(job)
+    component = ComponentsStore.getComponent(componentId)
+    component = ComponentsStore.unknownComponent(componentId) if !component
 
     if @state.configuration
       configurationLink = span null,
@@ -166,21 +179,3 @@ JobDetail = React.createClass
           runId: job.get('runId')
         autoReload: job.get('status') == 'waiting' || job.get('status') == 'processing'
 
-
-  render: ->
-    console.log 'configuration', @state.configuration?.toJS()
-    job = @state.job
-    div {className: 'container-fluid kbc-main-content'},
-      @_renderGeneralInfoRow(job)
-      @_renderRunInfoRow(job)
-      @_renderRunTimesRow(job)
-      @_renderAccordion(job)
-      @_renderLogRow(job)
-
-
-
-
-
-
-
-module.exports = JobDetail
