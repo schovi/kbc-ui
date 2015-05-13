@@ -1,25 +1,17 @@
 React = require('react')
-Link = React.createFactory(require('react-router').Link)
-Immutable = require('immutable')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 JobsStore = require('../../../stores/JobsStore')
-ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 RoutesStore = require '../../../../../stores/RoutesStore'
 ActionCreators = require('../../../ActionCreators')
 
-
 QueryRow = React.createFactory(require('./QueryRow'))
-
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
-JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel')
-Duration = React.createFactory(require('../../../../../react/common/Duration'))
-ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
-date = require '../../../../../utils/date'
+JobRow = React.createFactory(require './JobRow')
 
 {div, span,input, strong, form, button} = React.DOM
-JobsIndex = React.createClass
-  mixins: [createStoreMixin(JobsStore, ComponentsStore)]
+
+module.exports = React.createClass
+  mixins: [createStoreMixin(JobsStore)]
 
   getStateFromStores: ->
     jobs: JobsStore.getAll()
@@ -60,49 +52,15 @@ JobsIndex = React.createClass
         span {className: 'th'},
           strong null, 'Duration'
 
-  _unknownComponent: (name) ->
-    result =
-      id: name
-      name: name
-      type: 'unknown'
-    return Immutable.fromJS(result)
-
-  _renderTableRow: (row,idx) ->
-    rowComponent = ComponentsStore.getComponent(row.get 'component')
-    if not rowComponent
-      rowComponent = @_unknownComponent(row.get 'component')
-
-    Link {className: 'tr', to: 'jobDetail', params: {jobId: row.get('id')}, query: {q: @state.query}},
-      div className: 'td', row.get('id')
-      div className: 'td', JobStatusLabel {status: row.get 'status'}
-      div className: 'td',
-        ComponentIcon {component: rowComponent, size: '32'}
-        ' '
-        ComponentName {component: rowComponent}
-      div className: 'td', row.get 'command'
-      div className: 'td', row.getIn ['token', 'description']
-      div className: 'td',
-        date.format(row.get('createdTime'))
-      div className: 'td',
-        Duration {startTime: row.get('startTime'), endTime: row.get('endTime')}
-
 
   _renderTable: ->
-    console.log 'rendering table'
-    idx = 0
     div {className: 'table table-striped table-hover'},
       @_renderTableHeader(),
       div className: 'tbody',
-        @state.jobs.map((job) ->
-          idx++
-          @_renderTableRow(job, idx)
+        @state.jobs.map (job) ->
+          JobRow
+            job: job
+            key: job.get('id')
+            query: @state.query
+        , @
 
-        , @).toArray()
-
-
-
-
-
-
-
-module.exports = JobsIndex

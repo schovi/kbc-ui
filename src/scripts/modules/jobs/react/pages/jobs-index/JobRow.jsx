@@ -1,0 +1,65 @@
+import React from 'react';
+import {addons} from 'react/addons';
+import {Link} from 'react-router';
+import JobStatusLabel from '../../../../../react/common/JobStatusLabel';
+import ComponentIcon from '../../../../../react/common/ComponentIcon';
+import ComponentName from '../../../../../react/common/ComponentName';
+import Duration from '../../../../../react/common/Duration';
+
+import ComponentsStore from '../../../../components/stores/ComponentsStore';
+import date from '../../../../../utils/date';
+
+export default React.createClass({
+    mixins: [addons.PureRenderMixin],
+
+    propTypes: {
+        job: React.PropTypes.object.isRequired,
+        query: React.PropTypes.string.isRequired
+    },
+
+    render() {
+        const component = this.getComponent();
+        return (
+            <Link className="tr" to="jobDetail" params={this.linkParams()} query={this.linkQuery()}>
+                <div className="td">
+                    {this.props.job.get('id')}
+                </div>
+                <div className="td">
+                    <JobStatusLabel status={this.props.job.get('status')}/>
+                </div>
+                <div className="td">
+                    <ComponentIcon component={component} size="32"/> <ComponentName component={component} />
+                </div>
+                <div className="td">
+                    {this.props.job.get('command')}
+                </div>
+                <div className="td">
+                    {this.props.job.getIn(['token', 'description'])}
+                </div>
+                <div className="td">
+                    {date.format(this.props.job.get('createdTime'))}
+                </div>
+                <div className="td">
+                    <Duration startTime={this.props.job.get('startTime')} endTime={this.props.job.get('endTime')} />
+                </div>
+            </Link>
+        );
+    },
+
+    linkParams() {
+        return {
+            jobId: this.props.job.get('id')
+        };
+    },
+
+    linkQuery() {
+        return {
+            q: this.props.query
+        };
+    },
+
+    getComponent() {
+        const component = ComponentsStore.getComponent(this.props.job.get('component'));
+        return component ? component : ComponentsStore.unknownComponent(this.props.job.get('component'));
+    }
+});

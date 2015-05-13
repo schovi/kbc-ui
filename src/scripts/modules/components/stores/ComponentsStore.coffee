@@ -56,6 +56,11 @@ ComponentsStore = StoreUtils.createStore
       configId: configurationId
     )
 
+  unknownComponent: (name) ->
+    Map
+      id: name
+      name: name
+      type: 'unknown'
 
 Dispatcher.register (payload) ->
   action = payload.action
