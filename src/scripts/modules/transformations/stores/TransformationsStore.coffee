@@ -136,6 +136,11 @@ Dispatcher.register (payload) ->
       )
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_CREATE_SUCCESS
+      _store = _store.setIn ['transformationsByBucketId', action.bucketId, action.transformation.id],
+        Immutable.fromJS(action.transformation)
+      TransformationsStore.emitChange()
+
     when Constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD
       _store = _store.setIn ['loadingOverviews', action.bucketId, action.transformationId], true
       TransformationsStore.emitChange()

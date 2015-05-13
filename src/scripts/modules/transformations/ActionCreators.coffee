@@ -62,6 +62,16 @@ module.exports =
       )
     )
 
+  createTransformation: (bucketId, data) ->
+    transformationsApi
+    .createTransformation bucketId, data.toJS()
+    .then (transformation) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_CREATE_SUCCESS
+        bucketId: bucketId
+        transformation: transformation
+      )
+
 
   deleteTransformationBucket: (bucketId) ->
     dispatcher.handleViewAction

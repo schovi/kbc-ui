@@ -46,6 +46,13 @@ transformationsApi =
     .send()
     .promise()
 
+  createTransformation: (bucketId, data) ->
+    createRequest('POST', "configs/#{bucketId}/items")
+    .send(data)
+    .promise()
+    .then (response) ->
+      response.body
+
   saveTransformation: (bucketId, transformationId, data) ->
     createRequest('PUT', "configs/#{bucketId}/items/#{transformationId}")
     .send(data)
