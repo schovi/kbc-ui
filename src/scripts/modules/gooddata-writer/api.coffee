@@ -16,7 +16,7 @@ module.exports =
 
   getWriter: (configurationId) ->
     createRequest('GET', "writers")
-    .query writerId: configurationId
+    .query config: configurationId
     .promise()
     .then((response) ->
       response.body.writer
@@ -24,14 +24,14 @@ module.exports =
 
   getWriterModel: (configurationId) ->
     createRequest('GET', 'model')
-    .query writerId: configurationId
+    .query config: configurationId
     .promise()
     .then (response) ->
       response.body
 
   getWriterTables: (configurationId) ->
     createRequest('GET', "tables")
-    .query writerId: configurationId
+    .query config: configurationId
     .promise()
     .then((response) ->
       response.body.tables
@@ -39,7 +39,7 @@ module.exports =
 
   getTableDetail: (configurationId, tableId) ->
     createRequest('GET', 'tables')
-    .query writerId: configurationId
+    .query config: configurationId
     .query tableId: tableId
     .promise()
     .then (response) ->
@@ -47,7 +47,7 @@ module.exports =
 
   getReferenceableTables: (configurationId) ->
     createRequest('GET', 'tables')
-    .query writerId: configurationId
+    .query config: configurationId
     .query connection: true
     .promise()
     .then (response) ->
@@ -55,11 +55,11 @@ module.exports =
 
   updateTable: (configurationId, tableId, data) ->
     data = Immutable.fromJS(data)
-      .set 'writerId', configurationId
+      .set 'config', configurationId
       .set 'tableId', tableId
 
     createRequest('POST', 'tables')
-    .query writerId: configurationId
+    .query config: configurationId
     .send data.toJS()
     .promise()
     .then (response) ->
@@ -69,7 +69,7 @@ module.exports =
     createRequest('POST', 'reset-table')
     .send
       tableId: tableId
-      writerId: configurationId
+      config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -78,7 +78,7 @@ module.exports =
     createRequest('POST', 'upload-table')
     .send
       tableId: tableId
-      writerId: configurationId
+      config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -86,7 +86,7 @@ module.exports =
   uploadProject: (configurationId) ->
     createRequest('POST', 'upload-project')
     .send
-      writerId: configurationId
+      config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -94,7 +94,7 @@ module.exports =
   optimizeSLIHash: (configurationId) ->
     createRequest('POST', 'optimize-sli-hash')
     .send
-      writerId: configurationId
+      config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -102,28 +102,28 @@ module.exports =
   resetProject: (configurationId) ->
     createRequest('POST', 'reset-project')
     .send
-      writerId: configurationId
+      config: configurationId
     .promise()
     .then (response) ->
       response.body
 
   deleteWriter: (configurationId) ->
     createRequest('DELETE', 'writers')
-    .query writerId: configurationId
+    .query config: configurationId
     .promise()
     .then (response) ->
       response.body
 
   getDateDimensions: (configurationId) ->
     createRequest('GET', 'date-dimensions')
-    .query writerId: configurationId
+    .query config: configurationId
     .promise()
     .then (response) ->
       response.body.dimensions
 
   deleteDateDimension: (configurationId, name) ->
     createRequest('DELETE', 'date-dimensions')
-    .query writerId: configurationId
+    .query config: configurationId
     .query name: name
     .promise()
     .then (response) ->
@@ -131,10 +131,10 @@ module.exports =
 
   createDateDimension: (configurationId, dateDimension) ->
     data = Immutable.fromJS(dateDimension)
-    .set 'writerId', configurationId
+    .set 'config', configurationId
 
     createRequest('POST', 'date-dimensions')
-    .query writerId: configurationId
+    .query config: configurationId
     .send data.toJS()
     .promise()
     .then (response) ->

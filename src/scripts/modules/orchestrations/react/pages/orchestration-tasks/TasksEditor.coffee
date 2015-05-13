@@ -71,8 +71,6 @@ TasksEditor = React.createClass
 
     if component.get('id') == 'gooddata-writer'
       task.action = 'upload-project'
-      task.actionParameters =
-        writerId: configuration.get('id')
 
     if component.get('id') == 'transformation'
       task.actionParameters =
