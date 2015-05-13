@@ -148,7 +148,7 @@ module.exports = React.createClass
       configurationLink = span null,
         ' - '
         React.createElement ComponentConfigurationLink,
-          componentId: component.get 'id'
+          componentId: componentId
           configId: @state.configuration.get 'id'
         ,
           @state.configuration.get 'name'
