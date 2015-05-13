@@ -169,14 +169,15 @@ TransformationDetail = React.createClass
               component: 'transformation'
               method: 'run'
               mode: 'link'
-              runParams: ->
-                sandboxConfiguration
+              runParams: =>
+                @state.sandboxConfiguration
             ,
               ConfigureTransformationSandbox
                 bucketId: @state.bucketId
                 transformationId: @state.transformationId
-                onChange: (params) ->
-                  sandboxConfiguration = params
+                onChange: (params) =>
+                  @setState
+                    sandboxConfiguration: params
             )
 
           if @state.transformation.get('backend') == 'redshift' or
