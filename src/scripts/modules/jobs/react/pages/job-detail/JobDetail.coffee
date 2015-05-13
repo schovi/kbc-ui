@@ -46,7 +46,7 @@ module.exports = React.createClass
     configuration = null
     if job.hasIn ['params', 'config']
       config = job.getIn ['params', 'config']
-      configuration = InstalledComponentsStore.getConfig(job.get('component'), config)
+      configuration = InstalledComponentsStore.getConfig(getComponentId(job), config)
 
     job: job
     configuration: configuration
