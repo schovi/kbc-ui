@@ -1,5 +1,5 @@
 import React from 'react';
-import filesize from 'filesize';
+import fileSize from 'filesize';
 
 export default React.createClass({
   propTypes: {
@@ -7,7 +7,11 @@ export default React.createClass({
   },
 
   render() {
-    return this.props.size ? filesize(this.props.size) : 'N/A';
+    return (
+        <span>
+          {this.props.size ? fileSize(this.props.size) : 'N/A'}
+        </span>
+    );
   }
 
 });
