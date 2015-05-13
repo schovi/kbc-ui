@@ -3,7 +3,8 @@ import TreeNode from './TreeNode';
 
 export default React.createClass({
   propTypes: {
-    data: React.PropTypes.object.isRequired
+    data: React.PropTypes.object.isRequired,
+    onClick: React.PropTypes.func
   },
 
   render() {

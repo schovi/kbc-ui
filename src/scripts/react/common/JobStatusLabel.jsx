@@ -28,7 +28,7 @@ export default React.createClass({
 
   classes() {
     return classNames('label', CLASS_MAP[this.props.status], {
-      processing: this.props.status == 'processing'
+      processing: this.props.status === 'processing'
     });
   }
 

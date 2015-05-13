@@ -3,7 +3,7 @@ import Loader from './Loader';
 
 const LEFT = 'left', RIGHT = 'right';
 
-export default  React.createClass({
+export default React.createClass({
   propTypes: {
     isLoading: React.PropTypes.bool.isRequired,
     title: React.PropTypes.string,

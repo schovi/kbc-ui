@@ -5,7 +5,8 @@ import ApplicationStore from '../../../../stores/ApplicationStore';
 
 export default React.createClass({
     propTypes: {
-        tableId: React.PropTypes.string.isRequired
+        tableId: React.PropTypes.string.isRequired,
+        children: React.PropTypes.any
     },
 
     tableUrl() {

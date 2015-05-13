@@ -8,13 +8,14 @@ export default React.createClass({
     text: React.PropTypes.string.isRequired,
     onConfirm: React.PropTypes.func.isRequired,
     buttonLabel: React.PropTypes.string.isRequired,
-    buttonType: React.PropTypes.string
+    buttonType: React.PropTypes.string,
+    children: React.PropTypes.any
   },
 
   getDefaultProps() {
     return {
       buttonType: 'danger'
-    }
+    };
   },
 
   render() {

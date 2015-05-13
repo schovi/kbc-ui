@@ -60,13 +60,13 @@ export default React.createClass({
         return {
             stats: null,
             isLoading: false
-        }
+        };
     },
 
     render() {
         if (this.state.stats) {
             return (
-                <JobStats stats={this.state.stats} isLoading={this.state.isLoading}></JobStats>
+                <JobStats stats={this.state.stats} isLoading={this.state.isLoading} />
             );
         } else {
             return (

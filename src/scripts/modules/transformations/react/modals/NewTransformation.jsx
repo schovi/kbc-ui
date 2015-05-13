@@ -5,12 +5,31 @@ import {createTransformation} from '../../ActionCreators';
 
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
+function prepareDataForCreate(data) {
+    let newData = Map({
+        name: data.get('name'),
+        description: data.get('description')
+    });
 
+    switch (data.get('backend')) {
+        case 'mysql':
+            newData = newData.set('backend', 'mysql').set('type', 'simple');
+            break;
+        case 'redshift':
+            newData = newData.set('backend', 'redshift').set('type', 'simple');
+            break;
+        case 'r':
+            newData = newData.set('backend', 'docker').set('type', 'r');
+            break;
+    }
 
+    return newData;
+}
 
 export default React.createClass({
     propTypes: {
-        bucket: React.PropTypes.object.isRequired
+        bucket: React.PropTypes.object.isRequired,
+        onRequestHide: React.PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -48,7 +67,7 @@ export default React.createClass({
     },
 
     form() {
-        return(
+        return (
             <form className="form-horizontal">
                 <Input
                     type="text"
@@ -84,7 +103,7 @@ export default React.createClass({
       return [
           {value: 'mysql', label: 'MySQL'},
           {value: 'redshift', label: 'Redshift'},
-          {value: 'r', label: 'R'},
+          {value: 'r', label: 'R'}
       ].map((option) => {
             return (
                 <option value={option.value}>{option.label}</option>
@@ -107,34 +126,13 @@ export default React.createClass({
         this.setState({
            data: this.state.data.set('isSaving', true)
         });
-        createTransformation(this.props.bucket.get('id'), this.prepareDataForCreate(this.state.data))
+        createTransformation(this.props.bucket.get('id'), prepareDataForCreate(this.state.data))
         .then(this.props.onRequestHide)
         .catch(() => {
                 this.setState({
                     data: this.state.data.set('isSaving', false)
                 });
             });
-    },
-
-    prepareDataForCreate(data) {
-        let newData = Map({
-            name: data.get('name'),
-            description: data.get('description')
-        });
-
-        switch (data.get('backend')) {
-            case 'mysql':
-                newData = newData.set('backend', 'mysql').set('type', 'simple');
-                break;
-            case 'redshift':
-                newData = newData.set('backend', 'redshift').set('type', 'simple');
-                break;
-            case 'r':
-                newData = newData.set('backend', 'docker').set('type', 'r');
-                break;
-        }
-
-        return newData;
     }
 
 });

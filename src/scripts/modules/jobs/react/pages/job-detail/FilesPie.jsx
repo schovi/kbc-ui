@@ -18,13 +18,12 @@ export default React.createClass({
     },
 
     componentDidMount() {
-        const width = this.getDOMNode().offsetWidth;
         const svg = dimple.newSvg(this.getDOMNode(), WIDTH, WIDTH);
         svg.style('overflow', 'visible');
         const chart = new dimple.chart(svg, this.getData());
-        chart.addMeasureAxis("p", "Size");
-        const ring = chart.addSeries("Tag", dimple.plot.pie);
-        ring.innerRadius = "50%";
+        chart.addMeasureAxis('p', 'Size');
+        const ring = chart.addSeries('Tag', dimple.plot.pie);
+        ring.innerRadius = '50%';
         ring.getTooltipText = (e) => {
             return [
                 `Tag: ${e.aggField[0]}`,

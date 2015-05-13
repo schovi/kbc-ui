@@ -31,7 +31,7 @@ export default React.createClass({
 
         const tablesCount = this.props.tables.get('tables').count();
         if (tablesCount > limit) {
-            const message = tablesCount == 100 ? `More than ${tablesCount - limit} others.` : `${tablesCount - limit} others`;
+            const message = tablesCount === 100 ? `More than ${tablesCount - limit} others.` : `${tablesCount - limit} others`;
             rows.push(
               <li><span>{message}</span></li>
             );
@@ -43,11 +43,11 @@ export default React.createClass({
     render() {
         const rows = this.rows();
         if (rows.length) {
-            return(
+            return (
                 <ul>{this.rows()}</ul>
             );
         } else {
-            return(
+            return (
               <div className="text-muted">No tables.</div>
             );
         }

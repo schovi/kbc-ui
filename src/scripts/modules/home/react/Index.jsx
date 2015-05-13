@@ -1,5 +1,4 @@
 import React from 'react';
-import JobStatusLabel from '../../../react/common/JobStatusLabel';
 import ApplicationStore from '../../../stores/ApplicationStore';
 import TokensStore from '../../components/stores/StorageTokensStore';
 import filesize from 'filesize';
@@ -11,15 +10,15 @@ export default React.createClass({
         const currentProject = ApplicationStore.getCurrentProject();
         const tokens = TokensStore.getAll();
         return {
-            "data": {
-                "sizeBytes": currentProject.get('dataSizeBytes'),
-                "rowsCount": currentProject.get('rowsCount')
+            data: {
+                sizeBytes: currentProject.get('dataSizeBytes'),
+                rowsCount: currentProject.get('rowsCount')
             },
-            "tokens": {
-                "adminCount": tokens.filter((token) => token.has('admin')).count(),
-                "totalCount": tokens.count()
+            tokens: {
+                adminCount: tokens.filter((token) => token.has('admin')).count(),
+                totalCount: tokens.count()
             }
-        }
+        };
     },
 
     render() {

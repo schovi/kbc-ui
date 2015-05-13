@@ -22,7 +22,7 @@ export default React.createClass({
   },
 
   shouldShowType() {
-    return this.props.component.get('type') == 'extractor' || this.props.component.get('type') == 'writer';
+    return this.props.component.get('type') === 'extractor' || this.props.component.get('type') === 'writer';
   }
 
 });

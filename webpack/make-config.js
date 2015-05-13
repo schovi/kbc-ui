@@ -26,9 +26,9 @@ module.exports = function (options) {
                 allChunks: true
             }),
             new webpack.optimize.UglifyJsPlugin({
-              compress: {
-                warnings: false
-              }
+                compress: {
+                    warnings: false
+                }
             }),
             new webpack.optimize.DedupePlugin(),
             new CompressionPlugin({
@@ -48,7 +48,7 @@ module.exports = function (options) {
             './src/styles/kbc.less',
             './src/scripts/app'
         ];
-    }  else {
+    } else {
         entry = ['./src/scripts/app'];
     }
 
@@ -68,11 +68,19 @@ module.exports = function (options) {
         coffeelint: {
             configFile: 'coffeelint.json'
         },
+        eslint: {
+            configFile: '.eslintrc'
+        },
         module: {
-          preLoaders: [
+            preLoaders: [
                 {
                     test: /\.coffee$/,
                     loader: "coffee-lint-loader",
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.jsx?$/,
+                    loader: "eslint-loader",
                     exclude: /node_modules/
                 }
             ],
@@ -89,7 +97,7 @@ module.exports = function (options) {
                 },
                 {
                     test: /\.less$/,
-                    loader: isDevelopment ? "style-loader!css-loader!less-loader" :  ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
+                    loader: isDevelopment ? "style-loader!css-loader!less-loader" : ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
                 },
                 {
                     loader: 'file-loader',

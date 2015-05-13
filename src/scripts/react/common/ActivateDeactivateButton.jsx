@@ -12,7 +12,7 @@ export default React.createClass({
     isActive: React.PropTypes.bool.isRequired,
     isPending: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
-    mode: React.PropTypes.oneOf [MODE_BUTTON, MODE_LINK]
+    mode: React.PropTypes.oneOf([MODE_BUTTON, MODE_LINK])
   },
 
   getDefaultProps() {
@@ -32,7 +32,7 @@ export default React.createClass({
     } else {
       return (
         <OverlayTrigger placement="top" overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
-          {this.props.mode == MODE_BUTTON ? this.renderButton() : this.renderLink()}
+          {this.props.mode === MODE_BUTTON ? this.renderButton() : this.renderLink()}
         </OverlayTrigger>
       );
     }
