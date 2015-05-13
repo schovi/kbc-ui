@@ -1,13 +1,12 @@
 React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
-ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Button = React.createFactory(require('react-bootstrap').Button)
+ConfirmButtons = React.createFactory(require '../../../../react/common/ConfirmButtons')
 
 TransformationActionCreators = require '../../ActionCreators'
 
 {div, p, strong, form, input, label, textarea} = React.DOM
 
-NewTransformationBucket = React.createClass
+module.exports = React.createClass
   displayName: 'NewTransformationBucket'
 
   componentDidMount: ->
@@ -15,7 +14,6 @@ NewTransformationBucket = React.createClass
 
   getInitialState: ->
     isLoading: false
-    isValid: false
     name: ''
     description: ''
 
@@ -42,11 +40,12 @@ NewTransformationBucket = React.createClass
                 onChange: @_setDescription
                 ref: 'description',
       div className: 'modal-footer',
-        ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
-            'Cancel'
-          Button bsStyle: 'primary', onClick: @_handleCreate, disabled: @state.isLoading || !@state.isValid,
-            'Create'
+        ConfirmButtons
+          isSaving: @state.isLoading
+          isDisabled: !@_isValid()
+          saveLabel: 'Create'
+          onCancel: @props.onRequestHide
+          onSave: @_handleCreate
 
   _handleCreate: ->
     @setState
@@ -61,20 +60,11 @@ NewTransformationBucket = React.createClass
     name = e.target.value.trim()
     @setState
       name: name
-    @_validate()
 
   _setDescription: (e) ->
     description = e.target.value.trim()
     @setState
       description: description
-    @_validate()
-      
-  _validate: ->
-    if @state.description.length > 0 && @state.name.length > 0
-      @setState
-        isValid: true
-    else
-      @setState
-        isValid: false
 
-module.exports = NewTransformationBucket
+  _isValid: ->
+    @state.name.length > 0
