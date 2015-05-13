@@ -22,10 +22,16 @@ module.exports =
     limit = JobsStore.getLimit()
     query = JobsStore.getQuery()
     dispatcher.handleViewAction type: constants.ActionTypes.JOBS_LOAD
-    jobsApi.getJobsParametrized(query, limit, offset).then (jobs) ->
+    jobsApi
+    .getJobsParametrized(query, limit, offset)
+    .then (jobs) ->
       if preserveCurrentOffset
         offset = JobsStore.getOffset()
       actions.recieveJobs(jobs, offset, resetJobs)
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.JOBS_LOAD_ERROR
+      throw e
 
   filterJobs: (query) ->
     RoutesStore.getRouter().transitionTo 'jobs', null,

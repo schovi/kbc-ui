@@ -178,7 +178,11 @@ Dispatcher.register (payload) ->
   switch action.type
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_START
-      _store = _store.set 'isPending', true
+      # set pending only if path was changed - will not show pending indicator when only query is change
+      # like search in jobs
+      currentState = RoutesStore.getRouterState()
+      if !(currentState && currentState.get('pathname') == action.routerState.pathname)
+        _store = _store.set 'isPending', true
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
       _store = _store.withMutations (store) ->

@@ -81,6 +81,10 @@ Dispatcher.register (payload) ->
       _store = _store.set 'isLoading', true
       JobsStore.emitChange()
 
+    when Constants.ActionTypes.JOBS_LOAD_ERROR
+      _store = _store.delete 'isLoading'
+      JobsStore.emitChange()
+
     #LOAD MORE JOBS FROM API and merge with current jobs
     when Constants.ActionTypes.JOBS_LOAD_SUCCESS
       limit = _store.get 'limit'
