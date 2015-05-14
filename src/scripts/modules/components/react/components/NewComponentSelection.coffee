@@ -65,7 +65,10 @@ module.exports = React.createClass
     .map(@_renderComponentsRow, @)
     .toArray()
 
-  _renderComponentsRow: (components) ->
-    div className: 'row kbc-extractors-select', components.map((component) ->
+  _renderComponentsRow: (components, idx) ->
+    div
+      className: 'row kbc-extractors-select'
+      key: idx
+    , components.map((component) ->
       React.createElement ComponentBox, component: component, key: component.get('id')
     ).toArray()

@@ -4,7 +4,7 @@ createComponentsIndex = require './react/pages/ComponentsIndex'
 createNewComponentPage = require './react/pages/NewComponent'
 createNewComponentButton = require './react/components/NewComponentButton'
 
-NewComponentFormPage = React.createFactory(require './react/pages/new-component-form/NewComponentForm')
+NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 IntalledComponentsStore = require './stores/InstalledComponentsStore'

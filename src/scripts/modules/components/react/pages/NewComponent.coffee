@@ -11,8 +11,7 @@ NewComponentSelection = require '../components/NewComponentSelection'
 
 
 module.exports = (type) ->
-
-  NewComponent = React.createClass
+  React.createClass
     displayName: 'NewComponent'
     mixins: [createStoreMixin(ComponentsStore)]
 

@@ -23,7 +23,7 @@ TEXTS =
     writer: 'Get started with your first writer!'
 
 
-createComponentsIndex = (type) ->
+module.exports = (type) ->
 
   React.createClass
     displayName: 'InstalledComponents'
@@ -77,6 +77,3 @@ createComponentsIndex = (type) ->
             if config.get 'description'
               small null, config.get('description')
         ).toArray()
-
-
-module.exports = createComponentsIndex
