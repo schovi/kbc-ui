@@ -24,10 +24,10 @@ module.exports = React.createClass
           onConfirm: @props.onTerminate
         ,
           button
-            className: 'btn btn-default'
+            className: 'btn btn-link'
             disabled: @props.isTerminating
           ,
             span className: 'fa fa-fw fa-times'
-            'Terminate'
+            'Terminate Job'
     else
       null
