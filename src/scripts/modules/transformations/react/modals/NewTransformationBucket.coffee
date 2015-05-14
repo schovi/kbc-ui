@@ -62,7 +62,7 @@ module.exports = React.createClass
       name: name
 
   _setDescription: (e) ->
-    description = e.target.value.trim()
+    description = e.target.value
     @setState
       description: description
 
