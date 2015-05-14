@@ -8,17 +8,11 @@ OrchestrationActionCreators = require '../../ActionCreators'
 
 {div, p, strong} = React.DOM
 
-RunOrchestration = React.createClass
+module.exports = React.createClass
   displayName: 'RunOrchestration'
   propTypes:
     orchestration: React.PropTypes.object.isRequired
-    notify: React.PropTypes.bool
-
-  getDefaultProps: ->
-    notify: false
-
-  getInitialState: ->
-    isLoading: false
+    onRequestRun: React.PropTypes.func.isRequired
 
   render: ->
     Modal title: "Run orchestration #{@props.orchestration.get('name')}", onRequestHide: @props.onRequestHide,
@@ -29,22 +23,11 @@ RunOrchestration = React.createClass
            ' manually and the notifications will be sent only to you.'
       div className: 'modal-footer',
         React.createElement ConfirmButtons,
-          isSaving: @state.isLoading
           isDisabled: false
           saveLabel: 'Run'
           onCancel: @props.onRequestHide
           onSave: @_handleRun
 
   _handleRun: ->
-
-    @setState
-      isLoading: true
-
-    OrchestrationActionCreators
-    .runOrchestration(@props.orchestration.get('id'), @props.notify)
-    .then(@props.onRequestHide)
-
-
-
-
-module.exports = RunOrchestration
+    @props.onRequestHide()
+    @props.onRequestRun()
