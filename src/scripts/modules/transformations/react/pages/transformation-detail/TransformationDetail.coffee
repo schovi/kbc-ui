@@ -18,6 +18,7 @@ ConfigureTransformationSandbox = React.createFactory(require '../../components/C
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
+
 {div, span, ul, li, a, em} = React.DOM
 
 TransformationDetail = React.createClass
@@ -64,6 +65,10 @@ TransformationDetail = React.createClass
 
   _handleEditChange: (data) ->
     TransformationsActionCreators.updateTransformationEdit(@state.bucketId, @state.transformationId, data)
+
+  _handleActiveChange: (newValue) ->
+    TransformationsActionCreators.changeTransformationProperty(@state.bucketId,
+      @state.transformationId, 'disabled', !newValue)
 
   _showDetails: ->
     @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or
@@ -159,9 +164,9 @@ TransformationDetail = React.createClass
               mode: 'link'
               activateTooltip: 'Enable Transformation'
               deactivateTooltip: 'Disable Transformation'
-              isActive: !parseInt(@state.transformation.get('disabled'))
-              isPending: @state.pendingActions.get('save')
-              onChange: ->
+              isActive: !@state.transformation.get('disabled')
+              isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
+              onChange: @_handleActiveChange
           li {},
             RunComponentButton(
               icon: 'fa-wrench'

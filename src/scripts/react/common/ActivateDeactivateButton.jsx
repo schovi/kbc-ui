@@ -23,6 +23,18 @@ export default React.createClass({
   },
 
   render() {
+    if (this.props.mode === MODE_BUTTON) {
+      return this.renderButton();
+    } else {
+      return this.renderLink();
+    }
+  },
+
+  tooltip() {
+    return this.props.isActive ? this.props.deactivateTooltip : this.props.activateTooltip;
+  },
+
+  renderButton() {
     if (this.props.isPending) {
       return (
         <span className="btn btn-link">
@@ -32,28 +44,18 @@ export default React.createClass({
     } else {
       return (
         <OverlayTrigger placement="top" overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
-          {this.props.mode === MODE_BUTTON ? this.renderButton() : this.renderLink()}
+          <button className="btn btn-link" onClick={this.handleClick}>
+            {this.renderIcon()}
+          </button>
         </OverlayTrigger>
       );
     }
   },
 
-  tooltip() {
-    return this.props.isActive ? this.props.deactivateTooltip : this.props.activateTooltip;
-  },
-
-  renderButton() {
-    return (
-      <button className="btn btn-link" onClick={this.handleClick}>
-        {this.renderIcon()}
-      </button>
-    );
-  },
-
   renderLink() {
     return (
       <a onClick={this.handleClick}>
-        {this.renderIcon()} {this.tooltip()}
+        {this.props.isPending ? <Loader className="fa-fw"/> : this.renderIcon()} {this.tooltip()}
       </a>
     );
   },
