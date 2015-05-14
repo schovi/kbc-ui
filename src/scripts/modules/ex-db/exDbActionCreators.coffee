@@ -27,7 +27,6 @@ module.exports =
 
 
   changeQueryEnabledState: (configurationId, queryId, newValue) ->
-    console.log 'change enabled', configurationId, queryId, newValue
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_QUERY_CHANGE_ENABLED_START
       configurationId: configurationId

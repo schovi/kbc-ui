@@ -60,6 +60,13 @@ transformationsApi =
     .then (response) ->
       response.body
 
+  updateTransformationProperty: (bucketId, transformationId, propertyName, propertyValue) ->
+    createRequest 'PUT', "configs/#{bucketId}/items/#{transformationId}/#{propertyName}"
+    .send propertyValue
+    .promise()
+    .then (response) ->
+      response.body
+
   getGraph: (configuration) ->
     path = "graph?table=#{configuration.tableId}"
     path = path + "&direction=#{configuration.direction}"

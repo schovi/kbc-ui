@@ -328,3 +328,30 @@ module.exports =
       transformationId: transformationId
       bucketId: bucketId
     )
+
+  changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
+    console.log 'change', propertyName, newValue
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
+      bucketId: bucketId
+      transformationId: transformationId
+      propertyName: propertyName
+
+    transformationsApi
+    .updateTransformationProperty(bucketId, transformationId, propertyName, newValue)
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_SUCCESS
+        bucketId: bucketId
+        transformationId: transformationId
+        propertyName: propertyName
+        newValue: newValue
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_ERROR
+        bucketId: bucketId
+        transformationId: transformationId
+        propertyName: propertyName
+        error: e
+      throw e
+

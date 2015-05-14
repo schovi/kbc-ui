@@ -5,6 +5,8 @@ InstalledComponentsActionCreators = require '../../../../components/InstalledCom
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
+ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+
 TransformationsActionCreators = require '../../../ActionCreators'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
@@ -29,6 +31,13 @@ TransformationRow = React.createClass(
         text: "Do you really want to delete transformation #{@props.transformation.get('name')}?"
         onConfirm: @_deleteTransformation
     )
+
+    buttons.push ActivateDeactivateButton
+      activateTooltip: 'Enable Transformation'
+      deactivateTooltip: 'Disable Transformation'
+      isActive: !@props.transformation.get('disabled')
+      isPending: @props.pendingActions.has 'change-disabled'
+      onChange: @_handleActiveChange
 
     buttons.push(RunComponentButton(
       title: "Run #{@props.transformation.get('name')}"
@@ -73,6 +82,10 @@ TransformationRow = React.createClass(
     setTimeout ->
       TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
 
+  _handleActiveChange: (newValue) ->
+    transformationId = @props.transformation.get('id')
+    bucketId = @props.bucket.get('id')
+    TransformationsActionCreators.changeTransformationProperty(bucketId, transformationId, 'disabled', !newValue)
 )
 
 module.exports = TransformationRow
