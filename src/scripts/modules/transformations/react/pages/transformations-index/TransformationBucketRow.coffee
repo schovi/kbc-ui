@@ -20,17 +20,6 @@ TransformationBucketRow = React.createClass(
     buttons = []
     props = @props
 
-    buttons.push(RunComponentButton(
-      title: "Run #{@props.bucket.get('name')}"
-      component: 'transformation'
-      mode: 'button'
-      runParams: ->
-        configBucketId: props.bucket.get('id')
-      key: 'run'
-    ,
-      "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
-    ))
-
     buttons.push(DeleteButton
       tooltip: 'Delete Transformation Bucket'
       isPending: @props.pendingActions.get 'delete'
@@ -41,6 +30,17 @@ TransformationBucketRow = React.createClass(
       isEnabled: @props.bucket.get('transformationsCount') == 0
       key: 'delete-new'
     )
+
+    buttons.push(RunComponentButton(
+      title: "Run #{@props.bucket.get('name')}"
+      component: 'transformation'
+      mode: 'button'
+      runParams: ->
+        configBucketId: props.bucket.get('id')
+      key: 'run'
+    ,
+      "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
+    ))
 
     buttons
 

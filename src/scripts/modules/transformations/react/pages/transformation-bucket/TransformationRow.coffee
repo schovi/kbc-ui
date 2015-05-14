@@ -21,6 +21,15 @@ TransformationRow = React.createClass(
     buttons = []
     props = @props
 
+    buttons.push(DeleteButton
+      tooltip: 'Delete Transformation'
+      isPending: @props.pendingActions.get 'delete'
+      confirm:
+        title: 'Delete Transformation'
+        text: "Do you really want to delete transformation #{@props.transformation.get('name')}?"
+        onConfirm: @_deleteTransformation
+    )
+
     buttons.push(RunComponentButton(
       title: "Run #{@props.transformation.get('name')}"
       component: 'transformation'
@@ -32,14 +41,7 @@ TransformationRow = React.createClass(
       "You are about to run transformation #{@props.transformation.get('name')}."
     ))
 
-    buttons.push(DeleteButton
-      tooltip: 'Delete Transformation'
-      isPending: @props.pendingActions.get 'delete'
-      confirm:
-        title: 'Delete Transformation'
-        text: "Do you really want to delete transformation #{@props.transformation.get('name')}?"
-        onConfirm: @_deleteTransformation
-    )
+
     buttons
 
   render: ->

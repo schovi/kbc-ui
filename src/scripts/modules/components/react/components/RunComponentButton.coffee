@@ -103,6 +103,6 @@ module.exports = React.createClass
 
   _renderIcon: ->
     if @state.isLoading
-      Loader {}
+      Loader className: 'fa-fw'
     else
       i className: "fa fa-fw #{@props.icon}"
