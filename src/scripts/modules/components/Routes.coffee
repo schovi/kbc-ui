@@ -56,7 +56,7 @@ routes =
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
     defaultRouteHandler: createComponentsIndex('writer')
-    headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer')
+    headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer', 'writer')
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
       name: 'new-writer'
