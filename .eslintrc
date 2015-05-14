@@ -3,6 +3,9 @@
   "plugins": [
     "react"
   ],
+  "globals": {
+    "console": true
+  },
   "ecmaFeatures": {
     "jsx": true
   },
@@ -11,6 +14,7 @@
     "strict": [0],
     "eol-last": [0],
     "new-cap": [0],
+    "no-console": 0,
     "indent": [2, 2],
     "react/display-name": 0,
     "react/jsx-boolean-value": 1,

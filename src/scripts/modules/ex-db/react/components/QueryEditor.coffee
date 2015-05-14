@@ -19,9 +19,8 @@ module.exports = React.createClass
   getDefaultProps: ->
     showOutputTable: false
 
-  _handleOutputTableChange: (event) ->
-    console.log 'change', newValue
-    @props.onChange(@props.query.set 'outputTable', event.target.value)
+  _handleOutputTableChange: (newValue) ->
+    @props.onChange(@props.query.set 'outputTable', newValue)
 
   _handlePrimaryKeyChange: (event) ->
     @props.onChange(@props.query.set 'primaryKey', event.target.value)

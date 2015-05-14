@@ -1,4 +1,5 @@
 
+console.time('load')
 
 React = require 'react'
 Router = require 'react-router'
@@ -25,6 +26,7 @@ initializeData = require './initializeData'
     - rootNode - mount element
     - locationMode - hash or pushState location
 ###
+console.timeEnd('load')
 startApp = (appOptions) ->
 
   initializeData(appOptions.data)

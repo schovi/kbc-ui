@@ -58,8 +58,8 @@ module.exports = React.createClass
               React.createElement Typeahead,
                 value: @state.outputBucket
                 className: 'error' if @state.error
-                onChange: (event) =>
-                  @_validate event.target.value
+                onChange: (newValue) =>
+                  @_validate newValue
                   @setState
                     outputBucket: event.target.value
                 options: @state.buckets.toArray()
