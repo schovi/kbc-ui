@@ -1,4 +1,3 @@
-
 installedComponentsApi = require '../InstalledComponentsApi'
 syrupApi = require '../SyrupComponentApi'
 constants = require '../Constants'
@@ -7,7 +6,7 @@ ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
 Promise = require 'bluebird'
 
-COMPONENTS_WITHOUT_API = ['tde-exporter']
+COMPONENTS_WITHOUT_API = ['tde-exporter', 'geneea-topic-detection']
 
 createConfigByApi = (componentId, configuration) ->
   syrupApi
