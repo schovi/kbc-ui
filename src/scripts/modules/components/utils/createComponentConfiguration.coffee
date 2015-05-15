@@ -59,7 +59,7 @@ module.exports = (componentId, configuration) ->
 
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
-  else if component.get('uri') && COMPONENTS_WITHOUT_API.indexOf(component.get('id')) < 0
+  else if component.get('uri') and (component.get('id') not in COMPONENTS_WITHOUT_API)
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigManually(configuration)
