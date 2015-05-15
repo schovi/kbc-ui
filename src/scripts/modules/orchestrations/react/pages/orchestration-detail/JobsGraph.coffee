@@ -14,8 +14,6 @@ JobsGraph = React.createClass
     svg = dimple.newSvg(@getDOMNode(), width, 0.3 * width)
 
     data = @_prepareData()
-    console.log('data', data.toJS())
-
 
     chart = new dimple.chart(svg, data.get('jobs').toJS())
     chart.addTimeAxis("x", "date", null, "%b %d")
@@ -52,10 +50,9 @@ JobsGraph = React.createClass
       Map
         status: job.get('status')
         duration: (new Date(job.get('endTime')).getTime() - new Date(job.get('startTime')).getTime()) / 1000
-        date: job.get('createdTime')
+        date: parseInt(moment(job.get('createdTime')).format('x'))
 
     maxDuration = jobs.maxBy((job) -> job.get('duration')).get 'duration'
-    console.log('max', maxDuration)
     if maxDuration < 60
       scale = 1
       unit = 'Seconds'
