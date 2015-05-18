@@ -45,6 +45,12 @@ module.exports = React.createClass
       ,
         'Manage Applications'
 
+      links.push React.createElement MenuItem,
+        key: 'syrupJobsMonitoring'
+        href: @props.urlTemplates.get 'syrupJobsMonitoring'
+      ,
+        'Syrup Jobs Monitoring'
+
     if @props.maintainers.count()
       links.push React.createElement MenuItem,
         header: true
