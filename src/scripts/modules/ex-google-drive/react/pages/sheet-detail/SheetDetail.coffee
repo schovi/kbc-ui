@@ -39,7 +39,7 @@ module.exports = React.createClass
           @_createInput 'Document GoogleId', 'googleId', 'static'
           @_createInput 'Sheet Id', 'sheetId', 'static'
           @_createConfigInput(
-            'SAPI Table'
+            'Output Table'
             =>
               @_parsedConfig()?.db?.table #readFn
             (event, config) -> #setFn

@@ -38,7 +38,7 @@ module.exports = React.createClass
         div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
         div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
-          i className: 'fa fa-fw fa-long-arrow-right'
+          i className: 'kbc-icon-arrow-right'
         div className: 'td', @props.config.get('outputBucket') + '.' + queryName
         div className: 'td text-right',
           if @_isQueryDeleting(queryName)
@@ -82,7 +82,7 @@ module.exports = React.createClass
             strong null, 'Profile'
           span className: 'th',""# -> arrow
           span className: 'th',
-            strong null, 'SAPI Table'
+            strong null, 'Output Table'
           span className: 'th' #actions buttons
       div className: 'tbody',
          children

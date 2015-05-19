@@ -30,7 +30,7 @@ module.exports = React.createClass
         div className: 'td', row.get 'title'
         div className: 'td', row.get 'sheetTitle'
         div className: 'td',
-          i className: 'fa fa-fw fa-long-arrow-right'
+          i className: 'kbc-icon-arrow-right'
         div className: 'td', @_rawConfig(row)?.db?.table or "n/a"
         div className: 'td text-right',
           if @_isSheetDeleting(row.get('fileId'), row.get('sheetId'))
@@ -60,7 +60,7 @@ module.exports = React.createClass
             strong null, 'Sheet Title'
           span className: 'th',""# -> arrow
           span className: 'th',
-            strong null, 'SAPI Table'
+            strong null, 'Output Table'
           span className: 'th' #actions buttons
       div className: 'tbody',
         childs
