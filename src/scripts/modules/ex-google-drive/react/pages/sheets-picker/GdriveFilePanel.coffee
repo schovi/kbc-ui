@@ -65,7 +65,8 @@ module.exports = React.createClass
       active: @_isSelected(file.get('id'), sheet.get 'id')
       disabled: @_isConfigured(file.get('id'), sheet.get 'id')
       onClick: =>
-        @_sheetOnClick(file, sheet)
+        if not @_isConfigured(file.get('id'), sheet.get 'id')
+          @_sheetOnClick(file, sheet)
       ,
         sheet.get 'title'
 
