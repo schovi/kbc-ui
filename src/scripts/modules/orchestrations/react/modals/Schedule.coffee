@@ -31,7 +31,7 @@ module.exports = React.createClass
       div className: 'modal-footer',
         div null,
           div className: 'col-sm-6',
-            Button
+            React.createElement Button,
               className: 'pull-left'
               bsStyle: 'danger'
               onClick: @_handleRemoveSchedule
