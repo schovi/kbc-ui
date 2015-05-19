@@ -31,6 +31,9 @@ module.exports = React.createClass
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
     latestJobs: LatestJobsStore.getJobs 'ex-google-drive', config
 
+  isAuthorized: ->
+    @state.configuration.has 'email'
+
   render: ->
     #console.log @state.configuration.toJS()
     div {className: 'container-fluid'},
@@ -48,6 +51,8 @@ module.exports = React.createClass
         div className: 'col-sm-4 kbc-buttons',
           Link
             to: 'ex-google-drive-select-sheets'
+            disabled: not @isAuthorized()
+
             params:
               config: @state.configuration.get 'id'
             className: 'btn btn-success'
@@ -60,7 +65,18 @@ module.exports = React.createClass
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
       else
-        "no queries yet"
+        div className: 'well',
+          div null, 'no sheets yet'
+        ,
+          Link
+            className: 'btn btn-primary'
+            to: 'ex-google-drive-authorize'
+            params:
+              config: @state.configuration.get 'id'
+          ,
+            i className: 'fa fa-fw fa-user'
+            ' Authorize and Select Sheets'
+
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -87,6 +103,13 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-drive'
             configId: @state.configuration.get 'id'
+      span null,
+        'Authorized for: '
+        strong null,
+        if @isAuthorized()
+          @state.configuration.get 'email'
+        else
+          'not authorized'
 
       React.createElement ComponentMetadata,
         componentId: 'ex-google-drive'
