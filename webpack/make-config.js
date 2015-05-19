@@ -42,14 +42,17 @@ module.exports = function (options) {
 
     var entry = [];
     if (isDevelopment) {
-        entry = [
-            'webpack-dev-server/client?http://localhost:3000',
+        entry = {
+          bundle: ['webpack-dev-server/client?http://localhost:3000',
             'webpack/hot/only-dev-server',
             './src/styles/kbc.less',
             './src/scripts/app'
-        ];
+          ]};
     } else {
-        entry = ['./src/scripts/app'];
+        entry = {
+          bundle: ['./src/scripts/app'],
+          parts: ['./src/scripts/parts']
+        };
     }
 
 
@@ -58,7 +61,7 @@ module.exports = function (options) {
         entry: entry,
         output: {
             path: isDevelopment ? './dist' : './dist/' + process.env.KBC_REVISION,
-            filename: isDevelopment ? 'bundle.js' : 'bundle.min.js',
+            filename: isDevelopment ? '[name].js' : '[name].min.js',
             publicPath: isDevelopment ? '/scripts/' : ''
         },
         plugins: plugins,
