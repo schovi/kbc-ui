@@ -45,6 +45,11 @@ module.exports = React.createClass
           'Run ID'
         div className: 'col-md-9',
           @props.event.get('runId')
+      div className: 'row',
+        div className: 'col-md-3',
+          'Creator'
+        div className: 'col-md-9',
+          @props.event.getIn(['token', 'name'])
       @_attachments()
       @_treeSection('Parameters', 'params')
       @_treeSection('Results', 'results')
