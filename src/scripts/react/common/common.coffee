@@ -13,7 +13,6 @@ module.exports =
   Tree: require './Tree'
   CodeEditor: require './CodeEditor'
   Tooltip: require './Tooltip'
-  Protected: require './Protected'
   ActivateDeactivateButton: require './ActivateDeactivateButton'
   FileSize: require './FileSize'
   GraphCanvas: require './GraphCanvas'
