@@ -2,6 +2,7 @@ React = require 'react'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGdriveStore = require '../../../exGdriveStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
@@ -27,9 +28,12 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
+    currentUser = ApplicationStore.getSapiToken().get('description')
+    console.log "current user", currentUser
     configuration: ExGdriveStore.getConfig(config)
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
     latestJobs: LatestJobsStore.getJobs 'ex-google-drive', config
+
 
   isAuthorized: ->
     @state.configuration.has 'email'

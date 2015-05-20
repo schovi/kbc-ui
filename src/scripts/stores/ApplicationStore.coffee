@@ -1,4 +1,3 @@
-
 Dispatcher = require('../Dispatcher')
 Immutable = require('immutable')
 {Map, List} = Immutable
@@ -12,6 +11,9 @@ _store = Map(
 )
 
 ApplicationStore =
+
+  getSapiToken: ->
+    _store.getIn [ 'sapiToken']
 
   getSapiTokenString: ->
     _store.getIn [ 'sapiToken', 'token' ]
