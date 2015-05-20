@@ -31,12 +31,19 @@ module.exports = React.createClass
     currentUser = ApplicationStore.getSapiToken().get('description')
     console.log "current user", currentUser
     configuration: ExGdriveStore.getConfig(config)
+    currentUser: currentUser
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
     latestJobs: LatestJobsStore.getJobs 'ex-google-drive', config
 
 
   isAuthorized: ->
     @state.configuration.has 'email'
+
+  isCurrentAuthorized: ->
+    email = @state.configuration.get 'email'
+    emailsArray = [@state.currentUser, email]
+    isNull = null in emailsArray or undefined in emailsArray
+    @state.currentUser == email and not isNull
 
   render: ->
     #console.log @state.configuration.toJS()
@@ -52,17 +59,17 @@ module.exports = React.createClass
           ComponentDescription
             componentId: 'ex-google-drive'
             configId: @state.configuration.get('id')
-        div className: 'col-sm-4 kbc-buttons',
-          Link
-            to: 'ex-google-drive-select-sheets'
-            disabled: not @isAuthorized()
-
-            params:
-              config: @state.configuration.get 'id'
-            className: 'btn btn-success'
-          ,
-            span className: 'kbc-icon-plus'
-            ' Select Sheets'
+        if @isCurrentAuthorized()
+          div className: 'col-sm-4 kbc-buttons',
+            Link
+              to: 'ex-google-drive-select-sheets'
+              disabled: not @isAuthorized()
+              params:
+                config: @state.configuration.get 'id'
+              className: 'btn btn-success'
+            ,
+              span className: 'kbc-icon-plus'
+              ' Select Sheets'
       if items.count()
         ItemsTable
           items: items
@@ -85,14 +92,15 @@ module.exports = React.createClass
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       ul className: 'nav nav-stacked',
-        li null,
-          Link
-            to: 'ex-google-drive-authorize'
-            params:
-              config: @state.configuration.get 'id'
-          ,
-            i className: 'fa fa-fw fa-user'
-            ' Authorize'
+        if @isCurrentAuthorized()
+          li null,
+            Link
+              to: 'ex-google-drive-authorize'
+              params:
+                config: @state.configuration.get 'id'
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Authorize'
         li null,
           RunButtonModal
             title: 'Run Extraction'
