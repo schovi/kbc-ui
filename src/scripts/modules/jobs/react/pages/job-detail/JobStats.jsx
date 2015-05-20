@@ -1,6 +1,6 @@
 import React from 'react';
 import {addons} from 'react/addons';
-import Loader from '../../../../../react/common/Loader';
+import {Loader} from 'kbc-react-components';
 import {Map} from 'immutable';
 
 import {filesize} from '../../../../../utils/utils';

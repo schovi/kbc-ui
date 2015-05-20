@@ -7,7 +7,7 @@
 
 React = require 'react'
 
-Loader = require './Loader'
+{Loader} = require 'kbc-react-components'
 Button = require('react-bootstrap').Button
 
 module.exports = React.createClass

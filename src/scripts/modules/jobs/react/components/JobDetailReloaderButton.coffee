@@ -1,7 +1,7 @@
 React = require('react')
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 JobsStore = require('../../stores/JobsStore')
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
 JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel')

@@ -4,7 +4,7 @@ ExGdriveStore = require '../../exGdriveStore'
 RoutesStore = require '../../../../stores/RoutesStore'
 ExGdriveActionCreators = require '../../exGdriveActionCreators'
 
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
 

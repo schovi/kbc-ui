@@ -2,7 +2,7 @@ React = require 'react'
 pureRenderMixin = require('../../../../../react/mixins/ImmutableRendererMixin')
 
 {tr, td} = React.DOM
-Check = require '../../../../../react/common/Check'
+{Check} = require 'kbc-react-components'
 
 DeleteButton = require '../../../../../react/common/DeleteButton'
 

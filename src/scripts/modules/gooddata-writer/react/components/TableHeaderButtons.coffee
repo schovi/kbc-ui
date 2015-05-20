@@ -3,7 +3,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
 RoutesStore = require '../../../../stores/RoutesStore'
-Loader = require '../../../../react/common/Loader'
+Loader = require('kbc-react-components').Loader
 
 {ButtonGroup, Button, DropdownButton, MenuItem, Tooltip} = require 'react-bootstrap'
 

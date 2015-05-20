@@ -10,7 +10,7 @@ RedshiftCredentials = React.createFactory(require('../../../provisioning/react/c
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-Loader = React.createFactory(require '../../../../react/common/Loader')
+{Loader} = require('kbc-react-components')
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 

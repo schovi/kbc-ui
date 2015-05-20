@@ -5,7 +5,7 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Loader = React.createFactory(require('../../../../react/common/Loader'))
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {a, i, div, button} = React.DOM
 

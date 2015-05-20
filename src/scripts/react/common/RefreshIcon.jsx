@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from './Loader';
+import {Loader} from 'kbc-react-components';
 
 const LEFT = 'left', RIGHT = 'right';
 

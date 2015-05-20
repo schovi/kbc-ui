@@ -5,7 +5,7 @@ TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
 FileSize = React.createFactory(require '../../../../../react/common/FileSize')
-Check = React.createFactory(require '../../../../../react/common/Check')
+Check = React.createFactory(require('kbc-react-components').Check)
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
 

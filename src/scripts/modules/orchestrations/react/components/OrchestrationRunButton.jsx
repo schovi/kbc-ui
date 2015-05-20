@@ -2,7 +2,7 @@ import React from 'react';
 import {Tooltip, OverlayTrigger, ModalTrigger} from 'react-bootstrap';
 import RunOrchestrationModal from '../modals/RunOrchestration';
 import {runOrchestration} from '../../ActionCreators';
-import Loader from '../../../../react/common/Loader';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
   propTypes: {

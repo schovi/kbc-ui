@@ -5,7 +5,7 @@ ExGanalStore = require '../../exGanalStore'
 RoutesStore = require '../../../../stores/RoutesStore'
 ExGanalActionCreators = require '../../exGanalActionCreators'
 
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
 

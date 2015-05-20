@@ -8,7 +8,7 @@ Button = React.createFactory(require('react-bootstrap').Button)
 TasksEditTable = React.createFactory(require './TasksEditTable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal')
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {div, button, span} = React.DOM
 

@@ -4,7 +4,7 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
-Loader = React.createFactory(require '../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {div, span, i, textarea} = React.DOM
 

@@ -9,7 +9,7 @@ ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
 
 {div, span} = React.DOM
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 module.exports = React.createClass
   displayName: 'GdriveFilePanel'

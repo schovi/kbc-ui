@@ -1,5 +1,5 @@
 React = require 'react'
-Loader = React.createFactory(require '../common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {div, span} = React.DOM
 

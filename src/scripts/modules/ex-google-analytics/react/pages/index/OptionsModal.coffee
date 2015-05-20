@@ -6,7 +6,7 @@ ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
 
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'

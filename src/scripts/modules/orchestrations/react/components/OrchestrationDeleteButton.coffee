@@ -6,7 +6,7 @@ Router = require 'react-router'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require '../../../../react/common/Confirm')
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span, i} = React.DOM
 

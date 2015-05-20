@@ -3,7 +3,7 @@ Immutable = require 'immutable'
 
 api = require '../../../TransformationsApi.coffee'
 
-Loader = require '../../../../../react/common/Loader'
+{Loader} = require 'kbc-react-components'
 Graph = React.createFactory (require './Graph')
 TransformationsStore  = require('../../../stores/TransformationsStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'

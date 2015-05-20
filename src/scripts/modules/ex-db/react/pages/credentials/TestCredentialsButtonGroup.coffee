@@ -1,7 +1,7 @@
 React = require 'react'
 Button = React.createFactory(require('react-bootstrap').Button)
 
-Loader = React.createFactory(require('../../../../../react/common/common').Loader)
+Loader = React.createFactory(require('kbc-react-components').Loader)
 ExDbActionCreators = require '../../../exDbActionCreators'
 Link = React.createFactory(require('react-router').Link)
 

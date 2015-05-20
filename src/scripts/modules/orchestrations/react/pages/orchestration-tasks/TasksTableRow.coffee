@@ -4,7 +4,7 @@ common = require '../../../../../react/common/common'
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(common.Tree)
-Check = React.createFactory(common.Check)
+Check = React.createFactory(require('kbc-react-components').Check)
 
 {tr, td, span} = React.DOM
 

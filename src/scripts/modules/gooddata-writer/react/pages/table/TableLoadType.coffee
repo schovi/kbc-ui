@@ -6,7 +6,7 @@ actionCreators = require '../../../actionCreators'
 {Modal, ModalTrigger, Input, Button, ButtonToolbar} = require 'react-bootstrap'
 
 {div} = React.DOM
-Loader = require '../../../../../react/common/Loader'
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 
 FIELD = 'incrementalLoad'

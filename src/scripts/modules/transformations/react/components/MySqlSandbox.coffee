@@ -11,7 +11,7 @@ ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySqlSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-Loader = React.createFactory(require '../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 

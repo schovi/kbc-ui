@@ -1,7 +1,7 @@
 React = require 'react'
 
 Confirm = require './Confirm'
-Loader = require './Loader'
+{Loader} = require 'kbc-react-components'
 
 {button, span} = React.DOM
 

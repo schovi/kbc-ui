@@ -11,7 +11,7 @@ TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 {div, span, form } = React.DOM
 
 module.exports = React.createClass

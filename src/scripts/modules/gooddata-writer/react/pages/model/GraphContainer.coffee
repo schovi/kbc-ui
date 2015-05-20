@@ -3,7 +3,7 @@ Immutable = require 'immutable'
 
 api = require '../../../api'
 
-Loader = require '../../../../../react/common/Loader'
+{Loader} = require 'kbc-react-components'
 Graph = require './Graph'
 
 PureRenderMixin = require('react/addons').addons.PureRenderMixin

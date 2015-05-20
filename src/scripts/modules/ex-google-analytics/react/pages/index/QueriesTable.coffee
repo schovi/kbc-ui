@@ -1,6 +1,6 @@
 React = require('react')
 Link = React.createFactory(require('react-router').Link)
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 DeleteQueryButton = React.createFactory require('../../components/DeleteQueryButton')
 {i, span, div, a, strong} = React.DOM

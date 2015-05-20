@@ -3,7 +3,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 
 Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 
 {i, span, div, a, strong} = React.DOM

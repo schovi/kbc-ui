@@ -3,7 +3,7 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
-Check = React.createFactory(require('../../../../../react/common/Check'))
+Check = React.createFactory(require('kbc-react-components').Check)
 NewDimensionForm = React.createFactory(require './../../components/NewDimensionForm')
 
 

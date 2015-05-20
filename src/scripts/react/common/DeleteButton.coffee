@@ -5,7 +5,7 @@
 React = require 'react'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
-Loader = React.createFactory(require './Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require './Confirm')
 

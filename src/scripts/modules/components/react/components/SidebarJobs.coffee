@@ -1,7 +1,7 @@
 React = require 'react'
 
 JobRow = require './SidebarJobsRow'
-Loader = require '../../../../react/common/Loader'
+{Loader} = require 'kbc-react-components'
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 ###

@@ -66,8 +66,10 @@ module.exports = function (options) {
         },
         plugins: plugins,
         resolve: {
-            extensions: ['', '.js', '.jsx', '.coffee']
+            extensions: ['', '.js', '.jsx', '.coffee'],
+            fallback: path.join(__dirname, '../node_modules')
         },
+        resolveLoader: { fallback: path.join(__dirname, '../node_modules') },
         coffeelint: {
             configFile: 'coffeelint.json'
         },
@@ -84,12 +86,14 @@ module.exports = function (options) {
                 {
                     test: /\.jsx?$/,
                     loader: "eslint-loader",
+                    include:  path.resolve(__dirname, "../src/scripts"),
                     exclude: /node_modules/
                 }
             ],
             loaders: [
                 {
                     exclude: /node_modules/,
+                    include:  path.resolve(__dirname, "../src/scripts"),
                     test: /\.jsx?$/,
                     loaders: isDevelopment ? ['react-hot', 'babel'] : ['babel']
                 },

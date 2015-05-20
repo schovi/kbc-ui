@@ -5,7 +5,7 @@ InstalledComponentsActionCreators = require '../../InstalledComponentsActionCrea
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
 Confirm = require '../../../../react/common/Confirm'
-Loader = require '../../../../react/common/Loader'
+{Loader} = require 'kbc-react-components'
 
 module.exports = React.createClass
   displayName: 'DeleteConfigurationButton'

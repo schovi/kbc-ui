@@ -13,7 +13,7 @@ TabbedArea = React.createFactory(require('react-bootstrap').TabbedArea)
 TabPane = React.createFactory(require('react-bootstrap').TabPane)
 SearchRow = React.createFactory(require('../../../../../react/common/SearchRow'))
 Button = React.createFactory(require('react-bootstrap').Button)
-Loader = React.createFactory(require '../../../../../react/common/Loader')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 {div, span} = React.DOM
 
 module.exports = React.createClass
