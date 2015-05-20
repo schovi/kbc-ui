@@ -10,7 +10,6 @@ module.exports =
   JobStatusCircle: require './JobStatusCircle'
   JobStatusLabel: require './JobStatusLabel'
   SearchRow: require './SearchRow'
-  Tree: require './Tree'
   CodeEditor: require './CodeEditor'
   Tooltip: require './Tooltip'
   ActivateDeactivateButton: require './ActivateDeactivateButton'

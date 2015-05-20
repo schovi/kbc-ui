@@ -5,7 +5,7 @@ PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
 
 sapiEventsUtils = require '../utils'
-Tree = React.createFactory(require('../../../react/common/common').Tree)
+Tree = React.createFactory(require('kbc-react-components').Tree)
 {div, span, a, h2, h3, p, ul, li} = React.DOM
 
 

@@ -16,9 +16,8 @@ getComponentId = require '../../../getJobComponentId'
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
 date = require '../../../../../utils/date'
-Tree = require '../../../../../react/common/Tree'
+{Tree} = require 'kbc-react-components'
 {strong,div, h2, span, h4, section, p} = React.DOM
-
 
 accordionHeader = (text, isActive) ->
   span null,

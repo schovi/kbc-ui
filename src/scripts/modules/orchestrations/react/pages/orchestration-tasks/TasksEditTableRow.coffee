@@ -10,7 +10,7 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
-Tree = React.createFactory(common.Tree)
+Tree = React.createFactory(require('kbc-react-components').Tree)
 Check = React.createFactory(common.Check)
 
 {tr, td, span, div, i, input} = React.DOM
