@@ -1,23 +1,19 @@
 import React from 'react';
 import ApplicationStore from '../../../stores/ApplicationStore';
-import TokensStore from '../../components/stores/StorageTokensStore';
 import filesize from 'filesize';
 import string from 'underscore.string';
 
 export default React.createClass({
 
   getInitialState() {
-    const currentProject = ApplicationStore.getCurrentProject();
-    const tokens = TokensStore.getAll();
+    const currentProject = ApplicationStore.getCurrentProject(),
+      tokenStats = ApplicationStore.getTokenStats();
     return {
       data: {
         sizeBytes: currentProject.get('dataSizeBytes'),
         rowsCount: currentProject.get('rowsCount')
       },
-      tokens: {
-        adminCount: tokens.filter((token) => token.has('admin')).count(),
-        totalCount: tokens.count()
-      }
+      tokens: tokenStats
     };
   },
 
@@ -82,9 +78,9 @@ export default React.createClass({
               <div className="panel-body text-center">
                 <h2>Access</h2>
 
-                <h3>{this.state.tokens.adminCount} Admins</h3>
+                <h3>{this.state.tokens.get('adminCount')} Admins</h3>
 
-                <h3>{this.state.tokens.totalCount - this.state.tokens.adminCount} API Tokens</h3>
+                <h3>{this.state.tokens.get('totalCount') - this.state.tokens.get('adminCount')} API Tokens</h3>
               </div>
             </div>
           </div>

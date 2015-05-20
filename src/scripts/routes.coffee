@@ -22,8 +22,6 @@ routes =
   defaultRouteHandler: Home
   defaultRouteName: 'home'
   notFoundRouteHandler: ErrorPage
-  requireData: ->
-    StorageActionCreators.loadTokens()
   childRoutes: [
       orchestrationsRoutes
     ,

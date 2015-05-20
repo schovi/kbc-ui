@@ -37,6 +37,7 @@ startApp = (appOptions) ->
     organizations: appOptions.data.organizations
     maintainers: appOptions.data.maintainers
     kbc: appOptions.data.kbc
+    tokenStats: appOptions.data.tokenStats
   )
 
   RouterActionCreators.routesConfigurationReceive(routes)
