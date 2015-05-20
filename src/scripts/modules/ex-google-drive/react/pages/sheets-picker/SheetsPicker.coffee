@@ -119,7 +119,7 @@ module.exports = React.createClass
 
   _getPath: (fileId) ->
     file = @state.files.getIn [fileId]
-    if file && @_isFileOwner(file)
+    if @_isFileOwner(file)
       return 'My Drive'
     else
       return 'Shared With Me'
