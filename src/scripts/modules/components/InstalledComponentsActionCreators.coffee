@@ -19,27 +19,11 @@ deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 
 module.exports =
 
-  loadComponentsForce: ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
-    )
 
-    installedComponentsApi
-    .getComponents()
-    .then((components) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS
-        components: components
-      )
-    )
-    .catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_ERROR
-        status: error.status
-        response: error.response
-      )
-      throw error
-    )
+  loadComponentsForce: ->
+    dispatcher.handleAsyncAction constants.ActionTypes.INSTALLED_COMPONENTS_LOAD,
+      installedComponentsApi
+      .getComponents()
 
   loadComponents: ->
     return Promise.resolve() if InstalledComponentsStore.getIsLoaded()
@@ -47,8 +31,8 @@ module.exports =
 
   receiveAllComponents: (componentsRaw) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS
-      components: componentsRaw
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
+      data: componentsRaw
     )
 
   startConfigurationEdit: (componentId, configurationId, field) ->

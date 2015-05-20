@@ -11,6 +11,10 @@ module.exports =
 
 
   loadConfigurationForce: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CONFIGURATION_LOAD_START
+      configurationId: configurationId
+
     Promise.props
       id: configurationId
       queries: exDbApi.getQueries(configurationId)
@@ -18,7 +22,13 @@ module.exports =
     .then (configuration) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.EX_DB_CONFIGURATION_LOAD_SUCCESS
+        configurationId: configurationId
         configuration: configuration
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.EX_DB_CONFIGURATION_LOAD_ERROR
+        configurationId: configurationId
+        error: e
 
 
   loadConfiguration: (configurationId) ->

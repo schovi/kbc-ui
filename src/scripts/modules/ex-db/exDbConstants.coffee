@@ -3,7 +3,10 @@ keyMirror = require('react/lib/keyMirror')
 module.exports =
 
   ActionTypes: keyMirror(
+
+    EX_DB_CONFIGURATION_LOAD_START: null
     EX_DB_CONFIGURATION_LOAD_SUCCESS: null
+    EX_DB_CONFIGURATION_LOAD_ERROR: null
 
     EX_DB_QUERY_EDIT_START: null
     EX_DB_QUERY_EDIT_CANCEL: null

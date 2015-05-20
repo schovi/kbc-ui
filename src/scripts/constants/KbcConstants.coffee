@@ -21,3 +21,8 @@ module.exports =
     ROUTER_ROUTES_CONFIGURATION_RECEIVE: null
     ROUTER_ROUTER_CREATED: null
   )
+
+  ActionPhases: keyMirror
+    START: null,
+    SUCCESS: null,
+    ERROR: null

@@ -62,13 +62,6 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
-    when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
-      _store = _store.set 'isLoading', true
-      InstalledComponentsStore.emitChange()
-
-    when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_ERROR
-      _store = _store.set 'isLoading', false
-      InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_START
       _store = _store.withMutations (store) ->
@@ -77,7 +70,6 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_UPDATE
-      console.log 'update', action.field, action.value
       _store = _store.setIn ['editingConfigurations', action.componentId, action.configurationId, action.field],
         action.value
       InstalledComponentsStore.emitChange()
@@ -107,7 +99,6 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
 
-
     when constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_START
       _store = _store.setIn ['savingConfigurations', action.componentId, action.configurationId, action.field], true
       InstalledComponentsStore.emitChange()
@@ -125,14 +116,14 @@ Dispatcher.register (payload) ->
           .deleteIn ['editingConfigurations', action.componentId, action.configurationId, action.field]
       InstalledComponentsStore.emitChange()
 
-    when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD_SUCCESS
+    when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
           .set('isLoaded', true)
           .set('components',
             ## convert to by key structure
-            Immutable.fromJS(action.components)
+            Immutable.fromJS(action.data)
             .toMap()
             .map((component) ->
               component.set 'configurations', component.get('configurations').toMap().mapKeys((key, config) ->

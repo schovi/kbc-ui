@@ -2,15 +2,16 @@ React = require 'react'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
-InstalledComponetsStore = require '../../stores/InstalledComponentsStore'
+{ActionTypes} = require '../../Constants'
+PendingActionsStore = require '../../../../stores/PendingActionsStore'
 RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 
 module.exports = React.createClass
   displayName: 'ComponentsReloaderButton'
-  mixins: [createStoreMixin(InstalledComponetsStore)]
+  mixins: [createStoreMixin(PendingActionsStore)]
 
   getStateFromStores: ->
-    isLoading: InstalledComponetsStore.getIsLoading()
+    isLoading: PendingActionsStore.isPending(ActionTypes.INSTALLED_COMPONENTS_LOAD)
 
   _handleRefreshClick: ->
     InstalledComponentsActionCreators.loadComponentsForce()
