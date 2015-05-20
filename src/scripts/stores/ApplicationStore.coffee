@@ -27,6 +27,9 @@ ApplicationStore =
   getMaintainers: ->
     _store.get 'maintainers'
 
+  getTokenStats: ->
+    _store.get 'tokenStats'
+
   getCurrentProjectId: ->
     _store.getIn ['sapiToken', 'owner', 'id']
 
@@ -70,5 +73,6 @@ Dispatcher.register (payload) ->
           .set 'kbc', Immutable.fromJS(action.applicationData.kbc)
           .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
           .set 'maintainers', Immutable.fromJS(action.applicationData.maintainers)
+          .set 'tokenStats', Immutable.fromJS(action.applicationData.tokenStats)
 
 module.exports = ApplicationStore
