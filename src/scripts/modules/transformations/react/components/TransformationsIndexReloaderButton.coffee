@@ -4,7 +4,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
 TransformationActionCreators = require '../../ActionCreators'
 TransformationBucketsStore = require '../../stores/TransformationBucketsStore'
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 
 TransformationsIndexReloaderButton = React.createClass
   displayName: 'TransformationsIndexReloaderButton'

@@ -5,8 +5,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 OrchestrationsActionCreators = require '../../ActionCreators'
 OrchestrationsStore = require '../../stores/OrchestrationsStore'
 RoutesStore = require '../../../../stores/RoutesStore'
-
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 
 
 

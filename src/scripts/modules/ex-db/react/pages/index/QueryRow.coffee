@@ -2,7 +2,7 @@ React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
-Check = React.createFactory(require('../../../../../react/common/common').Check)
+Check = React.createFactory(require('kbc-react-components').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')

@@ -9,7 +9,6 @@ module.exports =
   FinishedWithIcon: require './FinishedWithIcon'
   JobStatusCircle: require './JobStatusCircle'
   JobStatusLabel: require './JobStatusLabel'
-  RefreshIcon: require './RefreshIcon'
   SearchRow: require './SearchRow'
   Tree: require './Tree'
   CodeEditor: require './CodeEditor'

@@ -4,7 +4,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
 OrchestrationsActionCreators = require '../../ActionCreators'
 OrchestrationsStore = require '../../stores/OrchestrationsStore'
-RefreshIcon = React.createFactory(require '../../../../react/common/RefreshIcon')
+RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 
 OrchestrationsReloaderButton = React.createClass
   displayName: 'OrchestrationsReloaderButton'

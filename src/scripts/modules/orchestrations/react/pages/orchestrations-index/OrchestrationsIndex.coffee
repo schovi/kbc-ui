@@ -8,7 +8,7 @@ OrchestrationStore = require '../../../stores/OrchestrationsStore'
 
 OrchestrationRow = React.createFactory(require './OrchestrationRow')
 SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
-RefreshIcon = React.createFactory(require '../../../../../react/common/RefreshIcon')
+RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 

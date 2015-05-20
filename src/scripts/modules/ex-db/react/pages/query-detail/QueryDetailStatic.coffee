@@ -1,6 +1,6 @@
 React = require 'react'
 CodeEditor  = React.createFactory(require('../../../../../react/common/common').CodeEditor)
-Check = React.createFactory(require('../../../../../react/common/common').Check)
+Check = React.createFactory(require('kbc-react-components').Check)
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM
 

@@ -7,7 +7,6 @@
 
 React = require 'react'
 
-{Loader} = require 'kbc-react-components'
 ConfirmButtons = require './ConfirmButtons'
 Button = require('react-bootstrap').Button
 
