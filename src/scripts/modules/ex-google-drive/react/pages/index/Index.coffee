@@ -29,21 +29,17 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     currentUser = ApplicationStore.getSapiToken().get('description')
-    console.log "current user", currentUser
-    configuration: ExGdriveStore.getConfig(config)
+    configuration = ExGdriveStore.getConfig(config)
+    console.log configuration.get 'owner'
+
+    configuration: configuration
     currentUser: currentUser
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
     latestJobs: LatestJobsStore.getJobs 'ex-google-drive', config
+    owner: configuration.get 'owner'
+    email: configuration.get 'email'
 
 
-  isAuthorized: ->
-    @state.configuration.has 'email'
-
-  isCurrentAuthorized: ->
-    email = @state.configuration.get 'email'
-    emailsArray = [@state.currentUser, email]
-    isNull = null in emailsArray or undefined in emailsArray
-    @state.currentUser == email and not isNull
 
   render: ->
     #console.log @state.configuration.toJS()
@@ -59,7 +55,7 @@ module.exports = React.createClass
           ComponentDescription
             componentId: 'ex-google-drive'
             configId: @state.configuration.get('id')
-        if @isCurrentAuthorized()
+        if @_showSelectSheets()
           div className: 'col-sm-4 kbc-buttons',
             Link
               to: 'ex-google-drive-select-sheets'
@@ -92,7 +88,7 @@ module.exports = React.createClass
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       ul className: 'nav nav-stacked',
-        if @isCurrentAuthorized()
+        if @_showAuthorize() and @state.email
           li null,
             Link
               to: 'ex-google-drive-authorize'
@@ -101,6 +97,14 @@ module.exports = React.createClass
             ,
               i className: 'fa fa-fw fa-user'
               ' Authorize'
+        if @_isExtLinkOnly() and @state.email
+          Link
+              to: 'ex-google-drive-authorize'
+              params:
+                config: @state.configuration.get 'id'
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Resend External Link'
         li null,
           RunButtonModal
             title: 'Run Extraction'
@@ -129,3 +133,23 @@ module.exports = React.createClass
 
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+
+  _showAuthorize: ->
+    (not @state.owner) && @state.email
+
+  _isExtLinkOnly: ->
+    external = @state.configuration.get 'external'
+    external && external == '1'
+
+  _isAuthorized: ->
+    @state.configuration.has 'email'
+
+  _showSelectSheets: ->
+    authorized = @state.currentUser in [@state.owner, @state.email]
+    authorized and not ($scope.gdriveAccount.external == '1')
+
+  # _isCurrentAuthorized: ->
+  #   email = @state.configuration.get 'email'
+  #   emailsArray = [@state.currentUser, email]
+  #   isNull = null in emailsArray or undefined in emailsArray
+  #   @state.currentUser == email and not isNull
