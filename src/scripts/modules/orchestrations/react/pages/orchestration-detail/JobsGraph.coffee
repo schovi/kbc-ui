@@ -1,8 +1,9 @@
 React = require 'react'
 moment = require 'moment'
+date = require '../../../../../utils/date'
 {Map} = require 'immutable'
 
-dimple = require 'dimple/dist/dimple.v2.1.1.js' # TODO move this require to utils and than require utils/dimple
+dimple = require 'dimple/dist/dimple.v2.1.3.js' # TODO move this require to utils and than require utils/dimple
 
 JobsGraph = React.createClass
   displayName: 'JobsGraph'
@@ -20,6 +21,13 @@ JobsGraph = React.createClass
     yAxis = chart.addMeasureAxis("y", "duration")
     yAxis.title = "Duration (#{data.get('unit')})"
     s = chart.addSeries("status", dimple.plot.bar)
+    s.getTooltipText = (e) ->
+      console.log 'tooltip', e
+      [
+        "Created: #{date.format(e.xField[0])}"
+        "Duration:  #{e.yValueList[0]} #{data.get('unit')}",
+
+      ]
     chart.assignColor("error", "red")
     chart.assignColor("success", "#96d130")
     chart.assignColor("warn", "red")
