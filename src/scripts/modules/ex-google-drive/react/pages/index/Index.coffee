@@ -99,12 +99,12 @@ module.exports = React.createClass
               ' Authorize'
         if @_isExtLinkOnly() and @state.email
           Link
-              to: 'ex-google-drive-authorize'
-              params:
-                config: @state.configuration.get 'id'
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Resend External Link'
+            to: 'ex-google-drive-authorize'
+            params:
+              config: @state.configuration.get 'id'
+          ,
+            i className: 'fa fa-fw fa-user'
+            ' Resend External Link'
         li null,
           RunButtonModal
             title: 'Run Extraction'
