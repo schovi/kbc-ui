@@ -59,7 +59,7 @@ module.exports = React.createClass
           div className: 'col-sm-4 kbc-buttons',
             Link
               to: 'ex-google-drive-select-sheets'
-              disabled: not @isAuthorized()
+              disabled: not @_isAuthorized()
               params:
                 config: @state.configuration.get 'id'
               className: 'btn btn-success'
@@ -122,7 +122,7 @@ module.exports = React.createClass
       span null,
         'Authorized for: '
         strong null,
-        if @isAuthorized()
+        if @_isAuthorized()
           @state.configuration.get 'email'
         else
           'not authorized'
@@ -146,7 +146,7 @@ module.exports = React.createClass
 
   _showSelectSheets: ->
     authorized = @state.currentUser in [@state.owner, @state.email]
-    authorized and not ($scope.gdriveAccount.external == '1')
+    authorized and not (@state.configuration.get('external') == '1')
 
   # _isCurrentAuthorized: ->
   #   email = @state.configuration.get 'email'
