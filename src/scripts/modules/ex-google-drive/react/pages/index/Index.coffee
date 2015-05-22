@@ -72,8 +72,8 @@ module.exports = React.createClass
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
       else
-        div className: 'well',
-          div null, 'no sheets yet'
+        div className: 'well component-empty-state text-center',
+          div null, 'No sheets configured yet.'
         ,
           Link
             className: 'btn btn-primary'
@@ -82,7 +82,7 @@ module.exports = React.createClass
               config: @state.configuration.get 'id'
           ,
             i className: 'fa fa-fw fa-user'
-            ' Authorize and Select Sheets'
+            ' Authorize Google Account'
 
 
   _renderSideBar: ->
