@@ -30,8 +30,6 @@ module.exports = React.createClass
     config =  RoutesStore.getCurrentRouteParam('config')
     currentUser = ApplicationStore.getSapiToken().get('description')
     configuration = ExGdriveStore.getConfig(config)
-    console.log configuration.get 'owner'
-
     configuration: configuration
     currentUser: currentUser
     deletingSheets: ExGdriveStore.getDeletingSheets(config)

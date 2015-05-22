@@ -47,7 +47,7 @@ module.exports = React.createClass
               googleId: row.get 'googleId'
               config: configurationId
           ,
-            'You are about to run extraction.'
+            "You are about to run extraction of #{row.get('title')}-#{row.get('sheetTitle')}"
 
     , @).toArray()
 

@@ -101,7 +101,6 @@ Dispatcher.register (payload) ->
     # GOOGLE DRIVE FILES/SHEETS SELECTION
     when Constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
       configId = action.configurationId
-      console.log "data", action.data
       data = Immutable.fromJS(action.data)
       #console.log data
       _store = _store.withMutations( (store) ->
