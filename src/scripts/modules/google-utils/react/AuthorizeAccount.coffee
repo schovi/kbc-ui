@@ -21,9 +21,11 @@ module.exports = React.createClass
     generateExternalLinkFn: React.PropTypes.func.isRequired
     sendEmailFn: React.PropTypes.func.isRequired
     sendingLink: React.PropTypes.bool
+    isExtLinkOnly: React.PropTypes.bool
 
 
   getInitialState: ->
+    console.log "asda", @props.isExtLinkOnly
     configId = RoutesStore.getCurrentRouteParam('config')
     token = ApplicationStore.getSapiTokenString()
     currentUserEmail = ApplicationStore.getCurrentAdmin().get 'email'
@@ -31,22 +33,24 @@ module.exports = React.createClass
     configId: configId
     token: token
     currentUserEmail: currentUserEmail
+    defaultActiveKey: if @props.isExtLinkOnly then 'external' else 'instant'
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
-      TabbedArea defaultActiveKey: 'instant', animation: false,
-        TabPane eventKey: 'instant', tab: 'Instant Authorization',
-          form {className: 'form-horizontal', action: @_getOAuthUrl(), method: 'POST'},
-            div  className: 'row',
-              div className: 'well',
-                'Authorize Google account now.',
-              @_createHiddenInput('token', @state.token)
-              @_createHiddenInput('account', @state.configId)
-              @_createHiddenInput('referrer', @_getReferrer())
-              Button
-                className: 'btn btn-primary'
-                type: 'submit',
-                  'Authorize Google account now'
+      TabbedArea defaultActiveKey: @state.defaultActiveKey, animation: false,
+        if not @props.isExtLinkOnly
+          TabPane eventKey: 'instant', tab: 'Instant Authorization',
+            form {className: 'form-horizontal', action: @_getOAuthUrl(), method: 'POST'},
+              div  className: 'row',
+                div className: 'well',
+                  'Authorize Google account now.',
+                @_createHiddenInput('token', @state.token)
+                @_createHiddenInput('account', @state.configId)
+                @_createHiddenInput('referrer', @_getReferrer())
+                Button
+                  className: 'btn btn-primary'
+                  type: 'submit',
+                    'Authorize Google account now'
 
         TabPane eventKey: 'external', tab: 'External Authorization',
           form {className: 'form-horizontal'},

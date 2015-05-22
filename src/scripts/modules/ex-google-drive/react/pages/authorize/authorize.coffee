@@ -18,7 +18,9 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
+    config = ExGdriveStore.getConfig configId
     token = ApplicationStore.getSapiTokenString()
+    external: config.get 'external'
     gdriveComponent: ComponentsStore.getComponent('ex-google-drive')
     configId: configId
     token: token
@@ -30,6 +32,7 @@ module.exports = React.createClass
       componentName: 'ex-google-drive'
       isGeneratingExtLink: @state.isGeneratingExtLink
       extLink: @state.extLink
+      isExtLinkOnly: @_isExtLinkOnly()
       refererUrl: @_getReferrer()
       generateExternalLinkFn: =>
         ActionCreators.generateExternalLink(@state.configId)
@@ -44,3 +47,6 @@ module.exports = React.createClass
     basepath = "#{origin}#{pathname}#{search}#/extractors/ex-google-drive"
     referrer = "#{basepath}/#{@state.configId}/sheets"
     return referrer #encodeURIComponent(referrer)
+
+  _isExtLinkOnly: ->
+    @state.external and @state.external == '1'
