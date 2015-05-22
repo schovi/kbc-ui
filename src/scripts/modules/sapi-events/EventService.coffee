@@ -1,6 +1,6 @@
 Immutable = require 'immutable'
 EventEmitter = require('events').EventEmitter
-List = Immutable.List
+Map = Immutable.Map
 _ = require 'underscore'
 timer = require '../../utils/Timer'
 
@@ -15,7 +15,7 @@ class EventsService
     @reset()
 
   reset: ->
-    @_events = List()
+    @_events = Map()
     @_query = ''
     @_isLoading = false
     @_loadingOlder = false
@@ -60,7 +60,7 @@ class EventsService
     @_emitChange()
     @_listEvents(
       limit: 10
-      sinceId: @_events.first()?.get('id')
+      sinceId: @getEvents().first()?.get('id')
     )
     .then(@_prependEvents.bind(@))
     .catch @_onError.bind(@)
@@ -70,7 +70,7 @@ class EventsService
     @_emitChange()
 
     @_listEvents(
-      maxId: @_events.last().get('id')
+      maxId: @getEvents().last().get('id')
     ).then(@_appendEvents.bind(@))
     .catch @_onError.bind(@)
 
@@ -91,6 +91,8 @@ class EventsService
 
   getEvents: ->
     @_events
+    .toSeq()
+    .sortBy (event) -> event.get('id') * -1
 
   getIsLoadingOlder: ->
     @_loadingOlder
@@ -106,19 +108,27 @@ class EventsService
 
   _setEvents: (events) ->
     @_isLoading = false
-    @_events = Immutable.fromJS(events)
+    @_events = @_convertEvents(events)
     @_emitChange()
 
   _prependEvents: (events) ->
     @_isLoading = false
-    @_events = Immutable.fromJS(events).concat(@_events) if events.length
+    if events.length
+      @_events = @_events.merge(@_convertEvents(events))
     @_emitChange()
 
   _appendEvents: (events) ->
     @_loadingOlder = false
-    @_events = @_events.concat(Immutable.fromJS(events))
+    @_events = @_events.merge(@_convertEvents(events))
     @_hasMore = false if !events.length
     @_emitChange()
+
+  _convertEvents: (eventsRaw) ->
+    Immutable
+    .fromJS(eventsRaw)
+    .toMap()
+    .mapKeys (key, event) ->
+      event.get 'id'
 
   _emitChange: ->
     @_emmiter.emit(CHANGE_EVENT)
