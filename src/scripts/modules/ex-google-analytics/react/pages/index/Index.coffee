@@ -25,7 +25,8 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
-    config: ExGanalStore.getConfig(configId)
+    config = ExGanalStore.getConfig(configId)
+    config: config
     configId: configId
     since: moment().subtract(4, 'day')
     until: moment()
@@ -64,7 +65,18 @@ module.exports = React.createClass
             ExGanalStore.isDeletingQueries(@state.configId, queryName)
 
       else
-        "no queries yet"
+        div className: 'well component-empty-state text-center',
+          div null, 'No queries configured yet.'
+        ,
+          Link
+            className: 'btn btn-primary'
+            to: 'ex-google-analytics'
+            params:
+              config: @state.config.get 'id'
+          ,
+            i className: 'fa fa-fw fa-user'
+            ' Authorize Google Account'
+
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
