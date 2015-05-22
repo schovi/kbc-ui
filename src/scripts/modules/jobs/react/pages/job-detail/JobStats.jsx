@@ -42,21 +42,19 @@ export default React.createClass({
       <div className="row clearfix">
         <div className="col-md-4">
           <h4>
-            Imported Tables
-            <small>{this.props.stats.getIn(['tables', 'import', 'totalCount'])} imports total</small>
-            {this.loader()}
+            Imported Tables <small>{this.props.stats.getIn(['tables', 'import', 'totalCount'])} imports total</small>
+              {this.loader()}
           </h4>
           <TablesList tables={this.props.stats.getIn(['tables', 'import'])}/>
         </div>
         <div className="col-md-4">
-          <h4>Exported Tables
-            <small>{this.props.stats.getIn(['tables', 'export', 'totalCount'])} exports total</small>
+          <h4>Exported Tables <small>{this.props.stats.getIn(['tables', 'export', 'totalCount'])} exports total</small>
           </h4>
           <TablesList tables={this.props.stats.getIn(['tables', 'export'])}/>
         </div>
         <div className="col-md-3">
-          <h4>Data Transfer
-            <small>{this.filesCount()} files total</small>
+          <h4>
+            Data Transfer <small>{this.filesCount()} files total</small>
           </h4>
           <div className="text-center">
             <h1>{this.dataSize()}</h1>

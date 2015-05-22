@@ -48,12 +48,16 @@ export default React.createClass({
       isLoading: true
     });
     getRunIdStats(this.props.runId)
-      .then(function (stats) {
-        this.setState({
-          stats: Immutable.fromJS(stats),
-          isLoading: false
-        });
-      }.bind(this));
+      .then(this.receiveStats);
+  },
+
+  receiveStats(stats) {
+    if (this.isMounted()) {
+      this.setState({
+        stats: Immutable.fromJS(stats),
+        isLoading: false
+      });
+    }
   },
 
   getInitialState() {

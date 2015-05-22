@@ -33,7 +33,7 @@ export default React.createClass({
     if (tablesCount > limit) {
       const message = tablesCount === 100 ? `More than ${tablesCount - limit} others.` : `${tablesCount - limit} others`;
       rows.push(
-        <li><span>{message}</span></li>
+        <li key="more"><span>{message}</span></li>
       );
     }
 

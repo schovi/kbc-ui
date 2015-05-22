@@ -1,6 +1,6 @@
 React = require 'react'
 TableRow = React.createFactory(require './EventsTableRow')
-Loader = React.createFactory(require('../../../react/common/common').Loader)
+{Loader} = require('kbc-react-components')
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
 {table, thead, tbody, tr, th, td} = React.DOM
@@ -21,7 +21,7 @@ module.exports = React.createClass
           th null,
             'Event'
             ' '
-            (Loader() if @props.isLoading)
+            (React.createElement(Loader) if @props.isLoading)
       tbody null,
         @props.events.map( (event) ->
           TableRow
