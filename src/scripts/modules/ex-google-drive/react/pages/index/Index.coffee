@@ -106,15 +106,16 @@ module.exports = React.createClass
             ,
               i className: 'fa fa-fw fa-user'
               ' Resend External Link'
-        li null,
-          RunButtonModal
-            title: 'Run Extraction'
-            mode: 'link'
-            component: 'ex-google-drive'
-            runParams: =>
-              config: @state.configuration.get 'id'
-          ,
-            'You are about to run the extraction of this configuration.'
+        if @state.configuration.get('items')?.count() > 0
+          li null,
+            RunButtonModal
+              title: 'Run Extraction'
+              mode: 'link'
+              component: 'ex-google-drive'
+              runParams: =>
+                config: @state.configuration.get 'id'
+            ,
+              'You are about to run the extraction of this configuration.'
 
         li null,
           DeleteConfigurationButton
