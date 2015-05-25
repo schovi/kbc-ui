@@ -1,5 +1,6 @@
 React = require 'react'
 moment = require 'moment'
+numeral = require 'numeral'
 date = require '../../../../../utils/date'
 {Map} = require 'immutable'
 
@@ -25,8 +26,7 @@ JobsGraph = React.createClass
       console.log 'tooltip', e
       [
         "Created: #{date.format(e.xField[0])}"
-        "Duration:  #{e.yValueList[0]} #{data.get('unit')}",
-
+        "Duration:  #{numeral(e.yValueList[0]).format('0.0')} #{data.get('unit')}",
       ]
     chart.assignColor("error", "red")
     chart.assignColor("success", "#96d130")
