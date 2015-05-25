@@ -4,6 +4,7 @@ LatestJobs = require '../../../../components/react/components/SidebarJobs'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalStore = require '../../../exGanalStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore.coffee'
 QueriesTable = React.createFactory(require('./QueriesTable'))
 OptionsModal = React.createFactory(require('./OptionsModal'))
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
@@ -26,6 +27,10 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     config = ExGanalStore.getConfig(configId)
+    currentUser = ApplicationStore.getSapiToken().get('description')
+
+    currentUser: currentUser
+    owner: config.get 'owner'
     config: config
     configId: configId
     since: moment().subtract(4, 'day')
@@ -77,26 +82,49 @@ module.exports = React.createClass
             i className: 'fa fa-fw fa-user'
             ' Authorize Google Account'
 
+  _showAuthorize: ->
+    (not @state.owner)
+
+  _isCurrentAuthorized: ->
+    (@state.currentUser == @state.owner or (@state.currentUser == @state.config.get 'email')) and @state.owner != null
+
+
+  _isExtLinkOnly: ->
+    @state.config.get('external') == '1'
+
+  _showSelectProfiles: ->
+    @_isCurrentAuthorized() and not @_isExtLinkOnly()
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       ul className: 'nav nav-stacked',
-        li null,
-          Link
-            to: 'ex-google-analytics-authorize'
-            params:
-              config: @state.configId
-          ,
-            i className: 'fa fa-fw fa-user'
-            'Authorize'
-        li null,
-          Link
-            to: 'ex-google-analytics-select-profiles'
-            params:
-              config: @state.configId
-          ,
-            span className: 'fa fa-fw fa-check'
-            'Select Profiles'
+        if @_showAuthorize()
+          li null,
+            Link
+              to: 'ex-google-analytics-authorize'
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              'Authorize'
+        if @_isExtLinkOnly()
+          li null,
+            Link
+              to: 'ex-google-analytics-authorize'
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              'Resend External Link'
+        if @_showSelectProfiles()
+          li null,
+            Link
+              to: 'ex-google-analytics-select-profiles'
+              params:
+                config: @state.configId
+            ,
+              span className: 'fa fa-fw fa-check'
+              'Select Profiles'
         li null,
           ModalTrigger
             modal: OptionsModal
