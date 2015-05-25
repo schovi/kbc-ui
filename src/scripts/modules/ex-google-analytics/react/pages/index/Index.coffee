@@ -70,7 +70,7 @@ module.exports = React.createClass
         ,
           Link
             className: 'btn btn-primary'
-            to: 'ex-google-analytics'
+            to: 'ex-google-analytics-select-profiles'
             params:
               config: @state.config.get 'id'
           ,
@@ -129,9 +129,19 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-analytics'
             configId: @state.configId
+      span null,
+        'Authorized for: '
+        strong null,
+        if @_isAuthorized()
+          @state.config.get 'email'
+        else
+          'not authorized'
       React.createElement ComponentMetadata,
         componentId: 'ex-google-analytics'
         configId: @state.configId
-
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+
+
+  _isAuthorized: ->
+    @state.config.has 'email'
