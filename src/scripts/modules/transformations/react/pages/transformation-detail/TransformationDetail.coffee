@@ -14,7 +14,7 @@ TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-ConfigureTransformationSandbox = React.createFactory(require '../../components/ConfigureTransformationSandbox')
+ConfigureTransformationSandboxMode = React.createFactory(require '../../components/ConfigureTransformationSandboxMode')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 
@@ -46,6 +46,9 @@ TransformationDetail = React.createClass
     isSaving: TransformationsStore.isSaving(bucketId, transformationId)
     editValue: TransformationsStore.getEditingTransformationData(bucketId, transformationId)
     transformations: TransformationsStore.getTransformations(bucketId)
+
+  getInitialState: ->
+    sandboxMode: 'prepare'
 
   _handleEditStart: ->
     TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
@@ -175,14 +178,15 @@ TransformationDetail = React.createClass
               method: 'run'
               mode: 'link'
               runParams: =>
-                @state.sandboxConfiguration
+                configBucketId: @state.bucketId
+                transformations: [@state.transformationId]
+                mode: @state.sandboxMode
             ,
-              ConfigureTransformationSandbox
-                bucketId: @state.bucketId
-                transformationId: @state.transformationId
-                onChange: (params) =>
+              ConfigureTransformationSandboxMode
+                mode: @state.sandboxMode
+                onChange: (mode) =>
                   @setState
-                    sandboxConfiguration: params
+                    sandboxMode: mode
             )
 
           if @state.transformation.get('backend') == 'redshift' or

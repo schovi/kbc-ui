@@ -20,7 +20,6 @@ GraphContainer = React.createFactory(require './GraphContainer')
 Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
-ConfigureTransformationSandbox = require '../../components/ConfigureTransformationSandbox'
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 
 require('codemirror/mode/sql/sql')
@@ -187,7 +186,6 @@ TransformationDetailStatic = React.createClass
   render: ->
     props = @props
     component = @
-    sandboxConfiguration = {}
     div {},
       div className: 'row kbc-header',
         @props.transformation.get("description") || em {}, "No description ..."

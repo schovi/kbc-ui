@@ -1,24 +1,17 @@
 React = require 'react'
-Modal = React.createFactory(require('react-bootstrap').Modal)
-ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Button = React.createFactory(require('react-bootstrap').Button)
 RadioGroup = React.createFactory(require('react-radio-group'))
-_ = require('underscore')
 
-{div, p, h4, strong, form, input, label, textarea, span} = React.DOM
+{div, p, strong, form, input, label, span} = React.DOM
 
-ConfigureTransformationSandbox = React.createClass
-  displayName: 'ConfigureTransformationSandbox'
+ConfigureTransformationSandboxMode = React.createClass
+  displayName: 'ConfigureTransformationSandboxMode'
 
   propTypes:
-    bucketId: React.PropTypes.string.isRequired
-    transformationId: React.PropTypes.string.isRequired
     onChange: React.PropTypes.func.isRequired
+    mode: React.PropTypes.string.isRequired
 
   getInitialState: ->
-    configBucketId: @props.bucketId
-    transformations: [@props.transformationId]
-    mode: 'prepare'
+    mode: @props.mode
 
   render: ->
     RadioGroup
@@ -57,6 +50,6 @@ ConfigureTransformationSandbox = React.createClass
       mode: mode
     ,
       ->
-        @props.onChange(@state)
+        @props.onChange(@state.mode)
 
-module.exports = ConfigureTransformationSandbox
+module.exports = ConfigureTransformationSandboxMode
