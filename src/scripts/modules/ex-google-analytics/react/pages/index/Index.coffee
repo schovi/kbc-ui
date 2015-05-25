@@ -82,19 +82,6 @@ module.exports = React.createClass
             i className: 'fa fa-fw fa-user'
             ' Authorize Google Account'
 
-  _showAuthorize: ->
-    (not @state.owner)
-
-  _isCurrentAuthorized: ->
-    (@state.currentUser == @state.owner or (@state.currentUser == @state.config.get 'email')) and @state.owner != null
-
-
-  _isExtLinkOnly: ->
-    @state.config.get('external') == '1'
-
-  _showSelectProfiles: ->
-    @_isCurrentAuthorized() and not @_isExtLinkOnly()
-
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       ul className: 'nav nav-stacked',
@@ -173,3 +160,16 @@ module.exports = React.createClass
 
   _isAuthorized: ->
     @state.config.has 'email'
+
+  _showAuthorize: ->
+    (not @state.owner)
+
+  _isCurrentAuthorized: ->
+    (@state.currentUser == @state.owner or (@state.currentUser == @state.config.get 'email')) and @state.owner != null
+
+
+  _isExtLinkOnly: ->
+    @state.config.get('external') == '1'
+
+  _showSelectProfiles: ->
+    @_isCurrentAuthorized() and not @_isExtLinkOnly()

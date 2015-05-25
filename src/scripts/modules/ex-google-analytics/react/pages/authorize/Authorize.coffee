@@ -16,6 +16,7 @@ module.exports = React.createClass
     isGeneratingExtLink: exGanalStore.isGeneratingExtLink(configId)
     extLink: exGanalStore.getExtLink(configId)
     isSendingEmail: exGanalStore.isSendingEmail configId
+    external: exGanalStore.getConfig(configId)?.get('external')
 
   render: ->
     AuthorizeAccount
@@ -23,6 +24,7 @@ module.exports = React.createClass
       isGeneratingExtLink: @state.isGeneratingExtLink
       extLink: @state.extLink
       refererUrl: @_getReferrer()
+      isExtLinkOnly: @_isExtLinkOnly()
       generateExternalLinkFn: =>
         ActionCreators.generateExternalLink(@state.configId)
       sendingLink: exGanalStore.isSendingEmail(@state.configId)
@@ -41,3 +43,6 @@ module.exports = React.createClass
     basepath = "#{origin}#{pathname}#{search}#/extractors/ex-google-analytics"
     referrer = "#{basepath}/#{@state.configId}/profiles"
     return referrer
+
+  _isExtLinkOnly: ->
+    @state.external and @state.external == '1'
