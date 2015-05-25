@@ -52,14 +52,15 @@ module.exports = React.createClass
             componentId: 'ex-google-analytics'
             configId: @state.configId
         div className: 'col-sm-4 kbc-buttons',
-          Link
-            to: 'ex-google-analytics-new-query'
-            params:
-              config: @state.configId
-            className: 'btn btn-success'
-          ,
-            i className: 'fa fa-fw fa-plus'
-            'Add Query'
+          if @_isAuthorized()
+            Link
+              to: 'ex-google-analytics-new-query'
+              params:
+                config: @state.configId
+              className: 'btn btn-success'
+            ,
+              i className: 'fa fa-fw fa-plus'
+              'Add Query'
       if queries.count()
         QueriesTable
           config: @state.config
@@ -73,14 +74,15 @@ module.exports = React.createClass
         div className: 'well component-empty-state text-center',
           div null, 'No queries configured yet.'
         ,
-          Link
-            className: 'btn btn-primary'
-            to: 'ex-google-analytics-select-profiles'
-            params:
-              config: @state.config.get 'id'
-          ,
-            i className: 'fa fa-fw fa-user'
-            ' Authorize Google Account'
+          if not @_isAuthorized()
+            Link
+              className: 'btn btn-primary'
+              to: 'ex-google-analytics-select-profiles'
+              params:
+                config: @state.config.get 'id'
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Authorize Google Account'
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -121,25 +123,26 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-gear'
               ' Options'
-        li null,
-          RunButtonModal
-            title: 'Run Extraction'
-            mode: 'link'
-            component: 'ex-google-analytics'
-            runParams: =>
-              config: @state.configId
-              since: @state.since.toISOString()
-              until: @state.until.toISOString()
-          ,
-            RunDatePicker
-              since: @state.since
-              until: @state.until
-              onChangeFrom: (date) =>
-                @setState
-                  since: date
-              onChangeUntil: (date) =>
-                @setState
-                  until: date
+        if @_isAuthorized() and (@state.config.get('configuration')?.count() > 0)
+          li null,
+            RunButtonModal
+              title: 'Run Extraction'
+              mode: 'link'
+              component: 'ex-google-analytics'
+              runParams: =>
+                config: @state.configId
+                since: @state.since.toISOString()
+                until: @state.until.toISOString()
+            ,
+              RunDatePicker
+                since: @state.since
+                until: @state.until
+                onChangeFrom: (date) =>
+                  @setState
+                    since: date
+                onChangeUntil: (date) =>
+                  @setState
+                    until: date
         li null,
           DeleteConfigurationButton
             componentId: 'ex-google-analytics'
@@ -147,16 +150,22 @@ module.exports = React.createClass
       span null,
         'Authorized for: '
         strong null,
-        if @_isAuthorized()
-          @state.config.get 'email'
-        else
-          'not authorized'
+        @_getAuthorizedForCaption()
       React.createElement ComponentMetadata,
         componentId: 'ex-google-analytics'
         configId: @state.configId
       React.createElement LatestJobs,
         jobs: @state.latestJobs
 
+  _getAuthorizedForCaption: ->
+    result = ''
+    if @_isAuthorized()
+      result = @state.config.get 'email'
+      if @_isExtLinkOnly()
+        result = "externally #{result}"
+    else
+      result = 'not authorized'
+    return result
 
   _isAuthorized: ->
     @state.config.has 'email'
