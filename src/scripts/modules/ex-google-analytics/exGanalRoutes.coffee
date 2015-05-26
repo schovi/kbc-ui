@@ -1,5 +1,5 @@
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
-
+StorageActionCreators = require '../components/StorageActionCreators'
 ExGanalIndex = require './react/pages/index/Index'
 ExGanalActionCreators = require './exGanalActionCreators'
 JobsActionCreators = require '../jobs/ActionCreators'
@@ -19,8 +19,10 @@ module.exports =
   isComponent: true
   defaultRouteHandler: ExGanalIndex
   requireData: [
-    (params) ->
-      ExGanalActionCreators.loadConfiguration params.config
+      (params) ->
+        ExGanalActionCreators.loadConfiguration params.config
+    , ->
+        StorageActionCreators.loadBuckets()
   ]
   poll:
     interval: 7

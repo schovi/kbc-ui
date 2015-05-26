@@ -44,6 +44,7 @@ module.exports = React.createClass
     isSavingBucket: analStore.isSavingBucket(@props.configId)
 
   render: ->
+    console.log "rendering #{@state.buckets.toArray()}"
     helpBlock = span className: 'help-block',
       p className: 'text-danger',
         @state.error
