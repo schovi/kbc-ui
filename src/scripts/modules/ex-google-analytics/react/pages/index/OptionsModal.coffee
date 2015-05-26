@@ -11,7 +11,8 @@ bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'
 actionCreators = require '../../../exGanalActionCreators'
-Typeahead = require '../../../../../react/common/Typeahead'
+Typeahead = React.createFactory require '../../../../../react/common/Typeahead'
+
 
 {span, div, p, strong, form, input, label, div} = React.DOM
 
@@ -55,13 +56,13 @@ module.exports = React.createClass
           div className: 'form-group',
             label className: 'control-label col-xs-4', 'Outbucket'
             div className: 'col-xs-8',
-              React.createElement Typeahead,
+              Typeahead
                 value: @state.outputBucket
                 className: 'error' if @state.error
                 onChange: (newValue) =>
                   @_validate newValue
                   @setState
-                    outputBucket: event.target.value
+                    outputBucket: newValue
                 options: @state.buckets.toArray()
               helpBlock if @state.error
 
