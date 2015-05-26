@@ -20,11 +20,13 @@ module.exports = React.createClass
     confirm: React.PropTypes.object # Confirm props
     isPending: React.PropTypes.bool
     isEnabled: React.PropTypes.bool
+    label: React.PropTypes.string
 
   getDefaultProps: ->
     tooltip: 'Delete'
     isPending: false
     isEnabled: true
+    label: ''
 
   render: ->
     if @props.isPending
@@ -44,3 +46,5 @@ module.exports = React.createClass
         ),
           button className: 'btn btn-link',
             i className: 'kbc-icon-cup'
+            if @props.label then ' ' + @props.label
+
