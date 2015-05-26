@@ -10,7 +10,7 @@ RedshiftCredentials = React.createFactory(require('../../../provisioning/react/c
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-{Loader} = require('kbc-react-components')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 
@@ -31,59 +31,69 @@ RedshiftSandbox = React.createClass
     buckets: StorageBucketsStore.getAll()
 
   _renderCredentials: ->
-    if @state.credentials.get "id"
-      span {},
+    span {},
+      if @state.credentials.get "id"
         RedshiftCredentials {credentials: @state.credentials}
-    else
-      if @state.pendingActions.get "create"
-        React.createElement Loader
       else
-        button {className: 'btn btn-success', onClick: @_createCredentials},
-        'Create Redshift Credentials'
+        'Credentials not found'
 
   _renderControlButtons: ->
     if @state.credentials.get "id"
       sandboxConfiguration = {}
-      span {},
-        RunComponentButton(
-          title: "Load Tables in Redshift Sandbox"
-          component: 'transformation'
-          method: 'create-sandbox'
-          mode: 'button'
-          runParams: ->
-            sandboxConfiguration
-        ,
-          ConfigureSandbox
-            backend: 'redshift'
-            tables: @state.tables
-            buckets: @state.buckets
-            onChange: (params) ->
-              sandboxConfiguration = params
-        )
-        if @state.pendingActions.get 'refresh'
-          button {className: "btn btn-link", disabled: true},
-            React.createElement Loader
-        else
-          button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshRedshiftCredentials},
-          span {className: 'fa fa-refresh'}
-        DeleteButton
-          tooltip: 'Delete Redshift Sandbox'
-          isPending: @state.pendingActions.get 'drop'
-          confirm:
-            title: 'Delete Redshift Sandbox'
-            text: 'Do you really want to delete Redshift sandbox?'
-            onConfirm: @_dropCredentials
+      div {},
+        div {},
+          RunComponentButton(
+            title: "Load Tables in Redshift Sandbox"
+            component: 'transformation'
+            method: 'create-sandbox'
+            mode: 'button'
+            label: "Load data"
+            runParams: ->
+              sandboxConfiguration
+          ,
+            ConfigureSandbox
+              backend: 'redshift'
+              tables: @state.tables
+              buckets: @state.buckets
+              onChange: (params) ->
+                sandboxConfiguration = params
+          )
+        div {},
+          if @state.pendingActions.get 'refresh'
+            button {className: "btn btn-link", disabled: true},
+              Loader()
+              " Refresh privileges"
+          else
+            button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshCredentials},
+              span {className: 'fa fa-refresh'}
+              " Refresh privileges"
+        div {},
+          DeleteButton
+            tooltip: 'Delete Redshift Sandbox'
+            isPending: @state.pendingActions.get 'drop'
+            label: 'Drop credentials'
+            confirm:
+              title: 'Delete Redshift Sandbox'
+              text: 'Do you really want to delete Redshift sandbox?'
+              onConfirm: @_dropCredentials
+    else
+      if @state.pendingActions.get "create"
+        span {},
+          Loader()
+          ' Creating credentials'
+      else
+        button {className: 'btn btn-link', onClick: @_createCredentials},
+          i className: 'fa fa-fw fa-plus'
+          ' Create credentials'
 
   render: ->
-    div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-      div {className: 'tr'},
-        div {className: 'td'},
-          div {className: 'row'},
-            h4 {}, 'Redshift'
-            div {className: 'pull-right'},
-              @_renderControlButtons()
-        div {className: 'td'},
-          @_renderCredentials()
+    div {className: 'row'},
+      h4 {}, 'Redshift'
+      div {className: 'col-md-9'},
+        @_renderCredentials()
+      div {className: 'col-md-3'},
+        @_renderControlButtons()
+
 
   _createCredentials: ->
     CredentialsActionCreators.createRedshiftSandboxCredentials()
@@ -91,7 +101,7 @@ RedshiftSandbox = React.createClass
   _dropCredentials: ->
     CredentialsActionCreators.dropRedshiftSandboxCredentials()
 
-  _refreshRedshiftCredentials: ->
+  _refreshCredentials: ->
     CredentialsActionCreators.refreshRedshiftSandboxCredentials()
 
 

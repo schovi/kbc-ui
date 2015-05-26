@@ -32,59 +32,66 @@ MySqlSandbox = React.createClass
     buckets: StorageBucketsStore.getAll()
 
   _renderCredentials: ->
-    if @state.credentials.get "id"
-      span {},
+    span {},
+      if @state.credentials.get "id"
         MySqlCredentials {credentials: @state.credentials}
-    else
-      if @state.pendingActions.get "create"
-        Loader()
       else
-        button {className: 'btn btn-success', onClick: @_createCredentials},
-        'Create MySql Credentials'
+        'Credentials not found'
 
   _renderControlButtons: ->
     if @state.credentials.get "id"
       sandboxConfiguration = {}
-      span {},
-        RunComponentButton(
-          title: "Load Tables in MySQL Sandbox"
-          component: 'transformation'
-          method: 'create-sandbox'
-          mode: 'button'
-          runParams: ->
-            sandboxConfiguration
-        ,
-          ConfigureSandbox
-            backend: 'mysql'
-            tables: @state.tables
-            buckets: @state.buckets
-            onChange: (params) ->
-              sandboxConfiguration = params
-        )
-        ConnectToMySqlSandbox {credentials: @state.credentials},
-          button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-            span {className: 'fa fa-database'}
-        DeleteButton
-          tooltip: 'Delete MySQL Sandbox'
-          isPending: @state.pendingActions.get 'drop'
-          confirm:
-            title: 'Delete MySQL Sandbox'
-            text: 'Do you really want to delete MySQL sandbox?'
-            onConfirm: @_dropCredentials
+      div {},
+        div {},
+          RunComponentButton(
+            title: "Load Tables into MySQL sandbox"
+            component: 'transformation'
+            method: 'create-sandbox'
+            mode: 'button'
+            label: "Load data"
+            runParams: ->
+              sandboxConfiguration
+          ,
+            ConfigureSandbox
+              backend: 'mysql'
+              tables: @state.tables
+              buckets: @state.buckets
+              onChange: (params) ->
+                sandboxConfiguration = params
+          )
+        div {},
+          ConnectToMySqlSandbox {credentials: @state.credentials},
+            button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+              span {className: 'fa fa-database'}
+              " Connect"
+        div {},
+          DeleteButton
+            label: 'Drop credentials'
+            tooltip: 'Delete MySQL Sandbox'
+            isPending: @state.pendingActions.get 'drop'
+            confirm:
+              title: 'Delete MySQL Sandbox'
+              text: 'Do you really want to delete MySQL sandbox?'
+              onConfirm: @_dropCredentials
     else
-      false
+      if @state.pendingActions.get "create"
+        span {},
+          Loader()
+          ' Creating credentials'
+      else
+        button {className: 'btn btn-link', onClick: @_createCredentials},
+          i className: 'fa fa-fw fa-plus'
+          ' Create credentials'
+
 
   render: ->
-    console.log 'render mysql', @state
-    div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-      div {className: 'tr'},
-        div {className: 'td'},
-          div {className: 'row'},
-            h4 {}, 'MySQL'
-            div {className: 'pull-right'},
-              @_renderControlButtons()
-        div {className: 'td'},
-          @_renderCredentials()
+    div {className: 'row'},
+      h4 {}, 'MySQL'
+      div {className: 'col-md-9'},
+        @_renderCredentials()
+      div {className: 'col-md-3'},
+         @_renderControlButtons()
+
 
   _createCredentials: ->
     CredentialsActionCreators.createMySqlSandboxCredentials()
