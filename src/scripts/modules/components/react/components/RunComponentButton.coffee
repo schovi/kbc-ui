@@ -44,6 +44,7 @@ module.exports = React.createClass
     runParams: React.PropTypes.func.isRequired
     method: React.PropTypes.string.isRequired
     icon: React.PropTypes.string.isRequired
+    label: React.PropTypes.string
 
   getDefaultProps: ->
     mode: 'button'
@@ -94,6 +95,8 @@ module.exports = React.createClass
         e.preventDefault()
     ,
       @_renderIcon()
+      if @props.label
+        ' ' + @props.label
 
   _renderLink: ->
     a
