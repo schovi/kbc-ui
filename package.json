@@ -9,7 +9,7 @@
     "classnames": "~2.1.0",
     "csv-parse": "0.0.9",
     "d3": "~3.5.2",
-    "dagre-d3": "~0.2.0",
+    "dagre-d3": "~0.2.9",
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "filesize": "~2.0.4",
     "flux": "^2.0.0",
