@@ -10,7 +10,6 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    console.log('rendering options ', this.props.options);
     const input = this.refs.input.getDOMNode();
     Typeahead(this.refs.input.getDOMNode(), {
         source: this.props.options,

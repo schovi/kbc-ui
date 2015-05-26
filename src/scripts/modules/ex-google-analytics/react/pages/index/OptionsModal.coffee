@@ -12,6 +12,7 @@ storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'
 actionCreators = require '../../../exGanalActionCreators'
 Typeahead = React.createFactory require '../../../../../react/common/Typeahead'
+ReactTypeahead = React.createFactory(require('react-typeahead').Typeahead)
 
 
 {span, div, p, strong, form, input, label, div} = React.DOM
@@ -57,10 +58,10 @@ module.exports = React.createClass
           div className: 'form-group',
             label className: 'control-label col-xs-4', 'Outbucket'
             div className: 'col-xs-8',
-              Typeahead
-                value: @state.outputBucket
-                className: 'error' if @state.error
-                onChange: (newValue) =>
+              ReactTypeahead
+                defaultValue: @state.outputBucket
+                customClasses: {'input': 'form-control'}
+                onOptionSelected: (newValue) =>
                   @_validate newValue
                   @setState
                     outputBucket: newValue

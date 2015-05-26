@@ -38,6 +38,7 @@
     "superagent": "~0.21.0",
     "typeahead": "0.2.0",
     "underscore": "~1.7.0",
+    "react-typeahead": "~1.0.5",
     "underscore.string": "~3.0.3"
   },
   "devDependencies": {
