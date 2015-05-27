@@ -5,6 +5,12 @@ exGdriveApi = require './exGdriveApi'
 exGdriveStore = require './exGdriveStore'
 module.exports =
 
+  dispatchApiError: (errorPath, error) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_API_ERROR
+      errorPath: errorPath
+
+
   generateExternalLink: (configId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_START
@@ -14,6 +20,9 @@ module.exports =
         type: constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_END
         configurationId: configId
         extLink: extLink
+    .catch (err) =>
+      @dispatchApiError(['extLinksGenerating', configId], err)
+      throw err
 
   searchQueryChange: (configId, newValue) ->
     dispatcher.handleViewAction
@@ -32,6 +41,9 @@ module.exports =
         type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
         configurationId: configurationId
         data: result
+    .catch (err) =>
+      @dispatchApiError( ['savingNewSheets', configurationId], err)
+      throw err
 
   cancelSheetSelection: (configurationId) ->
     dispatcher.handleViewAction
@@ -50,6 +62,9 @@ module.exports =
         configurationId: configurationId
         data: result
         nextPageToken: nextPageToken
+    .catch (err) =>
+      @dispatchApiError( ['loadingMore', configurationId], err)
+      throw err
 
   loadConfigurationForce: (configurationId) ->
     Promise.props
@@ -89,6 +104,9 @@ module.exports =
         configurationId: configId
         data: result
         fileId: fileId
+    .catch (err) =>
+      @dispatchApiError(['loadingFiles', configId, fileId], err)
+      throw err
 
   selectSheet: (configId, file, sheet) ->
     dispatcher.handleViewAction
@@ -147,6 +165,9 @@ module.exports =
         sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_SAVE_END
         sheetConfig.result = result
         dispatcher.handleViewAction sheetConfig
+      .catch (err) =>
+        @dispatchApiError(['savingSheets', configId, fileId, sheetId], err)
+        throw err
 
   deleteSheet: (configId, fileId, sheetId) ->
     sheetConfig =
@@ -160,3 +181,6 @@ module.exports =
       exGdriveApi.deleteSheet(configId, fileId, sheetId).then (result) ->
         sheetConfig.type = constants.ActionTypes.EX_GDRIVE_SHEET_DELETE_END
         dispatcher.handleViewAction sheetConfig
+      .catch (err) =>
+        @dispatchApiError(['deletingSheets', configId, fileId, sheetId], err)
+        throw err

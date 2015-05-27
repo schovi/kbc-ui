@@ -84,6 +84,11 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GDRIVE_API_ERROR
+      pathToDelete = action.errorPath
+      _store = _store.deleteIn pathToDelete
+      GdriveStore.emitChange()
+
     # authorize generate external link actions
     when Constants.ActionTypes.EX_GDRIVE_GENERATE_EXT_LINK_START
       configId = action.configurationId
