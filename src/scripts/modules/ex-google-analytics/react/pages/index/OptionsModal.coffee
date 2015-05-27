@@ -45,7 +45,6 @@ module.exports = React.createClass
     isSavingBucket: analStore.isSavingBucket(@props.configId)
 
   render: ->
-    console.log "rendering #{@state.buckets.toArray()}"
     helpBlock = span className: 'help-block',
       p className: 'text-danger',
         @state.error
@@ -56,11 +55,12 @@ module.exports = React.createClass
       div className: 'modal-body',
         form className: 'form-horizontal',
           div className: 'form-group',
-            label className: 'control-label col-xs-4', 'Outbucket'
-            div className: 'col-xs-8',
+            label className: 'control-label col-xs-2', 'Outbucket'
+            div className: 'col-xs-10',
               ReactTypeahead
+                customClasses:
+                  input: 'form-control'
                 defaultValue: @state.outputBucket
-                customClasses: {'input': 'form-control'}
                 onOptionSelected: (newValue) =>
                   @_validate newValue
                   @setState

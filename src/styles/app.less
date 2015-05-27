@@ -1,6 +1,5 @@
 @import (inline) '~codemirror/lib/codemirror.css';
 @import (inline) '~codemirror/theme/solarized.css';
-@import (inline) '~typeahead/style.css';
 @import '~react-select/less/default';
 @import '~react-datepicker/dist/react-datepicker.css';
 
@@ -8,20 +7,49 @@
   background-color: #000;
 }
 
-.typeahead {
- z-index: 2000 !important;
+.typeahead-selector {
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-top-color: #e6e6e6;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  margin-top: -1px;
+  /*max-height: 200px;*/
+  position: absolute;
+  top: 100%;
+  /* width: 100%; */
+  list-style: none;
+  z-index: 1000;
+  margin: 0;
+  padding: 4px 0px 4px 0px;
+
 }
+
+a.typeahead-option {
+  box-sizing: border-box;
+  color: #666666;
+  cursor: pointer;
+  display: block;
+  padding: 8px 10px;
+}
+.typeahead-selector .hover {
+  background-color: #f2f9fc;
+  color: #333333;
+}
+
 
 svg.kb-graph {
   margin-top: 10px;
 }
 
 svg.kb-graph  {
-	cursor: move;
+        cursor: move;
 }
 
 .kb-graph .node {
-	cursor: pointer;
+        cursor: pointer;
 }
 
 .kb-graph .node rect {
