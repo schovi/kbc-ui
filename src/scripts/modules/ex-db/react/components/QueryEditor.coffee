@@ -1,11 +1,21 @@
 React = require 'react'
+fuzzy = require 'fuzzy'
 
 CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
-Typeahead = require '../../../../react/common/Typeahead'
 
+Autosuggest = React.createFactory(require 'react-autosuggest')
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input} = React.DOM
+
+createGetSuggestions = (getOptions) ->
+  (input, callback) ->
+    suggestions = getOptions()
+      .filter (value) -> fuzzy.match(input, value)
+      .toList()
+
+    console.log 'suggestions', suggestions.toJS()
+    callback(null, suggestions.toJS())
 
 
 module.exports = React.createClass
@@ -52,10 +62,13 @@ module.exports = React.createClass
               div className: 'row',
                 span className: 'col-md-3', 'Output table '
                 strong className: 'col-md-9',
-                  React.createElement Typeahead,
-                    value: @props.query.get 'outputTable'
-                    onChange: @_handleOutputTableChange
-                    options: @_tableSelectOptions().toArray()
+                  Autosuggest
+                    suggestions: createGetSuggestions(@_tableSelectOptions)
+                    inputAttributes:
+                      className: 'form-control'
+                      placeholder: 'Output table ...'
+                      value: @props.query.get 'outputTable'
+                      onChange: @_handleOutputTableChange
           div className: 'td',
             div className: 'row',
               span className: 'col-md-3', 'Primary key '
@@ -82,20 +95,9 @@ module.exports = React.createClass
           value: @props.query.get 'query'
           onChange: @_handleQueryChange
 
-  _filterOptions: (options, filter, currentValue) ->
-    options = @_tableSelectOptions()
-    .filter (option) ->
-      fuzzy.match filter, option.label
-    .sortBy (option) -> option.label
-    .toArray()
-
-    options.unshift
-      label: filter
-      value: filter
-
-    options
 
   _tableSelectOptions: ->
+    console.log 'select opts'
     @props.tables
     .map (table) ->
       table.get 'id'

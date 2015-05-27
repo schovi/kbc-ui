@@ -11,7 +11,6 @@ bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'
 actionCreators = require '../../../exGanalActionCreators'
-Typeahead = React.createFactory require '../../../../../react/common/Typeahead'
 ReactTypeahead = React.createFactory(require('react-typeahead').Typeahead)
 
 
