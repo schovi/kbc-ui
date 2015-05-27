@@ -77,7 +77,7 @@ module.exports = React.createClass
           if not @_isAuthorized()
             Link
               className: 'btn btn-primary'
-              to: 'ex-google-analytics-select-profiles'
+              to: 'ex-google-analytics-authorize'
               params:
                 config: @state.config.get 'id'
             ,
