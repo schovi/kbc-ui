@@ -66,6 +66,8 @@ module.exports = React.createClass
                   @setState
                     outputBucket: newValue
                 options: @state.buckets.toArray()
+                maxVisible: 10
+                placeholder: 'to get hint start typing'
               helpBlock if @state.error
 
       div className: 'modal-footer',
