@@ -105,6 +105,11 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GANAL_API_ERROR
+      pathToDelete = action.errorPath
+      _store = _store.deleteIn pathToDelete
+      GanalStore.emitChange()
+
     when Constants.ActionTypes.EX_GANAL_SEND_LINK
       configId = action.configId
       emailObject = Immutable.fromJS action.emailObject

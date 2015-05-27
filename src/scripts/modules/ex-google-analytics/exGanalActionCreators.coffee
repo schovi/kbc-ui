@@ -16,6 +16,12 @@ module.exports =
         type: Constants.ActionTypes.EX_GANAL_SEND_LINK_SUCCESS
         configId: configId
       ApplicationActionCreators.sendNotification "Email has been succesfully sent to #{emailObject.email}"
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['sendingLink', configId]
+        error: err
+      throw err
 
   deleteQuery: (configId, queryName) ->
     dispatcher.handleViewAction
@@ -29,7 +35,12 @@ module.exports =
         configId: configId
         queryName: queryName
         newQueries: result
-
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['deletingQueries', configId, queryName]
+        error: err
+      throw err
 
   saveOutputBucket: (configId, newBucket) ->
     dispatcher.handleViewAction
@@ -40,6 +51,12 @@ module.exports =
       dispatcher.handleViewAction
         type: Constants.ActionTypes.EX_GANAL_OUTBUCKET_SAVE_SUCCESS
         configId: configId
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['savingBucket', configId]
+        error: err
+      throw err
 
   saveSelectedProfiles: (configId) ->
     dispatcher.handleViewAction
@@ -57,6 +74,12 @@ module.exports =
       dispatcher.handleViewAction
         type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_SAVE_SUCCESS
         configId: configId
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['savingProfiles', configId]
+        error: err
+      throw err
 
   cancelSelectedProfiles: (configId) ->
     dispatcher.handleViewAction
@@ -88,6 +111,7 @@ module.exports =
         configId: configId
         profiles: result
 
+
   generateExternalLink: (configId) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_START
@@ -97,7 +121,12 @@ module.exports =
         type: Constants.ActionTypes.EX_GANAL_GENERATE_EXT_LINK_END
         configId: configId
         extLink: result
-
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['extLinksGenerating', configId]
+        error: err
+      throw err
   loadConfiguration: (configId) ->
     if exGanalStore.hasConfig(configId)
       return Promise.resolve()
@@ -129,6 +158,12 @@ module.exports =
         configId: configId
         name: name
         newConfig: result
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['savingConfig', configId]
+        error: err
+      throw err
 
   resetQuery: (configId, name) ->
     dispatcher.handleViewAction
@@ -164,3 +199,9 @@ module.exports =
         type: Constants.ActionTypes.EX_GANAL_NEW_QUERY_CREATE_SUCCESS
         configId: configId
         newConfig: result
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: Constants.ActionTypes.EX_GANAL_API_ERROR
+        errorPath: ['savingConfig', configId]
+        error: err
+      throw err

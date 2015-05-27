@@ -25,4 +25,5 @@ module.exports =
     EX_GANAL_DELETE_QUERY_SUCCESS: null
     EX_GANAL_SEND_LINK: null
     EX_GANAL_SEND_LINK_SUCCESS: null
+    EX_GANAL_API_ERROR: null
   )
