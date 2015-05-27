@@ -4,17 +4,25 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 Input = React.createFactory(require('react-bootstrap').Input)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
+fuzzy = require 'fuzzy'
 
-
+Autosuggest = React.createFactory(require 'react-autosuggest')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 bucketsStore = require '../../../../components/stores/StorageBucketsStore'
 storageActionCreators = require '../../../../components/StorageActionCreators'
 analStore = require '../../../exGanalStore'
 actionCreators = require '../../../exGanalActionCreators'
-ReactTypeahead = React.createFactory(require('react-typeahead').Typeahead)
+
 
 
 {span, div, p, strong, form, input, label, div} = React.DOM
+
+createGetSuggestions = (getOptions) ->
+  (input, callback) ->
+    suggestions = getOptions()
+      .filter (value) -> fuzzy.match(input, value)
+      .toList()
+    callback(null, suggestions.toJS())
 
 module.exports = React.createClass
   displayName: 'ExGanalOptionsModal'
@@ -29,6 +37,8 @@ module.exports = React.createClass
 
   componentDidMount: ->
     storageActionCreators.loadBuckets()
+
+
 
   getStateFromStores: ->
     buckets = bucketsStore.getAll()
@@ -52,21 +62,20 @@ module.exports = React.createClass
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',
-        form className: 'form-horizontal',
+        div className: 'form-horizontal',
           div className: 'form-group',
             label className: 'control-label col-xs-2', 'Outbucket'
-            div className: 'col-xs-10',
-              ReactTypeahead
-                customClasses:
-                  input: 'form-control'
-                defaultValue: @state.outputBucket
-                onOptionSelected: (newValue) =>
-                  @_validate newValue
-                  @setState
-                    outputBucket: newValue
-                options: @state.buckets.toArray()
-                maxVisible: 10
-                placeholder: 'to get hint start typing'
+            div className: "col-xs-10 form-group",
+              Autosuggest
+                suggestions: createGetSuggestions(@_getBuckets)
+                inputAttributes:
+                  className: 'form-control'
+                  placeholder: 'to get hint start typing'
+                  value: @state.outputBucket
+                  onChange: (newValue) =>
+                    @_validate newValue
+                    @setState
+                      outputBucket: newValue
               helpBlock if @state.error
 
       div className: 'modal-footer',
@@ -96,6 +105,11 @@ module.exports = React.createClass
     @setState
       error: error
 
+  _getBuckets: ->
+    buckets = bucketsStore.getAll()
+    buckets.filter( (bucket) ->
+      bucket.get('stage') != 'sys').map( (value,key) ->
+      return key)
 
   _handleConfirm: ->
     actionCreators.saveOutputBucket(@props.configId, @state.outputBucket).then  =>
