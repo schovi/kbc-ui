@@ -4,7 +4,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
 Select = React.createFactory(require('react-select'))
-Typeahead = React.createFactory(require '../../../../../react/common/Typeahead')
+ReactTypeahead = React.createFactory(require('react-typeahead').Typeahead)
 
 module.exports = React.createClass
   displayName: 'OutputMappingRowEditor'
@@ -110,11 +110,14 @@ module.exports = React.createClass
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Destination'
           React.DOM.div className: 'col-xs-10',
-            Typeahead
-              value: @props.value.get("destination", "")
-              onChange: @_handleChangeDestination
+            ReactTypeahead
+              defaultValue: @props.value.get("destination", "")
+              customClasses:
+                input: 'form-control'
+              onOptionSelected: @_handleChangeDestination
               options: @_getTables()
               placeholder: "Destination table in Storage"
+              maxVisible: 10
       React.DOM.div {className: "row col-md-12"},
         Input
           name: 'incremental'
@@ -145,11 +148,14 @@ module.exports = React.createClass
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
           React.DOM.div className: 'col-xs-4',
-            Typeahead
-              value: @props.value.get("deleteWhereColumn", "")
-              onChange: @_handleChangeDeleteWhereColumn
+            ReactTypeahead
+              defaultValue: @props.value.get("deleteWhereColumn", "")
+              customClasses:
+                input: 'form-control'
+              onOptionSelected: @_handleChangeDeleteWhereColumn
               options: @_getColumns()
               placeholder: "Select column"
+              maxVisible: 10
           React.DOM.div className: 'col-xs-2',
             Input
               type: 'select'
