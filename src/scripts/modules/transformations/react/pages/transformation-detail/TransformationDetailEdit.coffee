@@ -6,10 +6,7 @@ Immutable = require('immutable')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 CodeMirror = React.createFactory(require 'react-code-mirror')
-{Panel, Accordion, PanelGroup, Input, FormControls} = require('react-bootstrap')
-Panel  = React.createFactory Panel
-Accordion = React.createFactory Accordion
-PanelGroup = React.createFactory PanelGroup
+{Input, FormControls} = require('react-bootstrap')
 Input = React.createFactory Input
 StaticText = React.createFactory FormControls.Static
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
@@ -68,8 +65,7 @@ TransformationDetailEdit = React.createClass
               label: 'Id'
               labelClassName: 'col-xs-4'
               wrapperClassName: 'col-xs-8'
-            ,
-              @props.transformation.get 'id'
+              value: @props.transformation.get 'id'
           div className: "col-md-6",
             StaticText
               label: 'Type'

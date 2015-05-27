@@ -6,6 +6,10 @@ TableBackendLabel = React.createFactory(require '../../components/TableBackendLa
 TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
 FileSize = React.createFactory(require '../../../../../react/common/FileSize')
 Check = React.createFactory(require('kbc-react-components').Check)
+ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
+ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
+_ = require('underscore')
+
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
 
@@ -22,153 +26,154 @@ InputMappingDetail = React.createClass(
     @props.tables.getIn([@props.inputMapping.get('source'), 'bucket', 'backend']) == 'redshift'
 
   render: ->
-    div className: 'table table-striped',
-      span {className: 'tbody'},
+    ListGroupItems = [
+      ListGroupItem {key: 'dataSizeBytes'},
+        span {className: "col-md-6"},
+          'Source table size'
+        span {className: "col-md-6"},
+          FileSize
+            size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Source table size'
-          span {className: 'td'},
-            FileSize
-              size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']
+      ListGroupItem {key: 'rowsCount'},
+        span {className: "col-md-6"},
+          'Source table rows'
+        span {className: "col-md-6"},
+          if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
+            numeral(@props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']).format('0,0')
+          else
+            'N/A'
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Source table rows'
-          span {className: 'td'},
-            if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
-              numeral(@props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']).format('0,0')
+      ListGroupItem {key: 'backend'},
+        span {className: "col-md-6"},
+          'Storage type'
+        span {className: "col-md-6"},
+          @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
+
+      if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
+        ListGroupItem {key: 'optional'},
+          span {className: "col-md-6"},
+            'Optional'
+          span {className: "col-md-6"},
+            Check
+              isChecked: @props.inputMapping.get('optional')
+
+      if @props.transformationBackend == 'redshift' && @_isSourceTableInRedshift()
+        ListGroupItem {key: 'type'},
+          span {className: "col-md-6"},
+            'Type'
+          span {className: "col-md-6"},
+            @props.inputMapping.get('type')
+
+
+      if @props.transformationBackend == 'redshift' and
+      (@props.inputMapping.get('type') != 'view' || !@_isSourceTableInRedshift())
+        ListGroupItem {key: 'persistent'},
+          span {className: "col-md-6"},
+            'Persistent'
+          span {className: "col-md-6"},
+            Check
+              isChecked: @props.inputMapping.get('persistent')
+
+      ListGroupItem {},
+        span {className: "col-md-6"},
+          'Columns'
+        span {className: "col-md-6"},
+          if @props.inputMapping.get('columns').count()
+            @props.inputMapping.get('columns').join(', ')
+          else
+            'Use all columns'
+
+      ListGroupItem {key: 'whereColumn'},
+        span {className: "col-md-6"},
+          'Filters'
+        span {className: "col-md-6"},
+          if @props.inputMapping.get('whereColumn')
+            span {},
+              'Where '
+              strong {},
+                @props.inputMapping.get('whereColumn')
+              ' '
+              @props.inputMapping.get('whereOperator')
+              ' '
+              strong {},
+                @props.inputMapping.get('whereValues').join(', ')
+          if @props.inputMapping.get('days') != 0 && @props.inputMapping.get('whereColumn')
+            ' and '
+          if @props.inputMapping.get('days') != 0
+            span {},
+              if @props.inputMapping.get('whereColumn')
+                'changed in last '
+              else
+                'Changed in last '
+              @props.inputMapping.get('days')
+              ' days'
+          if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
+            'N/A'
+
+      if @props.transformationBackend == 'mysql'
+        ListGroupItem {key: 'indexes'},
+          span {className: "col-md-6"},
+            'Indexes'
+          span {className: "col-md-6"},
+            if @props.inputMapping.get('indexes').count()
+              @props.inputMapping.get('indexes').map((index, key) ->
+                span {},
+                  span {className: 'label label-default'},
+                    index.toArray().join(', ')
+                  ' '
+              , @).toArray()
             else
               'N/A'
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Storage type'
-          span {className: 'td'},
-            @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
-
-        if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Optional'
-            span {className: 'td'},
-              Check
-                isChecked: @props.inputMapping.get('optional')
-
-        if @props.transformationBackend == 'redshift' && @_isSourceTableInRedshift()
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Type'
-            span {className: 'td'},
-              @props.inputMapping.get('type')
-
-        if @props.transformationBackend == 'redshift' &&
-            (@props.inputMapping.get('type') != 'view' || !@_isSourceTableInRedshift())
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Persistent'
-            span {className: 'td'},
-              Check
-                isChecked: @props.inputMapping.get('persistent')
-
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Columns'
-          span {className: 'td'},
-            if @props.inputMapping.get('columns').count()
-              @props.inputMapping.get('columns').join(', ')
-            else
-              'Use all columns'
-
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Filters'
-          span {className: 'td'},
-            if @props.inputMapping.get('whereColumn')
-              span {},
-                'Where '
-                strong {},
-                  @props.inputMapping.get('whereColumn')
-                ' '
-                @props.inputMapping.get('whereOperator')
-                ' '
-                strong {},
-                  @props.inputMapping.get('whereValues').join(', ')
-            if @props.inputMapping.get('days') != 0 && @props.inputMapping.get('whereColumn')
-              ' and '
-            if @props.inputMapping.get('days') != 0
-              span {},
-                if @props.inputMapping.get('whereColumn')
-                  'changed in last '
-                else
-                  'Changed in last '
-                @props.inputMapping.get('days')
-                ' days'
-
-            if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
-              'N/A'
-
-        if (@props.transformationBackend == 'mysql')
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Columns'
-            span {className: 'td tags-list'},
-              if @props.inputMapping.get('indexes').count()
-                @props.inputMapping.get('indexes').map((index, key) ->
-                  span {},
-                    span {className: 'label label-default'},
-                      index.toArray().join(', ')
+      if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
+        ListGroupItem {key: 'datatypes'},
+          span {className: "col-md-6"},
+            'Data types'
+          span {className: "col-md-6"},
+            if @props.inputMapping.get('datatypes').count()
+              ul {},
+                @props.inputMapping.get('datatypes').map((definition, column) ->
+                  li {},
+                    strong {}, column
                     ' '
+                    span {}, definition
                 , @).toArray()
-              else
-                'N/A'
+            else
+              'No data types set'
 
-        if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Data types'
-            span {className: 'td'},
-              if @props.inputMapping.get('datatypes').count()
-                ul {},
-                  @props.inputMapping.get('datatypes').map((definition, column) ->
-                    li {},
-                      strong {}, column
-                      ' '
-                      span {}, definition
-                  , @).toArray()
-              else
-                'No data types set'
+      if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
+        ListGroupItem {key: 'sortKey'},
+          span {className: "col-md-6"},
+            'Sort key'
+          span {className: "col-md-6"},
+            if @props.inputMapping.get('sortKey')
+              @props.inputMapping.get('sortKey').split(',').join(', ')
+            else
+              'No sort key set'
 
-        if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Sort key'
-            span {className: 'td'},
-              if @props.inputMapping.get('sortKey')
-                @props.inputMapping.get('sortKey').split(',').join(', ')
-              else
-                'No sort key set'
+      if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
+        ListGroupItem {key: 'distKey'},
+          span {className: "col-md-6"},
+            'Dist key'
+          span {className: "col-md-6"},
+            if @props.inputMapping.get('distKey')
+              @props.inputMapping.get('distKey').split(',').join(', ')
+            else
+              'No distribution key set'
 
-        if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
-          span {className: 'tr'},
-            span {className: 'td'},
-              'Dist key'
-            span {className: 'td'},
-              if @props.inputMapping.get('distKey')
-                @props.inputMapping.get('distKey').split(',').join(', ')
-              else
-                'No distribution key set'
+      if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift())
+        ListGroupItem {key: 'copyOptions'},
+          span {className: "col-md-6"},
+            'COPY options'
+          span {className: "col-md-6"},
+            if @props.inputMapping.get('copyOptions')
+              @props.inputMapping.get('copyOptions')
+            else
+              span {className: 'muted'},
+                "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
 
-        if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift())
-          span {className: 'tr'},
-            span {className: 'td'},
-              'COPY options'
-            span {className: 'td'},
-              if @props.inputMapping.get('copyOptions')
-                @props.inputMapping.get('copyOptions')
-              else
-                span {className: 'muted'},
-                  "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
+    ]
+    ListGroup {}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
 
 module.exports = InputMappingDetail

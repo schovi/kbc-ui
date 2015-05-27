@@ -8,6 +8,10 @@ FileSize = React.createFactory(require '../../../../../react/common/FileSize')
 Check = React.createFactory(require('kbc-react-components').Check)
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
+ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
+ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
+_ = require('underscore')
+
 
 OutputMappingDetail = React.createClass(
   displayName: 'InputMappingDetail'
@@ -28,64 +32,63 @@ OutputMappingDetail = React.createClass(
       return "N/A"
 
   render: ->
-    div className: 'table table-striped',
-      span {className: 'tbody'},
+    ListGroupItems = [
+      ListGroupItem {key: 'dataSizeBytes'},
+        span {className: "col-md-6"},
+          'Destination table size'
+        span {className: "col-md-6"},
+          FileSize
+            size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Destination table size'
-          span {className: 'td'},
-            FileSize
-              size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
+      ListGroupItem {key: 'rowsCount'},
+        span {className: "col-md-6"},
+          'Destination table rows'
+        span {className: "col-md-6"},
+          if @props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']
+            numeral(@props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']).format('0,0')
+          else
+            'N/A'
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Destination table rows'
-          span {className: 'td'},
-            if @props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']
-              numeral(@props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']).format('0,0')
-            else
-              'N/A'
+      ListGroupItem {key: 'backend'},
+        span {className: "col-md-6"},
+          'Storage type'
+        span {className: "col-md-6"},
+          @_getTableBackend @props.outputMapping.get('destination')
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Storage type'
-          span {className: 'td'},
-            @_getTableBackend @props.outputMapping.get('destination')
+      ListGroupItem {key: 'primaryKey'},
+        span {className: "col-md-6"},
+          'Primary key'
+        span {className: "col-md-6"},
+          if @props.outputMapping.get('primaryKey').count()
+            @props.outputMapping.get('primaryKey').join(', ')
+          else
+            'N/A'
 
+      ListGroupItem {key: 'incremental'},
+        span {className: "col-md-6"},
+          'Incremental'
+        span {className: "col-md-6"},
+          Check
+            isChecked: @props.outputMapping.get('incremental')
 
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Primary key'
-          span {className: 'td'},
-            if @props.outputMapping.get('primaryKey').count()
-              @props.outputMapping.get('primaryKey').join(', ')
-            else
-              'N/A'
-
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Incremental'
-          span {className: 'td'},
-            Check
-              isChecked: @props.outputMapping.get('incremental')
-
-        span {className: 'tr'},
-          span {className: 'td'},
-            'Delete'
-          span {className: 'td'},
-            if @props.outputMapping.get('deleteWhereColumn')
-              span {},
-                'Where '
-                strong {},
-                  @props.outputMapping.get('deleteWhereColumn')
-                ' '
-                @props.outputMapping.get('deleteWhereOperator')
-                ' '
-                strong {},
-                  @props.outputMapping.get('deleteWhereValues').join(', ')
-            else
-              'N/A'
+      ListGroupItem {key: 'deleteWhere'},
+        span {className: "col-md-6"},
+          'Delete'
+        span {className: "col-md-6"},
+          if @props.outputMapping.get('deleteWhereColumn')
+            span {},
+              'Where '
+              strong {},
+                @props.outputMapping.get('deleteWhereColumn')
+              ' '
+              @props.outputMapping.get('deleteWhereOperator')
+              ' '
+              strong {},
+                @props.outputMapping.get('deleteWhereValues').join(', ')
+          else
+            'N/A'
+    ]
+    ListGroup {}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
 
 module.exports = OutputMappingDetail

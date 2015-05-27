@@ -76,6 +76,7 @@ TransformationDetailStatic = React.createClass
                       tables: @props.tables
               ,
                 InputMappingDetail
+                  fill: true
                   transformationBackend: @props.transformation.get('backend')
                   inputMapping: input
                   tables: @props.tables
@@ -105,6 +106,7 @@ TransformationDetailStatic = React.createClass
                         tables: @props.tables
                 ,
                   OutputMappingDetail
+                    fill: true
                     transformationBackend: @props.transformation.get('backend')
                     outputMapping: output
                     tables: @props.tables

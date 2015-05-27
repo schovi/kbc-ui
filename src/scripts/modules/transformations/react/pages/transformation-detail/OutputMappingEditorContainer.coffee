@@ -60,6 +60,7 @@ module.exports = React.createClass
                   ")"
             ,
               OutputMappingRowEditor
+                fill: true
                 value: mapping
                 tables: component.props.tables
                 onChange: (value) ->
