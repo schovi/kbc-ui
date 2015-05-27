@@ -45,7 +45,7 @@ module.exports = React.createClass
           (mapping, key) ->
             Panel
               key: key
-              collapsable: true
+              collapsible: true
               expanded: component.props.openOutputMappings.get(key, false)
               eventKey: key
               onSelect: (event, key) ->

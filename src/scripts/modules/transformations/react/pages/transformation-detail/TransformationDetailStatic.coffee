@@ -62,7 +62,7 @@ TransformationDetailStatic = React.createClass
             ).map((input, key) ->
               Panel
                 key: key
-                collapsable: true
+                collapsible: true
                 eventKey: key
                 expanded: props.openInputMappings.get(key, false)
                 header:
@@ -91,7 +91,7 @@ TransformationDetailStatic = React.createClass
               ).map((output, key) ->
                 Panel
                   key: key
-                  collapsable: true
+                  collapsible: true
                   eventKey: key
                   expanded: props.openOutputMappings.get(key, false)
                   header:
