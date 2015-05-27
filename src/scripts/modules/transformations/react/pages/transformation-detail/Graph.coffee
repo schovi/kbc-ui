@@ -87,8 +87,8 @@ module.exports = React.createClass
     @props.showDisabledHandler(showDisabled)
 
   render: ->
-    React.DOM.div null,
-      React.DOM.div null,
+    React.DOM.div {},
+      React.DOM.div {},
         React.DOM.div className: 'graph-options',
           Button
             bsStyle: 'link'
@@ -127,7 +127,7 @@ module.exports = React.createClass
                   ref: 'showDisabled'
                 'Show disabled transformations'
 
-      React.DOM.div null,
+      React.DOM.div {},
         React.DOM.div
           className: 'svg'
         React.DOM.div
