@@ -12,6 +12,7 @@ createGetSuggestions = (getOptions) ->
   (input, callback) ->
     suggestions = getOptions()
       .filter (value) -> fuzzy.match(input, value)
+      .slice 0, 10
       .toList()
 
     console.log 'suggestions', suggestions.toJS()
