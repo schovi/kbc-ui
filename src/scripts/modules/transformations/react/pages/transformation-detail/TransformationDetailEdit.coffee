@@ -6,11 +6,12 @@ Immutable = require('immutable')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 CodeMirror = React.createFactory(require 'react-code-mirror')
-{Panel, Accordion, PanelGroup, Input} = require('react-bootstrap')
+{Panel, Accordion, PanelGroup, Input, FormControls} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 Accordion = React.createFactory Accordion
 PanelGroup = React.createFactory PanelGroup
 Input = React.createFactory Input
+StaticText = React.createFactory FormControls.Static
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 Select = React.createFactory(require('react-select'))
@@ -63,21 +64,21 @@ TransformationDetailEdit = React.createClass
           h4 {}, 'General'
         div className: "row",
           div className: "col-md-6",
-            Input
-              type: 'static'
+            StaticText
               label: 'Id'
-              value: @props.transformation.get 'id'
               labelClassName: 'col-xs-4'
               wrapperClassName: 'col-xs-8'
+            ,
+              @props.transformation.get 'id'
           div className: "col-md-6",
-            Input
-              type: 'static'
+            StaticText
               label: 'Type'
-              value: TransformationTypeLabel
+              labelClassName: 'col-xs-4'
+              wrapperClassName: 'col-xs-8'
+            ,
+              TransformationTypeLabel
                 backend: @props.transformation.get 'backend'
                 type: @props.transformation.get 'type'
-              labelClassName: 'col-xs-4'
-              wrapperClassName: 'col-xs-8'
         div className: "row",
           div className: "col-md-6",
             Input
