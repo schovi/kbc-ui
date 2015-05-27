@@ -5,8 +5,7 @@ _ = require('underscore')
 InputMappingRowMySqlEditor = React.createFactory(require './InputMappingRowMySqlEditor')
 InputMappingRowDockerEditor = React.createFactory(require './InputMappingRowDockerEditor')
 InputMappingRowRedshiftEditor = React.createFactory(require './InputMappingRowRedshiftEditor')
-{Panel} = require('react-bootstrap')
-Panel  = React.createFactory Panel
+Panel  = React.createFactory require('react-bootstrap').Panel
 
 module.exports = React.createClass
   displayName: 'InputMappingEditorContainer'
@@ -51,7 +50,9 @@ module.exports = React.createClass
               collapsable: true
               expanded: component.props.openInputMappings.get(key, false)
               eventKey: key
-              onSelect: (key) -> component.props.toggleOpenInputMapping(key)
+              onSelect: (event, key) ->
+                component.props.toggleOpenInputMapping(key)
+                event.preventDefault()
               header:
                 React.DOM.div {},
                   "Input Mapping \##{key + 1} ("

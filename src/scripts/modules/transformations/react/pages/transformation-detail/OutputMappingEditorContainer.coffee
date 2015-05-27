@@ -3,8 +3,7 @@ Immutable = require 'immutable'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
 OutputMappingRowEditor = React.createFactory(require './OutputMappingRowEditor')
-{Panel} = require('react-bootstrap')
-Panel  = React.createFactory Panel
+Panel  = React.createFactory require('react-bootstrap').Panel
 
 module.exports = React.createClass
   displayName: 'OutputMappingEditorContainer'
@@ -49,7 +48,9 @@ module.exports = React.createClass
               collapsable: true
               expanded: component.props.openOutputMappings.get(key, false)
               eventKey: key
-              onSelect: (key) -> component.props.toggleOpenOutputMapping(key)
+              onSelect: (event, key) ->
+                component.props.toggleOpenOutputMapping(key)
+                event.preventDefault()
               header:
                 React.DOM.div {},
                   "Output Mapping \##{key + 1} ("
