@@ -12,6 +12,11 @@ _store = Immutable.fromJS(
     name: 'Recipes'
     description: 'Create predefined transformations or run analysis on your data'
     ui: 'kbc.docToolRecipes'
+  ,
+    id: 'geneea-topic-detection'
+    name: 'Geneea'
+    description: 'Intelligent Text Interpretation'
+    link: 'kbc-app-geneea'
   ]
 )
 
