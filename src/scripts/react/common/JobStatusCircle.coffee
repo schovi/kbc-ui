@@ -11,6 +11,7 @@ statusColorMap =
   success: 'green'
   error: 'red'
   warn: 'red'
+  warning: 'red'
   processing: 'orange'
   cancelled: 'grey'
   waiting: 'grey'

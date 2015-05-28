@@ -11,6 +11,7 @@ const CLASS_MAP = {
   terminating: 'label-canceled',
   waiting: 'label-default',
   warn: 'label-danger'
+  warning: 'label-danger'
 };
 
 export default React.createClass({
