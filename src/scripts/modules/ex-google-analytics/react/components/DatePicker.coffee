@@ -87,10 +87,3 @@ module.exports = React.createClass
               @setState
                 dateUntil: moment()
                 dateFrom: moment().subtract(event.target.value, 'day')
-
-      # Input
-      #   label: 'Date Range'
-      #   type: 'static'
-      #   value: daysRange
-      #   labelClassName: 'col-sm-3'
-      #   wrapperClassName: 'col-sm-6'

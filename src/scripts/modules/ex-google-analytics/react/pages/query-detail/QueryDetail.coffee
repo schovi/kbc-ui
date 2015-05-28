@@ -7,6 +7,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 Input = React.createFactory(require('react-bootstrap').Input)
 Label = React.createFactory(require('react-bootstrap').Label)
+StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 {div, form} = React.DOM
 module.exports = React.createClass
@@ -30,7 +31,6 @@ module.exports = React.createClass
     if not @state.query
       div {}
     else
-      console.log 'rendering query', @state.query.toJS()
       if @state.isEditing
         QueryEditor
           configId: @state.configId
@@ -58,12 +58,11 @@ module.exports = React.createClass
       pvalue = @state.name
     if propName == 'profile'
       pvalue = if pvalue then @_assmbleProfileName(pvalue) else '--all--'
-    Input
+    StaticText
       label: caption
-      type: 'static'
-      value: pvalue
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
+    , pvalue
 
   _assmbleProfileName: (profileId) ->
     profile = @state.profiles.find( (p) ->

@@ -42,7 +42,6 @@ module.exports = React.createClass
       component.transitionTo 'ex-google-analytics', config: component.state.currentConfigId
 
   render: ->
-    console.log 'is editing', @state.isEditing
     if @state.isEditing
       React.DOM.div className: 'kbc-buttons',
         if @state.isSaving

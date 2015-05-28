@@ -29,7 +29,6 @@ module.exports = React.createClass
     selectedProfiles: exGanalStore.getSelectedProfiles(configId)
 
   render: ->
-    console.log 'rendering Profiles', @state.profiles.toJS()
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
         @_renderProfiles()
