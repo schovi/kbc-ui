@@ -62,13 +62,14 @@ MySqlSandbox = React.createClass
         div {},
           ConnectToMySqlSandbox {credentials: @state.credentials},
             button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-              span {className: 'fa fa-database'}
+              span {className: 'fa fa-fw fa-database'}
               " Connect"
         div {},
           DeleteButton
             label: 'Drop credentials'
             tooltip: 'Delete MySQL Sandbox'
             isPending: @state.pendingActions.get 'drop'
+            fixedWidth: true
             confirm:
               title: 'Delete MySQL Sandbox'
               text: 'Do you really want to delete MySQL sandbox?'

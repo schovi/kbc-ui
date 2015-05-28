@@ -65,13 +65,14 @@ RedshiftSandbox = React.createClass
               " Refresh privileges"
           else
             button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshCredentials},
-              span {className: 'fa fa-refresh'}
+              span {className: 'fa fa-fw fa-refresh'}
               " Refresh privileges"
         div {},
           DeleteButton
             tooltip: 'Delete Redshift Sandbox'
             isPending: @state.pendingActions.get 'drop'
             label: 'Drop credentials'
+            fixedWidth: true
             confirm:
               title: 'Delete Redshift Sandbox'
               text: 'Do you really want to delete Redshift sandbox?'

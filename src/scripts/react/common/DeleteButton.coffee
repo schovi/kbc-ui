@@ -3,6 +3,7 @@
 ###
 
 React = require 'react'
+classnames = require 'classnames'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 Loader = React.createFactory(require('kbc-react-components').Loader)
@@ -21,12 +22,14 @@ module.exports = React.createClass
     isPending: React.PropTypes.bool
     isEnabled: React.PropTypes.bool
     label: React.PropTypes.string
+    fixedWidth: React.PropTypes.bool
 
   getDefaultProps: ->
     tooltip: 'Delete'
     isPending: false
     isEnabled: true
     label: ''
+    fixedWidth: false
 
   render: ->
     if @props.isPending
@@ -45,6 +48,6 @@ module.exports = React.createClass
           buttonLabel: 'Delete'
         ),
           button className: 'btn btn-link',
-            i className: 'kbc-icon-cup'
+            i className: classnames('fa kbc-icon-cup', 'fa-fw': @props.fixedWidth)
             if @props.label then ' ' + @props.label
 
