@@ -10,7 +10,7 @@ const CLASS_MAP = {
   terminated: 'label-canceled',
   terminating: 'label-canceled',
   waiting: 'label-default',
-  warn: 'label-danger'
+  warn: 'label-danger',
   warning: 'label-danger'
 };
 
