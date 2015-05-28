@@ -1,4 +1,5 @@
 request = require('../../utils/request')
+_ = require 'underscore'
 
 ApplicationStore = require '../../stores/ApplicationStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
@@ -13,18 +14,25 @@ createRequest = (method, path) ->
   request(method, createUrl(path))
   .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
 
+handleEmptyConfiguration = (response) ->
+  config = response?.body
+  if not _.isEmpty(config) and _.isEmpty(config.configuration)
+    config.configuration = {}
+  return config
+
+
 module.exports =
+
   getConfig: (configId) ->
     createRequest('GET', 'account/' + configId)
     .promise().then (response) ->
-      response.body
+      return handleEmptyConfiguration(response)
 
   sendLinkEmail: (emailObject) ->
     createRequest('POST', "send-external-link")
     .send(emailObject)
     .promise().then (response) ->
-      return response.body
-
+      response.body
 
   getExtLink: (configId) ->
     data =
@@ -60,4 +68,4 @@ module.exports =
     createRequest('POST', "account/#{configId}")
     .send(configData)
     .promise().then (response) ->
-      return response.body
+      return handleEmptyConfiguration(response)
