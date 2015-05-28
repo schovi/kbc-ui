@@ -25,7 +25,7 @@
     "object-assign": "^1.0.0",
     "prettycron": "~0.10.0",
     "react": "~0.13.3",
-    "react-autosuggest": "^1.13.1",
+    "react-autosuggest": "^1.14.0",
     "react-bootstrap": "~0.23.0",
     "react-code-mirror": "~3.0.4",
     "react-datepicker": "~0.6.2",
