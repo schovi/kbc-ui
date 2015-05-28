@@ -38,7 +38,6 @@
     "react-typeahead": "~1.0.6",
     "react-zeroclipboard": "~0.4.0",
     "superagent": "~0.21.0",
-    "typeahead": "0.2.0",
     "underscore": "~1.7.0",
     "underscore.string": "~3.0.3"
   },
