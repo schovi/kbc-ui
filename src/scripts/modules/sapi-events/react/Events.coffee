@@ -81,12 +81,13 @@ Events = React.createClass
   _renderMoreButton: ->
     return null if !@state.hasMore
 
-    Button
-      bsStyle: 'default'
-      onClick: @_handleLoadMore
-      disabled: @state.isLoadingOlder
-    ,
-      if  @state.isLoadingOlder then 'Loading ...' else 'More ...'
+    div className: 'kbc-block-with-padding',
+      Button
+        bsStyle: 'default'
+        onClick: @_handleLoadMore
+        disabled: @state.isLoadingOlder
+      ,
+        if  @state.isLoadingOlder then 'Loading ...' else 'More ...'
 
   _handleLoadMore: ->
     @_events.loadMore()

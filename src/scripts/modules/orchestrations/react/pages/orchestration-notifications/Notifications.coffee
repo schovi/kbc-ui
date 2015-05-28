@@ -38,7 +38,7 @@ module.exports = React.createClass
     errorEmails = @_getNotificationsForChannel 'error'
     processingEmails = @_getNotificationsForChannel 'processing'
 
-    div null,
+    div {className: 'kbc-block-with-padding'},
       div null,
         p null,
           'You can subscribe to some events in orchestration jobs processing.'

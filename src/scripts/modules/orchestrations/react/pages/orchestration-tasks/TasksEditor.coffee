@@ -29,12 +29,13 @@ TasksEditor = React.createClass
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
         onTaskMove: @_handleTaskMove
-      ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
-        Button
-          bsStyle: 'primary'
-          disabled: @props.isSaving
-        ,
-          'Add task'
+      div className: 'kbc-block-with-padding',
+        ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
+          Button
+            bsStyle: 'primary'
+            disabled: @props.isSaving
+          ,
+            'Add task'
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(

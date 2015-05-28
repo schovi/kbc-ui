@@ -13,14 +13,14 @@ TasksTable = React.createClass
     components: React.PropTypes.object.isRequired
 
   render: ->
-    table className: 'table table-stripped',
+    table className: 'table table-stripped kbc-table-layout-fixed',
       thead null,
         tr null,
-          th colSpan: 2, 'Component'
-          th null, 'Action'
-          th null, 'Parameters'
-          th null, 'Active'
-          th null, 'Continue on failure'
+          th null, 'Component'
+          th style: {width: '10%'}, 'Action'
+          th style: {width: '40%'}, 'Parameters'
+          th style: {width: '8%'}, 'Active'
+          th style: {width: '12%'}, 'Continue on Failure'
       tbody null,
         @props.tasks.map((task) ->
           TasksTableRow

@@ -35,11 +35,11 @@ _pages = [
   ,
     id: 'jobs'
     title: 'Jobs'
-    icon: 'kbc-icon-storage'
+    icon: 'kbc-icon-jobs'
   ,
     id: 'applications'
     title: 'Applications'
-    icon: 'kbc-icon-storage'
+    icon: 'kbc-icon-applications'
 
 ]
 

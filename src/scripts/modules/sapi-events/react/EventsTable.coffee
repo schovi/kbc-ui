@@ -14,7 +14,7 @@ module.exports = React.createClass
     isLoading: React.PropTypes.bool.isRequired
 
   render: ->
-    table className: 'table table-striped',
+    table className: 'table table-striped table-hover',
       thead null,
         tr null,
           th null, 'Created'

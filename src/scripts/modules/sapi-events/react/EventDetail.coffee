@@ -19,7 +19,7 @@ module.exports = React.createClass
     div null,
       a onClick: @props.onGoBack,
         span className: 'fa fa-chevron-left', null,
-        ' back'
+        ' Back'
       h2 null,
         "Event #{@props.event.get('id')}"
       div className: "well message #{@_eventClass()}",

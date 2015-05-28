@@ -16,11 +16,12 @@ TasksTableRow = React.createClass
   render: ->
     tr null,
       td null,
-        if @props.component
-          ComponentIcon component: @props.component
-        else
-          ' '
-      td null,
+        span className: 'kbc-component-icon',
+          if @props.component
+            ComponentIcon component: @props.component
+          else
+            ' '
+
         if @props.component
           ComponentName component: @props.component
         else

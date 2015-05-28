@@ -46,11 +46,12 @@ TasksEditTableRow = React.createClass
       td null,
         i className: 'fa fa-bars'
       td null,
-        if @props.component
-          ComponentIcon component: @props.component
-        else
-          ' '
-      td null,
+        span className: 'kbc-component-icon',
+          if @props.component
+            ComponentIcon component: @props.component
+          else
+            ' '
+
         if @props.component
           ComponentName component: @props.component
         else
@@ -62,7 +63,7 @@ TasksEditTableRow = React.createClass
           defaultValue: @props.task.get('action')
           disabled: @props.disabled
           onChange: @_handleActionChange
-      td null,
+      td className: 'kbc-cursor-pointer',
         ModalTrigger
           modal: TaskParametersEditModal(
             onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
@@ -80,7 +81,7 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td null,
+      td className: 'kbc-cursor-pointer',
         div className: 'pull-right',
           i className: 'kbc-icon-cup', onClick: @_handleDelete
 
