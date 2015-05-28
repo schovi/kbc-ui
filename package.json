@@ -66,7 +66,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --port 3000 --inline",
-    "build": "webpack --config webpack/production.config.js --profile --colors && node webpack/generate-manifest.js"
+    "build": "webpack --config webpack/production.config.js --profile --colors --bail && node webpack/generate-manifest.js"
   },
   "author": "Martin Halamicek",
   "jest": {
