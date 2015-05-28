@@ -8,7 +8,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
 ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
-DateFormatHint = require './DateFormatHint'
+DateFormatHint = React.createFactory(require './DateFormatHint')
 PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 #PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
