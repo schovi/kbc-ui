@@ -40,15 +40,6 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     dataPreview: React.PropTypes.array
 
-  _handleInputChange: (propName, e) ->
-    @props.onChange @props.column.set(propName, e.target.value)
-
-  _createInput: (props, body) ->
-    if @props.isEditing
-      Input(props, body)
-    else
-      StaticText null, props.value
-
   render: ->
     console.log 'render row', @props.column.get('name')
     column = @props.column
@@ -175,6 +166,15 @@ module.exports = React.createClass
 
   _handleDateDimensionSelect: (data) ->
     @props.onChange @props.column.set('dateDimension', data.selectedDimension)
+
+  _handleInputChange: (propName, e) ->
+    @props.onChange @props.column.set(propName, e.target.value)
+
+  _createInput: (props, body) ->
+    if @props.isEditing
+      Input(props, body)
+    else
+      StaticText null, props.value
 
 
   _shouldRenderPart: (partName) ->
