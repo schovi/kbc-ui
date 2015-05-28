@@ -120,10 +120,17 @@ module.exports = React.createClass
 
 
   _createInput: (labelValue, propName, type = 'text') ->
-    Input
-      label: labelValue
-      type: type
-      value: @state.sheet.get propName
-      labelClassName: 'col-xs-4'
-      wrapperClassName: 'col-xs-8'
-      onChange: @_handleChange.bind @, propName
+    if type != 'static'
+      Input
+        label: labelValue
+        type: type
+        value: @state.sheet.get propName
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+        onChange: @_handleChange.bind @, propName
+    else
+      StaticText
+        label: labelValue
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+      , @state.sheet.get propName
