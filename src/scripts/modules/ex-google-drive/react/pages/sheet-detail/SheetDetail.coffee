@@ -4,7 +4,7 @@ ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
-
+StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 {div, span, form } = React.DOM
 module.exports = React.createClass
@@ -92,23 +92,30 @@ module.exports = React.createClass
 
 
   _createConfigInput: (caption, readFn, setFn, type, validationProperty,  stringify = true) ->
-    Input
-      label: caption
-      type: if @state.isEditing then type else 'static'
-      value: readFn()
-      labelClassName: 'col-xs-4'
-      wrapperClassName: 'col-xs-8'
-      help: @state.validation?[validationProperty] if @state.isEditing
-      bsStyle: 'error' if @state.validation?[validationProperty] and @state.isEditing
-      onChange: (event) =>
-        config = @_parsedConfig()
-        config = setFn(event, config)
-        if stringify
-          newConfig = JSON.stringify(config)
-        else
-          newConfig = config
+    if @state.isEditing
+      Input
+        label: caption
+        type: type
+        value: readFn()
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+        help: @state.validation?[validationProperty] if @state.isEditing
+        bsStyle: 'error' if @state.validation?[validationProperty] and @state.isEditing
+        onChange: (event) =>
+          config = @_parsedConfig()
+          config = setFn(event, config)
+          if stringify
+            newConfig = JSON.stringify(config)
+          else
+            newConfig = config
+          ActionCreators.sheetEditOnChange(@state.configId, @state.fileId, @state.sheetId, 'config', newConfig)
+    else
+      StaticText
+        label: caption
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+      , readFn()
 
-        ActionCreators.sheetEditOnChange(@state.configId, @state.fileId, @state.sheetId, 'config', newConfig)
 
 
 
