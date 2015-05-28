@@ -3,7 +3,7 @@ Immutable = require 'immutable'
 keyMirror = require('react/lib/keyMirror')
 
 {tr, td, option, span, div} = React.DOM
-
+StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Input = React.createFactory(require('react-bootstrap').Input)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
@@ -43,6 +43,12 @@ module.exports = React.createClass
   _handleInputChange: (propName, e) ->
     @props.onChange @props.column.set(propName, e.target.value)
 
+  _createInput: (props, body) ->
+    if @props.isEditing
+      Input(props, body)
+    else
+      StaticText null, props.value
+
   render: ->
     console.log 'render row', @props.column.get('name')
     column = @props.column
@@ -51,14 +57,14 @@ module.exports = React.createClass
       td null,
         column.get('name'),
       td null,
-        Input
-          type: if @props.isEditing then 'text' else 'static'
+        @_createInput
+          type: 'text'
           value: column.get 'gdName'
           disabled: @props.isSaving
           onChange: @_handleInputChange.bind @, 'gdName'
       td null,
-        Input
-          type: if @props.isEditing then 'select' else 'static'
+        @_createInput
+          type: 'select'
           value: column.get 'type'
           disableD: @props.isSaving
           onChange: @_handleInputChange.bind @, 'type'
@@ -81,8 +87,8 @@ module.exports = React.createClass
 
   _renderSchemaReferenceSelect: ->
     if @_shouldRenderPart visibleParts.SCHEMA_REFERENCE
-      Input
-        type: if @props.isEditing then 'select' else 'static'
+      @_createInput
+        type: 'select'
         value: @props.column.get 'schemaReference', ''
         disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'schemaReference'
@@ -94,8 +100,8 @@ module.exports = React.createClass
 
   _renderReferenceSelect: ->
     if @_shouldRenderPart visibleParts.REFERENCE
-      Input
-        type: if @props.isEditing then 'select' else 'static'
+      @_createInput
+        type: 'select'
         disabled: @props.isSaving
         value: @props.column.get 'reference'
         onChange: @_handleInputChange.bind @, 'reference'
@@ -108,8 +114,8 @@ module.exports = React.createClass
   _renderSortLabelSelect: ->
     return if !@_shouldRenderPart visibleParts.SORT_LABEL
     return if !@props.sortLabelColumns.count()
-    Input
-      type: if @props.isEditing then 'select' else 'static'
+    @_createInput
+      type: 'select'
       value: @props.column.get 'sortLabel'
       disabled: @props.isSaving
       onChange: @_handleInputChange.bind @, 'sortLabel'
@@ -123,8 +129,8 @@ module.exports = React.createClass
   _renderDataTypeSelect: ->
     if @_shouldRenderPart visibleParts.DATA_TYPE
       span null,
-        Input
-          type: if @props.isEditing then 'select' else 'static'
+        @_createInput
+          type: 'select'
           value: @props.column.get 'dataType'
           disabled: @props.isSaving
           onChange: @_handleInputChange.bind @, 'dataType'
@@ -132,8 +138,8 @@ module.exports = React.createClass
           @_selectOptions Immutable.fromJS(DataTypes).set('', '')
 
         if [DataTypes.VARCHAR, DataTypes.DECIMAL].indexOf(@props.column.get 'dataType') >= 0
-          Input
-            type: if @props.isEditing then 'text' else 'static'
+          @_createInput
+            type: 'text'
             value: @props.column.get 'dataTypeSize'
             disabled: @props.isSaving
             onChange: @_handleInputChange.bind @, 'dataTypeSize'
@@ -142,8 +148,8 @@ module.exports = React.createClass
   _renderDateSelect: ->
     return if !@_shouldRenderPart visibleParts.DATE
     div null,
-      Input
-        type: if @props.isEditing then 'text' else 'static'
+      @_createInput
+        type: 'text'
         value: @props.column.get 'format'
         disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'format'
@@ -194,4 +200,3 @@ module.exports = React.createClass
       ,
         value
     .toArray()
-
