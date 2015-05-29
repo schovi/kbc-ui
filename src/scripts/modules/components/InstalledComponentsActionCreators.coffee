@@ -68,6 +68,31 @@ module.exports =
     return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded()
     @loadComponentConfigDataForce(componentId, configId)
 
+  saveComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
+      componentId: componentId
+      configId: configId
+    )
+    dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
+    dataToSave = {configuration: dataToSave.toJS()}
+    installedComponentsApi
+    .updateComponentConfiguration(componentId, configId, dataToSave).then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
+        componentId: componentId
+        configId: configId
+        configData: response.configuration
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_ERROR
+        componentId: componentId
+        configId: configId
+      )
+      throw error
+
+
   startEditComponentConfigData: (componentId, configId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_START

@@ -13,7 +13,6 @@ createRequest = (method, path) ->
 installedComponentsApi =
 
   getComponentConfigData: (componentId, configId) ->
-    console.log "get api req", componentId, configId
     url = "components/#{componentId}/configs/#{configId}"
     createRequest('GET', url)
     .promise()

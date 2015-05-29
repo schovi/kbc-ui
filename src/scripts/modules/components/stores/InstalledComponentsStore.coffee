@@ -39,6 +39,9 @@ InstalledComponentsStore = StoreUtils.createStore
   getEditingConfigData: (componentId, configId) ->
     _store.getIn ['configDataEditing', componentId, configId]
 
+  getSavingConfigData: (componentId, configId) ->
+    _store.getIn ['configDataSaving', componentId, configId]
+
   getConfigData: (componentId, configId) ->
     _store.getIn ['configData', componentId, configId]
 
@@ -100,11 +103,28 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_SUCCESS
       _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
       storePath = ['configData', action.componentId, action.configId]
-      _store = _store.setIn storePath, action.configData
+      _store = _store.setIn storePath, Immutable.fromJS(action.configData)
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR
       _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
+      componentId = action.componentId
+      configId = action.configId
+      dataToSave = InstalledComponentsStore.getEditingConfigData(componentId, configId)
+      _store = _store.setIn ['configDataSaving', componentId, configId], dataToSave
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
+      _store = _store.setIn ['configData', action.componentId, action.configId], Immutable.fromJS(action.configData)
+      _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
+      _store = _store.deleteIn ['configDataEditing', action.componentId, action.configId]
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_ERROR
+      _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
