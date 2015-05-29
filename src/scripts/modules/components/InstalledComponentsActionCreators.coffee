@@ -68,6 +68,27 @@ module.exports =
     return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded()
     @loadComponentConfigDataForce(componentId, configId)
 
+  startEditComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_START
+      componentId: componentId
+      configId: configId
+    )
+
+  updateEditComponentConfigData: (componentId, configId, newData) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_UPDATE
+      componentId: componentId
+      configId: configId
+      data: newData
+    )
+
+  cancelEditComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_CANCEL
+      componentId: componentId
+      configId: configId
+    )
 
   loadComponents: ->
     return Promise.resolve() if InstalledComponentsStore.getIsLoaded()

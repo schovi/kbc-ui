@@ -36,6 +36,9 @@ InstalledComponentsStore = StoreUtils.createStore
   getIsConfigDataLoaded: (componentId, configId) ->
     _store.hasIn ['configData', componentId, configId]
 
+  getEditingConfigData: (componentId, configId) ->
+    _store.getIn ['configDataEditing', componentId, configId]
+
   getConfigData: (componentId, configId) ->
     _store.getIn ['configData', componentId, configId]
 
@@ -73,6 +76,23 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_START
+      path = ['configDataEditing', action.componentId, action.configId]
+      configData = InstalledComponentsStore.getConfigData(action.componentId, action.configId)
+      _store = _store.setIn path, configData
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_UPDATE
+      path = ['configDataEditing', action.componentId, action.configId]
+      configData = action.data
+      _store = _store.setIn path, configData
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_CANCEL
+      path = ['configDataEditing', action.componentId, action.configId]
+      _store = _store.deleteIn path
+      InstalledComponentsStore.emitChange()
+
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD
       _store = _store.setIn ['configDataLoading', action.componentId, action.configId], true
       InstalledComponentsStore.emitChange()
