@@ -3,14 +3,14 @@ RouteHandler = React.createFactory(require('react-router').RouteHandler)
 ApplicationStore = require '../../stores/ApplicationStore'
 
 Header = React.createFactory(require '././Header')
-Sidebar = React.createFactory(require '././Sidebar')
+SidebarNavigation = React.createFactory(require '././SidebarNavigation')
 Notifications = React.createFactory(require './Notifications')
 ErrorPage = React.createFactory(require './../pages/ErrorPage')
 LoadingPage = React.createFactory(require './../pages/LoadingPage')
 ProjectSelect = React.createFactory(require './project-select/ProjectSelect')
 PageTitle = React.createFactory(require './PageTitle')
 
-User = React.createFactory(require './User')
+CurrentUser = React.createFactory(require './CurrentUser')
 UserLinks = React.createFactory(require './UserLinks')
 
 {div} = React.DOM
@@ -46,9 +46,9 @@ App = React.createClass
               urlTemplates: @state.urlTemplates
               xsrf: @state.xsrf
               canCreateProject: @state.canCreateProject
-            Sidebar()
+            SidebarNavigation()
             div className: 'kbc-sidebar-footer',
-              User
+              CurrentUser
                 user: @state.currentAdmin
                 maintainers: @state.maintainers
                 urlTemplates: @state.urlTemplates
