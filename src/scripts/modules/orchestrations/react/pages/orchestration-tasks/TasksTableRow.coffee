@@ -32,9 +32,20 @@ TasksTableRow = React.createClass
       td null,
         Tree data: @props.task.get('actionParameters')
       td null,
-        Check isChecked: @props.task.get('active')
+        span className: (if @props.task.get('active')
+          'kbc-icon-check-tick'
+        else
+          'kbc-icon-check-cross'),
+          span className: 'path1'
+          span className: 'path2'
+          span className: 'path3'
       td null,
-        Check isChecked: @props.task.get('continueOnFailure')
+        span className: (if @props.task.get('continueOnFailure')
+          'kbc-icon-check-tick'
+        else 'kbc-icon-check-cross'),
+          span className: 'path1'
+          span className: 'path2'
+          span className: 'path3'
 
 
 module.exports = TasksTableRow
