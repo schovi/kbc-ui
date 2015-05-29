@@ -41,6 +41,34 @@ module.exports =
       throw error
     )
 
+  loadComponentConfigDataForce: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD
+      componentId: componentId
+      configId: configId
+    )
+    installedComponentsApi
+    .getComponentConfigData(componentId, configId).then (configData) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_SUCCESS
+        componentId: componentId
+        configId: configId
+        configData: configData
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR
+        componentId: componentId
+        configId: configId
+      )
+      throw error
+
+  #loads configuration JSON data of the component and specified configId
+  loadComponentConfigData: (componentId, configId) ->
+    return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded()
+    @loadComponentConfigDataForce(componentId, configId)
+
+
   loadComponents: ->
     return Promise.resolve() if InstalledComponentsStore.getIsLoaded()
     @loadComponentsForce()

@@ -1,4 +1,3 @@
-
 request = require '../../utils/request'
 ApplicationStore = require '../../stores/ApplicationStore'
 
@@ -12,6 +11,15 @@ createRequest = (method, path) ->
 
 
 installedComponentsApi =
+
+  getComponentConfigData: (componentId, configId) ->
+    console.log "get api req", componentId, configId
+    url = "components/#{componentId}/configs/#{configId}"
+    createRequest('GET', url)
+    .promise()
+    .then((response) ->
+      response.body
+    )
 
   getComponents: ->
     createRequest('GET', 'components')

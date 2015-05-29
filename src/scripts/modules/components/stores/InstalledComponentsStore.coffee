@@ -1,4 +1,3 @@
-
 Dispatcher = require('../../../Dispatcher')
 constants = require '../Constants'
 Immutable = require('immutable')
@@ -6,6 +5,12 @@ Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
+  configData: Map() #componentId #configId - configuration detail JSON
+  configDataLoading: Map() #componentId #configId - configuration detail JSON
+  configDataEditing: Map() #componentId #configId - configuration
+#detail JSON
+  configDataSaving: Map()
+
   components: Map()
   editingConfigurations: Map()
   savingConfigurations: Map()
@@ -27,6 +32,12 @@ InstalledComponentsStore = StoreUtils.createStore
 
   getComponent: (componentId) ->
     _store.getIn ['components', componentId]
+
+  getIsConfigDataLoaded: (componentId, configId) ->
+    _store.hasIn ['configData', componentId, configId]
+
+  getConfigData: (componentId, configId) ->
+    _store.getIn ['configData', componentId, configId]
 
   getConfig: (componentId, configId) ->
     _store.getIn ['components', componentId, 'configurations', configId]
@@ -62,6 +73,20 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD
+      _store = _store.setIn ['configDataLoading', action.componentId, action.configId], true
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_SUCCESS
+      _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
+      storePath = ['configData', action.componentId, action.configId]
+      _store = _store.setIn storePath, action.configData
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR
+      _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
+      InstalledComponentsStore.emitChange()
+
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
       _store = _store.set 'isLoading', true
       InstalledComponentsStore.emitChange()

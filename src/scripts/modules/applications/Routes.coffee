@@ -1,6 +1,7 @@
 React = require 'react'
 Index = require './react/pages/apps-index/AppsIndex'
 geneeaApp = require './modules/geneea/react/pages/index/Index'
+installedComponentsActions =  require '../components/InstalledComponentsActionCreators'
 
 routes =
   name: 'applications'
@@ -11,10 +12,11 @@ routes =
     path: 'geneea'
     title: 'Geneea'
     handler: geneeaApp
-    # requireData: [
-    #   ->
-    #     StorageActionCreators.loadTables()
-    # ]
+    requireData: [
+      (params) ->
+        configId = params.configId #not supported now!
+        installedComponentsActions.loadComponentConfigData('geneea-topic-detection', configId)
+    ]
 
   ]
 
