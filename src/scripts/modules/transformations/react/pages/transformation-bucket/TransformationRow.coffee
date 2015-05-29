@@ -62,10 +62,10 @@ TransformationRow = React.createClass(
     ,
       span {className: 'td'},
         h4 {},
-        span {className: 'label kbc-label-rounded-small label-default pull-left'},
-          @props.transformation.get('phase') || 1
-        ' '
-        @props.transformation.get('name')
+          span {className: 'label kbc-label-rounded-small label-default pull-left'},
+            @props.transformation.get('phase') || 1
+          ' '
+          @props.transformation.get('name')
       span {className: 'td'},
         small {}, @props.transformation.get('description') || em {}, 'No description'
       span {className: 'td'},

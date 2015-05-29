@@ -31,8 +31,9 @@ module.exports = React.createClass
       QueryRow(onSearch: @_search, query: @state.query)
       @_renderTable()
       if @state.isLoadMore
-        button onClick: @_loadMore, className: 'btn btn-default btn-large text-center',
-          'More..'
+        div className: 'kbc-block-with-padding',
+          button onClick: @_loadMore, className: 'btn btn-default btn-large text-center',
+            'More..'
 
   _renderTableHeader: ->
     div {className: 'thead' },

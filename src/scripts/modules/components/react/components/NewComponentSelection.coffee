@@ -16,21 +16,19 @@ ComponentBox = React.createClass
 
   render: ->
     component = @props.component
-    div className: 'col-sm-4',
-      div className: 'panel',
-        div className: 'panel-body text-center',
-          ComponentIcon
-            component: component
-            size: '64'
-          h2 null, component.get('name')
-          p null, component.get('description')
-          Link
-            className: 'btn btn-success btn-lg'
-            to: "new-#{component.get('type')}-form"
-            params:
-              componentId: component.get 'id'
-          ,
-            span className: 'kbc-icon-plus', 'Add'
+    div className: 'td',
+      ComponentIcon
+        component: component
+        size: '64'
+      h2 null, component.get('name')
+      p null, component.get('description')
+      Link
+        className: 'btn btn-success btn-lg'
+        to: "new-#{component.get('type')}-form"
+        params:
+          componentId: component.get 'id'
+      ,
+        span className: 'kbc-icon-plus', 'Add'
 
 
 module.exports = React.createClass
@@ -44,7 +42,9 @@ module.exports = React.createClass
     div className: @props.className,
       @props.children
       SearchRow(className: 'row kbc-search-row', onChange: @_handleFilterChange, query: @props.filter)
-      @_renderComponents()
+      div className: 'table kbc-table-border-vertical kbc-components-overview kbc-layout-table',
+        div className: 'tbody',
+          @_renderComponents()
       div className: 'row',
         div className: 'text-center',
           h2 null, 'Haven\'t found what you were looking for?'
@@ -67,7 +67,7 @@ module.exports = React.createClass
 
   _renderComponentsRow: (components, idx) ->
     div
-      className: 'row kbc-extractors-select'
+      className: 'tr'
       key: idx
     , components.map((component) ->
       React.createElement ComponentBox, component: component, key: component.get('id')

@@ -15,16 +15,18 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      @state.components
-      .toIndexedSeq()
-      .sortBy (component) -> component.get('name')
-      .groupBy (component, i) -> Math.floor(i / 3)
-      .map @_renderAppsRow, @
-      .toArray()
+      div className: 'table kbc-table-border-vertical kbc-components-overview kbc-layout-table',
+        div className: 'tbody',
+          @state.components
+          .toIndexedSeq()
+          .sortBy (component) -> component.get('name')
+          .groupBy (component, i) -> Math.floor(i / 3)
+          .map @_renderAppsRow, @
+          .toArray()
 
   _renderAppsRow: (apps, key) ->
     div
-      className: 'row kbc-extractors-select'
+      className: 'tr'
       key: key
     ,
       apps.map (app) ->

@@ -20,21 +20,17 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        <div className="row kbc-extractors-select kbc-overview">
-          <div className="col-sm-3">
-            <div className="panel">
-              <div className="panel-body text-center">
+        <div className="table kbc-table-border-vertical kbc-layout-table kbc-overview">
+          <div className="tbody">
+            <div className="tr">
+              <div className="td">
                 <h2>Storage</h2>
 
                 <h3>{filesize(this.state.data.sizeBytes)}</h3>
 
                 <h3>{string.numberFormat(this.state.data.rowsCount)} rows</h3>
               </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="panel">
-              <div className="panel-body text-center">
+              <div className="td">
                 <h2>Orchestrations</h2>
                 <h4>6 configured</h4>
 
@@ -48,13 +44,8 @@ export default React.createClass({
                   6 errors <span className="text-muted">/week</span> <span className="badge"
                                                                            style={{backgroundColor: 'red'}}>+12% </span>
                 </p>
-
               </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="panel">
-              <div className="panel-body text-center">
+              <div className="td">
                 <h2>Components</h2>
                 <h4>12 extractors, 3 writers</h4>
                 <h4>2 transformation buckets and 3 others</h4>
@@ -69,13 +60,8 @@ export default React.createClass({
                   6 errors <span className="text-muted">/week</span> <span className="badge"
                                                                            style={{backgroundColor: '#96d130'}}>-6% </span>
                 </p>
-
               </div>
-            </div>
-          </div>
-          <div className="col-sm-3">
-            <div className="panel">
-              <div className="panel-body text-center">
+              <div className="td">
                 <h2>Access</h2>
 
                 <h3>{this.state.tokens.get('adminCount')} Admins</h3>

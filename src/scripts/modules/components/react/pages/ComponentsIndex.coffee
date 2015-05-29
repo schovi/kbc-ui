@@ -42,7 +42,7 @@ module.exports = (type) ->
         , @).toArray()
 
         div className: 'container-fluid kbc-main-content',
-          table className: 'table table-bordered kbc-table-full-width kbc-extractors-table',
+          table className: 'table table-bordered kbc-table-full-width kbc-components-list',
             tbody null, rows
       else
         React.createElement NewComponentSelection,
@@ -72,8 +72,13 @@ module.exports = (type) ->
               componentId: component.get 'id'
               configId: config.get 'id'
             ,
-              config.get 'name'
+              span className: 'kbc-config-name',
+                if config.get 'name'
+                  config.get 'name'
+                else
+                  '---'
+              if config.get 'description'
+                small null, config.get('description')
             span className: 'kbc-icon-arrow-right'
-            if config.get 'description'
-              small null, config.get('description')
+
         ).toArray()

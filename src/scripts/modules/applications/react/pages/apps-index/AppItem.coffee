@@ -14,13 +14,11 @@ module.exports = React.createClass
     "#{ApplicationStore.getProjectBaseUrl()}/application?app=#{@props.app.get('ui')}"
 
   render: ->
-    div className: 'col-sm-4',
-      div className: 'panel',
-        div className: 'panel-body text-center',
-          @_renderIcon()
-          h2 null, @props.app.get 'name'
-          p null, @props.app.get 'description'
-          @_renderLink()
+    div className: 'td',
+      @_renderIcon()
+      h2 null, @props.app.get 'name'
+      p null, @props.app.get 'description'
+      @_renderLink()
 
   _renderLink: ->
     if @props.app.has 'link'
