@@ -33,7 +33,7 @@ module.exports = React.createClass
         isValid: @props.isValid
         isSaving: @props.isSaving
       div className: 'row',
-        div className: 'col-xs-4',
+        div className: 'col-md-8',
           Input
             type: 'text'
             label: 'Name'

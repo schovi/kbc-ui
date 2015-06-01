@@ -1,7 +1,7 @@
 React = require 'react'
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 
-{div, h2, a} = React.DOM
+{div, h2, a, table, tbody, tr, td} = React.DOM
 
 ComponentSelect = React.createClass
   displayName: 'ComponentSelect'
@@ -18,20 +18,22 @@ ComponentSelect = React.createClass
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
-      a
-        className: 'list-group-item'
-        key: component.get('id')
-        onClick: @_handleSelect.bind(@, component)
-      ,
-        ComponentIcon component: component
-        ' '
-        component.get('name')
+      tr null,
+        td null,
+          a
+            key: component.get('id')
+            onClick: @_handleSelect.bind(@, component)
+          ,
+            ComponentIcon component: component
+            ' '
+            component.get('name')
     , @).toArray()
 
     div null,
-      h2 null, title,
-      div className: 'list-group',
-        components
+      h2 null, title
+      table className: 'table table-striped table-hover kbc-tasks-list',
+        tbody null,
+          components
 
   _handleSelect: (component) ->
     @props.onComponentSelect(component)
