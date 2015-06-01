@@ -4,6 +4,7 @@ _ = require 'underscore'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 ComponentsStore = require '../../stores/ComponentsStore'
+hasComponentUI = require '../../utils/hasComponentUI'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
 Link = React.createFactory require('react-router').Link
@@ -79,6 +80,6 @@ module.exports = (type) ->
                   '---'
               if config.get 'description'
                 small null, config.get('description')
-            span className: 'kbc-icon-arrow-right'
+            span className: 'kbc-icon-arrow-right' if hasComponentUI(component.get('id'))
 
         ).toArray()
