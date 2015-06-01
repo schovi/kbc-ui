@@ -25,10 +25,10 @@ StaticInput = React.createFactory React.createClass
     ,
       span props,
         if @props.text
-          span null,
+          span className: 'kbc-cursor-pointer',
             @props.text
         else
-          span className: 'text-muted',
+          span className: 'text-muted kbc-cursor-pointer',
             @props.placeholder
         ' '
         i className: 'fa fa-edit text-muted'
@@ -51,33 +51,32 @@ EditInput = React.createFactory React.createClass
     @refs.valueInput.getInputDOMNode().focus()
 
   render: ->
-    div className: 'form-inline',
-      div className: 'form-group',
-        Input
-          ref: 'valueInput'
-          type: 'text'
-          bsStyle: if !@props.isValid then 'error' else ''
-          value: @props.text
-          disabled: @props.isSaving
-          placeholder: @props.placeholder
-          onChange: @_onChange
-        ' '
-        Button
-          bsStyle: 'primary'
-          disabled: @props.isSaving || !@props.isValid
-          onClick: @props.onSave
-        ,
-          'Save'
-        Button
-          bsStyle: 'link'
-          disabled: @props.isSaving
-          onClick: @props.onCancel
-        ,
-          'Cancel'
-        if @props.isSaving
-          span null,
-            ' '
-            Loader()
+    div className: 'form-inline kbc-inline',
+      Input
+        ref: 'valueInput'
+        type: 'text'
+        bsStyle: if !@props.isValid then 'error' else ''
+        value: @props.text
+        disabled: @props.isSaving
+        placeholder: @props.placeholder
+        onChange: @_onChange
+      ' '
+      Button
+        bsStyle: 'primary'
+        disabled: @props.isSaving || !@props.isValid
+        onClick: @props.onSave
+      ,
+        'Save'
+      Button
+        bsStyle: 'link'
+        disabled: @props.isSaving
+        onClick: @props.onCancel
+      ,
+        'Cancel'
+      if @props.isSaving
+        span null,
+          ' '
+          Loader()
 
 
 

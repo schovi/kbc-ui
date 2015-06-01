@@ -73,7 +73,7 @@ OrchestrationRow = React.createClass(
         CronRecord
           crontabRecord: @props.orchestration.get 'crontabRecord'
       ),
-      (span {className: 'td text-right'},
+      (span {className: 'td text-right kbc-no-wrap'},
         @buttons()
       )
     )
