@@ -19,19 +19,20 @@ StaticInput = React.createFactory React.createClass
 
   render: ->
     props = _.omit @props, 'text'
+    props.className = 'kbc-inline-edit-link'
     OverlayTrigger
       overlay: Tooltip null, @props.editTooltip
       placement: 'top'
     ,
       span props,
         if @props.text
-          span className: 'kbc-cursor-pointer',
+          span className: null,
             @props.text
         else
-          span className: 'text-muted kbc-cursor-pointer',
+          span className: 'text-muted',
             @props.placeholder
         ' '
-        i className: 'fa fa-edit text-muted'
+        span className: 'kbc-icon-pencil'
 
 EditInput = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
@@ -51,7 +52,7 @@ EditInput = React.createFactory React.createClass
     @refs.valueInput.getInputDOMNode().focus()
 
   render: ->
-    div className: 'form-inline kbc-inline',
+    div className: 'form-inline kbc-inline-edit',
       Input
         ref: 'valueInput'
         type: 'text'
@@ -62,17 +63,19 @@ EditInput = React.createFactory React.createClass
         onChange: @_onChange
       ' '
       Button
-        bsStyle: 'primary'
-        disabled: @props.isSaving || !@props.isValid
-        onClick: @props.onSave
-      ,
-        'Save'
-      Button
+        className: 'kbc-inline-edit-cancel'
         bsStyle: 'link'
         disabled: @props.isSaving
         onClick: @props.onCancel
       ,
-        'Cancel'
+        span className: 'kbc-icon-cross2'
+      Button
+        className: 'kbc-inline-edit-submit'
+        bsStyle: 'info'
+        disabled: @props.isSaving || !@props.isValid
+        onClick: @props.onSave
+      ,
+        'Save'
       if @props.isSaving
         span null,
           ' '
