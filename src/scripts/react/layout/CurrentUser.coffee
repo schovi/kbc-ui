@@ -22,6 +22,7 @@ module.exports = React.createClass
         div null,
           strong null, @props.user.get 'name'
           React.createElement DropdownButton,
+            className: 'kbc-user-menu'
             bsStyle: 'link'
             dropup: true
             title: ''
