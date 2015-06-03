@@ -11,6 +11,7 @@ StorageActionCreators = require('../components/StorageActionCreators')
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
 TransformationBucketButtons = require './react/components/TransformationBucketButtons'
 TransformationListButtons = require './react/components/TransformationsListButtons'
+TransformationDetailButtons = require './react/components/TransformationDetailButtons'
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
 
@@ -49,6 +50,7 @@ routes =
             name = TransformationsStore.getTransformation(bucketId, transformationId).get 'name'
             "Transformation " + name
           defaultRouteHandler: TransformationDetail
+          headerButtonsHandler: TransformationDetailButtons
           requireData: [
             ->
               StorageActionCreators.loadTables()

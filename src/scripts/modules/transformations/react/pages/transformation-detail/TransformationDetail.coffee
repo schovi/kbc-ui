@@ -82,16 +82,6 @@ TransformationDetail = React.createClass
     component = @
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
-        if @_showDetails()
-          div {className: 'text-right'},
-            EditButtons
-              isEditing: @state.isEditing
-              isSaving: @state.isSaving
-              isDisabled: false
-              onCancel: @_handleEditCancel
-              onSave: @_handleEditSave
-              onEditStart: @_handleEditStart
-              editLabel: 'Edit transformation'
         div {},
           if (!@state.isEditing)
             TransformationDetailStatic
