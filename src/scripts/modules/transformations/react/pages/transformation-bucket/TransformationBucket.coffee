@@ -24,10 +24,11 @@ TransformationBucket = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'row kbc-header',
-        ComponentDescription
-          componentId: 'transformation'
-          configId: @state.bucket.get 'id'
+      div className: 'row',
+        div className: 'row col-md-8',
+          ComponentDescription
+            componentId: 'transformation'
+            configId: @state.bucket.get 'id'
       if @state.transformations.count()
         @_renderTable()
       else

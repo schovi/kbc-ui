@@ -34,10 +34,9 @@ module.exports = React.createClass
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
-          div className: 'col-sm-8',
-            ComponentDescription
-              componentId: 'gooddata-writer'
-              configId: writer.get 'id'
+          ComponentDescription
+            componentId: 'gooddata-writer'
+            configId: writer.get 'id'
           div className: 'col-sm-4 kbc-buttons',
         if writer.get 'info'
           Alert bsStyle: 'warning',

@@ -38,10 +38,10 @@ module.exports = React.createClass
   render: ->
     React.DOM.div className: 'kb-graph',
       if @state.isLoading
-        React.DOM.div className: 'well',
+        React.DOM.div className: 'row text-center',
           React.createElement Loader
       else if !@state.model || !@state.model.get('nodes').count()
-        React.DOM.div className: 'well',
+        React.DOM.div className: 'row text-center',
           'No nodes found.'
       else
         Graph
