@@ -12,10 +12,11 @@ routes =
     path: 'geneea'
     title: 'Geneea'
     handler: geneeaApp
+
     requireData: [
       (params) ->
-        configId = params.configId #not supported now!
-        installedComponentsActions.loadComponentConfigData('geneea-topic-detection', configId)
+        installedComponentsActions.loadComponents()
+        #installedComponentsActions.loadComponentConfigData('geneea-topic-detection', configId)
     ]
 
   ]
