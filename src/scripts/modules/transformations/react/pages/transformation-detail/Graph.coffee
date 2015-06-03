@@ -114,7 +114,10 @@ module.exports = React.createClass
           ,
             React.DOM.span className: 'fa fa-arrow-circle-o-down'
             ' Download'
-          React.DOM.span className: 'pull-right',
+          React.DOM.span
+            className: 'pull-right checkbox'
+            style:
+              marginTop: '5px'
             if @props.disabledTransformation
               React.DOM.small {},
                 'Showing all disabled transformations'
@@ -125,7 +128,7 @@ module.exports = React.createClass
                   onChange: @_handleChangeShowDisabled
                   checked: @props.showDisabled
                   ref: 'showDisabled'
-                'Show disabled transformations'
+                ' Show disabled transformations'
 
       React.DOM.div {},
         React.DOM.div

@@ -25,7 +25,7 @@ OutputMappingRow = React.createClass(
               @props.outputMapping.get 'source'
           span {className: 'td'},
             span {className: 'fa fa-chevron-right fa-fw'}
-            ' '
+          span {className: 'td'},
             TableSizeLabel
               size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
             ' '

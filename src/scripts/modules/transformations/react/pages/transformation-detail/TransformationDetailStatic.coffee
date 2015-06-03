@@ -25,7 +25,7 @@ SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigge
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
 
-{div, span, input, strong, form, button, h4, i, ul, li, button, a, small, p, code, em} = React.DOM
+{div, span, input, strong, form, button, h2, i, ul, li, button, a, small, p, code, em} = React.DOM
 
 TransformationDetailStatic = React.createClass
   displayName: 'TransformationDetailStatic'
@@ -54,7 +54,7 @@ TransformationDetailStatic = React.createClass
     component = @
     span {},
       div {},
-        h4 {}, 'Input Mapping'
+        h2 {}, 'Input Mapping'
         if @props.transformation.get('input').count()
           div {},
             @props.transformation.get('input').sortBy((inputMapping) ->
@@ -84,7 +84,7 @@ TransformationDetailStatic = React.createClass
         else
           p {}, small {}, 'No Input Mapping'
       div {},
-        h4 {}, 'Output Mapping'
+        h2 {}, 'Output Mapping'
           if @props.transformation.get('output').count()
             div {},
               @props.transformation.get('output').sortBy((outputMapping) ->
@@ -117,7 +117,7 @@ TransformationDetailStatic = React.createClass
 
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
-          h4 {}, 'Packages'
+          h2 {}, 'Packages'
           p {},
             if @props.transformation.get('packages', Immutable.List()).count()
               @props.transformation.get('packages', Immutable.List()).map((packageName, key) ->
@@ -139,7 +139,7 @@ TransformationDetailStatic = React.createClass
 
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
-          h4 {}, 'Script'
+          h2 {}, 'Script'
           if @props.transformation.get('queries').count()
             CodeMirror
               theme: 'solarized'
@@ -152,7 +152,7 @@ TransformationDetailStatic = React.createClass
             p {}, small {}, 'No R Script'
       else
         div {},
-          h4 {}, 'Queries'
+          h2 {}, 'Queries'
           if @props.transformation.get('queries').count()
             span {},
               div className: 'table table-striped table-hover',
@@ -192,16 +192,16 @@ TransformationDetailStatic = React.createClass
       div className: 'kbc-row kbc-header',
         @props.transformation.get("description") || em {}, "No description ..."
       div className: '',
-        p {className: 'kbc-row text-right'},
-          span {className: 'label kbc-label-rounded-small label-default'},
-            'Phase: '
-            @props.transformation.get 'phase'
-          ' '
-          TransformationTypeLabel
-            backend: @props.transformation.get 'backend'
-            type: @props.transformation.get 'type'
         div {className: 'kbc-row'},
-          h4 {}, 'Overview'
+          div {className: 'pull-right'},
+            span {className: 'label kbc-label-rounded-small label-default'},
+              'Phase: '
+              @props.transformation.get 'phase'
+            ' '
+            TransformationTypeLabel
+              backend: @props.transformation.get 'backend'
+              type: @props.transformation.get 'type'
+          h2 {}, 'Overview'
           GraphContainer
             bucketId: @props.bucketId
             transformationId: @props.transformationId
