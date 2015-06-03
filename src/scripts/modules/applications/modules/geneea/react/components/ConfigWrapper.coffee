@@ -29,7 +29,6 @@ module.exports = React.createClass
   renderConfigs: (component) ->
     ul null,
       component.get('configurations').map((config) ->
-        console.log "configs", config.get 'id'
         li key: config.get('id'),
           Link
             to: "kbc-app-geneea-detail"

@@ -1,19 +1,21 @@
 React = require 'react'
 {span, div, a, p, h2} = React.DOM
+
 createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
-
-ConfigWrapper = React.createFactory require '../../components/ConfigWrapper'
+RoutesStore = require '../../../../../../../stores/RoutesStore'
 
 module.exports = React.createClass
 
-  displayName: 'GeneeaApp'
+  displayName: 'GeneeaAppDetail'
 
   mixins: [createStoreMixin(InstalledComponentsStore)]
   getStateFromStores: ->
-    configs: InstalledComponentsStore.getComponent('geneea-topic-detection')
+    configId = RoutesStore.getCurrentRouteParam('config')
+    config = InstalledComponentsStore.getConfigData("geneea-topic-detection", configId)
+    config: config
+
 
   render: ->
-    console.log "rendering geneea index"
-    ConfigWrapper
-      installedConfigurations: @state.configs
+    console.log "rendering geneea detail", @state.config.toJS()
+    div null, "detail"
