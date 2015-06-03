@@ -3,6 +3,8 @@ React = require 'react'
 createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
 
+ConfigWrapper = React.createFactory require '../../components/ConfigWrapper'
+
 module.exports = React.createClass
 
   displayName: 'GeneeaApp'
@@ -13,4 +15,5 @@ module.exports = React.createClass
 
   render: ->
     console.log @state.configs.toJS()
-    div {}, 'GENEEA APP INDEX'
+    ConfigWrapper
+      installedConfigurations: @state.configs
