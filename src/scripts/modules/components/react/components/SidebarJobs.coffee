@@ -19,10 +19,10 @@ module.exports = React.createClass
   render: ->
     console.log 'render jobs'
     React.DOM.div null,
-      React.DOM.h3 null,
+      React.DOM.h4 null,
         'Last runs'
         React.createElement(Loader) if @props.jobs.get 'isLoading'
-      React.DOM.div null,
+      React.DOM.div className: 'kbc-sidebar-jobs',
         @props.jobs.get('jobs').map (job) ->
           React.createElement JobRow,
             job: job

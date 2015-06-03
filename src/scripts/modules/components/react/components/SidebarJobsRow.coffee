@@ -8,7 +8,7 @@ ImmutableRendererMixin = require '../../../../react/mixins/ImmutableRendererMixi
 
 Link = React.createFactory(require('react-router').Link)
 
-{div, span, a, em, strong} = React.DOM
+{div, span, a, em, strong, small} = React.DOM
 
 JobNavRow = React.createClass
   displayName: 'LatestJobsRow'
@@ -28,16 +28,17 @@ JobNavRow = React.createClass
         span className: 'td kbc-td-status',
           JobStatusCircle status: @props.job.get('status')
         span className: 'td',
-          strong null,
-            @props.job.get('id')
           div null,
-            em null, @props.job.getIn ['token', 'description']
-          React.DOM.br()
+            strong null,
+              @props.job.get('id')
           div null,
-            if @props.job.get('startTime')
-              DurationWithIcon startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')
+            @props.job.getIn ['token', 'description']
           div null,
-            FinishedWithIcon endTime: @props.job.get('endTime')
+            small className: 'pull-left',
+              if @props.job.get('startTime')
+                DurationWithIcon startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')
+            small className: 'pull-right',
+              FinishedWithIcon endTime: @props.job.get('endTime')
 
 
 module.exports = JobNavRow

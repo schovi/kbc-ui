@@ -14,16 +14,16 @@ ComponentMetadata = React.createClass
   propTypes:
     config: React.PropTypes.object.isRequired
   render: ->
-    React.DOM.div className: 'kbc-buttons',
-      React.DOM.span null,
-        'Created by: '
+    React.DOM.div className: 'kbc-buttons kbc-text-light',
+      React.DOM.div null,
+        'Created by '
         React.DOM.strong null,
           @props.config.getIn ['creatorToken', 'description']
-      React.DOM.br null
-      React.DOM.span null,
-        'Created on: '
-        React.DOM.strong null,
-          date.format(@props.config.get 'created')
+      React.DOM.div null,
+        React.DOM.small null,
+          'ON '
+          React.DOM.strong null,
+            date.format(@props.config.get 'created')
 
 module.exports = React.createClass
   displayName: "ComponentMetadataWrapper"

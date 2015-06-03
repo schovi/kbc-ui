@@ -61,6 +61,10 @@ module.exports = React.createClass
         else
           'No queries yet'
       div className: 'col-md-3 kbc-main-sidebar',
+        React.createElement ComponentMetadata,
+          componentId: 'ex-db'
+          configId: @state.configuration.get 'id'
+
         ul className: 'nav nav-stacked',
           li null,
             Link
@@ -83,10 +87,6 @@ module.exports = React.createClass
             React.createElement DeleteConfigurationButton,
               componentId: 'ex-db'
               configId: @state.configuration.get 'id'
-
-        React.createElement ComponentMetadata,
-          componentId: 'ex-db'
-          configId: @state.configuration.get 'id'
 
         LatestJobs
           jobs: @state.latestJobs

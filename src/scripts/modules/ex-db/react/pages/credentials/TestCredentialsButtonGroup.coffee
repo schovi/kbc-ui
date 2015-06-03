@@ -32,7 +32,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'form-group',
-      div className: 'col-xs-offset-4 col-sx-8',
+      div className: 'col-xs-offset-4 col-xs-8',
         Button
           bsStyle: 'primary'
           disabled: @state.isTesting
