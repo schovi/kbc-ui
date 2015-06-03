@@ -48,11 +48,10 @@ module.exports = React.createClass
   _renderMainContent: ->
     items = @state.configuration.get('items')
     div {className: 'col-md-9 kbc-main-content'},
-      div className: 'row kbc-header',
-        div className: 'col-sm-8',
-          ComponentDescription
-            componentId: 'ex-google-drive'
-            configId: @state.configuration.get('id')
+      div className: 'row',
+        ComponentDescription
+          componentId: 'ex-google-drive'
+          configId: @state.configuration.get('id')
         if @_showSelectSheets()
           div className: 'col-sm-4 kbc-buttons',
             Link
@@ -85,6 +84,19 @@ module.exports = React.createClass
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
+      div className: 'kbc-buttons kbc-text-light',
+        span null,
+          'Authorized for '
+        strong null,
+          if @_isAuthorized()
+            @state.configuration.get 'email'
+          else
+            'not authorized'
+
+        React.createElement ComponentMetadata,
+          componentId: 'ex-google-drive'
+          configId: @state.configuration.get 'id'
+
       ul className: 'nav nav-stacked',
         if @_showAuthorize() and @state.email
           li null,
@@ -119,17 +131,6 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-drive'
             configId: @state.configuration.get 'id'
-      span null,
-        'Authorized for: '
-        strong null,
-        if @_isAuthorized()
-          @state.configuration.get 'email'
-        else
-          'not authorized'
-
-      React.createElement ComponentMetadata,
-        componentId: 'ex-google-drive'
-        configId: @state.configuration.get 'id'
 
       React.createElement LatestJobs,
         jobs: @state.latestJobs

@@ -61,25 +61,25 @@ EditInput = React.createFactory React.createClass
         disabled: @props.isSaving
         placeholder: @props.placeholder
         onChange: @_onChange
-      ' '
-      Button
-        className: 'kbc-inline-edit-cancel'
-        bsStyle: 'link'
-        disabled: @props.isSaving
-        onClick: @props.onCancel
-      ,
-        span className: 'kbc-icon-cross2'
-      Button
-        className: 'kbc-inline-edit-submit'
-        bsStyle: 'info'
-        disabled: @props.isSaving || !@props.isValid
-        onClick: @props.onSave
-      ,
-        'Save'
-      if @props.isSaving
-        span null,
-          ' '
-          Loader()
+      span className: 'kbc-inline-edit-buttons',
+        Button
+          className: 'kbc-inline-edit-cancel'
+          bsStyle: 'link'
+          disabled: @props.isSaving
+          onClick: @props.onCancel
+        ,
+          span className: 'kbc-icon-cross2'
+        Button
+          className: 'kbc-inline-edit-submit'
+          bsStyle: 'info'
+          disabled: @props.isSaving || !@props.isValid
+          onClick: @props.onSave
+        ,
+          'Save'
+        if @props.isSaving
+          span null,
+            ' '
+            Loader()
 
 
 

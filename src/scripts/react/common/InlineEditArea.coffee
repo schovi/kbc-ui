@@ -50,34 +50,34 @@ EditArea = React.createFactory React.createClass
     @refs.textArea.getDOMNode().focus()
 
   render: ->
-    div className: 'form-horizontal',
-      div className: 'form-group',
-        textarea(
-          ref: 'textArea'
-          value: @props.text
+    div className: 'form-inline kbc-inline-edit kbc-inline-textarea',
+      textarea(
+        ref: 'textArea'
+        value: @props.text
+        disabled: @props.isSaving
+        placeholder: @props.placeholder
+        onChange: @_onChange
+        className: 'form-control'
+      ),
+      span className: 'kbc-inline-edit-buttons',
+        Button
+          className: 'kbc-inline-edit-cancel'
+          bsStyle: 'link'
           disabled: @props.isSaving
-          placeholder: @props.placeholder
-          onChange: @_onChange
-          className: 'form-control'
-        ),
-      div className: 'form-group',
-        div className: 'kbc-buttons',
-          Button
-            bsStyle: 'link'
-            disabled: @props.isSaving
-            onClick: @props.onCancel
-          ,
-            'Cancel'
-          Button
-            bsStyle: 'primary'
-            disabled: @props.isSaving
-            onClick: @props.onSave
-          ,
-            'Save'
-          if @props.isSaving
-            span null,
-              ' '
-              Loader()
+          onClick: @props.onCancel
+        ,
+          span className: 'kbc-icon-cross2'
+        Button
+          className: 'kbc-inline-edit-submit'
+          bsStyle: 'info'
+          disabled: @props.isSaving
+          onClick: @props.onSave
+        ,
+          'Save'
+        if @props.isSaving
+          span null,
+            ' '
+            Loader()
 
 
 module.exports = React.createClass
