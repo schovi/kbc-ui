@@ -189,10 +189,10 @@ TransformationDetailStatic = React.createClass
     props = @props
     component = @
     div {},
-      div className: 'row kbc-header',
+      div className: 'kbc-row kbc-header',
         @props.transformation.get("description") || em {}, "No description ..."
-      div {},
-        p {className: 'text-right'},
+      div className: '',
+        p {className: 'kbc-row text-right'},
           span {className: 'label kbc-label-rounded-small label-default'},
             'Phase: '
             @props.transformation.get 'phase'
@@ -200,7 +200,7 @@ TransformationDetailStatic = React.createClass
           TransformationTypeLabel
             backend: @props.transformation.get 'backend'
             type: @props.transformation.get 'type'
-        div {},
+        div {className: 'kbc-row'},
           h4 {}, 'Overview'
           GraphContainer
             bucketId: @props.bucketId

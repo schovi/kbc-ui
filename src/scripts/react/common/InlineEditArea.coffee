@@ -18,6 +18,7 @@ StaticArea = React.createFactory React.createClass
 
   render: ->
     props = _.omit @props, 'text'
+    props.className = 'kbc-inline-edit-link'
     OverlayTrigger
       overlay: Tooltip null, @props.editTooltip
       placement: 'top'
@@ -30,7 +31,7 @@ StaticArea = React.createFactory React.createClass
           span className: 'text-muted',
             @props.placeholder
         ' '
-        i className: 'fa fa-edit text-muted'
+        i className: 'kbc-icon-pencil'
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'

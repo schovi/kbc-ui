@@ -26,7 +26,7 @@ StaticInput = React.createFactory React.createClass
     ,
       span props,
         if @props.text
-          span className: null,
+          span null,
             @props.text
         else
           span className: 'text-muted',

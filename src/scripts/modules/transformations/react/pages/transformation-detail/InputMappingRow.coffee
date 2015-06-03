@@ -28,7 +28,7 @@ InputMappingRow = React.createClass(
             @props.inputMapping.get 'source'
           span {className: 'td'},
             span {className: 'fa fa-chevron-right fa-fw'}
-            ' '
+          span {className: 'td'},
             TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
             ' '
             if @props.transformationBackend == 'docker'
