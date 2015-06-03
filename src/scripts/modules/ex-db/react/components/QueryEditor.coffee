@@ -6,7 +6,7 @@ Check = React.createFactory(require('../../../../react/common/common').Check)
 
 Autosuggest = React.createFactory(require 'react-autosuggest')
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input} = React.DOM
+{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label} = React.DOM
 
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
@@ -47,12 +47,12 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'table kbc-table-border-vertical kbc-detail-table',
+      div className: 'table kbc-detail-table form-horizontal',
         div className: 'tr',
           div className: 'td',
-            div className: 'row',
-              span className: 'col-md-3', 'Name '
-              strong className: 'col-md-9',
+            div className: 'form-group',
+              label className: 'col-md-3 control-label', 'Name'
+              div className: 'col-md-9',
                 input
                   className: 'form-control'
                   type: 'text'
@@ -60,9 +60,9 @@ module.exports = React.createClass
                   placeholder: 'Untitled Query'
                   onChange: @_handleNameChange
             if @props.showOutputTable
-              div className: 'row',
-                span className: 'col-md-3', 'Output table '
-                strong className: 'col-md-9',
+              div className: 'form-group',
+                label className: 'col-md-3 control-label', 'Output table'
+                div className: 'col-md-9',
                   Autosuggest
                     suggestions: createGetSuggestions(@_tableSelectOptions)
                     inputAttributes:
@@ -71,22 +71,23 @@ module.exports = React.createClass
                       value: @props.query.get 'outputTable'
                       onChange: @_handleOutputTableChange
           div className: 'td',
-            div className: 'row',
-              span className: 'col-md-3', 'Primary key '
-              strong className: 'col-md-9',
+            div className: 'form-group',
+              label className: 'col-md-3 control-label', 'Primary key'
+                div className: 'col-md-9',
                 input
                   className: 'form-control'
                   type: 'text'
                   value: @props.query.get 'primaryKey'
                   placeholder: 'No primary key'
                   onChange: @_handlePrimaryKeyChange
-            div className: 'row',
-              span className: 'col-md-3', 'Incremental '
-              strong className: 'col-md-9',
-                input
-                  type: 'checkbox'
-                  checked: @props.query.get 'incremental'
-                  onChange: @_handleIncrementalChange
+            div className: 'form-group',
+              div className: 'col-md-9 col-md-offset-3 checkbox',
+                label null,
+                  input
+                    type: 'checkbox'
+                    checked: @props.query.get 'incremental'
+                    onChange: @_handleIncrementalChange
+                  'Incremental'
       div
         style:
           'margin-top': '-30px'
