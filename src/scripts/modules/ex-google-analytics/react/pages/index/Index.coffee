@@ -70,7 +70,7 @@ module.exports = React.createClass
             ExGanalStore.isDeletingQueries(@state.configId, queryName)
 
       else
-        div className: 'well component-empty-state text-center',
+        div className: 'row component-empty-state text-center',
           div null, 'No queries configured yet.'
         ,
           if not @_isAuthorized()

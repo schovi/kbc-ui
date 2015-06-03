@@ -59,7 +59,8 @@ module.exports = React.createClass
             configuration: @state.configuration
             pendingActions: @state.pendingActions
         else
-          'No queries yet'
+          div className: 'row component-empty-state text-center',
+            'No queries configured yet.'
       div className: 'col-md-3 kbc-main-sidebar',
         div className: 'kbc-buttons kbc-text-light',
           React.createElement ComponentMetadata,

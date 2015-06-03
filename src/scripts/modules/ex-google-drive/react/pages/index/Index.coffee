@@ -69,7 +69,7 @@ module.exports = React.createClass
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
       else
-        div className: 'well component-empty-state text-center',
+        div className: 'row component-empty-state text-center',
           div null, 'No sheets configured yet.'
         ,
           Link
