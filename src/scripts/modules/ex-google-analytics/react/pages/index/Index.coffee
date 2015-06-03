@@ -86,6 +86,14 @@ module.exports = React.createClass
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
+      div className: 'kbc-buttons kbc-text-light',
+        span null,
+          'Authorized for '
+        strong null,
+          @_getAuthorizedForCaption()
+        React.createElement ComponentMetadata,
+          componentId: 'ex-google-analytics'
+          configId: @state.configId
       ul className: 'nav nav-stacked',
         if @_showAuthorize()
           li null,
@@ -147,13 +155,6 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-analytics'
             configId: @state.configId
-      span null,
-        'Authorized for: '
-        strong null,
-        @_getAuthorizedForCaption()
-      React.createElement ComponentMetadata,
-        componentId: 'ex-google-analytics'
-        configId: @state.configId
       React.createElement LatestJobs,
         jobs: @state.latestJobs
 

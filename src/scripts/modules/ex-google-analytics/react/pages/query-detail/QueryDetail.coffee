@@ -9,7 +9,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 Label = React.createFactory(require('react-bootstrap').Label)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
-{div, form} = React.DOM
+{div, form, caption, input, label} = React.DOM
 module.exports = React.createClass
   displayName: 'ExGanalQueryDetail'
   mixins: [createStoreMixin(exGanalStore)]
@@ -58,11 +58,15 @@ module.exports = React.createClass
       pvalue = @state.name
     if propName == 'profile'
       pvalue = if pvalue then @_assmbleProfileName(pvalue) else '--all--'
-    StaticText
-      label: caption
-      labelClassName: 'col-xs-4'
-      wrapperClassName: 'col-xs-8'
-    , pvalue
+    div className: 'form-group',
+      label className: 'control-label col-xs-4',
+        caption,
+      div className: 'col-xs-8',
+        input
+          className: 'form-control'
+          type: 'text'
+          disabled: true
+          value: pvalue,
 
   _assmbleProfileName: (profileId) ->
     profile = @state.profiles.find( (p) ->

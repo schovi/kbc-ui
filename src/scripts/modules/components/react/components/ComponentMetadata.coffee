@@ -14,7 +14,7 @@ ComponentMetadata = React.createClass
   propTypes:
     config: React.PropTypes.object.isRequired
   render: ->
-    React.DOM.div className: 'kbc-buttons kbc-text-light',
+    React.DOM.div null,
       React.DOM.div null,
         'Created by '
         React.DOM.strong null,
