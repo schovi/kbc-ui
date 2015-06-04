@@ -28,14 +28,14 @@ InputMappingDetail = React.createClass(
   render: ->
     ListGroupItems = [
       ListGroupItem {key: 'dataSizeBytes'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Source table size'
         span {className: "col-md-6"},
           FileSize
             size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']
 
       ListGroupItem {key: 'rowsCount'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Source table rows'
         span {className: "col-md-6"},
           if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
@@ -44,14 +44,14 @@ InputMappingDetail = React.createClass(
             'N/A'
 
       ListGroupItem {key: 'backend'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Storage type'
         span {className: "col-md-6"},
           @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
 
       if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
         ListGroupItem {key: 'optional'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Optional'
           span {className: "col-md-6"},
             Check
@@ -59,7 +59,7 @@ InputMappingDetail = React.createClass(
 
       if @props.transformationBackend == 'redshift' && @_isSourceTableInRedshift()
         ListGroupItem {key: 'type'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Type'
           span {className: "col-md-6"},
             @props.inputMapping.get('type')
@@ -68,14 +68,14 @@ InputMappingDetail = React.createClass(
       if @props.transformationBackend == 'redshift' and
       (@props.inputMapping.get('type') != 'view' || !@_isSourceTableInRedshift())
         ListGroupItem {key: 'persistent'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Persistent'
           span {className: "col-md-6"},
             Check
               isChecked: @props.inputMapping.get('persistent')
 
       ListGroupItem {},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Columns'
         span {className: "col-md-6"},
           if @props.inputMapping.get('columns').count()
@@ -84,7 +84,7 @@ InputMappingDetail = React.createClass(
             'Use all columns'
 
       ListGroupItem {key: 'whereColumn'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Filters'
         span {className: "col-md-6"},
           if @props.inputMapping.get('whereColumn')
@@ -112,7 +112,7 @@ InputMappingDetail = React.createClass(
 
       if @props.transformationBackend == 'mysql'
         ListGroupItem {key: 'indexes'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Indexes'
           span {className: "col-md-6"},
             if @props.inputMapping.get('indexes').count()
@@ -127,7 +127,7 @@ InputMappingDetail = React.createClass(
 
       if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
         ListGroupItem {key: 'datatypes'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Data types'
           span {className: "col-md-6"},
             if @props.inputMapping.get('datatypes').count()
@@ -143,7 +143,7 @@ InputMappingDetail = React.createClass(
 
       if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
         ListGroupItem {key: 'sortKey'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Sort key'
           span {className: "col-md-6"},
             if @props.inputMapping.get('sortKey')
@@ -153,7 +153,7 @@ InputMappingDetail = React.createClass(
 
       if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
         ListGroupItem {key: 'distKey'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'Dist key'
           span {className: "col-md-6"},
             if @props.inputMapping.get('distKey')
@@ -163,7 +163,7 @@ InputMappingDetail = React.createClass(
 
       if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift())
         ListGroupItem {key: 'copyOptions'},
-          span {className: "col-md-6"},
+          strong {className: "col-md-4"},
             'COPY options'
           span {className: "col-md-6"},
             if @props.inputMapping.get('copyOptions')

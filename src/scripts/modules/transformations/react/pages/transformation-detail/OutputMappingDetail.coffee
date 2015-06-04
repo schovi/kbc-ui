@@ -34,14 +34,14 @@ OutputMappingDetail = React.createClass(
   render: ->
     ListGroupItems = [
       ListGroupItem {key: 'dataSizeBytes'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Destination table size'
         span {className: "col-md-6"},
           FileSize
             size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
 
       ListGroupItem {key: 'rowsCount'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Destination table rows'
         span {className: "col-md-6"},
           if @props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']
@@ -50,13 +50,13 @@ OutputMappingDetail = React.createClass(
             'N/A'
 
       ListGroupItem {key: 'backend'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Storage type'
         span {className: "col-md-6"},
           @_getTableBackend @props.outputMapping.get('destination')
 
       ListGroupItem {key: 'primaryKey'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Primary key'
         span {className: "col-md-6"},
           if @props.outputMapping.get('primaryKey').count()
@@ -65,14 +65,14 @@ OutputMappingDetail = React.createClass(
             'N/A'
 
       ListGroupItem {key: 'incremental'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Incremental'
         span {className: "col-md-6"},
           Check
             isChecked: @props.outputMapping.get('incremental')
 
       ListGroupItem {key: 'deleteWhere'},
-        span {className: "col-md-6"},
+        strong {className: "col-md-4"},
           'Delete'
         span {className: "col-md-6"},
           if @props.outputMapping.get('deleteWhereColumn')
