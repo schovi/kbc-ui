@@ -19,7 +19,7 @@ CronRecord = React.createFactory(require '../../components/CronRecord')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 ScheduleModal = React.createFactory(require('../../modals/Schedule'))
 
-{div, h2, span, strong} = React.DOM
+{div, h2, span, strong, br} = React.DOM
 
 OrchestrationDetail = React.createClass
   displayName: 'OrchestrationDetail'
@@ -62,6 +62,7 @@ OrchestrationDetail = React.createClass
                 span className: 'col-md-3', 'Schedule '
                 strong className: 'col-md-9',
                   CronRecord crontabRecord: @state.orchestration.get('crontabRecord')
+                  br null
                   ModalTrigger
                     modal: ScheduleModal
                       crontabRecord: @state.orchestration.get 'crontabRecord'
@@ -83,6 +84,7 @@ OrchestrationDetail = React.createClass
                   else
                     span null,
                       'No notifications set yet'
+                  br null
                   Link
                     to: 'orchestrationNotifications'
                     params:
@@ -95,6 +97,7 @@ OrchestrationDetail = React.createClass
                 span className: 'col-md-3', 'Tasks '
                 strong className: 'col-md-9',
                   TasksSummary tasks: @state.tasks
+                  br null
                   Link to: 'orchestrationTasks', params:
                     orchestrationId: @state.orchestration.get('id')
                   ,

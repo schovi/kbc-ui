@@ -46,10 +46,11 @@ module.exports = React.createClass
   _renderMainContent: ->
     queries = @state.config.get('configuration')
     div {className: 'col-md-9 kbc-main-content'},
-      div className: 'row',
-        ComponentDescription
-          componentId: 'ex-google-analytics'
-          configId: @state.configId
+      div className: 'row kbc-header',
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: 'ex-google-analytics'
+            configId: @state.configId
         div className: 'col-sm-4 kbc-buttons',
           if @_isAuthorized()
             Link

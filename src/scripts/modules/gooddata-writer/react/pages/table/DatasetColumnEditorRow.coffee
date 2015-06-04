@@ -138,14 +138,13 @@ module.exports = React.createClass
 
   _renderDateSelect: ->
     return if !@_shouldRenderPart visibleParts.DATE
-    div null,
-      @_createInput
-        type: 'text'
-        value: @props.column.get 'format'
-        disabled: @props.isSaving
-        onChange: @_handleInputChange.bind @, 'format'
-        addonAfter: DateFormatHint() if @props.isEditing
-      span null,
+    @_createInput
+      type: 'text'
+      value: @props.column.get 'format'
+      disabled: @props.isSaving
+      onChange: @_handleInputChange.bind @, 'format'
+      addonAfter: DateFormatHint() if @props.isEditing
+      span className: '',
         'Date dimension: '
         @props.column.get 'dateDimension'
         ' '

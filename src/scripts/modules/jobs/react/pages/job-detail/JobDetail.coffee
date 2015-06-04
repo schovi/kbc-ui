@@ -82,24 +82,33 @@ module.exports = React.createClass
       else
         'N/A'
 
-    div {className: 'row'},
-      div {className: 'row'},
-        div {className: 'col-md-6'},
-          strong null, 'RunId: '
-          job.get('runId')
-        div {className: 'col-md-6'},
-          strong null, 'Start: '
-          renderDate(job.get('startTime'))
-      div {className: 'row'},
-        div {className: 'col-md-6'},
-          strong null, 'Duration: '
-          if jobStarted()
-            Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
-          else
-            'N/A'
-        div {className: 'col-md-6'},
-          strong null, 'End: '
-          renderDate(job.get('endTime'))
+    div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+      div {className: 'tr'},
+        div {className: 'td'},
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'RunId'
+            strong {className: 'col-md-9'},
+              job.get('runId')
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Duration'
+            strong {className: 'col-md-9'},
+              if jobStarted()
+                Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
+              else
+                'N/A'
+        div {className: 'td'},
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Start'
+            strong {className: 'col-md-9'},
+              renderDate(job.get('startTime'))
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'End'
+            strong {className: 'col-md-9'},
+              renderDate(job.get('endTime'))
 
   _renderAccordion: (job) ->
     React.createElement PanelGroup,
