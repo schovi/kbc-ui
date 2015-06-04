@@ -16,7 +16,7 @@ module.exports = React.createClass
     dimension: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
-    className: 'form-horizontal'
+    className: 'form-inline'
 
   _handleInputChange: (field, e) ->
     @props.onChange @props.dimension.set(field, e.target.value)
@@ -27,19 +27,22 @@ module.exports = React.createClass
   render: ->
     form className: @props.className,
       Input
+        style: {'marginLeft': '5px', 'marginRight': '15px'}
         type: 'text'
         placeholder: 'Dimension name'
-        label: 'name'
+        label: 'Add Dimension: '
         value: @props.dimension.get 'name'
         disabled: @props.isPending
         onChange: @_handleInputChange.bind @, 'name'
       Input
+        style: {'marginRight': '5px'}
         type: 'checkbox'
         label: 'Include time'
         disabled: @props.isPending
         checked: @props.dimension.get 'includeTime'
         onChange: @_handleCheckboxChange.bind @, 'includeTime'
       Button
+        style: {'marginLeft': '15px'}
         bsStyle: 'success'
         disabled: @props.isPending || !@props.dimension.get('name').trim().length
         onClick: @props.onSubmit

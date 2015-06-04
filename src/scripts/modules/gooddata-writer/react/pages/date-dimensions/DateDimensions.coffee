@@ -32,14 +32,14 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'col-sm-8',
-        DateDimensionsTable
-          dimensions: @state.dimensions
-          configurationId: @state.configurationId
-      div className: 'col-sm-4',
-        NewDimensionForm
-          isPending: @state.isCreatingNewDimension
-          dimension: @state.newDimension
-          onChange: @_handleNewDimensionUpdate
-          onSubmit: @_handleNewDimensionSave
+      div className: 'row',
+        div className: 'col-sm-8',
+          DateDimensionsTable
+            dimensions: @state.dimensions
+            configurationId: @state.configurationId
+          NewDimensionForm
+            isPending: @state.isCreatingNewDimension
+            dimension: @state.newDimension
+            onChange: @_handleNewDimensionUpdate
+            onSubmit: @_handleNewDimensionSave
 

@@ -39,7 +39,7 @@ module.exports = React.createClass
         onCancel: @props.onCancel
         onSave: @props.onSave
     else
-      React.DOM.div null,
+      React.DOM.span null,
         React.createElement Button,
           bsStyle: 'success'
           onClick: @props.onEditStart

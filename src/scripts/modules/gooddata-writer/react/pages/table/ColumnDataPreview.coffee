@@ -17,7 +17,8 @@ module.exports = React.createClass
       placement: 'left'
       overlay: @_renderPopover()
     ,
-      React.DOM.span className: 'fa fa-eye'
+      React.DOM.button className: 'btn btn-link',
+        React.DOM.span className: 'fa fa-eye'
 
   _renderPopover: ->
     Popover

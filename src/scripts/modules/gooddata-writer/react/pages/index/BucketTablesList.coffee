@@ -19,13 +19,14 @@ module.exports = React.createClass
         key: table.get 'id'
     , @).toArray()
 
-    div className: 'table table-striped table-hover',
-      div className: 'thead', key: 'table-header',
-        div className: 'tr',
-          span className: 'th',
-            strong null, 'Table name'
-          span className: 'th',
-            strong null, 'Good Data name'
-          span className: 'th'
-      div className: 'tbody',
-        childs
+    div className: 'row',
+      div className: 'table table-striped table-hover',
+        div className: 'thead', key: 'table-header',
+          div className: 'tr',
+            span className: 'th',
+              strong null, 'Table name'
+            span className: 'th',
+              strong null, 'Good Data name'
+            span className: 'th'
+        div className: 'tbody',
+          childs

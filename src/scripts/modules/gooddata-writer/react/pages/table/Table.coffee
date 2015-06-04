@@ -63,18 +63,19 @@ module.exports = React.createClass
   render: ->
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
-        div className: 'col-sm-8',
+        div className: '',
           strong null, 'GoodData name'
           ' '
           TableGdName
             table: @state.table
             configurationId: @state.configurationId
           ' '
+
+        div className: 'kbc-buttons',
           TableLoadType
             table: @state.table
             configurationId: @state.configurationId
-
-        div className: 'col-sm-4 kbc-buttons',
+        div className: 'kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns
             isSaving: @state.isSavingColumns
@@ -82,7 +83,7 @@ module.exports = React.createClass
             onCancel: @_handleEditCancel
             onSave: @_handleEditSave
             onEditStart: @_handleEditStart
-            editLabel: 'Edit columns'
+            editLabel: 'Edit Columns'
 
       ColumnsEditor
         columns: @state.columns

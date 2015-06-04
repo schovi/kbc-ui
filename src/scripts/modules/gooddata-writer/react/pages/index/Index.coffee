@@ -33,7 +33,7 @@ module.exports = React.createClass
     writer = @state.writer.get 'config'
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
-        div className: 'row kbc-header',
+        div className: 'row',
           ComponentDescription
             componentId: 'gooddata-writer'
             configId: writer.get 'id'
