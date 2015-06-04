@@ -69,7 +69,6 @@ module.exports = React.createClass
     div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)
-      @_renderRunTimesRow(job)
       @_renderAccordion(job)
       @_renderLogRow(job)
 
@@ -77,26 +76,30 @@ module.exports = React.createClass
   _renderRunInfoRow: (job) ->
     jobStarted = ->
       job.get('startTime')
-
-    div {className: 'row'},
-      div {className: 'col-md-6'}, 'RunId ' + job.get('runId')
-      div {className: 'col-md-6'}, 'Duration ',
-        if jobStarted()
-          Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
-        else
-          'N/A'
-
-  _renderRunTimesRow: (job) ->
     renderDate = (pdate) ->
       if pdate
         date.format(pdate)
       else
         'N/A'
+
     div {className: 'row'},
-      div {className: 'col-md-6'}, 'Start ',
-        renderDate(job.get('startTime'))
-      div {className: 'col-md-6'}, 'End ',
-        renderDate(job.get('endTime'))
+      div {className: 'row'},
+        div {className: 'col-md-6'},
+          strong null, 'RunId: '
+          job.get('runId')
+        div {className: 'col-md-6'},
+          strong null, 'Start: '
+          renderDate(job.get('startTime'))
+      div {className: 'row'},
+        div {className: 'col-md-6'},
+          strong null, 'Duration: '
+          if jobStarted()
+            Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
+          else
+            'N/A'
+        div {className: 'col-md-6'},
+          strong null, 'End: '
+          renderDate(job.get('endTime'))
 
   _renderAccordion: (job) ->
     React.createElement PanelGroup,
@@ -156,7 +159,7 @@ module.exports = React.createClass
 
     div {className: 'row'},
       div {className: 'col-md-6'},
-        span {className: 'form-control-static'},
+        span {className: ''},
           ComponentIcon {component: component, size: '32'}
           ' '
           ComponentName {component: component}
@@ -172,7 +175,7 @@ module.exports = React.createClass
 
   _renderLogRow: (job) ->
     div {className: 'col-md-12'},
-      h4 null, 'Log'
+      h2 null, 'Log'
       Events
         params:
           runId: job.get('runId')
