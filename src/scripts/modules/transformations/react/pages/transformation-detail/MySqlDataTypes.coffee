@@ -68,8 +68,9 @@ module.exports = React.createClass
             disabled: @props.disabled || !@props.selectValue
             placeholder: "Eg. VARCHAR(255)"
             onChange: @_handleInputOnChange
-        React.DOM.span {className: "col-xs-2"},
+        React.DOM.span {className: "col-xs-2 kbc-col-button"},
           Button
+            className: 'btn-success'
             onClick: @props.handleAddDataType
             disabled: @props.disabled || !@props.selectValue || !@props.inputValue
           ,

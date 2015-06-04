@@ -4,6 +4,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Button} = require('react-bootstrap')
 Button = React.createFactory Button
+{span} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ItemsListEditor'
@@ -38,7 +39,7 @@ module.exports = React.createClass
 
   _renderLabels: ->
     component = @
-    React.DOM.div {className: "col-xs-10 col-xs-offset-2"},
+    React.DOM.div {className: "well"},
       @props.value.map((packageName, key) ->
         React.DOM.span {key: key},
           React.DOM.span {className: 'label label-default'},
@@ -53,8 +54,8 @@ module.exports = React.createClass
 
   _renderAddInput: ->
     component = @
-    React.DOM.span {className: "form-group form-group-sm"},
-      React.DOM.div {className: "col-xs-4 col-xs-offset-2"},
+    React.DOM.div {className: "row"},
+      React.DOM.div {className: "col-xs-4 form-inline kbc-inline-edit"},
         React.DOM.input
           className: "form-control"
           type: "text"
@@ -63,22 +64,21 @@ module.exports = React.createClass
           onChange: @_handleOnChangeInput
           value: @props.input
           disabled: @props.disabled
-      React.DOM.div {className: "col-xs-6"},
-        Button
-          bsStyle: "success"
-          onClick: @_handleClickAddButton
-          disabled: @props.disabled || @props.input.trim() == ''
-        ,
-          React.DOM.i {className: "kbc-icon-plus"}
-          " Add"
+        span className: 'kbc-inline-edit-buttons kbc-inline-edit-button',
+          Button
+            className: 'kbc-inline-edit-submit'
+            bsStyle: "success"
+            onClick: @_handleClickAddButton
+            disabled: @props.disabled || @props.input.trim() == ''
+          ,
+            React.DOM.span {className: "kbc-icon-plus"}
 
   render: ->
-    React.DOM.span {},
+    React.DOM.div {},
       if (@props.value.count())
-        React.DOM.span {},
-          @_renderLabels()
+        @_renderLabels()
       else
-        React.DOM.div {className: "col-xs-4 col-xs-offset-2"},
+        React.DOM.div {className: "well"},
           React.DOM.small {},
             @props.emptyText
       @_renderAddInput()

@@ -55,9 +55,9 @@ TransformationDetailEdit = React.createClass
   render: ->
     props = @props
     component = @
-    div className: 'kbc-row',
-      h2 {}, 'General'
-      form className: 'form-horizontal',
+    form className: 'form-horizontal',
+      div className: 'kbc-row',
+        h2 {}, 'General'
         div className: "row",
           div className: "col-md-6",
             StaticText
@@ -105,9 +105,8 @@ TransformationDetailEdit = React.createClass
               onChange: (e) -> component._handleChangeProperty("description", e.target.value)
               labelClassName: 'col-xs-2'
               wrapperClassName: 'col-xs-10'
-        div className: "row",
-          div className: "col-md-12",
-            h2 {}, 'Dependencies'
+      div className: "kbc-row",
+        h2 {}, 'Dependencies'
         div className: "row",
           div className: "col-md-12",
             div className: 'form-group',
@@ -124,9 +123,7 @@ TransformationDetailEdit = React.createClass
                   disabled: @props.isSaving
                 span {className: "help-block"},
                   "Transformations that will be executed before this transformation"
-        div className: "row",
-          div className: "col-md-12",
-            h2 {}, 'Input Mapping'
+      div className: "kbc-row",
         InputMappingEditorContainer
           value: @props.transformation.get("input")
           tables: @props.tables
@@ -140,9 +137,7 @@ TransformationDetailEdit = React.createClass
           openInputMappings: @props.openInputMappings
           toggleOpenInputMapping: @props.toggleOpenInputMapping
 
-        div className: "row",
-          div className: "col-md-12",
-            h2 {}, 'Output Mapping'
+      div className: "kbc-row",
         OutputMappingEditorContainer
           value: @props.transformation.get("output")
           tables: @props.tables
@@ -156,32 +151,28 @@ TransformationDetailEdit = React.createClass
           openOutputMappings: @props.openOutputMappings
           toggleOpenOutputMapping: @props.toggleOpenOutputMapping
 
-        if @props.transformation.get("backend") == 'docker' && @props.transformation.get("type") == "r"
-          div className: "row",
-            div className: "col-md-12",
-              h2 {}, "Packages"
-              div className: 'form-group',
-                div className: 'col-xs-12',
-                  PackagesEditorContainer
-                    name: "packages"
-                    value: @props.transformation.get("packages")
-                    input: @props.transformation.get("packagesInput", "")
-                    disabled: @props.isSaving
-                    onChangeValue: (value) ->
-                      component._handleChangeProperty("packages", value)
-                    onChangeInput: (value) ->
-                      component._handleChangeProperty("packagesInput", value)
-        div className: "row",
-          div className: "col-md-12",
-            h2 {}, if @props.transformation.get("backend") == 'docker' then "Script" else "Queries"
-            div className: 'form-group',
-              div className: 'col-xs-12',
-                QueryEditorContainer
-                  transformation: @props.transformation
-                  value: @props.transformation.get("queries", "")
-                  disabled: @props.isSaving
-                  onChange: (value) ->
-                    component._handleChangeProperty("queries", value)
+      if @props.transformation.get("backend") == 'docker' && @props.transformation.get("type") == "r"
+        div className: "kbc-row",
+          h2 {}, "Packages"
+          PackagesEditorContainer
+            name: "packages"
+            value: @props.transformation.get("packages")
+            input: @props.transformation.get("packagesInput", "")
+            disabled: @props.isSaving
+            onChangeValue: (value) ->
+              component._handleChangeProperty("packages", value)
+            onChangeInput: (value) ->
+              component._handleChangeProperty("packagesInput", value)
+      div className: "kbc-row",
+        h2 {}, if @props.transformation.get("backend") == 'docker' then "Script" else "Queries"
+        div className: 'form-group',
+          div className: 'col-xs-12',
+            QueryEditorContainer
+              transformation: @props.transformation
+              value: @props.transformation.get("queries", "")
+              disabled: @props.isSaving
+              onChange: (value) ->
+                component._handleChangeProperty("queries", value)
 
 
 

@@ -24,8 +24,7 @@ module.exports = React.createClass
   render: ->
     component = @
     React.DOM.span {},
-      React.DOM.div {className: "row"},
-        React.DOM.span {className: "col-xs-12"},
+      React.DOM.div {className: "well"},
         if !@props.indexes.count()
           React.DOM.div {}, "No indexes set yet."
         else
@@ -40,20 +39,20 @@ module.exports = React.createClass
                     component.props.handleRemoveIndex(key)
               ' '
           , @).toArray()
-      React.DOM.div {className: "row"},
-        React.DOM.span {className: "col-xs-10"},
-          Select
-            multi: true
-            name: 'add-indexes'
-            value: @props.selectValue.toJS()
-            disabled: @props.disabled
-            placeholder: "Select column(s) to create an index"
-            onChange: @_handleSelectOnChange
-            options: @props.columnsOptions
-        React.DOM.span {className: "col-xs-2"},
-          Button
-            onClick: @props.handleAddIndex
-            disabled: @props.disabled || @props.selectValue.count() == 0
-          ,
-            React.DOM.i {className: "kbc-icon-plus"}
-            " Add"
+      React.DOM.div {className: "col-xs-8"},
+        Select
+          multi: true
+          name: 'add-indexes'
+          value: @props.selectValue.toJS()
+          disabled: @props.disabled
+          placeholder: "Select column(s) to create an index"
+          onChange: @_handleSelectOnChange
+          options: @props.columnsOptions
+      React.DOM.div {className: "col-xs-1 kbc-col-button"},
+        Button
+          className: 'btn-success'
+          onClick: @props.handleAddIndex
+          disabled: @props.disabled || @props.selectValue.count() == 0
+        ,
+          React.DOM.i {className: "kbc-icon-plus"}
+          " Add"

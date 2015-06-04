@@ -79,7 +79,7 @@ module.exports = React.createClass
 
   render: ->
     component = @
-    React.DOM.div {},
+    React.DOM.div {className: 'panel-body'},
       React.DOM.div {className: "row col-md-12"},
         if @props.backend == 'docker' && @props.type == 'r'
           Input

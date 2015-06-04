@@ -61,7 +61,7 @@ EditInput = React.createFactory React.createClass
         disabled: @props.isSaving
         placeholder: @props.placeholder
         onChange: @_onChange
-      span className: 'kbc-inline-edit-buttons',
+      div className: 'kbc-inline-edit-buttons',
         Button
           className: 'kbc-inline-edit-cancel'
           bsStyle: 'link'

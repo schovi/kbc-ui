@@ -30,16 +30,16 @@ module.exports = React.createClass
 
   render: ->
     component = @
-    React.DOM.span {},
-      React.DOM.div {className: "row col-md-12 text-right"},
+    React.DOM.div {},
+      React.DOM.div {className: "pull-right"},
         React.DOM.button
           className: "btn btn-success"
           onClick: (e) ->
             component.props.onAddOutputMapping()
             e.preventDefault()
         ,
-          React.DOM.span {className: 'fa fa-plus fa-fw'}
-          " Add Output Mapping"
+          React.DOM.span {className: 'kbc-icon-plus'}
+      React.DOM.h2 null, 'Output Mapping'
       if @props.value.count()
         @props.value.map(
           (mapping, key) ->
@@ -52,12 +52,18 @@ module.exports = React.createClass
                 component.props.toggleOpenOutputMapping(key)
                 event.preventDefault()
               header:
-                React.DOM.div {},
-                  "Output Mapping \##{key + 1} ("
-                  if mapping.get("source") then mapping.get("source") else "Undefined"
-                  React.DOM.span {className: 'fa fa-chevron-right fa-fw'}
-                  if mapping.get("destination") then mapping.get("destination") else "Undefined"
-                  ")"
+                React.DOM.div className: '',
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-xs-1',
+                      React.DOM.strong null, "\##{key + 1}"
+                    React.DOM.div className: 'col-xs-10',
+                      React.DOM.strong null,
+                        if mapping.get("source") then mapping.get("source") else "Undefined"
+                        React.DOM.span {className: 'kbc-icon-arrow-right'}
+                        if mapping.get("destination") then mapping.get("destination") else "Undefined"
+                    React.DOM.div className: 'col-xs-1 text-right',
+                      React.DOM.button className: 'btn btn-link',
+                        React.DOM.span className: 'kbc-icon-cup'
             ,
               OutputMappingRowEditor
                 fill: true
