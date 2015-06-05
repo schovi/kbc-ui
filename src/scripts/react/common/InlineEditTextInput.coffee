@@ -16,13 +16,15 @@ StaticInput = React.createFactory React.createClass
     placeholder: React.PropTypes.string
     editTooltip: React.PropTypes.string
     onCancel: React.PropTypes.func
+    tooltipPlacement: React.PropTypes.string
+
 
   render: ->
     props = _.omit @props, 'text'
     props.className = 'kbc-inline-edit-link'
     OverlayTrigger
       overlay: Tooltip null, @props.editTooltip
-      placement: 'top'
+      placement: @props.tooltipPlacement
     ,
       span props,
         if @props.text
@@ -97,11 +99,13 @@ module.exports = React.createClass
     isValid: React.PropTypes.bool
 
     editTooltip: React.PropTypes.string
+    tooltipPlacement: React.PropTypes.string
     placeholder: React.PropTypes.string
 
   getDefaultProps: ->
     placeholder: 'Click to edit'
     editTooltip: 'Click to edit'
+    tooltipPlacement: 'top'
     isSaving: false
 
   render: ->
@@ -118,6 +122,7 @@ module.exports = React.createClass
       StaticInput
         text: @props.text
         editTooltip: @props.editTooltip
+        tooltipPlacement: @props.tooltipPlacement
         placeholder: @props.placeholder
         onClick: @props.onEditStart
 

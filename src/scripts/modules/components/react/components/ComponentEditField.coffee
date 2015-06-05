@@ -17,9 +17,11 @@ module.exports = React.createClass
     fieldName: React.PropTypes.string.isRequired
     editElement: React.PropTypes.func.isRequired
     placeholder: React.PropTypes.string
+    tooltipPlacement: React.PropTypes.string
 
   getDefaultProps: ->
     placeholder: 'Describe the component ...'
+    tooltipPlacement: 'top'
 
   getStateFromStores: ->
     value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get @props.fieldName
@@ -49,6 +51,7 @@ module.exports = React.createClass
     React.createElement @props.editElement,
       text: if @state.isEditing then @state.editValue else @state.value
       placeholder: @props.placeholder
+      tooltipPlacement: @props.tooltipPlacement
       isSaving: @state.isSaving
       isEditing: @state.isEditing
       isValid: @state.isValid
