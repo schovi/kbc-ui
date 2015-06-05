@@ -70,6 +70,7 @@ module.exports = React.createClass
 
 
   _renderEditorRow: ->
+    console.log "rendering row"
     div className: 'row',
       div className: 'form-group',
         label className: 'col-xs-2 control-label', 'Source Table'
@@ -82,6 +83,8 @@ module.exports = React.createClass
             onChange: (newValue) =>
               newEditingData = @state.editingData
               newEditingData.intable = newValue
+              newEditingData.outtable = "#{newValue}-ex"
+              console.log newEditingData
               @setState
                 editingData: newEditingData
               @_updateEditingConfig()
@@ -128,6 +131,7 @@ module.exports = React.createClass
             onChange: (newValue) =>
               newEditingData = @state.editingData
               newEditingData.outtable = newValue
+              console.log "editing outtable", newEditingData
               @setState
                 editingData: newEditingData
               @_updateEditingConfig()
@@ -160,10 +164,9 @@ module.exports = React.createClass
     )
     return [] if !table
     result = table.get("columns").map( (column) ->
-      console.log column
       {
-        id: column
         label: column
+        value: column
       }
     ).toList().toJS()
     return result
@@ -177,15 +180,17 @@ module.exports = React.createClass
     , value or 'N/A'
 
   _prepareEditingData: (editingData) ->
-    console.log "editing data", editingData
+    #console.log "editing data", editingData?.toJS()
     getTables = (source) ->
       editingData?.getIn ['storage', source, 'tables']
     params = editingData?.get 'parameters'
-
-    intable: getTables('input')?.get(0)?.get('source')
-    outtable: getTables('output')?.get(0)?.get('source')
-    primary_key_column: params?.get 'primary_key_column'
-    data_column: params?.get 'data_column'
+    edata =
+      intable: getTables('input')?.get(0)?.get('source')
+      outtable: getTables('output')?.get(0)?.get('source') or ""
+      primary_key_column: params?.get 'primary_key_column'
+      data_column: params?.get 'data_column'
+    console.log "prepared edata", edata
+    return edata
 
   _updateEditingConfig: ->
     columns = _.map @_getColumns(), (value, key) ->
