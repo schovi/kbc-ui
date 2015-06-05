@@ -28,8 +28,7 @@ function prepareDataForCreate(data) {
 
 export default React.createClass({
   propTypes: {
-    bucket: React.PropTypes.object.isRequired,
-    onRequestHide: React.PropTypes.func.isRequired
+    bucket: React.PropTypes.object.isRequired
   },
 
   getInitialState() {
@@ -106,7 +105,7 @@ export default React.createClass({
       {value: 'r', label: 'R'}
     ].map(function(option) {
         return (
-          <option value={option.value}>{option.label}</option>
+          <option value={option.value} key={option.value}>{option.label}</option>
         );
       });
   },
