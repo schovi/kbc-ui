@@ -24,6 +24,7 @@ TransformationRow = React.createClass(
     props = @props
 
     buttons.push(DeleteButton
+      key: 'delete'
       tooltip: 'Delete Transformation'
       isPending: @props.pendingActions.get 'delete'
       confirm:
@@ -33,6 +34,7 @@ TransformationRow = React.createClass(
     )
 
     buttons.push ActivateDeactivateButton
+      key: 'active'
       activateTooltip: 'Enable Transformation'
       deactivateTooltip: 'Disable Transformation'
       isActive: !@props.transformation.get('disabled')
@@ -40,6 +42,7 @@ TransformationRow = React.createClass(
       onChange: @_handleActiveChange
 
     buttons.push(RunComponentButton(
+      key: 'run'
       title: "Run #{@props.transformation.get('name')}"
       component: 'transformation'
       mode: 'button'

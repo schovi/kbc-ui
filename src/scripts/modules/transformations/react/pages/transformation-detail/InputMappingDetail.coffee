@@ -74,7 +74,7 @@ InputMappingDetail = React.createClass(
             Check
               isChecked: @props.inputMapping.get('persistent')
 
-      ListGroupItem {},
+      ListGroupItem {key: 'columns'},
         strong {className: "col-md-4"},
           'Columns'
         span {className: "col-md-6"},
