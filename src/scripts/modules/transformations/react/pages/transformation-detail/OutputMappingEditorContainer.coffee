@@ -62,7 +62,12 @@ module.exports = React.createClass
                         React.DOM.span {className: 'kbc-icon-arrow-right'}
                         if mapping.get("destination") then mapping.get("destination") else "Undefined"
                     React.DOM.div className: 'col-xs-1 text-right',
-                      React.DOM.button className: 'btn btn-link',
+                      React.DOM.button
+                        className: 'btn btn-link'
+                        onClick: (e) ->
+                          component.props.onDeleteOutputMapping(key)
+                          e.preventDefault()
+                      ,
                         React.DOM.span className: 'kbc-icon-cup'
             ,
               OutputMappingRowEditor
@@ -71,9 +76,8 @@ module.exports = React.createClass
                 tables: component.props.tables
                 onChange: (value) ->
                   component._handleChangeOutputMapping(key, value)
-                onDelete: ->
-                  component.props.onDeleteOutputMapping(key)
                 disabled: component.props.disabled
                 backend: component.props.backend
                 type: component.props.type
+
         ).toArray()

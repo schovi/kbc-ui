@@ -64,7 +64,12 @@ module.exports = React.createClass
                         React.DOM.span {className: 'kbc-icon-arrow-right'}
                         if mapping.get("destination") then mapping.get("destination") else "Undefined"
                     React.DOM.div className: 'col-xs-1 text-right',
-                      React.DOM.button className: 'btn btn-link',
+                      React.DOM.button
+                        className: 'btn btn-link'
+                        onClick: (e) ->
+                          component.props.onDeleteInputMapping(key)
+                          e.preventDefault()
+                      ,
                         React.DOM.span className: 'kbc-icon-cup'
 
             ,
@@ -74,8 +79,6 @@ module.exports = React.createClass
                   tables: component.props.tables
                   onChange: (value) ->
                     component._handleChangeInputMapping(key, value)
-                  onDelete: ->
-                    component.props.onDeleteInputMapping(key)
                   disabled: component.props.disabled
               else if component.props.backend == "redshift" && component.props.type == "simple"
                 InputMappingRowRedshiftEditor
@@ -83,8 +86,6 @@ module.exports = React.createClass
                   tables: component.props.tables
                   onChange: (value) ->
                     component._handleChangeInputMapping(key, value)
-                  onDelete: ->
-                    component.props.onDeleteInputMapping(key)
                   disabled: component.props.disabled
 
               else if component.props.backend == "docker" && component.props.type == "r"
@@ -93,7 +94,5 @@ module.exports = React.createClass
                   tables: component.props.tables
                   onChange: (value) ->
                     component._handleChangeInputMapping(key, value)
-                  onDelete: ->
-                    component.props.onDeleteInputMapping(key)
                   disabled: component.props.disabled
         ).toArray()

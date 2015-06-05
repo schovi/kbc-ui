@@ -15,7 +15,6 @@ module.exports = React.createClass
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
-    onDelete: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
 
   distStyleOptions: [
@@ -380,12 +379,3 @@ module.exports = React.createClass
                 ,
                   "Default options"
                 "."
-
-      React.DOM.div {className: "row col-md-12 text-right"},
-        React.DOM.button
-          className: "btn btn-danger"
-          onClick: (e) ->
-            component.props.onDelete()
-            e.preventDefault()
-        ,
-          " Delete input mapping"
