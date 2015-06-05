@@ -75,7 +75,9 @@ module.exports =
       configId: configId
     )
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
-    dataToSave = {configuration: dataToSave.toJS()}
+    dataToSave = dataToSave?.toJS()
+    dataToSave = {configuration: JSON.stringify(dataToSave)}
+
     installedComponentsApi
     .updateComponentConfiguration(componentId, configId, dataToSave).then (response) ->
       dispatcher.handleViewAction(

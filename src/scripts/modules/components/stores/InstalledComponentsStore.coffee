@@ -118,7 +118,8 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
-      _store = _store.setIn ['configData', action.componentId, action.configId], Immutable.fromJS(action.configData)
+      configData = _store.getIn ['configDataSaving', action.componentId, action.configId]
+      _store = _store.setIn ['configData', action.componentId, action.configId], configData
       _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       _store = _store.deleteIn ['configDataEditing', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()

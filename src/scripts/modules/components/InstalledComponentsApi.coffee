@@ -17,7 +17,7 @@ installedComponentsApi =
     createRequest('GET', url)
     .promise()
     .then((response) ->
-      response.body
+      response.body?.configuration
     )
 
   getComponents: ->

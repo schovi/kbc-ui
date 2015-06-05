@@ -35,19 +35,20 @@ module.exports = React.createClass
     configData = InstalledComponentsStore.getConfigData("geneea-topic-detection", configId)
     editingConfigData = InstalledComponentsStore.getEditingConfigData("geneea-topic-detection", configId)
 
-    inputTables = configData?.getIn ['configuration', 'storage', 'input', 'tables']
+    inputTables = configData?.getIn [ 'storage', 'input', 'tables']
     intable = inputTables?.get(0)?.get 'source'
-    outTables = configData?.getIn ['configuration', 'storage', 'output', 'tables']
+    outTables = configData?.getIn [ 'storage', 'output', 'tables']
     outTable = outTables?.get(0)?.get 'source'
-    parameters = configData?.getIn ['configuration','parameters']
+    parameters = configData?.getIn ['parameters']
     editingData = @_prepareEditingData(editingConfigData)
+    isEditing = InstalledComponentsStore.getEditingConfigData('geneea-topic-detection', configId)
 
 
     data_column: parameters?.get 'data_column'
     primary_key_column: parameters?.get 'primary_key_column'
     intable: intable
     outtable: outTable
-    isEditing: true
+    isEditing: isEditing
     editingData: editingData
     configId: configId
 
@@ -182,7 +183,7 @@ module.exports = React.createClass
     #console.log "editing data", editingData?.toJS()
     getTables = (source) ->
       editingData?.getIn ['storage', source, 'tables']
-    params = editingData?.get 'parameters'
+    params = editingData?.getIn ['parameters']
 
     intable: getTables('input')?.get(0)?.get('source')
     outtable: getTables('output')?.get(0)?.get('source') or ""
