@@ -2,7 +2,7 @@ React = require 'react'
 Immutable = require 'immutable'
 keyMirror = require('react/lib/keyMirror')
 
-{tr, td, option, span, div} = React.DOM
+{tr, td, option, span, div, strong} = React.DOM
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Input = React.createFactory(require('react-bootstrap').Input)
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
@@ -45,7 +45,7 @@ module.exports = React.createClass
     column = @props.column
     rowClassName = if @props.isValid then '' else 'danger'
     tr className: rowClassName,
-      td null,
+      td className: 'kbc-static-cell',
         column.get('name'),
       td null,
         @_createInput
@@ -138,15 +138,17 @@ module.exports = React.createClass
 
   _renderDateSelect: ->
     return if !@_shouldRenderPart visibleParts.DATE
-    @_createInput
-      type: 'text'
-      value: @props.column.get 'format'
-      disabled: @props.isSaving
-      onChange: @_handleInputChange.bind @, 'format'
-      addonAfter: DateFormatHint() if @props.isEditing
-      span className: '',
+    div style: {'width': '15vw'},
+      @_createInput
+        type: 'text'
+        value: @props.column.get 'format'
+        disabled: @props.isSaving
+        onChange: @_handleInputChange.bind @, 'format'
+        addonAfter: DateFormatHint() if @props.isEditing
+      span {},
         'Date dimension: '
-        @props.column.get 'dateDimension'
+        strong {},
+          @props.column.get 'dateDimension'
         ' '
         if @props.isEditing
           ModalTrigger

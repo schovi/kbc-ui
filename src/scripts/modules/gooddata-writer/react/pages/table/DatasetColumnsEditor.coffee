@@ -77,7 +77,7 @@ module.exports = React.createClass
     @props.onColumnChange column
 
   render: ->
-    table className: 'table table-striped',
+    table className: 'table table-striped kbc-table-editor',
       thead null,
         tr null,
           th null, 'Column'
