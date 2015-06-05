@@ -3,6 +3,7 @@ Index = require './react/pages/apps-index/AppsIndex'
 geneeaApp = require './modules/geneea/react/pages/index/Index'
 geneeaAppDetail = require './modules/geneea/react/pages/detail/Detail'
 installedComponentsActions =  require '../components/InstalledComponentsActionCreators'
+installedComponentsStore =  require '../components/stores/InstalledComponentsStore'
 geneeaDetailHeader = require './modules/geneea/react/components/detailHeaderButtons'
 routes =
   name: 'applications'
@@ -20,7 +21,10 @@ routes =
     childRoutes: [
       name: 'kbc-app-geneea-detail'
       path: ':config'
-      title: 'Geneea Topic Detection'
+      title: (routerState) ->
+        configId = routerState.getIn ['params', 'config']
+        config = installedComponentsStore.getConfig 'geneea-topic-detection', configId
+        "Geneea Topic Detection - #{config.get('name')}"
       handler: geneeaAppDetail
       headerButtonsHandler: geneeaDetailHeader
       requireData: [
