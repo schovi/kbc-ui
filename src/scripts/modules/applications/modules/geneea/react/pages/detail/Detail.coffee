@@ -2,6 +2,8 @@ React = require 'react'
 Immutable = require('immutable')
 {span, div, a, p, h2, label, input, form} = React.DOM
 _ = require 'underscore'
+Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
+OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Input = React.createFactory(require('react-bootstrap').Input)
 createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
@@ -23,6 +25,13 @@ createGetSuggestions = (getOptions) ->
       .slice 0, 10
       .toList()
     callback(null, suggestions.toJS())
+
+tooltips =
+  intable: "Table containing text for topic detection"
+  data_column: "Column of the input table containing text for topic detection"
+  primary_key_column: "Column of the input table uniquely identifying each row of the input table"
+  outtable: "Result table containing columns id(primary key column values),\
+   topic column and confidence column as a result of topic detection of data column"
 
 
 module.exports = React.createClass
@@ -64,10 +73,10 @@ module.exports = React.createClass
           @_renderEditorRow()
         else
           div className: 'row',
-            @_createInput('Input Table', @state.intable)
-            @_createInput('Data Column', @state.data_column)
-            @_createInput('Primary Key', @state.primary_key_column)
-            @_createInput('Output Table', @state.outtable)
+            @_createInput('Input Table', @state.intable, tooltips.intable)
+            @_createInput('Data Column', @state.data_column, tooltips.data_column)
+            @_createInput('Primary Key', @state.primary_key_column, tooltips.primary_key_column)
+            @_createInput('Output Table', @state.outtable, tooltips.outtable)
 
 
   _renderEditorRow: ->
@@ -90,6 +99,9 @@ module.exports = React.createClass
                 editingData: newEditingData
               @_updateEditingConfig()
             options: @_getTables()
+        ,
+          p className: 'help-block', tooltips.intable
+
       div className: 'form-group',
         label className: 'col-xs-2 control-label', 'Data Column'
         div className: 'col-xs-10',
@@ -105,6 +117,9 @@ module.exports = React.createClass
                 editingData: newEditingData
               @_updateEditingConfig()
             options: @_getColumns()
+        ,
+          p className: 'help-block', tooltips.data_column
+
       div className: 'form-group',
         label className: 'col-xs-2 control-label', 'Primary Key'
         div className: 'col-xs-10',
@@ -120,21 +135,26 @@ module.exports = React.createClass
                 editingData: newEditingData
               @_updateEditingConfig()
             options: @_getColumns()
+        ,
+          p className: 'help-block', tooltips.primary_key_column
+
       div className: 'form-group',
         label className: 'control-label col-xs-2', 'Output Table'
         div className: "col-xs-10",
-        Autosuggest
-          suggestions: createGetSuggestions(@_getOutTables)
-          inputAttributes:
-            className: 'form-control'
-            placeholder: 'to get hint start typing'
-            value: @state.editingData.outtable
-            onChange: (newValue) =>
-              newEditingData = @state.editingData
-              newEditingData.outtable = newValue
-              @setState
-                editingData: newEditingData
-              @_updateEditingConfig()
+          Autosuggest
+            suggestions: createGetSuggestions(@_getOutTables)
+            inputAttributes:
+              className: 'form-control'
+              placeholder: 'to get hint start typing'
+              value: @state.editingData.outtable
+              onChange: (newValue) =>
+                newEditingData = @state.editingData
+                newEditingData.outtable = newValue
+                @setState
+                  editingData: newEditingData
+                @_updateEditingConfig()
+        ,
+          p className: 'help-block', tooltips.outtable
 
 
   _getTables: ->
@@ -171,13 +191,17 @@ module.exports = React.createClass
     ).toList().toJS()
     return result
 
-  _createInput: (caption, value) ->
-    pvalue =
-    StaticText
-      label: caption
-      labelClassName: 'col-xs-4'
-      wrapperClassName: 'col-xs-8'
-    , value or 'N/A'
+  _createInput: (caption, value, tooltip) ->
+    OverlayTrigger
+      overlay: Tooltip null, tooltip
+      key: caption
+      placement: 'top'
+    ,
+      StaticText
+        label: caption
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+      , value or 'N/A'
 
   _prepareEditingData: (editingData) ->
     #console.log "editing data", editingData?.toJS()
