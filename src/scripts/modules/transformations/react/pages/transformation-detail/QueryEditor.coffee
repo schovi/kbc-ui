@@ -14,9 +14,12 @@ module.exports = React.createClass
 
   propTypes:
     mode: React.PropTypes.string.isRequired
-    value: React.PropTypes.string.isRequired
+    value: React.PropTypes.string
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+
+  getDefaultProps: ->
+    value: ''
 
   _handleOnChange: (e) ->
     @props.onChange(e.target.value)

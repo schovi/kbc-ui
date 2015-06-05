@@ -8,9 +8,12 @@ module.exports = React.createClass
 
   propTypes:
     transformation: React.PropTypes.object.isRequired
-    value: React.PropTypes.string.isRequired
+    value: React.PropTypes.string
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+
+  getDefaultProps: ->
+    value: ''
 
   render: ->
     component = @
