@@ -61,19 +61,26 @@ TransformationDetailEdit = React.createClass
         div className: "row",
           div className: "col-md-6",
             StaticText
+              key: 'id'
               label: 'Id'
               labelClassName: 'col-xs-4'
               wrapperClassName: 'col-xs-8'
               value: @props.transformation.get 'id'
           div className: "col-md-6",
-            StaticText
-              label: 'Type'
-              labelClassName: 'col-xs-4'
-              wrapperClassName: 'col-xs-8'
-            ,
-              TransformationTypeLabel
-                backend: @props.transformation.get 'backend'
-                type: @props.transformation.get 'type'
+            # mock StaticText, as it cannot contain a component
+            div className: "form-group",
+              label className: "control-label col-xs-4",
+                span {},
+                  "Type"
+              div className: "col-xs-8",
+                p
+                  label: "Type"
+                  className: "form-control-static"
+                ,
+                  TransformationTypeLabel
+                    backend: @props.transformation.get 'backend'
+                    type: @props.transformation.get 'type'
+
         div className: "row",
           div className: "col-md-6",
             Input

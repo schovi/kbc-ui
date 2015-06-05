@@ -1,16 +1,12 @@
 React = require 'react'
 
-Router = require 'react-router'
-
-{button, span, i} = React.DOM
-
+{span} = React.DOM
 
 TransformationTypeLabel = React.createClass
   displayName: 'TransformationTypeLabel'
   propTypes:
     backend: React.PropTypes.string.isRequired
     type: React.PropTypes.string
-
   render: ->
     if @props.backend == 'mysql' && @props.type == 'simple'
       span {className: 'label label-default'},
