@@ -1,20 +1,23 @@
 React = require 'react'
 _ = require 'underscore'
 ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
-{DropdownButton, MenuItem} = require 'react-bootstrap'
+{DropdownButton, MenuItem, DropdownStateMixin} = require 'react-bootstrap'
 
 {div, img, strong, span} = React.DOM
 
 module.exports = React.createClass
   displayName: 'User'
-  mixins: [ImmutableRendererMixin]
+  mixins: [ImmutableRendererMixin, DropdownStateMixin]
   propTypes:
     user: React.PropTypes.object.isRequired
     maintainers: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
     canManageApps: React.PropTypes.bool.isRequired
   render: ->
-    div className: 'kbc-user',
+    div
+      className: 'kbc-user'
+      onClick: @_handleUserClick
+    ,
       img
         src: @props.user.get 'profileImageUrl'
         className: 'kbc-user-avatar'
@@ -26,6 +29,7 @@ module.exports = React.createClass
             bsStyle: 'link'
             dropup: true
             title: ''
+            ref: 'dropdownButton'
           ,
             @_userLinks()
         div null,
@@ -78,3 +82,6 @@ module.exports = React.createClass
 
   _maintainerUrl: (id) ->
     _.template(@props.urlTemplates.get('maintainer'))(maintainerId: id)
+
+  _handleUserClick: (e) ->
+    @refs.dropdownButton.handleDropdownClick(e)
