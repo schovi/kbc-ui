@@ -28,8 +28,9 @@ module.exports = React.createClass
             className: 'kbc-user-menu'
             bsStyle: 'link'
             dropup: true
-            title: ''
+            title: span(className: 'kbc-icon-picker')
             ref: 'dropdownButton'
+            noCaret: true
           ,
             @_userLinks()
         div null,
