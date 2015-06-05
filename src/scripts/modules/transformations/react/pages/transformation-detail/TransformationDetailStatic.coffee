@@ -158,7 +158,7 @@ TransformationDetailStatic = React.createClass
               div className: 'table table-striped table-hover',
                 span {className: 'tbody'},
                   @props.transformation.get('queries').map((query, index) ->
-                    span {className: 'tr'},
+                    span {className: 'tr', key: index},
                       span {className: 'td'},
                         index + 1
                       span {className: 'td'},
