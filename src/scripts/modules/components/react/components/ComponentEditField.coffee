@@ -16,6 +16,10 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
     fieldName: React.PropTypes.string.isRequired
     editElement: React.PropTypes.func.isRequired
+    placeholder: React.PropTypes.string
+
+  getDefaultProps: ->
+    placeholder: 'Describe the component ...'
 
   getStateFromStores: ->
     value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get @props.fieldName
@@ -44,7 +48,7 @@ module.exports = React.createClass
   render: ->
     React.createElement @props.editElement,
       text: if @state.isEditing then @state.editValue else @state.value
-      placeholder: 'Describe the component ...'
+      placeholder: @props.placeholder
       isSaving: @state.isSaving
       isEditing: @state.isEditing
       isValid: @state.isValid
