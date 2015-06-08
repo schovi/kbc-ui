@@ -37,7 +37,7 @@ createGetSuggestions = (getOptions) ->
 tooltips =
   intable: "Table containing text for topic detection"
   data_column: "Column of the input table containing text for topic detection"
-  primary_key_column: "Column of the input table uniquely identifying each row of the input table"
+  id_column: "Column of the input table uniquely identifying each row of the input table"
   outtable: "Result table containing columns id(primary key column values),\
    topic column and confidence column as a result of topic detection of data column"
 
@@ -63,7 +63,7 @@ module.exports = (componentId) ->
 
 
       data_column: parameters?.get 'data_column'
-      primary_key_column: parameters?.get 'primary_key_column'
+      id_column: parameters?.get 'id_column'
       intable: intable
       outtable: outTable
       isEditing: isEditing
@@ -121,7 +121,7 @@ module.exports = (componentId) ->
               div className: 'row',
                 @_createInput('Input Table', @state.intable, tooltips.intable)
                 @_createInput('Data Column', @state.data_column, tooltips.data_column)
-                @_createInput('Primary Key', @state.primary_key_column, tooltips.primary_key_column)
+                @_createInput('Primary Key', @state.id_column, tooltips.id_column)
                 @_createInput('Output Table', @state.outtable, tooltips.outtable)
 
 
@@ -140,7 +140,7 @@ module.exports = (componentId) ->
                 newEditingData.intable = newValue
                 newEditingData.outtable = "#{newValue}-ex"
                 newEditingData.data_column = ""
-                newEditingData.primary_key_column = ""
+                newEditingData.id_column = ""
                 @setState
                   editingData: newEditingData
                 @_updateEditingConfig()
@@ -171,18 +171,18 @@ module.exports = (componentId) ->
           div className: 'col-xs-10',
             Select
               key: 'primcol'
-              name: 'primary_key_column'
-              value: @state.editingData.primary_key_column
+              name: 'id_column'
+              value: @state.editingData.id_column
               placeholder: "Primary Key Column"
               onChange: (newValue) =>
                 newEditingData = @state.editingData
-                newEditingData.primary_key_column = newValue
+                newEditingData.id_column = newValue
                 @setState
                   editingData: newEditingData
                 @_updateEditingConfig()
               options: @_getColumns()
           ,
-            p className: 'help-block', tooltips.primary_key_column
+            p className: 'help-block', tooltips.id_column
 
         div className: 'form-group',
           label className: 'control-label col-xs-2', 'Output Table'
@@ -257,14 +257,16 @@ module.exports = (componentId) ->
 
       intable: getTables('input')?.get(0)?.get('source')
       outtable: getTables('output')?.get(0)?.get('source') or ""
-      primary_key_column: params?.get 'primary_key_column'
+      id_column: params?.get 'id_column'
       data_column: params?.get 'data_column'
 
 
     _updateEditingConfig: ->
-      columns = _.map @_getColumns(), (value, key) ->
-        key
       setup = @state.editingData
+      columns = _.map @_getColumns(), (value, key) ->
+        value['value']
+      columns = [setup?.id_column, setup?.data_column]
+      console.log "OCLUMNS", columns
       template =
         storage:
           input:
@@ -272,7 +274,7 @@ module.exports = (componentId) ->
           output:
             tables: [{source: setup.outtable, destination: setup.outtable}]
         parameters:
-          'primary_key_column': setup.primary_key_column
+          'id_column': setup.id_column
           data_column: setup.data_column
           user_key: '9cf1a9a51553e32fda1ecf101fc630d5'
       updateFn = InstalledComponentsActions.updateEditComponentConfigData

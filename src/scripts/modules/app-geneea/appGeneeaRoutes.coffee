@@ -25,6 +25,4 @@ createRoute = (componentId) ->
 
 
 
-module.exports = [
-  createRoute 'geneea-topic-detection'
-  ]
+module.exports = createRoute 'geneea-topic-detection'
