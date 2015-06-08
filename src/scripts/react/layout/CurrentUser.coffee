@@ -85,4 +85,4 @@ module.exports = React.createClass
     _.template(@props.urlTemplates.get('maintainer'))(maintainerId: id)
 
   _handleUserClick: (e) ->
-    @refs.dropdownButton.handleDropdownClick(e)
+    @refs.dropdownButton.handleDropdownClick(e) if e.target.tagName != 'A'
