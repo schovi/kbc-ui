@@ -5,24 +5,24 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Input = React.createFactory(require('react-bootstrap').Input)
-ComponentDescription = require '../../../../../../components/react/components/ComponentDescription'
+ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
-ComponentMetadata = require '../../../../../../components/react/components/ComponentMetadata'
-RunButtonModal = React.createFactory(require('../../../../../../components/react/components/RunComponentButton'))
-DeleteConfigurationButton = require '../../../../../../components/react/components/DeleteConfigurationButton'
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
-LatestJobs = require '../../../../../../components/react/components/SidebarJobs'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
-createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
-InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
-InstalledComponentsActions = require '../../../../../../components/InstalledComponentsActionCreators'
-storageActionCreators = require '../../../../../../components/StorageActionCreators'
-storageTablesStore = require '../../../../../../components/stores/StorageTablesStore'
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+storageActionCreators = require '../../../../components/StorageActionCreators'
+storageTablesStore = require '../../../../components/stores/StorageTablesStore'
 Select = React.createFactory(require('react-select'))
-LatestJobsStore = require '../../../../../../jobs/stores/LatestJobsStore'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 fuzzy = require 'fuzzy'
 
-RoutesStore = require '../../../../../../../stores/RoutesStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Autosuggest = React.createFactory(require 'react-autosuggest')
 
