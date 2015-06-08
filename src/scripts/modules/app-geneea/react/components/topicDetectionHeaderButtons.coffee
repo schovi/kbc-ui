@@ -1,11 +1,11 @@
 React = require 'react'
-createStoreMixin = require '../../../../../../react/mixins/createStoreMixin'
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-RoutesStore = require '../../../../../../stores/RoutesStore'
+RoutesStore = require '../../../../stores/RoutesStore'
 
-EditButtons = React.createFactory(require '../../../../../../react/common/EditButtons')
-InstalledComponentsStore = require '../../../../../components/stores/InstalledComponentsStore'
-InstalledComponentsActions = require '../../../../../components/InstalledComponentsActionCreators'
+EditButtons = React.createFactory(require '../../../../react/common/EditButtons')
+InstalledComponentsStore = require '../../../components/stores/InstalledComponentsStore'
+InstalledComponentsActions = require '../../../components/InstalledComponentsActionCreators'
 
 module.exports = React.createClass
   displayName: 'GeneeaDetailHeaderButton'

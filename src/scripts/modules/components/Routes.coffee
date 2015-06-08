@@ -15,7 +15,7 @@ ComponentsActionCreators = require './ComponentsActionCreators'
 exDbRoutes = require '../ex-db/exDbRoutes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
-
+appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
 
 routes =
@@ -42,6 +42,9 @@ routes =
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
       ]
+    ,
+      appGeneeaRoutes
+
     ]
 
   extractors:

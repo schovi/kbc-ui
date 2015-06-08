@@ -1,6 +1,8 @@
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 topicDetectionIndex = require '../app-geneea/react/pages/index/Index'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
+JobsActionCreators = require '../jobs/ActionCreators'
+topicDetectionHeaderButtons = require './react/components/topicDetectionHeaderButtons'
 
 module.exports =
   name: 'geneea-topic-detection'
@@ -18,3 +20,4 @@ module.exports =
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs('geneea-topic-detection', params.config)
   defaultRouteHandler: topicDetectionIndex
+  headerButtonsHandler: topicDetectionHeaderButtons
