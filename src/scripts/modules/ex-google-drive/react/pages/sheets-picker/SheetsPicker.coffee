@@ -38,8 +38,12 @@ module.exports = React.createClass
     #console.log 'sheet picker files', @state.files.toJS()
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
-        @_renderGdriveFiles()
-        @_renderProjectConfigFiles()
+        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+          div {className: 'tr'},
+            div {className: 'td'},
+              @_renderGdriveFiles()
+            div {className: 'td'},
+              @_renderProjectConfigFiles()
     else
       div {}, 'Loading ...'
 
@@ -49,7 +53,7 @@ module.exports = React.createClass
 
   _renderGdriveFiles: ->
     component = @
-    div className: 'col-sm-6',
+    div className: '',
       SearchRow
         query: @state.searchQuery
         onChange: @_searchRowChanged
@@ -74,7 +78,7 @@ module.exports = React.createClass
 
 
   _renderProjectConfigFiles: ->
-    div className: 'col-sm-6',
+    div className: '',
       ConfigSheetsPanels
         deselectSheetFn: @_deselectSheet
         selectedSheets: @state.selectedSheets

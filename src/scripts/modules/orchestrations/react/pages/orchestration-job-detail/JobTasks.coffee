@@ -24,7 +24,10 @@ JobTasks = React.createClass
     components: ComponentsStore.getAll()
 
   render: ->
-    PanelGroup accordion: true, @_renderTasks()
+    PanelGroup
+      accordion: true
+      className: 'kbc-panel-heading-with-table'
+      @_renderTasks()
 
   _renderTasks: ->
     @props.tasks.map(@_renderTask, @).toArray()

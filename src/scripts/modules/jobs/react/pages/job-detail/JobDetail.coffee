@@ -113,7 +113,7 @@ module.exports = React.createClass
   _renderAccordion: (job) ->
     React.createElement PanelGroup,
       accordion: true
-      className: 'kbc-accordion'
+      className: 'kbc-accordion kbc-panel-heading-with-table'
       activeKey: @state.activeAccordion
       onSelect: @_handleChangeActiveAccordion
     ,

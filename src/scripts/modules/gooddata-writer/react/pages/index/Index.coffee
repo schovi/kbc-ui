@@ -43,6 +43,7 @@ module.exports = React.createClass
           Alert bsStyle: 'warning',
             writer.get 'info'
         PanelGroup
+          className: 'kbc-panel-heading-with-table'
           accordion: true
           activeKey: @state.writer.get 'openedBucket'
           onSelect: @_handleBucketSelect

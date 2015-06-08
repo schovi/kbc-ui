@@ -9,7 +9,7 @@ ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
 Button = React.createFactory(require('react-bootstrap').Button)
 
-{div, span, h3} = React.DOM
+{div, span, h3, a} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ConfigSheetsPanel'
@@ -29,35 +29,29 @@ module.exports = React.createClass
       @_renderSelectedSheets()
 
   _renderConfiguredSheets: ->
-    Panel
-      header:
-        h3 className: 'text-center', 'Sheets Already Configured in Project'
-      ,
-        if @props.configSheets
-          ListGroup {},
-            @props.configSheets.map((sheet) =>
-              path = @props.getPathFn(sheet.get('googleId'))
-              fileTitle = sheet.get 'title'
-              sheetTitle = sheet.get 'sheetTitle'
-              ListGroupItem
-                className: 'text-center'
-                key: sheet.get('sheetId') + sheet.get('googleId')
-                ,
-                  "#{path} / #{fileTitle} / #{sheetTitle}").toArray()
-        else
-          div className: 'well', 'No sheets configured in project.'
+    div {},
+      React.DOM.h2 className: '', 'Sheets Already Configured in Project'
+      if @props.configSheets
+        React.DOM.ul {},
+          @props.configSheets.map((sheet) =>
+            path = @props.getPathFn(sheet.get('googleId'))
+            fileTitle = sheet.get 'title'
+            sheetTitle = sheet.get 'sheetTitle'
+            React.DOM.li {},
+              "#{path} / #{fileTitle} / #{sheetTitle}").toArray()
+      else
+        div className: 'well', 'No sheets configured in project.'
 
 
   _renderSelectedSheets: ->
     #console.log @props.selectedSheets.toJS() if @props.selectedSheets
-    Panel
-      header:
-        h3 className: 'text-center', 'Sheets To Be Added To Project'
-      ,
-        if @props.selectedSheets
+    div {},
+      React.DOM.h2 className: '', 'Sheets To Be Added To Project'
+      if @props.selectedSheets
+        React.DOM.ul {},
           @_renderSelectedSheetsListGroup()
-        else
-          div className: 'well', 'No sheets selected.'
+      else
+        div className: 'well', 'No sheets selected.'
 
   _renderSelectedSheetsListGroup: ->
     listItems = @props.selectedSheets.map((sheets, fileId) =>
@@ -70,17 +64,14 @@ module.exports = React.createClass
       return sheetItems
     ).toList()
     listItems = listItems.flatten(true).toArray()
-    ListGroup {}, listItems
+
 
 
   _renderSheetGroupItem: (path, fileTitle, sheetTitle, fileId, sheetId) ->
-    ListGroupItem
-      className: 'text-center'
-      active: true
-      ,
-        span {},
-          "#{path} / #{fileTitle} / #{sheetTitle}"
-          span
-            onClick: =>
-              @props.deselectSheetFn(fileId, sheetId)
-            className: 'btn btn-sm', '×'
+    React.DOM.li {},
+      span {},
+        "#{path} / #{fileTitle} / #{sheetTitle} "
+        span
+          onClick: =>
+            @props.deselectSheetFn(fileId, sheetId)
+          className: 'kbc-icon-cup kbc-cursor-pointer', ''

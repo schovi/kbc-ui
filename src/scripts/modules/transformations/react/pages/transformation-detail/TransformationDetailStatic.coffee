@@ -61,6 +61,7 @@ TransformationDetailStatic = React.createClass
               inputMapping.get('source').toLowerCase()
             ).map((input, key) ->
               Panel
+                className: 'kbc-panel-heading-with-table'
                 key: key
                 collapsible: true
                 eventKey: key
@@ -91,6 +92,7 @@ TransformationDetailStatic = React.createClass
                 outputMapping.get('source').toLowerCase()
               ).map((output, key) ->
                 Panel
+                  className: 'kbc-panel-heading-with-table'
                   key: key
                   collapsible: true
                   eventKey: key

@@ -46,6 +46,7 @@ module.exports = React.createClass
         @props.value.map(
           (mapping, key) ->
             Panel
+              className: 'kbc-panel-heading-with-table'
               key: key
               collapsible: true
               expanded: component.props.openInputMappings.get(key, false)
