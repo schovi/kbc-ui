@@ -32,8 +32,6 @@ routes =
       jobsRoutes
     ,
       transformationsRoutes
-    ,
-      applications
 
   ]
 

@@ -20,6 +20,30 @@ goodDataWriterRoutes = require '../gooddata-writer/routes'
 
 routes =
 
+  applications:
+    name: 'applications'
+    title: 'Applications'
+    requireData: ->
+      InstalledComponentsActionsCreators.loadComponents()
+    defaultRouteHandler: createComponentsIndex('application')
+    headerButtonsHandler: createNewComponentButton('New Application', 'new-application', 'application')
+    reloaderHandler: ComponentReloaderButton
+    childRoutes: [
+      name: 'new-application'
+      title: 'New Application'
+      defaultRouteHandler: createNewComponentPage('application')
+      childRoutes: [
+        name: 'new-application-form'
+        title: (routerState) ->
+          componentId = routerState.getIn ['params', 'componentId']
+          ComponentsStore.getComponent(componentId).get 'name'
+        path: ':componentId'
+        handler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.componentId
+      ]
+    ]
+
   extractors:
     name: 'extractors'
     title: 'Extractors'
