@@ -25,4 +25,9 @@ createRoute = (componentId) ->
 
 
 
-module.exports = createRoute 'geneea-topic-detection'
+module.exports =
+  topicDetection: createRoute 'geneea-topic-detection'
+  sentimentAnalysis: createRoute 'geneea-sentiment-analysis'
+  lemmatization: createRoute 'geneea-lemmatization'
+  correction: createRoute 'geneea-text-correction'
+  languageDetection: createRoute 'geneea-language-detection'

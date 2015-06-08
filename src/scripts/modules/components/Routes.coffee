@@ -43,8 +43,15 @@ routes =
           ComponentsActionCreators.loadComponent params.componentId
       ]
     ,
-      appGeneeaRoutes
-
+      appGeneeaRoutes.sentimentAnalysis
+    ,
+      appGeneeaRoutes.topicDetection
+    ,
+      appGeneeaRoutes.lemmatization
+    ,
+      appGeneeaRoutes.correction
+    ,
+      appGeneeaRoutes.languageDetection
     ]
 
   extractors:
