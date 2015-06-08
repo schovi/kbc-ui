@@ -6,9 +6,10 @@
 
 React = require 'react'
 Immutable = require 'immutable'
-{div, span} = React.DOM
+{div, span, ul, li, input} = React.DOM
 
 CurrentUser = require './react/layout/CurrentUser'
+ProjectsList = require './react/layout/project-select/List'
 
 App = React.createClass
   render: ->
@@ -20,8 +21,14 @@ App = React.createClass
           maintainers: @props.maintainers
           urlTemplates: @props.urlTemplates
           canManageApps: true
+          dropup: false
       div className: 'kbc-outer-content well',
-        'todo'
+        React.createElement ProjectsList,
+          organizations: @props.organizations
+          urlTemplates: @props.urlTemplates
+          focus: true
+          canCreateProject: true
+
 
 global.kbcApp =
   start: (appOptions) ->
@@ -31,6 +38,7 @@ global.kbcApp =
       user: Immutable.fromJS(appOptions.data.kbc.admin)
       urlTemplates: Immutable.fromJS(appOptions.data.kbc.urlTemplates)
       maintainers: Immutable.fromJS(appOptions.data.maintainers)
+      organizations: Immutable.fromJS(appOptions.data.organizations)
     ), document.body)
 
   helpers: require './helpers'

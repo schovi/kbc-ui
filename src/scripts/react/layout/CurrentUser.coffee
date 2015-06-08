@@ -13,6 +13,7 @@ module.exports = React.createClass
     maintainers: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
     canManageApps: React.PropTypes.bool.isRequired
+    dropup: React.PropTypes.bool.isRequired
   render: ->
     div
       className: 'kbc-user'
@@ -27,7 +28,7 @@ module.exports = React.createClass
           React.createElement DropdownButton,
             className: 'kbc-user-menu'
             bsStyle: 'link'
-            dropup: true
+            dropup: @props.dropup
             title: span(className: 'kbc-icon-picker')
             ref: 'dropdownButton'
             noCaret: true

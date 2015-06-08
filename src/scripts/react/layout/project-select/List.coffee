@@ -2,6 +2,7 @@ React = require 'react'
 fuzzy = require 'fuzzy'
 {List, Map} = require 'immutable'
 _ = require 'underscore'
+
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 NewProjectModal = React.createFactory(require '../NewProjectModal')
 
@@ -13,8 +14,7 @@ module.exports = React.createClass
     organizations: React.PropTypes.object.isRequired
     currentProjectId: React.PropTypes.number.isRequired
     urlTemplates: React.PropTypes.object.isRequired
-    xsrf: React.PropTypes.string.isRequired
-    open: React.PropTypes.bool.isRequired
+    focus: React.PropTypes.bool.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
 
   getInitialState: ->
@@ -22,26 +22,26 @@ module.exports = React.createClass
     selectedProjectId: null
     selectedOrganizationId: null
 
+  componentDidMount: ->
+    if @props.focus
+      @refs.searchInput.getDOMNode().focus()
+
   componentDidUpdate: (prevProps) ->
-    # focus search on dropdown open
-    if @props.open && @props.open != prevProps.open
+    if @props.focus && @props.focus != prevProps.focus
       @refs.searchInput.getDOMNode().focus()
 
   render: ->
-    div className: 'dropdown-menu',
+    div null,
       ul className: 'list-unstyled',
         li className: 'dropdown-header kb-nav-search kbc-search',
           span className: 'kbc-icon-search'
           input
-            style:
-              color: '#fff'
             className: 'form-control'
             placeholder: 'Search your projects'
             value: @state.query
             ref: 'searchInput'
             onChange: @_handleQueryChange
             onKeyDown: @_handleKeyDown
-
       @_projectsList()
       @_newProject() if @props.canCreateProject
 
@@ -74,17 +74,6 @@ module.exports = React.createClass
 
     ul className: 'list-unstyled kbc-project-select-results', elements
 
-  _newProject: ->
-    ul className: 'list-unstyled kbc-project-select-new',
-      li null,
-        ModalTrigger modal: NewProjectModal(
-          urlTemplates: @props.urlTemplates
-          xsrf: @props.xsrf
-          organizations: @props.organizations
-        ),
-          span null,
-            span className: 'fa fa-plus-circle'
-            ' New Project'
 
   _organizationsFiltered: ->
     filter = @state.query
@@ -163,7 +152,7 @@ module.exports = React.createClass
     newIndex = if previous then selectedIndex - 1 else selectedIndex + 1
     newSelected = organizationsAndProjects.get(newIndex)
     if !newSelected
-      # go back to first which is always organization
+      #    go back to first which is always organization
       return @setState
         selectedProjectId: null
         selectedOrganizationId: organizationsAndProjects.first().get 'id'
@@ -185,3 +174,18 @@ module.exports = React.createClass
       @setState
         selectedProjectId: item.get 'id'
         selectedOrganizationId: null
+
+
+  _newProject: ->
+    ul className: 'list-unstyled kbc-project-select-new',
+      li null,
+        ModalTrigger modal: NewProjectModal(
+          urlTemplates: @props.urlTemplates
+          xsrf: @props.xsrf
+          organizations: @props.organizations
+        ),
+          a null,
+            span className: 'fa fa-plus-circle'
+            ' New Project'
+
+

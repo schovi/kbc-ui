@@ -3,7 +3,7 @@ React = require 'react'
 {div, button, span} = React.DOM
 
 
-Dropdown = React.createFactory(require './Dropdown')
+ProjectsList = require './List'
 DropdownStateMixin = require('react-bootstrap').DropdownStateMixin
 
 module.exports = React.createClass
@@ -24,13 +24,14 @@ module.exports = React.createClass
           span className: 'kbc-icon-pickerDouble'
           span className: 'kbc-project-name',
             @props.currentProject.get('name')
-      Dropdown
+      div className: 'dropdown-menu',
+      React.createElement ProjectsList,
         organizations: @props.organizations
         currentProjectId: @props.currentProject.get('id')
         urlTemplates: @props.urlTemplates
         xsrf: @props.xsrf
         canCreateProject: @props.canCreateProject
-        open: @state.open
+        focus: @state.open
 
   _handleDropdownClick: (e) ->
     e.preventDefault()

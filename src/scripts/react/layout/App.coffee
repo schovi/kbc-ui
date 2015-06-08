@@ -53,6 +53,7 @@ App = React.createClass
                 maintainers: @state.maintainers
                 urlTemplates: @state.urlTemplates
                 canManageApps: @state.canManageApps
+                dropup: true
               UserLinks()
           div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
             Notifications()
