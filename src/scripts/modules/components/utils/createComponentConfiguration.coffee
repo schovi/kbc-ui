@@ -6,7 +6,8 @@ ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
 Promise = require 'bluebird'
 
-COMPONENTS_WITHOUT_API = ['tde-exporter', 'geneea-topic-detection']
+COMPONENTS_WITHOUT_API = ['tde-exporter', 'geneea-topic-detection',
+'geneea-language-detection', 'geneea-lemmatization', 'geneea-sentiment-analysis', 'geneea-text-correction']
 
 createConfigByApi = (componentId, configuration) ->
   syrupApi
