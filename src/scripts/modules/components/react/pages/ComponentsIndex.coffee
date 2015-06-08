@@ -57,7 +57,6 @@ module.exports = (type) ->
             React.DOM.p null, TEXTS['installFirst'][type]
 
     renderComponentRow: (component) ->
-      console.log "aaaaaaaa", component.toJS()
       tr key: component.get('id'),
         td null,
           ComponentIcon
