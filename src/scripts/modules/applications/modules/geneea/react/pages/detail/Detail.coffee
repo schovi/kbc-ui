@@ -11,7 +11,7 @@ ComponentMetadata = require '../../../../../../components/react/components/Compo
 RunButtonModal = React.createFactory(require('../../../../../../components/react/components/RunComponentButton'))
 DeleteConfigurationButton = require '../../../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
-
+LatestJobs = require '../../../../../../components/react/components/SidebarJobs'
 
 createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
@@ -19,7 +19,7 @@ InstalledComponentsActions = require '../../../../../../components/InstalledComp
 storageActionCreators = require '../../../../../../components/StorageActionCreators'
 storageTablesStore = require '../../../../../../components/stores/StorageTablesStore'
 Select = React.createFactory(require('react-select'))
-
+LatestJobsStore = require '../../../../../../jobs/stores/LatestJobsStore'
 fuzzy = require 'fuzzy'
 
 RoutesStore = require '../../../../../../../stores/RoutesStore'
@@ -68,6 +68,7 @@ module.exports = React.createClass
     isEditing: isEditing
     editingData: editingData
     configId: configId
+    latestJobs: LatestJobsStore.getJobs 'geneea-topic-detection', configId
 
   componentWillMount: ->
     storageActionCreators.loadTables()
@@ -87,19 +88,22 @@ module.exports = React.createClass
           componentId: 'geneea-topic-detection'
           configId: @state.configId
       ul className: 'nav nav-stacked',
-        li null,
+        li disabled: true,
           RunButtonModal
+
             title: 'Run Extraction'
             mode: 'link'
             component: 'geneea-topic-detection'
             runParams: =>
               config: @state.configId
           ,
-            'You are about to run the extraction of this configuration.'
+            'You are about to run the topic detection job of this configuration.'
         li null,
           DeleteConfigurationButton
             componentId: 'geneea-topic-detection'
             configId: @state.configId
+      # React.createElement LatestJobs,
+      #   jobs: @state.latestJobs
 
 
   _renderMainContent: ->
