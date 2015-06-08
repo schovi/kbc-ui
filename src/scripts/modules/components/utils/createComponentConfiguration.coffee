@@ -4,10 +4,8 @@ constants = require '../Constants'
 string = require '../../../utils/string'
 ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
+componentHasApi = require './hasComponentApi'
 Promise = require 'bluebird'
-
-COMPONENTS_WITHOUT_API = ['tde-exporter', 'geneea-topic-detection',
-'geneea-language-detection', 'geneea-lemmatization', 'geneea-sentiment-analysis', 'geneea-text-correction']
 
 createConfigByApi = (componentId, configuration) ->
   syrupApi
@@ -60,7 +58,7 @@ module.exports = (componentId, configuration) ->
 
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
-  else if component.get('uri') and (component.get('id') not in COMPONENTS_WITHOUT_API)
+  else if component.get('uri') and componentHasApi(component.get('id'))
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigManually(configuration)
