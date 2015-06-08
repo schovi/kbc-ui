@@ -6,3 +6,4 @@ global.kbcApp =
   parts:
     ProjectSelect: require './react/layout/project-select/ProjectSelect'
     CurrentUser: require './react/layout/CurrentUser'
+    ProjectsList: require './react/layout/project-select/List'
