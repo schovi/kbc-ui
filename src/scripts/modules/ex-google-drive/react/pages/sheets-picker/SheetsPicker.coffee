@@ -54,6 +54,7 @@ module.exports = React.createClass
   _renderGdriveFiles: ->
     component = @
     div className: '',
+      React.DOM.h2 {}, "Available Sheets of #{@state.config.get('email')}"
       SearchRow
         query: @state.searchQuery
         onChange: @_searchRowChanged

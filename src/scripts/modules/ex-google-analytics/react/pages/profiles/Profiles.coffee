@@ -31,28 +31,29 @@ module.exports = React.createClass
   render: ->
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
-        @_renderProfiles()
-        @_renderProjectProfiles()
+        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+          div {className: 'tr'},
+            div {className: 'td'},
+              @_renderProfiles()
+            div {className: 'td'},
+              @_renderProjectProfiles()
     else
       div {}, 'Loading ...'
 
   _renderProfiles: ->
-    div className: 'col-md-6',
-      Panel
-        header:
-          h3 className: 'text-center', "Profiles of #{@state.config.get('email')}"
-        ,
-          PanelGroup accordion: true,
-            if @state.profiles and @state.profiles.count() > 0
-              @state.profiles.map( (profileGroup, profileGroupName) =>
-                @_renderProfileGroup(profileGroup, profileGroupName)
-              ,@).toArray()
-            else
-              div className: 'well', 'No Profiles.'
+    div className: '',
+      React.DOM.h2 className: '', "Available Profiles of #{@state.config.get('email')}"
+      PanelGroup accordion: true,
+        if @state.profiles and @state.profiles.count() > 0
+          @state.profiles.map( (profileGroup, profileGroupName) =>
+            @_renderProfileGroup(profileGroup, profileGroupName)
+          ,@).toArray()
+        else
+          div className: 'well', 'No Profiles.'
 
   _renderProfileGroup: (profileGroup, profileGroupName) ->
     header = div
-      className: 'text-center'
+      className: ''
       profileGroupName
     Panel
       header: header
@@ -66,7 +67,7 @@ module.exports = React.createClass
 
   _renderProfilePanel: (profile, profileName, profileGroupName) ->
     header = div
-      className: 'text-center'
+      className: ''
       profileName
     PanelGroup accordion: true,
       Panel
@@ -74,19 +75,20 @@ module.exports = React.createClass
         key: profileName
         eventKey: profileName
       ,
-        ListGroup {},
-          profile.map((profileItem) =>
-            ListGroupItem
-              className: 'text-center'
-              active: @_isSelected(profileItem.get('id'))
-              onClick: =>
-                profileItem = profileItem.set 'webPropertyName', profileName
-                profileItem = profileItem.set 'accountName', profileGroupName
-                profileItem = profileItem.set 'googleId', profileItem.get 'id'
-                @_profileOnClick(profileItem)
-              ,
-                profileItem.get 'name'
-          ).toArray()
+        div {className: 'row'},
+          ListGroup {},
+            profile.map((profileItem) =>
+              ListGroupItem
+                className: ''
+                active: @_isSelected(profileItem.get('id'))
+                onClick: =>
+                  profileItem = profileItem.set 'webPropertyName', profileName
+                  profileItem = profileItem.set 'accountName', profileGroupName
+                  profileItem = profileItem.set 'googleId', profileItem.get 'id'
+                  @_profileOnClick(profileItem)
+                ,
+                  profileItem.get 'name'
+            ).toArray()
 
   _profileOnClick: (profile) ->
     if @_isSelected(profile.get 'id')
@@ -98,29 +100,26 @@ module.exports = React.createClass
     @state.selectedProfiles and @state.selectedProfiles.has profileId
 
   _renderProjectProfiles: ->
-    div className: 'col-md-6',
-      Panel
-        header:
-          h3 className: 'text-center', 'Selected Profiles'
-        ,
-          if @state.selectedProfiles
-            @_renderProfilesItems(@state.selectedProfiles)
-          else
-            div className: 'well', 'No profiles selected in project.'
+    div className: '',
+      React.DOM.h2 className: '', 'Selected Profiles'
+      if @state.selectedProfiles
+        @_renderProfilesItems(@state.selectedProfiles)
+      else
+        div className: 'well', 'No profiles selected in project.'
 
   _renderProfilesItems: (profiles) ->
-    ListGroup {},
+    React.DOM.ul {},
       profiles.map((profile) =>
         profilePath = @_getProfilePath profile
-        ListGroupItem
-          className: 'text-center'
+        React.DOM.li
           key: profile.get 'googleId'
           span {},
             profilePath
+            ' '
             span
               onClick: =>
                 @_profileOnClick(profile)
-              className: 'btn btn-sm', '×'
+              className: 'kbc-icon-cup kbc-cursor-pointer', ''
 
         ).toArray()
 
