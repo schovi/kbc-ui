@@ -46,7 +46,7 @@ module.exports = function (options) {
           bundle: ['webpack-dev-server/client?http://localhost:3000',
             'webpack/hot/only-dev-server',
             './src/styles/kbc.less',
-            './src/scripts/app'
+            options.entry
           ]};
     } else {
         entry = {
