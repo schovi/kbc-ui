@@ -1,10 +1,18 @@
 React = require 'react'
 Immutable = require('immutable')
-{span, div, a, p, h2, label, input, form} = React.DOM
+{ul, li, span, div, a, p, h2, label, input, form} = React.DOM
 _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Input = React.createFactory(require('react-bootstrap').Input)
+ComponentDescription = require '../../../../../../components/react/components/ComponentDescription'
+ComponentDescription = React.createFactory(ComponentDescription)
+ComponentMetadata = require '../../../../../../components/react/components/ComponentMetadata'
+RunButtonModal = React.createFactory(require('../../../../../../components/react/components/RunComponentButton'))
+DeleteConfigurationButton = require '../../../../../../components/react/components/DeleteConfigurationButton'
+DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
+
+
 createStoreMixin = require '../../../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../../../components/InstalledComponentsActionCreators'
@@ -67,16 +75,49 @@ module.exports = React.createClass
     storageActionCreators.loadTables()
 
   render: ->
-    div {className: 'container-fluid kbc-main-content'},
-      form className: 'form-horizontal',
-        if @state.isEditing
-          @_renderEditorRow()
-        else
-          div className: 'row',
-            @_createInput('Input Table', @state.intable, tooltips.intable)
-            @_createInput('Data Column', @state.data_column, tooltips.data_column)
-            @_createInput('Primary Key', @state.primary_key_column, tooltips.primary_key_column)
-            @_createInput('Output Table', @state.outtable, tooltips.outtable)
+    #console.log 'rendering', @state.config.toJS()
+    div {className: 'container-fluid'},
+      @_renderMainContent()
+      @_renderSideBar()
+
+  _renderSideBar: ->
+    div {className: 'col-md-3 kbc-main-sidebar'},
+      div className: 'kbc-buttons kbc-text-light',
+        React.createElement ComponentMetadata,
+          componentId: 'geneea-topic-detection'
+          configId: @state.configId
+      ul className: 'nav nav-stacked',
+        li null,
+          RunButtonModal
+            title: 'Run Extraction'
+            mode: 'link'
+            component: 'geneea-topic-detection'
+            runParams: =>
+              config: @state.configId
+          ,
+            'You are about to run the extraction of this configuration.'
+        li null,
+          DeleteConfigurationButton
+            componentId: 'geneea-topic-detection'
+            configId: @state.configId
+
+
+  _renderMainContent: ->
+    div {className: 'col-md-9 kbc-main-content'},
+      div className: 'row',
+        ComponentDescription
+          componentId: 'geneea-topic-detection'
+          configId: @state.configId
+      div className: 'row',
+        form className: 'form-horizontal',
+          if @state.isEditing
+            @_renderEditorRow()
+          else
+            div className: 'row',
+              @_createInput('Input Table', @state.intable, tooltips.intable)
+              @_createInput('Data Column', @state.data_column, tooltips.data_column)
+              @_createInput('Primary Key', @state.primary_key_column, tooltips.primary_key_column)
+              @_createInput('Output Table', @state.outtable, tooltips.outtable)
 
 
   _renderEditorRow: ->
