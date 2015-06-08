@@ -29,6 +29,8 @@ routes =
     ,
       componentsRoutes.writers
     ,
+      componentsRoutes.applications
+    ,
       jobsRoutes
     ,
       transformationsRoutes
