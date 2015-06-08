@@ -1,23 +1,30 @@
+genericIndex = require '../app-geneea/react/pages/index/Index'
+genericHeaderButtons = require './react/components/detailHeaderButtons'
+
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
-topicDetectionIndex = require '../app-geneea/react/pages/index/Index'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
-topicDetectionHeaderButtons = require './react/components/topicDetectionHeaderButtons'
 
-module.exports =
-  name: 'geneea-topic-detection'
-  path: 'geneea-topic-detection/:config'
+createRoute = (componentId) ->
+  name: componentId
+  path: "#{componentId}/:config"
   isComponent: true
   requireData: [
     (params) ->
-      installedComponentsActions.loadComponentConfigData "geneea-topic-detection", params.config
+      installedComponentsActions.loadComponentConfigData componentId, params.config
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    IntalledComponentsStore.getConfig('geneea-topic-detection', configId).get 'name'
+    IntalledComponentsStore.getConfig(componentId, configId).get 'name'
   poll:
     interval: 5
     action: (params) ->
-      JobsActionCreators.loadComponentConfigurationLatestJobs('geneea-topic-detection', params.config)
-  defaultRouteHandler: topicDetectionIndex
-  headerButtonsHandler: topicDetectionHeaderButtons
+      JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
+  defaultRouteHandler: genericIndex(componentId)
+  headerButtonsHandler: genericHeaderButtons(componentId)
+
+
+
+module.exports = [
+  createRoute 'geneea-topic-detection'
+  ]
