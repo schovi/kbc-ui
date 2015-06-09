@@ -262,16 +262,16 @@ module.exports = (componentId) ->
       return result
 
     _createInput: (caption, value, tooltip) ->
-      OverlayTrigger
-        overlay: Tooltip null, tooltip
-        key: caption
-        placement: 'top'
-      ,
-        StaticText
-          label: caption
-          labelClassName: 'col-xs-4'
-          wrapperClassName: 'col-xs-8'
-        , value or 'N/A'
+      # OverlayTrigger
+      #   overlay: Tooltip null, tooltip
+      #   key: caption
+      #   placement: 'top'
+      # ,
+      StaticText
+        label: caption
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+      , value or 'N/A'
 
     _prepareEditingData: (editingData) ->
       #console.log "editing data", editingData?.toJS()
