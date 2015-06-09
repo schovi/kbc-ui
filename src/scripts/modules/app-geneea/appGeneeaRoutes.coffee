@@ -5,7 +5,7 @@ installedComponentsActions = require '../components/InstalledComponentsActionCre
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 
-createRoute = (componentId, outtableSuffix) ->
+createRoute = (componentId) ->
   name: componentId
   path: "#{componentId}/:config"
   isComponent: true
@@ -20,14 +20,14 @@ createRoute = (componentId, outtableSuffix) ->
     interval: 5
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
-  defaultRouteHandler: genericIndex(componentId, outtableSuffix)
+  defaultRouteHandler: genericIndex(componentId)
   headerButtonsHandler: genericHeaderButtons(componentId)
 
 
 
 module.exports =
-  topicDetection: createRoute 'geneea-topic-detection', 'topic'
-  sentimentAnalysis: createRoute 'geneea-sentiment-analysis', 'sentiment'
-  lemmatization: createRoute 'geneea-lemmatization', 'lemma'
-  correction: createRoute 'geneea-text-correction', 'correction'
-  languageDetection: createRoute 'geneea-language-detection', 'lang'
+  topicDetection: createRoute 'geneea-topic-detection'
+  sentimentAnalysis: createRoute 'geneea-sentiment-analysis'
+  lemmatization: createRoute 'geneea-lemmatization'
+  correction: createRoute 'geneea-text-correction'
+  languageDetection: createRoute 'geneea-language-detection'

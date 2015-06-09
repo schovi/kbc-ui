@@ -21,7 +21,7 @@ storageTablesStore = require '../../../../components/stores/StorageTablesStore'
 Select = React.createFactory(require('react-select'))
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 fuzzy = require 'fuzzy'
-
+getTemplates = require './../../components/templates'
 RoutesStore = require '../../../../../stores/RoutesStore'
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Autosuggest = React.createFactory(require 'react-autosuggest')
@@ -34,18 +34,13 @@ createGetSuggestions = (getOptions) ->
       .toList()
     callback(null, suggestions.toJS())
 
-tooltips =
-  intable: "Table containing text for topic detection"
-  data_column: "Column of the input table containing text for topic detection"
-  id_column: "Column of the input table uniquely identifying each row of the input table"
-  outtable: "Result table containing columns id(primary key column values),\
-   topic column and confidence column as a result of topic detection of data column"
-
-
-module.exports = (componentId, outtableSuffix) ->
+module.exports = (componentId) ->
   React.createClass
 
     displayName: 'GeneeaAppDetail'
+
+    tooltips: getTemplates(componentId).tooltips
+    outTableSuffix: getTemplates(componentId).outputTableSuffix
 
     mixins: [createStoreMixin(InstalledComponentsStore, storageTablesStore)]
     getStateFromStores: ->
@@ -119,10 +114,10 @@ module.exports = (componentId, outtableSuffix) ->
               @_renderEditorRow()
             else
               div className: 'row',
-                @_createInput('Input Table', @state.intable, tooltips.intable)
-                @_createInput('Data Column', @state.data_column, tooltips.data_column)
-                @_createInput('Primary Key', @state.id_column, tooltips.id_column)
-                @_createInput('Output Table', @state.outtable, tooltips.outtable)
+                @_createInput('Input Table', @state.intable, @tooltips.intable)
+                @_createInput('Data Column', @state.data_column, @tooltips.data_column)
+                @_createInput('Primary Key', @state.id_column, @tooltips.id_column)
+                @_createInput('Output Table', @state.outtable, @tooltips.outtable)
 
 
     _renderEditorRow: ->
@@ -138,7 +133,7 @@ module.exports = (componentId, outtableSuffix) ->
               onChange: (newValue) =>
                 newEditingData = @state.editingData
                 newEditingData.intable = newValue
-                newEditingData.outtable = "#{newValue}-#{outtableSuffix}"
+                newEditingData.outtable = "#{newValue}-#{@outTableSuffix}"
                 newEditingData.data_column = ""
                 newEditingData.id_column = ""
                 @setState
@@ -146,7 +141,7 @@ module.exports = (componentId, outtableSuffix) ->
                 @_updateEditingConfig()
               options: @_getTables()
           ,
-            p className: 'help-block', tooltips.intable
+            p className: 'help-block', @tooltips.intable
 
         div className: 'form-group',
           label className: 'col-xs-2 control-label', 'Data Column'
@@ -164,7 +159,7 @@ module.exports = (componentId, outtableSuffix) ->
                 @_updateEditingConfig()
               options: @_getColumns()
           ,
-            p className: 'help-block', tooltips.data_column
+            p className: 'help-block', @tooltips.data_column
 
         div className: 'form-group',
           label className: 'col-xs-2 control-label', 'Primary Key'
@@ -182,7 +177,7 @@ module.exports = (componentId, outtableSuffix) ->
                 @_updateEditingConfig()
               options: @_getColumns()
           ,
-            p className: 'help-block', tooltips.id_column
+            p className: 'help-block', @tooltips.id_column
 
         div className: 'form-group',
           label className: 'control-label col-xs-2', 'Output Table'
@@ -200,7 +195,7 @@ module.exports = (componentId, outtableSuffix) ->
                     editingData: newEditingData
                   @_updateEditingConfig()
           ,
-            p className: 'help-block', tooltips.outtable
+            p className: 'help-block', @tooltips.outtable
 
 
     _getTables: ->
