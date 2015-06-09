@@ -56,9 +56,13 @@ module.exports = (componentId) ->
       editingData = @_prepareEditingData(editingConfigData)
       isEditing = InstalledComponentsStore.getEditingConfigData(componentId, configId)
 
+      language = null
+      if @_isLangParam()
+        language = parameters?.get('language') or 'en'
 
       data_column: parameters?.get 'data_column'
       id_column: parameters?.get 'id_column'
+      language: language
       intable: intable
       outtable: outTable
       isEditing: isEditing
@@ -118,6 +122,7 @@ module.exports = (componentId) ->
                 @_createInput('Data Column', @state.data_column, @tooltips.data_column)
                 @_createInput('Primary Key', @state.id_column, @tooltips.id_column)
                 @_createInput('Output Table', @state.outtable, @tooltips.outtable)
+                @_createInput('Language', @_getLangLabel(@state.language), @tooltips.language) if @_isLangParam()
 
 
     _renderEditorRow: ->
@@ -196,6 +201,30 @@ module.exports = (componentId) ->
                   @_updateEditingConfig()
           ,
             p className: 'help-block', @tooltips.outtable
+        if @_isLangParam()
+          div className: 'form-group',
+            label className: 'col-xs-2 control-label', 'Language'
+            div className: 'col-xs-10',
+              Select
+                key: 'language'
+                name: 'language'
+                value: @state.editingData.language
+                placeholder: "Language Column"
+                onChange: (newValue) =>
+                  newEditingData = @state.editingData
+                  newEditingData.language = newValue
+                  @setState
+                    editingData: newEditingData
+                  @_updateEditingConfig()
+                options: [
+                  label: 'English'
+                  value: 'en'
+                ,
+                  label: 'Czech'
+                  value: 'cs'
+                  ]
+            ,
+              p className: 'help-block', @tooltips.language
 
 
     _getTables: ->
@@ -249,11 +278,16 @@ module.exports = (componentId) ->
       getTables = (source) ->
         editingData?.getIn ['storage', source, 'tables']
       params = editingData?.getIn ['parameters']
+      language = null
+      if @_isLangParam()
+        language = params?.get('language') or 'en'
+      console.log "prepare language", language
 
       intable: getTables('input')?.get(0)?.get('source')
       outtable: getTables('output')?.get(0)?.get('source') or ""
       id_column: params?.get 'id_column'
       data_column: params?.get 'data_column'
+      language: language
 
 
     _updateEditingConfig: ->
@@ -272,6 +306,16 @@ module.exports = (componentId) ->
           'id_column': setup.id_column
           data_column: setup.data_column
           user_key: '9cf1a9a51553e32fda1ecf101fc630d5'
+          language: setup.language if @_isLangParam()
       updateFn = InstalledComponentsActions.updateEditComponentConfigData
       data = Immutable.fromJS template
       updateFn componentId, @state.configId, data
+
+    _isLangParam: ->
+      componentId != 'geneea-language-detection'
+
+    _getLangLabel: (lang) ->
+      languages =
+        en: 'English'
+        cs: 'Czech'
+      languages[lang] or "unknown language #{lang}"
