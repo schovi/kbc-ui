@@ -37,6 +37,7 @@ module.exports = (componentId) ->
 
     render: ->
       EditButtons
+        editLabel: 'Setup'
         isEditing: @state.isEditing
         isSaving: @state.isSaving
         isDisabled: !@state.isValid

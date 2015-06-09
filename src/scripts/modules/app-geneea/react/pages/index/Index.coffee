@@ -58,7 +58,7 @@ module.exports = (componentId) ->
       runMessage = "You are about to run #{@actionLabel} job of this configuration."
       if not isComplete
         runMessage = "Warning! You are about to run #{@actionLabel} \
-        of uncomplete configuration that will most likely fail, please edit configuriation first."
+        of uncomplete configuration that will most likely fail, please setup configuriation first."
       inputTables = configData?.getIn [ 'storage', 'input', 'tables']
       intable = inputTables?.get(0)?.get 'source'
       outTables = configData?.getIn [ 'storage', 'output', 'tables']
