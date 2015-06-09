@@ -2,7 +2,8 @@ React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 Link = React.createFactory(require('react-router').Link)
 
-{ActivateDeactivateButton, Confirm, Tooltip, Loader} = require '../../../../../react/common/common'
+{ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
+{Loader} = require 'kbc-react-components'
 
 actionCreators = require '../../../actionCreators'
 
@@ -36,7 +37,7 @@ module.exports = React.createClass
           onChange: @_handleExportChange
         if @props.table.get('pendingActions').contains 'uploadTable'
           React.DOM.span className: 'btn btn-link',
-            React.createElement Loader
+            React.createElement Loader, className: 'fa-fw'
         else
           React.createElement Tooltip,
             tooltip: 'Upload table to GoodData'

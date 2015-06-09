@@ -67,7 +67,7 @@ LoadTypeModal = React.createClass
     ,
       div className: 'modal-body',
         div className: 'form-horizontal',
-          Input
+          React.createElement Input,
             type: 'radio'
             wrapperClassName: 'col-sm-offset-2 col-sm-8'
             help: 'All data in GoodData dataset will be replaced by current data in source Storage API table.'
@@ -75,7 +75,7 @@ LoadTypeModal = React.createClass
             checked: !incrementalLoad
             onChange: @_handleModeRadioChange.bind @, 'full'
             disabled: isSaving
-          Input
+          React.createElement Input,
             type: 'radio'
             wrapperClassName: 'col-sm-offset-2 col-sm-8'
             help: incrementalHelp
@@ -86,13 +86,13 @@ LoadTypeModal = React.createClass
 
       div className: 'modal-footer',
         Loader() if isSaving
-        ButtonToolbar null,
-          Button
+        React.createElement ButtonToolbar,
+          React.createElement Button,
             onClick: @props.onRequestHide
             bsStyle: 'link'
           ,
             'Cancel'
-          Button
+          React.createElement Button,
             onClick: @props.onSave
             bsStyle: 'success'
             disabled: isSaving
