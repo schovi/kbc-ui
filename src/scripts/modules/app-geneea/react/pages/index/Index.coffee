@@ -281,7 +281,6 @@ module.exports = (componentId) ->
       language = null
       if @_isLangParam()
         language = params?.get('language') or 'en'
-      console.log "prepare language", language
 
       intable: getTables('input')?.get(0)?.get('source')
       outtable: getTables('output')?.get(0)?.get('source') or ""
@@ -295,7 +294,6 @@ module.exports = (componentId) ->
       columns = _.map @_getColumns(), (value, key) ->
         value['value']
       columns = [setup?.id_column, setup?.data_column]
-      console.log "OCLUMNS", columns
       template =
         storage:
           input:
