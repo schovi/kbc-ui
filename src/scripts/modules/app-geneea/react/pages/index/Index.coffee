@@ -89,16 +89,17 @@ module.exports = (componentId) ->
             componentId: componentId
             configId: @state.configId
         ul className: 'nav nav-stacked',
-          li disabled: true,
-            RunButtonModal
+          if not @state.isEditing
+            li null,
+              RunButtonModal
 
-              title: "Run #{@actionLabel}"
-              mode: 'link'
-              component: componentId
-              runParams: =>
-                config: @state.configId
-            ,
-              "You are about to run #{@actionLabel} job of this configuration."
+                title: "Run #{@actionLabel}"
+                mode: 'link'
+                component: componentId
+                runParams: =>
+                  config: @state.configId
+              ,
+                "You are about to run #{@actionLabel} job of this configuration."
           li null,
             DeleteConfigurationButton
               componentId: componentId
