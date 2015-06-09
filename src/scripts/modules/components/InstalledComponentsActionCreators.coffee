@@ -192,15 +192,15 @@ module.exports =
 
     notification = "Configuration #{configuration.get('name')} was deleted."
 
+    RoutesStore.getRouter().transitionTo transitionTo
+
     deleteComponentConfiguration componentId, configurationId
     .then (response) ->
-      RoutesStore.getRouter().transitionTo transitionTo
 
-      setTimeout ->
-        dispatcher.handleViewAction
-          type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
-          componentId: componentId
-          configurationId: configurationId
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
+        componentId: componentId
+        configurationId: configurationId
 
       ApplicationActionCreators.sendNotification notification
 
