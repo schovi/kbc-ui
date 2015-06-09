@@ -42,7 +42,7 @@ tooltips =
    topic column and confidence column as a result of topic detection of data column"
 
 
-module.exports = (componentId) ->
+module.exports = (componentId, outtableSuffix) ->
   React.createClass
 
     displayName: 'GeneeaAppDetail'
@@ -138,7 +138,7 @@ module.exports = (componentId) ->
               onChange: (newValue) =>
                 newEditingData = @state.editingData
                 newEditingData.intable = newValue
-                newEditingData.outtable = "#{newValue}-ex"
+                newEditingData.outtable = "#{newValue}-#{outtableSuffix}"
                 newEditingData.data_column = ""
                 newEditingData.id_column = ""
                 @setState
