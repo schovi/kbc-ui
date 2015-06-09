@@ -41,6 +41,7 @@ module.exports = (componentId) ->
 
     tooltips: getTemplates(componentId).tooltips
     outTableSuffix: getTemplates(componentId).outputTableSuffix
+    actionLabel: getTemplates(componentId).runActionLabel
 
     mixins: [createStoreMixin(InstalledComponentsStore, storageTablesStore)]
     getStateFromStores: ->
@@ -91,7 +92,7 @@ module.exports = (componentId) ->
           li disabled: true,
             RunButtonModal
 
-              title: 'Run Extraction'
+              title: "Run #{@actionLabel}"
               mode: 'link'
               component: componentId
               runParams: =>

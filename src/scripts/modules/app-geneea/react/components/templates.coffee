@@ -1,3 +1,10 @@
+runActionsLabel =
+  'geneea-topic-detection': 'Topic Detection'
+  'geneea-sentiment-analysis': 'Sentiment analysis'
+  'geneea-lemmatization': 'Lemmatization'
+  'geneea-text-correction': 'Text Correction'
+  'geneea-language-detection': 'Language Detection'
+
 outputTableSuffixes =
   'geneea-topic-detection': 'topic'
   'geneea-sentiment-analysis': 'sentiment'
@@ -49,3 +56,4 @@ tooltips  =
 module.exports = (componentId) ->
   tooltips: tooltips[componentId] or {}
   outputTableSuffix: outputTableSuffixes[componentId] or "ex"
+  runActionLabel: runActionsLabel[componentId] or ""
