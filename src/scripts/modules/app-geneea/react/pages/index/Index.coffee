@@ -22,6 +22,7 @@ Select = React.createFactory(require('react-select'))
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 fuzzy = require 'fuzzy'
 getTemplates = require './../../components/templates'
+validation = require './../../components/validation'
 RoutesStore = require '../../../../../stores/RoutesStore'
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Autosuggest = React.createFactory(require 'react-autosuggest')
@@ -42,6 +43,9 @@ module.exports = (componentId) ->
     tooltips: getTemplates(componentId).tooltips
     outTableSuffix: getTemplates(componentId).outputTableSuffix
     actionLabel: getTemplates(componentId).runActionLabel
+    runMessage: ->
+
+
 
     mixins: [createStoreMixin(InstalledComponentsStore, storageTablesStore)]
     getStateFromStores: ->
@@ -49,6 +53,11 @@ module.exports = (componentId) ->
       configData = InstalledComponentsStore.getConfigData(componentId, configId)
       editingConfigData = InstalledComponentsStore.getEditingConfigData(componentId, configId)
 
+      isComplete = validation(componentId).isComplete(configData)
+      runMessage = "You are about to run #{@actionLabel} job of this configuration."
+      if not isComplete
+        runMessage = "Warning! You are about to run #{@actionLabel} \
+        of uncomplete configuration that will most likely fail, please edit configuriation first."
       inputTables = configData?.getIn [ 'storage', 'input', 'tables']
       intable = inputTables?.get(0)?.get 'source'
       outTables = configData?.getIn [ 'storage', 'output', 'tables']
@@ -70,6 +79,7 @@ module.exports = (componentId) ->
       editingData: editingData
       configId: configId
       latestJobs: LatestJobsStore.getJobs componentId, configId
+      runMessage: runMessage
 
     componentWillMount: ->
       storageActionCreators.loadTables()
@@ -99,7 +109,7 @@ module.exports = (componentId) ->
                 runParams: =>
                   config: @state.configId
               ,
-                "You are about to run #{@actionLabel} job of this configuration."
+                @state.runMessage
           li null,
             DeleteConfigurationButton
               componentId: componentId

@@ -1,6 +1,6 @@
 React = require 'react'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
-
+validation = require './validation'
 RoutesStore = require '../../../../stores/RoutesStore'
 
 EditButtons = React.createFactory(require '../../../../react/common/EditButtons')
@@ -18,12 +18,13 @@ module.exports = (componentId) ->
     getStateFromStores: ->
       configId = RoutesStore.getCurrentRouteParam 'config'
       componentId = componentId
+      editingData = InstalledComponentsStore.getEditingConfigData(componentId, configId)
 
       componentId: componentId
       configId: configId
-      isEditing: InstalledComponentsStore.getEditingConfigData(componentId, configId)
+      isEditing: editingData
       isSaving: InstalledComponentsStore.getSavingConfigData(componentId, configId)
-      isValid: true #TODO: validation!
+      isValid: validation(componentId).isComplete(editingData)
 
     _handleEditStart: ->
       InstalledComponentsActions.startEditComponentConfigData(@state.componentId, @state.configId)
