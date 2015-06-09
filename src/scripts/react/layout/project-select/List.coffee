@@ -70,7 +70,9 @@ module.exports = React.createClass
         [[organizationElement], projectElements]
       , @).flatten().toArray()
     else
-      elements = li className: 'dropdown-header', 'No projects found'
+      elements = li className: '',
+        React.DOM.a {className: 'kbc-link-disabled'},
+          React.DOM.em {}, 'No projects found'
 
     ul className: 'list-unstyled kbc-project-select-results', elements
 
