@@ -67,7 +67,7 @@ module.exports = React.createClass
             Link
               to: 'jobs'
               query:
-                q: '+component:gooddata-writer-async +params.writerId:KB_PM'
+                q: '+component:gooddata-writer +params.config:KB_PM'
             ,
               span className: 'fa fa-tasks fa-fw'
               ' Jobs Queue'
