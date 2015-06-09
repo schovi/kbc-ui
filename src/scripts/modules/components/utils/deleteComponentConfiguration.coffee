@@ -1,5 +1,4 @@
 componentHasApi = require './hasComponentApi'
-NonApiComponents = require('./createComponentConfiguration').COMPONENTS_WITHOUT_API
 
 installedComponentsApi = require '../InstalledComponentsApi'
 syrupApi = require '../SyrupComponentApi'
