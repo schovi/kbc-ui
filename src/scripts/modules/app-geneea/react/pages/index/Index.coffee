@@ -5,6 +5,7 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Input = React.createFactory(require('react-bootstrap').Input)
+TableLink = React.createFactory(require('../../../../components/react/components/StorageApiTableLink'))
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
@@ -130,10 +131,10 @@ module.exports = (componentId) ->
               @_renderEditorRow()
             else
               div className: 'row',
-                @_createInput('Input Table', @state.intable, @tooltips.intable)
+                @_createInput('Input Table', @state.intable, @tooltips.intable, true)
                 @_createInput('Data Column', @state.data_column, @tooltips.data_column)
                 @_createInput('Primary Key', @state.id_column, @tooltips.id_column)
-                @_createInput('Output Table', @state.outtable, @tooltips.outtable)
+                @_createInput('Output Table', @state.outtable, @tooltips.outtable, @_tableExists(@state.outtable))
                 @_createInput('Language', @_getLangLabel(@state.language), @tooltips.language) if @_isLangParam()
 
 
@@ -273,7 +274,9 @@ module.exports = (componentId) ->
       ).toList().toJS()
       return result
 
-    _createInput: (caption, value, tooltip) ->
+    _createInput: (caption, value, tooltip, isTable) ->
+      if isTable and not _.isEmpty value
+        value = TableLink tableId: value, value
       # OverlayTrigger
       #   overlay: Tooltip null, tooltip
       #   key: caption
@@ -320,6 +323,11 @@ module.exports = (componentId) ->
       updateFn = InstalledComponentsActions.updateEditComponentConfigData
       data = Immutable.fromJS template
       updateFn componentId, @state.configId, data
+
+    _tableExists: (tableId) ->
+      tables = storageTablesStore.getAll()
+      tables.find( (table) ->
+        table.get('id') == tableId)
 
     _isLangParam: ->
       componentId != 'geneea-language-detection'
