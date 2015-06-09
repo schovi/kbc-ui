@@ -13,7 +13,8 @@ DropdownButton = React.createFactory DropdownButton
 TablesList = React.createFactory(require './BucketTablesList')
 ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
 Link = React.createFactory(require('react-router').Link)
-{Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
+{Tooltip, Confirm} = require '../../../../../react/common/common'
+{Loader} = require 'kbc-react-components'
 
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
@@ -67,7 +68,7 @@ module.exports = React.createClass
             Link
               to: 'jobs'
               query:
-                q: '+component:gooddata-writer +params.config:KB_PM'
+                q: '+component:gooddata-writer +params.config:' + writer.get('id')
             ,
               span className: 'fa fa-tasks fa-fw'
               ' Jobs Queue'
@@ -88,12 +89,11 @@ module.exports = React.createClass
               onConfirm: @_handleProjectUpload
             ,
               a null,
-                span className: 'fa fa-upload fa-fw'
+                if @state.writer.get('pendingActions', List()).contains 'uploadProject'
+                  React.createElement Loader, className: 'fa-fw'
+                else
+                  span className: 'fa fa-upload fa-fw'
                 ' Upload project'
-            if @state.writer.get('pendingActions', List()).contains 'uploadProject'
-              span null,
-                ' '
-                React.createElement Loader
           li null,
             Link
               to: 'gooddata-writer-model'
@@ -110,12 +110,11 @@ module.exports = React.createClass
               onConfirm: @_handleProjectDelete
             ,
               a null,
-                span className: 'kbc-icon-cup fa-fw'
+                if @state.writer.get 'isDeleting'
+                  React.createElement Loader, className: 'fa-fw'
+                else
+                  span className: 'kbc-icon-cup fa-fw'
                 ' Delete Writer'
-            if @state.writer.get 'isDeleting'
-              span null,
-                ' '
-                React.createElement Loader
           li null,
             if @state.writer.get 'isOptimizingSLI'
               span null,
