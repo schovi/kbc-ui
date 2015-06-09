@@ -98,7 +98,7 @@ module.exports = (componentId) ->
               runParams: =>
                 config: @state.configId
             ,
-              'You are about to run the topic detection job of this configuration.'
+              "You are about to run #{@actionLabel} job of this configuration."
           li null,
             DeleteConfigurationButton
               componentId: componentId
