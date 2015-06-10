@@ -93,7 +93,7 @@ module.exports = React.createClass
       else
         'N/A'
 
-    div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+    div {className: 'table kbc-table-border-vertical kbc-detail-table', style: {marginBottom: 0}},
       div {className: 'tr'},
         div {className: 'td'},
           div {className: 'row'},
