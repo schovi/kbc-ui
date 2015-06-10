@@ -38,16 +38,17 @@ JobTasks = React.createClass
       span className: 'table',
         span className: 'tbody',
           span className: 'tr',
-            span className: 'td col-sm-9',
+            span className: 'td col-xs-8',
             if component
-              ComponentIcon size: '32', component: component
-              ' '
-              ComponentName component: component
+              span {},
+                ComponentIcon size: '32', component: component
+                ' '
+                ComponentName component: component
             else
               task.get 'componentUrl'
-            span className: 'td col-sm-2',
+            span className: 'td col-xs-2 text-right',
               Duration startTime: task.get('startTime'), endTime: task.get('endTime')
-            span className: 'td col-sm-1 text-right',
+            span className: 'td col-xs-2 text-right',
               JobStatusLabel status: task.get('status') if task.has('status')
 
     Panel
