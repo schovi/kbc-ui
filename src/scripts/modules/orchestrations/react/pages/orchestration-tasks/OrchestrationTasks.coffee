@@ -37,6 +37,11 @@ OrchestrationTasks = React.createClass
       filteredOrchestrations: OrchestrationStore.getFiltered()
     }
 
+  componentDidMount: ->
+    # start edit if orchestration is empty
+    if !@state.isEditing && @state.tasks.count() == 0
+      OrchestrationsActionCreators.startOrchestrationTasksEdit(@state.orchestration.get('id'))
+
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
 
