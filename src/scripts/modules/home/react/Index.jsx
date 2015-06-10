@@ -25,48 +25,13 @@ export default React.createClass({
             <div className="tr">
               <div className="td">
                 <h2>Storage</h2>
-
-                <h3>{filesize(this.state.data.sizeBytes)}</h3>
-
-                <h3>{string.numberFormat(this.state.data.rowsCount)} rows</h3>
-              </div>
-              <div className="td">
-                <h2>Orchestrations</h2>
-                <h4>6 configured</h4>
-
-                <p className="">2 processing and 1 waiting</p>
-
-                <p className="">
-                  12 success runs <span className="text-muted">/week</span>
-                </p>
-
-                <p className="">
-                  6 errors <span className="text-muted">/week</span> <span className="badge"
-                                                                           style={{backgroundColor: 'red'}}>+12% </span>
-                </p>
-              </div>
-              <div className="td">
-                <h2>Components</h2>
-                <h4>12 extractors, 3 writers</h4>
-                <h4>2 transformation buckets and 3 others</h4>
-
-                <p className="">12 processing and 1 waiting</p>
-
-                <p className="">
-                  82 success runs <span className="text-muted">/week</span>
-                </p>
-
-                <p className="">
-                  6 errors <span className="text-muted">/week</span> <span className="badge"
-                                                                           style={{backgroundColor: '#96d130'}}>-6% </span>
-                </p>
+                <h3 style={ {fontSize: '64px'} }>{filesize(this.state.data.sizeBytes)}</h3>
+                <h3 style={ {fontSize: '34px'} }>{string.numberFormat(this.state.data.rowsCount)} <small>Rows</small></h3>
               </div>
               <div className="td">
                 <h2>Access</h2>
-
-                <h3>{this.state.tokens.get('adminCount')} Admins</h3>
-
-                <h3>{this.state.tokens.get('totalCount') - this.state.tokens.get('adminCount')} API Tokens</h3>
+                <h3 style={ {fontSize: '64px'} }>{this.state.tokens.get('adminCount')} <small style={ {fontSize: '24px'} }>Admins</small></h3>
+                <h3 style={ {fontSize: '34px'} }>{this.state.tokens.get('totalCount') - this.state.tokens.get('adminCount')} <small>API Tokens</small></h3>
               </div>
             </div>
           </div>
