@@ -4,6 +4,7 @@ goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
 RoutesStore = require '../../../../stores/RoutesStore'
 Loader = require('kbc-react-components').Loader
+TableLoadType = React.createFactory(require './TableLoadType')
 
 {ButtonGroup, Button, DropdownButton, MenuItem, Tooltip} = require 'react-bootstrap'
 
@@ -11,7 +12,7 @@ Confirm = require '../../../../react/common/Confirm'
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 
-{button, span} = React.DOM
+{button, span, div} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GoodDataWriterTableButtons'
@@ -58,39 +59,44 @@ module.exports = React.createClass
       @state.table.getIn ['data', 'name']
       ' to GoodData project?'
 
-    React.createElement ButtonGroup, null,
-      React.createElement DropdownButton, null,
-        React.createElement MenuItem, null,
-          React.createElement Confirm,
-            title: 'Reset export status'
-            text: resetExportStatusText
-            buttonLabel: 'Reset'
-            buttonType: 'success'
-            onConfirm: @_handleResetExportStatus
-          ,
-            React.DOM.span null, 'Reset export status'
-        React.createElement MenuItem, null,
-          React.createElement Confirm,
-            title: 'Reset table'
-            text: resetTableText
-            buttonLabel: 'Reset'
-            buttonType: 'success'
-            onConfirm: @_handleResetTable
-          ,
-            React.DOM.span null, 'Reset table'
-      if @state.table.get('pendingActions').contains 'uploadTable'
-        React.createElement Button, null,
-          React.createElement Loader, className: 'fa-fw'
-          ' Upload table'
-      else
-        React.createElement Confirm,
-          text: uploadTableText
-          title: 'Upload Table'
-          buttonLabel: 'Upload'
-          buttonType: 'success'
-          onConfirm: @_handleUpload
-        ,
+    div null,
+      TableLoadType
+        table: @state.table
+        configurationId: @state.configurationId
+      ' '
+      React.createElement ButtonGroup, null,
+        React.createElement DropdownButton, null,
+          React.createElement MenuItem, null,
+            React.createElement Confirm,
+              title: 'Reset export status'
+              text: resetExportStatusText
+              buttonLabel: 'Reset'
+              buttonType: 'success'
+              onConfirm: @_handleResetExportStatus
+            ,
+              React.DOM.span null, 'Reset export status'
+          React.createElement MenuItem, null,
+            React.createElement Confirm,
+              title: 'Reset table'
+              text: resetTableText
+              buttonLabel: 'Reset'
+              buttonType: 'success'
+              onConfirm: @_handleResetTable
+            ,
+              React.DOM.span null, 'Reset table'
+        if @state.table.get('pendingActions').contains 'uploadTable'
           React.createElement Button, null,
-            span className: 'fa fa-upload fa-fw'
+            React.createElement Loader, className: 'fa-fw'
             ' Upload table'
+        else
+          React.createElement Confirm,
+            text: uploadTableText
+            title: 'Upload Table'
+            buttonLabel: 'Upload'
+            buttonType: 'success'
+            onConfirm: @_handleUpload
+          ,
+            React.createElement Button, null,
+              span className: 'fa fa-upload fa-fw'
+              ' Upload table'
 

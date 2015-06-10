@@ -1,12 +1,12 @@
 React = require 'react'
 
-
-actionCreators = require '../../../actionCreators'
+actionCreators = require '../../actionCreators'
 
 {Modal, ModalTrigger, Input, Button, ButtonToolbar} = require 'react-bootstrap'
 
 {div} = React.DOM
 Loader = React.createFactory(require('kbc-react-components').Loader)
+ConfirmButtons = require '../../../../react/common/ConfirmButtons'
 
 
 FIELD = 'incrementalLoad'
@@ -85,20 +85,12 @@ LoadTypeModal = React.createClass
             disabled: isSaving
 
       div className: 'modal-footer',
-        Loader() if isSaving
-        React.createElement ButtonToolbar,
-          React.createElement Button,
-            onClick: @props.onRequestHide
-            bsStyle: 'link'
-          ,
-            'Cancel'
-          React.createElement Button,
-            onClick: @props.onSave
-            bsStyle: 'success'
-            disabled: isSaving
-          ,
-            'Save'
-
+        React.createElement ConfirmButtons,
+          isSaving: isSaving
+          isDisabled: isSaving
+          saveLabel: 'Save'
+          onCancel: @props.onRequestHide
+          onSave: @props.onSave
 
 
 module.exports = React.createClass
@@ -141,7 +133,7 @@ module.exports = React.createClass
 
   _loadTypeLabel: ->
     switch @props.table.getIn ['data', 'incrementalLoad']
-      when false then 'Full'
+      when false, 0 then 'Full'
       when 1 then 'Incremental  1 day'
       else "Incremental  #{@props.table.getIn ['data', 'incrementalLoad']} days"
 
