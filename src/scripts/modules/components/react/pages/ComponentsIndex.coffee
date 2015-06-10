@@ -17,8 +17,8 @@ NewComponentSelection = require '../components/NewComponentSelection'
 
 TEXTS =
   noComponents:
-    extractor: 'You don\'t have any extractors installed yet'
-    writer: 'You don\'t have any writers installed yet'
+    extractor: 'Extractors allows you to collect data from various sources.'
+    writer: 'Writers allows you to send data to various destinations.'
   installFirst:
     extractor: 'Get started with your first extractor!'
     writer: 'Get started with your first writer!'

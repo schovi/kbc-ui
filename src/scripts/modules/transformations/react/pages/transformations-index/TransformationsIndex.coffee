@@ -9,7 +9,7 @@ InstalledComponentsStore = require('../../../../components/stores/InstalledCompo
 
 NewTransformationBucketButton = require '../../components/NewTransformationBucketButton'
 
-{div, span, input, strong, form, button, h4, i, button, small, ul, li, a, p} = React.DOM
+{div, span, input, strong, form, button, h4, h2, i, button, small, ul, li, a, p} = React.DOM
 TransformationsIndex = React.createClass
   displayName: 'TransformationsIndex'
   mixins: [createStoreMixin(TransformationBucketsStore, InstalledComponentsStore)]
@@ -38,8 +38,10 @@ TransformationsIndex = React.createClass
 
   _renderEmptyState: ->
     div className: 'row',
+      h2 null,
+        'Transformations allows you to modify your data.'
       p null,
-        'The transformation "engine" is tasked with modifying the data in Storage. It picks data from Storage,
+        'It picks data from Storage,
           manipulates it and then stores it back. Transformations can use MySQL, Redshift or R.'
       p null,
         React.createElement NewTransformationBucketButton,
