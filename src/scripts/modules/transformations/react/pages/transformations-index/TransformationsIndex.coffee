@@ -7,7 +7,9 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationBucketsStore = require('../../../stores/TransformationBucketsStore')
 InstalledComponentsStore = require('../../../../components/stores/InstalledComponentsStore')
 
-{div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
+NewTransformationBucketButton = require '../../components/NewTransformationBucketButton'
+
+{div, span, input, strong, form, button, h4, i, button, small, ul, li, a, p} = React.DOM
 TransformationsIndex = React.createClass
   displayName: 'TransformationsIndex'
   mixins: [createStoreMixin(TransformationBucketsStore, InstalledComponentsStore)]
@@ -35,9 +37,12 @@ TransformationsIndex = React.createClass
         , @).toArray()
 
   _renderEmptyState: ->
-    div {className: 'table table-striped'},
-      div {className: 'tfoot'},
-        div {className: 'tr'},
-          div {className: 'td'}, 'No transformation buckets found'
+    div className: 'row',
+      p null,
+        'The transformation "engine" is tasked with modifying the data in Storage. It picks data from Storage,
+          manipulates it and then stores it back. Transformations can use MySQL, Redshift or R.'
+      p null,
+        React.createElement NewTransformationBucketButton,
+          buttonLabel: 'Get Started Now'
 
 module.exports = TransformationsIndex

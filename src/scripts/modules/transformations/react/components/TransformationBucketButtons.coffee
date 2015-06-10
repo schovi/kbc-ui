@@ -1,24 +1,30 @@
 React = require 'react'
 
-NewTransformationBucketModal = React.createFactory(require '../modals/NewTransformationBucket')
-ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-Link = React.createFactory(require('react-router').Link)
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+BucketsStore = require '../../stores/TransformationBucketsStore'
 
-{button, span} = React.DOM
+{Link} = require('react-router')
+NewTransformationBucketButton = require './NewTransformationBucketButton'
 
-TransformationBucketButtons = React.createClass
+{span, button} = React.DOM
+
+module.exports = React.createClass
   displayName: 'NewTransformationBucketButton'
+  mixins: [createStoreMixin(BucketsStore)]
+
+  getStateFromStores: ->
+    hasBuckets: BucketsStore.getAll().count()
 
   render: ->
-    span {},
-      Link to: 'sandbox',
-        button className: 'btn btn-link',
-          span className: 'kbc-icon-cog'
-          ' Sandbox'
-      ModalTrigger modal: NewTransformationBucketModal(),
-        button className: 'btn btn-success',
-          span className: 'kbc-icon-plus'
-          'Add Bucket'
+    if @state.hasBuckets
+      span {},
+        React.createElement Link,
+          to: 'sandbox'
+        ,
+          button className: 'btn btn-link',
+            span className: 'kbc-icon-cog'
+            ' Sandbox'
+        React.createElement NewTransformationBucketButton
+    else
+      null
 
-
-module.exports = TransformationBucketButtons

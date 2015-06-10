@@ -21,11 +21,15 @@ module.exports = React.createClass
     Modal title: "New Transformation Bucket", onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
         form className: 'form-horizontal',
+          p className: 'help-block',
+            'Transformation bucket is a container for related transformations.'
+            ' '
+            'When the bucket is created you can start creating transformations inside it'
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Name'
             div className: 'col-sm-6',
               input
-                placeholder: 'Transformation bucket name'
+                placeholder: 'Main'
                 className: 'form-control'
                 value: @state.text
                 onChange: @_setName
@@ -34,7 +38,7 @@ module.exports = React.createClass
             label className: 'col-sm-4 control-label', 'Description'
             div className: 'col-sm-6',
               textarea
-                placeholder: 'Bucket description'
+                placeholder: 'Main transformations'
                 className: 'form-control'
                 value: @state.description
                 onChange: @_setDescription
