@@ -39,7 +39,7 @@ App = React.createClass
         homeUrl: @state.homeUrl
       div className: 'container-fluid',
         div className: 'row',
-          div className: 'col-sm-3 col-md-2 kbc-sidebar',
+          div className: 'col-xs-3 kbc-sidebar',
             ProjectSelect
               organizations: @state.organizations
               currentProject: @state.currentProject
@@ -55,7 +55,7 @@ App = React.createClass
                 canManageApps: @state.canManageApps
                 dropup: true
               UserLinks()
-          div className: 'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 kbc-main',
+          div className: 'col-xs-9 col-xs-offset-3 kbc-main',
             Notifications()
             if @props.isError
               ErrorPage()
