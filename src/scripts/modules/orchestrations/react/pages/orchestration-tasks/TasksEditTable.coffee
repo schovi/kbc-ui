@@ -26,16 +26,24 @@ TasksEditTable = React.createClass
           th style: {width: '12%'}, 'Continue on Failure'
           th style: {width: '5%'}
       tbody null,
-        @props.tasks.map((task) ->
-          TasksEditTableRow
-            task: task
-            component: @props.components.get(task.get('component'))
-            disabled: @props.disabled
-            key: task.get('id')
-            onTaskDelete: @props.onTaskDelete
-            onTaskUpdate: @props.onTaskUpdate
-            onTaskMove: @props.onTaskMove
-        , @).toArray()
+        if @props.tasks.count()
+          @props.tasks.map((task) ->
+            TasksEditTableRow
+              task: task
+              component: @props.components.get(task.get('component'))
+              disabled: @props.disabled
+              key: task.get('id')
+              onTaskDelete: @props.onTaskDelete
+              onTaskUpdate: @props.onTaskUpdate
+              onTaskMove: @props.onTaskMove
+          , @).toArray()
+        else
+          tr null,
+            td
+              className: 'text-muted'
+              colSpan: 7
+            ,
+              'There are no tasks assigned yet. Please start by adding first task.'
 
 
 module.exports = TasksEditTable
