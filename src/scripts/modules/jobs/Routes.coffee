@@ -5,7 +5,6 @@ JobsActionCreators = require('./ActionCreators')
 JobsReloaderButton = require('./react/components/JobsReloaderButton')
 JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton')
 JobTerminateButton = require './react/components/JobTerminateButton'
-JobStatusLabel = React.createFactory(require '../../react/common/JobStatusLabel')
 JobsStore = require('./stores/JobsStore')
 Promise = require('bluebird')
 

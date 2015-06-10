@@ -4,7 +4,6 @@ JobsStore = require('../../stores/JobsStore')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
-JobStatusLabel = React.createFactory(require '../../../../react/common/JobStatusLabel')
 
 JobDetailReloaderButton = React.createClass
   displayName: 'JobDetailReloaderButton'
@@ -19,7 +18,6 @@ JobDetailReloaderButton = React.createClass
 
   render: ->
     React.DOM.span null,
-      JobStatusLabel {status: @state.job.get 'status'}
       if @state.jobLoading
         React.DOM.span null,
           ' '
