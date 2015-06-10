@@ -12,6 +12,7 @@ Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
 {PanelGroup, Panel} = require 'react-bootstrap'
 getComponentId = require '../../../getJobComponentId'
+JobStatusLabel = React.createFactory(require('../../../../../react/common/common').JobStatusLabel)
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -74,6 +75,16 @@ module.exports = React.createClass
 
 
   _renderRunInfoRow: (job) ->
+    componentId = getComponentId(job)
+    if @state.configuration
+      configurationLink = span null,
+        React.createElement ComponentConfigurationLink,
+          componentId: componentId
+          configId: @state.configuration.get 'id'
+        ,
+          @state.configuration.get 'name'
+    else
+      configurationLink = null
     jobStarted = ->
       job.get('startTime')
     renderDate = (pdate) ->
@@ -87,9 +98,44 @@ module.exports = React.createClass
         div {className: 'td'},
           div {className: 'row'},
             span {className: 'col-md-3'},
+              'Configuration'
+            strong {className: 'col-md-9'},
+              configurationLink
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Created'
+            strong {className: 'col-md-9'},
+              date.format(job.get('createdTime'))
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Start'
+            strong {className: 'col-md-9'},
+              renderDate(job.get('startTime'))
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Initialized '
+            strong className: 'col-md-9',
+              job.getIn(['token', 'description'])
+          div {className: 'row'},
+            span {className: 'col-md-3'},
               'RunId'
             strong {className: 'col-md-9'},
               job.get('runId')
+        div {className: 'td'},
+          div {className: 'row'},
+            span {className: 'col-md-3'},
+              'Command'
+            strong {className: 'col-md-9'},
+              span {className: 'label label-info'},job.get('command')
+          div className: 'row',
+            span className: 'col-md-3', 'Status '
+            span className: 'col-md-9', JobStatusLabel status: job.get('status')
+          div className: 'row',
+            span className: 'col-md-3', 'End '
+            strong className: 'col-md-9', job.get('endTime')
+          div className: 'row',
+            span className: 'col-md-3', 'Token '
+            strong className: 'col-md-9', job.getIn(['token', 'description'])
           div {className: 'row'},
             span {className: 'col-md-3'},
               'Duration'
@@ -98,17 +144,6 @@ module.exports = React.createClass
                 Duration({startTime: job.get('startTime'), endTime: job.get('endTime')})
               else
                 'N/A'
-        div {className: 'td'},
-          div {className: 'row'},
-            span {className: 'col-md-3'},
-              'Start'
-            strong {className: 'col-md-9'},
-              renderDate(job.get('startTime'))
-          div {className: 'row'},
-            span {className: 'col-md-3'},
-              'End'
-            strong {className: 'col-md-9'},
-              renderDate(job.get('endTime'))
 
   _renderAccordion: (job) ->
     React.createElement PanelGroup,
@@ -155,32 +190,12 @@ module.exports = React.createClass
     component = ComponentsStore.getComponent(componentId)
     component = ComponentsStore.unknownComponent(componentId) if !component
 
-    if @state.configuration
-      configurationLink = span null,
-        ' - '
-        React.createElement ComponentConfigurationLink,
-          componentId: componentId
-          configId: @state.configuration.get 'id'
-        ,
-          @state.configuration.get 'name'
-    else
-      configurationLink = null
-
     div {className: 'row'},
       div {className: 'col-md-6'},
         span {className: ''},
           ComponentIcon {component: component, size: '32'}
           ' '
           ComponentName {component: component}
-        configurationLink
-        ' '
-        span {className: 'label label-info'},job.get('command')
-      div {className: 'col-md-6'},
-        span null, 'Created By'
-          ' '
-          strong null, job.getIn(['token', 'description'])
-          ' on '
-          date.format(job.get('createdTime'))
 
   _renderLogRow: (job) ->
     div {className: 'col-md-12'},
