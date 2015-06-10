@@ -12,7 +12,7 @@ OrchestrationTasks = require './react/pages/orchestration-tasks/OrchestrationTas
 OrchestrationNotifications = require './react/pages/orchestration-notifications/OrchestrationNotifications'
 
 OrchestrationsReloaderButton = require './react/components/OrchestrationsReloaderButton'
-NewOrchestrationButton = require './react/components/NewOrchestionButton'
+NewOrchestrationHeaderButton = require './react/components/NewOrchestionHeaderButton'
 OrchestrationReloaderButton = require './react/components/OrchestrationReloaderButton'
 JobReloaderButton = require './react/components/JobReloaderButton'
 JobTerminateButton = require './react/components/JobTerminateButton'
@@ -31,7 +31,7 @@ routes =
   title: 'Orchestrations'
   defaultRouteHandler: OrchestrationsIndex
   reloaderHandler: OrchestrationsReloaderButton
-  headerButtonsHandler: NewOrchestrationButton
+  headerButtonsHandler: NewOrchestrationHeaderButton
   poll:
     interval: 10
     action: ->

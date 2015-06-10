@@ -11,8 +11,10 @@ SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
 RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
+NewOrchestrationButton = require '../../components/NewOrchestionButton'
 
-{div, span, strong} = React.DOM
+
+{div, span, strong, h2, p} = React.DOM
 
 Index = React.createClass
   displayName: 'OrchestrationsIndex'
@@ -22,6 +24,7 @@ Index = React.createClass
     OrchestrationsActionCreators.setOrchestrationsFilter(query)
 
   getStateFromStores: ->
+    totalOrchestrationsCount: OrchestrationStore.getAll().count()
     orchestrations: OrchestrationStore.getFiltered()
     pendingActions: OrchestrationStore.getPendingActions()
     isLoading: OrchestrationStore.getIsLoading()
@@ -30,13 +33,25 @@ Index = React.createClass
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
-      SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
-      if @state.orchestrations.count()
-        @_renderTable()
+      if @state.totalOrchestrationsCount
+        SearchRow(onChange: @_handleFilterChange, query: @state.filter, className: 'row kbc-search-row')
+        if @state.orchestrations.count()
+          @_renderTable()
+        else
+          @_renderNotFound()
       else
         @_renderEmptyState()
 
   _renderEmptyState: ->
+    div className: 'row',
+      p null,
+        'Orchestrations allows you schedule and group together related tasks.'
+      p null,
+        React.createElement NewOrchestrationButton,
+          buttonLabel: 'Get Started Now'
+
+
+  _renderNotFound: ->
     div {className: 'table table-striped'},
       div {className: 'tfoot'},
         div {className: 'tr'},

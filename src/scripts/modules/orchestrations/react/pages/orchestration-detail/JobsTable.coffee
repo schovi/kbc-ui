@@ -3,7 +3,7 @@ JobsTableRow = React.createFactory(require './JobsTableRow')
 RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
-{table, thead, th, tr, tbody, div} = React.DOM
+{table, thead, th, tr, td, tbody, div} = React.DOM
 
 JobsTable = React.createClass(
   displayName: 'JobsTable'
@@ -17,9 +17,19 @@ JobsTable = React.createClass(
     # TODO
 
   render: ->
-    rows = @props.jobs.map((job) ->
-      JobsTableRow {job: job, key: job.get('id'), onJobCancel: @cancelJob}
-    , @).toArray()
+    if @props.jobs.count()
+      rows = @props.jobs.map((job) ->
+        JobsTableRow {job: job, key: job.get('id'), onJobCancel: @cancelJob}
+      , @).toArray()
+    else
+      rows = [
+        tr null,
+          td
+            className: 'text-muted'
+            colSpan: 7
+          ,
+            'Orchestration has not been executed yet.'
+      ]
 
     jobsTable = (table {className: 'table table-striped table-hover kb-table-jobs'},
       (thead {},
