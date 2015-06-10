@@ -20,11 +20,15 @@ ConfigurationSelect = React.createClass
         a className: 'pull-right', onClick: @_handleBack,
           span className: 'fa fa-chevron-left', null,
             ' Back'
-      ul className: 'list-group',
+      div className: 'list-group',
         @props.component.get('configurations').map((configuration) ->
-          li className: 'list-group-item', key: configuration.get('id'),
+          a
+            className: 'list-group-item'
+            key: configuration.get('id')
+            onClick: @_handleSelect.bind(@, configuration)
+          ,
             configuration.get('name')
-            i className: 'fa fa-plus', onClick: @_handleSelect.bind(@, configuration)
+            i className: 'fa fa-plus-circle pull-right'
         , @).toArray()
 
   _handleBack: ->

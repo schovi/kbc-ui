@@ -1,7 +1,7 @@
 React = require 'react'
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 
-{div, h2, a, table, tbody, tr, td} = React.DOM
+{div, h2, a, table, tbody, tr, td, span} = React.DOM
 
 ComponentSelect = React.createClass
   displayName: 'ComponentSelect'
@@ -13,8 +13,8 @@ ComponentSelect = React.createClass
     div null,
       @_renderSection('Extractors', @_getComponentsForType('extractor')),
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
-      @_renderSection('Recipes', @_getComponentsForType('recipe'))
       @_renderSection('Writers', @_getComponentsForType('writer'))
+      @_renderSection('Applications', @_getComponentsForType('application'))
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
@@ -27,6 +27,8 @@ ComponentSelect = React.createClass
             ComponentIcon component: component
             ' '
             component.get('name')
+            ' '
+            span className: 'kbc-icon-arrow-right pull-right'
     , @).toArray()
 
     div null,
