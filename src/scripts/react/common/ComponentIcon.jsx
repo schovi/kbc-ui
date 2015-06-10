@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import ApplicationStore from '../../stores/ApplicationStore';
+
 import extractor from '../../../images/extractor-32-1.png';
 import writer from '../../../images/writer-32-1.png';
 import other from '../../../images/other-32-1.png';
@@ -12,7 +14,8 @@ const DEFAULT_ICON_IMAGES = {
 };
 
 function getComponentIconURL(componentType) {
-  return DEFAULT_ICON_IMAGES[componentType] ? DEFAULT_ICON_IMAGES[componentType] : DEFAULT_ICON_IMAGES.other;
+  const fileName = DEFAULT_ICON_IMAGES[componentType] ? DEFAULT_ICON_IMAGES[componentType] : DEFAULT_ICON_IMAGES.other;
+  return ApplicationStore.getScriptsBasePath() + fileName;
 }
 
 export default React.createClass({
