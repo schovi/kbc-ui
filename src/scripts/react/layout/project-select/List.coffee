@@ -60,11 +60,15 @@ module.exports = React.createClass
 
         projectElements = organization.get('projects').map((project) ->
           li key: "proj-#{project.get('id')}",
-            a
-              href: @_projectUrl(project.get 'id')
-              className: if @state.selectedProjectId == project.get('id') then 'active' else ''
-            ,
-              project.get('name')
+            if project.get('isDisabled')
+              span className: 'disabled',
+                project.get('name')
+            else
+              a
+                href: @_projectUrl(project.get 'id')
+                className: if @state.selectedProjectId == project.get('id') then 'active' else ''
+              ,
+                project.get('name')
         , @).toArray()
 
         [[organizationElement], projectElements]
