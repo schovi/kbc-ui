@@ -66,7 +66,7 @@ routes =
       name: 'orchestrationJob'
       reloaderHandler: JobReloaderButton
       poll:
-        interval: 2
+        interval: 10
         action: (params) ->
           OrchestrationsActionCreators.loadJobForce(parseInt(params.jobId))
       requireData: (params) ->
