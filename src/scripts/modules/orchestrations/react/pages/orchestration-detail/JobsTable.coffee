@@ -31,7 +31,7 @@ JobsTable = React.createClass(
             'Orchestration has not been executed yet.'
       ]
 
-    jobsTable = (table {className: 'table table-striped table-hover kb-table-jobs'},
+    jobsTable = (table {className: 'table table-striped table-hover kb-table-jobs kbc-cursor-pointer'},
       (thead {},
         (tr {},
           (th {}, "ID"),
