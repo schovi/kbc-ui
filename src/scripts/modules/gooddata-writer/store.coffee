@@ -116,7 +116,10 @@ referencesForColumns = (columns) ->
     )
 
 extendTable = (table) ->
-  table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
+  table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
+  if !table.get('name').length
+    table = table.set('name', table.get('id')) # fallback to table id if name not set
+  table
 
 GoodDataWriterStore = StoreUtils.createStore
 

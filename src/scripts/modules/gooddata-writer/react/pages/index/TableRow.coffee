@@ -7,7 +7,7 @@ Link = React.createFactory(require('react-router').Link)
 
 actionCreators = require '../../../actionCreators'
 
-{span, div, a, button, i} = React.DOM
+{span, div, a, button, i, strong} = React.DOM
 
 module.exports = React.createClass
   displayName: 'TableRow'
@@ -55,8 +55,8 @@ module.exports = React.createClass
 
   _uploadText: ->
     span null,
-      'Are you sure you want to upload '
-      @props.table.getIn ['data', 'name']
+      'Are you sure you want to upload table '
+      strong null, @props.table.getIn(['data', 'name'])
       ' to GoodData project?'
 
   _handleUpload: ->
