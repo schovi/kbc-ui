@@ -19,7 +19,7 @@ TEXTS =
   noComponents:
     extractor: 'Extractors allows you to collect data from various sources.'
     writer: 'Writers allows you to send data to various destinations.'
-    application: 'Use applications to enhance, modify or understand your data.'
+    application: 'Use applications to enhance, modify or better understand your data.'
   installFirst:
     extractor: 'Get started with your first extractor!'
     writer: 'Get started with your first writer!'
