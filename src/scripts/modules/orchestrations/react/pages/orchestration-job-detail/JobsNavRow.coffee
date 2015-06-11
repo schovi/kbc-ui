@@ -29,7 +29,7 @@ JobNavRow = React.createClass
     ,
      span className: 'table',
       span className: 'tr',
-        span className: 'td kbc-td-status',
+        span className: 'td kbc-td-status col-xs-1',
           JobStatusCircle status: @props.job.get('status')
         span className: 'td',
           if @props.job.get('initializedBy') == 'manually'

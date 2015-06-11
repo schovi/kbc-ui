@@ -40,7 +40,7 @@ OrchestrationRow = React.createFactory React.createClass
     ,
       span className: 'table',
         span className: 'tr',
-          span className: 'td kbc-td-status',
+          span className: 'td kbc-td-status col-xs-1',
             JobStatusCircle status: lastExecutedJob?.get('status')
           span className: 'td',
             em null, disabled
