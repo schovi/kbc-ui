@@ -16,6 +16,7 @@ module.exports = React.createClass
     urlTemplates: React.PropTypes.object.isRequired
     focus: React.PropTypes.bool.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
+    xsrf: React.PropTypes.string.isRequired
 
   getInitialState: ->
     query: ''
