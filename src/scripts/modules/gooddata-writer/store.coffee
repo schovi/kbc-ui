@@ -228,11 +228,12 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_TABLE_SUCCESS
+      columns = Immutable.OrderedMap(action.table.columns)
+        .map (value) ->
+          Map value
+
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
-
-      columns = table.get('columns').toOrderedMap().mapKeys (key, column) ->
-        column.get 'name'
 
       _store = _store.withMutations (store) ->
         store
