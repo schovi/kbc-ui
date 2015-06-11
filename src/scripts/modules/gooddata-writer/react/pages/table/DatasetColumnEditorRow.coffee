@@ -43,7 +43,6 @@ module.exports = React.createClass
     dataPreview: React.PropTypes.array
 
   render: ->
-    console.log 'render row', @props.column.get('name')
     column = @props.column
     rowClassName = if @props.isValid then '' else 'danger'
     tr className: rowClassName,

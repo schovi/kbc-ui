@@ -20,7 +20,6 @@ module.exports = React.createClass
     actionCreators.deleteDateDimension(@props.configurationId, @props.dimension.get 'id')
 
   render: ->
-    console.log 'render row', @props.dimension.get('id')
     tr null,
       td null,
         @props.dimension.getIn ['data', 'name']

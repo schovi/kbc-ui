@@ -100,7 +100,6 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
 
   _handleEditStart: ->
-    console.log 'start'
     actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD)
 
   _handleEditSave: ->

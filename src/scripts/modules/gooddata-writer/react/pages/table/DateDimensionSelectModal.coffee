@@ -49,7 +49,6 @@ module.exports = React.createClass
       selectedDimension: @state.selectedDimension
 
   render: ->
-    console.log 'render', @state
     Modal
       title: @_title()
       onRequestHide: @props.onRequestHide

@@ -59,7 +59,6 @@ dispatcher.register (payload) ->
         .setIn ['dimensionsById', action.configurationId], dimensionsById
 
       DimensionsStore.emitChange()
-      console.log 'store', _store.toJS()
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_START

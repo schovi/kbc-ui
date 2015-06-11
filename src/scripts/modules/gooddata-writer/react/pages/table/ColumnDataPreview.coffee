@@ -12,7 +12,6 @@ module.exports = React.createClass
     tableData: React.PropTypes.array
 
   render: ->
-    console.log 'data preview', @props.tableData
     OverlayTrigger
       placement: 'left'
       overlay: @_renderPopover()

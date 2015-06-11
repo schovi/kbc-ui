@@ -98,7 +98,6 @@ module.exports =
     goodDataWriterApi
     .optimizeSLIHash configurationId
     .then (response) ->
-      console.log 'optimize', response
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
         configurationId: configurationId
@@ -106,7 +105,6 @@ module.exports =
       applicationActionCreators.sendNotification 'Optimalization of SLI hashes has been triggered!
       You can see progress TODO'
     .catch (e) ->
-      console.log 'error', e
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_ERROR
         configurationId: configurationId
@@ -296,10 +294,8 @@ module.exports =
     goodDataWriterApi
     .resetTable configurationId, tableId
     .then (job) ->
-      console.log 'job ready', job
       jobPoller.poll applicationStore.getSapiTokenString(), job.url
     .then (job) ->
-      console.log 'job done', job
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_SUCCESS
         configurationId: configurationId

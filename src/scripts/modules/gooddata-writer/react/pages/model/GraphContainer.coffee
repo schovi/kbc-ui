@@ -26,7 +26,6 @@ module.exports = React.createClass
     throw e
 
   _handleDataReceive: (model) ->
-    console.log 'data received', model
     @setState
       isLoading: false
       model: Immutable.fromJS model
