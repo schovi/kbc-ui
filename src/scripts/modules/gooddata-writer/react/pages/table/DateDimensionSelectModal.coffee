@@ -103,7 +103,7 @@ module.exports = React.createClass
                 Check
                   isChecked: dimension.getIn ['data', 'includeTime']
               td null,
-                Input
+                input
                   type: 'radio'
                   checked: dimension.get('id') == @state.selectedDimension
                   value: dimension.get('id')
