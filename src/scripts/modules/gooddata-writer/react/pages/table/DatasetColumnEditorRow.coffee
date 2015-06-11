@@ -162,8 +162,8 @@ module.exports = React.createClass
         disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'format'
         addonAfter: DateFormatHint() if @props.isEditing
-      span {},
-        'Date dimension: '
+      span {className: 'kbc-form-control-info'},
+        'Dimension: '
         strong {},
           @props.column.get 'dateDimension'
         ' '
