@@ -291,11 +291,8 @@ dispatcher.register (payload) ->
         .set 'invalidColumns', getInvalidColumns(columns)
         .set 'references', referencesForColumns(columns)
 
-      console.timeEnd 'modify'
 
-      console.time 'change'
       GoodDataWriterStore.emitChange()
-      console.timeEnd 'change'
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_START
@@ -336,7 +333,7 @@ dispatcher.register (payload) ->
           action.configurationId
           action.tableId
           'current'
-        ], Immutable.fromJS(action.columns))
+        ], Immutable.OrderedMap(action.columns).map (value) -> Map value)
 
       GoodDataWriterStore.emitChange()
 
