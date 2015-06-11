@@ -2,6 +2,8 @@ React = require 'react'
 Immutable = require 'immutable'
 keyMirror = require('react/lib/keyMirror')
 
+{Map} = Immutable
+
 {tr, td, option, span, div, strong} = React.DOM
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Input = React.createFactory(require('react-bootstrap').Input)
@@ -70,6 +72,8 @@ module.exports = React.createClass
       td null,
         @_renderSortLabelSelect()
       td null,
+        @_renderSortOrderSelect()
+      td null,
         @_renderDataTypeSelect()
       td null,
         ColumnDataPreview
@@ -116,6 +120,20 @@ module.exports = React.createClass
         .set('', '')
       )
 
+
+  _renderSortOrderSelect: ->
+    return if !@_shouldRenderPart visibleParts.SORT_LABEL
+    return if !@props.sortLabelColumns.count()
+    @_createInput
+      type: 'select'
+      value: @props.column.get 'sortOrder'
+      disable: @props.isSaving
+      onChange: @_handleInputChange.bind @, 'sortOrder'
+    ,
+      @_selectOptions(
+        Map(SortOrderOptions)
+        .set('', '')
+      )
 
   _renderDataTypeSelect: ->
     if @_shouldRenderPart visibleParts.DATA_TYPE

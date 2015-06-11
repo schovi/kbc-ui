@@ -85,6 +85,7 @@ module.exports = React.createClass
           th null, 'Type'
           th null, 'Reference'
           th null, 'Sort Label'
+          th null, ' '
           th null, 'Data Type'
           th null
       tbody null,
