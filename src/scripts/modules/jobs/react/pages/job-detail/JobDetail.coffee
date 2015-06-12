@@ -132,7 +132,7 @@ module.exports = React.createClass
             span className: 'col-md-9', JobStatusLabel status: job.get('status')
           div className: 'row',
             span className: 'col-md-3', 'End '
-            strong className: 'col-md-9', job.get('endTime')
+            strong className: 'col-md-9', renderDate(job.get('endTime'))
           div className: 'row',
             span className: 'col-md-3', 'Token '
             strong className: 'col-md-9', job.getIn(['token', 'description'])
