@@ -4,6 +4,7 @@ transformationsApi = require './TransformationsApi'
 TransformationBucketsStore = require './stores/TransformationBucketsStore'
 TransformationsStore = require './stores/TransformationsStore'
 InstalledComponentsActionCreators = require '../components/InstalledComponentsActionCreators'
+RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
 
@@ -60,6 +61,8 @@ module.exports =
         type: constants.ActionTypes.TRANSFORMATION_BUCKET_CREATE_SUCCESS
         bucket: newBucket
       )
+      RoutesStore.getRouter().transitionTo 'transformationBucket',
+        bucketId: newBucket.id
     )
 
   createTransformation: (bucketId, data) ->
@@ -71,6 +74,9 @@ module.exports =
         bucketId: bucketId
         transformation: transformation
       )
+      RoutesStore.getRouter().transitionTo 'transformationDetail',
+        transformationId: transformation.id
+        bucketId: bucketId
 
 
   deleteTransformationBucket: (bucketId) ->
