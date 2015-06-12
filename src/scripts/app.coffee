@@ -53,7 +53,7 @@ startApp = (appOptions) ->
   # error thrown during application live not on route chage
   Promise.onPossiblyUnhandledRejection (e) ->
     error = Error.create(e)
-    notification = "Error: #{error.getTitle()}. #{error.getText()}"
+    notification = "#{error.getTitle()}. #{error.getText()}"
     if error.getExceptionId()
       notification += " Exception id: #{error.getExceptionId()}"
 

@@ -33,6 +33,9 @@ module.exports =
       actions.receiveAllOrchestrations(orchestrations)
     )
     .catch (err) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.ORCHESTRATIONS_LOAD_ERROR
+      )
       throw err
 
   receiveAllOrchestrations: (orchestrations) ->

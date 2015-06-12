@@ -135,8 +135,11 @@ Dispatcher.register (payload) ->
       _store = _store.set 'isLoading', true
       OrchestrationStore.emitChange()
 
+    when Constants.ActionTypes.ORCHESTRATIONS_LOAD_ERROR
+      _store = _store.set 'isLoading', false
+      OrchestrationStore.emitChange()
+
     when Constants.ActionTypes.ORCHESTRATIONS_LOAD_SUCCESS
-      console.log 'load success'
       _store = _store.withMutations((store) ->
         store
           .set('isLoading', false)
