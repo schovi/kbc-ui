@@ -10,6 +10,7 @@ Promise = require 'bluebird'
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 React = require 'react'
 {Link} = require 'react-router'
+RoutesStore = require '../../stores/RoutesStore'
 
 module.exports =
 
@@ -107,6 +108,8 @@ module.exports =
         type: constants.ActionTypes.ORCHESTRATION_CREATE_SUCCESS
         orchestration: newOrchestration
       )
+      RoutesStore.getRouter().transitionTo 'orchestration',
+        orchestrationId: newOrchestration.id
     )
 
 
