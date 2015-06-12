@@ -57,7 +57,7 @@ startApp = (appOptions) ->
     if error.getExceptionId()
       notification += " Exception id: #{error.getExceptionId()}"
 
-    ApplicationActionCreators.sendNotification notification, 'error'
+    ApplicationActionCreators.sendNotification notification, 'error', error.id
     throw e
 
   # Show loading page before app is ready

@@ -7,7 +7,7 @@ HttpError = require './HttpError'
 class Error
 
   constructor: (@title, @text, @data, @exceptionId) ->
-
+    @id = null
 
   getTitle: ->
     @title
@@ -25,7 +25,9 @@ createFromException = (error) ->
   if error instanceof HttpError
     createFromXhrError error
   else if error.crossDomain
-    new Error('Not connected to internet', 'Please try again later.')
+    error = new Error('Not connected to internet', 'Please try again later.')
+    error.id = 'couldNotConnect'
+    error
   else if error.isOperational # error from bluebird
     new Error('Connection error', error.message)
   else

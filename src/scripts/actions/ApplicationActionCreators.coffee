@@ -14,12 +14,13 @@ module.exports =
   ###
     notification - React element
   ###
-  sendNotification: (notification, type = 'success') ->
+  sendNotification: (notification, type = 'success', id = null) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
       notification:
         value: notification
         type: type
+        id: id
 
   deleteNotification: (notificationIndex) ->
     dispatcher.handleViewAction
