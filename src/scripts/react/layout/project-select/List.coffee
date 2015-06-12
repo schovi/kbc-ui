@@ -1,6 +1,7 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
 {List, Map} = require 'immutable'
+Tooltip = require '../../common/Tooltip'
 _ = require 'underscore'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
@@ -62,8 +63,14 @@ module.exports = React.createClass
         projectElements = organization.get('projects').map((project) ->
           li key: "proj-#{project.get('id')}",
             if project.get('isDisabled')
-              span className: 'disabled',
-                project.get('name')
+              React.createElement Tooltip,
+                tooltip: 'Project is disabled. ' + project.get('disabledReason')
+                placement: 'top'
+              ,
+                span
+                  className: 'disabled'
+                ,
+                  project.get('name')
             else
               a
                 href: @_projectUrl(project.get 'id')
