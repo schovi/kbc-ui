@@ -6,6 +6,7 @@ ExDbActionCreators = require '../../../exDbActionCreators'
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
+{Protected} = require 'kbc-react-components'
 
 {form, div, label, p, option} = React.DOM
 
@@ -33,7 +34,7 @@ module.exports = React.createClass
         @_createInput 'Host name', 'host'
         @_createInput 'Port', 'port', 'number'
         @_createInput 'Username', 'user'
-        @_createInput 'Password', 'password'
+        @_createInput 'Password', 'password', 'text', true
         @_createInput 'Connection retries', 'retries', 'number'
         TestCredentialsButtonGroup
           credentials: @props.credentials
@@ -45,7 +46,7 @@ module.exports = React.createClass
       value = event.target.value
     @props.onChange(@props.credentials.set propName, value)
 
-  _createInput: (labelValue, propName, type = 'text') ->
+  _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     if @props.enabled
       Input
         label: labelValue
@@ -54,6 +55,14 @@ module.exports = React.createClass
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
         onChange: @_handleChange.bind @, propName
+    else if isProtected
+      StaticText
+        label: labelValue
+        labelClassName: 'col-xs-4'
+        wrapperClassName: 'col-xs-8'
+      ,
+        React.createElement Protected, null,
+          @props.credentials.get propName
     else
       StaticText
         label: labelValue
