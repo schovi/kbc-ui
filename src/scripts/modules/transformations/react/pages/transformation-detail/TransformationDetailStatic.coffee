@@ -2,6 +2,7 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 Immutable = require('immutable')
+Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TransformationsActionCreators = require '../../../ActionCreators'
@@ -154,9 +155,13 @@ TransformationDetailStatic = React.createClass
             p {}, small {}, 'No R Script'
       else
         div {},
-          h2 {}, 'Queries'
+          h2 {},
+            'Queries',
+            if @props.transformation.get('queries').count()
+              small {},
+                Clipboard text: @props.transformation.get('queries').toArray().join("\n\n")
           if @props.transformation.get('queries').count()
-            span {},
+            div {},
               @props.transformation.get('queries').map((query, index) ->
                 if index % 2 == 0
                   rowClassName = "row stripe-odd"
