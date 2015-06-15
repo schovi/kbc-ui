@@ -117,7 +117,7 @@ InputMappingDetail = React.createClass(
           span {className: "col-md-6"},
             if @props.inputMapping.get('indexes').count()
               @props.inputMapping.get('indexes').map((index, key) ->
-                span {},
+                span {key: index},
                   span {className: 'label label-default'},
                     index.toArray().join(', ')
                   ' '
@@ -133,7 +133,7 @@ InputMappingDetail = React.createClass(
             if @props.inputMapping.get('datatypes').count()
               ul {},
                 @props.inputMapping.get('datatypes').map((definition, column) ->
-                  li {},
+                  li {key: column},
                     strong {}, column
                     ' '
                     span {}, definition
