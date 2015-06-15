@@ -1,12 +1,13 @@
 React = require 'react'
 _ = require 'underscore'
+{List} = require 'immutable'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
-{div, span, i, textarea} = React.DOM
+{div, span, i, textarea, br} = React.DOM
 
 StaticArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaStatic'
@@ -23,15 +24,22 @@ StaticArea = React.createFactory React.createClass
       overlay: Tooltip null, @props.editTooltip
       placement: 'top'
     ,
-      span props,
+      div props,
         if @props.text
-          span null,
-            @props.text
+          div null,
+            @parsedText()
         else
           span className: 'text-muted',
             @props.placeholder
         ' '
         i className: 'kbc-icon-pencil'
+
+  parsedText: ->
+    List(@props.text.split("\n"))
+    .map (value, index) ->
+      span key: index,
+        value
+    .interpose br()
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
