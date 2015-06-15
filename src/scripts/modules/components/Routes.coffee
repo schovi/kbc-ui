@@ -4,19 +4,22 @@ createComponentsIndex = require './react/pages/ComponentsIndex'
 createNewComponentPage = require './react/pages/NewComponent'
 createNewComponentButton = require './react/components/NewComponentButton'
 
+
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
-IntalledComponentsStore = require './stores/InstalledComponentsStore'
 ComponentsStore = require './stores/ComponentsStore'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
+
 
 exDbRoutes = require '../ex-db/exDbRoutes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
+
+createGenericDetailRoute = require './createGenericDetailRoute'
 
 routes =
 
@@ -52,6 +55,8 @@ routes =
       appGeneeaRoutes.correction
     ,
       appGeneeaRoutes.languageDetection
+    ,
+      createGenericDetailRoute 'application'
     ]
 
   extractors:
@@ -82,6 +87,8 @@ routes =
       exGdriveGoogleRoutes
     ,
       exGanalRoutes
+    ,
+      createGenericDetailRoute 'extractor'
     ]
 
   writers:
@@ -108,6 +115,8 @@ routes =
       ]
     ,
       goodDataWriterRoutes
+    ,
+      createGenericDetailRoute 'writer'
     ]
 
 

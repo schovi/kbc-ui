@@ -92,7 +92,7 @@ module.exports =
       componentId: componentId
       configurationId: configurationId
 
-    query = "component:#{componentId} AND params.config:#{configurationId}"
+    query = "(component:#{componentId} OR params.component:#{componentId}) AND params.config:#{configurationId}"
     jobsApi
     .getJobsParametrized(query, 10, 0)
     .then (jobs) ->

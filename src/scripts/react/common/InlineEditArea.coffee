@@ -67,6 +67,7 @@ EditArea = React.createFactory React.createClass
         placeholder: @props.placeholder
         onChange: @_onChange
         className: 'form-control'
+        rows: 2
       span className: 'kbc-inline-edit-buttons',
         if @props.isSaving
           span null,

@@ -30,6 +30,17 @@ module.exports = React.createClass
       a href: ComponentsStore.getComponentDetailLegacyUrl(@props.componentId, @props.configId),
         @props.children
     else
-      span className: 'text-muted',
+      Link
+        to: 'generic-detail-' + @getComponentType()
+        params:
+          config: @props.configId
+          component: @props.componentId
+      ,
         @props.children
+
+  getComponentType: ->
+    component = ComponentsStore.getComponent(@props.componentId)
+    return 'extractor' if !component
+    component.get 'type'
+
 
