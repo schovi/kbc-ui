@@ -25,7 +25,6 @@ module.exports = React.createClass
     editingCredentials: ExDbStore.getEditingCredentials config
 
   _handleCredentialsChange: (newCredentials) ->
-    console.log 'new creds', newCredentials.toJS()
     ExDbActionCreators.updateEditingCredentials @state.configuration.get('id'), newCredentials
 
   render: ->

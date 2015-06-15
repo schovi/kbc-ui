@@ -175,8 +175,12 @@ Dispatcher.register (payload) ->
     ## Credentials edit handling
     when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_START
       _store = _store.withMutations (store) ->
+        #  set default driver to mysql
+        credentials = ExDbStore.getConfig(action.configurationId).get('credentials')
+        if !credentials.get 'driver'
+          credentials = credentials.set('driver', 'mysql')
         store.setIn ['editingCredentials', action.configurationId],
-          ExDbStore.getConfig(action.configurationId).get 'credentials'
+          credentials
       ExDbStore.emitChange()
 
     when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_CANCEL
