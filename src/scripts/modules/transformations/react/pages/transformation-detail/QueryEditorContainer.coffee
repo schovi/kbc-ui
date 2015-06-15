@@ -18,9 +18,12 @@ module.exports = React.createClass
   render: ->
     component = @
     React.DOM.span {},
-      if @props.transformation.get("backend") == "mysql" || @props.transformation.get("backend") == "redshift"
+      if @props.transformation.get("backend") == "mysql"
         React.DOM.p {className: "well"},
-          "Keboola Connection does not oficially support functions or stored procedures. Use at your own risk."
+          "Keboola Connection does not officially support MySQL functions or stored procedures. Use at your own risk."
+      if @props.transformation.get("backend") == "redshift"
+        React.DOM.p {className: "well"},
+          "Redshift does not support functions or stored procedures."
       if @props.transformation.get("backend") == "docker" && @props.transformation.get("type") == "r"
         React.DOM.p {className: "well"},
           "Read on "
