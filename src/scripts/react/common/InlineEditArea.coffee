@@ -6,6 +6,7 @@ Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
+Textarea = require 'react-textarea-autosize'
 
 {div, span, i, textarea, br} = React.DOM
 
@@ -55,18 +56,17 @@ EditArea = React.createFactory React.createClass
     @props.onChange e.target.value
 
   componentDidMount: ->
-    @refs.textArea.getDOMNode().focus()
+    @refs.textArea.focus()
 
   render: ->
     div className: 'form-inline kbc-inline-edit kbc-inline-textarea',
-      textarea(
+      React.createElement Textarea,
         ref: 'textArea'
         value: @props.text
         disabled: @props.isSaving
         placeholder: @props.placeholder
         onChange: @_onChange
         className: 'form-control'
-      ),
       span className: 'kbc-inline-edit-buttons',
         if @props.isSaving
           span null,
