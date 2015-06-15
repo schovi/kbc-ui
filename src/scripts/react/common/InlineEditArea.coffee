@@ -68,6 +68,10 @@ EditArea = React.createFactory React.createClass
         className: 'form-control'
       ),
       span className: 'kbc-inline-edit-buttons',
+        if @props.isSaving
+          span null,
+            Loader()
+            ' '
         Button
           className: 'kbc-inline-edit-cancel'
           bsStyle: 'link'
@@ -82,10 +86,7 @@ EditArea = React.createFactory React.createClass
           onClick: @props.onSave
         ,
           'Save'
-        if @props.isSaving
-          span null,
-            ' '
-            Loader()
+
 
 
 module.exports = React.createClass
