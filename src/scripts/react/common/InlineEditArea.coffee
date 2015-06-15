@@ -27,7 +27,7 @@ StaticArea = React.createFactory React.createClass
     ,
       div props,
         if @props.text
-          div null,
+          span null,
             @parsedText()
         else
           span className: 'text-muted',
