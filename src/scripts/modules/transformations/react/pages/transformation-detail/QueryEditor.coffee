@@ -31,6 +31,6 @@ module.exports = React.createClass
         theme: 'solarized'
         lineNumbers: true
         mode: @props.mode
-        lineWrapping: false
+        lineWrapping: true
         onChange: @_handleOnChange
         readOnly: @props.disabled

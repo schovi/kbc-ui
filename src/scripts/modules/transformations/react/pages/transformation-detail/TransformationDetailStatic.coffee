@@ -157,22 +157,24 @@ TransformationDetailStatic = React.createClass
           h2 {}, 'Queries'
           if @props.transformation.get('queries').count()
             span {},
-              div className: 'table table-striped table-hover',
-                span {className: 'tbody'},
-                  @props.transformation.get('queries').map((query, index) ->
-                    span {className: 'tr', key: index},
-                      span {className: 'td'},
-                        index + 1
-                      span {className: 'td'},
-                        span {className: 'static'},
-                          CodeMirror
-                            theme: 'solarized'
-                            lineNumbers: false
-                            defaultValue: query
-                            readOnly: true
-                            mode: @_codeMirrorMode()
-                            lineWrapping: true
-                  , @).toArray()
+              @props.transformation.get('queries').map((query, index) ->
+                if index % 2 == 0
+                  rowClassName = "row stripe-odd"
+                else
+                  rowClassName = "row"
+                div {className: rowClassName, key: index},
+                  div {className: 'col-md-1 vertical-center', key: "number"},
+                    index + 1
+                  div {className: 'col-md-11 vertical-center', key: "query"},
+                    span {className: 'static'},
+                      CodeMirror
+                        theme: 'solarized'
+                        lineNumbers: false
+                        defaultValue: query
+                        readOnly: true
+                        mode: @_codeMirrorMode()
+                        lineWrapping: true
+              , @).toArray()
               if @props.transformation.get('backend') == 'redshift' or
                   @props.transformation.get('backend') == 'mysql' &&
                   @props.transformation.get('type') == 'simple'
