@@ -19,6 +19,10 @@ OrchestrationDeleteButton = React.createClass
   propTypes:
     orchestration: React.PropTypes.object.isRequired
     isPending: React.PropTypes.bool.isRequired
+    tooltipPlacement: React.PropTypes.string
+
+  getDefaultProps: ->
+    tooltipPlacement: 'top'
 
   render: ->
     if @props.isPending
@@ -28,7 +32,7 @@ OrchestrationDeleteButton = React.createClass
       OverlayTrigger
         overlay: Tooltip null, 'Delete orchestration'
         key: 'delete'
-        placement: 'top'
+        placement: @props.tooltipPlacement
       ,
         Confirm
           title: 'Delete Orchestration'

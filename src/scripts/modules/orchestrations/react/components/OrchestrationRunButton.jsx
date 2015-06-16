@@ -7,12 +7,14 @@ import {Loader} from 'kbc-react-components';
 export default React.createClass({
   propTypes: {
     orchestration: React.PropTypes.object.isRequired,
-    notify: React.PropTypes.bool
+    notify: React.PropTypes.bool,
+    tooltipPlacement: React.PropTypes.string
   },
 
   getDefaultProps() {
     return {
-      notify: false
+      notify: false,
+      tooltipPlacement: 'top'
     };
   },
 
@@ -24,7 +26,7 @@ export default React.createClass({
 
   render() {
     return (
-      <OverlayTrigger overlay={<Tooltip>Run</Tooltip>} key="run" placement="top">
+      <OverlayTrigger overlay={<Tooltip>Run</Tooltip>} key="run" placement={this.props.tooltipPlacement}>
         <ModalTrigger modal={this.modal()}>
           <button className="btn btn-link" onClick={this.handleButtonClick}>
             {this.icon()}

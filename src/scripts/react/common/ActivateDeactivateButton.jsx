@@ -11,13 +11,15 @@ export default React.createClass({
     isActive: React.PropTypes.bool.isRequired,
     isPending: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
-    mode: React.PropTypes.oneOf([MODE_BUTTON, MODE_LINK])
+    mode: React.PropTypes.oneOf([MODE_BUTTON, MODE_LINK]),
+    tooltipPlacement: React.PropTypes.string
   },
 
   getDefaultProps() {
     return {
       isPending: false,
-      mode: MODE_BUTTON
+      mode: MODE_BUTTON,
+      tooltipPlacement: 'top'
     };
   },
 
@@ -42,7 +44,7 @@ export default React.createClass({
       );
     } else {
       return (
-        <OverlayTrigger placement="top" overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
+        <OverlayTrigger placement={this.props.tooltipPlacement} overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
           <button className="btn btn-link" onClick={this.handleClick}>
             {this.renderIcon()}
           </button>

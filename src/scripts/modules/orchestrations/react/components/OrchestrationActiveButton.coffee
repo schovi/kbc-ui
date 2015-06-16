@@ -13,6 +13,10 @@ module.exports = React.createClass
   propTypes:
     orchestration: React.PropTypes.object.isRequired
     isPending: React.PropTypes.bool.isRequired
+    tooltipPlacement: React.PropTypes.string
+
+  getDefaultProps: ->
+    tooltipPlacement: 'top'
 
   render: ->
     React.createElement ActivateDeactivateButton,
@@ -21,6 +25,7 @@ module.exports = React.createClass
       isActive: @props.orchestration.get('active')
       isPending: @props.isPending
       onChange: @_handleActiveChange
+      tooltipPlacement: @props.tooltipPlacement
 
   _handleActiveChange: (newValue) ->
     if newValue

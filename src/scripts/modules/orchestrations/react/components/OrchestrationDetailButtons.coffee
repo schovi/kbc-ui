@@ -27,11 +27,14 @@ OrchestrationDetailButtons = React.createClass
       OrchestrationActiveButton
         orchestration: @state.orchestration
         isPending: @state.pendingActions.get 'active', false
+        tooltipPlacement: 'bottom'
       OrchestrationDeleteButton
         orchestration: @state.orchestration
         isPending: @state.pendingActions.get 'delete', false
+        tooltipPlacement: 'bottom'
       OrchestrationRunButton
         orchestration: @state.orchestration
+        tooltipPlacement: 'bottom'
 
 
 module.exports = OrchestrationDetailButtons
