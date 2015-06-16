@@ -241,21 +241,17 @@ TransformationDetailStatic = React.createClass
     div {},
       div className: 'kbc-row kbc-header',
         @props.transformation.get("description") || em {}, "No description ..."
+        div {className: 'pull-right'},
+          span {className: 'label kbc-label-rounded-small label-default'},
+            'Phase: '
+            @props.transformation.get 'phase'
+          ' '
+          TransformationTypeLabel
+            backend: @props.transformation.get 'backend'
+            type: @props.transformation.get 'type'
+
       div className: '',
         div {className: 'kbc-row'},
-          div {className: 'pull-right'},
-            span {className: 'label kbc-label-rounded-small label-default'},
-              'Phase: '
-              @props.transformation.get 'phase'
-            ' '
-            TransformationTypeLabel
-              backend: @props.transformation.get 'backend'
-              type: @props.transformation.get 'type'
-          h2 {}, 'Overview'
-          GraphContainer
-            bucketId: @props.bucketId
-            transformationId: @props.transformationId
-            disabled: @props.transformation.get("disabled", false)
           span {},
             if !@props.showDetails
               div {className: 'well'},
