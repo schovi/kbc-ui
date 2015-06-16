@@ -13,7 +13,8 @@ export default React.createClass({
         sizeBytes: currentProject.get('dataSizeBytes'),
         rowsCount: currentProject.get('rowsCount')
       },
-      tokens: tokenStats
+      tokens: tokenStats,
+      projectId: currentProject.get('id')
     };
   },
 

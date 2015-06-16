@@ -93,7 +93,7 @@
                         "description":"tomas.kacur@keboola.com",
                         "token": kbcApp.helpers.getUrlParameterByName('token', window.location.search),
                         "owner": {
-                            "id": 0,
+                            "id": parseInt(kbcApp.helpers.getUrlParameterByName('token', window.location.search).split('-')[0]),
                             "name": "Development",
                             "dataSizeBytes": 1232343534543,
                             "rowsCount": 13402344
