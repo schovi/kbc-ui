@@ -15,6 +15,6 @@ module.exports = React.createClass
       fieldName: 'name'
       editElement: InlineEditTextInput
       placeholder: 'Name the component ...'
-      tooltipPlacement: 'right'
+      tooltipPlacement: 'bottom'
 
 

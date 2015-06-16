@@ -40,7 +40,7 @@ module.exports = React.createClass
     React.createElement InlineEditTextInput,
       text: if @state.isEditing then @state.editValue else @state.value
       placeholder: 'Name the component ...'
-      tooltipPlacement: 'right'
+      tooltipPlacement: 'bottom'
       isSaving: @state.isSaving
       isEditing: @state.isEditing
       isValid: @state.editValue?.trim() != ''
