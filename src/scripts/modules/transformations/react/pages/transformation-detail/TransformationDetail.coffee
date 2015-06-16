@@ -171,24 +171,29 @@ TransformationDetail = React.createClass
               isActive: !@state.transformation.get('disabled')
               isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
               onChange: @_handleActiveChange
-          li {},
-            RunComponentButton(
-              icon: 'fa-wrench'
-              title: "Create sandbox"
-              component: 'transformation'
-              method: 'run'
-              mode: 'link'
-              runParams: =>
-                configBucketId: @state.bucketId
-                transformations: [@state.transformationId]
-                mode: @state.sandboxMode
-            ,
-              ConfigureTransformationSandboxMode
-                mode: @state.sandboxMode
-                onChange: (mode) =>
-                  @setState
-                    sandboxMode: mode
-            )
+
+          if @state.transformation.get('backend') == 'redshift' or
+          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+            li {},
+              RunComponentButton(
+                icon: 'fa-wrench'
+                title: "Create sandbox"
+                component: 'transformation'
+                method: 'run'
+                mode: 'link'
+                runParams: =>
+                  configBucketId: @state.bucketId
+                  transformations: [@state.transformationId]
+                  mode: @state.sandboxMode
+              ,
+
+                ConfigureTransformationSandboxMode
+                  backend: @state.transformation.get("backend")
+                  mode: @state.sandboxMode
+                  onChange: (mode) =>
+                    @setState
+                      sandboxMode: mode
+              )
 
           if @state.transformation.get('backend') == 'redshift' or
               @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
