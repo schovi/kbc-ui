@@ -8,6 +8,7 @@ class Error
 
   constructor: (@title, @text, @data, @exceptionId) ->
     @id = null
+    @isUserError = false
 
   getTitle: ->
     @title
@@ -34,13 +35,10 @@ createFromException = (error) ->
     new Error('Application error', 'Please try reload the browser')
 
 createFromXhrError = (httpError) ->
-  title = switch httpError.response.status
-    when 404 then 'Page not found'
-    when 401 then 'Unauthorized access'
-    else 'Application Error'
+  title = 'Error'
 
   text = ''
-  if httpError.response.body?.error
+  if httpError.response.body?.error && httpError.response.body.error != 'User error'
     text += httpError.response.body.error
 
   if httpError.response.body?.message
@@ -49,7 +47,12 @@ createFromXhrError = (httpError) ->
   if !text
     text = 'Application error. Please try reload the browser'
 
-  new Error(title, text, httpError, httpError.response.body?.exceptionId)
+  error = new Error(title, text, httpError, httpError.response.body?.exceptionId)
+
+  if httpError.response.status in [400, 401, 403, 404]
+    error.isUserError = true
+
+  error
 
 module.exports =
   Error: Error
