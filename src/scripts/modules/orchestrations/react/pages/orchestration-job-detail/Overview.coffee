@@ -32,7 +32,11 @@ JobDetailOverview = React.createClass
               span className: 'col-md-9', JobStatusLabel status: @props.job.get('status')
             div className: 'row',
               span className: 'col-md-3', 'End '
-              strong className: 'col-md-9', date.format(@props.job.get('endTime'))
+              strong className: 'col-md-9',
+                if @props.job.get('endTime')
+                  date.format(@props.job.get('endTime'))
+                else
+                  'N/A'
             div className: 'row',
               span className: 'col-md-3', 'Token '
               strong className: 'col-md-9', @props.job.getIn(['token', 'description'])
