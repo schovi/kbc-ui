@@ -29,6 +29,9 @@ TransformationDetail = React.createClass
     Router.Navigation
   ]
 
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
+
   getStateFromStores: ->
     bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
