@@ -2,7 +2,7 @@ React = require 'react'
 
 FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
-
+AppVendorInfo = React.createFactory(require './appVendorinfo')
 {div, form} = React.DOM
 
 
@@ -52,3 +52,9 @@ module.exports = React.createClass
             wrapperClassName: 'col-xs-10'
             onChange: @_handleChange.bind @, 'description'
             disabled: @props.isSaving
+          @_renderAppVendorInfo() if (@props.component.get('is3rdParty') == true or true)
+
+  _renderAppVendorInfo: ->
+    componentData = @props.component.get('data')
+    AppVendorInfo
+      data: componentData
