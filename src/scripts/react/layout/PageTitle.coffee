@@ -10,7 +10,14 @@ module.exports = React.createClass
   mixins: [createStoreMixin(RoutesStore)]
 
   getStateFromStores: ->
-    pageTitle: ApplicationStore.getCurrentProject().get('name') + ' - ' + RoutesStore.getCurrentRouteTitle()
+    pageTitle: ApplicationStore.getCurrentProject().get('name') + ' - ' + @breadcrumbs()
+
+  breadcrumbs: ->
+    RoutesStore
+    .getBreadcrumbs()
+    .map (page) ->
+      page.get 'title'
+    .join ' / '
 
   render: ->
     DocumentTitle title: @state.pageTitle
