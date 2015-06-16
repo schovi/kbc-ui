@@ -225,7 +225,7 @@ module.exports =
 
     defaultParams =
       method: 'run'
-      message: 'Extractor job has been scheduled.'
+      message: 'Job has been scheduled.'
 
     params = _.extend {}, defaultParams, params
 
@@ -246,4 +246,5 @@ module.exports =
               onClick: @props.onClick
             ,
               'here'
+            '.'
       )
