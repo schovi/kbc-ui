@@ -90,95 +90,96 @@ module.exports = React.createClass
   render: ->
     component = @
     React.DOM.div {className: 'panel-body'},
-      React.DOM.div {className: "row col-md-12"},
-        if @props.backend == 'docker' && @props.type == 'r'
-          Input
-            type: 'text'
-            name: 'source'
-            label: 'File'
-            value: @props.value.get("source")
-            disabled: @props.disabled
-            placeholder: "File name"
-            onChange: @_handleChangeSource
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-            help: React.DOM.span {},
-              "File will be uploaded from"
-              React.DOM.code {}, "/data/out/tables"
-        else
-          Input
-            type: 'text'
-            name: 'source'
-            label: 'Source'
-            value: @props.value.get("source")
-            disabled: @props.disabled
-            placeholder: "Source table in transformation DB"
-            onChange: @_handleChangeSource
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
-          React.DOM.label className: 'col-xs-2 control-label', 'Destination'
-          React.DOM.div className: 'col-xs-10',
-            React.createElement Autosuggest,
-              suggestions: createGetSuggestions(@_getTables)
-              inputAttributes:
-                className: 'form-control'
-                placeholder: 'Destination table in Storage'
-                value: @props.value.get("destination", "")
-                onChange: @_handleChangeDestination
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          name: 'incremental'
-          type: 'checkbox'
-          label: 'Incremental'
-          value: @props.value.get("optional")
-          disabled: @props.disabled
-          onChange: @_handleChangeIncremental
-          wrapperClassName: 'col-xs-offset-2 col-xs-10'
-          help: "If the destination table exists in Storage API,
-            output mapping does not overwrite the table, it only appends the data to it.
-            Uses incremental write to Storage API."
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          name: 'primaryKey'
-          type: 'text'
-          label: 'Primary key'
-          value: @_getPrimaryKeyValue()
-          disabled: @props.disabled
-          placeholder: "Column name(s)"
-          onChange: @_handleChangePrimaryKey
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-10'
-          help: "Primary key of the table in Storage API. If the table already exists, primary key must match.
-            Parts of a composite primary key are separated with a comma."
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
-          React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
-          React.DOM.div className: 'col-xs-4',
-            React.createElement Autosuggest,
-              suggestions: createGetSuggestions(@_getColumns)
-              inputAttributes:
-                className: 'form-control'
-                placeholder: 'Select column'
-                value: @props.value.get("deleteWhereColumn", "")
-                onChange: @_handleChangeDeleteWhereColumn
-          React.DOM.div className: 'col-xs-2',
-            Input
-              type: 'select'
-              name: 'deleteWhereOperator'
-              value: @props.value.get("deleteWhereOperator")
-              disabled: @props.disabled
-              onChange: @_handleChangeDeleteWhereOperator
-            ,
-              React.DOM.option {value: "eq"}, "= (IN)"
-              React.DOM.option {value: "ne"}, "!= (NOT IN)"
-          React.DOM.div className: 'col-xs-4',
+      React.DOM.div null,
+        React.DOM.div {className: "row col-md-12"},
+          if @props.backend == 'docker' && @props.type == 'r'
             Input
               type: 'text'
-              name: 'deleteWhereValues'
-              value: @_getDeleteWhereValues()
+              name: 'source'
+              label: 'File'
+              value: @props.value.get("source")
               disabled: @props.disabled
-              onChange: @_handleChangeDeleteWhereValues
-              placeholder: "Comma separated values"
+              placeholder: "File name"
+              onChange: @_handleChangeSource
+              labelClassName: 'col-xs-2'
+              wrapperClassName: 'col-xs-10'
+              help: React.DOM.span {},
+                "File will be uploaded from"
+                React.DOM.code {}, "/data/out/tables"
+          else
+            Input
+              type: 'text'
+              name: 'source'
+              label: 'Source'
+              value: @props.value.get("source")
+              disabled: @props.disabled
+              placeholder: "Source table in transformation DB"
+              onChange: @_handleChangeSource
+              labelClassName: 'col-xs-2'
+              wrapperClassName: 'col-xs-10'
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group',
+            React.DOM.label className: 'col-xs-2 control-label', 'Destination'
+            React.DOM.div className: 'col-xs-10',
+              React.createElement Autosuggest,
+                suggestions: createGetSuggestions(@_getTables)
+                inputAttributes:
+                  className: 'form-control'
+                  placeholder: 'Destination table in Storage'
+                  value: @props.value.get("destination", "")
+                  onChange: @_handleChangeDestination
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            name: 'incremental'
+            type: 'checkbox'
+            label: 'Incremental'
+            value: @props.value.get("optional")
+            disabled: @props.disabled
+            onChange: @_handleChangeIncremental
+            wrapperClassName: 'col-xs-offset-2 col-xs-10'
+            help: "If the destination table exists in Storage API,
+              output mapping does not overwrite the table, it only appends the data to it.
+              Uses incremental write to Storage API."
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            name: 'primaryKey'
+            type: 'text'
+            label: 'Primary key'
+            value: @_getPrimaryKeyValue()
+            disabled: @props.disabled
+            placeholder: "Column name(s)"
+            onChange: @_handleChangePrimaryKey
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            help: "Primary key of the table in Storage API. If the table already exists, primary key must match.
+              Parts of a composite primary key are separated with a comma."
+
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group',
+            React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
+            React.DOM.div className: 'col-xs-4',
+              React.createElement Autosuggest,
+                suggestions: createGetSuggestions(@_getColumns)
+                inputAttributes:
+                  className: 'form-control'
+                  placeholder: 'Select column'
+                  value: @props.value.get("deleteWhereColumn", "")
+                  onChange: @_handleChangeDeleteWhereColumn
+            React.DOM.div className: 'col-xs-2',
+              Input
+                type: 'select'
+                name: 'deleteWhereOperator'
+                value: @props.value.get("deleteWhereOperator")
+                disabled: @props.disabled
+                onChange: @_handleChangeDeleteWhereOperator
+              ,
+                React.DOM.option {value: "eq"}, "= (IN)"
+                React.DOM.option {value: "ne"}, "!= (NOT IN)"
+            React.DOM.div className: 'col-xs-4',
+              Input
+                type: 'text'
+                name: 'deleteWhereValues'
+                value: @_getDeleteWhereValues()
+                disabled: @props.disabled
+                onChange: @_handleChangeDeleteWhereValues
+                placeholder: "Comma separated values"
