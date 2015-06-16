@@ -151,7 +151,7 @@ TransformationDetail = React.createClass
               ' Overview'
           li {},
             RunComponentButton(
-              title: "Run Transformation"
+              title: "Run transformation"
               component: 'transformation'
               mode: 'link'
               runParams: =>
@@ -163,15 +163,15 @@ TransformationDetail = React.createClass
           li {},
             ActivateDeactivateButton
               mode: 'link'
-              activateTooltip: 'Enable Transformation'
-              deactivateTooltip: 'Disable Transformation'
+              activateTooltip: 'Enable transformation'
+              deactivateTooltip: 'Disable transformation'
               isActive: !@state.transformation.get('disabled')
               isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
               onChange: @_handleActiveChange
           li {},
             RunComponentButton(
               icon: 'fa-wrench'
-              title: "Create Sandbox"
+              title: "Create sandbox"
               component: 'transformation'
               method: 'run'
               mode: 'link'
@@ -202,7 +202,7 @@ TransformationDetail = React.createClass
           li {},
             a {},
               React.createElement Confirm,
-                text: 'Delete Transformation'
+                text: 'Delete transformation'
                 title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
                 buttonLabel: 'Delete'
                 buttonType: 'danger'
