@@ -20,14 +20,14 @@ export default React.createClass({
 
   render() {
     return (
-        <ModalTrigger modal={<ConfirmModal {...this.props}/>}>
-          {React.cloneElement(React.Children.only(this.props.children), {
-            onClick: (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          })}
-        </ModalTrigger>
+      <ModalTrigger {...this.props} modal={<ConfirmModal {...this.props}/>}>
+        {React.cloneElement(React.Children.only(this.props.children), {
+          onClick: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        })}
+      </ModalTrigger>
     );
   }
 
