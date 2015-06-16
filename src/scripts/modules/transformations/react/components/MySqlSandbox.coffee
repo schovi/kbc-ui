@@ -33,10 +33,7 @@ MySqlSandbox = React.createClass
 
   _renderCredentials: ->
     span {},
-      if @state.credentials.get "id"
-        MySqlCredentials {credentials: @state.credentials}
-      else
-        'Credentials not found'
+      MySqlCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
     if @state.credentials.get "id"
@@ -75,11 +72,7 @@ MySqlSandbox = React.createClass
               text: 'Do you really want to delete MySQL sandbox?'
               onConfirm: @_dropCredentials
     else
-      if @state.pendingActions.get "create"
-        span {},
-          Loader()
-          ' Creating credentials'
-      else
+      if !@state.pendingActions.get("create")
         button {className: 'btn btn-link', onClick: @_createCredentials},
           i className: 'fa fa-fw fa-plus'
           ' Create credentials'

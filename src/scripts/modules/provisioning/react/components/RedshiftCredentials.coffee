@@ -2,6 +2,7 @@ React = require 'react'
 
 Protected = React.createFactory(require('kbc-react-components').Protected)
 Clipboard = React.createFactory(require '../../../../react/common/Clipboard')
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {span, div, strong} = React.DOM
 
@@ -9,9 +10,23 @@ RedshiftCredentials = React.createClass
   displayName: 'RedshiftCredentials'
   propTypes:
     credentials: React.PropTypes.object
+    isCreating: React.PropTypes.bool
 
   render: ->
     div {},
+      if @props.isCreating
+        span {},
+          Loader()
+          ' Creating credentials'
+      else
+        if @props.credentials.get "id"
+          @_renderCredentials()
+
+        else
+          'Credentials not found'
+
+  _renderCredentials: ->
+    span {},
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
         strong {className: 'col-md-9'},
