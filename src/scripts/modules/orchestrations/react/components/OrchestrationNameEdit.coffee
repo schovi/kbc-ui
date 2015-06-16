@@ -18,11 +18,18 @@ module.exports = React.createClass
     orchestrationId: React.PropTypes.number.isRequired
 
   getStateFromStores: ->
-    value: OrchestrationsStore.get(@props.orchestrationId).get FIELD
-    editValue: OrchestrationsStore.getEditingValue @props.orchestrationId, FIELD
-    isEditing: OrchestrationsStore.isEditing @props.orchestrationId, FIELD
-    isSaving: OrchestrationsStore.isSaving @props.orchestrationId, FIELD
+    @getStateForOrchestration(@props.orchestrationId)
+
+  getStateForOrchestration: (orchestrationId) ->
+    value: OrchestrationsStore.get(orchestrationId).get FIELD
+    editValue: OrchestrationsStore.getEditingValue orchestrationId, FIELD
+    isEditing: OrchestrationsStore.isEditing orchestrationId, FIELD
+    isSaving: OrchestrationsStore.isSaving orchestrationId, FIELD
     isValid: true
+
+  componentWillReceiveProps: (nextProps) ->
+    if nextProps.orchestrationId != @props.orchestrationId
+      @setState(@getStateForOrchestration(nextProps.orchestrationId))
 
   _handleEditStart: ->
     actionCreators.startOrchestrationFieldEdit @props.orchestrationId, FIELD
