@@ -143,6 +143,13 @@ TransformationDetail = React.createClass
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},
+            Link
+              to: 'transformationDetailGraph'
+              params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
+            ,
+              span className: 'fa fa-search fa-fw'
+              ' Overview'
+          li {},
             RunComponentButton(
               title: "Run Transformation"
               component: 'transformation'

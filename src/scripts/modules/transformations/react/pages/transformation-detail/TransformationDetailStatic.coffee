@@ -17,7 +17,6 @@ OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
-GraphContainer = React.createFactory(require './GraphContainer')
 {Panel} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'

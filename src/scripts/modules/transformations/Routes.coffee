@@ -3,6 +3,7 @@ React = require 'react'
 TransformationsIndex = require('./react/pages/transformations-index/TransformationsIndex')
 TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket')
 TransformationDetail = require('./react/pages/transformation-detail/TransformationDetail')
+TransformationGraph = require('./react/pages/transformation-graph/TransformationGraph')
 Sandbox = require('./react/pages/sandbox/Sandbox')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
@@ -54,6 +55,13 @@ routes =
           requireData: [
             ->
               StorageActionCreators.loadTables()
+          ]
+          childRoutes: [
+            name: 'transformationDetailGraph'
+            path: 'graph'
+            title: (routerState) ->
+              "Overview"
+            defaultRouteHandler: TransformationGraph
           ]
         ]
       ,
