@@ -6,6 +6,7 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Loader = React.createFactory(require('kbc-react-components').Loader)
+RoutesStore = require '../../../../stores/RoutesStore'
 
 {a, i, div, button} = React.DOM
 
@@ -45,11 +46,13 @@ module.exports = React.createClass
     method: React.PropTypes.string.isRequired
     icon: React.PropTypes.string.isRequired
     label: React.PropTypes.string
+    redirect: React.PropTypes.bool
 
   getDefaultProps: ->
     mode: 'button'
     method: 'run'
     icon: 'fa-play'
+    redirect: false
 
   getInitialState: ->
     isLoading: false
@@ -70,10 +73,12 @@ module.exports = React.createClass
       @setState
         isLoading: false
 
-  _handleStarted: ->
+  _handleStarted: (response) ->
     if @isMounted()
       @setState
         isLoading: false
+    if @props.redirect
+      RoutesStore.getRouter().transitionTo("jobDetail", {jobId: response.id})
 
   render: ->
     ModalTrigger
