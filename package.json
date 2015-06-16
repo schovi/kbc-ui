@@ -37,7 +37,6 @@
     "react-router": "~0.13.3",
     "react-select": "~0.4.8",
     "react-textarea-autosize": "^2.3.1",
-    "react-typeahead": "~1.0.6",
     "react-zeroclipboard": "~0.4.0",
     "superagent": "~0.21.0",
     "underscore": "~1.7.0",

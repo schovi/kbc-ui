@@ -4,7 +4,18 @@ _ = require('underscore')
 Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
 Select = React.createFactory(require('react-select'))
-ReactTypeahead = React.createFactory(require('react-typeahead').Typeahead)
+Autosuggest = require 'react-autosuggest'
+fuzzy = require 'fuzzy'
+
+createGetSuggestions = (getOptions) ->
+  (input, callback) ->
+    suggestions = getOptions()
+    .filter (value) -> fuzzy.match(input, value)
+    .slice 0, 10
+    .toList()
+
+    console.log 'suggestions', suggestions.toJS()
+    callback(null, suggestions.toJS())
 
 module.exports = React.createClass
   displayName: 'OutputMappingRowEditor'
@@ -63,18 +74,18 @@ module.exports = React.createClass
     map = inOutTables.map((table) ->
       table.get("id")
     )
-    map.toList().toJS()
+    map.toList()
 
   _getColumns: ->
     if !@props.value.get("destination")
-      return []
+      return Immutable.List()
     props = @props
     table = @props.tables.find((table) ->
       table.get("id") == props.value.get("destination")
     )
     if !table
-      return []
-    table.get("columns").toJS()
+      return Immutable.List()
+    table.get("columns")
 
   render: ->
     component = @
@@ -109,14 +120,13 @@ module.exports = React.createClass
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Destination'
           React.DOM.div className: 'col-xs-10',
-            ReactTypeahead
-              defaultValue: @props.value.get("destination", "")
-              customClasses:
-                input: 'form-control'
-              onOptionSelected: @_handleChangeDestination
-              options: @_getTables()
-              placeholder: "Destination table in Storage"
-              maxVisible: 10
+            React.createElement Autosuggest,
+              suggestions: createGetSuggestions(@_getTables)
+              inputAttributes:
+                className: 'form-control'
+                placeholder: 'Destination table in Storage'
+                value: @props.value.get("destination", "")
+                onChange: @_handleChangeDestination
       React.DOM.div {className: "row col-md-12"},
         Input
           name: 'incremental'
@@ -147,14 +157,13 @@ module.exports = React.createClass
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
           React.DOM.div className: 'col-xs-4',
-            ReactTypeahead
-              defaultValue: @props.value.get("deleteWhereColumn", "")
-              customClasses:
-                input: 'form-control'
-              onOptionSelected: @_handleChangeDeleteWhereColumn
-              options: @_getColumns()
-              placeholder: "Select column"
-              maxVisible: 10
+            React.createElement Autosuggest,
+              suggestions: createGetSuggestions(@_getColumns)
+              inputAttributes:
+                className: 'form-control'
+                placeholder: 'Select column'
+                value: @props.value.get("deleteWhereColumn", "")
+                onChange: @_handleChangeDeleteWhereColumn
           React.DOM.div className: 'col-xs-2',
             Input
               type: 'select'
