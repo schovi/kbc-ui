@@ -72,7 +72,6 @@ TransformationDetailStatic = React.createClass
           div {},
             _.map(@props.transformation.get("requires").toArray(), (required) ->
               Link
-                className: 'tr'
                 to: 'transformationDetail'
                 params: {transformationId: required, bucketId: props.bucket.get('id')}
               ,
@@ -90,7 +89,6 @@ TransformationDetailStatic = React.createClass
           div {},
             _.map(@_getDependentTransformations().toArray(), (dependent) ->
               Link
-                className: 'tr'
                 to: 'transformationDetail'
                 params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
               ,
