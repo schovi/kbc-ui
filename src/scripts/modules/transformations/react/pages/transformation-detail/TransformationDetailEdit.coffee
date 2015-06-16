@@ -55,7 +55,7 @@ TransformationDetailEdit = React.createClass
   render: ->
     props = @props
     component = @
-    form className: 'form-horizontal',
+    div className: 'form-horizontal',
       div className: 'kbc-row',
         h2 {}, 'General'
         div className: "row",
