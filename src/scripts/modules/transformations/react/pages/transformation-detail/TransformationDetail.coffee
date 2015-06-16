@@ -52,6 +52,7 @@ TransformationDetail = React.createClass
 
   getInitialState: ->
     sandboxMode: 'prepare'
+    sandboxRedirect: true
 
   _handleEditStart: ->
     TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
@@ -181,6 +182,7 @@ TransformationDetail = React.createClass
                 component: 'transformation'
                 method: 'run'
                 mode: 'link'
+                redirect: @state.sandboxRedirect
                 runParams: =>
                   configBucketId: @state.bucketId
                   transformations: [@state.transformationId]
@@ -190,9 +192,12 @@ TransformationDetail = React.createClass
                 ConfigureTransformationSandboxMode
                   backend: @state.transformation.get("backend")
                   mode: @state.sandboxMode
-                  onChange: (mode) =>
+                  redirect: @state.sandboxRedirect
+                  onChange: (values) =>
+                    console.log values
                     @setState
-                      sandboxMode: mode
+                      sandboxMode: values.mode
+                      sandboxRedirect: values.redirect
               )
 
           if @state.transformation.get('backend') == 'redshift' or
