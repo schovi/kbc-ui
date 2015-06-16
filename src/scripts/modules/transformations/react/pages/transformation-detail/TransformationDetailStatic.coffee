@@ -3,6 +3,7 @@ Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 Immutable = require('immutable')
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
+_ = require('underscore')
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TransformationsActionCreators = require '../../../ActionCreators'
@@ -22,6 +23,7 @@ Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
+SelectRequires = React.createFactory(require('./SelectRequires'))
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -36,6 +38,7 @@ TransformationDetailStatic = React.createClass
   propTypes:
     bucket: React.PropTypes.object.isRequired
     transformation: React.PropTypes.object.isRequired
+    transformations: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
     bucketId: React.PropTypes.string.isRequired
@@ -50,10 +53,51 @@ TransformationDetailStatic = React.createClass
   _toggleOutputMapping: (index) ->
     TransformationsActionCreators.toggleOpenOutputMapping(@props.bucketId, @props.transformationId, index)
 
+  _getDependentTransformations: ->
+    props = @props
+    @props.transformations.filter((transformation) ->
+      transformation.get("requires").contains(props.transformation.get("id"))
+    )
+
   _renderDetail: ->
     props = @props
     component = @
     span {},
+      if @props.transformation.get("requires").toArray().length
+        span {},
+          div {},
+            h2 {}, 'Requires'
+          div {className: "help-block"},
+            "These transformations are processed before this transformation starts."
+          div {},
+            _.map(@props.transformation.get("requires").toArray(), (required) ->
+              Link
+                className: 'tr'
+                to: 'transformationDetail'
+                params: {transformationId: required, bucketId: props.bucket.get('id')}
+              ,
+                span {className: 'label kbc-label-rounded-small label-default'},
+                  _.find(props.transformations.toArray(), (transformation) ->
+                    transformation.get("id") == required
+                  )?.get("name") || required
+            )
+      if @_getDependentTransformations().count()
+        span {},
+          div {},
+            h2 {}, 'Dependent transformations'
+          div {className: "help-block"},
+            "These transformations are dependent on the current transformation."
+          div {},
+            _.map(@_getDependentTransformations().toArray(), (dependent) ->
+              Link
+                className: 'tr'
+                to: 'transformationDetail'
+                params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
+              ,
+                span {className: 'label kbc-label-rounded-small label-default'},
+                  dependent.get("name")
+            )
+
       div {},
         h2 {}, 'Input Mapping'
         if @props.transformation.get('input').count()

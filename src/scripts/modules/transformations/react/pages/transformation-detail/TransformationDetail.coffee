@@ -87,6 +87,7 @@ TransformationDetail = React.createClass
             TransformationDetailStatic
               bucket: @state.bucket
               transformation: @state.transformation
+              transformations: @state.transformations
               pendingActions: @state.pendingActions
               tables: @state.tables
               bucketId: @state.bucketId
