@@ -74,7 +74,7 @@ TransformationDetailEdit = React.createClass
                   "Type"
               div className: "col-xs-8",
                 p
-                  label: "Type"
+                  label: "Backend"
                   className: "form-control-static"
                 ,
                   TransformationTypeLabel
