@@ -23,7 +23,9 @@ export default React.createClass({
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.autoRefresh) {
-      this.stopPolling();
+      /*jslint browser:true*/
+      setTimeout(this.stopPolling, 2000); // events can be delayed
+      this.collectStats();
     }
   },
 
