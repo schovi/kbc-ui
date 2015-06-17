@@ -75,7 +75,7 @@ Header = React.createClass
         # component name edit is enabled
         breadcrumbs.push span key: part.get('name'),
           @state.component.get 'name'
-          span null, ' - '
+          span className: 'kbc-inline-edit-dash', ' - '
           ComponentNameEdit
             componentId: @state.component.get 'id'
             configId: @state.currentRouteParams.get 'config'
