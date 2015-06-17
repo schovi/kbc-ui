@@ -11,20 +11,14 @@ module.exports = React.createClass
     div className: 'form-group',
       label className: 'control-label col-xs-2', 'License'
       div className: 'col-xs-10',
-        address null,
-          strong null, "Vendor name"
-          br()
-          "contact line"
-          br()
-          "contact line"
-          br()
-          "contact line"
-
         span null, 'This is a 3rd party application with the following terms and conditions'
         ul null,
           li null, 'Extra money will be charged.' #optional
           li null, 'Data may be sent out of Keboola Connection' #optional
           li null, 'Vendor license terms and conditions' #required
+          li null,
+            'Vendor:'
+            @_renderAddress()
         Input
           type: 'checkbox'
           label: 'I agree with the terms and conditions.'
@@ -32,3 +26,13 @@ module.exports = React.createClass
           labelClassName: 'col-xs-10'
           onChange: (event) ->
             console.log "changed", event.target.checked
+
+  _renderAddress: ->
+    address null,
+      strong null, 'Vendor name'
+      br()
+      "contact line"
+      br()
+      "contact line"
+      br()
+      "contact line"
