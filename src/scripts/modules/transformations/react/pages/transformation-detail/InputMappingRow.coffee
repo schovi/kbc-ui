@@ -20,15 +20,15 @@ InputMappingRow = React.createClass(
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
-          span {className: 'td'},
+          span {className: 'td col-xs-3'},
             TableSizeLabel {size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']}
             ' '
             TableBackendLabel {backend: @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']}
-          span {className: 'td'},
+          span {className: 'td col-xs-4'},
             @props.inputMapping.get 'source'
-          span {className: 'td'},
+          span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
-          span {className: 'td'},
+          span {className: 'td col-xs-4'},
             TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
             ' '
             if @props.transformationBackend == 'docker'

@@ -18,20 +18,20 @@ OutputMappingRow = React.createClass(
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
-          span {className: 'td'},
+          span {className: 'td col-xs-4'},
             if @props.transformationBackend == 'docker'
               'in/tables/' + @props.outputMapping.get 'source'
             else
               @props.outputMapping.get 'source'
-          span {className: 'td'},
+          span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
-          span {className: 'td'},
+          span {className: 'td col-xs-3'},
             TableSizeLabel
               size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
             ' '
             TableBackendLabel
               backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
-          span {className: 'td'},
+          span {className: 'td col-xs-4'},
             @props.outputMapping.get 'destination'
 )
 
