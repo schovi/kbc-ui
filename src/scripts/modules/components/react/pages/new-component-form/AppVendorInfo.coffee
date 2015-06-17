@@ -27,7 +27,7 @@ module.exports = React.createClass
           wrapperClassName: 'col-xs-10'
           labelClassName: 'col-xs-10'
           onChange: (event) =>
-            @props.setAgreedLicense(event.target.checked)
+            @props.handleAgreedLicense(event.target.checked)
 
   _renderAddress: ->
     address null,

@@ -63,6 +63,7 @@ module.exports = React.createClass
     vendorData = @props.component.getIn(@vendorInfoPath)
     AppVendorInfo
       vendorData: vendorData
+      licenseAgreed: @_isLicenseAgreed()
       handleAgreedLicense: @_setAgreedLicense
 
   _is3rdPartyApp: ->
@@ -72,9 +73,9 @@ module.exports = React.createClass
     # if is not 3rdparty app then license is always agreed by default
     if not @_is3rdPartyApp()
       return true
-    return @props.component.getIn(@vendorInfoPath.concat(['agreed'])) or false
+    agreed = @props.configuration.get('agreed')
+    return  agreed or false
 
   _setAgreedLicense: (checked) ->
-    vendorData = @props.component.getIn(@vendorInfoPath)
-    newData = vendorData.set 'agreed', checked
-    @props.onChange(@props.configuration.setIn @vendorInfoPath, newData)
+    #@props.onChange(@props.configuration.setIn(@vendorInfoPath, newData))
+    @props.onChange(@props.configuration.set 'agreed', checked)
