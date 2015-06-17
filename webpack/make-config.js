@@ -50,7 +50,7 @@ module.exports = function (options) {
           ]};
     } else {
         entry = {
-          bundle: ['./src/scripts/app'],
+          bundle: ['./node_modules/intl/Intl.js', './src/scripts/app'],
           parts: ['./src/scripts/parts']
         };
     }

@@ -7,6 +7,24 @@ import {filesize} from '../../../../../utils/utils';
 import TablesList from './TablesList';
 import FilesPie from './FilesPie';
 
+import IntlMessageFormat from 'intl-messageformat';
+
+const MESSAGES = {
+    TOTAL_IMPORTS: '{totalCount, plural, ' +
+    '=1 {one import total}' +
+    'other {# imports total}}',
+    TOTAL_EXPORTS: '{totalCount, plural, ' +
+    '=1 {one export total}' +
+    'other {# exports total}}',
+    TOTAL_FILES: '{totalCount, plural, ' +
+    '=1 {one files total}' +
+    'other {# files total}}'
+};
+
+function message(id, params) {
+  return new IntlMessageFormat(MESSAGES[id]).format(params);
+}
+
 export default React.createClass({
   propTypes: {
     stats: React.PropTypes.object.isRequired,
@@ -42,19 +60,19 @@ export default React.createClass({
       <div className="clearfix">
         <div className="col-md-4">
           <h4>
-            Imported Tables <small>{this.props.stats.getIn(['tables', 'import', 'totalCount'])} imports total</small>
-              {this.loader()}
+            Imported Tables {this.importsTotal()} {this.loader()}
           </h4>
           <TablesList tables={this.props.stats.getIn(['tables', 'import'])}/>
         </div>
         <div className="col-md-4">
-          <h4>Exported Tables <small>{this.props.stats.getIn(['tables', 'export', 'totalCount'])} exports total</small>
+          <h4>
+            Exported Tables {this.exportsTotal()}
           </h4>
           <TablesList tables={this.props.stats.getIn(['tables', 'export'])}/>
         </div>
         <div className="col-md-4">
           <h4>
-            Data Transfer <small>{this.filesCount()} files total</small>
+            Data Transfer <small>{message('TOTAL_FILES', {totalCount: this.filesCount()})}</small>
           </h4>
           <div className="text-center">
             <h1>{this.dataSize()}</h1>
@@ -63,5 +81,18 @@ export default React.createClass({
         </div>
       </div>
     );
+  },
+
+  importsTotal() {
+    const total = this.props.stats.getIn(['tables', 'import', 'totalCount']);
+    return total > 0 ? <small>{message('TOTAL_IMPORTS', {totalCount: total})}</small> : null;
+  },
+
+  exportsTotal() {
+    const total = this.props.stats.getIn(['tables', 'export', 'totalCount']);
+    return total > 0 ? <small>{message('TOTAL_EXPORTS', {totalCount: total})}</small> : null;
   }
+
+
+
 });

@@ -16,6 +16,8 @@
     "fuzzy": "~0.1.0",
     "gulp-concat": "^2.5.2",
     "immutable": "~3.7.3",
+    "intl": "^1.0.0-rc-1",
+    "intl-messageformat": "^1.1.0",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",
     "kbc-react-components": "0.0.6",
     "keen-js": "^3.2.4",
