@@ -5,7 +5,8 @@ Input = React.createFactory(require('react-bootstrap').Input)
 module.exports = React.createClass
   displayName: 'appVendorInfo'
   propTypes:
-    data: React.PropTypes.object
+    vendorData: React.PropTypes.object.isRequired
+    setAgreedLicense: React.PropTypes.func.isRequired
 
   render: ->
     div className: 'form-group',
@@ -22,10 +23,11 @@ module.exports = React.createClass
         Input
           type: 'checkbox'
           label: 'I agree with the terms and conditions.'
+          checked: @props.vendorData.get('agreed')
           wrapperClassName: 'col-xs-10'
           labelClassName: 'col-xs-10'
-          onChange: (event) ->
-            console.log "changed", event.target.checked
+          onChange: (event) =>
+            @props.setAgreedLicense(event.target.checked)
 
   _renderAddress: ->
     address null,

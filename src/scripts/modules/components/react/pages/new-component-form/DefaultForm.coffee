@@ -18,8 +18,11 @@ module.exports = React.createClass
     isValid: React.PropTypes.bool.isRequired
     isSaving: React.PropTypes.bool.isRequired
 
+
   componentDidMount: ->
     @refs.name.getInputDOMNode().focus()
+
+
 
   _handleChange: (propName, event) ->
     @props.onChange(@props.configuration.set propName, event.target.value)
@@ -30,7 +33,7 @@ module.exports = React.createClass
         component: @props.component
         onCancel: @props.onCancel
         onSave: @props.onSave
-        isValid: @props.isValid
+        isValid: @props.isValid and @_isLicenseAgreed()
         isSaving: @props.isSaving
       div className: 'row',
         div className: 'col-md-8',
@@ -52,9 +55,24 @@ module.exports = React.createClass
             wrapperClassName: 'col-xs-10'
             onChange: @_handleChange.bind @, 'description'
             disabled: @props.isSaving
-          @_renderAppVendorInfo() if (@props.component.get('is3rdParty') == true or true)
+          @_renderAppVendorInfo() if @_is3rdPartyApp()
 
   _renderAppVendorInfo: ->
-    componentData = @props.component.get('data')
+    vendorData = @props.component.getIn(['data','vendor'])
     AppVendorInfo
-      data: componentData
+      vendorData: vendorData
+      setAgreedLicense: @_setAgreedLicense
+
+  _is3rdPartyApp: ->
+    @props.component.hasIn(['data','vendor'])
+
+  _isLicenseAgreed: ->
+    # if is not 3rdparty app then license is always agreed by default
+    if not @_is3rdPartyApp()
+      return true
+    return @props.component.getIn(['data','vendor', 'agreed']) or false
+
+  _setAgreedLicense: (checked) ->
+    vendorData = @props.component.getIn(['data','vendor'])
+    newData = vendorData.set 'agreed', checked
+    @props.onChange(@props.configuration.setIn ['data','vendor'], newData)
