@@ -2,7 +2,7 @@ React = require 'react'
 
 FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
-AppVendorInfo = React.createFactory(require './appVendorinfo')
+AppVendorInfo = React.createFactory(require './AppVendorInfo')
 {div, form} = React.DOM
 
 
