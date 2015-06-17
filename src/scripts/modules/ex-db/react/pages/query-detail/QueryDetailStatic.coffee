@@ -12,7 +12,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'table kbc-detail-table form-horizontal',
+      div className: 'table kbc-form-table form-horizontal',
         div className: 'tr',
           div className: 'td',
             div className: 'form-group',
