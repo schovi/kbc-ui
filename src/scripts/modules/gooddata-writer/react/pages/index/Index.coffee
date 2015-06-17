@@ -52,7 +52,7 @@ module.exports = React.createClass
           query: @state.filter
         if @state.tablesByBucket.count()
           div
-            className: 'kbc-panel-heading-with-table kbc-panel-heading-with-table panel-group'
+            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
           ,
             @state.tablesByBucket.map (tables, bucketId) ->
               @_renderBucketPanel bucketId, tables
