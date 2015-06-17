@@ -76,7 +76,9 @@ export default React.createClass({
       );
     } else {
       return (
-        <div className="row">Loading ...</div>
+        <div>
+          Loading ...
+        </div>
       );
     }
   }
