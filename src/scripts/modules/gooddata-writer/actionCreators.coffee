@@ -62,9 +62,9 @@ module.exports =
     return Promise.resolve() if goodDataWriterStore.hasTableColumns(configurationId, tableId)
     @loadTableDetailForce(configurationId, tableId)
 
-  selectBucket: (configurationId, bucketId) ->
+  toggleBucket: (configurationId, bucketId) ->
     dispatcher.handleViewAction
-      type: constants.ActionTypes.GOOD_DATA_WRITER_SELECT_BUCKET
+      type: constants.ActionTypes.GOOD_DATA_WRITER_SET_BUCKET_TOGGLE
       configurationId: configurationId
       bucketId: bucketId
 
@@ -398,3 +398,9 @@ module.exports =
         configurationId: configurationId
         error: e
       throw e
+
+  setWriterTablesFilter: (configurationId, query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLES_FILTER_CHANGE
+      filter: query
+      configurationId: configurationId

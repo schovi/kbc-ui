@@ -2,17 +2,14 @@ React = require 'react'
 {List} = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
-ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
+ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
-Panel  = React.createFactory Panel
-PanelGroup = React.createFactory PanelGroup
-Alert = React.createFactory Alert
-DropdownButton = React.createFactory DropdownButton
 
-TablesList = React.createFactory(require './BucketTablesList')
-ActiveCountBadge = React.createFactory(require './ActiveCountBadge')
-Link = React.createFactory(require('react-router').Link)
+SearchRow = require '../../../../../react/common/SearchRow'
+TablesList = require './BucketTablesList'
+ActiveCountBadge = require './ActiveCountBadge'
+{Link} = require('react-router')
 {Tooltip, Confirm} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
 
@@ -28,7 +25,11 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     writer: goodDataWriterStore.getWriter(config)
-    tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
+    tablesByBucket: goodDataWriterStore.getWriterTablesByBucketFiltered(config)
+    filter: goodDataWriterStore.getWriterTablesFilter(config)
+
+  _handleFilterChange: (query) ->
+    actionCreators.setWriterTablesFilter(@state.writer.getIn(['config', 'id']), query)
 
   render: ->
     writer = @state.writer.get 'config'
@@ -36,28 +37,34 @@ module.exports = React.createClass
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
           div className: 'col-sm-8',
-            ComponentDescription
+            React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
           div className: 'col-sm-4 kbc-buttons',
         if writer.get 'info'
-          Alert bsStyle: 'warning',
+          React.createELement Alert,
+            bsStyle: 'warning'
+          ,
             writer.get 'info'
-        PanelGroup
-          className: 'kbc-panel-heading-with-table'
-          accordion: true
-          activeKey: @state.writer.get 'openedBucket'
-          onSelect: @_handleBucketSelect
-        ,
-          @state.tablesByBucket.map (tables, bucketId) ->
-            @_renderBucketPanel bucketId, tables
-          , @
-          .toArray()
+        React.createElement SearchRow,
+          className: 'row kbc-search-row'
+          onChange: @_handleFilterChange
+          query: @state.filter
+        if @state.tablesByBucket.count()
+          div
+            className: 'kbc-panel-heading-with-table kbc-panel-heading-with-table panel-group'
+          ,
+            @state.tablesByBucket.map (tables, bucketId) ->
+              @_renderBucketPanel bucketId, tables
+            , @
+            .toArray()
+        else
+          @_renderNotFound()
 
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li null,
-            Link
+            React.createElement Link,
               to: 'gooddata-writer-date-dimensions'
               params:
                 config: writer.get 'id'
@@ -65,7 +72,7 @@ module.exports = React.createClass
               span className: 'fa fa-clock-o fa-fw'
               ' Date Dimensions'
           li null,
-            Link
+            React.createElement Link,
               to: 'jobs'
               query:
                 q: '+component:gooddata-writer +params.config:' + writer.get('id')
@@ -95,7 +102,7 @@ module.exports = React.createClass
                   span className: 'fa fa-upload fa-fw'
                 ' Upload project'
           li null,
-            Link
+            React.createElement Link,
               to: 'gooddata-writer-model'
               params:
                 config: @state.writer.getIn ['config', 'id']
@@ -120,7 +127,7 @@ module.exports = React.createClass
               span null,
                 ' '
                 React.createElement Loader
-            DropdownButton
+            React.createElement DropdownButton,
               title: span null,
                 span className: 'fa fa-cog fa-fw'
                 ' Advanced'
@@ -154,9 +161,11 @@ module.exports = React.createClass
                   a null,
                     'Reset Project'
 
-  _handleBucketSelect: (selectedKey) ->
-    actionCreators.selectBucket @state.writer.getIn(['config', 'id']),
-      selectedKey
+  _handleBucketSelect: (bucketId, e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    console.log 'selected', e.selected
+    actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId
 
   _handleProjectUpload: ->
     actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
@@ -170,10 +179,15 @@ module.exports = React.createClass
   _handleProjectReset: ->
     actionCreators.resetProject(@state.writer.getIn ['config', 'id'])
 
+  _renderNotFound: ->
+    div {className: 'table table-striped'},
+      div {className: 'tfoot'},
+        div {className: 'tr'},
+          div {className: 'td'}, 'No tables found'
+
+
   _renderBucketPanel: (bucketId, tables) ->
-
     activeCount = tables.filter((table) -> table.getIn(['data', 'export'])).count()
-
     header = span null,
       span className: 'table',
         span className: 'tbody',
@@ -181,15 +195,18 @@ module.exports = React.createClass
             span className: 'td',
               bucketId
             span className: 'td text-right',
-              ActiveCountBadge
+              React.createElement ActiveCountBadge,
                 totalCount: tables.size
                 activeCount: activeCount
 
-    Panel
+    React.createElement Panel,
       header: header
       key: bucketId
       eventKey: bucketId
+      expanded: !!@state.filter.length || @state.writer.getIn(['bucketToggles', bucketId])
+      collapsible: true
+      onSelect: @_handleBucketSelect.bind(@, bucketId)
     ,
-      TablesList
+      React.createElement TablesList,
         configId: @state.writer.getIn ['config', 'id']
         tables: tables

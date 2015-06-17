@@ -3,6 +3,7 @@ StoreUtils = require '../../utils/StoreUtils'
 Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
+fuzzy = require 'fuzzy'
 
 {ColumnTypes, DataTypes} = constants
 {Map, List} = Immutable
@@ -12,6 +13,7 @@ _store = Map
   writers: Map()
   tables: Map()
   tableColumns: Map()
+  filters: Map() # by [writer_id][tables] = value
   referenceableTables: Map()
 
 
@@ -133,6 +135,9 @@ GoodDataWriterStore = StoreUtils.createStore
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
 
+  getWriterTablesFilter: (configurationId) ->
+    _store.getIn ['filters', configurationId, 'tables'], ''
+
   getReferenceableTablesForTable: (configurationId, tableId) ->
     _store.getIn(['referenceableTables', configurationId]).filter (name, id) ->
       id != tableId
@@ -143,6 +148,20 @@ GoodDataWriterStore = StoreUtils.createStore
     .toSeq()
     .groupBy (table) ->
       table.getIn ['data', 'bucket']
+
+  getWriterTablesByBucketFiltered: (configurationId) ->
+    filter = @getWriterTablesFilter configurationId
+
+    all = @getWriterTablesByBucket(configurationId)
+    return all if !filter
+
+    all
+    .map (tables) ->
+      tables.filter (table) ->
+        fuzzy.match(filter, table.getIn ['data', 'name'])
+    .filter (tables) ->
+      tables.count() > 0
+
 
   getTable: (configurationId, tableId) ->
     _store.getIn ['tables', configurationId, tableId]
@@ -169,6 +188,10 @@ dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLES_FILTER_CHANGE
+      _store = _store.setIn ['filters', action.configurationId, 'tables'], action.filter
+      GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_LOAD_START
       _store = _store.setIn ['writers', action.configurationId, 'isLoading'], true
@@ -198,7 +221,7 @@ dispatcher.register (payload) ->
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'isDeleting'], false
         .setIn ['writers', action.configuration.id, 'isOptimizingSLI'], false
-        .setIn ['writers', action.configuration.id, 'openedBucket'], false
+        .setIn ['writers', action.configuration.id, 'bucketToggles'], Map()
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
 
@@ -468,27 +491,21 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
 
-    when constants.ActionTypes.GOOD_DATA_WRITER_SELECT_BUCKET
-      currentSelected = _store.getIn [
+    when constants.ActionTypes.GOOD_DATA_WRITER_SET_BUCKET_TOGGLE
+      current = _store.getIn [
         'writers'
         action.configurationId
-        'openedBucket'
-      ]
+        'bucketToggles'
+        action.bucketId
+      ], false
 
-      if currentSelected == action.bucketId
-        # close bucket
-        _store = _store.setIn [
-          'writers'
-          action.configurationId
-          'openedBucket'
-        ], false
-      else
-        # open bucket
-        _store = _store.setIn [
-          'writers'
-          action.configurationId
-          'openedBucket'
-        ], action.bucketId
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'bucketToggles'
+        action.bucketId
+      ], !current
+
       GoodDataWriterStore.emitChange()
 
 module.exports = GoodDataWriterStore
