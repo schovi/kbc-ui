@@ -6,7 +6,7 @@ module.exports = React.createClass
   displayName: 'appVendorInfo'
   propTypes:
     vendorData: React.PropTypes.object.isRequired
-    setAgreedLicense: React.PropTypes.func.isRequired
+    handleAgreedLicense: React.PropTypes.func.isRequired
 
   render: ->
     div className: 'form-group',

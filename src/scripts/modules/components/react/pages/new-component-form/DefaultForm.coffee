@@ -57,22 +57,24 @@ module.exports = React.createClass
             disabled: @props.isSaving
           @_renderAppVendorInfo() if @_is3rdPartyApp()
 
+  vendorInfoPath: ['data','vendor']
+
   _renderAppVendorInfo: ->
-    vendorData = @props.component.getIn(['data','vendor'])
+    vendorData = @props.component.getIn(@vendorInfoPath)
     AppVendorInfo
       vendorData: vendorData
-      setAgreedLicense: @_setAgreedLicense
+      handleAgreedLicense: @_setAgreedLicense
 
   _is3rdPartyApp: ->
-    @props.component.hasIn(['data','vendor'])
+    @props.component.hasIn(@vendorInfoPath)
 
   _isLicenseAgreed: ->
     # if is not 3rdparty app then license is always agreed by default
     if not @_is3rdPartyApp()
       return true
-    return @props.component.getIn(['data','vendor', 'agreed']) or false
+    return @props.component.getIn(@vendorInfoPath.concat(['agreed'])) or false
 
   _setAgreedLicense: (checked) ->
-    vendorData = @props.component.getIn(['data','vendor'])
+    vendorData = @props.component.getIn(@vendorInfoPath)
     newData = vendorData.set 'agreed', checked
-    @props.onChange(@props.configuration.setIn ['data','vendor'], newData)
+    @props.onChange(@props.configuration.setIn @vendorInfoPath, newData)
