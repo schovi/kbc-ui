@@ -19,7 +19,7 @@ export default React.createClass({
   getDefaultProps() {
     return {
       onChange: () => {},
-      onSubmit: (e) => e.preventDefault()
+      onSubmit: (query) => query
     };
   },
 
