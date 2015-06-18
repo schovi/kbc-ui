@@ -2,7 +2,7 @@ React = require 'react'
 Input = React.createFactory(require('react-bootstrap').Input)
 List = require('immutable').List
 
-{div, label, ul, li, span, strong, address, a, br } = React.DOM
+{div, label, ul, li, p, span, strong, address, a, br } = React.DOM
 module.exports = React.createClass
   displayName: 'appVendorInfo'
   propTypes:
@@ -17,26 +17,27 @@ module.exports = React.createClass
         ul null,
           li null, 'Extra money will be charged.'
           li null, 'Data may be sent out of Keboola Connection.'
-          li null,
-            'Vendor:'
-            @_renderAddress()
-          @_renderLicenseUrl()
+        div null,
+          "Application developeed by"
+          @_renderAddress()
         Input
           type: 'checkbox'
-          label: 'I agree with the terms and conditions.'
+          label: @_renderCheckboxLabel()
           checked: @props.vendorData.get('agreed')
           wrapperClassName: 'col-xs-10'
           labelClassName: 'col-xs-10'
           onChange: (event) =>
             @props.handleAgreedLicense(event.target.checked)
 
-  _renderLicenseUrl: ->
+  _renderCheckboxLabel: ->
     licenseUrl = @props.vendorData.get 'licenseUrl'
+    msg = 'I agree with these terms and conditions'
     if not licenseUrl
-      return null
+      return "#{msg}."
     else
-      li null,
-        a {href: licenseUrl, target: '_blank'}, 'Vendor license terms and conditions.'
+      span null,
+        "#{msg} and with "
+        a {href: licenseUrl, target: '_blank'}, "vendor license terms and conditions."
 
 
   _renderAddress: ->
