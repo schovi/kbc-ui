@@ -18,7 +18,7 @@ module.exports = React.createClass
           li null, 'Extra money will be charged.'
           li null, 'Data may be sent out of Keboola Connection.'
         div null,
-          "Application developeed by"
+          "Application developed by"
           @_renderAddress()
         Input
           type: 'checkbox'
