@@ -115,8 +115,8 @@ module.exports = (componentId) ->
             DeleteConfigurationButton
               componentId: componentId
               configId: @state.configId
-        # React.createElement LatestJobs,
-        #   jobs: @state.latestJobs
+        React.createElement LatestJobs,
+          jobs: @state.latestJobs
 
 
     _renderMainContent: ->
