@@ -5,7 +5,7 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
-Loader = React.createFactory(require('kbc-react-components').Loader)
+{Loader, NewLineToBr} = require('kbc-react-components')
 Textarea = require 'react-textarea-autosize'
 
 {div, span, i, textarea, br} = React.DOM
@@ -28,19 +28,13 @@ StaticArea = React.createFactory React.createClass
       div props,
         if @props.text
           span null,
-            @parsedText()
+            React.createElement NewLineToBr,
+              text: @props.text
         else
           span className: 'text-muted',
             @props.placeholder
         ' '
         i className: 'kbc-icon-pencil'
-
-  parsedText: ->
-    List(@props.text.split("\n"))
-    .map (value, index) ->
-      span key: index,
-        value
-    .interpose br()
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
@@ -71,7 +65,7 @@ EditArea = React.createFactory React.createClass
       span className: 'kbc-inline-edit-buttons',
         if @props.isSaving
           span null,
-            Loader()
+            React.createElement Loader
             ' '
         Button
           className: 'kbc-inline-edit-cancel'

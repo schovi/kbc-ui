@@ -23,6 +23,7 @@ Panel  = React.createFactory Panel
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 SelectRequires = React.createFactory(require('./SelectRequires'))
+{NewLineToBr} = require 'kbc-react-components'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -240,7 +241,11 @@ TransformationDetailStatic = React.createClass
     component = @
     div {},
       div className: 'kbc-row kbc-header',
-        @props.transformation.get("description") || em {}, "No description ..."
+        if @props.transformation.get("description")
+          React.createElement NewLineToBr,
+            text: @props.transformation.get("description")
+        else
+          em {}, "No description ..."
         div {className: 'pull-right'},
           span {className: 'label kbc-label-rounded-small label-default'},
             'Phase: '
