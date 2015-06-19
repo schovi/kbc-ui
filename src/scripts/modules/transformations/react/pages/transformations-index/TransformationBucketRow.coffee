@@ -33,7 +33,7 @@ TransformationBucketRow = React.createClass(
     )
 
     buttons.push(RunComponentButton(
-      tooltip: "Run #{@props.bucket.get('name')}"
+      title: "Run #{@props.bucket.get('name')}"
       component: 'transformation'
       mode: 'button'
       runParams: ->
