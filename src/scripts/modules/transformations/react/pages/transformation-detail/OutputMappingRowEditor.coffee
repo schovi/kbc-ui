@@ -12,9 +12,11 @@ createGetSuggestions = (getOptions) ->
     suggestions = getOptions()
     .filter (value) -> fuzzy.match(input, value)
     .slice 0, 10
-    .toList()
-
-    console.log 'suggestions', suggestions.toJS()
+    .toList().sort( (valA, valB) ->
+      return 1 if valA > valB
+      return -1 if valA < valB
+      return 0
+    )
     callback(null, suggestions.toJS())
 
 module.exports = React.createClass

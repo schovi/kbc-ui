@@ -139,7 +139,11 @@ module.exports = React.createClass
         value: table.get("id")
       }
     )
-    map.toList().toJS()
+    map.toList().sort( (valA, valB) ->
+      return 1 if valA.label > valB.label
+      return -1 if valA.label < valB.label
+      return 0
+    ).toJS()
 
   _getColumns: ->
     if !@props.value.get("source")
