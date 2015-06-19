@@ -18,6 +18,7 @@ QueryEditorContainer = React.createFactory(require('./QueryEditorContainer'))
 PackagesEditorContainer = React.createFactory(require('./PackagesEditorContainer'))
 InputMappingEditorContainer = React.createFactory(require('./InputMappingEditorContainer'))
 OutputMappingEditorContainer = React.createFactory(require('./OutputMappingEditorContainer'))
+Textarea = require 'react-textarea-autosize'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -103,15 +104,16 @@ TransformationDetailEdit = React.createClass
               wrapperClassName: 'col-xs-8'
         div className: "row",
           div className: "col-md-12",
-            Input
-              type: 'textarea'
-              label: 'Description'
-              value: @props.transformation.get("description")
-              disabled: @props.isSaving
-              placeholder: "Describe the transformation"
-              onChange: (e) -> component._handleChangeProperty("description", e.target.value)
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
+            div className: "form-group",
+              label className: "control-label col-xs-2",
+                'Description'
+              div className: 'col-xs-10',
+                React.createElement Textarea,
+                  value: @props.transformation.get("description")
+                  disabled: @props.isSaving
+                  placeholder: "Describe the transformation"
+                  className: "form-control"
+                  onChange: (e) -> component._handleChangeProperty("description", e.target.value)
       div className: "kbc-row",
         h2 {}, 'Dependencies'
         div className: "row",
