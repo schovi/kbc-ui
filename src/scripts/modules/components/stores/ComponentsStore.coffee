@@ -1,4 +1,3 @@
-
 Dispatcher = require('../../../Dispatcher')
 Constants = require '../Constants'
 Immutable = require('immutable')
@@ -41,6 +40,14 @@ ComponentsStore = StoreUtils.createStore
   hasComponentLegacyUI: (id) ->
     _store.getIn(['componentsById', id], Map()).get 'hasUI'
 
+  getRecipeAppUrl: (recipeId, configurationId) ->
+    projectId = ApplicationStore.getCurrentProjectId()
+    legacyRecipeDetail = ApplicationStore.getUrlTemplates().get 'home'
+    recipeAppName = "kbc.docToolRecipesApp"
+    legacyRecipeDetail = "#{legacyRecipeDetail}/#{projectId}/application/?app=#{recipeAppName}"
+    legacyRecipeDetail = "#{legacyRecipeDetail}#/#{recipeId}/#{configurationId}"
+
+
   getComponentDetailLegacyUrl: (id, configurationId) ->
     component = @getComponent id
 
@@ -49,12 +56,17 @@ ComponentsStore = StoreUtils.createStore
     else
       templateName = 'legacyWriterDetail'
 
-    template = ApplicationStore.getUrlTemplates().get templateName
-    _.template(template)(
-      projectId: ApplicationStore.getCurrentProjectId()
-      appId: "kbc." + camelize(id)
-      configId: configurationId
-    )
+    recipeId = id
+    isRecipe = _.str.startsWith(recipeId, 'rcp-')
+    if isRecipe
+      return @getRecipeAppUrl(recipeId, configurationId)
+    else
+      template = ApplicationStore.getUrlTemplates().get templateName
+      _.template(template)(
+        projectId: ApplicationStore.getCurrentProjectId()
+        appId: "kbc." + camelize(id)
+        configId: configurationId
+      )
 
   unknownComponent: (name) ->
     Map
