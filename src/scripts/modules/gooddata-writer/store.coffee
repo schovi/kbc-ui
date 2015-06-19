@@ -216,12 +216,18 @@ dispatcher.register (payload) ->
       .mapKeys (key, table) ->
         table.get 'id'
 
+      # open bucket it there is only one
+      bucketToggles = Map()
+      buckets = tablesById.groupBy (table) -> table.getIn ['data', 'bucket']
+      if buckets.count() == 1
+        bucketToggles = bucketToggles.set(buckets.keySeq().first(), true)
+
       _store = _store.withMutations (store) ->
         store
         .setIn ['writers', action.configuration.id, 'isLoading'], false
         .setIn ['writers', action.configuration.id, 'isDeleting'], false
         .setIn ['writers', action.configuration.id, 'isOptimizingSLI'], false
-        .setIn ['writers', action.configuration.id, 'bucketToggles'], Map()
+        .setIn ['writers', action.configuration.id, 'bucketToggles'], bucketToggles
         .setIn ['writers', action.configuration.id, 'config'], Immutable.fromJS action.configuration.writer
         .setIn ['tables', action.configuration.id], tablesById
 
