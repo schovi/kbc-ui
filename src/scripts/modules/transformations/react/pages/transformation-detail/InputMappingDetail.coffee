@@ -127,19 +127,20 @@ InputMappingDetail = React.createClass(
 
       if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
         ListGroupItem {key: 'datatypes'},
-          strong {className: "col-md-4"},
-            'Data types'
-          span {className: "col-md-6"},
-            if @props.inputMapping.get('datatypes').count()
-              ul {},
-                @props.inputMapping.get('datatypes').map((definition, column) ->
-                  li {key: column},
-                    strong {}, column
-                    ' '
-                    span {}, definition
-                , @).toArray()
-            else
-              'No data types set'
+          div className: 'clearfix',
+            strong {className: "col-md-4"},
+              'Data types'
+            span {className: "col-md-6"},
+              if @props.inputMapping.get('datatypes').count()
+                ul {},
+                  @props.inputMapping.get('datatypes').map((definition, column) ->
+                    li {key: column},
+                      strong {}, column
+                      ' '
+                      span {}, definition
+                  , @).toArray()
+              else
+                'No data types set'
 
       if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
         ListGroupItem {key: 'sortKey'},
