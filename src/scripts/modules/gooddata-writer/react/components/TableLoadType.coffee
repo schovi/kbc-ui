@@ -4,7 +4,7 @@ actionCreators = require '../../actionCreators'
 
 {Modal, ModalTrigger, Input, Button, ButtonToolbar} = require 'react-bootstrap'
 
-{div} = React.DOM
+{div, span} = React.DOM
 Loader = React.createFactory(require('kbc-react-components').Loader)
 ConfirmButtons = require '../../../../react/common/ConfirmButtons'
 
@@ -129,6 +129,8 @@ module.exports = React.createClass
       ,
         'Load: '
         @_loadTypeLabel()
+        ' '
+        span className: 'kbc-icon-pencil'
 
   _loadTypeLabel: ->
     switch @props.table.getIn ['data', 'incrementalLoad']
