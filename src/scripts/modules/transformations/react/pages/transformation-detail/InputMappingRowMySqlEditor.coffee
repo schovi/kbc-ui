@@ -54,7 +54,7 @@ module.exports = React.createClass
       mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
 
       indexes = _.filter(mapping.get("indexes").toJS(), (index) ->
-        _.filter(index.split(","), (indexPart) ->
+        _.filter(index, (indexPart) ->
           _.contains(mapping.get("columns").toJS(), indexPart)
         ).length == index.length
       )
