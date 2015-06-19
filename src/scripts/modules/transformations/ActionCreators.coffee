@@ -26,12 +26,12 @@ module.exports =
     .getTransformationBuckets()
     .then((buckets) ->
       # load success
-      actions.receiveAllTransformationBuckets(buckets)
+      actions.receiveTransformationBuckets(buckets)
     )
     .catch (err) ->
       throw err
 
-  receiveAllTransformationBuckets: (buckets) ->
+  receiveTransformationBuckets: (buckets) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
       buckets: buckets
@@ -361,3 +361,12 @@ module.exports =
         error: e
       throw e
 
+  setTransformationBucketsFilter: (query) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_BUCKETS_FILTER_CHANGE
+      filter: query
+
+  toggleBucket: (bucketId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_BUCKETS_TOGGLE
+      bucketId: bucketId

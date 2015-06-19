@@ -36,6 +36,12 @@ removeFromLoadingBuckets = (store, bucketId) ->
 TransformationsStore = StoreUtils.createStore
 
   ###
+    Return all transformations
+  ###
+  getAllTransformations: ->
+    _store.getIn(['transformationsByBucketId'], List())
+
+  ###
     Returns all transformations for bucket id
   ###
   getTransformations: (bucketId) ->
@@ -66,6 +72,9 @@ TransformationsStore = StoreUtils.createStore
   ###
   isBucketLoading: (bucketId) ->
     _store.get('loadingTransformationBuckets').contains bucketId
+
+  getAllPendingActions: ->
+    _store.getIn ['pendingActions'], Map()
 
   getPendingActions: (bucketId) ->
     _store.getIn ['pendingActions', bucketId], Map()
@@ -358,5 +367,15 @@ Dispatcher.register (payload) ->
         ], true
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
+      _store = _store.withMutations((store) ->
+        _.each(action.buckets, (bucket) ->
+          _.each(bucket.transformations, (transformation) ->
+            tObj = Immutable.fromJS(transformation)
+            store = store.setIn ['transformationsByBucketId', bucket.id, tObj.get 'id'], tObj
+          )
+        )
+      )
+      TransformationsStore.emitChange()
 
 module.exports = TransformationsStore

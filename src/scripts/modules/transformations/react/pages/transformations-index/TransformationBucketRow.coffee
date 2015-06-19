@@ -5,6 +5,7 @@ InstalledComponentsActionCreators = require '../../../../components/InstalledCom
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationActionCreators = require '../../../ActionCreators'
+RoutesStore = require '../../../../../stores/RoutesStore'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -32,7 +33,7 @@ TransformationBucketRow = React.createClass(
     )
 
     buttons.push(RunComponentButton(
-      title: "Run #{@props.bucket.get('name')}"
+      tooltip: "Run #{@props.bucket.get('name')}"
       component: 'transformation'
       mode: 'button'
       runParams: ->
@@ -42,15 +43,28 @@ TransformationBucketRow = React.createClass(
       "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
     ))
 
+    buttons.push(
+      button
+        key: 'bucket'
+        className: "btn btn-link"
+        onClick: (e) ->
+          e.preventDefault()
+          e.stopPropagation()
+          RoutesStore.getRouter().transitionTo("transformationBucket", {bucketId: props.bucket.get('id')})
+      ,
+        i {className: "fa fa-fw fa-chevron-right"}
+    )
+
+
     buttons
 
   render: ->
-    Link {className: 'tr', to: 'transformationBucket', params: {bucketId: @props.bucket.get('id')}},
-      span {className: 'td'},
+    span {className: 'tr'},
+      span {className: 'td col-xs-4'},
         h4 {}, @props.bucket.get('name')
-      span {className: 'td'},
+      span {className: 'td col-xs-5'},
         small {}, @props.description || em {}, 'No description'
-      span {className: 'td text-right'},
+      span {className: 'td col-xs-3 text-right'},
         @buttons()
 
   _deleteTransformationBucket: ->

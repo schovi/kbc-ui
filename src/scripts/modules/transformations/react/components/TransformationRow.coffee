@@ -1,13 +1,13 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-InstalledComponentsActionCreators = require '../../../../components/InstalledComponentsActionCreators'
-RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
-DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
-ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+ImmutableRenderMixin = require '../../../../react/mixins/ImmutableRendererMixin'
+InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
+RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
+TransformationTypeLabel = React.createFactory(require './TransformationTypeLabel')
+DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
+ActivateDeactivateButton = React.createFactory(require '../../../../react/common/ActivateDeactivateButton')
 
-TransformationsActionCreators = require '../../../ActionCreators'
+TransformationsActionCreators = require '../../ActionCreators'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -33,14 +33,6 @@ TransformationRow = React.createClass(
         onConfirm: @_deleteTransformation
     )
 
-    buttons.push ActivateDeactivateButton
-      key: 'active'
-      activateTooltip: 'Enable Transformation'
-      deactivateTooltip: 'Disable Transformation'
-      isActive: !@props.transformation.get('disabled')
-      isPending: @props.pendingActions.has 'change-disabled'
-      onChange: @_handleActiveChange
-
     buttons.push(RunComponentButton(
       key: 'run'
       title: "Run #{@props.transformation.get('name')}"
@@ -53,6 +45,13 @@ TransformationRow = React.createClass(
       "You are about to run transformation #{@props.transformation.get('name')}."
     ))
 
+    buttons.push ActivateDeactivateButton
+      key: 'active'
+      activateTooltip: 'Enable Transformation'
+      deactivateTooltip: 'Disable Transformation'
+      isActive: !@props.transformation.get('disabled')
+      isPending: @props.pendingActions.has 'change-disabled'
+      onChange: @_handleActiveChange
 
     buttons
 
@@ -63,13 +62,13 @@ TransformationRow = React.createClass(
       to: 'transformationDetail'
       params: {transformationId: @props.transformation.get('id'), bucketId: @props.bucket.get('id')}
     ,
-      span {className: 'td col-xs-5'},
+      span {className: 'td col-xs-4'},
         h4 {},
           span {className: 'label kbc-label-rounded-small label-default pull-left'},
             @props.transformation.get('phase') || 1
           ' '
           @props.transformation.get('name')
-      span {className: 'td col-xs-4'},
+      span {className: 'td col-xs-5'},
         small {}, @props.transformation.get('description') || em {}, 'No description'
       span {className: 'td col-xs-1'},
         TransformationTypeLabel

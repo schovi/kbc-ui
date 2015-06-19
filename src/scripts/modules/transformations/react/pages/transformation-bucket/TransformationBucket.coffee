@@ -6,7 +6,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
 TransformationBucketsStore  = require('../../../stores/TransformationBucketsStore')
 RoutesStore = require '../../../../../stores/RoutesStore'
-TransformationRow = React.createFactory(require './TransformationRow')
+TransformationRow = React.createFactory(require '../../components/TransformationRow')
 ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 

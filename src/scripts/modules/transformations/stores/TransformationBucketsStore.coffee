@@ -13,6 +13,9 @@ _store = Map(
   isLoaded: false
   loadingBuckets: List()
   pendingActions: Map() # by bucket id id
+  filters: Map()
+  toggles: Map()
+
 )
 
 TransformationBucketsStore = StoreUtils.createStore
@@ -46,6 +49,11 @@ TransformationBucketsStore = StoreUtils.createStore
   getPendingActionsForBucket: (bucketId) ->
     @getPendingActions().get(bucketId, Map())
 
+  getTransformationBucketsFilter: ->
+    _store.getIn ['filters', 'buckets'], ''
+
+  getToggles: ->
+    _store.getIn ['toggles'], Map()
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -83,6 +91,23 @@ Dispatcher.register (payload) ->
         store
         .removeIn ['bucketsById', action.bucketId]
         .removeIn ['pendingActions', action.bucketId, 'delete']
+      TransformationBucketsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_BUCKETS_FILTER_CHANGE
+      _store = _store.setIn ['filters', 'buckets'], action.filter
+      TransformationBucketsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_BUCKETS_TOGGLE
+      current = _store.getIn [
+        'toggles'
+        action.bucketId
+      ], false
+
+      _store = _store.setIn [
+        'toggles'
+        action.bucketId
+      ], !current
+
       TransformationBucketsStore.emitChange()
 
 module.exports = TransformationBucketsStore
