@@ -33,6 +33,7 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
+    console.log 'writer', writer.toJS(), writer
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
@@ -40,12 +41,12 @@ module.exports = React.createClass
             React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
-          div className: 'col-sm-4 kbc-buttons',
-        if writer.get 'info'
-          React.createELement Alert,
-            bsStyle: 'warning'
-          ,
-            writer.get 'info'
+        if writer.get('info')
+          div className: 'row',
+            React.createElement Alert,
+              bsStyle: 'warning'
+            ,
+              writer.get('info')
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleFilterChange
