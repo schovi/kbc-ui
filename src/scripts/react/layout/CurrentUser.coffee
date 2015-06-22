@@ -45,6 +45,13 @@ module.exports = React.createClass
     ,
       'Change Password'
 
+    links.push React.createElement MenuItem,
+      key: 'avatar'
+      href: 'https://gravatar.com/'
+      target: '_blank'
+    ,
+      'Change Profile Picture'
+
     if @props.canManageApps
       links.push React.createElement MenuItem,
         key: 'manageApps'
