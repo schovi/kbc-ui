@@ -5,6 +5,7 @@ ActionCreators = require '../../../exGanalActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 exGanalStore = require('../../../exGanalStore')
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 module.exports = React.createClass
   displayName: 'ExGanalAuthorize'
@@ -39,8 +40,7 @@ module.exports = React.createClass
 
 
   _getReferrer: ->
-    {origin, pathname, search} = window.location
-    basepath = "#{origin}#{pathname}#{search}#/extractors/ex-google-analytics"
+    basepath = ApplicationStore.getProjectPageUrl "extractors/ex-google-analytics"
     referrer = "#{basepath}/#{@state.configId}/profiles"
     return referrer
 
