@@ -36,10 +36,6 @@ accordionHeader = (text, isActive) ->
 module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
 
-
-  getInitialState: ->
-    activeAccordion: 'stats'
-
   getStateFromStores: ->
     job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
 
@@ -50,6 +46,7 @@ module.exports = React.createClass
 
     job: job
     configuration: configuration
+    activeAccordion: if job.get('status') == 'error' then 'params' else 'stats'
 
   componentDidUpdate: (prevProps, prevState) ->
     currentStatus = @state.job.get 'status'
