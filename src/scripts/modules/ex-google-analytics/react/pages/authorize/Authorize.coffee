@@ -40,8 +40,10 @@ module.exports = React.createClass
 
 
   _getReferrer: ->
+    origin = window.location.origin
     basepath = ApplicationStore.getProjectPageUrl "extractors/ex-google-analytics"
-    referrer = "#{basepath}/#{@state.configId}/profiles"
+    referrer = "#{origin}#{basepath}/#{@state.configId}/profiles"
+    console.log "referrer", referrer
     return referrer
 
   _isExtLinkOnly: ->

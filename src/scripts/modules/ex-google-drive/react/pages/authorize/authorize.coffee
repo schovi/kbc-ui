@@ -43,8 +43,10 @@ module.exports = React.createClass
     ActionCreators.generateExternalLink(@state.configId)
 
   _getReferrer: ->
+    origin = window.location.origin
     basepath = ApplicationStore.getProjectPageUrl "extractors/ex-google-drive"
-    referrer = "#{basepath}/#{@state.configId}/sheets"
+    referrer = "#{origin}#{basepath}/#{@state.configId}/sheets"
+    console.log "referrer", referrer
     return referrer #encodeURIComponent(referrer)
 
   _isExtLinkOnly: ->
