@@ -34,7 +34,8 @@ module.exports = React.createClass
         @_createInput 'Host name', 'host'
         @_createInput 'Port', 'port', 'number'
         @_createInput 'Username', 'user'
-        @_createInput 'Password', 'password', 'text', true
+        @_createInput 'Password', 'password', 'password', true
+        @_createInput 'Database', 'database', 'text'
         @_createInput 'Connection retries', 'retries', 'number'
         TestCredentialsButtonGroup
           credentials: @props.credentials
