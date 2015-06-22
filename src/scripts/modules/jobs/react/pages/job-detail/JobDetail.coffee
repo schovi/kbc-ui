@@ -11,6 +11,7 @@ ComponentIcon = React.createFactory(require('../../../../../react/common/Compone
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
 {PanelGroup, Panel} = require 'react-bootstrap'
+{Link} = require 'react-router'
 getComponentId = require '../../../getJobComponentId'
 JobStatusLabel = React.createFactory(require('../../../../../react/common/common').JobStatusLabel)
 
@@ -80,6 +81,14 @@ module.exports = React.createClass
           configId: @state.configuration.get 'id'
         ,
           @state.configuration.get 'name'
+    else if componentId == 'orchestrator'
+      configurationLink = span null,
+        React.createElement Link,
+          to: 'orchestration'
+          params:
+            orchestrationId: job.getIn ['params', 'orchestration', 'id']
+        ,
+          job.getIn ['params', 'orchestration', 'name']
     else
       configurationLink = null
     jobStarted = ->

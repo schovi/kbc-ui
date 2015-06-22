@@ -52,12 +52,20 @@ export default React.createClass({
   },
 
   jobConfiguration() {
+    const componentId = getComponentId(this.props.job);
+
+    if (componentId === 'orchestrator') {
+      return (
+        <span>{this.props.job.getIn(['params', 'orchestration', 'name'])}</span>
+      );
+    }
+
     const configId = this.props.job.getIn(['params', 'config']);
     if (!configId) {
       return null;
     }
 
-    const config = InstalledComponentsStore.getConfig(getComponentId(this.props.job), configId);
+    const config = InstalledComponentsStore.getConfig(componentId, configId);
     if (!config) {
       return (
         <span>{configId}</span>
