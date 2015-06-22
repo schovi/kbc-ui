@@ -7,6 +7,7 @@ import ComponentName from '../../../../../react/common/ComponentName';
 import Duration from '../../../../../react/common/Duration';
 
 import ComponentsStore from '../../../../components/stores/ComponentsStore';
+import InstalledComponentsStore from '../../../../components/stores/InstalledComponentsStore';
 import date from '../../../../../utils/date';
 import getComponentId from '../../../getJobComponentId';
 
@@ -32,6 +33,9 @@ export default React.createClass({
           <ComponentIcon component={component} size="32"/> <ComponentName component={component}/>
         </div>
         <div className="td">
+          { this.jobConfiguration() }
+        </div>
+        <div className="td">
           {this.props.job.get('command')}
         </div>
         <div className="td">
@@ -44,6 +48,24 @@ export default React.createClass({
           <Duration startTime={this.props.job.get('startTime')} endTime={this.props.job.get('endTime')}/>
         </div>
       </Link>
+    );
+  },
+
+  jobConfiguration() {
+    const configId = this.props.job.getIn(['params', 'config']);
+    if (!configId) {
+      return null;
+    }
+
+    const config = InstalledComponentsStore.getConfig(getComponentId(this.props.job), configId);
+    if (!config) {
+      return (
+        <span>{configId}</span>
+      );
+    }
+
+    return (
+      <span>{config.get('name')}</span>
     );
   },
 
