@@ -96,26 +96,40 @@ TransformationsIndex = React.createClass
     TransformationActionCreators.toggleBucket bucketId
 
   _getFilteredBuckets: ->
-    if !@state.filter || @state.filter == ''
-      @state.buckets
-    else
+    filtered = @state.buckets
+    if @state.filter && @state.filter != ''
       filter = @state.filter
       component = @
-      @state.buckets.filter (bucket) ->
+      filtered = @state.buckets.filter (bucket) ->
         fuzzy.match(filter, bucket.get('name')) or
           fuzzy.match(filter, bucket.get('id')) or
           fuzzy.match(filter, bucket.get('description')) or
           component._getFilteredTransformations(bucket.get('id')).count()
 
+    filtered = filtered.sortBy((bucket) ->
+      name = bucket.get('name')
+      id = bucket.get('id')
+      name + id.toLowerCase()
+    )
+    return filtered
+
   _getFilteredTransformations: (bucketId) ->
-    if @state.filter && @state.filter == ''
-      Immutable.Map()
-    else
+    filtered = @state.transformationsInBuckets.getIn([bucketId], Immutable.Map())
+    if @state.filter && @state.filter != ''
       filter = @state.filter
-      @state.transformationsInBuckets.getIn([bucketId], Immutable.Map()).filter (transformation) ->
+      filtered = @state.transformationsInBuckets.getIn([bucketId], Immutable.Map()).filter((transformation) ->
         fuzzy.match(filter, transformation.get('name').toString()) or
           fuzzy.match(filter, transformation.get('id').toString()) or
           fuzzy.match(filter, transformation.get('description').toString()) or
           fuzzy.match(filter, transformation.get('fullId').toString())
+      )
+
+    filtered = filtered.sortBy((transformation) ->
+      phase = transformation.get('phase')
+      name = transformation.get('name')
+      phase + name.toLowerCase()
+    )
+    return filtered
+
 
 module.exports = TransformationsIndex
