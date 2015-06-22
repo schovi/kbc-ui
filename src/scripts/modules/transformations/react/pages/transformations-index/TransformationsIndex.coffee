@@ -113,9 +113,9 @@ TransformationsIndex = React.createClass
     else
       filter = @state.filter
       @state.transformationsInBuckets.getIn([bucketId], Immutable.Map()).filter (transformation) ->
-        fuzzy.match(filter, transformation.get('name')) or
-          fuzzy.match(filter, transformation.get('id')) or
-          fuzzy.match(filter, transformation.get('description')) or
-          fuzzy.match(filter, transformation.get('fullId'))
+        fuzzy.match(filter, transformation.get('name').toString()) or
+          fuzzy.match(filter, transformation.get('id').toString()) or
+          fuzzy.match(filter, transformation.get('description').toString()) or
+          fuzzy.match(filter, transformation.get('fullId').toString())
 
 module.exports = TransformationsIndex
