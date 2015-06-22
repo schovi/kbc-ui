@@ -18,7 +18,7 @@ JobRow = React.createClass(
     job: React.PropTypes.object.isRequired
     onJobCancel: React.PropTypes.func
 
-  jobDetail: ->
+  jobDetail: (event) ->
     # method provided by Router.Navigation mixin
     @transitionTo 'orchestrationJob',
       orchestrationId: @getParams().orchestrationId # current orchestration id
