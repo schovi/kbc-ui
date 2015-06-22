@@ -25,9 +25,15 @@ class Error
 createFromException = (error) ->
   if error instanceof HttpError
     createFromXhrError error
+  else if error.timeout
+    error = new Error('Request timeout', error.message)
+    error.isUserError = true
+    error.id = 'connectTimeout'
+    error
   else if error.crossDomain
     error = new Error('Not connected to internet', 'Please try again later.')
     error.id = 'couldNotConnect'
+    error.isUserError = true
     error
   else if error.isOperational # error from bluebird
     new Error('Connection error', error.message)
