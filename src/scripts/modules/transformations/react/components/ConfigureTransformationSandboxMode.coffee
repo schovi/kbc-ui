@@ -2,11 +2,18 @@ React = require 'react'
 RadioGroup = React.createFactory(require('react-radio-group'))
 MySqlCredentialsContainer = React.createFactory(require('./MySqlCredentialsContainer'))
 RedshiftCredentialsContainer = React.createFactory(require('./RedshiftCredentialsContainer'))
+MySqlSandboxCredentialsStore = require('../../../provisioning/stores/MySqlSandboxCredentialsStore')
+ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySqlSandbox')
+createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-{div, p, strong, form, input, label, span, h3, h4} = React.DOM
+{div, p, strong, form, input, label, span, h3, h4, button} = React.DOM
 
 ConfigureTransformationSandboxMode = React.createClass
   displayName: 'ConfigureTransformationSandboxMode'
+  mixins: [createStoreMixin(MySqlSandboxCredentialsStore)]
+
+  getStateFromStores: ->
+    mysqlCredentials: MySqlSandboxCredentialsStore.getCredentials()
 
   propTypes:
     onChange: React.PropTypes.func.isRequired
@@ -71,7 +78,17 @@ ConfigureTransformationSandboxMode = React.createClass
         if @props.backend == 'redshift'
           RedshiftCredentialsContainer {isAutoLoad: true}
         else
-          MySqlCredentialsContainer {isAutoLoad: true}
+          span {},
+            div {className: 'row'},
+              div {className: 'col-md-9'},
+                MySqlCredentialsContainer {isAutoLoad: true}
+              div {className: 'col-md-3'},
+                if @state.mysqlCredentials.get("id")
+                  ConnectToMySqlSandbox {credentials: @state.mysqlCredentials},
+                    button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+                      span {className: 'fa fa-fw fa-database'}
+                      " Connect"
+
 
   _setRedirect: (e) ->
     redirect = e.target.checked
