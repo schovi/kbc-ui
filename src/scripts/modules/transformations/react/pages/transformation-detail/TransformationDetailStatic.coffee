@@ -63,38 +63,49 @@ TransformationDetailStatic = React.createClass
     props = @props
     component = @
     span {},
-      if @props.transformation.get("requires").toArray().length
-        span {},
-          div {},
-            h2 {}, 'Requires'
-          div {className: "help-block"},
-            "These transformations are processed before this transformation starts."
-          div {},
-            _.map(@props.transformation.get("requires").toArray(), (required) ->
-              Link
-                to: 'transformationDetail'
-                params: {transformationId: required, bucketId: props.bucket.get('id')}
-              ,
-                span {className: 'label kbc-label-rounded-small label-default'},
-                  _.find(props.transformations.toArray(), (transformation) ->
-                    transformation.get("id") == required
-                  )?.get("name") || required
-            )
-      if @_getDependentTransformations().count()
-        span {},
-          div {},
-            h2 {}, 'Dependent transformations'
-          div {className: "help-block"},
-            "These transformations are dependent on the current transformation."
-          div {},
-            _.map(@_getDependentTransformations().toArray(), (dependent) ->
-              Link
-                to: 'transformationDetail'
-                params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
-              ,
-                span {className: 'label kbc-label-rounded-small label-default'},
-                  dependent.get("name")
-            )
+      span {},
+        div {},
+          h2 {}, 'Requires'
+          if @props.transformation.get("requires").toArray().length
+            span {},
+              div {className: "help-block"}, small {},
+                "These transformations are processed before this transformation starts."
+              div {},
+                _.map(@props.transformation.get("requires").toArray(), (required) ->
+                  Link
+                    to: 'transformationDetail'
+                    params: {transformationId: required, bucketId: props.bucket.get('id')}
+                  ,
+                    span {className: 'label kbc-label-rounded-small label-default'},
+                      _.find(props.transformations.toArray(), (transformation) ->
+                        transformation.get("id") == required
+                      )?.get("name") || required
+                )
+          else
+            div {className: "help-block"}, small {},
+              "No transformations are required."
+
+
+      span {},
+        div {},
+          h2 {}, 'Dependent transformations'
+          if @_getDependentTransformations().count()
+            span {},
+              div {className: "help-block"}, small {},
+                "These transformations are dependent on the current transformation."
+              div {},
+                _.map(@_getDependentTransformations().toArray(), (dependent) ->
+                  Link
+                    to: 'transformationDetail'
+                    params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
+                  ,
+                    span {className: 'label kbc-label-rounded-small label-default'},
+                      dependent.get("name")
+                )
+          else
+            div {className: "help-block"}, small {},
+              "No transformations are dependent on the current transformation."
+
 
       div {},
         h2 {}, 'Input Mapping'
@@ -126,7 +137,7 @@ TransformationDetailStatic = React.createClass
                   tables: @props.tables
             , @).toArray()
         else
-          p {}, small {}, 'No Input Mapping'
+          div {className: "help-block"}, small {}, 'No Input Mapping'
       div {},
         h2 {}, 'Output Mapping'
           if @props.transformation.get('output').count()
