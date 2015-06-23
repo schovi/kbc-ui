@@ -7,7 +7,7 @@ DeleteButton = React.createFactory(require '../../../../../react/common/DeleteBu
 TransformationActionCreators = require '../../../ActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 NewTransformationModal = require '../../modals/NewTransformation'
-{ModalTrigger} = require 'react-bootstrap'
+{ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -41,34 +41,44 @@ TransformationBucketRow = React.createClass(
       runParams: ->
         configBucketId: props.bucket.get('id')
       key: 'run'
+      tooltip: 'Run all transformations in bucket'
     ,
       "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
     ))
 
-    buttons.push(React.createElement ModalTrigger,
-      modal: React.createElement(NewTransformationModal,
-        bucket: @props.bucket
-      )
+    buttons.push(
+      React.createElement OverlayTrigger,
+        overlay: React.createElement(Tooltip, null, 'Create New Transformation')
+        placement: 'top'
       ,
-        button
-          className: 'btn btn-link'
-          onClick: (e) ->
-            e.stopPropagation()
-            e.preventDefault()
-        ,
-          span className: 'fa fa-plus'
+        React.createElement ModalTrigger,
+          modal: React.createElement(NewTransformationModal,
+            bucket: @props.bucket
+          )
+          ,
+            button
+              className: 'btn btn-link'
+              onClick: (e) ->
+                e.stopPropagation()
+                e.preventDefault()
+            ,
+              span className: 'fa fa-plus'
     )
 
     buttons.push(
-      button
-        key: 'bucket'
-        className: "btn btn-link"
-        onClick: (e) ->
-          e.preventDefault()
-          e.stopPropagation()
-          RoutesStore.getRouter().transitionTo("transformationBucket", {bucketId: props.bucket.get('id')})
+      React.createElement OverlayTrigger,
+        overlay: React.createElement(Tooltip, null, 'Go to Bucket Detail')
+        placement: 'top'
       ,
-        i {className: "fa fa-fw fa-chevron-right"}
+        button
+          key: 'bucket'
+          className: "btn btn-link"
+          onClick: (e) ->
+            e.preventDefault()
+            e.stopPropagation()
+            RoutesStore.getRouter().transitionTo("transformationBucket", {bucketId: props.bucket.get('id')})
+        ,
+          i {className: "fa fa-fw fa-chevron-right"}
     )
 
 

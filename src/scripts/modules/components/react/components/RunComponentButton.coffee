@@ -2,6 +2,7 @@ React = require 'react'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+{OverlayTrigger, Tooltip} = require 'react-bootstrap'
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
@@ -47,12 +48,14 @@ module.exports = React.createClass
     icon: React.PropTypes.string.isRequired
     label: React.PropTypes.string
     redirect: React.PropTypes.bool
+    tooltip: React.PropTypes.string
 
   getDefaultProps: ->
     mode: 'button'
     method: 'run'
     icon: 'fa-play'
     redirect: false
+    tooltip: 'Run'
 
   getInitialState: ->
     isLoading: false
@@ -82,15 +85,25 @@ module.exports = React.createClass
       RoutesStore.getRouter().transitionTo("jobDetail", {jobId: response.id})
 
   render: ->
-    ModalTrigger
-      modal: RunModal
-        title: @props.title
-        body: @props.children
-        onRequestRun: @_handleRunStart
-    ,
-      if @props.mode == 'button'
-        @_renderButton()
-      else
+    if @props.mode == 'button'
+      React.createElement OverlayTrigger,
+        overlay: React.createElement(Tooltip, null, @props.tooltip)
+        placement: 'top'
+      ,
+        ModalTrigger
+          modal: RunModal
+            title: @props.title
+            body: @props.children
+            onRequestRun: @_handleRunStart
+        ,
+          @_renderButton()
+    else
+      ModalTrigger
+        modal: RunModal
+          title: @props.title
+          body: @props.children
+          onRequestRun: @_handleRunStart
+      ,
         @_renderLink()
 
   _renderButton: ->
