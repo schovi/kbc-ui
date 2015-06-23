@@ -3,10 +3,14 @@ React = require 'react'
 GraphCanvas = require '../../../../../react/common/GraphCanvas'
 Button = React.createFactory(require('react-bootstrap').Button)
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
-
+Navigation = require('react-router').Navigation
 
 module.exports = React.createClass
+
   displayName: 'Graph'
+
+  mixins: [Navigation]
+
   propTypes:
     model: React.PropTypes.object.isRequired
     centerNodeId: React.PropTypes.string
@@ -17,9 +21,31 @@ module.exports = React.createClass
   _modelData: ->
     model = @props.model.toJS()
     for i of model.nodes
+      console.log model.nodes[i]
+      console.log @.makeHref('transformationDetail', {bucketId: "a", transformationId: "2"})
       if model.nodes[i].type == 'transformation' or
           model.nodes[i].type == 'remote-transformation'
         model.nodes[i].label = model.nodes[i].label.substring(model.nodes[i].label.indexOf("] ") + 2)
+
+      if model.nodes[i].type == 'transformation'
+        node = model.nodes[i].node
+        bucketId = node.substring(0, node.lastIndexOf("."))
+        transformationId  = node.substring(node.lastIndexOf(".") + 1)
+        model.nodes[i].link = @.makeHref('transformationDetail', {
+          bucketId: bucketId,
+          transformationId: transformationId
+        })
+
+      if model.nodes[i].type == 'writer'
+        link = model.nodes[i].link
+        config = link.substr(link.lastIndexOf("config=") + 7)
+        config = config.substr(0, config.lastIndexOf("#"))
+        table = link.substr(link.lastIndexOf("/") + 1)
+        model.nodes[i].link = @.makeHref('gooddata-writer-table', {
+          config: config,
+          table: table
+        })
+
     model
 
   _renderGraph: ->
