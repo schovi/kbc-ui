@@ -21,8 +21,6 @@ module.exports = React.createClass
   _modelData: ->
     model = @props.model.toJS()
     for i of model.nodes
-      console.log model.nodes[i]
-      console.log @.makeHref('transformationDetail', {bucketId: "a", transformationId: "2"})
       if model.nodes[i].type == 'transformation' or
           model.nodes[i].type == 'remote-transformation'
         model.nodes[i].label = model.nodes[i].label.substring(model.nodes[i].label.indexOf("] ") + 2)
