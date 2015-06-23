@@ -65,6 +65,7 @@ module.exports = React.createClass
       method: @props.method
       component: @props.component
       data: @props.runParams()
+      notify: !@props.redirect
 
     InstalledComponentsActionCreators
     .runComponent params
