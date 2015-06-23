@@ -40,7 +40,7 @@ module.exports = React.createClass
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
         div className: 'td', @props.config.get('outputBucket') + '.' + queryName
-        div className: 'td text-right',
+        div className: 'td text-right kbc-no-wrap',
           if @_isQueryDeleting(queryName)
             Loader()
           else

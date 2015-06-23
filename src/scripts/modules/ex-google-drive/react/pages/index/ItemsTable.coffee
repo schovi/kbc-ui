@@ -32,7 +32,7 @@ module.exports = React.createClass
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
         div className: 'td', @_rawConfig(row)?.db?.table or "n/a"
-        div className: 'td text-right',
+        div className: 'td text-right kbc-no-wrap',
           if @_isSheetDeleting(row.get('fileId'), row.get('sheetId'))
             Loader()
           else
