@@ -151,15 +151,16 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          type: 'checkbox'
-          label: 'Optional'
-          value: @props.value.get("optional")
-          disabled: @props.disabled
-          onChange: @_handleChangeOptional
-          wrapperClassName: 'col-xs-offset-2 col-xs-10'
-          help: "If this table does not exist in Storage, the transformation won't show an error."
+            React.DOM.div {},
+              Input
+                standalone: true
+                type: 'checkbox'
+                label: React.DOM.small {}, 'Optional'
+                value: @props.value.get("optional")
+                disabled: @props.disabled
+                onChange: @_handleChangeOptional
+                help: React.DOM.small {},
+                  "If this table does not exist in Storage, the transformation won't show an error."
       React.DOM.div {className: "row col-md-12"},
         Input
           type: 'text'
@@ -172,7 +173,7 @@ module.exports = React.createClass
           wrapperClassName: 'col-xs-10'
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Columns'
           React.DOM.div className: 'col-xs-10',
             Select
@@ -184,21 +185,24 @@ module.exports = React.createClass
               onChange: @_handleChangeColumns
               options: @_getColumnsOptions()
             React.DOM.div
-              className: "help-block"
+              className: "help-block small"
             ,
               "Import only specified columns"
-        Input
-          type: 'number'
-          label: 'Days'
-          value: @props.value.get("days")
-          disabled: @props.disabled
-          placeholder: 0
-          help: "Data updated in the given period"
-          onChange: @_handleChangeDays
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-4'
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+          Input
+            bsSize: 'small'
+            type: 'number'
+            label: 'Days'
+            value: @props.value.get("days")
+            disabled: @props.disabled
+            placeholder: 0
+            help: React.DOM.small {}, "Data updated in the given period"
+            onChange: @_handleChangeDays
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-5'
+
+      React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
           React.DOM.div className: 'col-xs-4',
             Select
@@ -228,7 +232,7 @@ module.exports = React.createClass
               placeholder: "Comma separated values"
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
           React.DOM.div className: 'col-xs-10',
             MySqlIndexesContainer
@@ -238,7 +242,7 @@ module.exports = React.createClass
               columnsOptions: @_getFilteredColumnsOptions()
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
           React.DOM.div className: 'col-xs-10',
             MySqlDataTypesContainer

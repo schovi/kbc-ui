@@ -24,9 +24,9 @@ module.exports = React.createClass
   render: ->
     component = @
     React.DOM.span {},
-      React.DOM.div {className: "well"},
+      React.DOM.div {className: "well small"},
         if !@props.indexes.count()
-          React.DOM.div {}, "No indexes set yet."
+          React.DOM.div {}, "No indexes set."
         else
           React.DOM.div {className: "tags-list"}
           @props.indexes.map((index, key) ->
@@ -39,7 +39,7 @@ module.exports = React.createClass
                     component.props.handleRemoveIndex(key)
               ' '
           , @).toArray()
-      React.DOM.div {className: "col-xs-8"},
+      React.DOM.div {className: "col-xs-10"},
         Select
           multi: true
           name: 'add-indexes'
@@ -48,9 +48,9 @@ module.exports = React.createClass
           placeholder: "Select column(s) to create an index"
           onChange: @_handleSelectOnChange
           options: @props.columnsOptions
-      React.DOM.div {className: "col-xs-1 kbc-col-button"},
+      React.DOM.div {className: "col-xs-2 kbc-col-button"},
         Button
-          className: 'btn-success'
+          bsSize: 'small'
           onClick: @props.handleAddIndex
           disabled: @props.disabled || @props.selectValue.count() == 0
         ,

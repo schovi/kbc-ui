@@ -38,18 +38,19 @@ module.exports = React.createClass
       React.DOM.div {className: "row"},
         React.DOM.span {className: "col-xs-12"},
         if !@props.datatypes.count()
-          React.DOM.div {}, "No data types set yet."
+          React.DOM.small {}, "No data types set yet."
         else
           ListGroup {},
             @props.datatypes.map((datatype, key) ->
               ListGroupItem {key: key},
-                  React.DOM.strong {}, key
-                  " "
-                  React.DOM.span {}, datatype
-                  React.DOM.i
-                    className: "kbc-icon-cup pull-right"
-                    onClick: ->
-                      component.props.handleRemoveDataType(key)
+                  React.DOM.small {},
+                    React.DOM.strong {}, key
+                    " "
+                    React.DOM.span {}, datatype
+                    React.DOM.i
+                      className: "kbc-icon-cup pull-right"
+                      onClick: ->
+                        component.props.handleRemoveDataType(key)
             , @).toArray()
       React.DOM.div {className: "row"},
         React.DOM.span {className: "col-xs-5"},
@@ -70,17 +71,17 @@ module.exports = React.createClass
             onChange: @_handleInputOnChange
         React.DOM.span {className: "col-xs-2 kbc-col-button"},
           Button
-            className: 'btn-success'
+            bsSize: 'small'
             onClick: @props.handleAddDataType
             disabled: @props.disabled || !@props.selectValue || !@props.inputValue
           ,
             React.DOM.i {className: "kbc-icon-plus"}
             " Add"
-      React.DOM.div {className: "row"},
         React.DOM.p {className: "help-block"},
-          React.DOM.div {},
-            React.DOM.code {}, "VARCHAR(255)"
-            "default for primary key columns"
-          React.DOM.div {},
-            React.DOM.code {}, "TEXT"
-            "default for all other columns"
+          React.DOM.small {},
+            React.DOM.div {},
+              React.DOM.code {}, "VARCHAR(255)"
+              "default for primary key columns"
+            React.DOM.div {},
+              React.DOM.code {}, "TEXT"
+              "default for all other columns"

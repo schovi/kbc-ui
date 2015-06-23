@@ -126,6 +126,7 @@ module.exports = React.createClass
               options: @_getTables()
       React.DOM.div {className: "row col-md-12"},
         Input
+          bsSize: 'small'
           type: 'text'
           label: 'File'
           value: @props.value.get("destination")
@@ -134,11 +135,11 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
-          help: React.DOM.span {},
+          help: React.DOM.small {},
             "File will be downloaded to"
             React.DOM.code {}, "/data/in/tables"
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Columns'
           React.DOM.div className: 'col-xs-10',
             Select
@@ -149,22 +150,23 @@ module.exports = React.createClass
               placeholder: "All columns will be imported"
               onChange: @_handleChangeColumns
               options: @_getColumnsOptions()
-            React.DOM.div
+            React.DOM.small
               className: "help-block"
             ,
               "Import only specified columns"
         Input
+          bsSize: 'small'
           type: 'number'
           label: 'Days'
           value: @props.value.get("days")
           disabled: @props.disabled
           placeholder: 0
-          help: "Data updated in the given period"
+          help: React.DOM.small {}, "Data updated in the given period"
           onChange: @_handleChangeDays
           labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-4'
+          wrapperClassName: 'col-xs-5'
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
           React.DOM.div className: 'col-xs-4',
             Select
