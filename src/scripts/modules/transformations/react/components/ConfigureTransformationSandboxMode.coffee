@@ -6,6 +6,7 @@ MySqlSandboxCredentialsStore = require('../../../provisioning/stores/MySqlSandbo
 ConnectToMySqlSandbox = React.createFactory(require '../components/ConnectToMySqlSandbox')
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
+{Input} = require 'react-bootstrap'
 {div, p, strong, form, input, label, span, h3, h4, button} = React.DOM
 
 ConfigureTransformationSandboxMode = React.createClass
@@ -35,43 +36,35 @@ ConfigureTransformationSandboxMode = React.createClass
           value: @state.mode
           onChange: @_setMode
         ,
-          form {className: 'form-horizontal'},
-            div {className: 'radio'},
-              label {},
-                input
-                  type: 'radio'
-                  value: 'input'
-                ,
-                  'Load input tables only'
-            div {className: 'radio'},
-              label {className: 'radio'},
-                input
-                  type: 'radio'
-                  value: 'prepare'
-                ,
-                  'Prepare transformation'
-                  span {className: 'help-block'},
-                    'Load input tables AND perform required transformations'
-            div {className: 'radio'},
-              label {className: 'radio'},
-                input
-                  type: 'radio'
-                  value: 'dry-run'
-                ,
-                  'Execute transformation without writing to Storage API'
+          div {className: 'form-horizontal'},
+            React.createElement Input,
+              type: 'radio'
+              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              label: 'Load input tables only'
+              value: 'input'
+            React.createElement Input,
+              type: 'radio'
+              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              label: 'Prepare transformation'
+              help: 'Load input tables AND perform required transformations'
+              value: 'prepare'
+            React.createElement Input,
+              type: 'radio'
+              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              label: 'Execute transformation without writing to Storage API'
+              value: 'dry-run'
       div {},
         h3 {},
           "Redirect"
-        form {className: 'form-horizontal'},
-          div {className: 'checkbox'},
-            label {},
-              input
-                type: 'checkbox'
-                value: '1'
-                checked: @state.redirect
-                onChange: @_setRedirect
-              ,
-                'Show job detail'
+        div {className: 'form-horizontal'},
+          React.createElement Input,
+            type: 'checkbox'
+            value: '1'
+            wrapperClassName: 'col-sm-offset-2 col-sm-8'
+            checked: @state.redirect
+            onChange: @_setRedirect
+          ,
+            'Show job detail'
       div {},
         h3 {},
           "Credentials"
