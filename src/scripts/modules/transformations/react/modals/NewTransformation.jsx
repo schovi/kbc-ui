@@ -117,7 +117,7 @@ export default React.createClass({
 
   handleChange(field, e) {
     this.setState({
-      data: this.state.data.set(field, e.target.value.trim())
+      data: this.state.data.set(field, e.target.value)
     });
   },
 
