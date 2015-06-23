@@ -68,6 +68,9 @@ export default React.createClass({
   form() {
     return (
       <form className="form-horizontal">
+        <p className="help-block">
+          Create new transformation in bucket <strong>{ this.props.bucket.get('name') }</strong>
+        </p>
         <Input
           type="text"
           value={this.state.data.get('name')}

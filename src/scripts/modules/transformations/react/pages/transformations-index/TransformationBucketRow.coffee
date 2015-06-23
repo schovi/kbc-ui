@@ -6,6 +6,8 @@ RunComponentButton = React.createFactory(require '../../../../components/react/c
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationActionCreators = require '../../../ActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
+NewTransformationModal = require '../../modals/NewTransformation'
+{ModalTrigger} = require 'react-bootstrap'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -42,6 +44,20 @@ TransformationBucketRow = React.createClass(
     ,
       "You are about to run all transformations in bucket #{@props.bucket.get('name')}."
     ))
+
+    buttons.push(React.createElement ModalTrigger,
+      modal: React.createElement(NewTransformationModal,
+        bucket: @props.bucket
+      )
+      ,
+        button
+          className: 'btn btn-link'
+          onClick: (e) ->
+            e.stopPropagation()
+            e.preventDefault()
+        ,
+          span className: 'fa fa-plus'
+    )
 
     buttons.push(
       button
