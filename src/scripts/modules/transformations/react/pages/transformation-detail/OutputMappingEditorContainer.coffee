@@ -29,19 +29,24 @@ module.exports = React.createClass
     value = @props.value.set(key, mapping)
     @props.onChange(value)
 
+  _renderAddButton: ->
+    component = @
+    React.DOM.button
+      className: "btn btn-success"
+      onClick: (e) ->
+        component.props.onAddOutputMapping()
+        e.preventDefault()
+    ,
+      React.DOM.span {className: 'kbc-icon-plus'}
+      " Add"
+
   render: ->
     component = @
     React.DOM.div {},
-      React.DOM.div {className: "pull-right"},
-        React.DOM.button
-          className: "btn btn-success"
-          onClick: (e) ->
-            component.props.onAddOutputMapping()
-            e.preventDefault()
-        ,
-          React.DOM.span {className: 'kbc-icon-plus'}
+      if !@props.value.count()
+        React.DOM.div className: 'pull-right',
+          @_renderAddButton()
       React.DOM.h2 null, 'Output Mapping'
-      if @props.value.count()
         @props.value.map(
           (mapping, key) ->
             Panel
@@ -84,3 +89,6 @@ module.exports = React.createClass
                 type: component.props.type
 
         ).toArray()
+      if @props.value.count()
+        React.DOM.div {className: "text-right"},
+          @_renderAddButton()
