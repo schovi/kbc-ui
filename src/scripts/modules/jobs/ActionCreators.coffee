@@ -37,6 +37,12 @@ module.exports =
     RoutesStore.getRouter().transitionTo 'jobs', null,
       q: query
 
+  toggleJobAccordion: (jobId, activeAccordion) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.JOB_ACCORDION_TOGGLE
+      activeAccordion: activeAccordion
+      jobId: jobId
+
   setQuery: (query) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_SET_QUERY

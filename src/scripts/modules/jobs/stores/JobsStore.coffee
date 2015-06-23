@@ -9,6 +9,7 @@ List = Immutable.List
 
 _store = Map(
   jobsById: Map()
+  jobsActiveAccordions: Map() # id job -> active accordion name
   loadingJobs: List()
   terminatingJobs: List() # waiting for terminate request send
   query: ''
@@ -35,6 +36,9 @@ JobsStore = StoreUtils.createStore
 
   get: (id) ->
     _store.getIn ['jobsById', id]
+
+  getJobActiveAccordion: (id) ->
+    _store.getIn ['jobsActiveAccordions', id], 'stats'
 
   has: (id) ->
     _store.hasIn ['jobsById', id]
@@ -88,6 +92,7 @@ Dispatcher.register (payload) ->
     #LOAD MORE JOBS FROM API and merge with current jobs
     when Constants.ActionTypes.JOBS_LOAD_SUCCESS
       limit = _store.get 'limit'
+      jobs = Immutable.fromJS(action.jobs).toMap()
       if action.resetJobs
         _store = _store.set('jobsById', Map())
       _store = _store.withMutations((store) ->
@@ -95,11 +100,20 @@ Dispatcher.register (payload) ->
           .set('isLoading', false)
           .set('isLoaded', true)
           .set('offset', action.newOffset)
-          .mergeIn(['jobsById'], Immutable.fromJS(action.jobs).toMap()
-            .map (job) ->
+          .mergeIn(['jobsById'],
+            jobs.map (job) ->
               job.set 'id', parseInt(job.get('id')) # dokud to miro nefixne na backendu
             .mapKeys (key, job) ->
               job.get 'id'
+          )
+          .set('jobsActiveAccordions',
+            jobs.mapKeys (key, job) ->
+              job.get 'id'
+            .map (job) ->
+              if job.get('status') == 'error'
+                'params'
+              else
+                'stats'
           ))
       loadMore = true
       offset = _store.get('offset')
@@ -120,13 +134,21 @@ Dispatcher.register (payload) ->
 
 
     when Constants.ActionTypes.JOB_LOAD_SUCCESS
+      previous = JobsStore.get action.job.id
+
       _store = _store.withMutations (store) ->
         job = Immutable.fromJS(action.job)
         job.set 'id', parseInt(job.get 'id')
-        store
+        store = store
           .setIn ['jobsById', action.job.id], job
           .update 'loadingJobs', (loadingJobs) ->
             loadingJobs.remove(loadingJobs.indexOf(action.job.id))
+
+        # toggle accordion if error
+        if job.get('status') == 'error' && (!previous || previous.get('status') != 'error')
+          store = store.setIn ['jobsActiveAccordions', job.get('id')], 'params'
+
+        store
 
       JobsStore.emitChange()
 
@@ -140,5 +162,11 @@ Dispatcher.register (payload) ->
         jobs.remove(jobs.indexOf(action.jobId))
       JobsStore.emitChange()
 
+    when Constants.ActionTypes.JOB_ACCORDION_TOGGLE
+      currentActive = JobsStore.getJobActiveAccordion(action.jobId)
+      # close current or open new
+      newActive = if currentActive == action.activeAccordion then '' else action.activeAccordion
+      _store = _store.setIn ['jobsActiveAccordions', action.jobId], newActive
+      JobsStore.emitChange()
 
 module.exports = JobsStore

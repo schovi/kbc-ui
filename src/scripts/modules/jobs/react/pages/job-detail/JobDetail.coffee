@@ -14,6 +14,7 @@ JobStats = require './JobStatsContainer'
 {Link} = require 'react-router'
 getComponentId = require '../../../getJobComponentId'
 JobStatusLabel = React.createFactory(require('../../../../../react/common/common').JobStatusLabel)
+ActionCreators = require '../../../ActionCreators'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -37,6 +38,8 @@ accordionHeader = (text, isActive) ->
 module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
 
+
+
   getStateFromStores: ->
     job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
 
@@ -47,7 +50,7 @@ module.exports = React.createClass
 
     job: job
     configuration: configuration
-    activeAccordion: if job.get('status') == 'error' then 'params' else 'stats'
+    activeAccordion: JobsStore.getJobActiveAccordion(job.get('id'))
 
   componentDidUpdate: (prevProps, prevState) ->
     currentStatus = @state.job.get 'status'
@@ -60,8 +63,7 @@ module.exports = React.createClass
         SoundNotifications.crash()
 
   _handleChangeActiveAccordion: (activeKey) ->
-    @setState
-      activeAccordion: if activeKey == @state.activeAccordion then '' else activeKey
+    ActionCreators.toggleJobAccordion(@state.job.get('id'), activeKey)
 
   render: ->
     job = @state.job
