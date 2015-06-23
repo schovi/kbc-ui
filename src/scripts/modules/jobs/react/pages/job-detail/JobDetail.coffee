@@ -165,6 +165,12 @@ module.exports = React.createClass
         eventKey: 'params'
       ,
         @_renderParamsRow(job)
+      if @_isGoodDataWriter()
+        React.createElement Panel,
+          header: accordionHeader('GoodData Results', @state.activeAccordion == 'gdresults')
+          eventKey: 'gdresults'
+        ,
+        'gdresults'
       React.createElement Panel,
         header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
         eventKey: 'stats'
@@ -213,3 +219,5 @@ module.exports = React.createClass
           runId: job.get('runId')
         autoReload: job.get('status') == 'waiting' || job.get('status') == 'processing'
 
+  _isGoodDataWriter: ->
+    getComponentId(@state.job) == 'gooddata-writer'
