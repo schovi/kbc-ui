@@ -369,6 +369,7 @@ module.exports =
         type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_SUCCESS
         configurationId: configurationId
         dimension: dateDimension
+      dateDimension
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_ERROR

@@ -38,7 +38,11 @@ module.exports = React.createClass
     newDimension: dateDimensionStore.getNewDimension(@props.configurationId)
 
   _handleNewDimensionSave: ->
-    actionCreators.saveNewDateDimension(@props.configurationId)
+    actionCreators
+    .saveNewDateDimension(@props.configurationId)
+    .then (dateDimension) =>
+      @setState
+        selectedDimension: dateDimension.get('name')
 
   _handleNewDimensionUpdate: (newDimension) ->
     actionCreators.updateNewDateDimension(@props.configurationId, newDimension)
