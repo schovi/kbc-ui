@@ -39,18 +39,18 @@ ConfigureTransformationSandboxMode = React.createClass
           div {className: 'form-horizontal'},
             React.createElement Input,
               type: 'radio'
-              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              wrapperClassName: 'col-sm-offset-1 col-sm-8'
               label: 'Load input tables only'
               value: 'input'
             React.createElement Input,
               type: 'radio'
-              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              wrapperClassName: 'col-sm-offset-1 col-sm-8'
               label: 'Prepare transformation'
               help: 'Load input tables AND perform required transformations'
               value: 'prepare'
             React.createElement Input,
               type: 'radio'
-              wrapperClassName: 'col-sm-offset-2 col-sm-8'
+              wrapperClassName: 'col-sm-offset-1 col-sm-8'
               label: 'Execute transformation without writing to Storage API'
               value: 'dry-run'
       div {},
@@ -60,27 +60,27 @@ ConfigureTransformationSandboxMode = React.createClass
           React.createElement Input,
             type: 'checkbox'
             value: '1'
-            wrapperClassName: 'col-sm-offset-2 col-sm-8'
+            wrapperClassName: 'col-sm-offset-1 col-sm-8'
             checked: @state.redirect
             onChange: @_setRedirect
-          ,
-            'Show job detail'
-      div {},
+            label: 'Show job detail'
+      div className: 'clearfix',
         h3 {},
           "Credentials"
-        if @props.backend == 'redshift'
-          RedshiftCredentialsContainer {isAutoLoad: true}
-        else
-          span {},
-            div {className: 'row'},
-              div {className: 'col-md-9'},
-                MySqlCredentialsContainer {isAutoLoad: true}
-              div {className: 'col-md-3'},
-                if @state.mysqlCredentials.get("id")
-                  ConnectToMySqlSandbox {credentials: @state.mysqlCredentials},
-                    button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-                      span {className: 'fa fa-fw fa-database'}
-                      " Connect"
+        div className: 'col-sm-offset-1 col-sm-10',
+          if @props.backend == 'redshift'
+            RedshiftCredentialsContainer {isAutoLoad: true}
+          else
+            span {},
+              div {className: 'row'},
+                div {className: 'col-md-9'},
+                  MySqlCredentialsContainer {isAutoLoad: true}
+                div {className: 'col-md-3'},
+                  if @state.mysqlCredentials.get("id")
+                    ConnectToMySqlSandbox {credentials: @state.mysqlCredentials},
+                      button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+                        span {className: 'fa fa-fw fa-database'}
+                        " Connect"
 
 
   _setRedirect: (e) ->
