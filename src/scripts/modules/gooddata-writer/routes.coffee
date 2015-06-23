@@ -5,6 +5,7 @@ GoodDataWriterStore = require './store'
 
 IndexPage = require './react/pages/index/Index'
 TablePage = require './react/pages/table/Table'
+WriterReloader = require './react/components/WritersReloaderButton'
 TablePageHeaderButtons = require './react/components/TableHeaderButtons'
 TablePageHeaderExportStatus = require './react/components/TableHeaderExportStatus'
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
@@ -23,6 +24,7 @@ module.exports =
     configId = routerState.getIn ['params', 'config']
     'GoodData - ' + InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
   defaultRouteHandler: IndexPage
+  reloaderHandler: WriterReloader
   childRoutes: [
     name: 'gooddata-writer-table'
     path: 'table/:table'
