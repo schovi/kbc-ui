@@ -5,11 +5,13 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+EventsService = require('../../../../sapi-events/EventService').factory
 Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
 JobStats = require './JobStatsContainer'
+GoodDataStats = require './GoodDataStats'
 {PanelGroup, Panel} = require 'react-bootstrap'
 {Link} = require 'react-router'
 getComponentId = require '../../../getJobComponentId'
@@ -170,7 +172,9 @@ module.exports = React.createClass
           header: accordionHeader('GoodData Results', @state.activeAccordion == 'gdresults')
           eventKey: 'gdresults'
         ,
-        'gdresults'
+        React.createElement GoodDataStats,
+          tasks: @state.job.getIn ['params', 'tasks']
+          events: @_prepareGdWriterEvents()
       React.createElement Panel,
         header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
         eventKey: 'stats'
@@ -221,3 +225,8 @@ module.exports = React.createClass
 
   _isGoodDataWriter: ->
     getComponentId(@state.job) == 'gooddata-writer'
+
+  _prepareGdWriterEvents: ->
+    es = EventsService({runId: @state.job.get('runId')})
+    es.setQuery('type:success OR type:error')
+    es
