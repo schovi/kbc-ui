@@ -11,12 +11,11 @@ createGetSuggestions = (getOptions) ->
   (input, callback) ->
     suggestions = getOptions()
     .filter (value) -> fuzzy.match(input, value)
-    .slice 0, 10
-    .toList().sort( (valA, valB) ->
-      return 1 if valA > valB
-      return -1 if valA < valB
-      return 0
+    .sortBy( (item) ->
+      item
     )
+    .slice 0, 10
+    .toList()
     callback(null, suggestions.toJS())
 
 module.exports = React.createClass
@@ -26,6 +25,7 @@ module.exports = React.createClass
   propTypes:
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    buckets: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     backend: React.PropTypes.string.isRequired
@@ -68,14 +68,19 @@ module.exports = React.createClass
   _getDeleteWhereValues: ->
     @props.value.get("deleteWhereValues", Immutable.List()).join(",")
 
-  _getTables: ->
-    props = @props
-    inOutTables = @props.tables.filter((table) ->
-      table.get("id").substr(0, 3) == "in." || table.get("id").substr(0, 4) == "out."
+  _getTablesAndBuckets: ->
+    tablesAndBuckets = @props.tables.merge(@props.buckets)
+
+    inOut = tablesAndBuckets.filter((item) ->
+      item.get("id").substr(0, 3) == "in." || item.get("id").substr(0, 4) == "out."
     )
-    map = inOutTables.map((table) ->
-      table.get("id")
+
+    map = inOut.sortBy((item) ->
+      item.get("id")
+    ).map((item) ->
+      item.get("id")
     )
+
     map.toList()
 
   _getColumns: ->
@@ -124,7 +129,7 @@ module.exports = React.createClass
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'
             React.DOM.div className: 'col-xs-10',
               React.createElement Autosuggest,
-                suggestions: createGetSuggestions(@_getTables)
+                suggestions: createGetSuggestions(@_getTablesAndBuckets)
                 inputAttributes:
                   className: 'form-control'
                   placeholder: 'Destination table in Storage'

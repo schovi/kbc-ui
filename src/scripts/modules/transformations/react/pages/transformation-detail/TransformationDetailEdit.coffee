@@ -33,6 +33,7 @@ TransformationDetailEdit = React.createClass
   propTypes:
     transformation: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    buckets: React.PropTypes.object.isRequired
     transformations: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     isSaving: React.PropTypes.bool.isRequired
@@ -150,6 +151,7 @@ TransformationDetailEdit = React.createClass
         OutputMappingEditorContainer
           value: @props.transformation.get("output")
           tables: @props.tables
+          buckets: @props.buckets
           backend: @props.transformation.get("backend")
           type: @props.transformation.get("type")
           disabled: @props.isSaving

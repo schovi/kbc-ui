@@ -12,6 +12,7 @@ module.exports = React.createClass
   propTypes:
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    buckets: React.PropTypes.object.isRequired
     backend: React.PropTypes.string.isRequired
     type: React.PropTypes.string.isRequired
     onChange: React.PropTypes.func.isRequired
@@ -75,6 +76,7 @@ module.exports = React.createClass
                 fill: true
                 value: mapping
                 tables: component.props.tables
+                buckets: component.props.buckets
                 onChange: (value) ->
                   component._handleChangeOutputMapping(key, value)
                 disabled: component.props.disabled

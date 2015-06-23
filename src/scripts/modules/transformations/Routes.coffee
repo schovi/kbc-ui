@@ -55,6 +55,7 @@ routes =
           requireData: [
             ->
               StorageActionCreators.loadTables()
+              StorageActionCreators.loadBuckets()
           ]
           childRoutes: [
             name: 'transformationDetailGraph'

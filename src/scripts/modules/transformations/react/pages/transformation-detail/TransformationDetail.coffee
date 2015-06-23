@@ -9,6 +9,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
 TransformationBucketsStore  = require('../../../stores/TransformationBucketsStore')
 StorageTablesStore  = require('../../../../components/stores/StorageTablesStore')
+StorageBucketsStore  = require('../../../../components/stores/StorageBucketsStore')
 RoutesStore = require '../../../../../stores/RoutesStore'
 TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
@@ -25,7 +26,7 @@ TransformationDetail = React.createClass
   displayName: 'TransformationDetail'
 
   mixins: [
-    createStoreMixin(TransformationsStore, TransformationBucketsStore, StorageTablesStore),
+    createStoreMixin(TransformationsStore, TransformationBucketsStore, StorageTablesStore, StorageBucketsStore),
     Router.Navigation
   ]
 
@@ -39,6 +40,7 @@ TransformationDetail = React.createClass
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
     tables: StorageTablesStore.getAll()
+    buckets: StorageBucketsStore.getAll()
     bucketId: bucketId
     transformationId: transformationId
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
@@ -104,6 +106,7 @@ TransformationDetail = React.createClass
               transformations: @state.transformations
               transformation: @state.editValue
               tables: @state.tables
+              buckets: @state.buckets
               isSaving: @state.isSaving
               onChange: @_handleEditChange
               openInputMappings: @state.openEditingInputMappings
