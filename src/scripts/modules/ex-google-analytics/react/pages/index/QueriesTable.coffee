@@ -33,8 +33,8 @@ module.exports = React.createClass
         params:
           config: @props.configId
           name: queryName
-        div className: 'td', row.get('metrics').join()
-        div className: 'td', row.get('dimensions').join()
+        div className: 'td', row.get('metrics').join(', ')
+        div className: 'td', row.get('dimensions').join(', ')
         div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
         div className: 'td', @_getProfileName(row.get('profile'))
         div className: 'td',
