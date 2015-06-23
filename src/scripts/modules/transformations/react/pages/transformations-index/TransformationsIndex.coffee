@@ -107,9 +107,7 @@ TransformationsIndex = React.createClass
           component._getFilteredTransformations(bucket.get('id')).count()
 
     filtered = filtered.sortBy((bucket) ->
-      name = bucket.get('name')
-      id = bucket.get('id')
-      name + id.toLowerCase()
+      bucket.get('name').toLowerCase()
     )
     return filtered
 
