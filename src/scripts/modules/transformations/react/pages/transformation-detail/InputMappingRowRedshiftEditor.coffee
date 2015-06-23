@@ -203,15 +203,16 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          type: 'checkbox'
-          label: 'Optional'
-          value: @props.value.get("optional")
-          disabled: @props.disabled
-          onChange: @_handleChangeOptional
-          wrapperClassName: 'col-xs-offset-2 col-xs-10'
-          help: "If this table does not exist in Storage, the transformation won't show an error."
+            Input
+              standalone: true
+              bsSize: 'small'
+              type: 'checkbox'
+              label: React.DOM.small {}, 'Optional'
+              value: @props.value.get("optional")
+              disabled: @props.disabled
+              onChange: @_handleChangeOptional
+              help: React.DOM.small {},
+                "If this table does not exist in Storage, the transformation won't show an error."
       React.DOM.div {className: "row col-md-12"},
         Input
           type: 'text'
@@ -224,6 +225,7 @@ module.exports = React.createClass
           wrapperClassName: 'col-xs-10'
       if (@_isSourceTableRedshift())
         Input
+          bsSize: 'small'
           type: 'select'
           name: 'type'
           label: 'Type'
@@ -233,30 +235,33 @@ module.exports = React.createClass
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
           help:
-            React.DOM.span {},
-              React.DOM.div {},
-               React.DOM.code {}, "table"
-               "Input mapping is created as a physical table, takes longer to process"
-              React.DOM.div {},
-               React.DOM.code {}, "view"
-               "Input mapping is created as a view, will consume more memory when materializing"
+            React.DOM.small {},
+              React.DOM.span {},
+                React.DOM.div {},
+                 React.DOM.code {}, "table"
+                 "Input mapping is created as a physical table, takes longer to process"
+                React.DOM.div {},
+                 React.DOM.code {}, "view"
+                 "Input mapping is created as a view, will consume more memory when materializing"
         ,
           React.DOM.option {value: "table"}, "Table"
           React.DOM.option {value: "view"}, "View"
       if (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           Input
+            bsSize: 'small'
             type: 'checkbox'
-            label: 'Persistent'
+            label: React.DOM.small {}, 'Persistent'
             value: @props.value.get("persistent")
             disabled: @props.disabled
             onChange: @_handleChangePersistent
             wrapperClassName: 'col-xs-offset-2 col-xs-10'
-            help: "Try to keep the table in Redshift DB. STATUPDATE and COMPUPDATE
+            help: React.DOM.small {},
+              "Try to keep the table in Redshift DB. STATUPDATE and COMPUPDATE
               will be processed only in the first run."
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Columns'
           React.DOM.div className: 'col-xs-10',
             Select
@@ -272,17 +277,19 @@ module.exports = React.createClass
             ,
               "Import only specified columns"
         Input
+          bsSize: 'small'
           type: 'number'
           label: 'Days'
           value: @props.value.get("days")
           disabled: @props.disabled
           placeholder: 0
-          help: "Data updated in the given period"
+          help: React.DOM.small {},
+            "Data updated in the given period"
           onChange: @_handleChangeDays
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-4'
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
           React.DOM.div className: 'col-xs-4',
             Select
@@ -294,6 +301,7 @@ module.exports = React.createClass
               options: @_getColumnsOptions()
           React.DOM.div className: 'col-xs-2',
             Input
+              bsSize: 'small'
               type: 'select'
               name: 'whereOperator'
               value: @props.value.get("whereOperator")
@@ -304,6 +312,7 @@ module.exports = React.createClass
               React.DOM.option {value: "ne"}, "!= (NOT IN)"
           React.DOM.div className: 'col-xs-4',
             Input
+              bsSize: 'small'
               type: 'text'
               name: 'whereValues'
               value: @_getWhereValues()
@@ -312,7 +321,7 @@ module.exports = React.createClass
               placeholder: "Comma separated values"
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
           React.DOM.div className: 'col-xs-10',
             RedshiftDataTypesContainer
@@ -322,7 +331,7 @@ module.exports = React.createClass
               columnsOptions: @_getFilteredColumnsOptions()
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Sort Key'
           React.DOM.div className: 'col-xs-10',
             Select
@@ -333,14 +342,13 @@ module.exports = React.createClass
               placeholder: "No sortkey"
               onChange: @_handleChangeSortKey
               options: @_getFilteredColumnsOptions()
-            React.DOM.div
-              className: "help-block"
-            ,
-              "SORTKEY option for creating table in Redshift DB.
-                You can create a compound sort key."
+            React.DOM.div className: "help-block",
+              React.DOM.small {},
+                "SORTKEY option for creating table in Redshift DB.
+                  You can create a compound sort key."
 
       React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group',
+        React.DOM.div className: 'form-group form-group-sm',
           React.DOM.label className: 'col-xs-2 control-label', 'Dist Key'
           React.DOM.div className: 'col-xs-7',
             Select
@@ -362,12 +370,14 @@ module.exports = React.createClass
           React.DOM.div
             className: "col-xs-offset-2 col-xs-10 help-block"
           ,
-            "DISTKEY and DISTSTYLE options used for
-              CREATE TABLE query in Redshift."
+            React.DOM.small {},
+              "DISTKEY and DISTSTYLE options used for
+                CREATE TABLE query in Redshift."
 
       if (!@_isSourceTableRedshift())
         React.DOM.div {className: "row col-md-12"},
           Input
+            bsSize: 'small'
             type: 'text'
             label: 'COPY options'
             value: @props.value.get("copyOptions")
@@ -377,7 +387,7 @@ module.exports = React.createClass
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-10'
             help:
-              React.DOM.span {},
+              React.DOM.small {},
                 "Additional options for COPY command, multiple values separated by comma. "
                 React.DOM.a
                   href: "http://wiki.keboola.com/home/keboola-connection/devel-space/

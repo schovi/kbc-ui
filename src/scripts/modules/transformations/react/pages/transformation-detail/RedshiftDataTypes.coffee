@@ -66,18 +66,19 @@ module.exports = React.createClass
       React.DOM.div {className: "row"},
         React.DOM.span {className: "col-xs-12"},
         if !@props.datatypes.count()
-          React.DOM.div {}, "No data types set yet."
+          React.DOM.div {}, React.DOM.small {}, "No data types set yet."
         else
           ListGroup {},
             @props.datatypes.map((datatype, key) ->
               ListGroupItem {key: key},
-                  React.DOM.strong {}, key
-                  " "
-                  React.DOM.span {}, datatype
-                  React.DOM.i
-                    className: "kbc-icon-cup pull-right"
-                    onClick: ->
-                      component.props.handleRemoveDataType(key)
+                  React.DOM.small {},
+                    React.DOM.strong {}, key
+                    " "
+                    React.DOM.span {}, datatype
+                    React.DOM.i
+                      className: "kbc-icon-cup pull-right"
+                      onClick: ->
+                        component.props.handleRemoveDataType(key)
             , @).toArray()
       React.DOM.div {className: "row"},
         React.DOM.span {className: "col-xs-3"},
@@ -97,13 +98,15 @@ module.exports = React.createClass
             onChange: @props.datatypeOnChange
             options: @_getDatatypeOptions()
         React.DOM.span {className: "col-xs-2"},
-          Input
-            type: 'text'
-            name: 'add-size'
-            value: @props.sizeValue
-            disabled: @props.disabled || !@props.showSize
-            placeholder: "Eg. 255"
-            onChange: @_handleSizeOnChange
+          if @props.showSize
+            Input
+              bsSize: 'small'
+              type: 'text'
+              name: 'add-size'
+              value: @props.sizeValue
+              disabled: @props.disabled || !@props.showSize
+              placeholder: "Eg. 255"
+              onChange: @_handleSizeOnChange
         React.DOM.span {className: "col-xs-2"},
           Select
             name: 'add-datatype-compression'
@@ -114,16 +117,18 @@ module.exports = React.createClass
             options: @_getCompressionOptions()
         React.DOM.span {className: "col-xs-1"},
           Button
+            bsSize: 'small'
             onClick: @props.handleAddDataType
             disabled: @props.disabled || !@props.columnValue || !@props.datatypeValue
           ,
             React.DOM.i {className: "kbc-icon-plus"}
             " Add"
       React.DOM.div {className: "row"},
-        React.DOM.p {className: "help-block"},
-          React.DOM.div {},
-            React.DOM.code {}, "VARCHAR(255) ENCODE LZO"
-            "default for primary key columns"
-          React.DOM.div {},
-            React.DOM.code {}, "VARCHAR(65535) ENCODE LZO"
-            "default for all other columns"
+        React.DOM.small {},
+          React.DOM.p {className: "help-block"},
+            React.DOM.div {},
+              React.DOM.code {}, "VARCHAR(255) ENCODE LZO"
+              "default for primary key columns"
+            React.DOM.div {},
+              React.DOM.code {}, "VARCHAR(65535) ENCODE LZO"
+              "default for all other columns"

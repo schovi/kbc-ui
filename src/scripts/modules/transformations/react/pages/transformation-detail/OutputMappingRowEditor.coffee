@@ -135,20 +135,21 @@ module.exports = React.createClass
                   placeholder: 'Destination table in Storage'
                   value: @props.value.get("destination", "")
                   onChange: @_handleChangeDestination
+              Input
+                standalone: true
+                name: 'incremental'
+                type: 'checkbox'
+                label: React.DOM.small {}, 'Incremental'
+                value: @props.value.get("optional")
+                disabled: @props.disabled
+                onChange: @_handleChangeIncremental
+                help: React.DOM.small {},
+                  "If the destination table exists in Storage API,
+                  output mapping does not overwrite the table, it only appends the data to it.
+                  Uses incremental write to Storage API."
         React.DOM.div {className: "row col-md-12"},
           Input
-            name: 'incremental'
-            type: 'checkbox'
-            label: 'Incremental'
-            value: @props.value.get("optional")
-            disabled: @props.disabled
-            onChange: @_handleChangeIncremental
-            wrapperClassName: 'col-xs-offset-2 col-xs-10'
-            help: "If the destination table exists in Storage API,
-              output mapping does not overwrite the table, it only appends the data to it.
-              Uses incremental write to Storage API."
-        React.DOM.div {className: "row col-md-12"},
-          Input
+            bsSize: 'small'
             name: 'primaryKey'
             type: 'text'
             label: 'Primary key'
@@ -158,11 +159,12 @@ module.exports = React.createClass
             onChange: @_handleChangePrimaryKey
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-10'
-            help: "Primary key of the table in Storage API. If the table already exists, primary key must match.
+            help: React.DOM.small {},
+              "Primary key of the table in Storage API. If the table already exists, primary key must match.
               Parts of a composite primary key are separated with a comma."
 
         React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group',
+          React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
             React.DOM.div className: 'col-xs-4',
               React.createElement Autosuggest,
@@ -174,6 +176,7 @@ module.exports = React.createClass
                   onChange: @_handleChangeDeleteWhereColumn
             React.DOM.div className: 'col-xs-2',
               Input
+                bsSize: 'small'
                 type: 'select'
                 name: 'deleteWhereOperator'
                 value: @props.value.get("deleteWhereOperator")
@@ -184,6 +187,7 @@ module.exports = React.createClass
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
               Input
+                bsSize: 'small'
                 type: 'text'
                 name: 'deleteWhereValues'
                 value: @_getDeleteWhereValues()
