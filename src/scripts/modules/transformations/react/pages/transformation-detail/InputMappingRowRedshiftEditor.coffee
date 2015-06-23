@@ -275,7 +275,7 @@ module.exports = React.createClass
             React.DOM.div
               className: "help-block"
             ,
-              "Import only specified columns"
+              React.DOM.small {}, "Import only specified columns"
         Input
           bsSize: 'small'
           type: 'number'
