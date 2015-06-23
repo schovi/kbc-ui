@@ -167,7 +167,7 @@ module.exports = React.createClass
         eventKey: 'params'
       ,
         @_renderParamsRow(job)
-      if @_isGoodDataWriter()
+      if @_isGoodDataWriter() and false
         React.createElement Panel,
           header: accordionHeader('GoodData Results', @state.activeAccordion == 'gdresults')
           eventKey: 'gdresults'
