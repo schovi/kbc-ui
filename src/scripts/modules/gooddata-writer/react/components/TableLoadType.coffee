@@ -123,8 +123,8 @@ module.exports = React.createClass
     React.createElement ModalTrigger,
       modal: modal
     ,
-      React.DOM.span
-        className: 'label label-default'
+      React.DOM.button
+        className: 'btn label label-default'
         onClick: @_handleEditStart
       ,
         'Load: '
