@@ -20,28 +20,22 @@ module.exports = React.createClass
 
   _modelData: ->
     model = @props.model.toJS()
+    
     for i of model.nodes
       if model.nodes[i].type == 'transformation' or
           model.nodes[i].type == 'remote-transformation'
         model.nodes[i].label = model.nodes[i].label.substring(model.nodes[i].label.indexOf("] ") + 2)
 
-      if model.nodes[i].type == 'transformation'
-        node = model.nodes[i].node
-        bucketId = node.substring(0, node.lastIndexOf("."))
-        transformationId  = node.substring(node.lastIndexOf(".") + 1)
+      if model.nodes[i].object.type == 'transformation'
         model.nodes[i].link = @.makeHref('transformationDetail', {
-          bucketId: bucketId,
-          transformationId: transformationId
+          bucketId: model.nodes[i].object.bucket,
+          transformationId: model.nodes[i].object.transformation
         })
 
-      if model.nodes[i].type == 'writer'
-        link = model.nodes[i].link
-        config = link.substr(link.lastIndexOf("config=") + 7)
-        config = config.substr(0, config.lastIndexOf("#"))
-        table = link.substr(link.lastIndexOf("/") + 1)
+      if model.nodes[i].object.type == 'writer'
         model.nodes[i].link = @.makeHref('gooddata-writer-table', {
-          config: config,
-          table: table
+          config: model.nodes[i].object.config,
+          table: model.nodes[i].object.table
         })
 
     model
