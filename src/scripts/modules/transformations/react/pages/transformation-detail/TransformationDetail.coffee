@@ -84,67 +84,78 @@ TransformationDetail = React.createClass
     @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
+  _handleInputMappingAdd: ->
+    TransformationsActionCreators.addInputMapping(
+      @state.bucketId,
+      @state.transformationId
+    )
+
+  _handleDeleteInputMapping: (key) ->
+    TransformationsActionCreators.deleteInputMapping(
+      @state.bucketId,
+      @state.transformationId,
+      key
+    )
+
+  _handleToggleOpenInputMapping: (key) ->
+    TransformationsActionCreators.toggleOpenEditingInputMapping(
+      @state.bucketId,
+      @state.transformationId,
+      key
+    )
+
+  _handleAddOutputMapping: ->
+    TransformationsActionCreators.addOutputMapping(
+      @state.bucketId,
+      @state.transformationId
+    )
+
+  _handleDeleteOutputMapping: (key) ->
+    TransformationsActionCreators.deleteOutputMapping(
+      @state.bucketId,
+      @state.transformationId,
+      key
+    )
+
+  _handleToggleOpenOutputMapping: (key) ->
+    TransformationsActionCreators.toggleOpenEditingOutputMapping(
+      @state.bucketId,
+      @state.transformationId,
+      key
+    )
+
   render: ->
     component = @
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
-        div {},
-          if (!@state.isEditing)
-            TransformationDetailStatic
-              bucket: @state.bucket
-              transformation: @state.transformation
-              transformations: @state.transformations
-              pendingActions: @state.pendingActions
-              tables: @state.tables
-              bucketId: @state.bucketId
-              transformationId: @state.transformationId
-              openInputMappings: @state.openInputMappings
-              openOutputMappings: @state.openOutputMappings
-              showDetails: @_showDetails()
-          else
-            TransformationDetailEdit
-              transformations: @state.transformations
-              transformation: @state.editValue
-              tables: @state.tables
-              buckets: @state.buckets
-              isSaving: @state.isSaving
-              onChange: @_handleEditChange
-              openInputMappings: @state.openEditingInputMappings
-              openOutputMappings: @state.openEditingOutputMappings
-              onAddInputMapping: ->
-                TransformationsActionCreators.addInputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId
-                )
-              onDeleteInputMapping: (key) ->
-                TransformationsActionCreators.deleteInputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId,
-                  key
-                )
-              toggleOpenInputMapping: (key) ->
-                TransformationsActionCreators.toggleOpenEditingInputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId,
-                  key
-                )
-              onAddOutputMapping: ->
-                TransformationsActionCreators.addOutputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId
-                )
-              onDeleteOutputMapping: (key) ->
-                TransformationsActionCreators.deleteOutputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId,
-                  key
-                )
-              toggleOpenOutputMapping: (key) ->
-                TransformationsActionCreators.toggleOpenEditingOutputMapping(
-                  component.state.bucketId,
-                  component.state.transformationId,
-                  key
-                )
+        if (!@state.isEditing)
+          TransformationDetailStatic
+            bucket: @state.bucket
+            transformation: @state.transformation
+            transformations: @state.transformations
+            pendingActions: @state.pendingActions
+            tables: @state.tables
+            bucketId: @state.bucketId
+            transformationId: @state.transformationId
+            openInputMappings: @state.openInputMappings
+            openOutputMappings: @state.openOutputMappings
+            showDetails: @_showDetails()
+        else
+          TransformationDetailEdit
+            transformations: @state.transformations
+            transformation: @state.editValue
+            tables: @state.tables
+            buckets: @state.buckets
+            isSaving: @state.isSaving
+            onChange: @_handleEditChange
+            openInputMappings: @state.openEditingInputMappings
+            openOutputMappings: @state.openEditingOutputMappings
+            onAddInputMapping: @_handleInputMappingAdd
+            onDeleteInputMapping: @_handleDeleteInputMapping
+            toggleOpenInputMapping: @_handleToggleOpenInputMapping
+            onAddOutputMapping: @_handleAddOutputMapping
+            onDeleteOutputMapping: @_handleDeleteOutputMapping
+            toggleOpenOutputMapping: @_handleToggleOpenOutputMapping
 
 
       div className: 'col-md-3 kbc-main-sidebar',

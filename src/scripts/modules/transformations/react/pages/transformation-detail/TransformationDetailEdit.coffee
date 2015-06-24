@@ -54,6 +54,12 @@ TransformationDetailEdit = React.createClass
       transformation = transformation.setIn(["requires"], Immutable.List())
     @props.onChange(transformation)
 
+  _handleInputChange: (value) ->
+    @_handleChangeProperty("input", value)
+
+  _handleOutputChange: (value) ->
+    @_handleChangeProperty("output", value)
+
   render: ->
     props = @props
     component = @
@@ -140,8 +146,7 @@ TransformationDetailEdit = React.createClass
           backend: @props.transformation.get("backend")
           type: @props.transformation.get("type")
           disabled: @props.isSaving
-          onChange: (value) ->
-            component._handleChangeProperty("input", value)
+          onChange: @_handleInputChange
           onAddInputMapping: @props.onAddInputMapping
           onDeleteInputMapping: @props.onDeleteInputMapping
           openInputMappings: @props.openInputMappings
@@ -155,8 +160,7 @@ TransformationDetailEdit = React.createClass
           backend: @props.transformation.get("backend")
           type: @props.transformation.get("type")
           disabled: @props.isSaving
-          onChange: (value) ->
-            component._handleChangeProperty("output", value)
+          onChange: @_handleOutputChange
           onAddOutputMapping: @props.onAddOutputMapping
           onDeleteOutputMapping: @props.onDeleteOutputMapping
           openOutputMappings: @props.openOutputMappings
