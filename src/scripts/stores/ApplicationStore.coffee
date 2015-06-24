@@ -48,6 +48,9 @@ ApplicationStore =
   getProjectPageUrl: (path) ->
     @getProjectBaseUrl() + '/' + path
 
+  getSapiTableUrl: (tableId) ->
+    @getProjectBaseUrl() + "/storage#/tables/#{tableId}"
+
   getUrlTemplates: ->
     _store.getIn ['kbc', 'urlTemplates']
 

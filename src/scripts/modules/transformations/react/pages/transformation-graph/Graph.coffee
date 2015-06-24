@@ -4,6 +4,7 @@ GraphCanvas = require '../../../../../react/common/GraphCanvas'
 Button = React.createFactory(require('react-bootstrap').Button)
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 Navigation = require('react-router').Navigation
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 module.exports = React.createClass
 
@@ -20,7 +21,7 @@ module.exports = React.createClass
 
   _modelData: ->
     model = @props.model.toJS()
-    
+
     for i of model.nodes
       if model.nodes[i].type == 'transformation' or
           model.nodes[i].type == 'remote-transformation'
@@ -37,6 +38,9 @@ module.exports = React.createClass
           config: model.nodes[i].object.config,
           table: model.nodes[i].object.table
         })
+
+      if model.nodes[i].object.type == 'storage'
+        model.nodes[i].link = ApplicationStore.getSapiTableUrl(model.nodes[i].object.table)
 
     model
 
