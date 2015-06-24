@@ -62,29 +62,26 @@ TransformationDetailStatic = React.createClass
   _renderDetail: ->
     props = @props
     component = @
-    span {},
-      span {},
-        div {},
-          h2 {}, 'Requires'
-          if @props.transformation.get("requires").toArray().length
-            span {},
-              div {className: "help-block"}, small {},
-                "These transformations are processed before this transformation starts."
-              div {},
-                _.map(@props.transformation.get("requires").toArray(), (required) ->
-                  Link
-                    to: 'transformationDetail'
-                    params: {transformationId: required, bucketId: props.bucket.get('id')}
-                  ,
-                    span {className: 'label kbc-label-rounded-small label-default'},
-                      _.find(props.transformations.toArray(), (transformation) ->
-                        transformation.get("id") == required
-                      )?.get("name") || required
-                )
-          else
-            div {className: "help-block"}, small {},
-              "No transformations are required."
-
+    div {className: 'kbc-row'},
+      h2 {}, 'Requires'
+      if @props.transformation.get("requires").toArray().length
+        span {},
+          div {className: "help-block"}, small {},
+            "These transformations are processed before this transformation starts."
+          div {},
+            _.map(@props.transformation.get("requires").toArray(), (required) ->
+              Link
+                to: 'transformationDetail'
+                params: {transformationId: required, bucketId: props.bucket.get('id')}
+              ,
+                span {className: 'label kbc-label-rounded-small label-default'},
+                  _.find(props.transformations.toArray(), (transformation) ->
+                    transformation.get("id") == required
+                  )?.get("name") || required
+            )
+      else
+        div {className: "help-block"}, small {},
+          "No transformations are required."
 
       span {},
         div {},
@@ -267,14 +264,12 @@ TransformationDetailStatic = React.createClass
             type: @props.transformation.get 'type'
 
       div className: '',
-        div {className: 'kbc-row'},
-          span {},
-            if !@props.showDetails
-              div {className: 'well'},
-                "This transformation is not supported in UI."
-          span {},
-            if @props.showDetails
-              @_renderDetail()
+        if props.showDetails
+          @_renderDetail()
+        else
+          div {className: 'kbc-row'},
+            div {className: 'well'},
+              "This transformation is not supported in UI."
 
   _codeMirrorMode: ->
     mode = 'text/text'
