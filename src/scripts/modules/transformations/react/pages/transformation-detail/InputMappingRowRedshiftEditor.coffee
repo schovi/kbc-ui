@@ -224,28 +224,29 @@ module.exports = React.createClass
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
       if (@_isSourceTableRedshift())
-        Input
-          bsSize: 'small'
-          type: 'select'
-          name: 'type'
-          label: 'Type'
-          value: @props.value.get("type", "table")
-          disabled: @props.disabled
-          onChange: @_handleChangeType
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-10'
-          help:
-            React.DOM.small {},
-              React.DOM.span {},
-                React.DOM.div {},
-                 React.DOM.code {}, "table"
-                 "Input mapping is created as a physical table, takes longer to process"
-                React.DOM.div {},
-                 React.DOM.code {}, "view"
-                 "Input mapping is created as a view, will consume more memory when materializing"
-        ,
-          React.DOM.option {value: "table"}, "Table"
-          React.DOM.option {value: "view"}, "View"
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            bsSize: 'small'
+            type: 'select'
+            name: 'type'
+            label: 'Type'
+            value: @props.value.get("type", "table")
+            disabled: @props.disabled
+            onChange: @_handleChangeType
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            help:
+              React.DOM.small {},
+                React.DOM.span {},
+                  React.DOM.div {},
+                   React.DOM.code {}, "table"
+                   "Input mapping is created as a physical table, takes longer to process"
+                  React.DOM.div {},
+                   React.DOM.code {}, "view"
+                   "Input mapping is created as a view, will consume more memory when materializing"
+          ,
+            React.DOM.option {value: "table"}, "Table"
+            React.DOM.option {value: "view"}, "View"
       if (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           Input

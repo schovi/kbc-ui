@@ -147,6 +147,7 @@ module.exports = React.createClass
 
         if [DataTypes.VARCHAR, DataTypes.DECIMAL].indexOf(@props.column.get 'dataType') >= 0
           @_createInput
+            style: {width: '3vw'}
             type: 'text'
             value: @props.column.get 'dataTypeSize'
             disabled: @props.isSaving
@@ -155,7 +156,7 @@ module.exports = React.createClass
 
   _renderDateSelect: ->
     return if !@_shouldRenderPart visibleParts.DATE
-    div style: {'width': '15vw'},
+    div style: {width: '15vw'},
       @_createInput
         type: 'text'
         value: @props.column.get 'format'

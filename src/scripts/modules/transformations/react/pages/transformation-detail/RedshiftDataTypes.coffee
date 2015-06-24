@@ -123,9 +123,9 @@ module.exports = React.createClass
           ,
             React.DOM.i {className: "kbc-icon-plus"}
             " Add"
-      React.DOM.div {className: "row"},
-        React.DOM.small {},
-          React.DOM.p {className: "help-block"},
+      React.DOM.div {className: "row", style: {paddingTop: "5px"}},
+        React.DOM.div {className: "help-block col-xs-12"},
+          React.DOM.small {},
             React.DOM.div {},
               React.DOM.code {}, "VARCHAR(255) ENCODE LZO"
               "default for primary key columns"

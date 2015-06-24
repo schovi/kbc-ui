@@ -106,9 +106,9 @@ TransformationDetailEdit = React.createClass
         div className: "row",
           div className: "col-md-12",
             div className: "form-group",
-              label className: "control-label col-xs-2",
+              label {className: "control-label col-xs-2", style: {width: '16%'}},
                 'Description'
-              div className: 'col-xs-10',
+              div {className: 'col-xs-10', style: {width: '84%'}},
                 React.createElement Textarea,
                   value: @props.transformation.get("description")
                   disabled: @props.isSaving
@@ -120,8 +120,8 @@ TransformationDetailEdit = React.createClass
         div className: "row",
           div className: "col-md-12",
             div className: 'form-group',
-              label className: 'col-xs-2 control-label', 'Requires'
-              div className: 'col-xs-10',
+              label {className: 'col-xs-2 control-label', style: {width: '16%'}}, 'Requires'
+              div {className: 'col-xs-10', style: {width: '84%'}},
                 SelectRequires
                   name: 'requires'
                   value: @props.transformation.get("requires")
