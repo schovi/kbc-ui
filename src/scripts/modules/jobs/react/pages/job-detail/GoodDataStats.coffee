@@ -1,33 +1,50 @@
 React = require 'react'
 _ = require 'underscore'
+moment = require 'moment'
 
-{div} = React.DOM
+ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+{div, strong, span} = React.DOM
+Duration = require('../../../../../utils/duration')
 
 module.exports = React.createClass
   displayName: 'GoodDataResultStats'
-  propTypes:
-    tasks: React.PropTypes.object.isRequired
-    events: React.PropTypes.object.isRequired
+  mixins: [ImmutableRenderMixin]
 
-  componentDidMount: ->
-    console.log "TASKS", @props.tasks.toJS()
-    @props.events.load().then (result) =>
-      console.log "loaded", result
-      console.log "EVENTS", @props.events.getEvents().toJS()
-      @_getTasksResults()
+  propTypes:
+    tasks: React.PropTypes.array.isRequired
+    #events: React.PropTypes.object.isRequired
 
   render: ->
-    div null, 'stats detail'
+    console.log "tasks", @props.tasks
+
+    div className: 'table table-striped table-hover',
+      div className: 'thead', key: 'table-header',
+        div className: 'tr',
+          span className: 'th',
+            strong null, 'Task Id'
+          span className: 'th',
+            strong null, 'Task Name'
+          span className: 'th',
+            strong null, 'Start Time'
+          span className: 'th',
+            strong null, 'Duration'
+          span className: 'th',
+            strong null, 'Status'
+          span className: 'th'
+      div className: 'tbody',
+          _.map @props.tasks, (task, taskId) =>
+            if task
+              duration = task.performance.duration
+              m = moment(task.created)
+              finished = m.subtract(duration, 'seconds') #TODO
+            div className: 'tr',
+              @_renderCell(taskId?.toString())
+              @_renderCell(task?.task.name)
+              @_renderCell(task?.created)
+              @_renderCell(Duration(task?.performance.duration))
+              @_renderCell(task?.type)
 
 
-  _getTasksResults: ->
-    events = @props.events.getEvents().toJS()
-    tasks = @props.tasks.toJS()
-    _.each tasks, (task, taskId) ->
-      msg = "Task #{taskId} "
-      console.log "task", task, taskId, msg
-
-      result = _.filter _.values(events), (event) ->
-        #console.log event.message, msg, _.str.startsWith(event.message, msg)
-        _.str.startsWith event.message, msg
-      console.log "filter result", result
+  _renderCell: (value) ->
+    div className: 'td',
+      value or "N/A"
