@@ -1,5 +1,4 @@
 React = require 'react'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
@@ -10,13 +9,19 @@ MySqlDataTypesContainer = React.createFactory(require("./MySqlDataTypesContainer
 
 module.exports = React.createClass
   displayName: 'InputMappingRowMySqlEditor'
-  mixins: [ImmutableRenderMixin]
 
   propTypes:
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+
+  shouldComponentUpdate: (nextProps) ->
+    should = @props.value != nextProps.value ||
+    @props.tables != nextProps.tables ||
+    @props.disabled != nextProps.disabled
+
+    should
 
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
@@ -137,9 +142,7 @@ module.exports = React.createClass
     )
 
   render: ->
-    component = @
     React.DOM.div {},
-
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Source'
