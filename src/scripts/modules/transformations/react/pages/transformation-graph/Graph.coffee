@@ -4,7 +4,8 @@ GraphCanvas = require '../../../../../react/common/GraphCanvas'
 Button = React.createFactory(require('react-bootstrap').Button)
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 Navigation = require('react-router').Navigation
-ApplicationStore = require '../../../../../stores/ApplicationStore'
+
+graphUtils = require '../../../../../utils/graphUtils'
 
 module.exports = React.createClass
 
@@ -21,27 +22,7 @@ module.exports = React.createClass
 
   _modelData: ->
     model = @props.model.toJS()
-
-    for i of model.nodes
-      if model.nodes[i].type == 'transformation' or
-          model.nodes[i].type == 'remote-transformation'
-        model.nodes[i].label = model.nodes[i].label.substring(model.nodes[i].label.indexOf("] ") + 2)
-
-      if model.nodes[i].object.type == 'transformation'
-        model.nodes[i].link = @.makeHref('transformationDetail', {
-          bucketId: model.nodes[i].object.bucket,
-          transformationId: model.nodes[i].object.transformation
-        })
-
-      if model.nodes[i].object.type == 'writer'
-        model.nodes[i].link = @.makeHref('gooddata-writer-table', {
-          config: model.nodes[i].object.config,
-          table: model.nodes[i].object.table
-        })
-
-      if model.nodes[i].object.type == 'storage'
-        model.nodes[i].link = ApplicationStore.getSapiTableUrl(model.nodes[i].object.table)
-
+    model.nodes = graphUtils.addLinksToNodes(model.nodes)
     model
 
   _renderGraph: ->

@@ -4,6 +4,8 @@ GraphCanvas = require '../../../../../react/common/GraphCanvas'
 Button = React.createFactory(require('react-bootstrap').Button)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
+graphUtils = require '../../../../../utils/graphUtils'
+
 module.exports = React.createClass
   displayName: 'Graph'
   propTypes:
@@ -15,6 +17,8 @@ module.exports = React.createClass
 
   _modelData: ->
     model = @props.model.toJS()
+    model.nodes = graphUtils.addLinksToNodes(model.nodes)
+
     for i of model.transitions
       if (@state.direction == 'reverse')
         source = model.transitions[i].source
