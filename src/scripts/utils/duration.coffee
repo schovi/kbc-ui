@@ -13,5 +13,5 @@ module.exports = (duration, round = false) ->
     result.push minutes + ' min'  if minutes > 0
 
     if seconds > 0 && (!round || hours == 0)
-      result.push seconds + ' sec'  if seconds > 1
+      result.push seconds + ' sec'
     if result.length > 0 then result.join(' ') else ''
