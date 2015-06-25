@@ -24,17 +24,15 @@ module.exports = React.createClass
 
   render: ->
     GoodDataStats
-      tasks: @_getTasksResults()
+      tasks: @_getTaskEvents()
 
 
-  _getTasksResults: ->
+  _getTaskEvents: ->
     events = @state.events.toJS()
     tasks = @props.job.getIn(['params', 'tasks']).toJS()
-    tasksResults = []
-    _.each tasks, (task, taskId) ->
+    _.map tasks, (task, taskId) ->
       msg = "Task #{taskId} "
-      result = _.find _.values(events), (event) ->
+      event = _.find _.values(events), (event) ->
         _.str.startsWith event.message, msg
-      result.task = task if result
-      tasksResults[taskId] = result
-    tasksResults
+      task.event = event
+      task

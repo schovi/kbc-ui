@@ -1,21 +1,20 @@
 React = require 'react'
 _ = require 'underscore'
 moment = require 'moment'
+StatusLabel = React.createFactory require '../../../../../react/common/JobStatusLabel'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 {div, strong, span} = React.DOM
 Duration = require('../../../../../utils/duration')
-
+date = require '../../../../../utils/date'
 module.exports = React.createClass
   displayName: 'GoodDataResultStats'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
     tasks: React.PropTypes.array.isRequired
-    #events: React.PropTypes.object.isRequired
 
   render: ->
-    console.log "tasks", @props.tasks
 
     div className: 'table table-striped table-hover',
       div className: 'thead', key: 'table-header',
@@ -25,7 +24,7 @@ module.exports = React.createClass
           span className: 'th',
             strong null, 'Task Name'
           span className: 'th',
-            strong null, 'Start Time'
+            strong null, 'Started'
           span className: 'th',
             strong null, 'Duration'
           span className: 'th',
@@ -33,16 +32,21 @@ module.exports = React.createClass
           span className: 'th'
       div className: 'tbody',
           _.map @props.tasks, (task, taskId) =>
-            if task
-              duration = task.performance.duration
-              m = moment(task.created)
-              finished = m.subtract(duration, 'seconds') #TODO
+            started = "N/A"
+            duration = "N/A"
+            status = "N/A"
+            if task.event
+              duration = task.event.performance.duration
+              finished = moment(task.created)
+              started = finished.subtract(duration, 'seconds') #TODO
+              status = StatusLabel({status: task.event?.type})
+              started = date.format(started.toISOString())
             div className: 'tr',
-              @_renderCell(taskId?.toString())
-              @_renderCell(task?.task.name)
-              @_renderCell(task?.created)
-              @_renderCell(Duration(task?.performance.duration))
-              @_renderCell(task?.type)
+              @_renderCell(taskId.toString())
+              @_renderCell(task.name)
+              @_renderCell(started)
+              @_renderCell(Duration(duration))
+              @_renderCell(status)
 
 
   _renderCell: (value) ->
