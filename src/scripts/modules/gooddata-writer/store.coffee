@@ -66,9 +66,15 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
 
         return column
 
+      # reset references if column becomes non-referenceable
       isNotReferencable = [ColumnTypes.CONNECTION_POINT, ColumnTypes.ATTRIBUTE].indexOf(newColumn.get('type')) < 0
       if column.get('reference') == newColumn.get('name') && isNotReferencable
         return column.delete('reference')
+
+      # allow only one connection point for table
+      if newColumn.get('type') == ColumnTypes.CONNECTION_POINT && column.get('type') == ColumnTypes.CONNECTION_POINT
+        column = column.set('type', ColumnTypes.ATTRIBUTE)
+
       return column
 
   columns
