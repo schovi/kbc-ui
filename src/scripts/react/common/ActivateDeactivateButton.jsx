@@ -46,7 +46,7 @@ export default React.createClass({
       return (
         <OverlayTrigger placement={this.props.tooltipPlacement} overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
           <button className="btn btn-link" onClick={this.handleClick}>
-            {this.renderIcon()}
+            {this.renderIcon(this.props.isActive)}
           </button>
         </OverlayTrigger>
       );
@@ -56,14 +56,14 @@ export default React.createClass({
   renderLink() {
     return (
       <a onClick={this.handleClick}>
-        {this.props.isPending ? <Loader className="fa-fw"/> : this.renderIcon()} {this.tooltip()}
+        {this.props.isPending ? <Loader className="fa-fw"/> : this.renderIcon(!this.props.isActive)} {this.tooltip()}
       </a>
     );
   },
 
-  renderIcon() {
+  renderIcon(isChecked) {
     return (
-      <Check isChecked={this.props.isActive}/>
+      <Check isChecked={isChecked}/>
     );
   },
 
