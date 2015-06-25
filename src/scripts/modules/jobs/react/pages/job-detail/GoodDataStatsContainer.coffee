@@ -18,11 +18,9 @@ module.exports = React.createClass
 
   _handleEventsChange: ->
     events = @state.eventService.getEvents()
-    console.log "HANDLE EVENTS CHANGE", events
     @setState
       events: events
     if @props.job.get('isFinished') == true
-      console.log "stoping autoreload"
       @state.eventService.stopAutoReload()
     else
       @state.eventService.startAutoReload()
