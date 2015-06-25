@@ -126,21 +126,9 @@ TransformationDetail = React.createClass
 
   render: ->
     component = @
-    div className: 'container-fluid',
-      div className: 'col-md-9 kbc-main-content',
-        if (!@state.isEditing)
-          TransformationDetailStatic
-            bucket: @state.bucket
-            transformation: @state.transformation
-            transformations: @state.transformations
-            pendingActions: @state.pendingActions
-            tables: @state.tables
-            bucketId: @state.bucketId
-            transformationId: @state.transformationId
-            openInputMappings: @state.openInputMappings
-            openOutputMappings: @state.openOutputMappings
-            showDetails: @_showDetails()
-        else
+    if (@state.isEditing)
+      div className: 'container-fluid',
+        div className: 'kbc-main-content',
           TransformationDetailEdit
             transformations: @state.transformations
             transformation: @state.editValue
@@ -156,87 +144,99 @@ TransformationDetail = React.createClass
             onAddOutputMapping: @_handleAddOutputMapping
             onDeleteOutputMapping: @_handleDeleteOutputMapping
             toggleOpenOutputMapping: @_handleToggleOpenOutputMapping
-
-
-      div className: 'col-md-3 kbc-main-sidebar',
-        ul className: 'nav nav-stacked',
-          li {},
-            Link
-              to: 'transformationDetailGraph'
-              params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
-            ,
-              span className: 'fa fa-search fa-fw'
-              ' Overview'
-          li {},
-            RunComponentButton(
-              title: "Run transformation"
-              component: 'transformation'
-              mode: 'link'
-              runParams: =>
-                configBucketId: @state.bucketId
-                transformations: [@state.transformation.get('id')]
-            ,
-              "You are about to run transformation #{@state.transformation.get('name')}."
-            )
-          li {},
-            ActivateDeactivateButton
-              mode: 'link'
-              activateTooltip: 'Enable transformation'
-              deactivateTooltip: 'Disable transformation'
-              isActive: !@state.transformation.get('disabled')
-              isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
-              onChange: @_handleActiveChange
-
-          if @state.transformation.get('backend') == 'redshift' or
-          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+    else
+      div className: 'container-fluid',
+        div className: 'col-md-9 kbc-main-content',
+            TransformationDetailStatic
+              bucket: @state.bucket
+              transformation: @state.transformation
+              transformations: @state.transformations
+              pendingActions: @state.pendingActions
+              tables: @state.tables
+              bucketId: @state.bucketId
+              transformationId: @state.transformationId
+              openInputMappings: @state.openInputMappings
+              openOutputMappings: @state.openOutputMappings
+              showDetails: @_showDetails()
+        div className: 'col-md-3 kbc-main-sidebar',
+          ul className: 'nav nav-stacked',
+            li {},
+              Link
+                to: 'transformationDetailGraph'
+                params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
+              ,
+                span className: 'fa fa-search fa-fw'
+                ' Overview'
             li {},
               RunComponentButton(
-                icon: 'fa-wrench'
-                title: "Create sandbox"
+                title: "Run transformation"
                 component: 'transformation'
-                method: 'run'
                 mode: 'link'
-                redirect: @state.sandboxRedirect
                 runParams: =>
                   configBucketId: @state.bucketId
-                  transformations: [@state.transformationId]
-                  mode: @state.sandboxMode
+                  transformations: [@state.transformation.get('id')]
               ,
-
-                ConfigureTransformationSandboxMode
-                  backend: @state.transformation.get("backend")
-                  mode: @state.sandboxMode
-                  redirect: @state.sandboxRedirect
-                  onChange: (values) =>
-                    console.log values
-                    @setState
-                      sandboxMode: values.mode
-                      sandboxRedirect: values.redirect
+                "You are about to run transformation #{@state.transformation.get('name')}."
               )
-
-          if @state.transformation.get('backend') == 'redshift' or
-              @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
             li {},
-              SqlDepModalTrigger
-                backend: @state.transformation.get('backend')
-                bucketId: @state.bucketId
-                transformationId: @state.transformationId
-              ,
-                a {},
-                  span className: 'fa fa-sitemap fa-fw'
-                  ' SQLDep'
+              ActivateDeactivateButton
+                mode: 'link'
+                activateTooltip: 'Enable transformation'
+                deactivateTooltip: 'Disable transformation'
+                isActive: !@state.transformation.get('disabled')
+                isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
+                onChange: @_handleActiveChange
 
-          li {},
-            a {},
-              React.createElement Confirm,
-                text: 'Delete transformation'
-                title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
-                buttonLabel: 'Delete'
-                buttonType: 'danger'
-                onConfirm: @_deleteTransformation
-              ,
-                span {},
-                  span className: 'fa kbc-icon-cup fa-fw'
-                  ' Delete transformation'
+            if @state.transformation.get('backend') == 'redshift' or
+            @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+              li {},
+                RunComponentButton(
+                  icon: 'fa-wrench'
+                  title: "Create sandbox"
+                  component: 'transformation'
+                  method: 'run'
+                  mode: 'link'
+                  redirect: @state.sandboxRedirect
+                  runParams: =>
+                    configBucketId: @state.bucketId
+                    transformations: [@state.transformationId]
+                    mode: @state.sandboxMode
+                ,
+
+                  ConfigureTransformationSandboxMode
+                    backend: @state.transformation.get("backend")
+                    mode: @state.sandboxMode
+                    redirect: @state.sandboxRedirect
+                    onChange: (values) =>
+                      console.log values
+                      @setState
+                        sandboxMode: values.mode
+                        sandboxRedirect: values.redirect
+                )
+
+            if @state.transformation.get('backend') == 'redshift' or
+                @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+              li {},
+                SqlDepModalTrigger
+                  backend: @state.transformation.get('backend')
+                  bucketId: @state.bucketId
+                  transformationId: @state.transformationId
+                ,
+                  a {},
+                    span className: 'fa fa-sitemap fa-fw'
+                    ' SQLDep'
+
+            li {},
+              a {},
+                React.createElement Confirm,
+                  text: 'Delete transformation'
+                  title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
+                  buttonLabel: 'Delete'
+                  buttonType: 'danger'
+                  onConfirm: @_deleteTransformation
+                ,
+                  span {},
+                    span className: 'fa kbc-icon-cup fa-fw'
+                    ' Delete transformation'
 
 module.exports = TransformationDetail
