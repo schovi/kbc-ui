@@ -27,6 +27,9 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     showOutputTable: React.PropTypes.bool
 
+  componentDidMount: ->
+    React.findDOMNode(this.refs.queryName).focus()
+
   getDefaultProps: ->
     showOutputTable: false
 
@@ -57,6 +60,7 @@ module.exports = React.createClass
                   className: 'form-control'
                   type: 'text'
                   value: @props.query.get 'name'
+                  ref: 'queryName'
                   placeholder: 'Untitled Query'
                   onChange: @_handleNameChange
             if @props.showOutputTable

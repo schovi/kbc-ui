@@ -7,6 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExDbStore = require '../../../exDbStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+ExDbActionCreators = require '../../../exDbActionCreators'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -20,7 +21,7 @@ Link = React.createFactory(require('react-router').Link)
 
 
 
-{div, table, tbody, tr, td, ul, li, i, a, span, h2, p, strong, br} = React.DOM
+{div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
 
 module.exports = React.createClass
@@ -36,6 +37,9 @@ module.exports = React.createClass
     pendingActions: ExDbStore.getQueriesPendingActions config
     latestJobs: LatestJobsStore.getJobs 'ex-db', config
 
+  _handleEditStart: ->
+    ExDbActionCreators.editCredentials(@state.configuration.get 'id')
+
   render: ->
     configurationId = @state.configuration.get('id')
     div className: 'container-fluid',
@@ -46,6 +50,35 @@ module.exports = React.createClass
               componentId: 'ex-db'
               configId: @state.configuration.get('id')
           div className: 'col-sm-4 kbc-buttons',
+            if @state.configuration.get('queries').count() >= 1
+              Link
+                to: 'ex-db-new-query'
+                params:
+                  config: @state.configuration.get 'id'
+                className: 'btn btn-success'
+              ,
+                span className: 'kbc-icon-plus'
+                ' Add Query'
+        if !@state.configuration.getIn ['credentials', 'host']
+          div className: 'row component-empty-state text-center',
+            p null,
+              'Please setup database credentials for this extractor'
+            Link
+              to: 'ex-db-credentials'
+              params:
+                config: @state.configuration.get 'id'
+              onClick: @_handleEditStart
+            ,
+              button className: 'btn btn-success',
+                'Setup Database Credentials'
+        if @state.configuration.get('queries').count()
+          QueryTable
+            configuration: @state.configuration
+            pendingActions: @state.pendingActions
+        else
+          div className: 'row component-empty-state text-center',
+            p null,
+              'No queries configured yet.'
             Link
               to: 'ex-db-new-query'
               params:
@@ -54,13 +87,6 @@ module.exports = React.createClass
             ,
               span className: 'kbc-icon-plus'
               ' Add Query'
-        if @state.configuration.get('queries').count()
-          QueryTable
-            configuration: @state.configuration
-            pendingActions: @state.pendingActions
-        else
-          div className: 'row component-empty-state text-center',
-            'No queries configured yet.'
       div className: 'col-md-3 kbc-main-sidebar',
         div className: 'kbc-buttons kbc-text-light',
           React.createElement ComponentMetadata,

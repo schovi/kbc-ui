@@ -24,13 +24,13 @@ module.exports = React.createClass
         Loader()
     else
       OverlayTrigger
-        overlay: Tooltip null, 'Delete orchestration'
+        overlay: Tooltip null, 'Delete Query'
         key: 'delete'
         placement: 'top'
       ,
         Confirm
           title: 'Delete Query'
-          text: "Do you really want to delete query?"
+          text: "Do you really want to delete query #{@props.query.get('name')}?"
           buttonLabel: 'Delete'
           onConfirm: @_deleteQuery
         ,
