@@ -72,8 +72,20 @@ module.exports = React.createClass
     div {className: 'container-fluid kbc-main-content'},
       @_renderGeneralInfoRow(job)
       @_renderRunInfoRow(job)
+      @_renderErrorResultRow(job) if job.get('status') == 'error'
       @_renderAccordion(job)
       @_renderLogRow(job)
+
+
+  _renderErrorResultRow: (job) ->
+    result = job.get 'result'
+    exceptionId = job.getIn ['result', 'exceptionId'] if result
+    message =  job.getIn ['result', 'message'] if result
+    div {className: ''},
+      div {className: 'alert alert-danger'},
+        if exceptionId
+          span null, 'ExceptionId ' + exceptionId
+        p null, message
 
 
   _renderRunInfoRow: (job) ->

@@ -2,6 +2,7 @@ Immutable = require('immutable')
 StoreUtils = require('../../../utils/StoreUtils')
 Constants = require('../Constants')
 Dispatcher = require '../../../Dispatcher'
+getComponentId = require '../../jobs/getJobComponentId'
 _ = require('underscore')
 
 Map = Immutable.Map
@@ -110,8 +111,8 @@ Dispatcher.register (payload) ->
             jobs.mapKeys (key, job) ->
               job.get 'id'
             .map (job) ->
-              if job.get('status') == 'error'
-                'params'
+              if getComponentId(job) == 'gooddata-writer'
+                'gdresults'
               else
                 'stats'
           ))
@@ -144,9 +145,9 @@ Dispatcher.register (payload) ->
           .update 'loadingJobs', (loadingJobs) ->
             loadingJobs.remove(loadingJobs.indexOf(action.job.id))
 
-        # toggle accordion if error
-        if job.get('status') == 'error' && (!previous || previous.get('status') != 'error')
-          store = store.setIn ['jobsActiveAccordions', job.get('id')], 'params'
+        # toggle accordion if is gooddata-writer component
+        if getComponentId(job) == 'gooddata-writer'
+          store = store.setIn ['jobsActiveAccordions', job.get('id')], 'gdresults'
 
         store
 
