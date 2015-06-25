@@ -81,7 +81,7 @@ module.exports = React.createClass
     result = job.get 'result'
     exceptionId = job.getIn ['result', 'exceptionId'] if result
     message =  job.getIn ['result', 'message'] if result
-    div {className: ''},
+    div {className: 'row row-alert'},
       div {className: 'alert alert-danger'},
         if exceptionId
           span null, 'ExceptionId ' + exceptionId
