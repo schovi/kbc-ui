@@ -162,17 +162,18 @@ module.exports = React.createClass
       activeKey: @state.activeAccordion
       onSelect: @_handleChangeActiveAccordion
     ,
+      if @_isGoodDataWriter()
+        React.createElement Panel,
+          header: accordionHeader('GoodData Tasks Results', @state.activeAccordion == 'gdresults')
+          eventKey: 'gdresults'
+        ,
+        React.createElement GoodDataStatsContainer, {job: @state.job}
+
       React.createElement Panel,
         header: accordionHeader('Parameters & Results', @state.activeAccordion == 'params')
         eventKey: 'params'
       ,
         @_renderParamsRow(job)
-      if @_isGoodDataWriter()
-        React.createElement Panel,
-          header: accordionHeader('GoodData Results', @state.activeAccordion == 'gdresults')
-          eventKey: 'gdresults'
-        ,
-        React.createElement GoodDataStatsContainer, {job: @state.job}
 
       React.createElement Panel,
         header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
