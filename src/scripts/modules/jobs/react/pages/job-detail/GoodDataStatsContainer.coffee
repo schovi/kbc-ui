@@ -16,11 +16,25 @@ module.exports = React.createClass
   propTypes:
     job: React.PropTypes.object.isRequired
 
+  _handleEventsChange: ->
+    events = @state.eventService.getEvents()
+    console.log "HANDLE EVENTS CHANGE", events
+    @setState
+      events: events
+    if @props.job.get('isFinished') == true
+      console.log "stoping autoreload"
+      @state.eventService.stopAutoReload()
+    else
+      @state.eventService.startAutoReload()
+
+
+  componentWillUnmount: ->
+    @state.eventService.stopAutoReload()
+    @state.eventService.removeChangeListener(@_handleEventsChange)
 
   componentDidMount: ->
-    @state.eventService.load().then (result) =>
-      @setState
-        events: @state.eventService.getEvents()
+    @state.eventService.addChangeListener(@_handleEventsChange)
+    @state.eventService.load()
 
   render: ->
     GoodDataStats
