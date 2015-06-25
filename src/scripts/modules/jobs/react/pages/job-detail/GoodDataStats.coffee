@@ -42,7 +42,7 @@ module.exports = React.createClass
             params = Immutable.fromJS task.params
             if task.event
               duration = task.event.performance.duration
-              finished = moment(task.created)
+              finished = moment(task.event.created)
               started = finished.subtract(duration, 'seconds') #TODO
               status = StatusLabel({status: task.event?.type})
               started = date.format(started.toISOString())
