@@ -52,7 +52,7 @@ Immutable = require 'immutable'
 ###
 
 
-{table, tr, th, tbody, thead} = React.DOM
+{table, tr, th, tbody, thead, div} = React.DOM
 
 Row = React.createFactory(require './DatasetColumnEditorRow')
 pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
@@ -77,34 +77,35 @@ module.exports = React.createClass
     @props.onColumnChange column
 
   render: ->
-    table className: 'table table-striped kbc-table-editor',
-      thead null,
-        tr null,
-          th null, 'Column'
-          th null, 'GoodData name'
-          th null, 'Type'
-          th null, 'Reference'
-          th null, 'Sort Label'
-          th null, ' '
-          th null, 'Data Type'
-          th null
-      tbody null,
-        @props.columns.map (currentColumn) ->
-          colName = currentColumn.get 'name'
-          Row
-            column: currentColumn
-            referenceableTables: @props.referenceableTables
-            referenceableColumns: @props.columnsReferences.getIn [colName, 'referenceableColumns'], Immutable.Map()
-            sortLabelColumns: @props.columnsReferences.getIn [colName, 'sortColumns'], Immutable.Map()
-            isEditing: @props.isEditing
-            isSaving: @props.isSaving
-            isValid: !@props.invalidColumns.contains colName
-            configurationId: @props.configurationId
-            key: currentColumn.get 'name'
-            onChange: @_handleColumnChange
-            dataPreview: @props.dataPreview
-        , @
-        .toArray()
+    div style: {overflow: 'scroll'},
+      table className: 'table table-striped kbc-table-editor',
+        thead null,
+          tr null,
+            th null, 'Column'
+            th null, 'GoodData name'
+            th null, 'Type'
+            th null, 'Reference'
+            th null, 'Sort Label'
+            th null, ' '
+            th null, 'Data Type'
+            th null
+        tbody null,
+          @props.columns.map (currentColumn) ->
+            colName = currentColumn.get 'name'
+            Row
+              column: currentColumn
+              referenceableTables: @props.referenceableTables
+              referenceableColumns: @props.columnsReferences.getIn [colName, 'referenceableColumns'], Immutable.Map()
+              sortLabelColumns: @props.columnsReferences.getIn [colName, 'sortColumns'], Immutable.Map()
+              isEditing: @props.isEditing
+              isSaving: @props.isSaving
+              isValid: !@props.invalidColumns.contains colName
+              configurationId: @props.configurationId
+              key: currentColumn.get 'name'
+              onChange: @_handleColumnChange
+              dataPreview: @props.dataPreview
+          , @
+          .toArray()
 
 
 
