@@ -202,7 +202,7 @@ module.exports = React.createClass
             help: React.DOM.small {}, "Data updated in the given period"
             onChange: @_handleChangeDays
             labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-5'
+            wrapperClassName: 'col-xs-4'
 
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group form-group-sm',
