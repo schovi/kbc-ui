@@ -22,6 +22,8 @@ module.exports = React.createClass
       img
         src: @props.user.get 'profileImageUrl'
         className: 'kbc-user-avatar'
+        width: 40
+        height: 40
       ,
         div null,
           strong null, @props.user.get 'name'
