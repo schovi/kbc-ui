@@ -23,9 +23,9 @@ module.exports = React.createClass
       div className: 'thead', key: 'table-header',
         div className: 'tr',
           span className: 'th',
-            strong null, 'Task Id'
+            strong null, 'Id'
           span className: 'th',
-            strong null, 'Task Name'
+            strong null, 'Name'
           span className: 'th',
             strong null, 'Started'
           span className: 'th',
@@ -34,7 +34,6 @@ module.exports = React.createClass
             strong null, 'Status'
           span className: 'th',
             strong null, 'Params'
-          span className: 'th'
       div className: 'tbody',
           _.map @props.tasks, (task, taskId) =>
             started = "N/A"

@@ -164,7 +164,7 @@ module.exports = React.createClass
     ,
       if @_isGoodDataWriter()
         React.createElement Panel,
-          header: accordionHeader('GoodData Tasks Results', @state.activeAccordion == 'gdresults')
+          header: accordionHeader('Tasks', @state.activeAccordion == 'gdresults')
           eventKey: 'gdresults'
         ,
         React.createElement GoodDataStatsContainer, {job: @state.job}
