@@ -56,6 +56,7 @@ export default React.createClass({
 
   runParams() {
     return {
+      config: this.state.configId,
       query: this.state.query.get('id')
     };
   },
