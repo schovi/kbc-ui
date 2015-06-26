@@ -23,12 +23,18 @@ module.exports = React.createClass
     placeholder: 'Describe the component ...'
     tooltipPlacement: 'top'
 
+  componentWillReceiveProps: (nextProps) ->
+    @setState(@getState(nextProps))
+
   getStateFromStores: ->
-    value: InstalledComponentsStore.getConfig(@props.componentId, @props.configId).get @props.fieldName
-    editValue: InstalledComponentsStore.getEditingConfig @props.componentId, @props.configId, @props.fieldName
-    isEditing: InstalledComponentsStore.isEditingConfig @props.componentId, @props.configId, @props.fieldName
-    isSaving: InstalledComponentsStore.isSavingConfig @props.componentId, @props.configId, @props.fieldName
-    isValid: InstalledComponentsStore.isValidEditingConfig @props.componentId, @props.configId, @props.fieldName
+    @getState @props
+
+  getState: (props) ->
+    value: InstalledComponentsStore.getConfig(props.componentId, props.configId).get props.fieldName
+    editValue: InstalledComponentsStore.getEditingConfig props.componentId, props.configId, props.fieldName
+    isEditing: InstalledComponentsStore.isEditingConfig props.componentId, props.configId, props.fieldName
+    isSaving: InstalledComponentsStore.isSavingConfig props.componentId, props.configId, props.fieldName
+    isValid: InstalledComponentsStore.isValidEditingConfig props.componentId, props.configId, props.fieldName
 
   _handleEditStart: ->
     InstalledComponentsActionCreators.startConfigurationEdit(@props.componentId, @props.configId, @props.fieldName)
