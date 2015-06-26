@@ -9,7 +9,6 @@ StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM
 
 
 module.exports = React.createClass
@@ -26,7 +25,8 @@ module.exports = React.createClass
     ExDbActionCreators.updateNewQuery @state.configId, newQuery
 
   render: ->
-    QueryEditor
-      query: @state.newQuery
-      tables: @state.tables
-      onChange: @_handleQueryChange
+    React.DOM.div className: 'container-fluid kbc-main-content',
+      QueryEditor
+        query: @state.newQuery
+        tables: @state.tables
+        onChange: @_handleQueryChange

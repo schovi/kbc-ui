@@ -27,12 +27,12 @@ module.exports = React.createClass
     @transitionTo 'ex-db', config: @state.currentConfigId
 
   _handleCreate: ->
-    component = @
-
     ExDbActionCreators
     .createQuery @state.currentConfigId
-    .then ->
-      component.transitionTo 'ex-db', config: component.state.currentConfigId
+    .then (query) =>
+      @transitionTo 'ex-db-query',
+        config: @state.currentConfigId
+        query: query.id
 
   render: ->
     React.DOM.div className: 'kbc-buttons',

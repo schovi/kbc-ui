@@ -49,7 +49,7 @@ module.exports = React.createClass
     @props.onChange(@props.query.set 'name', event.target.value)
 
   render: ->
-    div className: 'container-fluid kbc-main-content',
+    div className: '',
       div className: 'table kbc-form-table form-horizontal',
         div className: 'tr',
           div className: 'td',

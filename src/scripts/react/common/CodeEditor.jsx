@@ -9,13 +9,15 @@ export default React.createClass({
     readOnly: React.PropTypes.bool,
     onChange: React.PropTypes.func,
     mode: React.PropTypes.string,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    lineNumbers: React.PropTypes.bool
   },
 
   getDefaultProps() {
     return {
       mode: 'text/x-mysql',
-      placeholder: ''
+      placeholder: '',
+      lineNumbers: true
     };
   },
 
@@ -24,7 +26,7 @@ export default React.createClass({
       <CodeMirror
         value={this.props.value}
         theme="solarized"
-        lineNumbers={true}
+        lineNumbers={this.props.lineNumbers}
         mode={this.props.mode}
         placeholder={this.props.placeholder}
         lineWrapping={false}

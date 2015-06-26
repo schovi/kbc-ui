@@ -11,7 +11,7 @@ module.exports = React.createClass
     query: React.PropTypes.object.isRequired
 
   render: ->
-    div className: 'container-fluid kbc-main-content',
+    div className: '',
       div className: 'table kbc-form-table form-horizontal',
         div className: 'tr',
           div className: 'td',
@@ -55,6 +55,12 @@ module.exports = React.createClass
         style:
           'margin-top': '-30px'
       ,
-        CodeEditor
-          readOnly: true
-          value: @props.query.get 'query'
+        if @props.query.get('query').length
+          CodeEditor
+            readOnly: 'nocursor'
+            lineNumbers: false
+            value: @props.query.get 'query'
+        else
+          div className: 'row kbc-header',
+            p className: 'text-muted',
+              'Query SQL not set.'

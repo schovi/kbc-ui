@@ -132,6 +132,7 @@ module.exports =
         type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_SUCCESS
         configurationId: configurationId
         query: newQuery
+      newQuery
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.EX_DB_NEW_QUERY_SAVE_ERROR

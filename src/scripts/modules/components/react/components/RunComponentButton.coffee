@@ -51,6 +51,7 @@ module.exports = React.createClass
     tooltip: React.PropTypes.string
     disabled: React.PropTypes.bool
     disabledReason: React.PropTypes.string
+    tootlipPlacement: React.PropTypes.string
 
   getDefaultProps: ->
     mode: 'button'
@@ -60,6 +61,7 @@ module.exports = React.createClass
     tooltip: 'Run'
     disabled: false
     disabledReason: ''
+    tooltipPlacement: 'top'
 
   getInitialState: ->
     isLoading: false
@@ -92,7 +94,7 @@ module.exports = React.createClass
     if @props.disabled
       React.createElement OverlayTrigger,
         overlay: React.createElement(Tooltip, null, @props.disabledReason)
-        placement: 'top'
+        placement: @props.tooltipPlacement
       ,
         if @props.mode == 'button'
           @_renderButton()
@@ -102,7 +104,7 @@ module.exports = React.createClass
       if @props.mode == 'button'
         React.createElement OverlayTrigger,
           overlay: React.createElement(Tooltip, null, @props.tooltip)
-          placement: 'top'
+          placement: @props.tooltipPlacement
         ,
           ModalTrigger
             modal: RunModal
