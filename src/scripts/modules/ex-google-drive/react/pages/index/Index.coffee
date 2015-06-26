@@ -20,7 +20,7 @@ Link = React.createFactory(require('react-router').Link)
 
 ItemsTable = React.createFactory(require './ItemsTable')
 
-{strong, br, ul, li, div, span, i} = React.DOM
+{p, strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGdriveIndex'
@@ -52,7 +52,7 @@ module.exports = React.createClass
         ComponentDescription
           componentId: 'ex-google-drive'
           configId: @state.configuration.get('id')
-        if @_showSelectSheets()
+        if @_showSelectSheets() and items.count()
           div className: 'col-sm-4 kbc-buttons',
             Link
               to: 'ex-google-drive-select-sheets'
@@ -69,17 +69,33 @@ module.exports = React.createClass
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
       else
-        div className: 'row component-empty-state text-center',
-          div null, 'No sheets configured yet.'
-        ,
-          Link
-            className: 'btn btn-primary'
-            to: 'ex-google-drive-authorize'
-            params:
-              config: @state.configuration.get 'id'
+        if not @_isAuthorized()
+          div className: 'row text-center',
+            p null, 'No Google Account authorized.'
           ,
-            i className: 'fa fa-fw fa-user'
-            ' Authorize Google Account'
+            Link
+              className: 'btn btn-success'
+              to: 'ex-google-drive-authorize'
+              params:
+                config: @state.configuration.get 'id'
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Authorize Google Account'
+        else
+          if @_showSelectSheets()
+            div className: 'row text-center',
+              p null, 'No sheets selected yet.'
+            ,
+              Link
+                to: 'ex-google-drive-select-sheets'
+                disabled: not @_isAuthorized()
+                params:
+                  config: @state.configuration.get 'id'
+                className: 'btn btn-success'
+              ,
+                span className: 'kbc-icon-plus'
+                ' Select Sheets'
+
 
 
   _renderSideBar: ->
