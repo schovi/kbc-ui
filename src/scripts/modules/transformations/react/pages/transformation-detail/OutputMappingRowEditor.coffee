@@ -31,6 +31,14 @@ module.exports = React.createClass
     backend: React.PropTypes.string.isRequired
     type: React.PropTypes.string.isRequired
 
+  getInitialState: ->
+    showDetails: false
+
+  _handleToggleShowDetails: (e) ->
+    @setState(
+      showDetails: e.target.checked
+    )
+
   _handleChangeSource: (e) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", e.target.value)
@@ -99,6 +107,15 @@ module.exports = React.createClass
     React.DOM.div {className: 'panel-body'},
       React.DOM.div null,
         React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group form-group-sm',
+            React.DOM.div className: 'col-xs-10 col-xs-offset-2',
+              Input
+                standalone: true
+                type: 'checkbox'
+                label: React.DOM.small {}, 'Show details'
+                checked: @state.showDetails
+                onChange: @_handleToggleShowDetails
+        React.DOM.div {className: "row col-md-12"},
           if @props.backend == 'docker' && @props.type == 'r'
             Input
               type: 'text'
@@ -135,62 +152,64 @@ module.exports = React.createClass
                   placeholder: 'Destination table in Storage'
                   value: @props.value.get("destination", "")
                   onChange: @_handleChangeDestination
-              Input
-                standalone: true
-                name: 'incremental'
-                type: 'checkbox'
-                label: React.DOM.small {}, 'Incremental'
-                value: @props.value.get("optional")
-                disabled: @props.disabled
-                onChange: @_handleChangeIncremental
-                help: React.DOM.small {},
-                  "If the destination table exists in Storage API,
-                  output mapping does not overwrite the table, it only appends the data to it.
-                  Uses incremental write to Storage API."
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            name: 'primaryKey'
-            type: 'text'
-            label: 'Primary key'
-            value: @_getPrimaryKeyValue()
-            disabled: @props.disabled
-            placeholder: "Column name(s)"
-            onChange: @_handleChangePrimaryKey
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-            help: React.DOM.small {},
-              "Primary key of the table in Storage API. If the table already exists, primary key must match.
-              Parts of a composite primary key are separated with a comma."
-
-        React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
-            React.DOM.div className: 'col-xs-4',
-              React.createElement Autosuggest,
-                suggestions: createGetSuggestions(@_getColumns)
-                inputAttributes:
-                  className: 'form-control'
-                  placeholder: 'Select column'
-                  value: @props.value.get("deleteWhereColumn", "")
-                  onChange: @_handleChangeDeleteWhereColumn
-            React.DOM.div className: 'col-xs-2',
-              Input
-                bsSize: 'small'
-                type: 'select'
-                name: 'deleteWhereOperator'
-                value: @props.value.get("deleteWhereOperator")
-                disabled: @props.disabled
-                onChange: @_handleChangeDeleteWhereOperator
-              ,
-                React.DOM.option {value: "eq"}, "= (IN)"
-                React.DOM.option {value: "ne"}, "!= (NOT IN)"
-            React.DOM.div className: 'col-xs-4',
-              Input
-                bsSize: 'small'
-                type: 'text'
-                name: 'deleteWhereValues'
-                value: @_getDeleteWhereValues()
-                disabled: @props.disabled
-                onChange: @_handleChangeDeleteWhereValues
-                placeholder: "Comma separated values"
+              if @state.showDetails
+                Input
+                  standalone: true
+                  name: 'incremental'
+                  type: 'checkbox'
+                  label: React.DOM.small {}, 'Incremental'
+                  value: @props.value.get("optional")
+                  disabled: @props.disabled
+                  onChange: @_handleChangeIncremental
+                  help: React.DOM.small {},
+                    "If the destination table exists in Storage API,
+                    output mapping does not overwrite the table, it only appends the data to it.
+                    Uses incremental write to Storage API."
+        if @state.showDetails
+          React.DOM.div {className: "row col-md-12"},
+            Input
+              bsSize: 'small'
+              name: 'primaryKey'
+              type: 'text'
+              label: 'Primary key'
+              value: @_getPrimaryKeyValue()
+              disabled: @props.disabled
+              placeholder: "Column name(s)"
+              onChange: @_handleChangePrimaryKey
+              labelClassName: 'col-xs-2'
+              wrapperClassName: 'col-xs-10'
+              help: React.DOM.small {},
+                "Primary key of the table in Storage API. If the table already exists, primary key must match.
+                Parts of a composite primary key are separated with a comma."
+        if @state.showDetails
+          React.DOM.div {className: "row col-md-12"},
+            React.DOM.div className: 'form-group form-group-sm',
+              React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
+              React.DOM.div className: 'col-xs-4',
+                React.createElement Autosuggest,
+                  suggestions: createGetSuggestions(@_getColumns)
+                  inputAttributes:
+                    className: 'form-control'
+                    placeholder: 'Select column'
+                    value: @props.value.get("deleteWhereColumn", "")
+                    onChange: @_handleChangeDeleteWhereColumn
+              React.DOM.div className: 'col-xs-2',
+                Input
+                  bsSize: 'small'
+                  type: 'select'
+                  name: 'deleteWhereOperator'
+                  value: @props.value.get("deleteWhereOperator")
+                  disabled: @props.disabled
+                  onChange: @_handleChangeDeleteWhereOperator
+                ,
+                  React.DOM.option {value: "eq"}, "= (IN)"
+                  React.DOM.option {value: "ne"}, "!= (NOT IN)"
+              React.DOM.div className: 'col-xs-4',
+                Input
+                  bsSize: 'small'
+                  type: 'text'
+                  name: 'deleteWhereValues'
+                  value: @_getDeleteWhereValues()
+                  disabled: @props.disabled
+                  onChange: @_handleChangeDeleteWhereValues
+                  placeholder: "Comma separated values"

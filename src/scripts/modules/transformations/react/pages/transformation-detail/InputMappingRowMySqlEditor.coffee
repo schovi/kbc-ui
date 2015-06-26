@@ -16,12 +16,21 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
 
-  shouldComponentUpdate: (nextProps) ->
+  getInitialState: ->
+    showDetails: false
+
+  shouldComponentUpdate: (nextProps, nextState) ->
     should = @props.value != nextProps.value ||
     @props.tables != nextProps.tables ||
-    @props.disabled != nextProps.disabled
+    @props.disabled != nextProps.disabled ||
+    @state.showDetails != nextState.showDetails
 
     should
+
+  _handleToggleShowDetails: (e) ->
+    @setState(
+      showDetails: e.target.checked
+    )
 
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
@@ -40,7 +49,7 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeOptional: (e) ->
-    value = @props.value.set("optional", e.target.value)
+    value = @props.value.set("optional", e.target.checked)
     @props.onChange(value)
 
   _handleChangeDays: (e) ->
@@ -144,6 +153,16 @@ module.exports = React.createClass
   render: ->
     React.DOM.div {},
       React.DOM.div {className: "row col-md-12"},
+        React.DOM.div className: 'form-group form-group-sm',
+          React.DOM.div className: 'col-xs-10 col-xs-offset-2',
+            Input
+              standalone: true
+              type: 'checkbox'
+              label: React.DOM.small {}, 'Show details'
+              checked: @state.showDetails
+              onChange: @_handleToggleShowDetails
+
+      React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Source'
           React.DOM.div className: 'col-xs-10',
@@ -154,16 +173,17 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-            React.DOM.div {},
-              Input
-                standalone: true
-                type: 'checkbox'
-                label: React.DOM.small {}, 'Optional'
-                value: @props.value.get("optional")
-                disabled: @props.disabled
-                onChange: @_handleChangeOptional
-                help: React.DOM.small {},
-                  "If this table does not exist in Storage, the transformation won't show an error."
+            if @state.showDetails
+              React.DOM.div {},
+                Input
+                  standalone: true
+                  type: 'checkbox'
+                  label: React.DOM.small {}, 'Optional'
+                  checked: @props.value.get("optional")
+                  disabled: @props.disabled
+                  onChange: @_handleChangeOptional
+                  help: React.DOM.small {},
+                    "If this table does not exist in Storage, the transformation won't show an error."
       React.DOM.div {className: "row col-md-12"},
         Input
           type: 'text'
@@ -174,24 +194,25 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group form-group-sm',
-          React.DOM.label className: 'col-xs-2 control-label', 'Columns'
-          React.DOM.div className: 'col-xs-10',
-            Select
-              multi: true
-              name: 'columns'
-              value: @props.value.get("columns", Immutable.List()).toJS()
-              disabled: @props.disabled || !@props.value.get("source")
-              placeholder: "All columns will be imported"
-              onChange: @_handleChangeColumns
-              options: @_getColumnsOptions()
-            React.DOM.div
-              className: "help-block small"
-            ,
-              "Import only specified columns"
-      React.DOM.div {className: "row col-md-12"},
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group form-group-sm',
+            React.DOM.label className: 'col-xs-2 control-label', 'Columns'
+            React.DOM.div className: 'col-xs-10',
+              Select
+                multi: true
+                name: 'columns'
+                value: @props.value.get("columns", Immutable.List()).toJS()
+                disabled: @props.disabled || !@props.value.get("source")
+                placeholder: "All columns will be imported"
+                onChange: @_handleChangeColumns
+                options: @_getColumnsOptions()
+              React.DOM.div
+                className: "help-block small"
+              ,
+                "Import only specified columns"
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
           Input
             bsSize: 'small'
             type: 'number'
@@ -203,53 +224,53 @@ module.exports = React.createClass
             onChange: @_handleChangeDays
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-4'
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group form-group-sm',
-          React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
-          React.DOM.div className: 'col-xs-4',
-            Select
-              name: 'whereColumn'
-              value: @props.value.get("whereColumn")
-              disabled: @props.disabled || !@props.value.get("source")
-              placeholder: "Select column"
-              onChange: @_handleChangeWhereColumn
-              options: @_getColumnsOptions()
-          React.DOM.div className: 'col-xs-2',
-            Input
-              type: 'select'
-              name: 'whereOperator'
-              value: @props.value.get("whereOperator")
-              disabled: @props.disabled
-              onChange: @_handleChangeWhereOperator
-            ,
-              React.DOM.option {value: "eq"}, "= (IN)"
-              React.DOM.option {value: "ne"}, "!= (NOT IN)"
-          React.DOM.div className: 'col-xs-4',
-            Input
-              type: 'text'
-              name: 'whereValues'
-              value: @_getWhereValues()
-              disabled: @props.disabled
-              onChange: @_handleChangeWhereValues
-              placeholder: "Comma separated values"
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group form-group-sm',
-          React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
-          React.DOM.div className: 'col-xs-10',
-            MySqlIndexesContainer
-              value: @props.value.get("indexes", Immutable.List())
-              disabled: @props.disabled || !@props.value.get("source")
-              onChange: @_handleChangeIndexes
-              columnsOptions: @_getFilteredColumnsOptions()
-
-      React.DOM.div {className: "row col-md-12"},
-        React.DOM.div className: 'form-group form-group-sm',
-          React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
-          React.DOM.div className: 'col-xs-10',
-            MySqlDataTypesContainer
-              value: @props.value.get("datatypes", Immutable.Map())
-              disabled: @props.disabled || !@props.value.get("source")
-              onChange: @_handleChangeDataTypes
-              columnsOptions: @_getFilteredColumnsOptions()
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group form-group-sm',
+            React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
+            React.DOM.div className: 'col-xs-4',
+              Select
+                name: 'whereColumn'
+                value: @props.value.get("whereColumn")
+                disabled: @props.disabled || !@props.value.get("source")
+                placeholder: "Select column"
+                onChange: @_handleChangeWhereColumn
+                options: @_getColumnsOptions()
+            React.DOM.div className: 'col-xs-2',
+              Input
+                type: 'select'
+                name: 'whereOperator'
+                value: @props.value.get("whereOperator")
+                disabled: @props.disabled
+                onChange: @_handleChangeWhereOperator
+              ,
+                React.DOM.option {value: "eq"}, "= (IN)"
+                React.DOM.option {value: "ne"}, "!= (NOT IN)"
+            React.DOM.div className: 'col-xs-4',
+              Input
+                type: 'text'
+                name: 'whereValues'
+                value: @_getWhereValues()
+                disabled: @props.disabled
+                onChange: @_handleChangeWhereValues
+                placeholder: "Comma separated values"
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group form-group-sm',
+            React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
+            React.DOM.div className: 'col-xs-10',
+              MySqlIndexesContainer
+                value: @props.value.get("indexes", Immutable.List())
+                disabled: @props.disabled || !@props.value.get("source")
+                onChange: @_handleChangeIndexes
+                columnsOptions: @_getFilteredColumnsOptions()
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
+          React.DOM.div className: 'form-group form-group-sm',
+            React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
+            React.DOM.div className: 'col-xs-10',
+              MySqlDataTypesContainer
+                value: @props.value.get("datatypes", Immutable.Map())
+                disabled: @props.disabled || !@props.value.get("source")
+                onChange: @_handleChangeDataTypes
+                columnsOptions: @_getFilteredColumnsOptions()
