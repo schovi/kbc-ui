@@ -3,6 +3,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ExDbStore = require '../../exDbStore'
 RoutesStore = require '../../../../stores/RoutesStore'
 ExDbActionCreators = require '../../exDbActionCreators'
+{Navigation} = require 'react-router'
 
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
@@ -10,7 +11,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 module.exports = React.createClass
   displayName: 'CredentialsHeaderButtons'
-  mixins: [createStoreMixin(ExDbStore)]
+  mixins: [createStoreMixin(ExDbStore), Navigation]
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
@@ -28,7 +29,8 @@ module.exports = React.createClass
     ExDbActionCreators.cancelCredentialsEdit @state.currentConfigId
 
   _handleCreate: ->
-    ExDbActionCreators.saveCredentialsEdit @state.currentConfigId
+    ExDbActionCreators
+    .saveCredentialsEdit @state.currentConfigId
 
   render: ->
     if @state.isEditing

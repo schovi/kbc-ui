@@ -3,12 +3,14 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 
 ExDbActionCreators = require '../ex-db/exDbActionCreators'
 ExDbIndex = require '../ex-db/react/pages/index/Index'
-ExDbCredentials = require '../ex-db/react/pages/credentials/Credentials'
+ExDbCredentialsPage = require '../ex-db/react/pages/credentials/CredentialsPage'
+ExDbNewCredentialsPage = require '../ex-db/react/pages/credentials/NewCredentialsPage'
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail'
 ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'
 ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryDetailHeaderButtons'
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
+ExDbNewCredentialsHeaderButtons = require '../ex-db/react/components/NewCredentialsHeaderButtons'
 ExDbQueryName = require './react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'
@@ -65,6 +67,13 @@ module.exports =
     path: 'credentials'
     title: ->
       'Credentials'
-    handler: ExDbCredentials
+    handler: ExDbCredentialsPage
     headerButtonsHandler: ExDbCredentialsHeaderButtons
+  ,
+    name: 'ex-db-new-credentials'
+    path: 'new-credentials'
+    title: ->
+      'New Credentials'
+    handler: ExDbNewCredentialsPage
+    headerButtonsHandler: ExDbNewCredentialsHeaderButtons
   ]

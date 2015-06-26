@@ -7,7 +7,6 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExDbStore = require '../../../exDbStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
-ExDbActionCreators = require '../../../exDbActionCreators'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -33,12 +32,11 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     config = RoutesStore.getRouterState().getIn ['params', 'config']
-    configuration: ExDbStore.getConfig config
+    configuration = ExDbStore.getConfig config
+    configuration: configuration
     pendingActions: ExDbStore.getQueriesPendingActions config
     latestJobs: LatestJobsStore.getJobs 'ex-db', config
-
-  _handleEditStart: ->
-    ExDbActionCreators.editCredentials(@state.configuration.get 'id')
+    hasCredentials: !!configuration.getIn ['credentials', 'host']
 
   render: ->
     configurationId = @state.configuration.get('id')
@@ -59,15 +57,14 @@ module.exports = React.createClass
               ,
                 span className: 'kbc-icon-plus'
                 ' Add Query'
-        if !@state.configuration.getIn ['credentials', 'host']
+        if !@state.hasCredentials
           div className: 'row component-empty-state text-center',
             p null,
               'Please setup database credentials for this extractor'
             Link
-              to: 'ex-db-credentials'
+              to: 'ex-db-new-credentials'
               params:
                 config: @state.configuration.get 'id'
-              onClick: @_handleEditStart
             ,
               button className: 'btn btn-success',
                 'Setup Database Credentials'
@@ -94,14 +91,15 @@ module.exports = React.createClass
             configId: @state.configuration.get 'id'
 
         ul className: 'nav nav-stacked',
-          li null,
-            Link
-              to: 'ex-db-credentials'
-              params:
-                config: @state.configuration.get 'id'
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Database Credentials'
+          if @state.hasCredentials
+            li null,
+              Link
+                to: 'ex-db-credentials'
+                params:
+                  config: @state.configuration.get 'id'
+              ,
+                i className: 'fa fa-fw fa-user'
+                ' Database Credentials'
           li null,
             RunExtractionButton
               title: 'Run Extraction'

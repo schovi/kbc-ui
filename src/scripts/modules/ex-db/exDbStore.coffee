@@ -13,6 +13,7 @@ _store = Map
   queryPendingActions: Map() # [configId][queryId][] map of pending actions
   savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId]['query'] - query [configId]['isSaving'] = true or not set
+  newCredentials: Map()
 
 
 
@@ -57,6 +58,10 @@ ExDbStore = StoreUtils.createStore
       primaryKey: ''
       query: ''
     )
+
+  getNewCredentials: (configId) ->
+    _store.getIn ['newCredentials', configId, 'credentials'],
+      _store.getIn ['configs', configId, 'credentials']
 
   isValidNewQuery: (configId) ->
     isValidQuery(@getNewQuery(configId))
@@ -189,7 +194,6 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_UPDATE
       # credentials are already in ImmutableJS structure
-      console.log 'edit', action.credentials.toJS()
       _store = _store.setIn ['editingCredentials', action.configurationId], action.credentials
       ExDbStore.emitChange()
 
@@ -210,6 +214,14 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_ERROR
       _store = _store.deleteIn ['savingCredentials', action.configurationId]
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_NEW_CREDENTIALS_UPDATE
+      _store = _store.setIn ['newCredentials', action.configurationId, 'credentials'], action.credentials
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_NEW_CREDENTIALS_RESET
+      _store = _store.deleteIn ['newCredentials', action.configurationId, 'credentials']
       ExDbStore.emitChange()
 
 

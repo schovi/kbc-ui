@@ -7,6 +7,25 @@ Promise = require('bluebird')
 exDbApi = require './exDbApi'
 exDbStore = require './exDbStore'
 
+saveCredentials = (configurationId, credentials) ->
+  dispatcher.handleViewAction
+    type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_START
+    configurationId: configurationId
+
+  exDbApi
+  .saveCredentials configurationId, credentials.toJS()
+  .then (response) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_SUCCESS
+      configurationId: configurationId
+      credentials: response
+  .catch (e) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_ERROR
+      configurationId: configurationId
+      error: e
+    throw e
+
 module.exports =
 
 
@@ -48,6 +67,7 @@ module.exports =
         queryId: queryId
         error: e
       throw e
+
 
 
 
@@ -149,6 +169,21 @@ module.exports =
   ###
     Credentials actions
   ###
+  resetNewCredentials: (configurationId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_NEW_CREDENTIALS_RESET
+      configurationId: configurationId
+
+  updateNewCredentials: (configurationId, credentials) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_NEW_CREDENTIALS_UPDATE
+      configurationId: configurationId
+      credentials: credentials
+
+  saveNewCredentials: (configurationId) ->
+    credentials = exDbStore.getNewCredentials(configurationId)
+    saveCredentials configurationId, credentials
+
   editCredentials: (configurationId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_START
@@ -167,24 +202,8 @@ module.exports =
 
   saveCredentialsEdit: (configurationId) ->
     credentials = exDbStore.getEditingCredentials configurationId
+    saveCredentials configurationId, credentials
 
-    dispatcher.handleViewAction
-      type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_START
-      configurationId: configurationId
-
-    exDbApi
-    .saveCredentials configurationId, credentials.toJS()
-    .then (response) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_SUCCESS
-        configurationId: configurationId
-        credentials: response
-    .catch (e) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.EX_DB_CREDENTIALS_EDIT_SAVE_ERROR
-        configurationId: configurationId
-        error: e
-      throw e
 
   testCredentials: (credentials) ->
     exDbApi.testAndWaitForCredentials credentials.toJS()
