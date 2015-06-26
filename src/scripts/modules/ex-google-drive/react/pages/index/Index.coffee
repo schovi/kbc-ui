@@ -1,5 +1,5 @@
 React = require 'react'
-
+classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGdriveStore = require '../../../exGdriveStore'
 ApplicationStore = require '../../../../../stores/ApplicationStore.coffee'
@@ -132,16 +132,18 @@ module.exports = React.createClass
             ,
               i className: 'fa fa-fw fa-user'
               ' Resend External Link'
-        if @state.configuration.get('items')?.count() > 0
-          li null,
-            RunButtonModal
-              title: 'Run Extraction'
-              mode: 'link'
-              component: 'ex-google-drive'
-              runParams: =>
-                config: @state.configuration.get 'id'
-            ,
-              'You are about to run the extraction of this configuration.'
+
+        li {className: classnames(disabled: !@state.configuration.get('items')?.count())},
+          RunButtonModal
+            title: 'Run Extraction'
+            mode: 'link'
+            component: 'ex-google-drive'
+            disabled: !@state.configuration.get('items')?.count()
+            disabledReason: 'There are no configured sheets.'
+            runParams: =>
+              config: @state.configuration.get 'id'
+          ,
+            'You are about to run the extraction of this configuration.'
 
         li null,
           DeleteConfigurationButton
