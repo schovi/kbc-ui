@@ -1,4 +1,5 @@
 React = require 'react'
+classnames = require 'classnames'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -18,7 +19,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
-{strong, br, ul, li, div, span, i} = React.DOM
+{p, strong, br, ul, li, div, span, i} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalIndex'
@@ -67,12 +68,12 @@ module.exports = React.createClass
         div className: 'row component-empty-state text-center',
           if @_isAuthorized()
             div null,
-              div null, 'No queries configured yet.'
+              p null, 'No queries configured yet.'
               @_renderAddQueryButton()
         ,
           if not @_isAuthorized()
             div null,
-              div null, 'No Google account authorized.'
+              p null, 'No Google account authorized.'
               Link
                 className: 'btn btn-success'
                 to: 'ex-google-analytics-authorize'
@@ -129,26 +130,27 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-gear'
               ' Options'
-        if @_isAuthorized() and (@state.config.get('configuration')?.count() > 0)
-          li null,
-            RunButtonModal
-              title: 'Run Extraction'
-              mode: 'link'
-              component: 'ex-google-analytics'
-              runParams: =>
-                config: @state.configId
-                since: @state.since.toISOString()
-                until: @state.until.toISOString()
-            ,
-              RunDatePicker
-                since: @state.since
-                until: @state.until
-                onChangeFrom: (date) =>
-                  @setState
-                    since: date
-                onChangeUntil: (date) =>
-                  @setState
-                    until: date
+        li {className: classnames(disabled: !@state.config.get('configuration')?.count())},
+          RunButtonModal
+            title: 'Run Extraction'
+            mode: 'link'
+            component: 'ex-google-analytics'
+            disabled: !@state.config.get('configuration')?.count()
+            disabledReason: "No queries configured."
+            runParams: =>
+              config: @state.configId
+              since: @state.since.toISOString()
+              until: @state.until.toISOString()
+          ,
+            RunDatePicker
+              since: @state.since
+              until: @state.until
+              onChangeFrom: (date) =>
+                @setState
+                  since: date
+              onChangeUntil: (date) =>
+                @setState
+                  until: date
         li null,
           DeleteConfigurationButton
             componentId: 'ex-google-analytics'
