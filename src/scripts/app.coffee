@@ -70,6 +70,8 @@ startApp = (appOptions) ->
 
   RouterActionCreators.routerCreated router
 
+  pendingPromise = null
+
   # re-render after each route change
   router.run (Handler, state) ->
     # avoid state mutation by router
@@ -77,6 +79,9 @@ startApp = (appOptions) ->
       routes: _.map state.routes, (route) ->
         # convert to plain object
         _.extend {}, route
+
+    if pendingPromise
+      pendingPromise.cancel()
 
     RouterActionCreators.routeChangeStart(state)
 
@@ -96,7 +101,8 @@ startApp = (appOptions) ->
       ).toArray()
 
     # wait for data and trigger render
-    Promise.all(promises)
+    pendingPromise = Promise.all(promises)
+    .cancellable()
     .then(->
       RouterActionCreators.routeChangeSuccess(state)
       React.render(React.createElement(Handler), appOptions.rootNode)
@@ -110,9 +116,12 @@ startApp = (appOptions) ->
           return callback
         )
 
-    ).catch((error) ->
+    )
+    .catch Promise.CancellationError, (e) ->
+      console.log 'cancelled route'
+    .catch((error) ->
       # render error page
-      console.log 'route change error', error.message, error, error.stack
+      console.log 'route change error', error
       RouterActionCreators.routeChangeError(error)
       React.render(React.createElement(Handler, isError: true), appOptions.rootNode)
     )

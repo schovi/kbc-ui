@@ -8,7 +8,7 @@ HttpError = require './HttpError'
 # Promise support for super agent http://visionmedia.github.io/superagent/#request-basics
 Request.prototype.promise = ->
   req = @
-  new Promise (resolve, reject) ->
+  promise = new Promise (resolve, reject) ->
     req.end (err, res) ->
       if err
         return reject err
@@ -16,6 +16,7 @@ Request.prototype.promise = ->
         return reject(new HttpError(res))
       else
         resolve res
+  promise.cancellable()
 
 
 module.exports = (method, url) ->
