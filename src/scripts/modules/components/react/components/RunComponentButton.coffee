@@ -2,12 +2,12 @@ React = require 'react'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-{OverlayTrigger, Tooltip} = require 'react-bootstrap'
+{OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Modal = React.createFactory(require('react-bootstrap').Modal)
-Button = React.createFactory(require('react-bootstrap').Button)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 RoutesStore = require '../../../../stores/RoutesStore'
+classnames = require 'classnames'
 
 {a, i, div, button} = React.DOM
 
@@ -26,12 +26,12 @@ RunModal = React.createFactory React.createClass
         @props.body
       div className: 'modal-footer',
         ButtonToolbar null,
-          Button
+          React.createElement Button,
             bsStyle: 'link'
             onClick: @props.onRequestHide
           ,
             'Close'
-          Button
+          React.createElement Button,
             bsStyle: 'primary'
             onClick: @_handleRun
           ,
@@ -49,6 +49,8 @@ module.exports = React.createClass
     label: React.PropTypes.string
     redirect: React.PropTypes.bool
     tooltip: React.PropTypes.string
+    disabled: React.PropTypes.bool
+    disabledReason: React.PropTypes.string
 
   getDefaultProps: ->
     mode: 'button'
@@ -56,6 +58,8 @@ module.exports = React.createClass
     icon: 'fa-play'
     redirect: false
     tooltip: 'Run'
+    disabled: false
+    disabledReason: ''
 
   getInitialState: ->
     isLoading: false
@@ -85,30 +89,41 @@ module.exports = React.createClass
       RoutesStore.getRouter().transitionTo("jobDetail", {jobId: response.id})
 
   render: ->
-    if @props.mode == 'button'
+    if @props.disabled
       React.createElement OverlayTrigger,
-        overlay: React.createElement(Tooltip, null, @props.tooltip)
+        overlay: React.createElement(Tooltip, null, @props.disabledReason)
         placement: 'top'
       ,
+        if @props.mode == 'button'
+          @_renderButton()
+        else
+          @_renderLink()
+    else
+      if @props.mode == 'button'
+        React.createElement OverlayTrigger,
+          overlay: React.createElement(Tooltip, null, @props.tooltip)
+          placement: 'top'
+        ,
+          ModalTrigger
+            modal: RunModal
+              title: @props.title
+              body: @props.children
+              onRequestRun: @_handleRunStart
+          ,
+            @_renderButton()
+      else
         ModalTrigger
           modal: RunModal
             title: @props.title
             body: @props.children
             onRequestRun: @_handleRunStart
         ,
-          @_renderButton()
-    else
-      ModalTrigger
-        modal: RunModal
-          title: @props.title
-          body: @props.children
-          onRequestRun: @_handleRunStart
-      ,
-        @_renderLink()
+          @_renderLink()
 
   _renderButton: ->
-    button
+    React.createElement Button,
       className: 'btn btn-link'
+      disabled: @props.disabled
       onClick: (e) ->
         e.stopPropagation()
         e.preventDefault()
@@ -119,6 +134,7 @@ module.exports = React.createClass
 
   _renderLink: ->
     a
+      className: classnames('text-muted': @props.disabled)
       onClick: (e) ->
         e.stopPropagation()
         e.preventDefault()

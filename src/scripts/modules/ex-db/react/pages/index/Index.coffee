@@ -1,5 +1,6 @@
 React = require 'react'
 Immutable = require 'immutable'
+classnames = require 'classnames'
 {Map} = Immutable
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -40,6 +41,7 @@ module.exports = React.createClass
     hasCredentials: !!configuration.getIn ['credentials', 'host']
     queriesFilter: ExDbStore.getQueriesFilter(config)
     queriesFiltered: ExDbStore.getQueriesFiltered(config)
+    hasEnabledQueries: configuration.get('queries').filter((query) -> query.get('enabled')).count() > 0
 
   _handleFilterChange: (query) ->
     actionCreators.setQueriesFilter(@state.configuration.get('id'), query)
@@ -87,7 +89,7 @@ module.exports = React.createClass
               pendingActions: @state.pendingActions
           else
             @_renderNotFound()
-        else
+        else if @state.hasCredentials
           div className: 'row component-empty-state text-center',
             p null,
               'No queries configured yet.'
@@ -115,11 +117,13 @@ module.exports = React.createClass
               ,
                 i className: 'fa fa-fw fa-user'
                 ' Database Credentials'
-          li null,
+          li className: classnames(disabled: !@state.hasEnabledQueries),
             RunExtractionButton
               title: 'Run Extraction'
               component: 'ex-db'
               mode: 'link'
+              disabled: !@state.hasEnabledQueries
+              disabledReason: 'There are no queries to be executed'
               runParams: ->
                 config: configurationId
             ,
