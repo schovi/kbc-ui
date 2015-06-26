@@ -39,7 +39,9 @@ Dispatcher.register (payload) ->
           tObj = Immutable.fromJS(table)
           store = store.setIn ['tables', tObj.get 'id'], tObj
         )
-        store.set 'isLoading', false
+        store
+          .set 'isLoading', false
+          .set 'isLoaded', true
       StorageTablesStore.emitChange()
 
     when constants.ActionTypes.STORAGE_TABLES_LOAD_ERROR
