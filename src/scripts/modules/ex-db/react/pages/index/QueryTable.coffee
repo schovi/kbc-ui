@@ -12,15 +12,16 @@ module.exports = React.createClass
   displayName: 'QueryTable'
   mixins: [ImmutableRenderMixin]
   propTypes:
-    configuration: React.PropTypes.object
+    queries: React.PropTypes.object
+    configurationId: React.PropTypes.string
     pendingActions: React.PropTypes.object
 
   render: ->
-    childs = @props.configuration.get('queries').map((query) ->
+    childs = @props.queries.map((query) ->
       QueryRow
         query: query
         pendingActions: @props.pendingActions.get query.get('id'), Map()
-        configurationId: @props.configuration.get 'id'
+        configurationId: @props.configurationId
         key: query.get('id')
     , @).toArray()
 

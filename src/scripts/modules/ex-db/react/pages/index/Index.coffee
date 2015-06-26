@@ -17,7 +17,8 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 LatestJobs = React.createFactory(require '../../../../components/react/components/SidebarJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
-
+SearchRow = require '../../../../../react/common/SearchRow'
+actionCreators = require '../../../exDbActionCreators'
 
 
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
@@ -37,6 +38,11 @@ module.exports = React.createClass
     pendingActions: ExDbStore.getQueriesPendingActions config
     latestJobs: LatestJobsStore.getJobs 'ex-db', config
     hasCredentials: !!configuration.getIn ['credentials', 'host']
+    queriesFilter: ExDbStore.getQueriesFilter(config)
+    queriesFiltered: ExDbStore.getQueriesFiltered(config)
+
+  _handleFilterChange: (query) ->
+    actionCreators.setQueriesFilter(@state.configuration.get('id'), query)
 
   render: ->
     configurationId = @state.configuration.get('id')
@@ -68,10 +74,19 @@ module.exports = React.createClass
             ,
               button className: 'btn btn-success',
                 'Setup Database Credentials'
+        if @state.configuration.get('queries').count() > 1
+          React.createElement SearchRow,
+            onChange: @_handleFilterChange
+            query: @state.queriesFilter
+            className: 'row kbc-search-row'
         if @state.configuration.get('queries').count()
-          QueryTable
-            configuration: @state.configuration
-            pendingActions: @state.pendingActions
+          if @state.queriesFiltered.count()
+            QueryTable
+              queries: @state.queriesFiltered
+              configurationId: @state.configuration.get('id')
+              pendingActions: @state.pendingActions
+          else
+            @_renderNotFound()
         else
           div className: 'row component-empty-state text-center',
             p null,
@@ -116,3 +131,9 @@ module.exports = React.createClass
 
         LatestJobs
           jobs: @state.latestJobs
+
+  _renderNotFound: ->
+    div {className: 'table table-striped'},
+      div {className: 'tfoot'},
+        div {className: 'tr'},
+          div {className: 'td'}, 'No queries found'

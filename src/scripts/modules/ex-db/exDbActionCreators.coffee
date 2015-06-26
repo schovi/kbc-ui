@@ -70,7 +70,11 @@ module.exports =
       throw e
 
 
-
+  setQueriesFilter: (configurationId, filter) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_DB_SET_QUERY_FILTER
+      configurationId: configurationId
+      filter: filter
 
   updateEditingQuery: (configurationId, query) ->
     dispatcher.handleViewAction

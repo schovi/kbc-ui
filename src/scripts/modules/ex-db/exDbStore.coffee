@@ -4,6 +4,7 @@ constants = require './exDbConstants'
 Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../utils/StoreUtils'
+fuzzy = require 'fuzzy'
 
 _store = Map
   configs: Map()
@@ -14,6 +15,7 @@ _store = Map
   savingQueries: Map() # map of saving query ids
   newQueries: Map() # [configId]['query'] - query [configId]['isSaving'] = true or not set
   newCredentials: Map()
+  queriesFilter: Map()
 
 
 
@@ -24,6 +26,18 @@ ExDbStore = StoreUtils.createStore
 
   getConfig: (configId) ->
     _store.getIn ['configs', configId]
+
+  getQueriesFiltered: (configId) ->
+    filter = @getQueriesFilter configId
+    @getConfig(configId)
+    .get('queries')
+    .filter (query) ->
+      fuzzy.match(filter, query.get('name')) ||
+      fuzzy.match(filter, query.get('outputTable'))
+
+
+  getQueriesFilter: (configId) ->
+    _store.getIn ['queriesFilter', configId], ''
 
   getQueriesPendingActions: (configId) ->
     _store.getIn ['queryPendingActions', configId], Map()
@@ -222,6 +236,10 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.EX_DB_NEW_CREDENTIALS_RESET
       _store = _store.deleteIn ['newCredentials', action.configurationId, 'credentials']
+      ExDbStore.emitChange()
+
+    when constants.ActionTypes.EX_DB_SET_QUERY_FILTER
+      _store = _store.setIn ['queriesFilter', action.configurationId], action.filter
       ExDbStore.emitChange()
 
 
