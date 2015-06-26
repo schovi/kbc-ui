@@ -3,6 +3,7 @@
 dispatcher = require '../../Dispatcher'
 constants = require './exDbConstants'
 Promise = require('bluebird')
+ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 
 exDbApi = require './exDbApi'
 exDbStore = require './exDbStore'
@@ -183,6 +184,8 @@ module.exports =
   saveNewCredentials: (configurationId) ->
     credentials = exDbStore.getNewCredentials(configurationId)
     saveCredentials configurationId, credentials
+    .then ->
+      ApplicationActionCreators.sendNotification 'Credentials are set up now. You can continue by adding queries.'
 
   editCredentials: (configurationId) ->
     dispatcher.handleViewAction

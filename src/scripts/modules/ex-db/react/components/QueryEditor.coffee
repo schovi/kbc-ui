@@ -98,6 +98,7 @@ module.exports = React.createClass
       ,
         CodeEditor
           readOnly: false
+          placeholder: 'SELECT `id`, `name` FROM `myTable`'
           value: @props.query.get 'query'
           onChange: @_handleQueryChange
 
