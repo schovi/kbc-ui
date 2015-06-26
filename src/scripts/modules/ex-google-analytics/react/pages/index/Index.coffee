@@ -52,15 +52,8 @@ module.exports = React.createClass
             componentId: 'ex-google-analytics'
             configId: @state.configId
         div className: 'col-sm-4 kbc-buttons',
-          if @_isAuthorized()
-            Link
-              to: 'ex-google-analytics-new-query'
-              params:
-                config: @state.configId
-              className: 'btn btn-success'
-            ,
-              i className: 'fa fa-fw fa-plus'
-              'Add Query'
+          if queries.count()
+            @_renderAddQueryButton()
       if queries.count()
         QueriesTable
           config: @state.config
@@ -72,17 +65,22 @@ module.exports = React.createClass
 
       else
         div className: 'row component-empty-state text-center',
-          div null, 'No queries configured yet.'
+          if @_isAuthorized()
+            div null,
+              div null, 'No queries configured yet.'
+              @_renderAddQueryButton()
         ,
           if not @_isAuthorized()
-            Link
-              className: 'btn btn-primary'
-              to: 'ex-google-analytics-authorize'
-              params:
-                config: @state.config.get 'id'
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Authorize Google Account'
+            div null,
+              div null, 'No Google account authorized.'
+              Link
+                className: 'btn btn-success'
+                to: 'ex-google-analytics-authorize'
+                params:
+                  config: @state.config.get 'id'
+              ,
+                i className: 'fa fa-fw fa-user'
+                ' Authorize Google Account'
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -183,3 +181,14 @@ module.exports = React.createClass
 
   _showSelectProfiles: ->
     @_isCurrentAuthorized() and not @_isExtLinkOnly()
+
+  _renderAddQueryButton: ->
+    if @_isAuthorized()
+      Link
+        to: 'ex-google-analytics-new-query'
+        params:
+          config: @state.configId
+        className: 'btn btn-success'
+      ,
+        i className: 'fa fa-fw fa-plus'
+        'Add Query'
