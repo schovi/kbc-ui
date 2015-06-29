@@ -22,7 +22,7 @@ module.exports = (componentType) ->
         componentId: params.component
         configId: params.config
   defaultRouteHandler: GenericDetail
-  path: ":component/:config"
+  path: "generic-detail/:component/:config"
   isComponent: true
   requireData: [
     (params) ->
