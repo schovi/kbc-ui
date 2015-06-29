@@ -18,7 +18,7 @@ exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
-
+dropoxWriterRoutes = require '../wr-dropbox/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
 
 routes =
@@ -115,6 +115,8 @@ routes =
       ]
     ,
       goodDataWriterRoutes
+    ,
+      dropoxWriterRoutes
     ,
       createGenericDetailRoute 'writer'
     ]
