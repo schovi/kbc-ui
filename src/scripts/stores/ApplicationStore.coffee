@@ -41,7 +41,7 @@ ApplicationStore =
 
   hasCurrentAdminFeature: (feature) ->
     features = @getCurrentAdmin().get 'features'
-    features?.has(feature) or false
+    features.includes(feature)
 
   getProjectBaseUrl: ->
     _store.getIn ['kbc', 'projectBaseUrl']

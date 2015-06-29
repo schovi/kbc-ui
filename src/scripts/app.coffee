@@ -1,4 +1,3 @@
-
 console.time('load')
 
 React = require 'react'
@@ -15,6 +14,7 @@ Error = require './utils/Error'
 ApplicationActionCreators = require './actions/ApplicationActionCreators'
 RouterActionCreators = require './actions/RouterActionCreators'
 
+HiddenComponents = require './modules/components/utils/hiddenComponents'
 
 RoutesStore = require './stores/RoutesStore'
 initializeData = require './initializeData'
@@ -40,6 +40,7 @@ startApp = (appOptions) ->
     tokenStats: appOptions.data.tokenStats
   )
 
+  routes = HiddenComponents.filterHiddenRoutes(routes)
   RouterActionCreators.routesConfigurationReceive(routes)
 
   router = Router.create(
