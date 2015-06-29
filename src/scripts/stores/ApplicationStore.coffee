@@ -39,6 +39,10 @@ ApplicationStore =
   getCurrentAdmin: ->
     _store.getIn ['kbc', 'admin']
 
+  hasCurrentAdminFeature: (feature) ->
+    features = @getCurrentAdmin().get 'features'
+    features.has feature
+
   getProjectBaseUrl: ->
     _store.getIn ['kbc', 'projectBaseUrl']
 

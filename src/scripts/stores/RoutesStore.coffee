@@ -1,10 +1,10 @@
-
 Dispatcher = require('../Dispatcher')
 Immutable = require 'immutable'
 Map = Immutable.Map
 List = Immutable.List
 Error = require '../utils/Error'
 StoreUtils = require '../utils/StoreUtils'
+isRouteAllowed = require('../modules/components/utils/hiddenComponents.coffee').isRouteAllowed
 _ = require 'underscore'
 
 Immutable = require('immutable')
@@ -146,6 +146,7 @@ RoutesStore = StoreUtils.createStore
     _store.get 'error'
 
   hasRoute: (routeName) ->
+    return false if not isRouteAllowed(routeName)
     !!getRoute(_store, routeName)
 
   getRequireDataFunctionsForRouterState: (routes) ->
