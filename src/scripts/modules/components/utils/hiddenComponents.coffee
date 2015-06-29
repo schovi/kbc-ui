@@ -14,16 +14,16 @@ module.exports =
     # via admin feature
     return  (not isHidden) or (isHidden and hasAdminFeature)
 
-
-
   filterHiddenRoutes: (routes) ->
-    filterChildRoutes = (childRoutes) =>
-      if not childRoutes
-        return []
+    stack = [routes]
+    while not _.isEmpty(stack)
+      tmpRoutes = stack.pop()
       result = []
-      for r in childRoutes
+      if not tmpRoutes.childRoutes
+        continue
+      for r in tmpRoutes.childRoutes
         if @isRouteAllowed(r.name)
-          result.push @filterHiddenRoutes(r)
-      return result
-    routes.childRoutes = filterChildRoutes(routes.childRoutes)
+          stack.push(r)
+          result.push(r)
+      tmpRoutes.childRoutes = result
     return routes
