@@ -2,7 +2,7 @@ ApplicationStore = require '../../../stores/ApplicationStore'
 
 # hardcoded array of hiden components(under construction components)
 # possible alternative is hasUI component property
-hiddenComponents = []
+hiddenComponents = ['wr-dropbox']
 
 module.exports =
   isRouteAllowed: (componentId) ->
