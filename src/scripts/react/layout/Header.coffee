@@ -38,7 +38,7 @@ Header = React.createClass
         a href: @props.homeUrl,
           span className: "kbc-icon-keboola", null
           'Connection'
-      div {className: 'col-xs-9 kbc-main-header-container'},
+      div {className: 'col-xs-9 col-xs-offset-3 kbc-main-header-container'},
         div {className: 'kbc-main-header kbc-header'},
           div {className: 'kbc-title'},
             @_renderComponentIcon()
