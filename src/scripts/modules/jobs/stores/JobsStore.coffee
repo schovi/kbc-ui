@@ -10,7 +10,6 @@ List = Immutable.List
 
 _store = Map(
   jobsById: Map()
-  jobsActiveAccordions: Map() # id job -> active accordion name
   loadingJobs: List()
   terminatingJobs: List() # waiting for terminate request send
   query: ''
@@ -37,9 +36,6 @@ JobsStore = StoreUtils.createStore
 
   get: (id) ->
     _store.getIn ['jobsById', id]
-
-  getJobActiveAccordion: (id) ->
-    _store.getIn ['jobsActiveAccordions', id], 'stats'
 
   has: (id) ->
     _store.hasIn ['jobsById', id]
@@ -107,15 +103,8 @@ Dispatcher.register (payload) ->
             .mapKeys (key, job) ->
               job.get 'id'
           )
-          .set('jobsActiveAccordions',
-            jobs.mapKeys (key, job) ->
-              job.get 'id'
-            .map (job) ->
-              if getComponentId(job) == 'gooddata-writer'
-                'gdresults'
-              else
-                'stats'
-          ))
+      )
+
       loadMore = true
       offset = _store.get('offset')
       if _store.get('jobsById').count() < (offset + limit)
@@ -145,10 +134,6 @@ Dispatcher.register (payload) ->
           .update 'loadingJobs', (loadingJobs) ->
             loadingJobs.remove(loadingJobs.indexOf(action.job.id))
 
-        # toggle accordion if is gooddata-writer component
-        if getComponentId(job) == 'gooddata-writer'
-          store = store.setIn ['jobsActiveAccordions', job.get('id')], 'gdresults'
-
         store
 
       JobsStore.emitChange()
@@ -161,13 +146,6 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.JOB_TERMINATE_SUCCESS, Constants.ActionTypes.JOB_TERMINATE_ERROR
       _store = _store.update 'terminatingJobs', (jobs) ->
         jobs.remove(jobs.indexOf(action.jobId))
-      JobsStore.emitChange()
-
-    when Constants.ActionTypes.JOB_ACCORDION_TOGGLE
-      currentActive = JobsStore.getJobActiveAccordion(action.jobId)
-      # close current or open new
-      newActive = if currentActive == action.activeAccordion then '' else action.activeAccordion
-      _store = _store.setIn ['jobsActiveAccordions', action.jobId], newActive
       JobsStore.emitChange()
 
 module.exports = JobsStore

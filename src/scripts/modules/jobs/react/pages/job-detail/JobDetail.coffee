@@ -52,7 +52,11 @@ module.exports = React.createClass
 
     job: job
     configuration: configuration
-    activeAccordion: JobsStore.getJobActiveAccordion(job.get('id'))
+
+
+  getInitialState: ->
+    job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
+    activeAccordion: if job.get('component') == 'gooddata-writer' then 'gdresults' else 'params'
 
   componentDidUpdate: (prevProps, prevState) ->
     currentStatus = @state.job.get 'status'
@@ -65,7 +69,8 @@ module.exports = React.createClass
         SoundNotifications.crash()
 
   _handleChangeActiveAccordion: (activeKey) ->
-    ActionCreators.toggleJobAccordion(@state.job.get('id'), activeKey)
+    @setState
+      activeAccordion: if activeKey == @state.activeAccordion then '' else activeKey
 
   render: ->
     job = @state.job
