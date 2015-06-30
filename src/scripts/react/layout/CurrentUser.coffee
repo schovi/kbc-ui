@@ -5,6 +5,9 @@ ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
 
 {div, img, strong, span} = React.DOM
 
+MODE_NORMAL = 'normal'
+MODE_SINGLE_PAGE = 'single'
+
 module.exports = React.createClass
   displayName: 'User'
   mixins: [ImmutableRendererMixin, DropdownStateMixin]
@@ -14,6 +17,11 @@ module.exports = React.createClass
     urlTemplates: React.PropTypes.object.isRequired
     canManageApps: React.PropTypes.bool.isRequired
     dropup: React.PropTypes.bool.isRequired
+    mode: React.PropTypes.oneOf [MODE_NORMAL, MODE_SINGLE_PAGE]
+
+  getDefaultProps: ->
+    mode: MODE_NORMAL
+
   render: ->
     div
       className: 'kbc-user'
@@ -22,8 +30,8 @@ module.exports = React.createClass
       img
         src: @props.user.get 'profileImageUrl'
         className: 'kbc-user-avatar'
-        width: 40
-        height: 40
+        width: @_iconSize()
+        height: @_iconSize()
       ,
         div null,
           strong null, @props.user.get 'name'
@@ -36,8 +44,15 @@ module.exports = React.createClass
             noCaret: true
           ,
             @_userLinks()
-        div null,
-          span null, @props.user.get 'email'
+        if @props.mode == MODE_NORMAL
+          div null,
+            span null, @props.user.get 'email'
+
+  _iconSize: ->
+    if @props.mode == MODE_SINGLE_PAGE
+      20
+    else
+      40
 
   _userLinks: ->
     links = []
