@@ -68,11 +68,13 @@ module.exports =
     return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded()
     @loadComponentConfigDataForce(componentId, configId)
 
-  saveComponentConfigData: (componentId, configId) ->
+
+  saveComponentConfigData: (componentId, configId, forceData) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
       componentId: componentId
       configId: configId
+      forceData: forceData
     )
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     dataToSave = dataToSave?.toJS()

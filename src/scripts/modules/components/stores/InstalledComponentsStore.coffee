@@ -127,8 +127,11 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
       componentId = action.componentId
       configId = action.configId
-      dataToSave = InstalledComponentsStore.getEditingConfigData(componentId, configId)
+      forceData = action.forceData
+      editingData = InstalledComponentsStore.getEditingConfigData(componentId, configId)
+      dataToSave = forceData or editingData
       _store = _store.setIn ['configDataSaving', componentId, configId], dataToSave
+
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
