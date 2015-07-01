@@ -1,5 +1,5 @@
 React = require 'react'
-Immutable = require 'immutable'
+{fromJS, Map, List} = require('immutable')
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -21,7 +21,8 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    toggles = localState.get('bucketToggles') or Immutable.Map()
+    toggles = localState.get('bucketToggles') or Map()
+    console.log "get state CONFIG DATA", configData.toJS()
 
     # state
     configId: configId
@@ -60,9 +61,9 @@ module.exports = React.createClass
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Enable Export'
           deactivateTooltip: 'Disable Export'
-          isActive: true
+          isActive: @_isTableExported(table.get('id'))
           isPending: false
-          onChange: @_handleExportChange
+          onChange: @_handleExportChange(table.get('id'))
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
         ,
@@ -88,7 +89,39 @@ module.exports = React.createClass
     div {className: 'col-md-3 kbc-main-sidebar'},
       "SIDE BAR TODO"
 
-  _handleExportChange: ->
+  _handleExportChange: (tableId)->
+    _handleExport = (newExportStatus) =>
+      if newExportStatus
+        @_addTableExport(tableId)
+      else
+        @_removeTableExport(tableId)
+    return _handleExport
+
+  _updateAndSaveConfigData: (path, data) ->
+    newData = @state.configData.setIn(path, data)
+    saveFn = InstalledComponentsActions.saveComponentConfigData
+    saveFn(componentId, @state.configId, newData)
+
+  _getInputTables: ->
+    @state.configData.getIn(['storage', 'input', 'tables']) or List()
+
+  _removeTableExport: (tableId) ->
+    intables = @_getInputTables()
+    intables = intables.filter (table) ->
+      table.get('source') != tableId
+    @_updateAndSaveConfigData(['storage', 'input', 'tables'], intables)
+
+  _addTableExport: (tableId) ->
+    intables = @_getInputTables()
+    jstable =
+      source: tableId
+      destination: tableId
+    table = intables.find((table) ->
+      table.get('source') == tableId)
+    if not table
+      table = fromJS(jstable)
+      intables = intables.push table
+      @_updateAndSaveConfigData(['storage', 'input', 'tables'], intables)
 
 
   _filterBuckets: (buckets) ->
@@ -97,8 +130,11 @@ module.exports = React.createClass
     return buckets
 
 
-  _isTableExportedFn: (table) ->
-    return false
+  _isTableExported: (tableId) ->
+    intables = @_getInputTables()
+    !!intables.find((table) ->
+      table.get('source') == tableId)
+
 
   _handleToggleBucket: (bucketId) ->
     newValue = !@_isBucketToggled(bucketId)

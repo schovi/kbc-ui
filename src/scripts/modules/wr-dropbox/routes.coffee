@@ -1,15 +1,12 @@
 IndexPage = require './react/pages/index/Index'
+installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 
 module.exports =
   name: 'wr-dropbox'
   path: 'wr-dropbox/:config'
   isComponent: true
-  # requireData: [
-  #   (params) ->
-  #     actionCreators.loadConfiguration params.config
-  # ]
-  title: (routerState) ->
-    "Dropbox Writer"
-    # configId = routerState.getIn ['params', 'config']
-    # 'GoodData - ' + InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
+  requireData: [
+    (params) ->
+      installedComponentsActions.loadComponentConfigData 'wr-dropbox', params.config
+  ]
   defaultRouteHandler: IndexPage

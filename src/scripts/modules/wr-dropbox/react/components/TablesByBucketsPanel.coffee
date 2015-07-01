@@ -55,9 +55,11 @@ module.exports = React.createClass
 
 
   _renderBucketPanel: (bucketId, tables) ->
-    activeCount = tables.filter((table) =>
-      @props.isTableExportedFn?.call(table)
-      ).count()
+    activeCount = 0
+    if @props.isTableExportedFn
+      activeCount = tables.filter((table) =>
+        @props.isTableExportedFn(table.get('id'))
+        ).count()
     header = span null,
       span className: 'table',
         span className: 'tbody',
@@ -116,7 +118,6 @@ module.exports = React.createClass
       bucket.get 'id'
     )
 
-    console.log "grouped", buckets.toJS()
     return buckets
 
   _isBucketToggled: (bucketId) ->
