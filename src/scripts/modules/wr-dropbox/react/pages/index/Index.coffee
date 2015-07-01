@@ -1,6 +1,6 @@
 React = require 'react'
 Immutable = require 'immutable'
-
+{ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 
@@ -9,7 +9,7 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
-{span, strong, div} = React.DOM
+{span, button, strong, div} = React.DOM
 
 componentId = 'wr-dropbox'
 
@@ -56,17 +56,40 @@ module.exports = React.createClass
     div {className: 'tr', key: table.get('id')},
       span className: 'td',
         table.get 'name'
+      span className: 'td text-right',
+        React.createElement ActivateDeactivateButton,
+          activateTooltip: 'Enable Export'
+          deactivateTooltip: 'Disable Export'
+          isActive: true
+          isPending: false
+          onChange: @_handleExportChange
+        React.createElement Tooltip,
+          tooltip: 'Upload table to Dropbox'
+        ,
+          React.createElement Confirm,
+            text: 'Upload Table'
+            title: 'Upload Table'
+            buttonLabel: 'Upload'
+            buttonType: 'success'
+            onConfirm: @_handleUpload
+          ,
+            button className: 'btn btn-link',
+              span className: 'fa fa-upload fa-fw'
 
 
   _renderHeaderRow: ->
     div className: 'tr',
       span className: 'th',
         strong null, 'Table name'
+    return null
 
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       "SIDE BAR TODO"
+
+  _handleExportChange: ->
+
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->

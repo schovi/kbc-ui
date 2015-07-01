@@ -85,12 +85,15 @@ module.exports = React.createClass
       @props.renderTableRowFn(table)
     , @).toArray()
 
-    header = @props.renderHeaderRowFn?.call(tables) or @_renderDefaultHeaderRow()
+    header = @_renderDefaultHeaderRow()
+    if @props.renderHeaderRowFn
+      header = @props.renderHeaderRowFn(tables)
 
     div className: 'row',
       div className: 'table table-striped table-hover',
-        div className: 'thead', key: 'table-header',
-          header
+        if header
+          div className: 'thead', key: 'table-header',
+            header
         div className: 'tbody',
           childs
 
