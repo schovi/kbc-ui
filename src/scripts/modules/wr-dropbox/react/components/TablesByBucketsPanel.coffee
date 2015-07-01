@@ -31,22 +31,27 @@ module.exports = React.createClass
     storageActionCreators.loadTables()
 
   render: ->
+    isTablesLoading = storageTablesStore.getIsLoading()
     buckets = @_getFilteredBuckets()
-    div null,
-      React.createElement SearchRow,
-        className: 'row kbc-search-row'
-        onChange: @props.onSearchQueryChange
-        query: @props.searchQuery
-      if buckets.count()
-        div
-          className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-        ,
-          buckets.map (bucket, bucketId) ->
-            @_renderBucketPanel bucketId, bucket.get 'tables'
-          , @
-          .toArray()
-      else
-        @_renderNotFound()
+    if isTablesLoading
+      div className: 'well',
+        'Loading Tables...'
+    else
+      div null,
+        React.createElement SearchRow,
+          className: 'row kbc-search-row'
+          onChange: @props.onSearchQueryChange
+          query: @props.searchQuery
+        if buckets.count()
+          div
+            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+          ,
+            buckets.map (bucket, bucketId) ->
+              @_renderBucketPanel bucketId, bucket.get 'tables'
+            , @
+            .toArray()
+        else
+          @_renderNotFound()
 
 
   _renderBucketPanel: (bucketId, tables) ->
