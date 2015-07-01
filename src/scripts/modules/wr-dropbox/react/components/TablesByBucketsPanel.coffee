@@ -1,5 +1,5 @@
 React = require 'react'
-
+fuzzy = require 'fuzzy'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ActiveCountBadge = require './ActiveCountBadge'
 SearchRow = require '../../../../react/common/SearchRow'
@@ -12,6 +12,8 @@ module.exports = React.createClass
 
   displayName: 'tablesByBucketsPanel'
 
+  mixins: [createStoreMixin(storageTablesStore)]
+
   propTypes:
     renderTableRowFn: React.PropTypes.func.isRequired
     renderHeaderRowFn: React.PropTypes.func
@@ -23,28 +25,23 @@ module.exports = React.createClass
     isBucketToggledFn: React.PropTypes.func
 
   getStateFromStores: ->
-    tables = storageTablesStore.getAll()
-    buckets = @_getTablesByBucketsList(tables)
-    filteredBuckets = if @props.filterFn then @props.filterFn(buckets) else buckets
-    #state =
-    buckets: filteredBuckets
-
-  mixins: [createStoreMixin(storageTablesStore)]
+    {}
 
   componentDidMount: ->
     storageActionCreators.loadTables()
 
   render: ->
+    buckets = @_getFilteredBuckets()
     div null,
       React.createElement SearchRow,
         className: 'row kbc-search-row'
         onChange: @props.onSearchQueryChange
         query: @props.searchQuery
-      if @state.buckets.count()
+      if buckets.count()
         div
           className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
         ,
-          @state.buckets.map (bucket, bucketId) ->
+          buckets.map (bucket, bucketId) ->
             @_renderBucketPanel bucketId, bucket.get 'tables'
           , @
           .toArray()
@@ -115,9 +112,7 @@ module.exports = React.createClass
     return buckets
 
   _isBucketToggled: (bucketId) ->
-    if not @props.isBucketToggledFn
-      return false
-    return @props.isBucketToggledFn(bucketId)
+    return @props.isBucketToggledFn?.call(bucketId)
 
   _handleBucketSelect: (bucketId, e) ->
     e.preventDefault()
@@ -129,3 +124,29 @@ module.exports = React.createClass
       div {className: 'tfoot'},
         div {className: 'tr'},
           div {className: 'td'}, 'No tables found'
+
+  #load buckets and tables from storage store and filter them
+  _getFilteredBuckets: ->
+    tables = storageTablesStore.getAll()
+    buckets = @_getTablesByBucketsList(tables)
+    if @props.filterFn
+      filteredBuckets = @props.filterFn(buckets)
+    else
+      filteredBuckets =  buckets
+    #filter according to search query
+    filteredBuckets = filteredBuckets.map (bucketObject, bucketId) =>
+      bucketObject.set('tables', @_filterBucketTables(bucketObject))
+    filteredBuckets = filteredBuckets.filter (bucket) ->
+      bucket.get('tables').count() > 0
+    return filteredBuckets
+
+  _filterBucketTables: (bucket) ->
+    query = @props.searchQuery
+    tables = bucket.get('tables')
+    if not query
+      return tables
+    newTables = tables.filter( (table) ->
+      tableId = table.get('id')
+      fuzzy.match(query, tableId)
+    )
+    return newTables

@@ -1,4 +1,6 @@
 React = require 'react'
+Immutable = require 'immutable'
+
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 
@@ -18,13 +20,14 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
-    editingConfigData = InstalledComponentsStore.getEditingConfigData(componentId, configId)
+    localState = InstalledComponentsStore.getLocalState(componentId, configId)
+    toggles = localState.get('bucketToggles') or Immutable.Map()
+
     # state
     configId: configId
     configData: configData
-    editingConfigData: editingConfigData
-    searchQuery: ''
-
+    localState: localState
+    bucketToggles: toggles
 
   render: ->
     div {className: 'container-fluid'},
@@ -43,14 +46,14 @@ module.exports = React.createClass
           renderHeaderRowFn: @_renderHeaderRow
           filterFn: @_filterBuckets
           onSearchQueryChange: @_handleSearchQueryChange
-          searchQuery: @state.searchQuery
+          searchQuery: @state.localState.get('searchQuery') or ''
           isTableExportedFn: @_isTableExported
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
 
 
   _renderTableRow: (table) ->
-    div className: 'tr',
+    div {className: 'tr', key: table.get('id')},
       span className: 'td',
         table.get 'name'
 
@@ -66,20 +69,25 @@ module.exports = React.createClass
       "SIDE BAR TODO"
 
   _filterBuckets: (buckets) ->
-    result = buckets.filter (bucket) ->
+    buckets = buckets.filter (bucket) ->
       bucket.get('stage') == 'out'
-    console.log result
-    result
+    return buckets
 
 
   _isTableExportedFn: (table) ->
     return false
 
-  _onToggleBucketFn: (bucketId) ->
-    return bucketId
+  _handleToggleBucket: (bucketId) ->
+    newValue = !@_isBucketToggled(bucketId)
+    newToggles = @state.bucketToggles.set(bucketId, newValue)
+    @_updateLocalState(['bucketToggles'], newToggles)
 
-  _isBucketToggledFn: (bucketId) ->
-    false
+  _isBucketToggled: (bucketId) ->
+    !!@state.bucketToggles.get(bucketId)
 
   _handleSearchQueryChange: (newQuery) ->
-    return newQuery
+    @_updateLocalState(['searchQuery'], newQuery)
+
+  _updateLocalState: (path, data) ->
+    newLocalState = @state.localState.setIn path, data
+    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
