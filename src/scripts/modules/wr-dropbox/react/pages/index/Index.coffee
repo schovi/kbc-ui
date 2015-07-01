@@ -22,6 +22,7 @@ module.exports = React.createClass
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles') or Map()
+    savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     console.log "get state CONFIG DATA", configData.toJS()
 
     # state
@@ -29,6 +30,7 @@ module.exports = React.createClass
     configData: configData
     localState: localState
     bucketToggles: toggles
+    savingData: savingData or Map()
 
   render: ->
     div {className: 'container-fluid'},
@@ -62,7 +64,7 @@ module.exports = React.createClass
           activateTooltip: 'Enable Export'
           deactivateTooltip: 'Disable Export'
           isActive: @_isTableExported(table.get('id'))
-          isPending: false
+          isPending: @_isPendingTable(table.get('id'))
           onChange: @_handleExportChange(table.get('id'))
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
@@ -77,6 +79,9 @@ module.exports = React.createClass
             button className: 'btn btn-link',
               span className: 'fa fa-upload fa-fw'
 
+  _isPendingTable: (tableId) ->
+    @state.savingData.has('storage')
+
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -89,7 +94,7 @@ module.exports = React.createClass
     div {className: 'col-md-3 kbc-main-sidebar'},
       "SIDE BAR TODO"
 
-  _handleExportChange: (tableId)->
+  _handleExportChange: (tableId) ->
     _handleExport = (newExportStatus) =>
       if newExportStatus
         @_addTableExport(tableId)
@@ -104,6 +109,11 @@ module.exports = React.createClass
 
   _getInputTables: ->
     @state.configData.getIn(['storage', 'input', 'tables']) or List()
+
+  _findInTable: (tableId) ->
+    intables = @_getInputTables()
+    intables = intables.filter (table) ->
+      table.get('source') != tableId
 
   _removeTableExport: (tableId) ->
     intables = @_getInputTables()
@@ -148,5 +158,5 @@ module.exports = React.createClass
     @_updateLocalState(['searchQuery'], newQuery)
 
   _updateLocalState: (path, data) ->
-    newLocalState = @state.localState.setIn path, data
+    newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
