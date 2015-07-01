@@ -94,6 +94,13 @@ module.exports =
       )
       throw error
 
+  updateLocalState: (componentId, configId, data) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_LOCAL_STATE_UPDATE
+      componentId: componentId
+      configId: configId
+      data: data
+    )
 
   startEditComponentConfigData: (componentId, configId) ->
     dispatcher.handleViewAction(

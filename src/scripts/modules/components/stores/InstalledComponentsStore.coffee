@@ -10,6 +10,7 @@ _store = Map(
   configDataEditing: Map() #componentId #configId - configuration
 #detail JSON
   configDataSaving: Map()
+  localState: Map()
 
   components: Map()
   editingConfigurations: Map()
@@ -20,6 +21,13 @@ _store = Map(
 )
 
 InstalledComponentsStore = StoreUtils.createStore
+
+  getLocalState: (componentId, configId) ->
+    path = ['localState', componentId, configId]
+    if not _store.hasIn(path)
+      return Immutable.Map()
+    else
+      return _store.getIn(path)
 
   getAll: ->
     _store
@@ -79,6 +87,12 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when constants.ActionTypes.INSTALLED_COMPONENTS_LOCAL_STATE_UPDATE
+      data = action.data
+      path = ['localState', action.componentId, action.configId]
+      _store = _store.setIn path, data
+      InstalledComponentsStore.emitChange()
+
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_START
       path = ['configDataEditing', action.componentId, action.configId]
       configData = InstalledComponentsStore.getConfigData(action.componentId, action.configId)
