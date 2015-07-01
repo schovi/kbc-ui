@@ -54,11 +54,17 @@ module.exports = React.createClass
       elements = organizations.map((organization) ->
 
         organizationElement = li className: 'dropdown-header', key: "org-#{organization.get('id')}",
-          a
-            href: @_organizationUrl(organization.get 'id')
-            className: if @state.selectedOrganizationId == organization.get('id') then 'active' else ''
-          ,
-            organization.get('name')
+          if organization.get('hasAccess')
+            a
+              href: @_organizationUrl(organization.get 'id')
+              className: if @state.selectedOrganizationId == organization.get('id') then 'active' else ''
+            ,
+              organization.get('name')
+          else
+            span
+              className: 'disabled'
+            ,
+              organization.get('name')
 
         projectElements = organization.get('projects').map((project) ->
           li key: "proj-#{project.get('id')}",
@@ -196,7 +202,7 @@ module.exports = React.createClass
         ModalTrigger modal: NewProjectModal(
           urlTemplates: @props.urlTemplates
           xsrf: @props.xsrf
-          organizations: @props.organizations
+          organizations: @props.organizations.filter (organization) -> organization.get('hasAccess')
         ),
           a null,
             span className: 'fa fa-plus-circle'
