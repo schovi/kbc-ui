@@ -1,14 +1,10 @@
 React = require 'react'
-common = require '../../../../../react/common/common'
-
-ComponentIcon = React.createFactory(common.ComponentIcon)
-ComponentName = React.createFactory(common.ComponentName)
-Tree = React.createFactory(require('kbc-react-components').Tree)
-Check = React.createFactory(require('kbc-react-components').Check)
+{ComponentIcon, ComponentName} = require '../../../../../react/common/common'
+{Tree, Check} = require 'kbc-react-components'
 
 {tr, td, span} = React.DOM
 
-TasksTableRow = React.createClass
+module.exports = React.createClass
   displayName: 'TasksTableRow'
   propTypes:
     task: React.PropTypes.object.isRequired
@@ -18,35 +14,20 @@ TasksTableRow = React.createClass
       td null,
         span className: 'kbc-component-icon',
           if @props.component
-            ComponentIcon component: @props.component
+            React.createElement ComponentIcon, component: @props.component
           else
             ' '
 
         if @props.component
-          ComponentName component: @props.component
+          React.createElement ComponentName, component: @props.component
         else
           @props.task.get('componentUrl')
       td null,
         span className: 'label label-info',
           @props.task.get('action')
       td null,
-        Tree data: @props.task.get('actionParameters')
+        React.createElement Tree, data: @props.task.get('actionParameters')
       td null,
-        span className: (if @props.task.get('active')
-          'kbc-icon-check-tick'
-        else
-          'kbc-icon-check-cross'),
-          span className: 'path1'
-          span className: 'path2'
-          span className: 'path3'
+        React.createElement Check, isChecked: @props.task.get('active')
       td null,
-        span className: (if @props.task.get('continueOnFailure')
-          'kbc-icon-check-tick'
-        else 'kbc-icon-check-cross'),
-          span className: 'path1'
-          span className: 'path2'
-          span className: 'path3'
-
-
-module.exports = TasksTableRow
-
+        React.createElement Check, isChecked: @props.task.get('continueOnFailure')
