@@ -15,7 +15,7 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
 
   getInitialState: ->
-    oauthUrl = 'https://syrup.keboola.com/oauth/oauth20'
+    oauthUrl = 'https://syrup.keboola.com/oauth/auth20'
     description: ""
     token: ApplicationStore.getSapiTokenString()
     oauthUrl: oauthUrl
