@@ -9,6 +9,8 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
+TableRow = React.createFactory require('./TableRow')
+
 {span, button, strong, div} = React.DOM
 
 componentId = 'wr-dropbox'
@@ -56,31 +58,20 @@ module.exports = React.createClass
 
 
   _renderTableRow: (table) ->
-    div {className: 'tr', key: table.get('id')},
-      span className: 'td',
-        table.get 'name'
-      span className: 'td text-right',
-        React.createElement ActivateDeactivateButton,
-          activateTooltip: 'Enable Export'
-          deactivateTooltip: 'Disable Export'
-          isActive: @_isTableExported(table.get('id'))
-          isPending: @_isPendingTable(table.get('id'))
-          onChange: @_handleExportChange(table.get('id'))
-        React.createElement Tooltip,
-          tooltip: 'Upload table to Dropbox'
-        ,
-          React.createElement Confirm,
-            text: 'Upload Table'
-            title: 'Upload Table'
-            buttonLabel: 'Upload'
-            buttonType: 'success'
-            onConfirm: @_handleUpload
-          ,
-            button className: 'btn btn-link',
-              span className: 'fa fa-upload fa-fw'
+    TableRow
+      isTableExported: @_isTableExported(table.get('id'))
+      isPending: @_isPendingTable(table.get('id'))
+      onExportChangeFn: =>
+        @_handleExportChange(table.get('id'))
+      onHandleUploadFn: @_handleUpload
+      table: table
+
+  _handleUpload: ->
 
   _isPendingTable: (tableId) ->
-    @state.savingData.has('storage')
+    result = @state.savingData.has('storage')
+    console.log "is pending", result
+    result
 
 
   _renderHeaderRow: ->
