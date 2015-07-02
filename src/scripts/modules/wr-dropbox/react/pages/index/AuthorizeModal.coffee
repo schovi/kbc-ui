@@ -1,4 +1,6 @@
-React = require 'react'
+React = require('react')
+ApplicationStore = require '../../../../../stores/ApplicationStore'
+ComponentsStore = require '../../components/stores/ComponentsStore'
 
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
@@ -10,44 +12,58 @@ Input = React.createFactory(require('react-bootstrap').Input)
 module.exports = React.createClass
   displayName: "DropboxAuthorizeModal"
 
+  propTypes:
+    configId: React.PropTypes.string.isRequired
+
   getInitialState: ->
     description: ""
+    token: ApplicationStore.getSapiTokenString()
+    oauthUrl: ComponentsStore.getComponent('oaut').get('uri')
+
 
   render: ->
     Modal
       title: 'Authorize Dropbox Account'
       onRequestHide: @props.onRequestHide
     ,
-      div className: 'modal-body',
-        div className: 'form-horizontal',
-          Input
-            label: "Dropbox Email"
-            type: 'text'
-            help: 'Used afterwards as a description of the authorized account'
-            labelClassName: 'col-xs-3'
-            wrapperClassName: 'col-xs-9'
-            defaultValue: @state.desription
-            onChange: (event) =>
-              @setState
-                description: event.target.value
 
+        form
+          className: 'form-horizontal'
+          action: @state.oauthUrl
+          method: 'POST'
+          @_createHiddenInput('api', 'wr-dropbox')
+          @_createHiddenInput('id', @props.configId)
+          @_createHiddenInput('token', @state.token)
+        ,
+          div className: 'modal-body',
+            Input
+              label: "Dropbox Email"
+              type: 'text'
+              name: 'description'
+              help: 'Used afterwards as a description of the authorized account'
+              labelClassName: 'col-xs-3'
+              wrapperClassName: 'col-xs-9'
+              defaultValue: @state.desription
+              onChange: (event) =>
+                @setState
+                  description: event.target.value
 
-
-
-      div className: 'modal-footer',
-        ButtonToolbar null,
-          Button
-            onClick: @props.onRequestHide
-            bsStyle: 'link'
-          ,
-            'Cancel'
-          Button
-            onClick: @_handleConfirm
-            bsStyle: 'success'
-          ,
-            span null,
-              'Authorize '
-              i className: 'fa fa-fw fa-dropbox'
-
-
-  _handleConfirm: ->
+          div className: 'modal-footer',
+            ButtonToolbar null,
+              Button
+                onClick: @props.onRequestHide
+                bsStyle: 'link'
+              ,
+                'Cancel'
+              Button
+                bsStyle: 'success'
+                type: 'submit'
+              ,
+                span null,
+                  'Authorize '
+                  i className: 'fa fa-fw fa-dropbox'
+  _createHiddenInput: (name, value) ->
+    Input
+      name: name
+      type: 'hidden'
+      value: value
