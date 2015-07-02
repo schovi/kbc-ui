@@ -23,7 +23,7 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    toggles = localState.get('bucketToggles') or Map()
+    toggles = localState.get('bucketToggles', Map())
     savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     console.log "get state CONFIG DATA", configData.toJS()
 
