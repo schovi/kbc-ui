@@ -1,6 +1,5 @@
 React = require('react')
 ApplicationStore = require '../../../../../stores/ApplicationStore'
-ComponentsStore = require '../../components/stores/ComponentsStore'
 
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
@@ -16,9 +15,10 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
 
   getInitialState: ->
+    oauthUrl = ' http://syrup.keboola.com/oauth/oauth20'
     description: ""
     token: ApplicationStore.getSapiTokenString()
-    oauthUrl: ComponentsStore.getComponent('oaut').get('uri')
+    oauthUrl: oauthUrl
 
 
   render: ->
@@ -26,7 +26,6 @@ module.exports = React.createClass
       title: 'Authorize Dropbox Account'
       onRequestHide: @props.onRequestHide
     ,
-
         form
           className: 'form-horizontal'
           action: @state.oauthUrl
@@ -62,6 +61,7 @@ module.exports = React.createClass
                 span null,
                   'Authorize '
                   i className: 'fa fa-fw fa-dropbox'
+
   _createHiddenInput: (name, value) ->
     Input
       name: name
