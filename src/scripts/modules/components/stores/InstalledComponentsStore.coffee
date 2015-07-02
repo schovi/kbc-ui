@@ -23,11 +23,7 @@ _store = Map(
 InstalledComponentsStore = StoreUtils.createStore
 
   getLocalState: (componentId, configId) ->
-    path = ['localState', componentId, configId]
-    if not _store.hasIn(path)
-      return Immutable.Map()
-    else
-      return _store.getIn(path)
+    _store.getIn ['localState', componentId, configId], Map()
 
   getAll: ->
     _store
