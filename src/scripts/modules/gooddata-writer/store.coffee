@@ -279,7 +279,10 @@ dispatcher.register (payload) ->
               'dateDimension',
               'sortLabel',
               'sortOrder'
-              'identifier'
+              'identifier',
+              'identifierLabel',
+              'identifierTime',
+              'title'
             ]
 
       table = Immutable.fromJS(action.table)
