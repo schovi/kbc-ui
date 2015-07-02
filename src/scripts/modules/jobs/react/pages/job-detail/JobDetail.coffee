@@ -41,7 +41,6 @@ module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
 
 
-
   getStateFromStores: ->
     job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
 
@@ -56,7 +55,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     job = JobsStore.get RoutesStore.getCurrentRouteIntParam('jobId')
-    activeAccordion: if job.get('component') == 'gooddata-writer' then 'gdresults' else 'params'
+    activeAccordion: if job.get('component') == 'gooddata-writer' then 'gdresults' else 'stats'
 
   componentDidUpdate: (prevProps, prevState) ->
     currentStatus = @state.job.get 'status'
