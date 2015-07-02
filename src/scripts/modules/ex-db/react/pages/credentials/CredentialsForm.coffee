@@ -81,9 +81,11 @@ module.exports = React.createClass
         wrapperClassName: 'col-xs-8'
         onChange: @_handleChange.bind @, propName
       ,
-        _.map options, (label, value) ->
+        allOptions = _.map(options, (label, value) ->
           option value: value,
             label
+        )
+        allOptions.unshift(option({value: "", disabled: "true"}, "Select driver"))
     else
       StaticText
         label: labelValue
