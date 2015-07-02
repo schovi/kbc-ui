@@ -49,7 +49,7 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeIncremental: (e) ->
-    value = @props.value.set("incremental", e.target.value)
+    value = @props.value.set("incremental", e.target.checked)
     @props.onChange(value)
 
   _handleChangePrimaryKey: (e) ->
@@ -158,7 +158,7 @@ module.exports = React.createClass
                   name: 'incremental'
                   type: 'checkbox'
                   label: React.DOM.small {}, 'Incremental'
-                  value: @props.value.get("optional")
+                  checked: @props.value.get("incremental")
                   disabled: @props.disabled
                   onChange: @_handleChangeIncremental
                   help: React.DOM.small {},
