@@ -1,5 +1,7 @@
 React = require 'react'
 {fromJS, Map, List} = require('immutable')
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -10,8 +12,11 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
 TableRow = React.createFactory require('./TableRow')
+AuthorizeModal = React.createFactory require('./AuthorizeModal')
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 
-{span, button, strong, div} = React.DOM
+
+{ul, li, span, button, strong, div, i} = React.DOM
 
 componentId = 'wr-dropbox'
 
@@ -83,7 +88,20 @@ module.exports = React.createClass
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
-      "SIDE BAR TODO"
+      div className: 'kbc-buttons kbc-text-light',
+        React.createElement ComponentMetadata,
+          componentId: componentId
+          configId: @state.configId
+      ul className: 'nav nav-stacked',
+        li null,
+          ModalTrigger
+            modal: AuthorizeModal
+              configId: @state.configId
+          ,
+            span className: 'btn btn-link',
+              i className: 'fa fa-fw fa-user'
+              ' Authorize'
+
 
   _handleExportChange: (tableId) ->
     _handleExport = (newExportStatus) =>
