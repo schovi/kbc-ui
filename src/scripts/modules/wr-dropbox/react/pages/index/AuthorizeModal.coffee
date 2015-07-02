@@ -1,6 +1,6 @@
 React = require('react')
 ApplicationStore = require '../../../../../stores/ApplicationStore'
-
+_ = require('underscore')
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Modal = React.createFactory(require('react-bootstrap').Modal)
@@ -57,6 +57,7 @@ module.exports = React.createClass
               Button
                 bsStyle: 'success'
                 type: 'submit'
+                disabled: _.isEmpty(@state.description)
               ,
                 span null,
                   'Authorize '
