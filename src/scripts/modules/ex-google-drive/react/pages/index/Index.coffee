@@ -30,6 +30,8 @@ module.exports = React.createClass
     config =  RoutesStore.getCurrentRouteParam('config')
     currentUser = ApplicationStore.getSapiToken().get('description')
     configuration = ExGdriveStore.getConfig(config)
+
+    savingSheets: ExGdriveStore.getSavingSheets(config)
     configuration: configuration
     currentUser: currentUser
     deletingSheets: ExGdriveStore.getDeletingSheets(config)
@@ -68,6 +70,7 @@ module.exports = React.createClass
           items: items
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
+          savingSheets: @state.savingSheets
       else
         if not @_isAuthorized()
           div className: 'row text-center',

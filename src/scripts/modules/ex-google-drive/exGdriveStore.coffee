@@ -31,6 +31,8 @@ GdriveStore = StoreUtils.createStore
     _store.getIn ['configs',configId]
   getDeletingSheets: (configId) ->
     _store.getIn ['deletingSheets', configId]
+  getSavingSheets: (configId) ->
+    _store.getIn ['savingSheets', configId]
 
   getConfigSheet: (configId, fileId, sheetId) ->
     items = _store.getIn ['configs', configId, 'items']

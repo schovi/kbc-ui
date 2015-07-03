@@ -5,7 +5,6 @@ Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-GdriveStore = require '../../../exGdriveStore'
 {Loader} = require 'kbc-react-components'
 
 {i, span, div, a, strong} = React.DOM
@@ -16,6 +15,7 @@ module.exports = React.createClass
   propTypes:
     items: React.PropTypes.object
     deletingSheets: React.PropTypes.object
+    savingSheets: React.PropTypes.object
     # configurationId: number
 
   render: ->
@@ -79,4 +79,4 @@ module.exports = React.createClass
   _isSheetSaving: (row) ->
     sheetId = row.get('sheetId').toString()
     fileId = row.get('fileId').toString()
-    isSaving = GdriveStore.isSavingSheet(@props.configurationId, fileId, sheetId)
+    @props.savingSheets and @props.savingSheets.hasIn([fileId, sheetId])
