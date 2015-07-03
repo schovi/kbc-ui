@@ -5,6 +5,8 @@ Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+GdriveStore = require '../../../exGdriveStore'
+{Loader} = require 'kbc-react-components'
 
 {i, span, div, a, strong} = React.DOM
 
@@ -31,7 +33,11 @@ module.exports = React.createClass
         div className: 'td', row.get 'sheetTitle'
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
-        div className: 'td', @_rawConfig(row)?.db?.table or "n/a"
+        div className: 'td',
+          if @_isSheetSaving(row)
+            React.createElement Loader
+          else
+            @_rawConfig(row)?.db?.table or "n/a"
         div className: 'td text-right kbc-no-wrap',
           if @_isSheetDeleting(row.get('fileId'), row.get('sheetId'))
             Loader()
@@ -69,3 +75,8 @@ module.exports = React.createClass
     @props.deletingSheets and @props.deletingSheets.hasIn [fileId,sheetId]
   _rawConfig: (row) ->
     JSON.parse(row.get 'config')
+
+  _isSheetSaving: (row) ->
+    sheetId = row.get('sheetId').toString()
+    fileId = row.get('fileId').toString()
+    isSaving = GdriveStore.isSavingSheet(@props.configurationId, fileId, sheetId)
