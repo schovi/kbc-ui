@@ -29,7 +29,6 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     config = ExGanalStore.getConfig(configId)
     currentUser = ApplicationStore.getSapiToken().get('description')
-
     currentUser: currentUser
     owner: config.get 'owner'
     config: config
@@ -37,6 +36,7 @@ module.exports = React.createClass
     since: moment().subtract(4, 'day')
     until: moment()
     latestJobs: LatestJobsStore.getJobs 'ex-google-analytics', configId
+    selectedProfilesCount: ExGanalStore.getSelectedProfiles(configId).count()
 
   render: ->
     console.log 'rendering', @state.config.toJS()
@@ -119,8 +119,11 @@ module.exports = React.createClass
               params:
                 config: @state.configId
             ,
-              span className: 'fa fa-fw fa-check'
-              'Select Profiles'
+              span className: 'fa fa-fw fa-globe'
+              'Profiles '
+              span className: 'badge',
+                @state.selectedProfilesCount
+
         li null,
           ModalTrigger
             modal: OptionsModal
