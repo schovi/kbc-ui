@@ -35,7 +35,9 @@ GdriveStore = StoreUtils.createStore
   getConfigSheet: (configId, fileId, sheetId) ->
     items = _store.getIn ['configs', configId, 'items']
     result = items.find (value, key) ->
-      value.get('fileId').toString() == fileId and value.get('sheetId').toString()
+      sheetIdMatch = value.get('sheetId').toString() == sheetId
+      fileIdMatch = value.get('fileId').toString() == fileId
+      fileIdMatch and sheetIdMatch
     return result
 
   hasGdriveFiles: (configId) ->
