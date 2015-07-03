@@ -75,7 +75,9 @@ module.exports = React.createClass
   _getRedirectUrl: ->
     origin = 'https://connection.keboola.com'
     url = @state.router.makeHref('wr-dropbox-oauth-redirect', config: @props.configId)
+    console.log "url=", url
     projectUrl = ApplicationStore.getProjectBaseUrl()
-    result = "#{origin}#{projectUrl}#{url}"
+    console.log "project url =", projectUrl
+    result = "#{origin}/#{url}"
     console.log result
     result
