@@ -30,9 +30,8 @@ module.exports = React.createClass
     ExDbActionCreators
     .createQuery @state.currentConfigId
     .then (query) =>
-      @transitionTo 'ex-db-query',
+      @transitionTo 'ex-db',
         config: @state.currentConfigId
-        query: query.id
 
   render: ->
     React.DOM.div className: 'kbc-buttons',
