@@ -30,3 +30,4 @@ module.exports = React.createClass
         query: @state.newQuery
         tables: @state.tables
         onChange: @_handleQueryChange
+        configId: @state.configId

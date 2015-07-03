@@ -73,9 +73,9 @@ module.exports = React.createClass
         if @state.isEditing
           QueryEditor
             query: @state.editingQuery
-            showOutputTable: true
             tables: @state.tables
             onChange: @_handleQueryChange
+            configId: @state.configId
         else
           QueryDetailStatic
             query: @state.query

@@ -26,12 +26,10 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     showOutputTable: React.PropTypes.bool
+    configId: React.PropTypes.string.isRequired
 
   componentDidMount: ->
     React.findDOMNode(this.refs.queryName).focus()
-
-  getDefaultProps: ->
-    showOutputTable: false
 
   _handleOutputTableChange: (newValue) ->
     @props.onChange(@props.query.set 'outputTable', newValue)
@@ -48,14 +46,17 @@ module.exports = React.createClass
   _handleNameChange: (event) ->
     @props.onChange(@props.query.set 'name', event.target.value)
 
+  _tableNamePlaceholder: ->
+    "in.c-ex-db-" + @props.configId + "." + @props.query.get('name', '')
+
   render: ->
     div className: '',
       div className: 'table kbc-form-table form-horizontal',
         div className: 'tr',
           div className: 'td',
             div className: 'form-group',
-              label className: 'col-md-3 control-label', 'Name'
-              div className: 'col-md-9',
+              label className: 'col-md-4 control-label', 'Name'
+              div className: 'col-md-8',
                 input
                   className: 'form-control'
                   type: 'text'
@@ -63,21 +64,20 @@ module.exports = React.createClass
                   ref: 'queryName'
                   placeholder: 'Untitled Query'
                   onChange: @_handleNameChange
-            if @props.showOutputTable
-              div className: 'form-group',
-                label className: 'col-md-3 control-label', 'Output table'
-                div className: 'col-md-9',
-                  Autosuggest
-                    suggestions: createGetSuggestions(@_tableSelectOptions)
-                    inputAttributes:
-                      className: 'form-control'
-                      placeholder: 'Output table ...'
-                      value: @props.query.get 'outputTable'
-                      onChange: @_handleOutputTableChange
+            div className: 'form-group',
+              label className: 'col-md-4 control-label', 'Output table'
+              div className: 'col-md-8',
+                Autosuggest
+                  suggestions: createGetSuggestions(@_tableSelectOptions)
+                  inputAttributes:
+                    className: 'form-control'
+                    placeholder: @_tableNamePlaceholder()
+                    value: @props.query.get 'outputTable'
+                    onChange: @_handleOutputTableChange
           div className: 'td',
             div className: 'form-group',
-              label className: 'col-md-3 control-label', 'Primary key'
-                div className: 'col-md-9',
+              label className: 'col-md-4 control-label', 'Primary key'
+                div className: 'col-md-8',
                 input
                   className: 'form-control'
                   type: 'text'
@@ -85,7 +85,7 @@ module.exports = React.createClass
                   placeholder: 'No primary key'
                   onChange: @_handlePrimaryKeyChange
             div className: 'form-group',
-              div className: 'col-md-9 col-md-offset-3 checkbox',
+              div className: 'col-md-8 col-md-offset-4 checkbox',
                 label null,
                   input
                     type: 'checkbox'
