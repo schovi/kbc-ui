@@ -1,11 +1,13 @@
-import React from 'react';
+import React from 'react/addons';
 import createStoreMixin from '../mixins/createStoreMixin';
 import NotificationsStore from '../../stores/NotificationsStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 import {Alert} from 'react-bootstrap';
 
+const CSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 const classMap = {
-  success: 'success',
+  success: 'info',
   error: 'danger'
 };
 
@@ -19,39 +21,41 @@ export default React.createClass({
   },
 
   render() {
+    console.log('nofs', this.state.notifications.toJS());
     return (
       <div className="kbc-notifications">
-        {this.state.notifications.map(this.renderNotification)}
+        <CSSTransitionGroup transitionName="kbcNotificationTransition">
+          {this.state.notifications.map(this.renderNotification)}
+        </CSSTransitionGroup>
       </div>
     );
   },
 
-  renderNotification(notification, index) {
+  renderNotification(notification) {
     return (
-      <div>
+      <div key={notification.get('id')}>
         <Alert
-          key={index}
-          onDismiss={this.handleDismiss.bind(this, index)}
+          onDismiss={this.handleDismiss.bind(this, notification.get('id'))}
           bsStyle={classMap[notification.get('type')]}
           >
-          {this.renderNotificationBody(notification, index)}
+          {this.renderNotificationBody(notification)}
         </Alert>
       </div>
     );
   },
 
-  renderNotificationBody(notification, index) {
+  renderNotificationBody(notification) {
     if (typeof notification.get('value') === 'string') {
       return notification.get('value');
     } else {
       return React.createElement(notification.get('value'), {
-        onClick: this.handleDismiss.bind(this, index)
+        onClick: this.handleDismiss.bind(this, notification.get('id'))
       });
     }
   },
 
-  handleDismiss(index) {
-    ApplicationActionCreators.deleteNotification(index);
+  handleDismiss(id) {
+    ApplicationActionCreators.deleteNotification(id);
   }
 
 });

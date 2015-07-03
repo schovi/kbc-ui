@@ -5,6 +5,7 @@ ApplicationStore = require '../../stores/ApplicationStore'
 Header = React.createFactory(require '././Header')
 SidebarNavigation = React.createFactory(require '././SidebarNavigation')
 Notifications = React.createFactory(require './Notifications')
+FloatingNotifications = require './FloatingNotifications'
 ErrorPage = React.createFactory(require './../pages/ErrorPage')
 LoadingPage = React.createFactory(require './../pages/LoadingPage')
 ProjectSelect = React.createFactory(require './project-select/ProjectSelect')
@@ -37,6 +38,7 @@ App = React.createClass
       PageTitle()
       Header
         homeUrl: @state.homeUrl
+      React.createElement(FloatingNotifications)
       div className: 'container-fluid',
         div className: 'row',
           div className: 'col-xs-3 kbc-sidebar',
@@ -56,7 +58,6 @@ App = React.createClass
                 dropup: true
               UserLinks()
           div className: 'col-xs-9 col-xs-offset-3 kbc-main',
-            Notifications()
             if @props.isError
               ErrorPage()
             else if @props.isLoading

@@ -22,9 +22,9 @@ module.exports =
         type: type
         id: id
 
-  deleteNotification: (notificationIndex) ->
+  deleteNotification: (id) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_DELETE_NOTIFICATION
-      notificationIndex: notificationIndex
+      notificationId: id
 
 
