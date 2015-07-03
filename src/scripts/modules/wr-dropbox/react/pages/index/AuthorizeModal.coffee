@@ -5,6 +5,7 @@ ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Input = React.createFactory(require('react-bootstrap').Input)
+RouterStore = require('../../../../../stores/RoutesStore')
 
 {i, span, div, p, strong, form, input, label, div} = React.DOM
 
@@ -19,6 +20,7 @@ module.exports = React.createClass
     description: ""
     token: ApplicationStore.getSapiTokenString()
     oauthUrl: oauthUrl
+    router: RouterStore.getRouter()
 
 
   render: ->
@@ -33,6 +35,7 @@ module.exports = React.createClass
           @_createHiddenInput('api', 'wr-dropbox')
           @_createHiddenInput('id', @props.configId)
           @_createHiddenInput('token', @state.token)
+          @_createHiddenInput('returnUrl', @_getRedirectUrl())
         ,
           div className: 'modal-body',
             Input
@@ -68,3 +71,10 @@ module.exports = React.createClass
       name: name
       type: 'hidden'
       value: value
+
+  _getRedirectUrl: ->
+    url = @state.router.makeHref('wr-dropbox-oauth-redirect', config: @props.configId)
+    projectUrl = ApplicationStore.getProjectBaseUrl()
+    result = "#{projectUrl}#{url}"
+    console.log result
+    result
