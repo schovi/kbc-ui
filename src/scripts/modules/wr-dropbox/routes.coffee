@@ -33,11 +33,14 @@ module.exports =
             saveFn('wr-dropbox', params.config, Immutable.fromJS(configuration)).then ->
               router = RouterStore.getRouter()
               notification = "Dropbox account #{description} succesfully authorized."
-              ApplicationActionCreators.sendNotification notification
+              ApplicationActionCreators.sendNotification
+                message: notification
               router.transitionTo('wr-dropbox', config: params.config)
           , (err) ->
             notification = 'Failed to authorize the Dropbox account, please contact us on support@keboola.com'
-            ApplicationActionCreators.sendNotification notification, 'error'
+            ApplicationActionCreators.sendNotification
+              message: notification
+              type: 'error'
             router.transitionTo('wr-dropbox', config: params.config)
 
 
