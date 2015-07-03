@@ -78,6 +78,6 @@ module.exports = React.createClass
     console.log "url=", url
     projectUrl = ApplicationStore.getProjectBaseUrl()
     console.log "project url =", projectUrl
-    result = "#{origin}/#{url}"
+    result = "#{origin}#{url}"
     console.log result
     result
