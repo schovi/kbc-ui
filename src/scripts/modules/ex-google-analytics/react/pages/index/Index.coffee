@@ -36,7 +36,7 @@ module.exports = React.createClass
     since: moment().subtract(4, 'day')
     until: moment()
     latestJobs: LatestJobsStore.getJobs 'ex-google-analytics', configId
-    selectedProfilesCount: ExGanalStore.getSelectedProfiles(configId).count()
+    selectedProfilesCount: ExGanalStore.getSelectedProfiles(configId)?.count() || 0
 
   render: ->
     console.log 'rendering', @state.config.toJS()
