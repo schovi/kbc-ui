@@ -1,8 +1,9 @@
 React = require 'react'
 {fromJS, Map, List} = require('immutable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-
+classnames = require 'classnames'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
+
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 
@@ -13,9 +14,11 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
 TableRow = React.createFactory require('./TableRow')
 AuthorizeModal = React.createFactory require('./AuthorizeModal')
+OptionsModal = React.createFactory require('./OptionsModal')
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 
-
+ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
 {ul, li, span, button, strong, div, i} = React.DOM
 
 componentId = 'wr-dropbox'
@@ -101,7 +104,21 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-user'
               ' Authorize'
+        li null,
+          ModalTrigger
+            modal: OptionsModal
+              parameters: @state.configData.get('parameters', Map())
+              updateParamsFn: @_updateParmeters
+              isUpadting: @state.savingData.has('parameters')
+          ,
+            span className: 'btn btn-link',
+              i className: 'fa fa-fw fa-gear'
+              ' Options'
 
+
+
+  _updateParmeters: (newParameters) ->
+    @_updateAndSaveConfigData(['parameters'], newParameters)
 
   _handleExportChange: (tableId) ->
     _handleExport = (newExportStatus) =>
