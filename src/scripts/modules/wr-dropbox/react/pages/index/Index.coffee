@@ -71,10 +71,18 @@ module.exports = React.createClass
       isPending: @_isPendingTable(table.get('id'))
       onExportChangeFn: =>
         @_handleExportChange(table.get('id'))
-      onHandleUploadFn: @_handleUpload
       table: table
+      prepareSingleUploadDataFn: @_prepareTableUploadData
 
-  _handleUpload: ->
+  _prepareTableUploadData: (table) ->
+    tableId = table.get('id')
+    configurationData:
+      storage:
+        input:
+          tables: [source: tableId, destination: tableId]
+      parameters: @state.configData.get('parameters', Map()).toJS()
+
+
 
   _isPendingTable: (tableId) ->
     result = @state.savingData.has('storage')

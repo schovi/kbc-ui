@@ -2,6 +2,8 @@ React = require 'react'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, button, strong, div} = React.DOM
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+
 
 module.exports = React.createClass
   displayName: 'DropboxTableRow'
@@ -10,7 +12,7 @@ module.exports = React.createClass
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
     onExportChangeFn: React.PropTypes.func.isRequired
-    onHandleUploadFn: React.PropTypes.func.isRequired
+    prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
 
   render: ->
@@ -28,12 +30,13 @@ module.exports = React.createClass
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
         ,
-          React.createElement Confirm,
-            text: 'Upload Table'
-            title: 'Upload Table'
-            buttonLabel: 'Upload'
-            buttonType: 'success'
-            onConfirm: @_handleUpload
+          RunButtonModal
+            title: 'Run Table Upload'
+            tooltip: 'Run Table Upload'
+            mode: 'button'
+            icon: 'fa fa-upload fa-fw'
+            component: 'wr-dropbox'
+            runParams: =>
+              config: @props.prepareSingleUploadDataFn(@props.table)
           ,
-            button className: 'btn btn-link',
-              span className: 'fa fa-upload fa-fw'
+           "You are about to run upload of #{@props.table.get('name')} to dropbox account"
