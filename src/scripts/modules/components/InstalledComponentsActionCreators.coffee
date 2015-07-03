@@ -212,7 +212,8 @@ module.exports =
         componentId: componentId
         configurationId: configurationId
 
-      ApplicationActionCreators.sendNotification notification
+      ApplicationActionCreators.sendNotification
+        message: notification
 
     .catch (e) ->
       dispatcher.handleViewAction
@@ -248,17 +249,18 @@ module.exports =
     .then (job) ->
       JobsActionCreators.recieveJobDetail(job)
       if params.notify
-        ApplicationActionCreators.sendNotification(React.createClass
-          render: ->
-            React.DOM.span null,
-              "#{params.message} You can track the job progress "
-              React.createElement Link,
-                to: 'jobDetail'
-                params:
-                  jobId: job.id
-                onClick: @props.onClick
-              ,
-                'here'
-              '.'
+        ApplicationActionCreators.sendNotification(
+          message: React.createClass
+            render: ->
+              React.DOM.span null,
+                "#{params.message} You can track the job progress "
+                React.createElement Link,
+                  to: 'jobDetail'
+                  params:
+                    jobId: job.id
+                  onClick: @props.onClick
+                ,
+                  'here'
+                '.'
       )
       job

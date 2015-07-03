@@ -15,7 +15,8 @@ module.exports =
       dispatcher.handleViewAction
         type: Constants.ActionTypes.EX_GANAL_SEND_LINK_SUCCESS
         configId: configId
-      ApplicationActionCreators.sendNotification "Email has been succesfully sent to #{emailObject.email}"
+      ApplicationActionCreators.sendNotification
+        message: "Email has been succesfully sent to #{emailObject.email}"
     .catch (err) ->
       dispatcher.handleViewAction
         type: Constants.ActionTypes.EX_GANAL_API_ERROR

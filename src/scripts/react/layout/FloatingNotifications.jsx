@@ -45,10 +45,10 @@ export default React.createClass({
   },
 
   renderNotificationBody(notification) {
-    if (typeof notification.get('value') === 'string') {
-      return notification.get('value');
+    if (typeof notification.get('message') === 'string') {
+      return notification.get('message');
     } else {
-      return React.createElement(notification.get('value'), {
+      return React.createElement(notification.get('message'), {
         onClick: this.handleDismiss.bind(this, notification.get('id'))
       });
     }

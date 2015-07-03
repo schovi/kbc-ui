@@ -102,7 +102,8 @@ module.exports =
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
         configurationId: configurationId
 
-      applicationActionCreators.sendNotification 'Optimalization of SLI hashes has been triggered!
+      applicationActionCreators.sendNotification
+        message: 'Optimalization of SLI hashes has been triggered!
       You can see progress TODO'
     .catch (e) ->
       dispatcher.handleViewAction
@@ -252,31 +253,33 @@ module.exports =
 
       if tableId
         table = goodDataWriterStore.getTable configurationId, tableId
-        applicationActionCreators.sendNotification React.createClass
-          render: ->
-            React.DOM.span null,
-              "GoodData upload of table "
-              React.DOM.strong null, table.getIn ['data', 'name']
-              " has been initiated You can track the job progress "
-              React.createElement Link,
-                to: 'jobDetail'
-                params:
-                  jobId: job.job
-                onClick: @props.onClick
-              ,
-                'here'
+        applicationActionCreators.sendNotification
+          message: React.createClass
+            render: ->
+              React.DOM.span null,
+                "GoodData upload of table "
+                React.DOM.strong null, table.getIn ['data', 'name']
+                " has been initiated You can track the job progress "
+                React.createElement Link,
+                  to: 'jobDetail'
+                  params:
+                    jobId: job.job
+                  onClick: @props.onClick
+                ,
+                  'here'
       else
-        applicationActionCreators.sendNotification React.createClass
-          render: ->
-            React.DOM.span null,
-              "GoodData upload has been initiated. You can track the job progress "
-              React.createElement Link,
-                to: 'jobDetail'
-                params:
-                  jobId: job.job
-                onClick: @props.onClick
-              ,
-                'here'
+        applicationActionCreators.sendNotification
+          message: React.createClass
+            render: ->
+              React.DOM.span null,
+                "GoodData upload has been initiated. You can track the job progress "
+                React.createElement Link,
+                  to: 'jobDetail'
+                  params:
+                    jobId: job.job
+                  onClick: @props.onClick
+                ,
+                  'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_ERROR
@@ -391,7 +394,8 @@ module.exports =
         type: constants.ActionTypes.GOOD_DATA_WRITER_DELETE_SUCCESS
         configurationId: configurationId
 
-      applicationActionCreators.sendNotification 'Writer has been scheduled for removal!'
+      applicationActionCreators.sendNotification
+        message: 'Writer has been scheduled for removal!'
 
     .catch (e) ->
       dispatcher.handleViewAction

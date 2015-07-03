@@ -58,7 +58,11 @@ startApp = (appOptions) ->
     if error.getExceptionId()
       notification += " Exception id: #{error.getExceptionId()}"
 
-    ApplicationActionCreators.sendNotification notification, 'error', error.id
+    ApplicationActionCreators.sendNotification
+      message: notification
+      type: 'error'
+      id: error.id
+
     if !error.isUserError
       throw e
 

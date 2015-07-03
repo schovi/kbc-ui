@@ -362,18 +362,19 @@ module.exports =
         job: newJob
       )
       if notify
-        ApplicationActionCreators.sendNotification React.createClass
-          render: ->
-            React.DOM.span null,
-              "Orchestration scheduled. You can track the progress "
-              React.createElement Link,
-                to: 'orchestrationJob'
-                params:
-                  jobId: newJob.id
-                  orchestrationId: id
-                onClick: @props.onClick
-              ,
-                'here'
+        ApplicationActionCreators.sendNotification
+          message: React.createClass
+            render: ->
+              React.DOM.span null,
+                "Orchestration scheduled. You can track the progress "
+                React.createElement Link,
+                  to: 'orchestrationJob'
+                  params:
+                    jobId: newJob.id
+                    orchestrationId: id
+                  onClick: @props.onClick
+                ,
+                  'here'
 
     )
 

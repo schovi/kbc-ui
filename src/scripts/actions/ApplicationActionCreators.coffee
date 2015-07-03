@@ -13,19 +13,26 @@ module.exports =
       applicationData: data
 
   ###
-    notification - React element
+    notification -
+      text - (required) notification message string or React element
+      type - notification type, default is success
+      id - notification id, used for duplicate messages filter
+      autoDelete - automatically delete message, default to false
   ###
-  sendNotification: (notification, type = 'success', id = null, autoDelete = false) ->
-    notification =
-      value: notification
-      type: type
-      id: if id then id else _.uniqueId('notification')
+  sendNotification: (notification) ->
+    defaults =
+      message: ''
+      type: 'success'
+      autoDelete: false
+      id: _.uniqueId('notification')
+
+    notification = _.extend defaults, notification
 
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
       notification: notification
 
-    if autoDelete
+    if notification.autoDelete
       setTimeout @deleteNotification.bind(@, notification.id), 10000
 
   deleteNotification: (id) ->
