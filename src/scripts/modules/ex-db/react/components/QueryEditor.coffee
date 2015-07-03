@@ -14,8 +14,6 @@ createGetSuggestions = (getOptions) ->
       .filter (value) -> fuzzy.match(input, value)
       .slice 0, 10
       .toList()
-
-    console.log 'suggestions', suggestions.toJS()
     callback(null, suggestions.toJS())
 
 
@@ -50,61 +48,54 @@ module.exports = React.createClass
     "in.c-ex-db-" + @props.configId + "." + @props.query.get('name', '')
 
   render: ->
-    div className: '',
-      div className: 'table kbc-form-table form-horizontal',
-        div className: 'tr',
-          div className: 'td',
-            div className: 'form-group',
-              label className: 'col-md-4 control-label', 'Name'
-              div className: 'col-md-8',
-                input
-                  className: 'form-control'
-                  type: 'text'
-                  value: @props.query.get 'name'
-                  ref: 'queryName'
-                  placeholder: 'Untitled Query'
-                  onChange: @_handleNameChange
-            div className: 'form-group',
-              label className: 'col-md-4 control-label', 'Output table'
-              div className: 'col-md-8',
-                Autosuggest
-                  suggestions: createGetSuggestions(@_tableSelectOptions)
-                  inputAttributes:
-                    className: 'form-control'
-                    placeholder: @_tableNamePlaceholder()
-                    value: @props.query.get 'outputTable'
-                    onChange: @_handleOutputTableChange
-          div className: 'td',
-            div className: 'form-group',
-              label className: 'col-md-4 control-label', 'Primary key'
-                div className: 'col-md-8',
-                input
-                  className: 'form-control'
-                  type: 'text'
-                  value: @props.query.get 'primaryKey'
-                  placeholder: 'No primary key'
-                  onChange: @_handlePrimaryKeyChange
-            div className: 'form-group',
-              div className: 'col-md-8 col-md-offset-4 checkbox',
-                label null,
-                  input
-                    type: 'checkbox'
-                    checked: @props.query.get 'incremental'
-                    onChange: @_handleIncrementalChange
-                  'Incremental'
-      div
-        style:
-          'margin-top': '-30px'
-      ,
-        CodeEditor
-          readOnly: false
-          placeholder: 'SELECT `id`, `name` FROM `myTable`'
-          value: @props.query.get 'query'
-          onChange: @_handleQueryChange
+    div className: 'row',
+      div className: 'form-horizontal',
+        div className: 'form-group',
+          label className: 'col-md-2 control-label', 'Name'
+          div className: 'col-md-4',
+            input
+              className: 'form-control'
+              type: 'text'
+              value: @props.query.get 'name'
+              ref: 'queryName'
+              placeholder: 'Untitled Query'
+              onChange: @_handleNameChange
+          label className: 'col-md-2 control-label', 'Primary key'
+          div className: 'col-md-4',
+          input
+            className: 'form-control'
+            type: 'text'
+            value: @props.query.get 'primaryKey'
+            placeholder: 'No primary key'
+            onChange: @_handlePrimaryKeyChange
+        div className: 'form-group',
+          label className: 'col-md-2 control-label', 'Output table'
+          div className: 'col-md-4',
+            Autosuggest
+              suggestions: createGetSuggestions(@_tableSelectOptions)
+              inputAttributes:
+                className: 'form-control'
+                placeholder: @_tableNamePlaceholder()
+                value: @props.query.get 'outputTable'
+                onChange: @_handleOutputTableChange
+          div className: 'col-md-4 col-md-offset-2 checkbox',
+            label null,
+              input
+                type: 'checkbox'
+                checked: @props.query.get 'incremental'
+                onChange: @_handleIncrementalChange
+              'Incremental'
+        div className: 'form-group',
+          label className: 'col-md-12 control-label', 'SQL query'
+          div className: 'col-md-12',
+            CodeEditor
+              readOnly: false
+              placeholder: 'SELECT `id`, `name` FROM `myTable`'
+              value: @props.query.get 'query'
+              onChange: @_handleQueryChange
 
 
   _tableSelectOptions: ->
-    console.log 'select opts'
     @props.tables
     .map (table) ->
       table.get 'id'

@@ -52,7 +52,6 @@ module.exports = React.createClass
     ExDbActionCreators.saveQueryEdit @state.configId, @state.query.get('id')
 
   render: ->
-    console.log 'q', @state.queriesFiltered.toJS()
     div className: 'container-fluid kbc-main-content',
       div className: 'col-md-3 kbc-main-nav',
         div className: 'kbc-container',

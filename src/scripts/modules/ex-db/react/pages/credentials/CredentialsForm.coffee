@@ -27,7 +27,6 @@ module.exports = React.createClass
     onChange: ->
 
   render: ->
-    console.log 'credentials', @props.credentials.toJS()
     form className: 'form-horizontal',
       div className: 'row',
         @_createSelect 'Driver', 'driver', _drivers

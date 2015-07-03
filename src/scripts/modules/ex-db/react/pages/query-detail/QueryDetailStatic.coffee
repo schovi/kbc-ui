@@ -11,56 +11,50 @@ module.exports = React.createClass
     query: React.PropTypes.object.isRequired
 
   render: ->
-    div className: '',
-      div className: 'table kbc-form-table form-horizontal',
-        div className: 'tr',
-          div className: 'td',
-            div className: 'form-group',
-              label className: 'col-md-3 control-label', 'Name'
-              div className: 'col-md-9',
-                input
-                  className: 'form-control'
-                  type: 'text'
-                  value: @props.query.get 'name'
-                  placeholder: 'Untitled Query'
-                  disabled: true
-            div className: 'form-group',
-              label className: 'col-md-3 control-label', 'Output table'
-              div className: 'col-md-9',
-                input
-                  className: 'form-control'
-                  type: 'text'
-                  placeholder: 'Output table ...'
-                  value: @props.query.get 'outputTable'
-                  disabled: true
-          div className: 'td',
-            div className: 'form-group',
-              label className: 'col-md-3 control-label', 'Primary key'
-                div className: 'col-md-9',
-                input
-                  className: 'form-control'
-                  type: 'text'
-                  value: @props.query.get 'primaryKey'
-                  placeholder: 'No primary key'
-                  disabled: true
-            div className: 'form-group',
-              div className: 'col-md-9 col-md-offset-3 checkbox',
-                label null,
-                  input
-                    type: 'checkbox'
-                    checked: @props.query.get 'incremental'
-                    disabled: true
-                  'Incremental'
-      div
-        style:
-          'margin-top': '-30px'
-      ,
-        if @props.query.get('query').length
-          CodeEditor
-            readOnly: 'nocursor'
-            lineNumbers: false
-            value: @props.query.get 'query'
-        else
-          div className: 'row kbc-header',
-            p className: 'text-muted',
-              'Query SQL not set.'
+    div className: 'row',
+      div className: 'form-horizontal',
+        div className: 'form-group',
+          label className: 'col-md-2 control-label', 'Name'
+          div className: 'col-md-4',
+            input
+              className: 'form-control'
+              type: 'text'
+              value: @props.query.get 'name'
+              placeholder: 'Untitled Query'
+              disabled: true
+          label className: 'col-md-2 control-label', 'Primary key'
+          div className: 'col-md-4',
+          input
+            className: 'form-control'
+            type: 'text'
+            value: @props.query.get 'primaryKey'
+            placeholder: 'No primary key'
+            disabled: true
+        div className: 'form-group',
+          label className: 'col-md-2 control-label', 'Output table'
+          div className: 'col-md-4',
+            input
+              className: 'form-control'
+              type: 'text'
+              placeholder: 'Output table ...'
+              value: @props.query.get 'outputTable'
+              disabled: true
+          div className: 'col-md-4 col-md-offset-2 checkbox',
+            label null,
+              input
+                type: 'checkbox'
+                checked: @props.query.get 'incremental'
+                disabled: true
+              'Incremental'
+        div className: 'form-group',
+          label className: 'col-md-12 control-label', 'SQL query'
+          div className: 'col-md-12',
+            if @props.query.get('query').length
+              CodeEditor
+                readOnly: 'nocursor'
+                lineNumbers: false
+                value: @props.query.get 'query'
+            else
+              div className: 'row kbc-header',
+                p className: 'text-muted',
+                  'SQL query not set.'
