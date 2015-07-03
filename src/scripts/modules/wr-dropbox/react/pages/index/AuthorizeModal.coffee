@@ -73,8 +73,9 @@ module.exports = React.createClass
       value: value
 
   _getRedirectUrl: ->
+    origin = window.location.origin
     url = @state.router.makeHref('wr-dropbox-oauth-redirect', config: @props.configId)
     projectUrl = ApplicationStore.getProjectBaseUrl()
-    result = "#{projectUrl}#{url}"
+    result = "#{origin}#{projectUrl}#{url}"
     console.log result
     result
