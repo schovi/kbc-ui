@@ -16,7 +16,6 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
 
   render: ->
-    console.log "RENDER table row"
     div {className: 'tr', key: @props.table.get('id')},
       span className: 'td',
         @props.table.get 'name'

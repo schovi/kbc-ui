@@ -55,6 +55,7 @@ module.exports =
         configId: configId
         configData: configData
       )
+      return configData
     .catch (error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR

@@ -82,13 +82,9 @@ module.exports = React.createClass
           tables: [source: tableId, destination: tableId]
       parameters: @state.configData.get('parameters', Map()).toJS()
 
-
-
   _isPendingTable: (tableId) ->
     result = @state.savingData.has('storage')
-    console.log "is pending", result
     result
-
 
   _renderHeaderRow: ->
     div className: 'tr',
