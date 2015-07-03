@@ -22,8 +22,8 @@ module.exports = React.createClass
         @props.table.get 'name'
       span className: 'td text-right',
         React.createElement ActivateDeactivateButton,
-          activateTooltip: 'Select table to bulk upload'
-          deactivateTooltip: 'Deselect table from bulk upload'
+          activateTooltip: 'Select table to upload'
+          deactivateTooltip: 'Deselect table from upload'
           isActive: @props.isTableExported
           isPending: @props.isPending
           onChange: @props.onExportChangeFn()

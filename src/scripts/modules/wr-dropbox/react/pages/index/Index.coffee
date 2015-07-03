@@ -106,7 +106,8 @@ module.exports = React.createClass
       ul className: 'nav nav-stacked',
         li {className: classnames(disabled: !@_getInputTables().count())},
           RunButtonModal
-            title: 'Run Bulk Upload'
+            title: 'Upload selected tables'
+            icon: 'fa fa-fw fa-upload'
             mode: 'link'
             component: 'wr-dropbox'
             disabled: !@_getInputTables().count()
