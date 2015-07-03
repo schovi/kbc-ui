@@ -36,6 +36,6 @@ module.exports = React.createClass
             icon: 'fa fa-upload fa-fw'
             component: 'wr-dropbox'
             runParams: =>
-              config: @props.prepareSingleUploadDataFn(@props.table)
+              configData: @props.prepareSingleUploadDataFn(@props.table)
           ,
            "You are about to run upload of #{@props.table.get('name')} to dropbox account"
