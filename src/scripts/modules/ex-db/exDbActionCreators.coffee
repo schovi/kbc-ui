@@ -190,7 +190,10 @@ module.exports =
     credentials = exDbStore.getNewCredentials(configurationId)
     saveCredentials configurationId, credentials
     .then ->
-      ApplicationActionCreators.sendNotification 'Credentials are set up now. You can continue by adding queries.'
+      ApplicationActionCreators.sendNotification 'Credentials are set up now. You can continue by adding queries.',
+        'success',
+        null,
+        true
 
   editCredentials: (configurationId) ->
     dispatcher.handleViewAction

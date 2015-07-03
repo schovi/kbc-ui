@@ -2,6 +2,7 @@
 
 dispatcher = require '../Dispatcher'
 constants = require '../constants/KbcConstants'
+_ = require 'underscore'
 
 
 module.exports =
@@ -14,13 +15,18 @@ module.exports =
   ###
     notification - React element
   ###
-  sendNotification: (notification, type = 'success', id = null) ->
+  sendNotification: (notification, type = 'success', id = null, autoDelete = false) ->
+    notification =
+      value: notification
+      type: type
+      id: if id then id else _.uniqueId('notification')
+
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
-      notification:
-        value: notification
-        type: type
-        id: id
+      notification: notification
+
+    if autoDelete
+      setTimeout @deleteNotification.bind(@, notification.id), 10000
 
   deleteNotification: (id) ->
     dispatcher.handleViewAction

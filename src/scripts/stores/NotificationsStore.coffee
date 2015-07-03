@@ -4,7 +4,6 @@ Immutable = require('immutable')
 {Map, List} = Immutable
 Constants = require '../constants/KbcConstants'
 StoreUtils = require '../utils/StoreUtils'
-_ = require 'underscore'
 
 _store = Map
   notifications: List()
@@ -26,9 +25,6 @@ Dispatcher.register (payload) ->
   switch action.type
     when Constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
 
-      if !action.notification.id
-        action.notification.id = _._.uniqueId('notification')
-
       # avoid duplication of same message
       if !hasNotificationWithId(action.notification.id)
         _store = _store
@@ -40,8 +36,9 @@ Dispatcher.register (payload) ->
       index = _store.get('notifications').findIndex (notification) ->
         notification.get('id') == action.notificationId
 
-      _store = _store.update 'notifications', (notifications) ->
-        notifications.delete index
-      NotificationsStore.emitChange()
+      if index >= 0
+        _store = _store.update 'notifications', (notifications) ->
+          notifications.delete index
+        NotificationsStore.emitChange()
 
 module.exports = NotificationsStore
