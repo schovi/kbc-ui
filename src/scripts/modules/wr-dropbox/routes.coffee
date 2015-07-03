@@ -13,6 +13,8 @@ module.exports =
   requireData: [
     (params) ->
       installedComponentsActions.loadComponentConfigData('wr-dropbox', params.config)
+    (params) ->
+      oauthActions.loadCredentials('wr-dropbox', params.config)
   ]
   defaultRouteHandler: IndexPage
   childRoutes: [

@@ -8,6 +8,7 @@ ComponentDescription = require '../../../../components/react/components/Componen
 ComponentDescription = React.createFactory(ComponentDescription)
 
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+OAuthStore = require('../../../OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -33,7 +34,10 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles', Map())
     savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId)
-    console.log "get state CONFIG DATA", configData.toJS()
+    credentials = OAuthStore.getCredentials(componentId, configId)
+    hasCredentials = OAuthStore.hasCredentials(componentId, configId)
+
+    console.log "get state CONFIG DATA", configData.toJS(), credentials?.toJS()
 
     # state
     configId: configId
@@ -41,6 +45,8 @@ module.exports = React.createClass
     localState: localState
     bucketToggles: toggles
     savingData: savingData or Map()
+    credentials: credentials
+    hasCredentials: hasCredentials
 
   render: ->
     div {className: 'container-fluid'},
@@ -96,6 +102,14 @@ module.exports = React.createClass
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       div className: 'kbc-buttons kbc-text-light',
+        span null,
+          'Authorized for '
+        strong null,
+          if @state.hasCredentials
+            @state.credentials.get('description')
+          else
+            'not authorized'
+
         React.createElement ComponentMetadata,
           componentId: componentId
           configId: @state.configId

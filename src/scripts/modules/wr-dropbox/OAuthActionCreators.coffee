@@ -3,6 +3,7 @@ Promise = require('bluebird')
 oauthStore = require './OAuthStore'
 oauthApi = require './OAuthApi'
 Constants = require('./OAuthConstants')
+Immutable = require('immutable')
 
 module.exports =
 
@@ -18,6 +19,7 @@ module.exports =
         type: Constants.ActionTypes.OAUTH_LOAD_CREDENTIALS_SUCCESS
         componentId: componentId
         configId: configId
+        credentials: Immutable.fromJS(result)
       return result
     .catch (err) ->
       console.log "LOAD CREDENTIALS API ERROR", err
