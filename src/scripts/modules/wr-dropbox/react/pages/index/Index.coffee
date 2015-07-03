@@ -96,6 +96,18 @@ module.exports = React.createClass
           componentId: componentId
           configId: @state.configId
       ul className: 'nav nav-stacked',
+        li {className: classnames(disabled: !@_getInputTables().count())},
+          RunButtonModal
+            title: 'Run Bulk Upload'
+            mode: 'link'
+            component: 'wr-dropbox'
+            disabled: !@_getInputTables().count()
+            disabledReason: "No tables configured."
+            runParams: =>
+              config: @state.configId
+          ,
+           "You are about to run upload of #{@_getInputTables().count()} selected table(s) to dropbox account"
+
         li null,
           ModalTrigger
             modal: AuthorizeModal
