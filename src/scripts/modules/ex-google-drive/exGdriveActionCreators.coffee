@@ -3,6 +3,7 @@ constants = require './exGdriveConstants'
 Promise = require('bluebird')
 exGdriveApi = require './exGdriveApi'
 exGdriveStore = require './exGdriveStore'
+RoutesStore = require '../../stores/RoutesStore'
 module.exports =
 
   dispatchApiError: (errorPath, error) ->
@@ -41,6 +42,8 @@ module.exports =
         type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_SUCCESS
         configurationId: configurationId
         data: result
+      RoutesStore.getRouter().transitionTo 'ex-google-drive',
+        config: configurationId
     .catch (err) =>
       @dispatchApiError( ['savingNewSheets', configurationId], err)
       throw err
