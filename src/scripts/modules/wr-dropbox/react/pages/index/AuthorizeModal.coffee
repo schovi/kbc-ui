@@ -67,7 +67,7 @@ module.exports = React.createClass
                   i className: 'fa fa-fw fa-dropbox'
 
   _createHiddenInput: (name, value) ->
-    Input
+    input
       name: name
       type: 'hidden'
       value: value
