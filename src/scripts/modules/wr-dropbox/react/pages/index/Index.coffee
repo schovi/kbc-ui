@@ -10,6 +10,7 @@ ComponentDescription = React.createFactory(ComponentDescription)
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 OAuthStore = require('../../../OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+OAuthActions = require('../../../OAuthActionCreators')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
@@ -36,6 +37,7 @@ module.exports = React.createClass
     savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     credentials = OAuthStore.getCredentials(componentId, configId)
     hasCredentials = OAuthStore.hasCredentials(componentId, configId)
+    isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId)
 
     console.log "get state CONFIG DATA", configData.toJS(), credentials?.toJS()
 
@@ -47,6 +49,7 @@ module.exports = React.createClass
     savingData: savingData or Map()
     credentials: credentials
     hasCredentials: hasCredentials
+    isDeletingCredentials: isDeletingCredentials
 
   render: ->
     div {className: 'container-fluid'},
@@ -128,13 +131,16 @@ module.exports = React.createClass
            "You are about to run upload of #{@_getInputTables().count()} selected table(s) to dropbox account"
 
         li null,
-          ModalTrigger
-            modal: AuthorizeModal
-              configId: @state.configId
-          ,
-            span className: 'btn btn-link',
-              i className: 'fa fa-fw fa-user'
-              ' Authorize'
+          if @state.hasCredentials
+            @_renderResetAuthorization()
+          else
+            ModalTrigger
+              modal: AuthorizeModal
+                configId: @state.configId
+            ,
+              span className: 'btn btn-link',
+                i className: 'fa fa-fw fa-user'
+                ' Authorize'
         li null,
           ModalTrigger
             modal: OptionsModal
@@ -145,6 +151,18 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-gear'
               ' Options'
+
+  _renderResetAuthorization: ->
+    ActivateDeactivateButton
+      mode: 'link'
+      activateTooltip: ''
+      deactivateTooltip: 'Reset Authorization'
+      isActive: true
+      isPending: @state.isDeletingCredentials
+      onChange: @_deleteCredentials
+
+  _deleteCredentials: ->
+    OAuthActions.deleteCredentials(componentId, @state.configId)
 
 
 
