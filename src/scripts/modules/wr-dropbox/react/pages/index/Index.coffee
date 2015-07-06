@@ -19,7 +19,8 @@ AuthorizeModal = React.createFactory require('./AuthorizeModal')
 OptionsModal = React.createFactory require('./OptionsModal')
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-
+DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
+DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
 {ul, li, span, button, strong, div, i} = React.DOM
 
@@ -140,6 +141,10 @@ module.exports = React.createClass
               span className: 'btn btn-link',
                 i className: 'fa fa-fw fa-user'
                 ' Authorize'
+        li null,
+          DeleteConfigurationButton
+            componentId: 'wr-dropbox'
+            configId: @state.configId
         li null,
           ModalTrigger
             modal: OptionsModal
