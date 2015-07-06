@@ -143,10 +143,6 @@ module.exports = React.createClass
                 i className: 'fa fa-fw fa-user'
                 ' Authorize'
         li null,
-          DeleteConfigurationButton
-            componentId: 'wr-dropbox'
-            configId: @state.configId
-        li null,
           ModalTrigger
             modal: OptionsModal
               parameters: @state.configData.get('parameters', Map())
@@ -156,6 +152,10 @@ module.exports = React.createClass
             span className: 'btn btn-link',
               i className: 'fa fa-fw fa-gear'
               ' Options'
+        li null,
+          DeleteConfigurationButton
+            componentId: 'wr-dropbox'
+            configId: @state.configId
 
   _renderResetAuthorization: ->
     ActivateDeactivateButton
