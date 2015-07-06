@@ -8,7 +8,7 @@ hiddenComponents = ['wr-dropbox']
 module.exports =
   isRouteAllowed: (componentId) ->
     isHidden = componentId in hiddenComponents
-    adminFeature = "ui-#{componentId}"
+    adminFeature = "ui-devel-preview"
     hasAdminFeature = ApplicationStore.hasCurrentAdminFeature(adminFeature)
     #route is not hidden or if it is hidden then it must be explicitely allowed
     # via admin feature
