@@ -5,6 +5,7 @@ Immutable = require 'immutable'
 RouterStore = require('../../stores/RoutesStore')
 {Navigation} = require 'react-router'
 ApplicationActionCreators = require('../../actions/ApplicationActionCreators')
+JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'wr-dropbox'
@@ -16,6 +17,10 @@ module.exports =
     (params) ->
       oauthActions.loadCredentials('wr-dropbox', params.config)
   ]
+  poll:
+    interval: 7
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('wr-dropbox', params.config)
   defaultRouteHandler: IndexPage
   childRoutes: [
     name: 'wr-dropbox-oauth-redirect'

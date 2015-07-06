@@ -2,6 +2,7 @@ React = require 'react'
 {fromJS, Map, List} = require('immutable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 classnames = require 'classnames'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -13,6 +14,7 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 OAuthActions = require('../../../OAuthActionCreators')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 TablesByBucketsPanel = React.createFactory require('../../components/TablesByBucketsPanel')
 TableRow = React.createFactory require('./TableRow')
 AuthorizeModal = React.createFactory require('./AuthorizeModal')
@@ -28,7 +30,7 @@ componentId = 'wr-dropbox'
 
 module.exports = React.createClass
   displayName: 'wrDropboxIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -44,6 +46,7 @@ module.exports = React.createClass
     console.log "get state CONFIG DATA", configData.toJS(), credentials?.toJS()
 
     # state
+    latestJobs: LatestJobsStore.getJobs(componentId, configId)
     configId: configId
     configData: configData
     localState: localState
@@ -173,6 +176,8 @@ module.exports = React.createClass
             componentId: 'wr-dropbox'
             configId: @state.configId
             customDeleteFn: @_deleteCredentials
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
 
 
   _renderResetAuthorization: ->
