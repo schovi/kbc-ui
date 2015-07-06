@@ -22,7 +22,7 @@ RunButtonModal = React.createFactory(require('../../../../components/react/compo
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
-{ul, li, span, button, strong, div, i} = React.DOM
+{p, ul, li, span, button, strong, div, i} = React.DOM
 
 componentId = 'wr-dropbox'
 
@@ -64,16 +64,29 @@ module.exports = React.createClass
         ComponentDescription
           componentId: 'wr-dropbox'
           configId: @state.configId
-      div className: 'row',
-        TablesByBucketsPanel
-          renderTableRowFn: @_renderTableRow
-          renderHeaderRowFn: @_renderHeaderRow
-          filterFn: @_filterBuckets
-          onSearchQueryChange: @_handleSearchQueryChange
-          searchQuery: @state.localState.get('searchQuery') or ''
-          isTableExportedFn: @_isTableExported
-          onToggleBucketFn: @_handleToggleBucket
-          isBucketToggledFn: @_isBucketToggled
+      if @state.hasCredentials
+        div className: 'row',
+          TablesByBucketsPanel
+            renderTableRowFn: @_renderTableRow
+            renderHeaderRowFn: @_renderHeaderRow
+            filterFn: @_filterBuckets
+            onSearchQueryChange: @_handleSearchQueryChange
+            searchQuery: @state.localState.get('searchQuery') or ''
+            isTableExportedFn: @_isTableExported
+            onToggleBucketFn: @_handleToggleBucket
+            isBucketToggledFn: @_isBucketToggled
+      else
+        div className: 'row component-empty-state text-center',
+          div null,
+            p null, 'No Dropbox account authorized.'
+            ModalTrigger
+              modal: AuthorizeModal
+                configId: @state.configId
+            ,
+              span className: 'btn btn-success',
+                i className: 'fa fa-fw fa-dropbox'
+                ' Authorize Dropbox Account'
+
 
 
   _renderTableRow: (table) ->
@@ -102,6 +115,9 @@ module.exports = React.createClass
         strong null, 'Table name'
     return null
 
+  _canRunUpload: ->
+    (@_getInputTables().count() > 0) and @state.hasCredentials
+
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -118,14 +134,14 @@ module.exports = React.createClass
           componentId: componentId
           configId: @state.configId
       ul className: 'nav nav-stacked',
-        li {className: classnames(disabled: !@_getInputTables().count())},
+        li {className: classnames(disabled: !@_canRunUpload())},
           RunButtonModal
             title: 'Upload selected tables'
             icon: 'fa fa-fw fa-upload'
             mode: 'link'
             component: 'wr-dropbox'
-            disabled: !@_getInputTables().count()
-            disabledReason: "No tables configured."
+            disabled: !@_canRunUpload()
+            disabledReason: "A dropbox account must be authorized and some table selected."
             runParams: =>
               config: @state.configId
           ,
