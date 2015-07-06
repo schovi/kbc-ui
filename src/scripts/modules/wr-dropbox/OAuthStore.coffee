@@ -8,7 +8,7 @@ fuzzy = require 'fuzzy'
 
 
 _store = Map
-  deleteingCredentials: Map()
+  deletingCredentials: Map()
   credentials: Map()
 
 OAuthStore = StoreUtils.createStore
@@ -19,7 +19,7 @@ OAuthStore = StoreUtils.createStore
     _store.getIn ['credentials', componentId, configId]
 
   isDeletingCredetials: (componentId, configId) ->
-    _store.hasIn ['deleteingCredentials', componentId, configId]
+    _store.hasIn ['deletingCredentials', componentId, configId]
 
 
 dispatcher.register (payload) ->
@@ -32,7 +32,7 @@ dispatcher.register (payload) ->
       OAuthStore.emitChange()
 
     when Constants.ActionTypes.OAUTH_DELETE_CREDENTIALS_START
-      _store = _store.setIn ['deletingCredentials', action.componentId, action.configId], true
+      _store = _store.setIn(['deletingCredentials', action.componentId, action.configId], true)
       OAuthStore.emitChange()
 
     when Constants.ActionTypes.OAUTH_DELETE_CREDENTIALS_SUCCESS

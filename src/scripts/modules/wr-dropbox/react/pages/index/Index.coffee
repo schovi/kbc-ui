@@ -28,7 +28,7 @@ componentId = 'wr-dropbox'
 
 module.exports = React.createClass
   displayName: 'wrDropboxIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -39,6 +39,7 @@ module.exports = React.createClass
     credentials = OAuthStore.getCredentials(componentId, configId)
     hasCredentials = OAuthStore.hasCredentials(componentId, configId)
     isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId)
+    console.log "HAS credentials", hasCredentials
 
     console.log "get state CONFIG DATA", configData.toJS(), credentials?.toJS()
 
