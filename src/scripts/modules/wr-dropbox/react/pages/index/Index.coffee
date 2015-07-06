@@ -156,6 +156,8 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'wr-dropbox'
             configId: @state.configId
+            customDeleteFn: @_deleteCredentials
+
 
   _renderResetAuthorization: ->
     ActivateDeactivateButton

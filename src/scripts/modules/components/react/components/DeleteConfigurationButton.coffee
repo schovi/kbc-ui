@@ -11,6 +11,7 @@ module.exports = React.createClass
   displayName: 'DeleteConfigurationButton'
   mixins: [createStoreMixin(InstalledComponentsStore)]
   propTypes:
+    customDeleteFn: React.PropTypes.func
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
 
@@ -19,6 +20,8 @@ module.exports = React.createClass
     isDeleting: InstalledComponentsStore.isDeletingConfig @props.componentId, @props.configId, @props.fieldName
 
   _handleDelete: ->
+    if @props.customDeleteFn
+      @props.customDeleteFn()
     InstalledComponentsActionCreators.deleteConfiguration @props.componentId,
         @props.configId
 
