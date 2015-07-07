@@ -32,7 +32,7 @@ module.exports = React.createClass
   _renderAddButton: ->
     component = @
     React.DOM.button
-      className: "btn btn-success"
+      className: "btn btn-primary"
       onClick: (e) ->
         component.props.onAddOutputMapping()
         e.preventDefault()
