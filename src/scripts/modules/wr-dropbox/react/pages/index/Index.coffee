@@ -112,8 +112,20 @@ module.exports = React.createClass
     parameters: @state.configData.get('parameters', Map()).toJS()
 
   _isPendingTable: (tableId) ->
-    result = @state.savingData.has('storage')
-    result
+    isSavingData = @state.savingData.has('storage')
+    if not isSavingData
+      return false
+    path = ['storage', 'input', 'tables']
+    saving = @state.savingData.getIn(path)
+    config = @state.configData.getIn(path)
+    isInSaving = saving.find (table) ->
+      table.get('source') == tableId
+    isInConfig = config.find (table) ->
+      table.get('source') == tableId
+    statusArray = [!!isInSaving, !!isInConfig]
+    true in statusArray and false in statusArray
+
+
 
   _renderHeaderRow: ->
     div className: 'tr',

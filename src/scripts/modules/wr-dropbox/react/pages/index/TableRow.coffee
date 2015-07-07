@@ -19,7 +19,7 @@ module.exports = React.createClass
     div {className: 'tr', key: @props.table.get('id')},
       span className: 'td',
         @props.table.get 'name'
-      span className: 'td text-right',
+      span {className: 'td text-right'},
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Select table to upload'
           deactivateTooltip: 'Deselect table from upload'
