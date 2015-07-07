@@ -3,6 +3,7 @@ React = require 'react'
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 classnames = require 'classnames'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
+{Loader, Check} = require 'kbc-react-components'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -196,6 +197,7 @@ module.exports = React.createClass
 
 
   _renderResetAuthorization: ->
+    description = @state.credentials.get('description')
     ActivateDeactivateButton
       mode: 'link'
       activateTooltip: ''
@@ -203,6 +205,21 @@ module.exports = React.createClass
       isActive: true
       isPending: @state.isDeletingCredentials
       onChange: @_deleteCredentials
+    React.createElement Confirm,
+      text: "Do you really want to reset the authorization of #{description}? \
+       Tables configured to upload will not be reset."
+      title: "Reset Authorization #{description}"
+      buttonLabel: 'Reset'
+      onConfirm: @_deleteCredentials
+    ,
+      React.DOM.a null,
+        if @state.isDeletingCredentials
+          React.createElement Loader
+        else
+          React.DOM.span className: 'fa fa-fw fa-times'
+        ' Reset Authorization'
+
+
 
   _deleteCredentials: ->
     OAuthActions.deleteCredentials(componentId, @state.configId)
