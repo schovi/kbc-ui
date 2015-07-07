@@ -42,9 +42,6 @@ module.exports = React.createClass
     credentials = OAuthStore.getCredentials(componentId, configId)
     hasCredentials = OAuthStore.hasCredentials(componentId, configId)
     isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId)
-    console.log "HAS credentials", hasCredentials
-
-    console.log "get state CONFIG DATA", configData.toJS(), credentials?.toJS()
 
     # state
     latestJobs: LatestJobsStore.getJobs(componentId, configId)

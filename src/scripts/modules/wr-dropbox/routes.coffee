@@ -1,5 +1,7 @@
 IndexPage = require './react/pages/index/Index'
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
+installedComponentsStore = require '../components/stores/InstalledComponentsStore'
+oauthStore = require('./OAuthStore')
 oauthActions = require('./OAuthActionCreators')
 Immutable = require 'immutable'
 RouterStore = require('../../stores/RoutesStore')
@@ -28,9 +30,10 @@ module.exports =
     title: ''
     requireData: [
       (params) ->
-        installedComponentsActions.loadComponentConfigData('wr-dropbox', params.config).then (configuration) ->
-          oauthActions.loadCredentials('wr-dropbox', params.config).then (credentials) ->
-            console.log "config credentials", configuration, credentials
+        installedComponentsActions.loadComponentConfigData('wr-dropbox', params.config).then ->
+          configuration = installedComponentsStore.getConfigData('wr-dropbox', params.config).toJS()
+          oauthActions.loadCredentials('wr-dropbox', params.config).then ->
+            credentials = oauthStore.getCredentials('wr-dropbox', params.config).toJS()
             parameters = configuration?.parameters or {}
             # save credentials id as this configId to its configuration
             parameters.credentials = params.config
