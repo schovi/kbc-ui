@@ -33,18 +33,24 @@ module.exports = React.createClass
           span className: 'th',
             strong null, 'Status'
           span className: 'th',
+            strong null, 'Details'
+          span className: 'th',
             strong null, 'Params'
       div className: 'tbody',
           _.map @props.tasks, (task, taskId) =>
             started = "N/A"
             duration = "N/A"
             status = "N/A"
+            details = "N/A"
             params = Immutable.fromJS task.params
             if task.event
               duration = task.event.performance.duration
               finished = moment(task.event.created)
               started = finished.subtract(duration, 'seconds') #TODO
               status = StatusLabel({status: task.event?.type})
+              if task.event.params?.details
+                eventParams = Immutable.fromJS task.event.params.details
+                details = React.createElement(Tree, {data: eventParams})
               started = date.format(started.toISOString())
             div className: 'tr',
               @_renderCell(taskId.toString())
@@ -52,6 +58,7 @@ module.exports = React.createClass
               @_renderCell(started)
               @_renderCell(Duration(duration))
               @_renderCell(status)
+              @_renderCell(details)
               @_renderCell(React.createElement Tree, {data: params})
 
 
