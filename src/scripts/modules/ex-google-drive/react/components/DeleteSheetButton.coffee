@@ -29,7 +29,7 @@ module.exports = React.createClass
         onConfirm: @_deleteQuery
       ,
         button className: 'btn btn-link',
-          i className: 'kbc-icon-cup'
+          i className: 'kbc-icon-cup fa-fw'
 
   _deleteQuery: ->
     ExGdriveActionCreators.deleteSheet @props.configurationId, @props.sheet.get('fileId'), @props.sheet.get('sheetId')

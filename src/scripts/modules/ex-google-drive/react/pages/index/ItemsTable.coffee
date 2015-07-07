@@ -3,7 +3,6 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 
 Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
-Loader = React.createFactory(require('kbc-react-components').Loader)
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 {Loader} = require 'kbc-react-components'
 
@@ -40,7 +39,8 @@ module.exports = React.createClass
             @_rawConfig(row)?.db?.table or "n/a"
         div className: 'td text-right kbc-no-wrap',
           if @_isSheetDeleting(row.get('fileId'), row.get('sheetId'))
-            Loader()
+            React.createElement Loader,
+              className: 'fa-fw'
           else
             DeleteSheetButton
               sheet: row
