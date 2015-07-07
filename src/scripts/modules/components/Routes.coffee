@@ -56,6 +56,8 @@ routes =
     ,
       appGeneeaRoutes.languageDetection
     ,
+      appGeneeaRoutes.entityRecognition
+    ,
       createGenericDetailRoute 'application'
     ]
 

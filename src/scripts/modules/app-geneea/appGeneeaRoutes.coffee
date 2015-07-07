@@ -31,3 +31,4 @@ module.exports =
   lemmatization: createRoute 'geneea-lemmatization'
   correction: createRoute 'geneea-text-correction'
   languageDetection: createRoute 'geneea-language-detection'
+  entityRecognition: createRoute 'geneea-entity-recognition'

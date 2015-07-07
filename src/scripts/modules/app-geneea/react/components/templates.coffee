@@ -4,6 +4,7 @@ runActionsLabel =
   'geneea-lemmatization': 'Lemmatization'
   'geneea-text-correction': 'Text Correction'
   'geneea-language-detection': 'Language Detection'
+  'geneea-entity-recognition': 'Entity Recognition'
 
 outputTableSuffixes =
   'geneea-topic-detection': 'topic'
@@ -11,8 +12,17 @@ outputTableSuffixes =
   'geneea-lemmatization': 'lemma'
   'geneea-text-correction': 'correction'
   'geneea-language-detection': 'lang'
+  'geneea-entity-recognition': 'entities'
 
 tooltips  =
+  'geneea-entity-recognition':
+    intable: "Table containing text for entity recognition"
+    data_column: "Column of the input table containing text for entity recognition"
+    id_column: "Column of the input table uniquely identifying each row of the input table"
+    outtable: "Result table containing columns id(primary key column values),\
+     entity, type, textOffset and sentiment column as a result of named-entity recognition of data column"
+    language: 'Language of the data column'
+
   'geneea-topic-detection':
     intable: "Table containing text for topic detection"
     data_column: "Column of the input table containing text for topic detection"
