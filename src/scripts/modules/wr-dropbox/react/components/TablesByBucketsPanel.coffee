@@ -2,7 +2,6 @@ React = require 'react'
 fuzzy = require 'fuzzy'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ActiveCountBadge = require './ActiveCountBadge'
-SearchRow = require '../../../../react/common/SearchRow'
 storageTablesStore = require '../../../components/stores/StorageTablesStore'
 storageActionCreators = require '../../../components/StorageActionCreators'
 {strong, br, ul, li, div, span, i, a, button, p} = React.DOM
@@ -18,8 +17,7 @@ module.exports = React.createClass
     renderTableRowFn: React.PropTypes.func.isRequired
     renderHeaderRowFn: React.PropTypes.func
     filterFn: React.PropTypes.func
-    onSearchQueryChange: React.PropTypes.func
-    searchQuery: React.PropTypes.string
+    searchQuery: React.PropTypes.string #used as filter of tables
     isTableExportedFn: React.PropTypes.func
     onToggleBucketFn: React.PropTypes.func
     isBucketToggledFn: React.PropTypes.func
@@ -37,21 +35,16 @@ module.exports = React.createClass
       div className: 'well',
         'Loading Tables...'
     else
-      div null,
-        React.createElement SearchRow,
-          className: 'row kbc-search-row'
-          onChange: @props.onSearchQueryChange
-          query: @props.searchQuery
-        if buckets.count()
-          div
-            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-          ,
-            buckets.map (bucket, bucketId) ->
-              @_renderBucketPanel bucketId, bucket.get 'tables'
-            , @
-            .toArray()
-        else
-          @_renderNotFound()
+      if buckets.count()
+        div
+          className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+        ,
+          buckets.map (bucket, bucketId) ->
+            @_renderBucketPanel bucketId, bucket.get 'tables'
+          , @
+          .toArray()
+      else
+        @_renderNotFound()
 
 
   _renderBucketPanel: (bucketId, tables) ->

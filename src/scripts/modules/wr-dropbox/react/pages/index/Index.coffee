@@ -7,7 +7,7 @@ LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
-
+SearchRow = require '../../../../../react/common/SearchRow'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 OAuthStore = require('../../../OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
@@ -68,16 +68,19 @@ module.exports = React.createClass
           componentId: 'wr-dropbox'
           configId: @state.configId
       if @state.hasCredentials
-        div className: 'row',
-          TablesByBucketsPanel
-            renderTableRowFn: @_renderTableRow
-            renderHeaderRowFn: @_renderHeaderRow
-            filterFn: @_filterBuckets
-            onSearchQueryChange: @_handleSearchQueryChange
-            searchQuery: @state.localState.get('searchQuery') or ''
-            isTableExportedFn: @_isTableExported
-            onToggleBucketFn: @_handleToggleBucket
-            isBucketToggledFn: @_isBucketToggled
+        React.createElement SearchRow,
+          className: 'row kbc-search-row'
+          onChange: @_handleSearchQueryChange
+          query: @state.localState.get('searchQuery')
+      if @state.hasCredentials
+        TablesByBucketsPanel
+          renderTableRowFn: @_renderTableRow
+          renderHeaderRowFn: @_renderHeaderRow
+          filterFn: @_filterBuckets
+          searchQuery: @state.localState.get('searchQuery')
+          isTableExportedFn: @_isTableExported
+          onToggleBucketFn: @_handleToggleBucket
+          isBucketToggledFn: @_isBucketToggled
       else
         div className: 'row component-empty-state text-center',
           div null,
