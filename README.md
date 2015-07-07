@@ -1,5 +1,5 @@
 
-# Keboola Connection UI
+# Keboola Connection UI [![Build Status](https://travis-ci.org/keboola/kbc-ui.svg?branch=master)](https://travis-ci.org/keboola/kbc-ui)
 
 User interface for Keboola Connection
 
