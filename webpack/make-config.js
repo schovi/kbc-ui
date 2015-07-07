@@ -43,14 +43,20 @@ module.exports = function (options) {
     var entry = [];
     if (isDevelopment) {
         entry = {
-          bundle: ['webpack-dev-server/client?http://localhost:3000',
+          bundle: [
+            'webpack-dev-server/client?http://localhost:3000',
             'webpack/hot/only-dev-server',
             './src/styles/kbc.less',
+            './node_modules/intl/Intl.js',
+            './node_modules/intl/locale-data/jsonp/en.js',
             options.entry
           ]};
     } else {
         entry = {
-          bundle: ['./node_modules/intl/dist/Intl.js', './src/scripts/app'],
+          bundle: [
+            './node_modules/intl/Intl.js',
+            './node_modules/intl/locale-data/jsonp/en.js',
+            './src/scripts/app'],
           parts: ['./src/scripts/parts']
         };
     }
