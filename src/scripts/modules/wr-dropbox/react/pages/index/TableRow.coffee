@@ -38,4 +38,5 @@ module.exports = React.createClass
             runParams: =>
               configData: @props.prepareSingleUploadDataFn(@props.table)
           ,
-           "You are about to run upload of #{@props.table.get('id')} to dropbox account"
+           "You are about to run upload of #{@props.table.get('id')} to dropbox account. \
+            The resulting file will be stored into 'Apps/Keboola Writer' dropbox folder."

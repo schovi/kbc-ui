@@ -106,7 +106,7 @@ module.exports = React.createClass
     tableId = table.get('id')
     storage:
       input:
-        tables: [source: tableId, destination: tableId]
+        tables: [source: tableId, destination: "#{tableId}.csv"]
     parameters: @state.configData.get('parameters', Map()).toJS()
 
   _isPendingTable: (tableId) ->
@@ -161,7 +161,8 @@ module.exports = React.createClass
             runParams: =>
               config: @state.configId
           ,
-           "You are about to run upload of #{@_getInputTables().count()} selected table(s) to dropbox account"
+           "You are about to run upload of #{@_getInputTables().count()} selected table(s) to dropbox account. \
+           The resulting file(s) will be stored into 'Apps/Keboola Writer' dropbox folder."
 
         li null,
           if @state.hasCredentials
@@ -257,7 +258,7 @@ module.exports = React.createClass
     intables = @_getInputTables()
     jstable =
       source: tableId
-      destination: tableId
+      destination: "#{tableId}.csv"
     table = intables.find((table) ->
       table.get('source') == tableId)
     if not table
