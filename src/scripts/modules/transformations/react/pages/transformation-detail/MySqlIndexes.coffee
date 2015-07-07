@@ -24,7 +24,7 @@ module.exports = React.createClass
   render: ->
     component = @
     React.DOM.span {},
-      React.DOM.div {className: "well small"},
+      React.DOM.div {className: "well"},
         if !@props.indexes.count()
           React.DOM.div {}, "No indexes set."
         else
