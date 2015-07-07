@@ -6,13 +6,17 @@ ApplicationStore = require '../../../stores/ApplicationStore'
 hiddenComponents = ['wr-dropbox']
 
 module.exports =
-  isRouteAllowed: (componentId) ->
+  isComponentAllowed: (componentId) ->
+    isHidden = componentId in hiddenComponents
+    #route is not hidden or if it is hidden then it must be explicitely allowed
+    # via admin feature
+    return  (not isHidden) || @hasDevelPreview(componentId)
+
+  hasDevelPreview: (componentId) ->
     isHidden = componentId in hiddenComponents
     adminFeature = "ui-devel-preview"
     hasAdminFeature = ApplicationStore.hasCurrentAdminFeature(adminFeature)
-    #route is not hidden or if it is hidden then it must be explicitely allowed
-    # via admin feature
-    return  (not isHidden) or (isHidden and hasAdminFeature)
+    isHidden && hasAdminFeature
 
   filterHiddenRoutes: (routes) ->
     stack = [routes]
@@ -22,7 +26,7 @@ module.exports =
       if not tmpRoutes.childRoutes
         continue
       for r in tmpRoutes.childRoutes
-        if @isRouteAllowed(r.name)
+        if @isComponentAllowed(r.name)
           stack.push(r)
           result.push(r)
       tmpRoutes.childRoutes = result
