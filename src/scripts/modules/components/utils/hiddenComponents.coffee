@@ -3,7 +3,7 @@ ApplicationStore = require '../../../stores/ApplicationStore'
 
 # hardcoded array of hiden components(under construction components)
 # possible alternative is hasUI component property
-hiddenComponents = ['wr-dropbox', 'geneea-entity-recognition']
+hiddenComponents = ['wr-dropbox']
 
 module.exports =
   isComponentAllowed: (componentId) ->
