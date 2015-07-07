@@ -22,6 +22,9 @@ module.exports = React.createClass
     oauthUrl: oauthUrl
     router: RouterStore.getRouter()
 
+  componentDidMount: ->
+    @refs.description.getInputDOMNode().focus()
+
 
   render: ->
     Modal
@@ -41,6 +44,7 @@ module.exports = React.createClass
             Input
               label: "Dropbox Email"
               type: 'text'
+              ref: 'description'
               name: 'description'
               help: 'Used afterwards as a description of the authorized account'
               labelClassName: 'col-xs-3'
