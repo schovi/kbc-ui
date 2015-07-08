@@ -133,7 +133,7 @@ GoodDataWriterStore = StoreUtils.createStore
 
 
   hasWriter: (configurationId) ->
-    _store.hasIn ['writers', configurationId]
+    _store.hasIn ['writers', configurationId, 'config']
 
   hasTableColumns: (configurationId, tableId) ->
     _store.hasIn ['tableColumns', configurationId, tableId, 'current']
