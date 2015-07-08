@@ -9,6 +9,9 @@ module.exports = React.createClass
   mixins: [ImmutableRendererMixin]
 
   _openSupportModal: (e) ->
+    window.Zenbox.init
+      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'dropboxId'])
+      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
     window.Zenbox.show() # zendesk global
     e.preventDefault()
     e.stopPropagation()

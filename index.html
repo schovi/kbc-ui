@@ -15,7 +15,9 @@
         show: function() {
             alert('This will open Zendesk zenbox on production');
         },
-        init: function() {}
+        init: function(options) {
+          console.log('zenbox init', options);
+        }
     };
 
     (function(kbcApp) {
@@ -123,6 +125,13 @@
                         "organization": "/admin/organizations/<%= organizationId %>",
                         "maintainer": "/admin/maintainers/<%= maintainerId %>"
                     },
+                    "zendesk":{
+                      "project":{
+                        "dropboxId":"20299883",
+                        "url":"https:\/\/keboola.zendesk.com"},
+                      "direct":{
+                        "dropboxId":"20299883",
+                        "url":"https:\/\/keboola.zendesk.com"}},
                     "adminEmails": ["martin@keboola.com"],
                     "goodDataTokens": {
                         "developer": "developer",
