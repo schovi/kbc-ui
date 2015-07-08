@@ -114,12 +114,13 @@ module.exports = React.createClass
     return buckets
 
   _isBucketToggled: (bucketId) ->
-    return @props.isBucketToggledFn?.call(bucketId)
+    togled = @props.isBucketToggledFn(bucketId)
+    return togled
 
   _handleBucketSelect: (bucketId, e) ->
     e.preventDefault()
     e.stopPropagation()
-    @props.onToggleBucketFn?.call bucketId
+    @props.onToggleBucketFn bucketId
 
   _renderNotFound: ->
     div {className: 'table table-striped'},
