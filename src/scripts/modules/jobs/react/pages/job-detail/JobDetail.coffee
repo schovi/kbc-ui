@@ -2,6 +2,7 @@ React = require('react')
 SoundNotifications = require '../../../../../utils/SoundNotifications'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -87,9 +88,18 @@ module.exports = React.createClass
     message =  job.getIn ['result', 'message'] if result
     div {className: 'row row-alert'},
       div {className: 'alert alert-danger'},
-        if exceptionId
-          span null, 'ExceptionId ' + exceptionId
-        p null, message
+        p null,
+          React.DOM.strong null, message
+        div null,
+          if exceptionId
+            span null, 'ExceptionId ' + exceptionId
+          React.DOM.button
+            className: 'btn btn-danger'
+            onClick: @_contactSupport
+            style:
+              marginLeft: '15px'
+          ,
+            'Contact Support'
 
 
   _renderRunInfoRow: (job) ->
@@ -241,3 +251,10 @@ module.exports = React.createClass
 
   _isGoodDataWriter: ->
     getComponentId(@state.job) == 'gooddata-writer'
+
+  _contactSupport: ->
+    Zenbox.init
+      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'direct', 'dropboxId'])
+      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'direct', 'url'])
+      request_subject: "Help with job #{@state.job.get('id')}"
+    Zenbox.show()
