@@ -4,8 +4,8 @@ ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 isDevelPreview = require('../../../../components/utils/hiddenComponents').hasCurrentUserDevelPreview
 RoutesStore = require '../../../../../stores/RoutesStore'
-PickerModule = require '../../../../google-utils/react/GooglePicker'
-Picker = React.createFactory(PickerModule.Picker)
+Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
+ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 
 {Panel, PanelGroup} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
@@ -44,11 +44,28 @@ module.exports = React.createClass
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
           div {className: 'tr'},
             div {className: 'td'},
+              @_renderPicker()
               @_renderGdriveFiles()
             div {className: 'td'},
               @_renderProjectConfigFiles()
     else
       div {}, 'Loading ...'
+
+  _renderPicker: ->
+    div className: '',
+      React.DOM.h2 {}, "1. Select document of #{@state.config.get('email')}"
+      Picker
+        dialogTitle: 'Select a spreadsheet document'
+        buttonLabel: 'Select spreadsheet document from Google Drive...'
+        onPickerFn: (data) ->
+          console.log "PICKED sheets", data
+        views: [
+          ViewTemplates.sheets
+          ViewTemplates.sharedSheets
+          ViewTemplates.recent
+        ]
+
+
 
   render: ->
     if isDevelPreview()

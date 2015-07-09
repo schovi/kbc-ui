@@ -3,6 +3,7 @@ _ = require('underscore')
 {Button} = require('react-bootstrap')
 {div, span} = React.DOM
 
+templates = require './PickerViewTemplates'
 
 apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLoad'
 scope = 'https://www.googleapis.com/auth/drive.readonly'
@@ -33,44 +34,24 @@ authorizePicker = (userEmail, callbackFn) ->
     'user_id': userEmail if userEmail
   , callbackFn)
 
-templates =
-  userOnly: (foldersOnly) ->
-    view = new google.picker.DocsView()
-    view.setIncludeFolders(true)
-    if foldersOnly
-      view.setSelectFolderEnabled(true)
-      view.setMimeTypes('application/vnd.google-apps.folder')
-    view.setParent("root")
-    return view
-
-  all: (foldersOnly) ->
-    allFoldersView = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
-    allFoldersView.setIncludeFolders(true)
-    if foldersOnly
-      allFoldersView.setSelectFolderEnabled(true)
-      allFoldersView.setMimeTypes('application/vnd.google-apps.folder')
-    return allFoldersView
-
-  recent: (foldersOnly) ->
-    recentView = new google.picker.DocsView(google.picker.ViewId.RECENTLY_PICKED)
-    if foldersOnly
-      recentView.setMimeTypes('application/vnd.google-apps.folder')
-      recentView.setSelectFolderEnabled(true)
-    recentView.setIncludeFolders(true)
-    return recentView
-
-createGdrivePicker = (views) ->
+createGdrivePicker = (views, viewGroups) ->
   picker = new google.picker.PickerBuilder()
     .setDeveloperKey(apiKey)
+    .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
   #  .setOrigin($scope.origin)
   if _.isEmpty views
-    views = [templates.userOnly()]
+    views = [templates.root]
+
+  for group in viewGroups
+    picker = picker.addViewGroup(group())
+
   for view in views
-    picker = picker.addView(view)
+    picker = picker.addView(view())
+
   return picker
 
 
-GooglePicker = React.createClass
+module.exports = React.createClass
 
   displayName: "googlePicker"
   propTypes:
@@ -78,6 +59,7 @@ GooglePicker = React.createClass
     buttonLabel: React.PropTypes.string.isRequired
     onPickedFn: React.PropTypes.func.isRequired
     views: React.PropTypes.array
+    viewGroups: React.PropTypes.array
 
   componentDidMount: ->
     injectGoogleApiScript()
@@ -110,7 +92,7 @@ GooglePicker = React.createClass
 
 
   _doOpenGdrivePicker: ->
-    picker = createGdrivePicker(@props.views)
+    picker = createGdrivePicker(@props.views, @props.viewGroups or [])
     picker = picker.setTitle(@props.dialogTitle)
       .setCallback(@_onPicked)
       .setOAuthToken(@state.accessToken)
@@ -121,7 +103,3 @@ GooglePicker = React.createClass
       return
     @props.onPickedFn(data.docs)
     return
-
-module.exports =
-  Picker: GooglePicker
-  ViewsTemplates: templates
