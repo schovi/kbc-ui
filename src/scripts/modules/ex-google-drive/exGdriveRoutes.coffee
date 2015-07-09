@@ -1,3 +1,5 @@
+isDevelPreview = require('../components/utils/hiddenComponents').hasCurrentUserDevelPreview
+Promise = require 'bluebird'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 
 ExGdriveIndex = require './react/pages/index/Index'
@@ -34,6 +36,8 @@ module.exports =
     headerButtonsHandler: ExGdriveSheetSelectionHeader
     requireData: [
       (params) ->
+        if isDevelPreview()
+          return Promise.resolve()
         nextPageToken = "" #load first page
         ExGoogleDriveActionCreators.loadGdriveFiles(params.config, nextPageToken)
     ]

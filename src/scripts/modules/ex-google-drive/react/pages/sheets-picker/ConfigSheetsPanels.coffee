@@ -35,10 +35,14 @@ module.exports = React.createClass
         React.DOM.ul {},
           @props.configSheets.map((sheet) =>
             path = @props.getPathFn(sheet.get('googleId'))
+            if not path
+              path = ''
+            else
+              path = "#{path} / "
             fileTitle = sheet.get 'title'
             sheetTitle = sheet.get 'sheetTitle'
             React.DOM.li {},
-              "#{path} / #{fileTitle} / #{sheetTitle}").toArray()
+              "#{path}#{fileTitle} / #{sheetTitle}").toArray()
       else
         div className: 'well', 'No sheets configured in project.'
 
@@ -68,9 +72,13 @@ module.exports = React.createClass
 
 
   _renderSheetGroupItem: (path, fileTitle, sheetTitle, fileId, sheetId) ->
+    if not path
+      path = ''
+    else
+      path = "#{path} / "
     React.DOM.li {},
       span {},
-        "#{path} / #{fileTitle} / #{sheetTitle} "
+        "#{path}#{fileTitle} / #{sheetTitle} "
         span
           onClick: =>
             @props.deselectSheetFn(fileId, sheetId)

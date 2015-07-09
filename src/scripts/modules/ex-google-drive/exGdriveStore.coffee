@@ -1,3 +1,4 @@
+isDevelPreview = require('../components/utils/hiddenComponents').hasCurrentUserDevelPreview
 Dispatcher = require('../../Dispatcher')
 Constants = require './exGdriveConstants'
 Immutable = require('immutable')
@@ -227,7 +228,8 @@ Dispatcher.register (payload) ->
         return file.get('id')
       console.log "FILES", files.toJS()
       _store = _store.setIn(['configs',configId], Immutable.fromJS(configObject))
-      _store = _store.setIn(['documents', configId], files)
+      if isDevelPreview()
+        _store = _store.setIn(['documents', configId], files)
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_VALIDATE

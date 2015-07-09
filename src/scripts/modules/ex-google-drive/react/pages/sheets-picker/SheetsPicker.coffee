@@ -197,6 +197,8 @@ module.exports = React.createClass
     return result?.count() > 0
 
   _getPath: (fileId) ->
+    if isDevelPreview()
+      return null
     file = @state.files.getIn [fileId]
     if @_isFileOwner(file)
       return 'My Drive'
