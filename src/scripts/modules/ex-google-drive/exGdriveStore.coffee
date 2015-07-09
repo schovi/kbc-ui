@@ -219,6 +219,7 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS
       configId = action.configuration.id
       configObject = action.configuration.configuration
+      _store = _store.setIn(['configs', configId], Immutable.fromJS(configObject))
       items = configObject.items or []
       items = Immutable.fromJS items
       files = items.map (item) ->
@@ -226,9 +227,9 @@ Dispatcher.register (payload) ->
 
       files = files.toMap().mapKeys (key, file) ->
         return file.get('id')
-      console.log "FILES", files.toJS()
-      _store = _store.setIn(['configs',configId], Immutable.fromJS(configObject))
+
       if isDevelPreview()
+        console.log 'DEVEL set documents'
         _store = _store.setIn(['documents', configId], files)
       GdriveStore.emitChange()
 
