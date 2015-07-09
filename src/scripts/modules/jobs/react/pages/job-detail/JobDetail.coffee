@@ -20,10 +20,13 @@ JobStatusLabel = React.createFactory(require('../../../../../react/common/common
 ActionCreators = require '../../../ActionCreators'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
+ErrorNote = require './ErrorNote'
 
 date = require '../../../../../utils/date'
 {Tree} = require 'kbc-react-components'
 {strong,div, h2, span, h4, section, p} = React.DOM
+
+APPLICATION_ERROR = 'application'
 
 accordionHeader = (text, isActive) ->
   span null,
@@ -52,6 +55,7 @@ module.exports = React.createClass
 
     job: job
     configuration: configuration
+    canUpdateErrorNote: ApplicationStore.getKbcVars().get('canDoSupport')
 
 
   getInitialState: ->
@@ -83,23 +87,34 @@ module.exports = React.createClass
 
 
   _renderErrorResultRow: (job) ->
-    result = job.get 'result'
-    exceptionId = job.getIn ['result', 'exceptionId'] if result
-    message =  job.getIn ['result', 'message'] if result
+    exceptionId = job.getIn ['result', 'exceptionId']
+    if job.get('error') == APPLICATION_ERROR
+      message = 'Internal Error'
+    else
+      message =  job.getIn ['result', 'message']
     div {className: 'row row-alert'},
       div {className: 'alert alert-danger'},
         p null,
           React.DOM.strong null, message
-        div null,
+        if job.get('error') == job.get('error') == APPLICATION_ERROR
+          p null,
+            'Something is broken. Our developers were notified about this error and will let you know what went wrong.'
+        p null,
           if exceptionId
             span null, 'ExceptionId ' + exceptionId
-          React.DOM.button
-            className: 'btn btn-danger'
-            onClick: @_contactSupport
-            style:
-              marginLeft: '15px'
-          ,
-            'Contact Support'
+        React.createElement ErrorNote,
+          jobId: job.get('id')
+          errorNote: job.get('errorNote')
+          onSave: @_handleErrorNoteSave
+          canEdit: @state.canUpdateErrorNote
+        React.DOM.button
+          className: 'btn btn-danger'
+          onClick: @_contactSupport
+          style:
+            marginTop: '10px'
+        ,
+          'Contact Support'
+
 
 
   _renderRunInfoRow: (job) ->
@@ -258,3 +273,6 @@ module.exports = React.createClass
       url: ApplicationStore.getKbcVars().getIn(['zendesk', 'direct', 'url'])
       request_subject: "Help with job #{@state.job.get('id')}"
     Zenbox.show()
+
+  _handleErrorNoteSave: (errorNote) ->
+    ActionCreators.jobErrorNoteUpdated(@state.job.get('id'), errorNote)

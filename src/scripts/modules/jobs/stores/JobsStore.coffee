@@ -148,4 +148,8 @@ Dispatcher.register (payload) ->
         jobs.remove(jobs.indexOf(action.jobId))
       JobsStore.emitChange()
 
+    when Constants.ActionTypes.JOB_ERROR_NOTE_UPDATED
+      _store = _store.setIn ['jobsById', action.jobId, 'errorNote'], action.errorNote
+      JobsStore.emitChange()
+
 module.exports = JobsStore

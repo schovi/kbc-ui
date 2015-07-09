@@ -20,5 +20,7 @@ module.exports =
     JOBS_LATEST_LOAD_SUCCESS: null
     JOBS_LATEST_LOAD_ERROR: null
 
+    JOB_ERROR_NOTE_UPDATED: null
+
 #    :null
   )

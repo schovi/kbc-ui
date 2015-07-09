@@ -39,3 +39,12 @@ module.exports =
       .promise()
       .then (response) ->
         response.body
+
+    saveJobErrorNote: (jobId, errorNote) ->
+      createRequest('PUT', "jobs/#{jobId}/error-note")
+      .send(
+        errorNote: errorNote
+      )
+      .promise()
+      .then (response) ->
+        response.body
