@@ -190,6 +190,8 @@ module.exports = React.createClass
     ActionCreators.loadGdriveFileSheets(@state.configId, file.get('id'))
 
   _isFileOwner: (file) ->
+    if not file
+      return true
     email = @state.config.get 'email'
     owners = file.get 'owners'
     result = owners?.filter (owner) ->
