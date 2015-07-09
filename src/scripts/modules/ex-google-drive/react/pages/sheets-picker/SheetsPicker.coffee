@@ -21,20 +21,20 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 {div, span} = React.DOM
 
 module.exports = React.createClass
-  name: 'SheetsPicker'
-  mixins: [createStoreMixin(ExGdriveStore)]
+name: 'SheetsPicker'
+mixins: [createStoreMixin(ExGdriveStore)]
 
-  getStateFromStores: ->
-    configId = RoutesStore.getCurrentRouteParam('config')
-    configId: configId
-    files: ExGdriveStore.getGdriveFiles(configId)
-    loadingFiles: ExGdriveStore.getLoadingFiles(configId)
-    selectedSheets: ExGdriveStore.getSelectedSheets configId
-    config: ExGdriveStore.getConfig(configId)
-    searchQuery: ExGdriveStore.getSearchQueryValue(configId) or ''
-    nextPageToken: ExGdriveStore.getNextPageToken(configId)
-    isLoadingMore: ExGdriveStore.isLoadingMore(configId)
-    isConfigLoaded: ExGdriveStore.hasConfig configId
+getStateFromStores: ->
+  configId = RoutesStore.getCurrentRouteParam('config')
+  configId: configId
+  files: ExGdriveStore.getGdriveFiles(configId)
+  loadingFiles: ExGdriveStore.getLoadingFiles(configId)
+  selectedSheets: ExGdriveStore.getSelectedSheets configId
+  config: ExGdriveStore.getConfig(configId)
+  searchQuery: ExGdriveStore.getSearchQueryValue(configId) or ''
+  nextPageToken: ExGdriveStore.getNextPageToken(configId)
+  isLoadingMore: ExGdriveStore.isLoadingMore(configId)
+  isConfigLoaded: ExGdriveStore.hasConfig configId
 
 
   develRender: ->
@@ -42,13 +42,13 @@ module.exports = React.createClass
     console.log 'DEVEL render'
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
-        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-          div {className: 'tr'},
-            div {className: 'td'},
-              @_renderPicker()
-              @_renderFilesPanel()
-            div {className: 'td'},
-              @_renderProjectConfigFiles()
+      div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+      div {className: 'tr'},
+      div {className: 'td'},
+      @_renderPicker()
+      @_renderFilesPanel()
+      div {className: 'td'},
+      @_renderProjectConfigFiles()
     else
       div {}, 'Loading ...'
 
@@ -59,42 +59,42 @@ module.exports = React.createClass
 
     items = @state.config.get 'items'
     div className: '',
-      React.DOM.h2 {}, "2. Select sheets from selected documents"
-      SearchRow
-        query: @state.searchQuery
-        onChange: @_searchRowChanged
+    React.DOM.h2 {}, "2. Select sheets from selected documents"
+    SearchRow
+    query: @state.searchQuery
+    onChange: @_searchRowChanged
     ,
 
-      GdriveFilePanel
-        loadSheetsFn: @_loadFilesSheets
-        selectSheetFn: @_selectSheet
-        deselectSheetFn: @_deselectSheet
-        selectedSheets: @state.selectedSheets
-        configuredSheets: items
-        loadingFiles: @state.loadingFiles
-        files: @state.files.filter( (file) ->
-          console.log file.toJS()
-          fileTitle = file.get('title').toLowerCase()
-          containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
-          if @state.searchQuery == '' or containsQuery >= 0
-            return filterFn(file)
-          else
-            return false
+    GdriveFilePanel
+    loadSheetsFn: @_loadFilesSheets
+    selectSheetFn: @_selectSheet
+    deselectSheetFn: @_deselectSheet
+    selectedSheets: @state.selectedSheets
+    configuredSheets: items
+    loadingFiles: @state.loadingFiles
+    files: @state.files.filter( (file) ->
+      fileTitle = file.get('title').toLowerCase()
+      containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
+      if @state.searchQuery == '' or containsQuery >= 0
+        return filterFn(file)
+        else
+          return false
         , @)
 
 
   _renderPicker: ->
     div className: '',
-      React.DOM.h2 {}, "1. Select documents of #{@state.config.get('email')}"
-      Picker
-        dialogTitle: 'Select a spreadsheet document'
-        buttonLabel: 'Select spreadsheet document from Google Drive...'
-        onPickedFn: (data) =>
-          data = _.filter data, (file) ->
-            file.type == 'document'
-          data = _.map data, (file) ->
-            file.title = file.name
-            file
+    React.DOM.h2 {}, "1. Select documents of #{@state.config.get('email')}"
+    Picker
+    email: @state.config.get('email')
+    dialogTitle: 'Select a spreadsheet document'
+    buttonLabel: 'Select spreadsheet document from Google Drive...'
+    onPickedFn: (data) =>
+      data = _.filter data, (file) ->
+        file.type == 'document'
+        data = _.map data, (file) ->
+          file.title = file.name
+          file
           console.log "PICKED sheets", data
           ActionCreators.addMoreFiles(@state.configId, data)
 
@@ -112,12 +112,12 @@ module.exports = React.createClass
     #console.log 'sheet picker files', @state.files.toJS()
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
-        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-          div {className: 'tr'},
-            div {className: 'td'},
-              @_renderGdriveFiles()
-            div {className: 'td'},
-              @_renderProjectConfigFiles()
+      div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+      div {className: 'tr'},
+      div {className: 'td'},
+      @_renderGdriveFiles()
+      div {className: 'td'},
+      @_renderProjectConfigFiles()
     else
       div {}, 'Loading ...'
 
@@ -128,54 +128,54 @@ module.exports = React.createClass
   _renderGdriveFiles: ->
     component = @
     div className: '',
-      React.DOM.h2 {}, "Available Sheets of #{@state.config.get('email')}"
-      SearchRow
-        query: @state.searchQuery
-        onChange: @_searchRowChanged
+    React.DOM.h2 {}, "Available Sheets of #{@state.config.get('email')}"
+    SearchRow
+    query: @state.searchQuery
+    onChange: @_searchRowChanged
     ,
-      TabbedArea defaultActiveKey: 'mydrive', animation: false,
-        TabPane eventKey: 'mydrive', tab: 'My Drive',
-          @_renderFilePanel (file) ->
-            component._isFileOwner(file)
-        TabPane eventKey: 'shared', tab: 'Shared With Me',
-          @_renderFilePanel (file) ->
-            not component._isFileOwner(file)
+    TabbedArea defaultActiveKey: 'mydrive', animation: false,
+    TabPane eventKey: 'mydrive', tab: 'My Drive',
+    @_renderFilePanel (file) ->
+      component._isFileOwner(file)
+      TabPane eventKey: 'shared', tab: 'Shared With Me',
+      @_renderFilePanel (file) ->
+        not component._isFileOwner(file)
         TabPane eventKey: 'all', tab: 'All Sheets',
-          @_renderFilePanel()
+        @_renderFilePanel()
       if @state.nextPageToken
         Button
-          className: 'btn btn-default'
-          onClick: @_loadMore
-          disabled: @state.isLoadingMore
+        className: 'btn btn-default'
+        onClick: @_loadMore
+        disabled: @state.isLoadingMore
         ,
-          'Load more...'
-          Loader() if @state.isLoadingMore
+        'Load more...'
+        Loader() if @state.isLoadingMore
 
 
   _renderProjectConfigFiles: ->
     div className: '',
-      ConfigSheetsPanels
-        deselectSheetFn: @_deselectSheet
-        selectedSheets: @state.selectedSheets
-        configSheets: @state.config.get 'items'
-        getPathFn: @_getPath
+    ConfigSheetsPanels
+    deselectSheetFn: @_deselectSheet
+    selectedSheets: @state.selectedSheets
+    configSheets: @state.config.get 'items'
+    getPathFn: @_getPath
 
   _renderFilePanel: (filterFn) ->
     if not filterFn
       filterFn = (file) ->
         file
     GdriveFilePanel
-      loadSheetsFn: @_loadFilesSheets
-      selectSheetFn: @_selectSheet
-      deselectSheetFn: @_deselectSheet
-      selectedSheets: @state.selectedSheets
-      configuredSheets: @state.config.get 'items'
-      loadingFiles: @state.loadingFiles
-      files: @state.files.filter( (file) ->
-        fileTitle = file.get('title').toLowerCase()
-        containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
-        if @state.searchQuery == '' or containsQuery >= 0
-          return filterFn(file)
+    loadSheetsFn: @_loadFilesSheets
+    selectSheetFn: @_selectSheet
+    deselectSheetFn: @_deselectSheet
+    selectedSheets: @state.selectedSheets
+    configuredSheets: @state.config.get 'items'
+    loadingFiles: @state.loadingFiles
+    files: @state.files.filter( (file) ->
+      fileTitle = file.get('title').toLowerCase()
+      containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
+      if @state.searchQuery == '' or containsQuery >= 0
+        return filterFn(file)
         else
           return false
       , @)

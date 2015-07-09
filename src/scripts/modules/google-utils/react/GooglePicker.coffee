@@ -60,6 +60,7 @@ module.exports = React.createClass
     onPickedFn: React.PropTypes.func.isRequired
     views: React.PropTypes.array
     viewGroups: React.PropTypes.array
+    email: React.PropTypes.string
 
   componentDidMount: ->
     injectGoogleApiScript()
@@ -81,7 +82,7 @@ module.exports = React.createClass
 
   _ButtonClick: ->
     if not @state.accessToken
-      authorizePicker(null, (authResult) =>
+      authorizePicker(@props.email, (authResult) =>
         if authResult and !authResult.error
           @setState
             accessToken: authResult.access_token
