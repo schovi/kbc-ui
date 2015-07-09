@@ -2,6 +2,7 @@ keyMirror = require('react/lib/keyMirror')
 
 module.exports =
   ActionTypes: keyMirror(
+    EX_GDRIVE_ADD_MORE_FILES: null
     EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS: null
     EX_GDRIVE_SHEET_EDIT_START: null
     EX_GDRIVE_SHEET_EDIT_CANCEL: null

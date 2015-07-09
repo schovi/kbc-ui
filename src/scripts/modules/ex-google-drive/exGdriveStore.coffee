@@ -88,6 +88,14 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GDRIVE_ADD_MORE_FILES
+      files = action.files
+      configId = action.configurationId
+      newFiles = Immutable.fromJS(files).toMap().mapKeys (key, file) ->
+        return file.get('id')
+      _store = _store.mergeIn ['documents', configId], newFiles
+      GdriveStore.emitChange()
+
     when Constants.ActionTypes.EX_GDRIVE_API_ERROR
       pathToDelete = action.errorPath
       _store = _store.deleteIn pathToDelete
@@ -137,6 +145,7 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['savingNewSheets', configId], sheetsToSave
       GdriveStore.emitChange()
 
+    # DEPRECATED
     when Constants.ActionTypes.EX_GDRIVE_LOADING_MORE_START
       configId = action.configurationId
       _store = _store.setIn ['loadingMore', configId]
@@ -148,6 +157,7 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['searchQuery', configId], value
       GdriveStore.emitChange()
 
+    # DEPRECATED
     when Constants.ActionTypes.EX_GDRIVE_LOADING_MORE_SUCCESS
       configId = action.configurationId
       oldNextToken = action.nextPageToken
@@ -160,6 +170,7 @@ Dispatcher.register (payload) ->
       _store = _store.mergeIn ['documents', configId], newFiles
       GdriveStore.emitChange()
 
+    # DEPRECATED
     when Constants.ActionTypes.EX_GDRIVE_FILES_LOAD_SUCCESS
       nextToken = action.data.nextPageToken
       files = action.data.items
@@ -207,7 +218,16 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GDRIVE_CONFIGURATION_LOAD_SUCCESS
       configId = action.configuration.id
       configObject = action.configuration.configuration
+      items = configObject.items or []
+      items = Immutable.fromJS items
+      files = items.map (item) ->
+        item.set 'id', item.get('googleId')
+
+      files = files.toMap().mapKeys (key, file) ->
+        return file.get('id')
+      console.log "FILES", files.toJS()
       _store = _store.setIn(['configs',configId], Immutable.fromJS(configObject))
+      _store = _store.setIn(['documents', configId], files)
       GdriveStore.emitChange()
 
     when Constants.ActionTypes.EX_GDRIVE_SHEET_EDIT_VALIDATE

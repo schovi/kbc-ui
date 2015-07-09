@@ -1,4 +1,5 @@
 React = require('react')
+_ = require('underscore')
 ExGdriveStore = require '../../../exGdriveStore'
 ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -45,20 +46,58 @@ module.exports = React.createClass
           div {className: 'tr'},
             div {className: 'td'},
               @_renderPicker()
-              @_renderGdriveFiles()
+              @_renderFilesPanel()
             div {className: 'td'},
               @_renderProjectConfigFiles()
     else
       div {}, 'Loading ...'
 
+  _renderFilesPanel: ->
+    if not filterFn
+      filterFn = (file) ->
+        file
+
+    items = @state.config.get 'items'
+    div className: '',
+      React.DOM.h2 {}, "2. Select sheets from selected documents"
+      SearchRow
+        query: @state.searchQuery
+        onChange: @_searchRowChanged
+    ,
+
+      GdriveFilePanel
+        loadSheetsFn: @_loadFilesSheets
+        selectSheetFn: @_selectSheet
+        deselectSheetFn: @_deselectSheet
+        selectedSheets: @state.selectedSheets
+        configuredSheets: items
+        loadingFiles: @state.loadingFiles
+        files: @state.files.filter( (file) ->
+          console.log file.toJS()
+          fileTitle = file.get('title').toLowerCase()
+          containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
+          if @state.searchQuery == '' or containsQuery >= 0
+            return filterFn(file)
+          else
+            return false
+        , @)
+
+
   _renderPicker: ->
     div className: '',
-      React.DOM.h2 {}, "1. Select document of #{@state.config.get('email')}"
+      React.DOM.h2 {}, "1. Select documents of #{@state.config.get('email')}"
       Picker
         dialogTitle: 'Select a spreadsheet document'
         buttonLabel: 'Select spreadsheet document from Google Drive...'
-        onPickerFn: (data) ->
+        onPickedFn: (data) =>
+          data = _.filter data, (file) ->
+            file.type == 'document'
+          data = _.map data, (file) ->
+            file.title = file.name
+            file
           console.log "PICKED sheets", data
+          ActionCreators.addMoreFiles(@state.configId, data)
+
         views: [
           ViewTemplates.sheets
           ViewTemplates.sharedSheets
@@ -153,9 +192,9 @@ module.exports = React.createClass
   _isFileOwner: (file) ->
     email = @state.config.get 'email'
     owners = file.get 'owners'
-    result = owners.filter (owner) ->
+    result = owners?.filter (owner) ->
       owner.get('emailAddress') == email
-    return result.count() > 0
+    return result?.count() > 0
 
   _getPath: (fileId) ->
     file = @state.files.getIn [fileId]

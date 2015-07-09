@@ -53,6 +53,14 @@ module.exports =
       type: constants.ActionTypes.EX_GDRIVE_SAVING_SHEETS_CANCEL
       configurationId: configurationId
 
+  addMoreFiles: (configurationId, files) ->
+    console.log "ADDING"
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_ADD_MORE_FILES
+      configurationId: configurationId
+      files: files
+
+
   loadMoreFiles: (configurationId, nextPageToken) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_LOADING_MORE_START
