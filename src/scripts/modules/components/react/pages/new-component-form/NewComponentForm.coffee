@@ -11,7 +11,7 @@ DefaultForm = require './DefaultForm'
 GoodDataWriterForm = require './GoodDataWriterForm'
 ManualConfigurationForm = require './ManualConfigurationFrom'
 
-{hasDevelPreview} = require '../../../../components/utils/hiddenComponents'
+hiddenComponents = require '../../../../components/utils/hiddenComponents'
 
 {div} = React.DOM
 
@@ -48,7 +48,7 @@ module.exports = React.createClass
         onSave: @_handleSave
 
   _getFormHandler: ->
-    hasUI = @state.component.get('hasUI') || hasDevelPreview(@state.component.get('id'))
+    hasUI = @state.component.get('hasUI') || hiddenComponents.hasDevelPreview(@state.component.get('id'))
     if !hasUI
       return ManualConfigurationForm
 
