@@ -249,7 +249,7 @@ module.exports =
       # taken and modified from
       # http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
       # removed multiline comment part
-      regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\/\*[\w\W]*?(?=\*\/)\*\/|--.*|[^"\';#])+(?:;|$))'
+      regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\#.*|--.*|[^"\';#])+(?:;|$))'
       re = new RegExp(regex, 'g')
       matches = data.queries.match(re)
       matches = _.map(_.filter(matches, (line) ->
