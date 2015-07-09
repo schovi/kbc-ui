@@ -14,9 +14,12 @@ module.exports =
 
   hasDevelPreview: (componentId) ->
     isHidden = componentId in hiddenComponents
-    adminFeature = "ui-devel-preview"
-    hasAdminFeature = ApplicationStore.hasCurrentAdminFeature(adminFeature)
+    hasAdminFeature = @hasCurrentUserDevelPreview()
     isHidden && hasAdminFeature
+
+  hasCurrentUserDevelPreview: ->
+    adminFeature = "ui-devel-preview"
+    return ApplicationStore.hasCurrentAdminFeature(adminFeature)
 
   filterHiddenRoutes: (routes) ->
     stack = [routes]
