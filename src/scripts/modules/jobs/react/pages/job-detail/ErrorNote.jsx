@@ -75,17 +75,23 @@ export default React.createClass({
       isSaving: true
     });
     saveJobErrorNote(this.props.jobId, this.state.errorNote)
-    .then(this.handleSaveSuccess);
-
+    .then(this.handleSaveSuccess)
+    .catch(this.handleSaveError);
   },
 
   handleSaveSuccess() {
-    console.log('saved');
     this.setState({
       isSaving: false,
       isEditing: false
     });
     this.props.onSave(this.state.errorNote);
+  },
+
+  handleSaveError(error) {
+    this.setState({
+      isSaving: false
+    });
+    throw error;
   }
 
 });
