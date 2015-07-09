@@ -2,7 +2,10 @@ React = require('react')
 ExGdriveStore = require '../../../exGdriveStore'
 ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+isDevelPreview = require('../../../../components/utils/hiddenComponents').hasCurrentUserDevelPreview
 RoutesStore = require '../../../../../stores/RoutesStore'
+PickerModule = require '../../../../google-utils/react/GooglePicker'
+Picker = React.createFactory(PickerModule.Picker)
 
 {Panel, PanelGroup} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
@@ -33,8 +36,23 @@ module.exports = React.createClass
     isConfigLoaded: ExGdriveStore.hasConfig configId
 
 
+  develRender: ->
+    #console.log 'sheet picker files', @state.files.toJS()
+    console.log 'DEVEL render'
+    if @state.isConfigLoaded and @state.config
+      div {className: 'container-fluid kbc-main-content'},
+        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
+          div {className: 'tr'},
+            div {className: 'td'},
+              @_renderGdriveFiles()
+            div {className: 'td'},
+              @_renderProjectConfigFiles()
+    else
+      div {}, 'Loading ...'
 
   render: ->
+    if isDevelPreview()
+      return @develRender()
     #console.log 'sheet picker files', @state.files.toJS()
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
