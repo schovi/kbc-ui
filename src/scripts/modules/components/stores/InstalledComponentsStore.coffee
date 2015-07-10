@@ -40,8 +40,8 @@ InstalledComponentsStore = StoreUtils.createStore
   getIsConfigDataLoaded: (componentId, configId) ->
     _store.hasIn ['configData', componentId, configId]
 
-  getEditingConfigData: (componentId, configId) ->
-    _store.getIn ['configDataEditing', componentId, configId]
+  getEditingConfigData: (componentId, configId, defaultValue) ->
+    _store.getIn ['configDataEditing', componentId, configId], defaultValue
 
   getSavingConfigData: (componentId, configId) ->
     _store.getIn ['configDataSaving', componentId, configId]

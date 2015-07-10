@@ -12,6 +12,8 @@ applications = require './modules/applications/Routes'
 
 StorageActionCreators = require './modules/components/StorageActionCreators'
 
+ProjectBackup = require './modules/project-backup/Index'
+
 
 # Custom routing configuration object
 routes =
@@ -34,6 +36,10 @@ routes =
       jobsRoutes
     ,
       transformationsRoutes
+    ,
+      name: 'project-backup'
+      title: 'Project Backup'
+      defaultRouteHandler: ProjectBackup
 
   ]
 
