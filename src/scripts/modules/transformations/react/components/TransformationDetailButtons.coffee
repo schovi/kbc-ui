@@ -15,6 +15,9 @@ TransformationDetailButtons = React.createClass
     createStoreMixin(TransformationsStore)
   ]
 
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
+
   getStateFromStores: ->
     bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'

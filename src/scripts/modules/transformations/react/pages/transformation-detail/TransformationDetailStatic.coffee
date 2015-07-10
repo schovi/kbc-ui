@@ -225,7 +225,7 @@ TransformationDetailStatic = React.createClass
                       CodeMirror
                         theme: 'solarized'
                         lineNumbers: false
-                        defaultValue: query
+                        value: query
                         readOnly: true
                         mode: @_codeMirrorMode()
                         lineWrapping: true
