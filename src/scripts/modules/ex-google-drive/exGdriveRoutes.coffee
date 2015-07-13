@@ -1,4 +1,3 @@
-isDevelPreview = require('../components/utils/hiddenComponents').hasCurrentUserDevelPreview
 Promise = require 'bluebird'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 
@@ -34,13 +33,6 @@ module.exports =
     handler: sheetsPicker
     title: 'Select Sheets'
     headerButtonsHandler: ExGdriveSheetSelectionHeader
-    requireData: [
-      (params) ->
-        if isDevelPreview()
-          return Promise.resolve()
-        nextPageToken = "" #load first page
-        ExGoogleDriveActionCreators.loadGdriveFiles(params.config, nextPageToken)
-    ]
   ,
     name: 'ex-google-drive-authorize'
     path: 'authorize'

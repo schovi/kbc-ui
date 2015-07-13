@@ -7,7 +7,7 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 
 ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
-isDevelPreview = require('../../../../components/utils/hiddenComponents').hasCurrentUserDevelPreview
+
 RoutesStore = require '../../../../../stores/RoutesStore'
 Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
 ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
@@ -47,7 +47,7 @@ module.exports = React.createClass
     isConfigLoaded: ExGdriveStore.hasConfig configId
 
 
-  develRender: ->
+  render: ->
     #console.log 'sheet picker files', @state.files.toJS()
     console.log 'DEVEL render'
     if @state.isConfigLoaded and @state.config
@@ -66,7 +66,6 @@ module.exports = React.createClass
     if not filterFn
       filterFn = (file) ->
         file
-
     items = @state.config.get 'items'
     div className: '',
       React.DOM.h2 {}, "2. Select sheets from selected documents"
@@ -117,52 +116,8 @@ module.exports = React.createClass
         ]
 
 
-
-  render: ->
-    if isDevelPreview()
-      return @develRender()
-    #console.log 'sheet picker files', @state.files.toJS()
-    if @state.isConfigLoaded and @state.config
-      div {className: 'container-fluid kbc-main-content'},
-        div {className: 'table kbc-table-border-vertical kbc-detail-table'},
-          div {className: 'tr'},
-            div {className: 'td'},
-              @_renderGdriveFiles()
-            div {className: 'td'},
-              @_renderProjectConfigFiles()
-    else
-      div {}, 'Loading ...'
-
-
   _searchRowChanged: (newValue) ->
     ActionCreators.searchQueryChange(@state.configId, newValue)
-
-  _renderGdriveFiles: ->
-    component = @
-    div className: '',
-      React.DOM.h2 {}, "Available Sheets of #{@state.config.get('email')}"
-      SearchRow
-        query: @state.searchQuery
-        onChange: @_searchRowChanged
-    ,
-      TabbedArea defaultActiveKey: 'mydrive', animation: false,
-        TabPane eventKey: 'mydrive', tab: 'My Drive',
-          @_renderFilePanel (file) ->
-            component._isFileOwner(file)
-        TabPane eventKey: 'shared', tab: 'Shared With Me',
-          @_renderFilePanel (file) ->
-            not component._isFileOwner(file)
-        TabPane eventKey: 'all', tab: 'All Sheets',
-          @_renderFilePanel()
-      if @state.nextPageToken
-        Button
-          className: 'btn btn-default'
-          onClick: @_loadMore
-          disabled: @state.isLoadingMore
-        ,
-          'Load more...'
-          Loader() if @state.isLoadingMore
-
 
   _renderProjectConfigFiles: ->
     div className: '',
@@ -171,28 +126,6 @@ module.exports = React.createClass
         selectedSheets: @state.selectedSheets
         configSheets: @state.config.get 'items'
         getPathFn: @_getPath
-
-  _renderFilePanel: (filterFn) ->
-    if not filterFn
-      filterFn = (file) ->
-        file
-    GdriveFilePanel
-      loadSheetsFn: @_loadFilesSheets
-      selectSheetFn: @_selectSheet
-      deselectSheetFn: @_deselectSheet
-      expandedSheets: @state.expandedSheets
-      setExpandedSheetsFn: @_updateLocalState.bind(@, ['expandedSheets'])
-      selectedSheets: @state.selectedSheets
-      configuredSheets: @state.config.get 'items'
-      loadingFiles: @state.loadingFiles
-      files: @state.files.filter( (file) ->
-        fileTitle = file.get('title').toLowerCase()
-        containsQuery = fileTitle.toLowerCase().indexOf(@state.searchQuery)
-        if @state.searchQuery == '' or containsQuery >= 0
-          return filterFn(file)
-        else
-          return false
-      , @)
 
   _deselectSheet: (fileId, sheetId) ->
     ActionCreators.deselectSheet(@state.configId, fileId, sheetId)
@@ -213,13 +146,8 @@ module.exports = React.createClass
     return result?.count() > 0
 
   _getPath: (fileId) ->
-    if isDevelPreview()
-      return null
-    file = @state.files.get(fileId)
-    if @_isFileOwner(file)
-      return 'My Drive'
-    else
-      return 'Shared With Me'
+    return null
+
   _loadMore: ->
     ActionCreators.loadMoreFiles(@state.configId, @state.nextPageToken)
 
