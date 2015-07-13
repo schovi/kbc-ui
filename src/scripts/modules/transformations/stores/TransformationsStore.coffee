@@ -20,6 +20,7 @@ _store = Map(
   editingTransformations: Map()
   savingTransformations: Map()
   editingTransformationsData: Map()
+  editingTransformationsFields: Map()
   openEditingInputMappings: Map()
   openEditingOutputMappings: Map()
 
@@ -63,6 +64,9 @@ TransformationsStore = StoreUtils.createStore
   ###
   getTransformation: (bucketId, transformationId) ->
     _store.getIn ['transformationsByBucketId', bucketId, transformationId]
+
+  getTransformationEditingFields: (bucketId, transformationId) ->
+    _store.getIn ['editingTransformationsFields', bucketId, transformationId], Map()
 
   hasTransformation: (bucketId, transformationId) ->
     _store.hasIn ['transformationsByBucketId', bucketId, transformationId]
@@ -253,6 +257,14 @@ Dispatcher.register (payload) ->
         store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
         tObj = Immutable.fromJS(action.data)
         store = store.setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
+
+        if action.editingId
+          store = store.deleteIn [
+            'editingTransformationsFields'
+            action.bucketId
+            action.transformationId
+            action.editingId
+          ]
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
@@ -376,6 +388,23 @@ Dispatcher.register (payload) ->
           )
         )
       )
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_UPDATE_EDITING_FIELD
+      _store = _store.setIn [
+        'editingTransformationsFields'
+        action.bucketId
+        action.transformationId
+        action.fieldId
+      ], action.newValue
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_CANCEL_EDITING_FIELD
+      _store = _store.deleteIn [
+        'editingTransformationsFields'
+        action.bucketId
+        action.transformationId
+      ]
       TransformationsStore.emitChange()
 
 module.exports = TransformationsStore

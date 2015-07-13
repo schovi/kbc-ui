@@ -103,6 +103,7 @@ module.exports = React.createClass
     table.get("columns")
 
   render: ->
+    console.log 'render output mapping', @props.value.toJS()
     component = @
     React.DOM.div {className: 'panel-body'},
       React.DOM.div null,

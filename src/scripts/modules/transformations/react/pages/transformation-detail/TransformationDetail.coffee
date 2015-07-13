@@ -38,6 +38,7 @@ TransformationDetail = React.createClass
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
+    editingFields: TransformationsStore.getTransformationEditingFields(bucketId, transformationId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
     tables: StorageTablesStore.getAll()
     buckets: StorageBucketsStore.getAll()
@@ -150,9 +151,11 @@ TransformationDetail = React.createClass
             TransformationDetailStatic
               bucket: @state.bucket
               transformation: @state.transformation
+              editingFields: @state.editingFields
               transformations: @state.transformations
               pendingActions: @state.pendingActions
               tables: @state.tables
+              buckets: @state.buckets
               bucketId: @state.bucketId
               transformationId: @state.transformationId
               openInputMappings: @state.openInputMappings

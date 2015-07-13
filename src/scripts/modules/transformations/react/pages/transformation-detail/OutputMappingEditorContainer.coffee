@@ -2,7 +2,7 @@ React = require 'react'
 Immutable = require 'immutable'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
-OutputMappingRowEditor = React.createFactory(require './OutputMappingRowEditor')
+OutputMappingRowEditor = React.createFactory(require './../../components/mapping/OutputMappingRowEditor')
 Panel  = React.createFactory require('react-bootstrap').Panel
 
 module.exports = React.createClass

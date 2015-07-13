@@ -2,6 +2,7 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 Immutable = require('immutable')
+{Map} = Immutable
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
 _ = require('underscore')
 
@@ -17,13 +18,14 @@ OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
 CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
-{Panel} = require('react-bootstrap')
+{Panel, ModalTrigger} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 SelectRequires = React.createFactory(require('./SelectRequires'))
 {NewLineToBr} = require 'kbc-react-components'
+AddOutputMapping = require './AddOutputMapping'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -38,9 +40,11 @@ TransformationDetailStatic = React.createClass
   propTypes:
     bucket: React.PropTypes.object.isRequired
     transformation: React.PropTypes.object.isRequired
+    editingFields: React.PropTypes.object.isRequired
     transformations: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    buckets: React.PropTypes.object.isRequired
     bucketId: React.PropTypes.string.isRequired
     transformationId: React.PropTypes.string.isRequired
     openInputMappings: React.PropTypes.object.isRequired
@@ -136,37 +140,49 @@ TransformationDetailStatic = React.createClass
         else
           div {className: "help-block"}, small {}, 'No Input Mapping'
       div {},
-        h2 {}, 'Output Mapping'
-          if @props.transformation.get('output').count()
-            div {},
-              @props.transformation.get('output').sortBy((outputMapping) ->
-                outputMapping.get('source').toLowerCase()
-              ).map((output, key) ->
-                Panel
-                  className: 'kbc-panel-heading-with-table'
-                  key: key
-                  collapsible: true
-                  eventKey: key
-                  expanded: props.openOutputMappings.get(key, false)
-                  header:
-                    div
-                      onClick: ->
-                        component._toggleOutputMapping(key)
-                    ,
-                      OutputMappingRow
-                        transformationBackend: @props.transformation.get('backend')
-                        outputMapping: output
-                        tables: @props.tables
-                ,
-                  OutputMappingDetail
-                    fill: true
-                    transformationBackend: @props.transformation.get('backend')
-                    outputMapping: output
-                    tables: @props.tables
+        h2 {},
+          'Output Mapping'
+          span className: 'pull-right',
+            React.createElement AddOutputMapping,
+              tables: @props.tables
+              buckets: @props.buckets
+              transformation: @props.transformation
+              bucket: @props.bucket
+              mapping: @props.editingFields.get('new-output-mapping', Map())
+        if @props.transformation.get('output').count()
+          div {},
+            @props.transformation.get('output').sortBy((outputMapping) ->
+              outputMapping.get('source').toLowerCase()
+            ).map((output, key) ->
+              Panel
+                className: 'kbc-panel-heading-with-table'
+                key: key
+                collapsible: true
+                eventKey: key
+                expanded: props.openOutputMappings.get(key, false)
+                header:
+                  div
+                    onClick: ->
+                      component._toggleOutputMapping(key)
+                  ,
+                    OutputMappingRow
+                      transformation: @props.transformation
+                      bucket: @props.bucket
+                      outputMapping: output
+                      editingOutputMapping: @props.editingFields.get('input-' + key, output)
+                      editingId: 'input-' + key
+                      mappingIndex: key
+                      tables: @props.tables
+              ,
+                OutputMappingDetail
+                  fill: true
+                  transformationBackend: @props.transformation.get('backend')
+                  outputMapping: output
+                  tables: @props.tables
 
-              , @).toArray()
-          else
-            p {}, small {}, 'No Output Mapping'
+            , @).toArray()
+        else
+          p {}, small {}, 'No Output Mapping'
 
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
