@@ -3,7 +3,7 @@ ActionCreators = require '../../../exGdriveActionCreators'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 {Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
 
-Panel  = React.createFactory Panel
+#Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
 ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
@@ -18,6 +18,9 @@ module.exports = React.createClass
     files: React.PropTypes.object
     loadingFiles: React.PropTypes.object
     loadSheetsFn: React.PropTypes.func
+    setExpandedSheetsFn: React.PropTypes.func
+    expandedSheets: React.PropTypes.object
+    isExpandedFn: React.PropTypes.func
     selectSheetFn: React.PropTypes.func
     selectedSheets: React.PropTypes.object
     configuredSheets: React.PropTypes.object
@@ -25,7 +28,9 @@ module.exports = React.createClass
 
 
   render: ->
-    PanelGroup accordion: true,
+    #PanelGroup accordion: true,
+    div className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+    ,
       if @props.files and @props.files.count() > 0
         @props.files.map( (file) ->
           @_renderFilePanel(file)
@@ -39,10 +44,24 @@ module.exports = React.createClass
       file.get 'title'
       ' '
       Loader() if @_isLoading file
-    Panel
-      header: header
+    header = div null, 'slect me'
+    header = span null,
+      span className: 'table',
+        span className: 'tbody',
+          span className: 'tr',
+            span className: 'td',
+              file.get 'title'
+              ' '
+              Loader() if @_isLoading file
+
+    React.createElement Panel,
+      onSelect: @_onClick.bind(@, file)
+      expanded: @_isExpanded(file)
       key: file.get 'id'
-      eventKey: file.get 'id',
+      eventKey: file.get 'id'
+      collapsible: true
+      header: header
+
     ,
       if @_isLoading(file)
         div className: 'well',
@@ -87,7 +106,21 @@ module.exports = React.createClass
     )
     return result
 
-  _onClick: (file) ->
+  _isExpanded: (file) ->
+    if not @_isLoaded(file)
+      return false
+    expanded = @props.expandedSheets.get(file.get('id'), true)
+    return expanded
+
+
+  _onClick: (file, e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    if @_isLoaded(file)
+      expanded = !!@props.expandedSheets.get(file.get('id'), true)
+      newValue = !expanded
+      newSheets = @props.expandedSheets.set(file.get('id'), newValue)
+      @props.setExpandedSheetsFn(newSheets)
     if not @_isLoading(file) and not @_isLoaded(file)
       @props.loadSheetsFn(file)
 

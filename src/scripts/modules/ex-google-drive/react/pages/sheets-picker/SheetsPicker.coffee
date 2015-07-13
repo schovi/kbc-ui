@@ -1,6 +1,10 @@
 React = require('react')
 _ = require('underscore')
+{Map} = require 'immutable'
 ExGdriveStore = require '../../../exGdriveStore'
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+
 ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 isDevelPreview = require('../../../../components/utils/hiddenComponents').hasCurrentUserDevelPreview
@@ -22,10 +26,16 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 module.exports = React.createClass
   name: 'SheetsPicker'
-  mixins: [createStoreMixin(ExGdriveStore)]
+  mixins: [createStoreMixin(ExGdriveStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
+    localState = InstalledComponentsStore.getLocalState('ex-google-drive', configId)
+    expandedSheets = localState.get('expandedSheets', Map())
+
+    #state
+    localState: localState
+    expandedSheets: expandedSheets
     configId: configId
     files: ExGdriveStore.getGdriveFiles(configId)
     loadingFiles: ExGdriveStore.getLoadingFiles(configId)
@@ -66,6 +76,8 @@ module.exports = React.createClass
     ,
 
       GdriveFilePanel
+        expandedSheets: @state.expandedSheets
+        setExpandedSheetsFn: @_updateLocalState.bind(@, ['expandedSheets'])
         loadSheetsFn: @_loadFilesSheets
         selectSheetFn: @_selectSheet
         deselectSheetFn: @_deselectSheet
@@ -168,6 +180,8 @@ module.exports = React.createClass
       loadSheetsFn: @_loadFilesSheets
       selectSheetFn: @_selectSheet
       deselectSheetFn: @_deselectSheet
+      expandedSheets: @state.expandedSheets
+      setExpandedSheetsFn: @_updateLocalState.bind(@, ['expandedSheets'])
       selectedSheets: @state.selectedSheets
       configuredSheets: @state.config.get 'items'
       loadingFiles: @state.loadingFiles
@@ -208,3 +222,7 @@ module.exports = React.createClass
       return 'Shared With Me'
   _loadMore: ->
     ActionCreators.loadMoreFiles(@state.configId, @state.nextPageToken)
+
+  _updateLocalState: (path, data) ->
+    newLocalState = @state.localState.setIn(path, data)
+    InstalledComponentsActions.updateLocalState('ex-google-drive', @state.configId, newLocalState)
