@@ -30,7 +30,9 @@ JobTasks = React.createClass
       @_renderTasks()
 
   _renderTasks: ->
-    @props.tasks.map(@_renderTask, @).toArray()
+    @props.tasks
+    .filter (task) -> task.get('active')
+    .map(@_renderTask, @).toArray()
 
   _renderTask: (task) ->
     component = @state.components.get(task.get('component'))
