@@ -59,6 +59,8 @@ module.exports =
       type: constants.ActionTypes.EX_GDRIVE_ADD_MORE_FILES
       configurationId: configurationId
       files: files
+    for file in files
+      @loadGdriveFileSheets(configurationId, file.id)
 
 
   loadMoreFiles: (configurationId, nextPageToken) ->
