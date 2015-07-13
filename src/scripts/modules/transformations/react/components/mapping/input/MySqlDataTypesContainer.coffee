@@ -1,11 +1,11 @@
 React = require 'react'
 Immutable = require 'immutable'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-MySqlIndexes = React.createFactory(require('./MySqlIndexes'))
+ImmutableRenderMixin = require '../../../../../../react/mixins/ImmutableRendererMixin'
+MySqlDataTypes = React.createFactory(require('./MySqlDataTypes'))
 _ = require('underscore')
 
 module.exports = React.createClass
-  displayName: 'MySqlIndexesContainer'
+  displayName: 'MySqlDataTypesContainer'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
@@ -15,29 +15,37 @@ module.exports = React.createClass
     disabled: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    selectValue: Immutable.List()
+    selectValue: ""
+    inputValue: ""
 
   _handleSelectOnChange: (value) ->
     @setState
-      selectValue: Immutable.fromJS(value)
+      selectValue: value
 
-  _handleAddIndex: ->
-    value = @props.value.push(@state.selectValue)
+  _handleInputOnChange: (value) ->
+    @setState
+      inputValue: value
+
+  _handleAddDataType: ->
+    value = @props.value.set(@state.selectValue, @state.inputValue)
     @props.onChange(value)
     @setState
-      selectValue: Immutable.List()
+      selectValue: ""
+      inputValue: ""
 
-  _handleRemoveIndex: (key) ->
+  _handleRemoveDataType: (key) ->
     value = @props.value.remove(key)
     @props.onChange(value)
 
   render: ->
     component = @
-    MySqlIndexes
-      indexes: @props.value
+    MySqlDataTypes
+      datatypes: @props.value
       selectValue: @state.selectValue
+      inputValue: @state.inputValue
       columnsOptions: @props.columnsOptions
       selectOnChange: @_handleSelectOnChange
-      handleAddIndex: @_handleAddIndex
-      handleRemoveIndex: @_handleRemoveIndex
+      inputOnChange: @_handleInputOnChange
+      handleAddDataType: @_handleAddDataType
+      handleRemoveDataType: @_handleRemoveDataType
       disabled: @props.disabled

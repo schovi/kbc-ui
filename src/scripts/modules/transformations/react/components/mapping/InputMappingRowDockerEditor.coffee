@@ -4,11 +4,11 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
-MySqlIndexesContainer = React.createFactory(require("./MySqlIndexesContainer"))
-MySqlDataTypesContainer = React.createFactory(require("./MySqlDataTypesContainer"))
+MySqlIndexesContainer = React.createFactory(require("./input/MySqlIndexesContainer"))
+MySqlDataTypesContainer = React.createFactory(require("./input/MySqlDataTypesContainer"))
 
 module.exports = React.createClass
-  displayName: 'InputMappingRowMySqlEditor'
+  displayName: 'InputMappingRowDockjerEditor'
 
   propTypes:
     value: React.PropTypes.object.isRequired
@@ -19,25 +19,23 @@ module.exports = React.createClass
   getInitialState: ->
     showDetails: false
 
-  shouldComponentUpdate: (nextProps, nextState) ->
-    should = @props.value != nextProps.value ||
-    @props.tables != nextProps.tables ||
-    @props.disabled != nextProps.disabled ||
-    @state.showDetails != nextState.showDetails
-
-    should
-
   _handleToggleShowDetails: (e) ->
     @setState(
       showDetails: e.target.checked
     )
 
+  shouldComponentUpdate: (nextProps, nextState) ->
+    should = @props.value != nextProps.value ||
+        @props.tables != nextProps.tables ||
+        @props.disabled != nextProps.disabled ||
+        @state.showDetails != nextState.showDetails
+
+    should
+
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", value)
-      mapping = mapping.set("indexes", Immutable.List())
-      mapping = mapping.set("datatypes", Immutable.Map())
       mapping = mapping.set("whereColumn", "")
       mapping = mapping.set("whereValues", Immutable.List())
       mapping = mapping.set("whereOperator", "eq")
@@ -46,10 +44,6 @@ module.exports = React.createClass
 
   _handleChangeDestination: (e) ->
     value = @props.value.set("destination", e.target.value)
-    @props.onChange(value)
-
-  _handleChangeOptional: (e) ->
-    value = @props.value.set("optional", e.target.checked)
     @props.onChange(value)
 
   _handleChangeDays: (e) ->
@@ -63,22 +57,7 @@ module.exports = React.createClass
         mapping = mapping.set("whereColumn", "")
         mapping = mapping.set("whereValues", Immutable.List())
         mapping = mapping.set("whereOperator", "eq")
-
-      datatypes = _.pick(mapping.get("datatypes").toJS(), mapping.get("columns").toJS())
-      mapping = mapping.set("datatypes", Immutable.fromJS(datatypes || Immutable.Map()))
-
-      indexes = _.filter(mapping.get("indexes").toJS(), (index) ->
-        _.filter(index, (indexPart) ->
-          _.contains(mapping.get("columns").toJS(), indexPart)
-        ).length == index.length
-      )
-      mapping = mapping.set("indexes", Immutable.fromJS(indexes || Immutable.List()))
-
     @props.onChange(immutable)
-
-  _handleChangeIndexes: (indexes) ->
-    value = @props.value.set("indexes", indexes)
-    @props.onChange(value)
 
   _handleChangeWhereColumn: (string) ->
     value = @props.value.set("whereColumn", string)
@@ -91,10 +70,6 @@ module.exports = React.createClass
   _handleChangeWhereValues: (e) ->
     parsedValues = _.invoke(e.target.value.split(","), "trim")
     value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
-    @props.onChange(value)
-
-  _handleChangeDataTypes: (datatypes) ->
-    value = @props.value.set("datatypes", datatypes)
     @props.onChange(value)
 
   _getWhereValues: ->
@@ -124,7 +99,6 @@ module.exports = React.createClass
     table = @props.tables.find((table) ->
       table.get("id") == props.value.get("source")
     )
-    return [] if !table
     table.get("columns").toJS()
 
   _getColumnsOptions: ->
@@ -138,7 +112,7 @@ module.exports = React.createClass
     )
 
   _getFilteredColumnsOptions: ->
-    if @props.value.get("columns", Immutable.List()).count()
+    if @props.value.get("columns").count()
       columns = @props.value.get("columns").toJS()
     else
       columns = @_getColumns()
@@ -150,7 +124,15 @@ module.exports = React.createClass
         }
     )
 
+  _getFileName: ->
+    if @props.value.get("destination") && @props.value.get("destination") != ''
+      return @props.value.get("destination")
+    if @props.value.get("source") && @props.value.get("source") != ''
+      return @props.value.get("source")
+    return ''
+
   render: ->
+    component = @
     React.DOM.div {},
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group form-group-sm',
@@ -173,27 +155,22 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-            if @state.showDetails
-              React.DOM.div {},
-                Input
-                  standalone: true
-                  type: 'checkbox'
-                  label: React.DOM.small {}, 'Optional'
-                  checked: @props.value.get("optional")
-                  disabled: @props.disabled
-                  onChange: @_handleChangeOptional
-                  help: React.DOM.small {},
-                    "If this table does not exist in Storage, the transformation won't show an error."
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          type: 'text'
-          label: 'Destination'
-          value: @props.value.get("destination")
-          disabled: @props.disabled
-          placeholder: "Destination table name in transformation DB"
-          onChange: @_handleChangeDestination
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-10'
+            React.DOM.span {className: "help-block"},
+              "File will be available at"
+              React.DOM.code {}, "/data/in/tables/" + @_getFileName()
+
+      if @state.showDetails
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            bsSize: 'small'
+            type: 'text'
+            label: 'File name'
+            value: @props.value.get("destination")
+            disabled: @props.disabled
+            placeholder: "File name"
+            onChange: @_handleChangeDestination
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
@@ -207,23 +184,22 @@ module.exports = React.createClass
                 placeholder: "All columns will be imported"
                 onChange: @_handleChangeColumns
                 options: @_getColumnsOptions()
-              React.DOM.div
-                className: "help-block small"
+              React.DOM.small
+                className: "help-block"
               ,
                 "Import only specified columns"
       if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            type: 'number'
-            label: 'Days'
-            value: @props.value.get("days")
-            disabled: @props.disabled
-            placeholder: 0
-            help: React.DOM.small {}, "Data updated in the given period"
-            onChange: @_handleChangeDays
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-4'
+        Input
+          bsSize: 'small'
+          type: 'number'
+          label: 'Days'
+          value: @props.value.get("days")
+          disabled: @props.disabled
+          placeholder: 0
+          help: React.DOM.small {}, "Data updated in the given period"
+          onChange: @_handleChangeDays
+          labelClassName: 'col-xs-2'
+          wrapperClassName: 'col-xs-5'
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
@@ -254,23 +230,3 @@ module.exports = React.createClass
                 disabled: @props.disabled
                 onChange: @_handleChangeWhereValues
                 placeholder: "Comma separated values"
-      if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Indexes'
-            React.DOM.div className: 'col-xs-10',
-              MySqlIndexesContainer
-                value: @props.value.get("indexes", Immutable.List())
-                disabled: @props.disabled || !@props.value.get("source")
-                onChange: @_handleChangeIndexes
-                columnsOptions: @_getFilteredColumnsOptions()
-      if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
-            React.DOM.div className: 'col-xs-10',
-              MySqlDataTypesContainer
-                value: @props.value.get("datatypes", Immutable.Map())
-                disabled: @props.disabled || !@props.value.get("source")
-                onChange: @_handleChangeDataTypes
-                columnsOptions: @_getFilteredColumnsOptions()

@@ -2,10 +2,11 @@ React = require 'react'
 Immutable = require 'immutable'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 _ = require('underscore')
-InputMappingRowMySqlEditor = React.createFactory(require './InputMappingRowMySqlEditor')
-InputMappingRowDockerEditor = React.createFactory(require './InputMappingRowDockerEditor')
-InputMappingRowRedshiftEditor = React.createFactory(require './InputMappingRowRedshiftEditor')
+InputMappingRowMySqlEditor = React.createFactory(require '../../components/mapping/InputMappingRowMySqlEditor')
+InputMappingRowDockerEditor = React.createFactory(require '../../components/mapping/InputMappingRowDockerEditor')
+InputMappingRowRedshiftEditor = React.createFactory(require '../../components/mapping/InputMappingRowRedshiftEditor')
 Panel  = React.createFactory require('react-bootstrap').Panel
+
 
 module.exports = React.createClass
   displayName: 'InputMappingEditorContainer'

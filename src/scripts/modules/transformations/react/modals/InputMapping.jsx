@@ -1,0 +1,88 @@
+import React, {PropTypes} from 'react';
+import {Modal} from 'react-bootstrap';
+import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import InputMappingRowMySqlEditor from '../components/mapping/InputMappingRowMySqlEditor';
+import InputMappingRowDockerEditor from '../components/mapping/InputMappingRowDockerEditor';
+import InputMappingRowRedshiftEditor from '../components/mapping/InputMappingRowRedshiftEditor';
+
+const MODE_CREATE = 'create', MODE_EDIT = 'edit';
+
+export default React.createClass({
+  propTypes: {
+    mode: PropTypes.oneOf([MODE_CREATE, MODE_EDIT]),
+    mapping: PropTypes.object.isRequired,
+    tables: PropTypes.object.isRequired,
+    buckets: PropTypes.object.isRequired,
+    backend: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
+  },
+
+  getInitialState() {
+    return {
+      isSaving: false
+    };
+  },
+
+  render() {
+    return (
+      <Modal {...this.props} title="Input Mapping" bsSize="large" onChange={() => null}>
+        <div className="modal-body">
+          {this.editor()}
+        </div>
+        <div className="modal-footer">
+          <ConfirmButtons
+            saveLabel={this.props.mode === MODE_CREATE ? 'Create' : 'Save'}
+            isSaving={this.state.isSaving}
+            onCancel={this.handleCancel}
+            onSave={this.handleSave}
+            />
+        </div>
+      </Modal>
+    );
+  },
+
+  editor() {
+    const props = {
+      value: this.props.mapping,
+      tables: this.props.tables,
+      onChange: this.props.onChange
+    };
+    if (component.props.backend === "mysql" && component.props.type === "simple") {
+      return React.createElement(InputMappingRowMySqlEditor, props);
+    } else if (component.props.backend === "redshift" && component.props.type === "simple") {
+      return React.createElement(InputMappingRowRedshiftEditor, props);
+    } else if (component.props.backend === "docker" && component.props.type === "r") {
+      return React.createElement(InputMappingRowDockerEditor, props);
+    }
+    return null;
+  },
+
+  handleCancel() {
+    this.props.onRequestHide();
+    this.props.onCancel();
+  },
+
+  handleSave() {
+    this.setState({
+      isSaving: true
+    });
+    this.props
+      .onSave()
+      .then(() => {
+        this.setState({
+          isSaving: false
+        });
+        this.props.onRequestHide();
+      })
+      .catch((e) => {
+        this.setState({
+          isSaving: false
+        });
+        throw e;
+      });
+  }
+
+});

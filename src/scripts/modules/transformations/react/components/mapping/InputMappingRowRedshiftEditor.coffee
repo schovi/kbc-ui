@@ -4,7 +4,7 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
-RedshiftDataTypesContainer = React.createFactory(require("./RedshiftDataTypesContainer"))
+RedshiftDataTypesContainer = React.createFactory(require("./input/RedshiftDataTypesContainer"))
 
 module.exports = React.createClass
   displayName: 'InputMappingRowRedshiftEditor'
