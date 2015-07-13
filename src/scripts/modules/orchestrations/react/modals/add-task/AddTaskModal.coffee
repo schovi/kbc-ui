@@ -5,8 +5,9 @@ Button = React.createFactory(require('react-bootstrap').Button)
 
 ComponentSelect = React.createFactory(require './ComponentSelect')
 ConfigurationSelect = React.createFactory(require './ConfigurationSelect')
+ComponentsReloaderButton = require '../../../../components/react/components/ComponentsReloaderButton'
 
-
+createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
 STEP_COMPONENT_SELECT = 'componentSelect'
@@ -16,16 +17,19 @@ STEP_CONFIGURATION_SELECT = 'configurationSelect'
 
 AddTaskModal = React.createClass
   displayName: 'AddTaskModal'
+  mixins: [createStoreMixin(InstalledComponentsStore)]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
 
   getInitialState: ->
-    components: InstalledComponentsStore.getAll()
     selectedComponent: null
     currentStep: STEP_COMPONENT_SELECT
 
+  getStateFromStores: ->
+    components: InstalledComponentsStore.getAll()
+
   render: ->
-    Modal title: "Add Task", onRequestHide: @props.onRequestHide,
+    Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
 
       div className: 'modal-body',
         switch @state.currentStep
@@ -48,6 +52,11 @@ AddTaskModal = React.createClass
             onClick: @props.onRequestHide
           ,
             'Cancel'
+
+  _modalTitle: ->
+    React.DOM.h4 className: 'modal-title',
+      "Add task "
+      React.createElement ComponentsReloaderButton
 
   _handleComponentSelect: (component) ->
     @setState
