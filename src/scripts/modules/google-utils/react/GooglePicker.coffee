@@ -68,6 +68,7 @@ module.exports = React.createClass
   render: ->
     React.createElement Button,
       onClick: @_ButtonClick
+      className: 'btn btn-success'
     ,
       @props.buttonLabel
   getDefaultProps: ->
