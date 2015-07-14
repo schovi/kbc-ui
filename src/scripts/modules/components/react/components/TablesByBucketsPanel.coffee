@@ -23,13 +23,19 @@ module.exports = React.createClass
     isBucketToggledFn: React.PropTypes.func
 
   getStateFromStores: ->
-    {}
+    isTablesLoading = storageTablesStore.getIsLoading()
+    tables = storageTablesStore.getAll()
+
+    #state
+    isTablesLoading: isTablesLoading
+    tables: tables
+
 
   componentDidMount: ->
     storageActionCreators.loadTables()
 
   render: ->
-    isTablesLoading = storageTablesStore.getIsLoading()
+    isTablesLoading = @state.isTablesLoading
     buckets = @_getFilteredBuckets()
     if isTablesLoading
       div className: 'well',
@@ -130,7 +136,7 @@ module.exports = React.createClass
 
   #load buckets and tables from storage store and filter them
   _getFilteredBuckets: ->
-    tables = storageTablesStore.getAll()
+    tables = @state.tables
     buckets = @_getTablesByBucketsList(tables)
     if @props.filterFn
       filteredBuckets = @props.filterFn(buckets)
