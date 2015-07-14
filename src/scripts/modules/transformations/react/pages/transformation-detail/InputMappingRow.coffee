@@ -34,9 +34,11 @@ module.exports = React.createClass(
           span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
           span {className: 'td col-xs-3'},
-            TransformationTableTypeLabel {backend: @props.transformationBackend, type: @props.inputMapping.get('type')}
+            TransformationTableTypeLabel
+              backend: @props.transformation.get('backend')
+              type: @props.inputMapping.get('type')
             ' '
-            if @props.transformationBackend == 'docker'
+            if @props.transformation.get('backend') == 'docker'
               'in/tables/' + @props.inputMapping.get 'destination'
             else
               @props.inputMapping.get 'destination'

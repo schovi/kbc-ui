@@ -34,7 +34,7 @@ export default React.createClass({
             tables={this.props.tables}
             buckets={this.props.buckets}
             onChange={this.props.onChange}
-            disabled={false}
+            disabled={this.state.isSaving}
             backend={this.props.backend}
             type={this.props.type}
             />

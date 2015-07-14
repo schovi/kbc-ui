@@ -37,7 +37,7 @@ export default React.createClass({
 
   renderPackage(packageName) {
     return (
-      <span className="label kbc-label-rounded-small label-default">
+      <span key={packageName} className="label kbc-label-rounded-small label-default">
         {packageName}
       </span>
     );

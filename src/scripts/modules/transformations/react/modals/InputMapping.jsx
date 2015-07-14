@@ -47,6 +47,7 @@ export default React.createClass({
     const props = {
       value: this.props.mapping,
       tables: this.props.tables,
+      disabled: this.state.isSaving,
       onChange: this.props.onChange
     };
     if (this.props.backend === 'mysql' && this.props.type === 'simple') {

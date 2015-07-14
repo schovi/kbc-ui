@@ -26,7 +26,6 @@ SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigge
 Requires = require './Requires'
 Packages = require './Packages'
 Queries = require './Queries'
-{NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
 InlineEditArea = require '../../../../../react/common/InlineEditArea'
@@ -99,14 +98,15 @@ TransformationDetailStatic = React.createClass
               div {className: "help-block"}, small {},
                 "These transformations are dependent on the current transformation."
               div {},
-                _.map(@_getDependentTransformations().toArray(), (dependent) ->
+                @_getDependentTransformations().map((dependent) ->
                   Link
+                    key: dependent.get("id")
                     to: 'transformationDetail'
                     params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
                   ,
                     span {className: 'label kbc-label-rounded-small label-default'},
                       dependent.get("name")
-                )
+                ).toArray()
           else
             div {className: "help-block"}, small {},
               "No transformations are dependent on the current transformation."
@@ -190,6 +190,7 @@ TransformationDetailStatic = React.createClass
                       mappingIndex: key
                       tables: @props.tables
                       pendingActions: @props.pendingActions
+                      buckets: @props.buckets
               ,
                 OutputMappingDetail
                   fill: true
