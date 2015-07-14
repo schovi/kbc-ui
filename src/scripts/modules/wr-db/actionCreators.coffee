@@ -1,14 +1,14 @@
 Promise = require('bluebird')
-api = require('api')
+api = require('./api')
 store = require('./store')
 dispatcher = require('../../Dispatcher')
-
+constants = require './constants'
 module.exports =
   loadConfiguration: (driver, configId) ->
     if store.hasConfiguration(driver, configId)
       return Promise.resolve()
     else
-      @loadCredentialsForce(driver, configId)
+      @loadConfigurationForce(driver, configId)
 
 
   loadConfigurationForce: (driver, configId) ->
@@ -19,13 +19,13 @@ module.exports =
       tables: api.getTables(driver, configId)
     .then (result) ->
       dispatcher.handleViewAction
-        type: WR_DB_GET_CONFIGURATION_SUCCESS
+        type: constants.ActionTypes.WR_DB_GET_CONFIGURATION_SUCCESS
         driver: driver
         configId: configId
         config: result #credentials&tables
     .catch (err) ->
       dispatcher.handleViewAction
-        type: WR_DB_API_ERROR
+        type: constants.ActionTypes.WR_DB_API_ERROR
         driver: driver
         configId: configId
         error: err

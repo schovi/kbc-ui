@@ -2,6 +2,7 @@ React = require 'react'
 {fromJS, Map, List} = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+TableRow = React.createFactory require('./TableRow')
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -10,23 +11,34 @@ SearchRow = require '../../../../../react/common/SearchRow'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+WrDbStore = require '../../../store'
+WrDbActions = require '../../../actionCreators'
+
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
 componentId = 'wr-db'
+driver = 'mysql'
+
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
 module.exports = React.createClass
   displayName: 'wrdbIndex'
 
-  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, WrDbStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles', Map())
 
+    tables = WrDbStore.getTables(driver, configId)
+    credentials = WrDbStore.getCredentials(driver, configId)
+    console.log 'CONFIG tables:', tables.toJS(), 'credentials:', credentials.toJS()
+
     #state
+    tables: tables
+    credentials: credentials
     configId: configId
     hasCredentials: true #TODO
     localState: localState
@@ -76,14 +88,14 @@ module.exports = React.createClass
 
 
   _renderTableRow: (table) ->
-    div null, table.get('id')
-    # TableRow
-    #   isTableExported: @_isTableExported(table.get('id'))
-    #   isPending: @_isPendingTable(table.get('id'))
-    #   onExportChangeFn: =>
-    #     @_handleExportChange(table.get('id'))
-    #   table: table
-    #   prepareSingleUploadDataFn: @_prepareTableUploadData
+    #div null, table.get('id')
+    TableRow
+      isTableExported: @_isTableExported(table.get('id'))
+      isPending: @_isPendingTable(table.get('id'))
+      onExportChangeFn: =>
+        @_handleExportChange(table.get('id'))
+      table: table
+      prepareSingleUploadDataFn: @_prepareTableUploadData
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -92,8 +104,17 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Destination Table name'
 
-  _isTableExported: (tableId) ->
+  _handleExportChange: (tableId) ->
+
+  _isPendingTable: (tableId) ->
     return false
+
+  _prepareTableUploadData: (table) ->
+    return []
+
+  _isTableExported: (tableId) ->
+    table = @_getConfigTable(tableId)
+    return table and table.get('export')
     # intables = @_getInputTables()
     # !!intables.find((table) ->
     #   table.get('source') == tableId)
@@ -119,3 +140,7 @@ module.exports = React.createClass
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+
+  _getConfigTable: (tableId) ->
+    @state.tables.find( (table) ->
+      tableId == table.get 'id')

@@ -1,7 +1,7 @@
-{Map, FromJS, List} = require 'immutable'
+Dispatcher = require('../../Dispatcher')
+{Map, fromJS, List} = require 'immutable'
 
 StoreUtils = require('../../utils/StoreUtils')
-dispatcher = require '../../Dispatcher'
 constants = require './constants'
 
 
@@ -28,8 +28,7 @@ WrDbStore = StoreUtils.createStore
   getCredentials: (driver, configId) ->
     _store.getIn ['credentials', driver, configId]
 
-
-dispatcher.reqister (payload) ->
+Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
     when constants.ActionTypes.WR_DB_GET_CONFIGURATION_SUCCESS
@@ -37,6 +36,8 @@ dispatcher.reqister (payload) ->
       configId = action.configId
       credentials = action.config.credentials
       tables = action.config.tables
-      _store = _store.setIn ['tables',      driver, configId], FromJS(tables)
-      _store = _store.setIn ['credentials', driver, configId], FromJS(credentials)
+      _store = _store.setIn ['tables',      driver, configId], fromJS(tables)
+      _store = _store.setIn ['credentials', driver, configId], fromJS(credentials)
       WrDbStore.emitChange()
+
+module.exports = WrDbStore
