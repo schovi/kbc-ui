@@ -23,7 +23,7 @@ Panel  = React.createFactory Panel
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
-SelectRequires = React.createFactory(require('./SelectRequires'))
+Requires = require './Requires'
 {NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
@@ -70,25 +70,25 @@ TransformationDetailStatic = React.createClass
     component = @
     div {className: 'kbc-row'},
       h2 {}, 'Requires'
-      if @props.transformation.get("requires").toArray().length
-        span {},
-          div {className: "help-block"}, small {},
-            "These transformations are processed before this transformation starts."
-          div {},
-            _.map(@props.transformation.get("requires").toArray(), (required) ->
-              Link
-                to: 'transformationDetail'
-                params: {transformationId: required, bucketId: props.bucket.get('id')}
-              ,
-                span {className: 'label kbc-label-rounded-small label-default'},
-                  _.find(props.transformations.toArray(), (transformation) ->
-                    transformation.get("id") == required
-                  )?.get("name") || required
-            )
-      else
-        div {className: "help-block"}, small {},
-          "No transformations are required."
-
+      React.createElement Requires,
+        bucketId: @props.bucket.get('id')
+        transformation: @props.transformation
+        transformations: @props.transformations
+        isEditing: @props.editingFields.has('requires')
+        isSaving: @props.pendingActions.has('save-requires')
+        requires: @props.editingFields.get('requires', @props.transformation.get("requires"))
+        onEditStart: =>
+          TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+            @props.transformationId, 'requires')
+        onEditCancel: =>
+          TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'requires')
+        onEditChange: (newValue) =>
+          TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'requires', newValue)
+        onEditSubmit: =>
+          TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'requires')
       span {},
         div {},
           h2 {}, 'Dependent transformations'

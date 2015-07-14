@@ -267,6 +267,7 @@ Dispatcher.register (payload) ->
         'editingTransformationsFields'
         action.bucketId
         action.transformationId
+        action.fieldId
       ]
       TransformationsStore.emitChange()
 

@@ -359,7 +359,7 @@ module.exports =
         throw error
     else
       transformation = TransformationsStore.getTransformation(bucketId, transformationId)
-      transformation = transformation.set 'fieldId', value
+      transformation = transformation.set fieldId, value
 
       transformationsApi
       .saveTransformation(bucketId, transformationId, transformation.toJS())
