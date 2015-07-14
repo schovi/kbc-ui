@@ -301,6 +301,13 @@ module.exports =
       type: constants.ActionTypes.TRANSFORMATION_BUCKETS_TOGGLE
       bucketId: bucketId
 
+  startTransformationFieldEdit: (bucketId, transformationId, fieldId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_START_EDIT_FIELD
+      bucketId: bucketId
+      transformationId: transformationId
+      fieldId: fieldId
+
   updateTransformationEditingField: (bucketId, transformationId, fieldId, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_UPDATE_EDITING_FIELD
@@ -315,6 +322,66 @@ module.exports =
       bucketId: bucketId
       transformationId: transformationId
       fieldId: fieldId
+
+  saveTransformationEditingField: (bucketId, transformationId, fieldId) ->
+    value = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(fieldId)
+
+    pendingAction = "save-#{fieldId}"
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+      pendingAction: pendingAction
+    )
+
+    if fieldId in ['description']
+      transformationsApi
+      .updateTransformationProperty(bucketId, transformationId, fieldId, value)
+      .then ->
+        transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          data: transformation.set(fieldId, value).toJS()
+        )
+      .catch (error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          error: error
+        )
+        throw error
+    else
+      transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+      transformation = transformation.set 'fieldId', value
+
+      transformationsApi
+      .saveTransformation(bucketId, transformationId, transformation.toJS())
+      .then (response) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          data: response
+        )
+      .catch (error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          error: error
+        )
+        throw error
 
   ###
     Create new or update existing output mapping

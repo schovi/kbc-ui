@@ -224,6 +224,9 @@ Dispatcher.register (payload) ->
           ]
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+      _store = _store.deleteIn ['pendingActions', action.bucketId, action.transformationId, action.pendingAction]
+      TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
@@ -234,6 +237,20 @@ Dispatcher.register (payload) ->
           )
         )
       )
+      TransformationsStore.emitChange()
+
+    when Constants.ActionTypes.TRANSFORMATION_START_EDIT_FIELD
+      _store = _store.setIn [
+        'editingTransformationsFields'
+        action.bucketId
+        action.transformationId
+        action.fieldId
+      ], _store.getIn([
+        'transformationsByBucketId'
+        action.bucketId
+        action.transformationId
+        action.fieldId
+      ])
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_UPDATE_EDITING_FIELD

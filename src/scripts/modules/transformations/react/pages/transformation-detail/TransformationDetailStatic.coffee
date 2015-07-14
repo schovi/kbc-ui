@@ -27,6 +27,7 @@ SelectRequires = React.createFactory(require('./SelectRequires'))
 {NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
+InlineEditArea = require '../../../../../react/common/InlineEditArea'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -279,11 +280,24 @@ TransformationDetailStatic = React.createClass
     component = @
     div {},
       div className: 'kbc-row kbc-header',
-        if @props.transformation.get("description")
-          React.createElement NewLineToBr,
-            text: @props.transformation.get("description")
-        else
-          em {}, "No description ..."
+        React.createElement InlineEditArea,
+          isEditing: @props.editingFields.has('description')
+          isSaving: @props.pendingActions.has('save-description')
+          text: @props.editingFields.get('description', @props.transformation.get("description"))
+          editTooltip: "Click to edit description"
+          placeholder: "Describe the transformation"
+          onEditStart: =>
+            TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+              @props.transformationId, 'description')
+          onEditCancel: =>
+            TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description')
+          onEditChange: (newValue) =>
+            TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description', newValue)
+          onEditSubmit: =>
+            TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description')
         div {className: 'pull-right'},
           span {className: 'label kbc-label-rounded-small label-default'},
             'Phase: '
