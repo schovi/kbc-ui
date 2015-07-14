@@ -24,6 +24,7 @@ Panel  = React.createFactory Panel
 TransformationTypeLabel = React.createFactory(require '../../components/TransformationTypeLabel')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 Requires = require './Requires'
+Packages = require './Packages'
 {NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
@@ -202,24 +203,25 @@ TransformationDetailStatic = React.createClass
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
           h2 {}, 'Packages'
-          p {},
-            if @props.transformation.get('packages', Immutable.List()).count()
-              @props.transformation.get('packages', Immutable.List()).map((packageName, key) ->
-                span {key: key},
-                  span {className: 'label label-default'},
-                    packageName
-                  ' '
-              , @).toArray()
-            else
-              small {},
-              'No packages will installed'
-
-          if @props.transformation.get('packages', Immutable.List()).count()
-            p {}, small {},
-                'These packages will be installed into the Docker container running the R script. '
-                'Do not forget to load them using '
-                code {}, 'library()'
-                '.'
+          React.createElement Packages,
+            bucketId: @props.bucket.get('id')
+            transformation: @props.transformation
+            transformations: @props.transformations
+            isEditing: @props.editingFields.has('packages')
+            isSaving: @props.pendingActions.has('save-packages')
+            packages: @props.editingFields.get('packages', @props.transformation.get("packages"))
+            onEditStart: =>
+              TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+                @props.transformationId, 'packages')
+            onEditCancel: =>
+              TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'packages')
+            onEditChange: (newValue) =>
+              TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'packages', newValue)
+            onEditSubmit: =>
+              TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'packages')
 
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
