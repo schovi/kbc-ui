@@ -37,15 +37,17 @@ module.exports = React.createClass
     console.log 'CONFIG tables:', tables.toJS(), 'credentials:', credentials.toJS()
 
     #state
+    updatingTables: WrDbStore.getUpdatingTables(driver, configId)
     tables: tables
     credentials: credentials
     configId: configId
-    hasCredentials: true #TODO
+    hasCredentials: WrDbStore.hasCredentials(driver, configId)
     localState: localState
     bucketToggles: toggles
 
 
   render: ->
+    console.log 'render'
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -62,7 +64,7 @@ module.exports = React.createClass
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
-          query: @state.localState.get('searchQuery')
+          query: @state.localState.get('searchQuery') or ''
       if @state.hasCredentials
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
@@ -90,6 +92,7 @@ module.exports = React.createClass
   _renderTableRow: (table) ->
     #div null, table.get('id')
     TableRow
+      configId: @state.configId
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
       onExportChangeFn: =>
@@ -105,20 +108,23 @@ module.exports = React.createClass
         strong null, 'Destination Table name'
 
   _handleExportChange: (tableId) ->
+    isExported = @_isTableExported(tableId)
+    newExportedValue = !isExported
+    table = @_getConfigTable(tableId)
+    dbName = tableId
+    if table and table.get('dbName')
+      dbName = table.get('dbName')
+    WrDbActions.setTableToExport(driver, @state.configId, tableId, dbName, newExportedValue)
 
   _isPendingTable: (tableId) ->
-    return false
+    return @state.updatingTables.has(tableId)
 
   _prepareTableUploadData: (table) ->
     return []
 
   _isTableExported: (tableId) ->
     table = @_getConfigTable(tableId)
-    return table and table.get('export')
-    # intables = @_getInputTables()
-    # !!intables.find((table) ->
-    #   table.get('source') == tableId)
-
+    table and (table.get('export') == true)
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
@@ -143,4 +149,5 @@ module.exports = React.createClass
 
   _getConfigTable: (tableId) ->
     @state.tables.find( (table) ->
-      tableId == table.get 'id')
+      tableId == table.get('id')
+    )

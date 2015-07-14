@@ -17,6 +17,7 @@ module.exports = React.createClass
     onExportChangeFn: React.PropTypes.func.isRequired
     prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
+    configId: React.PropTypes.string.isRequired
 
   render: ->
     div {className: 'tr', key: @props.table.get('id')},
@@ -28,7 +29,7 @@ module.exports = React.createClass
           deactivateTooltip: 'Deselect table from upload'
           isActive: @props.isTableExported
           isPending: @props.isPending
-          onChange: @props.onExportChangeFn()
+          onChange: @props.onExportChangeFn
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
         ,
@@ -39,6 +40,7 @@ module.exports = React.createClass
             icon: 'fa fa-upload fa-fw'
             component: 'wr-db'
             runParams: =>
-              configData: @props.prepareSingleUploadDataFn(@props.table)
+              table: @props.table.get('id')
+              writer: @props.configId
           ,
            "You are about to run upload of #{@props.table.get('id')} to the database."

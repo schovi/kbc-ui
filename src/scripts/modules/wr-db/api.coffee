@@ -25,3 +25,16 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+  setTable: (driver, configId, tableId, dbName, isExported) ->
+    exported = if isExported then 1 else 0
+    path = "tables/#{tableId}"
+    data =
+      "dbName": dbName
+      "export": exported
+    createRequest('POST', driver, configId, path)
+    .send data
+    .promise()
+    .then (response) ->
+      console.log "API RESPONSE", response
+      response.body
