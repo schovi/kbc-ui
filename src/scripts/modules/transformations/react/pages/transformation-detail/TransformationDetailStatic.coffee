@@ -142,6 +142,7 @@ TransformationDetailStatic = React.createClass
                       editingInputMapping: @props.editingFields.get('input-' + key, input)
                       editingId: 'input-' + key
                       mappingIndex: key
+                      pendingActions: @props.pendingActions
               ,
                 InputMappingDetail
                   fill: true

@@ -1,6 +1,7 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
 {ModalTrigger} = require 'react-bootstrap'
+DeleteButton = require '../../../../../react/common/DeleteButton'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
@@ -39,7 +40,14 @@ module.exports = React.createClass(
               'in/tables/' + @props.inputMapping.get 'destination'
             else
               @props.inputMapping.get 'destination'
-          span {className: 'td col-xs-1'},
+          span {className: 'td col-xs-1 text-right kbc-no-wrap'},
+            React.createElement DeleteButton,
+              tooltip: 'Delete Input'
+              isPending: @props.pendingActions.get('delete-input-' + @props.mappingIndex)
+              confirm:
+                title: 'Delete Output'
+                text: "Do you really want to delete input?"
+                onConfirm: @_handleDelete
             React.createElement ModalTrigger,
               modal: React.createElement InputMappingModal,
                 mode: 'edit'
@@ -52,14 +60,13 @@ module.exports = React.createClass(
                 onSave: @_handleSave
             ,
               React.DOM.button
-                className: "btn btn-link pull-right"
+                className: "btn btn-link"
                 onClick: (e) ->
                   e.preventDefault()
                   e.stopPropagation()
               ,
                 React.DOM.span null,
-                  React.DOM.span {className: 'fa fa-edit'}
-                  ' Edit'
+                  React.DOM.span {className: 'fa fa-fw kbc-icon-pencil'}
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),
@@ -79,6 +86,13 @@ module.exports = React.createClass(
       @props.transformation.get('id')
       'input'
       @props.editingId
+      @props.mappingIndex
+    )
+
+  _handleDelete: ->
+    actionCreators.deleteTransformationMapping(@props.bucket.get('id'),
+      @props.transformation.get('id')
+      'input'
       @props.mappingIndex
     )
 )

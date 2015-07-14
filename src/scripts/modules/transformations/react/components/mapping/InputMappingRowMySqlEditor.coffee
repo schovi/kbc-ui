@@ -151,7 +151,7 @@ module.exports = React.createClass
     )
 
   render: ->
-    React.DOM.div {},
+    React.DOM.div {className: 'form-horizontal clearfix'},
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group form-group-sm',
           React.DOM.div className: 'col-xs-10 col-xs-offset-2',

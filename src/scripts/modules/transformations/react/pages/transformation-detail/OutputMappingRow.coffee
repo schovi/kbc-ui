@@ -44,7 +44,14 @@ OutputMappingRow = React.createClass(
               backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
           span {className: 'td col-xs-3'},
             @props.outputMapping.get 'destination'
-          span {className: 'td col-xs-1'},
+          span {className: 'td col-xs-1 col-xs-1 text-right kbc-no-wrap'},
+            React.createElement DeleteButton,
+              tooltip: 'Delete Output'
+              isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
+              confirm:
+                title: 'Delete Output'
+                text: "Do you really want to delete output?"
+                onConfirm: @_handleDelete
             React.createElement ModalTrigger,
               modal: React.createElement OutputMappingModal,
                 mode: 'edit'
@@ -58,21 +65,13 @@ OutputMappingRow = React.createClass(
                 onSave: @_handleSave
             ,
               React.DOM.button
-                className: "btn btn-link pull-right"
+                className: "btn btn-link"
                 onClick: (e) ->
                   e.preventDefault()
                   e.stopPropagation()
               ,
                 React.DOM.span null,
-                  React.DOM.span {className: 'fa fa-edit'}
-                  ' Edit'
-            React.createElement DeleteButton,
-              tooltip: 'Delete Output'
-              isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
-              confirm:
-                title: 'Delete Output'
-                text: "Do you really want to delete output?"
-                onConfirm: @_handleDelete
+                  React.DOM.span {className: 'fa fa-fa kbc-icon-pencil'}
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),

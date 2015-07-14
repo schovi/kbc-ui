@@ -354,6 +354,14 @@ module.exports =
     transformation = transformation.update mappingType, (mappings) ->
       mappings.delete(mappingIndex)
 
+    pendingAction = "delete-#{mappingType}-#{mappingIndex}"
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+      pendingAction: pendingAction
+    )
+
     transformationsApi
     .saveTransformation(bucketId, transformationId, transformation.toJS())
     .then (response) ->
@@ -362,12 +370,14 @@ module.exports =
         transformationId: transformationId
         bucketId: bucketId
         data: response
+        pendingAction: pendingAction
       )
     .catch (error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
         transformationId: transformationId
         bucketId: bucketId
+        pendingAction: pendingAction
         error: error
       )
       throw error

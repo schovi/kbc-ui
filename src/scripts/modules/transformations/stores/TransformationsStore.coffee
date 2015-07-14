@@ -204,10 +204,16 @@ Dispatcher.register (payload) ->
         _store = _store.setIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], true)
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      _store = _store.setIn ['pendingActions', action.bucketId, action.transformationId, action.pendingAction], true
+      TransformationsStore.emitChange()
+
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
         tObj = Immutable.fromJS(action.data)
-        store = store.setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
+        store = store
+          .setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
+          .deleteIn ['pendingActions', action.bucketId, action.transformationId, action.pendingAction]
 
         if action.editingId
           store = store.deleteIn [

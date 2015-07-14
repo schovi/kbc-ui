@@ -103,9 +103,8 @@ module.exports = React.createClass
     table.get("columns")
 
   render: ->
-    console.log 'render output mapping', @props.value.toJS()
     component = @
-    React.DOM.div {className: 'panel-body'},
+    React.DOM.div {className: 'form-horizontal clearfix'},
       React.DOM.div null,
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
