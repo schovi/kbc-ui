@@ -2,6 +2,8 @@ React = require 'react'
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, button, strong, div} = React.DOM
+Link = React.createFactory(require('react-router').Link)
+
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 
@@ -21,7 +23,13 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
 
   render: ->
-    div {className: 'tr', key: @props.table.get('id')},
+    Link
+      className: 'tr'
+      to: 'wr-db-table'
+      params:
+        config: @props.configId
+        tableId: @props.table.get('id')
+    ,
       span className: 'td',
         @props.table.get 'name'
       span className: 'td',

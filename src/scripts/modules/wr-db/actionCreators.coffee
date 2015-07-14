@@ -4,6 +4,31 @@ store = require('./store')
 dispatcher = require('../../Dispatcher')
 constants = require './constants'
 module.exports =
+  loadTableColumns: (driver, configId, tableId) ->
+    if store.hasColumns(driver, configId, tableId)
+      return Promise.resolve()
+    else
+      @loadTableColumnsForce(driver, configId, tableId)
+
+  loadTableColumnsForce: (driver, configId, tableId) ->
+    api.getColumns(driver, configId, tableId)
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_GET_COLUMNS_SUCCESS
+        driver: driver
+        configId: configId
+        tableId: tableId
+        columns: result
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        driver: driver
+        configId: configId
+        error: err
+      throw err
+
+
+
   loadConfiguration: (driver, configId) ->
     if store.hasConfiguration(driver, configId)
       return Promise.resolve()

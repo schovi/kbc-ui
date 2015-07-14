@@ -35,9 +35,23 @@ WrDbStore = StoreUtils.createStore
   getUpdatingTables: (driver, configId) ->
     _store.getIn ['updatingTables', driver, configId], Map()
 
+  hasColumns: (driver, configId, tableId) ->
+    _store.hasIn ['columns', driver, configId, tableId]
+
+  getColumns: (driver, configId, tableId) ->
+    _store.getIn ['columns', driver, configId, tableId]
+
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when constants.ActionTypes.WR_DB_GET_COLUMNS_SUCCESS
+      driver = action.driver
+      configId = action.configId
+      tableId = action.tableId
+      columns = action.columns
+      _store = _store.setIn ['columns', driver, configId, tableId], fromJS(columns)
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_SET_TABLE_START
       driver = action.driver
       configId = action.configId
