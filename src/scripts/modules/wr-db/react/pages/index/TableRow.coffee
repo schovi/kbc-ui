@@ -17,12 +17,15 @@ module.exports = React.createClass
     onExportChangeFn: React.PropTypes.func.isRequired
     prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
+    tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
 
   render: ->
     div {className: 'tr', key: @props.table.get('id')},
       span className: 'td',
         @props.table.get 'name'
+      span className: 'td',
+        @props.tableDbName
       span {className: 'td text-right'},
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Select table to upload'

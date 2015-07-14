@@ -93,6 +93,7 @@ module.exports = React.createClass
     #div null, table.get('id')
     TableRow
       configId: @state.configId
+      tableDbName: @_getConfigTable(table.get('id')).get('name')
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
       onExportChangeFn: =>
@@ -105,7 +106,7 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
-        strong null, 'Destination Table name'
+        strong null, 'Database name'
 
   _handleExportChange: (tableId) ->
     isExported = @_isTableExported(tableId)
