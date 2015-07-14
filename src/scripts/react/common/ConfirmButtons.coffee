@@ -19,26 +19,42 @@ module.exports = React.createClass
     saveLabel: React.PropTypes.string
     onCancel: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
-
+    placement: React.PropTypes.oneOf ['left', 'right']
 
   getDefaultProps: ->
     saveLabel: 'Save'
     cancelLabel: 'Cancel'
+    placement: 'right'
     isDisabled: false
 
   render: ->
-    React.DOM.div className: 'kbc-buttons',
-      if @props.isSaving
-        React.createElement Loader
-      React.createElement Button,
-        bsStyle: 'link'
-        disabled: @props.isSaving
-        onClick: @props.onCancel
-      ,
-        @props.cancelLabel
-      React.createElement Button,
-        bsStyle: 'success'
-        disabled: @props.isSaving || @props.isDisabled
-        onClick: @props.onSave
-      ,
-        @props.saveLabel
+    if @props.placement == 'left'
+      React.DOM.div className: 'kbc-buttons',
+        @_saveButton()
+        @_cancelButton()
+        @_loader()
+    else
+      React.DOM.div className: 'kbc-buttons',
+        @_loader()
+        @_cancelButton()
+        @_saveButton()
+
+  _loader: ->
+    if @props.isSaving
+      React.createElement Loader
+
+  _saveButton: ->
+    React.createElement Button,
+      bsStyle: 'success'
+      disabled: @props.isSaving || @props.isDisabled
+      onClick: @props.onSave
+    ,
+      @props.saveLabel
+
+  _cancelButton: ->
+    React.createElement Button,
+      bsStyle: 'link'
+      disabled: @props.isSaving
+      onClick: @props.onCancel
+    ,
+      @props.cancelLabel
