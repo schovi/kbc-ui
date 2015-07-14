@@ -12,19 +12,17 @@ export default React.createClass({
   render() {
     if (this.canBeTerminated()) {
       return (
-        <div>
-          {this.props.isTerminating ? <Loader/> : null}
-          <Confirm
-            title="Terminate Job"
-            text={`Do you really want to terminate the job ${this.props.job.get('id')}?`}
-            buttonLabel="Terminate"
-            onConfirm={this.props.onTerminate}
-            >
-            <button className="btn btn-link" disabled={this.props.isTerminating}>
-              <span className="fa fa-fw fa-times"/> Terminate job
-            </button>
-          </Confirm>
-        </div>
+        <Confirm
+          title="Terminate Job"
+          text={`Do you really want to terminate the job ${this.props.job.get('id')}?`}
+          buttonLabel="Terminate"
+          onConfirm={this.props.onTerminate}
+          >
+          <button className="btn btn-link" disabled={this.props.isTerminating}>
+            {this.props.isTerminating ? <Loader/> : null}
+            <span className="fa fa-fw fa-times"/> Terminate job
+          </button>
+        </Confirm>
       );
     } else {
       return null;

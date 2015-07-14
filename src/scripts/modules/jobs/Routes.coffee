@@ -4,7 +4,7 @@ JobsIndex = require('./react/pages/jobs-index/JobsIndex')
 JobsActionCreators = require('./ActionCreators')
 JobsReloaderButton = require('./react/components/JobsReloaderButton')
 JobDetailReloaderButton = require('./react/components/JobDetailReloaderButton')
-JobTerminateButton = require './react/components/JobTerminateButton'
+JobDetailButtons = require './react/components/JobDetailButtons'
 JobsStore = require('./stores/JobsStore')
 Promise = require('bluebird')
 
@@ -39,7 +39,7 @@ routes =
           "Job " + jobId
         reloaderHandler: JobDetailReloaderButton
         handler: JobDetail
-        headerButtonsHandler: JobTerminateButton
+        headerButtonsHandler: JobDetailButtons
         poll:
           interval: 2
           action: (params) ->
