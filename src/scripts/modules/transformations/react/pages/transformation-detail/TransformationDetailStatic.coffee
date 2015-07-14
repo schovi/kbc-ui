@@ -115,12 +115,13 @@ TransformationDetailStatic = React.createClass
       div {},
         h2 {},
           'Input Mapping'
-          span className: 'pull-right',
-            React.createElement AddInputMapping,
-              tables: @props.tables
-              transformation: @props.transformation
-              bucket: @props.bucket
-              mapping: @props.editingFields.get('new-input-mapping', Map())
+          if @props.transformation.get('input').count() >= 1
+            span className: 'pull-right',
+              React.createElement AddInputMapping,
+                tables: @props.tables
+                transformation: @props.transformation
+                bucket: @props.bucket
+                mapping: @props.editingFields.get('new-input-mapping', Map())
         if @props.transformation.get('input').count()
           div {},
             @props.transformation.get('input').sortBy((inputMapping) ->
@@ -154,17 +155,24 @@ TransformationDetailStatic = React.createClass
                   tables: @props.tables
             , @).toArray()
         else
-          div {className: "help-block"}, small {}, 'No Input Mapping'
+          div {className: "well text-center"},
+            p {}, 'No inputs assigned yet.'
+            React.createElement AddInputMapping,
+              tables: @props.tables
+              transformation: @props.transformation
+              bucket: @props.bucket
+              mapping: @props.editingFields.get('new-input-mapping', Map())
       div {},
         h2 {},
           'Output Mapping'
-          span className: 'pull-right',
-            React.createElement AddOutputMapping,
-              tables: @props.tables
-              buckets: @props.buckets
-              transformation: @props.transformation
-              bucket: @props.bucket
-              mapping: @props.editingFields.get('new-output-mapping', Map())
+          if  @props.transformation.get('output').count() >= 1
+            span className: 'pull-right',
+              React.createElement AddOutputMapping,
+                tables: @props.tables
+                buckets: @props.buckets
+                transformation: @props.transformation
+                bucket: @props.bucket
+                mapping: @props.editingFields.get('new-output-mapping', Map())
         if @props.transformation.get('output').count()
           div {},
             @props.transformation.get('output').sortBy((outputMapping) ->
@@ -200,7 +208,14 @@ TransformationDetailStatic = React.createClass
 
             , @).toArray()
         else
-          p {}, small {}, 'No Output Mapping'
+          div {className: "well text-center"},
+            p {}, 'No Output Mapping assigned yet.'
+            React.createElement AddOutputMapping,
+              tables: @props.tables
+              buckets: @props.buckets
+              transformation: @props.transformation
+              bucket: @props.bucket
+              mapping: @props.editingFields.get('new-output-mapping', Map())
 
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
