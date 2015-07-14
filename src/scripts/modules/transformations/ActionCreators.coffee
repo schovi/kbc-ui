@@ -389,11 +389,11 @@ module.exports =
   ###
     Create new or update existing output mapping
   ###
-  saveTransformationOutputMapping: (bucketId, transformationId, editingId, mappingIndex = null) ->
+  saveTransformationMapping: (bucketId, transformationId, mappingType, editingId, mappingIndex = null) ->
     mapping = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(editingId)
     transformation = TransformationsStore.getTransformation(bucketId, transformationId)
 
-    transformation = transformation.update 'output', (mappings) ->
+    transformation = transformation.update mappingType, (mappings) ->
       if mappingIndex
         mappings.set mappingIndex, mapping
       else

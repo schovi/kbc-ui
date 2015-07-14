@@ -79,8 +79,9 @@ OutputMappingRow = React.createClass(
     )
 
   _handleSave: ->
-    actionCreators.saveTransformationOutputMapping(@props.bucket.get('id'),
+    actionCreators.saveTransformationMapping(@props.bucket.get('id'),
       @props.transformation.get('id')
+      'output'
       @props.editingId
       @props.mappingIndex
     )

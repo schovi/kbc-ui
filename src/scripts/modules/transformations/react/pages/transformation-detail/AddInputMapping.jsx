@@ -1,12 +1,11 @@
 import React from 'react';
 import {ModalTrigger} from 'react-bootstrap';
-import OutputMappingModal from '../../modals/OutputMapping';
+import InputMappingModal from '../../modals/InputMapping';
 import actionCreators from '../../../ActionCreators';
 
 export default React.createClass({
   propTypes: {
     tables: React.PropTypes.object.isRequired,
-    buckets: React.PropTypes.object.isRequired,
     transformation: React.PropTypes.object.isRequired,
     bucket: React.PropTypes.object.isRequired,
     mapping: React.PropTypes.object.isRequired
@@ -16,18 +15,17 @@ export default React.createClass({
     return (
       <ModalTrigger modal={this.modal()}>
         <button className="btn btn-primary" onClick={this.handleClick}>
-          <span className="kbc-icon-plus"></span> Add Output
+          <span className="kbc-icon-plus"></span> Add Input
         </button>
       </ModalTrigger>
     );
   },
 
   modal() {
-    return React.createElement(OutputMappingModal, {
+    return React.createElement(InputMappingModal, {
       mode: 'create',
       mapping: this.props.mapping,
       tables: this.props.tables,
-      buckets: this.props.buckets,
       backend: this.props.transformation.get('backend'),
       type: this.props.transformation.get('type'),
       onChange: this.handleChange,
@@ -44,7 +42,7 @@ export default React.createClass({
   handleChange(newMapping) {
     actionCreators.updateTransformationEditingField(this.props.bucket.get('id'),
       this.props.transformation.get('id'),
-      'new-output-mapping',
+      'new-input-mapping',
       newMapping
     );
   },
@@ -52,7 +50,7 @@ export default React.createClass({
   handleCancel() {
     actionCreators.cancelTransformationEditingField(this.props.bucket.get('id'),
       this.props.transformation.get('id'),
-      'new-output-mapping'
+      'new-input-mapping'
     );
   },
 
@@ -60,8 +58,8 @@ export default React.createClass({
     // returns promise
     return actionCreators.saveTransformationMapping(this.props.bucket.get('id'),
       this.props.transformation.get('id'),
-      'output',
-      'new-output-mapping'
+      'input',
+      'new-input-mapping'
     );
   }
 

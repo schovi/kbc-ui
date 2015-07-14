@@ -12,7 +12,6 @@ export default React.createClass({
     mode: PropTypes.oneOf([MODE_CREATE, MODE_EDIT]),
     mapping: PropTypes.object.isRequired,
     tables: PropTypes.object.isRequired,
-    buckets: PropTypes.object.isRequired,
     backend: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -50,11 +49,11 @@ export default React.createClass({
       tables: this.props.tables,
       onChange: this.props.onChange
     };
-    if (component.props.backend === "mysql" && component.props.type === "simple") {
+    if (this.props.backend === 'mysql' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowMySqlEditor, props);
-    } else if (component.props.backend === "redshift" && component.props.type === "simple") {
+    } else if (this.props.backend === 'redshift' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowRedshiftEditor, props);
-    } else if (component.props.backend === "docker" && component.props.type === "r") {
+    } else if (this.props.backend === 'docker' && this.props.type === 'r') {
       return React.createElement(InputMappingRowDockerEditor, props);
     }
     return null;

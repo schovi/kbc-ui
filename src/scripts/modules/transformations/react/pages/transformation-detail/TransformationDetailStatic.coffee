@@ -26,6 +26,7 @@ SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigge
 SelectRequires = React.createFactory(require('./SelectRequires'))
 {NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
+AddInputMapping = require './AddInputMapping'
 
 require('codemirror/mode/sql/sql')
 require('codemirror/mode/r/r')
@@ -109,7 +110,14 @@ TransformationDetailStatic = React.createClass
 
 
       div {},
-        h2 {}, 'Input Mapping'
+        h2 {},
+          'Input Mapping'
+          span className: 'pull-right',
+            React.createElement AddInputMapping,
+              tables: @props.tables
+              transformation: @props.transformation
+              bucket: @props.bucket
+              mapping: @props.editingFields.get('new-input-mapping', Map())
         if @props.transformation.get('input').count()
           div {},
             @props.transformation.get('input').sortBy((inputMapping) ->
@@ -127,9 +135,13 @@ TransformationDetailStatic = React.createClass
                       component._toggleInputMapping(key)
                   ,
                     InputMappingRow
-                      transformationBackend: @props.transformation.get('backend')
+                      transformation: @props.transformation
+                      bucket: @props.bucket
                       inputMapping: input
                       tables: @props.tables
+                      editingInputMapping: @props.editingFields.get('input-' + key, input)
+                      editingId: 'input-' + key
+                      mappingIndex: key
               ,
                 InputMappingDetail
                   fill: true
