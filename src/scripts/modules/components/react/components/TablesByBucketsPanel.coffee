@@ -2,8 +2,8 @@ React = require 'react'
 fuzzy = require 'fuzzy'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ActiveCountBadge = require './ActiveCountBadge'
-storageTablesStore = require '../../../components/stores/StorageTablesStore'
-storageActionCreators = require '../../../components/StorageActionCreators'
+storageTablesStore = require '../../stores/StorageTablesStore'
+storageActionCreators = require '../../StorageActionCreators'
 {strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 
