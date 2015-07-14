@@ -15,7 +15,7 @@ export default React.createClass({
     return (
       <div>
         <div>
-          <div className="edit">
+          <div className="edit form-group">
             <CodeMirror
               value={this.props.queries}
               theme="solarized"

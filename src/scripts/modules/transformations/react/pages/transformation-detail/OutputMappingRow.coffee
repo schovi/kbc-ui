@@ -3,7 +3,7 @@ Link = React.createFactory(require('react-router').Link)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
-{ModalTrigger} = require 'react-bootstrap'
+{ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 DeleteButton = require '../../../../../react/common/DeleteButton'
 OutputMappingModal = require '../../modals/OutputMapping'
 actionCreators = require '../../../ActionCreators'
@@ -52,26 +52,30 @@ OutputMappingRow = React.createClass(
                 title: 'Delete Output'
                 text: "Do you really want to delete output?"
                 onConfirm: @_handleDelete
-            React.createElement ModalTrigger,
-              modal: React.createElement OutputMappingModal,
-                mode: 'edit'
-                tables: @props.tables
-                buckets: @props.buckets
-                backend: @props.transformation.get("backend")
-                type: @props.transformation.get("type")
-                mapping: @props.editingOutputMapping
-                onChange: @_handleChange
-                onCancel: @_handleCancel
-                onSave: @_handleSave
+            React.createElement OverlayTrigger,
+              overlay: React.createElement Tooltip, null, 'Edit Output'
+              placement: 'top'
             ,
-              React.DOM.button
-                className: "btn btn-link"
-                onClick: (e) ->
-                  e.preventDefault()
-                  e.stopPropagation()
+              React.createElement ModalTrigger,
+                modal: React.createElement OutputMappingModal,
+                  mode: 'edit'
+                  tables: @props.tables
+                  buckets: @props.buckets
+                  backend: @props.transformation.get("backend")
+                  type: @props.transformation.get("type")
+                  mapping: @props.editingOutputMapping
+                  onChange: @_handleChange
+                  onCancel: @_handleCancel
+                  onSave: @_handleSave
               ,
-                React.DOM.span null,
-                  React.DOM.span {className: 'fa fa-fa kbc-icon-pencil'}
+                React.DOM.button
+                  className: "btn btn-link"
+                  onClick: (e) ->
+                    e.preventDefault()
+                    e.stopPropagation()
+                ,
+                  React.DOM.span null,
+                    React.DOM.span {className: 'fa fa-fa kbc-icon-pencil'}
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),
