@@ -221,20 +221,6 @@ module.exports =
       index: index
     )
 
-  startTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_START
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-  cancelTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
   saveTransformationEdit: (bucketId, transformationId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
@@ -280,63 +266,7 @@ module.exports =
       throw error
 
 
-  updateTransformationEdit: (bucketId, transformationId, data) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
-      transformationId: transformationId
-      bucketId: bucketId
-      data: data
-    )
-
-  toggleOpenEditingInputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_OPEN_TOGGLE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  toggleOpenEditingOutputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_OPEN_TOGGLE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  deleteInputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_DELETE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  addInputMapping: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_ADD
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-
-  deleteOutputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_DELETE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  addOutputMapping: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_ADD
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
   changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
-    console.log 'change', propertyName, newValue
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
       bucketId: bucketId
@@ -417,5 +347,31 @@ module.exports =
         error: error
       )
       throw error
+
+  deleteTransformationMapping: (bucketId, transformationId, mappingType, mappingIndex) ->
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+
+    transformation = transformation.update mappingType, (mappings) ->
+      mappings.delete(mappingIndex)
+
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        data: response
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        error: error
+      )
+      throw error
+
+
 
 

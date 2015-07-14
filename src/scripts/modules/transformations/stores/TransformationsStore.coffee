@@ -17,12 +17,7 @@ _store = Map(
   showDisabledOverviews: Map()
   openInputMappings: Map()
   openOutputMappings: Map()
-  editingTransformations: Map()
-  savingTransformations: Map()
-  editingTransformationsData: Map()
   editingTransformationsFields: Map()
-  openEditingInputMappings: Map()
-  openEditingOutputMappings: Map()
 
 )
 
@@ -110,21 +105,6 @@ TransformationsStore = StoreUtils.createStore
 
   getOpenOutputMappings: (bucketId, transformationId) ->
     _store.getIn(['openOutputMappings', bucketId, transformationId], Map())
-
-  isEditing: (bucketId, transformationId) ->
-    _store.getIn(['editingTransformations', bucketId, transformationId], false)
-
-  isSaving: (bucketId, transformationId) ->
-    _store.getIn(['savingTransformations', bucketId, transformationId], false)
-
-  getEditingTransformationData: (bucketId, transformationId) ->
-    _store.getIn(['editingTransformationsData', bucketId, transformationId], Map())
-
-  getOpenEditingInputMappings: (bucketId, transformationId) ->
-    _store.getIn(['openEditingInputMappings', bucketId, transformationId], Map())
-
-  getOpenEditingOutputMappings: (bucketId, transformationId) ->
-    _store.getIn(['openEditingOutputMappings', bucketId, transformationId], Map())
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -224,37 +204,8 @@ Dispatcher.register (payload) ->
         _store = _store.setIn(['openOutputMappings', action.bucketId, action.transformationId, action.index], true)
       TransformationsStore.emitChange()
 
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_START
-      _store = _store.withMutations (store) ->
-        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], true
-        transformation = TransformationsStore.getTransformation(action.bucketId, action.transformationId)
-        if transformation.get("backend") == 'mysql' || transformation.get("backend") == 'redshift'
-          transformation = transformation.set("queries", transformation.get("queries").join("\n\n"))
-        else
-          transformation = transformation.set("queries", transformation.getIn(["queries", 0]))
-        store = store.setIn [
-            'editingTransformationsData',
-            action.bucketId,
-            action.transformationId,
-          ], transformation
-        return store
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
-      _store = _store.withMutations (store) ->
-        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
-        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
-      _store = _store.setIn ['savingTransformations', action.bucketId, action.transformationId], true
-      TransformationsStore.emitChange()
-
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
-        store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
-        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
-        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
         tObj = Immutable.fromJS(action.data)
         store = store.setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
 
@@ -267,117 +218,6 @@ Dispatcher.register (payload) ->
           ]
       TransformationsStore.emitChange()
 
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-      _store = _store.withMutations (store) ->
-        store = store.setIn ['savingTransformations', action.bucketId, action.transformationId], false
-        store = store.setIn ['editingTransformations', action.bucketId, action.transformationId], false
-        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, Map()]
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
-      _store = _store.setIn ['editingTransformationsData', action.bucketId, action.transformationId], action.data
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_OPEN_TOGGLE
-      if (_store.getIn(['openEditingInputMappings', action.bucketId, action.transformationId, action.index], false))
-        _store = _store.setIn([
-          'openEditingInputMappings',
-          action.bucketId,
-          action.transformationId,
-          action.index
-        ], false)
-      else
-        _store = _store.setIn([
-          'openEditingInputMappings',
-          action.bucketId,
-          action.transformationId,
-          action.index
-        ], true)
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_OPEN_TOGGLE
-      if (_store.getIn([
-        'openEditingOutputMappings',
-        action.bucketId,
-        action.transformationId,
-        action.index
-      ], false))
-        _store = _store.setIn([
-          'openEditingOutputMappings',
-          action.bucketId,
-          action.transformationId,
-          action.index
-        ], false)
-      else
-        _store = _store.setIn([
-          'openEditingOutputMappings',
-          action.bucketId,
-          action.transformationId,
-          action.index
-        ], true)
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_DELETE
-      _store = _store.deleteIn [
-        'editingTransformationsData',
-        action.bucketId,
-        action.transformationId,
-        "input",
-        action.index
-      ]
-
-      _store = _store.deleteIn [
-        'openEditingInputMappings',
-        action.bucketId,
-        action.transformationId,
-        action.index
-      ]
-
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_ADD
-      _store = _store.withMutations (store) ->
-        inputs = store.getIn ['editingTransformationsData', action.bucketId, action.transformationId, "input"], List()
-        inputs = inputs.push(new Map())
-        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, "input"], inputs
-        store = store.setIn [
-          'openEditingInputMappings',
-          action.bucketId,
-          action.transformationId,
-          inputs.count() - 1
-        ], true
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_DELETE
-      _store = _store.deleteIn [
-        'editingTransformationsData',
-        action.bucketId,
-        action.transformationId,
-        "output",
-        action.index
-      ]
-
-      _store = _store.deleteIn [
-        'openEditingOutputMappings',
-        action.bucketId,
-        action.transformationId,
-        action.index
-      ]
-
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_ADD
-      _store = _store.withMutations (store) ->
-        inputs = store.getIn ['editingTransformationsData', action.bucketId, action.transformationId, "output"], List()
-        inputs = inputs.push(new Map())
-        store = store.setIn ['editingTransformationsData', action.bucketId, action.transformationId, "output"], inputs
-        store = store.setIn [
-          'openEditingOutputMappings',
-          action.bucketId,
-          action.transformationId,
-          inputs.count() - 1
-        ], true
-      TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->

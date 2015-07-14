@@ -185,6 +185,7 @@ TransformationDetailStatic = React.createClass
                       editingId: 'input-' + key
                       mappingIndex: key
                       tables: @props.tables
+                      pendingActions: @props.pendingActions
               ,
                 OutputMappingDetail
                   fill: true

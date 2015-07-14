@@ -4,6 +4,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 {ModalTrigger} = require 'react-bootstrap'
+DeleteButton = require '../../../../../react/common/DeleteButton'
 OutputMappingModal = require '../../modals/OutputMapping'
 actionCreators = require '../../../ActionCreators'
 
@@ -22,6 +23,7 @@ OutputMappingRow = React.createClass(
     tables: React.PropTypes.object.isRequired
     buckets: React.PropTypes.object.isRequired
     bucket: React.PropTypes.object.isRequired
+    pendingActions: React.PropTypes.object.isRequired
 
   render: ->
     span {className: 'table'},
@@ -64,6 +66,13 @@ OutputMappingRow = React.createClass(
                 React.DOM.span null,
                   React.DOM.span {className: 'fa fa-edit'}
                   ' Edit'
+            React.createElement DeleteButton,
+              tooltip: 'Delete Output'
+              isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
+              confirm:
+                title: 'Delete Output'
+                text: "Do you really want to delete output?"
+                onConfirm: @_handleDelete
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),
@@ -83,6 +92,13 @@ OutputMappingRow = React.createClass(
       @props.transformation.get('id')
       'output'
       @props.editingId
+      @props.mappingIndex
+    )
+
+  _handleDelete: ->
+    actionCreators.deleteTransformationMapping(@props.bucket.get('id'),
+      @props.transformation.get('id')
+      'output'
       @props.mappingIndex
     )
 )
