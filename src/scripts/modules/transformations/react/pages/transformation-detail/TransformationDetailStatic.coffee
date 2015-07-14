@@ -25,6 +25,7 @@ TransformationTypeLabel = React.createFactory(require '../../components/Transfor
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 Requires = require './Requires'
 Packages = require './Packages'
+Queries = require './Queries'
 {NewLineToBr} = require 'kbc-react-components'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
@@ -222,60 +223,24 @@ TransformationDetailStatic = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
-
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
-        div {},
-          h2 {}, 'Script'
-          if @props.transformation.get('queries').count()
-            CodeMirror
-              theme: 'solarized'
-              lineNumbers: true
-              defaultValue: @props.transformation.getIn ['queries', 0]
-              readOnly: true
-              mode: 'text/x-rsrc'
-              lineWrapping: true
-          else
-            p {}, small {}, 'No R Script'
-      else
-        div {},
-          h2 {},
-            'Queries',
-            if @props.transformation.get('queries').count()
-              small {},
-                Clipboard text: @props.transformation.get('queries').toArray().join("\n\n")
-          if @props.transformation.get('queries').count()
-            div {},
-              @props.transformation.get('queries').map((query, index) ->
-                if index % 2 == 0
-                  rowClassName = "row stripe-odd"
-                else
-                  rowClassName = "row"
-                div {className: rowClassName, key: index},
-                  div {className: 'col-md-1 vertical-center', key: "number"},
-                    index + 1
-                  div {className: 'col-md-11 vertical-center', key: "query"},
-                    span {className: 'static'},
-                      CodeMirror
-                        theme: 'solarized'
-                        lineNumbers: false
-                        value: query
-                        readOnly: true
-                        mode: @_codeMirrorMode()
-                        lineWrapping: true
-              , @).toArray()
-              if @props.transformation.get('backend') == 'redshift' or
-                  @props.transformation.get('backend') == 'mysql' &&
-                  @props.transformation.get('type') == 'simple'
-                SqlDepModalTrigger
-                  backend: @props.transformation.get('backend')
-                  bucketId: @props.bucketId
-                  transformationId: @props.transformationId
-                ,
-                  a {},
-                    span className: 'fa fa-sitemap fa-fw'
-                    ' SQLDep'
-          else
-            p {}, small {}, 'No SQL Queries'
+      React.createElement Queries,
+        bucketId: @props.bucket.get('id')
+        transformation: @props.transformation
+        isEditing: @props.editingFields.has('queries')
+        isSaving: @props.pendingActions.has('save-queries')
+        queries: @props.editingFields.get('queries', @props.transformation.get("queries"))
+        onEditStart: =>
+          TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+            @props.transformationId, 'queries')
+        onEditCancel: =>
+          TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'queries')
+        onEditChange: (newValue) =>
+          TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'queries', newValue)
+        onEditSubmit: =>
+          TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'queries')
 
   render: ->
     props = @props
