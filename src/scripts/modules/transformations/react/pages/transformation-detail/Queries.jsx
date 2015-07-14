@@ -6,7 +6,7 @@ export default React.createClass({
   propTypes: {
     bucketId: PropTypes.string.isRequired,
     transformation: PropTypes.object.isRequired,
-    queries: PropTypes.object.isRequired,
+    queries: PropTypes.string.isRequired,
     isEditing: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onEditStart: PropTypes.func.isRequired,

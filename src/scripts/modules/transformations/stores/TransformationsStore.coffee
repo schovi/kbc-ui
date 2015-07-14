@@ -29,6 +29,9 @@ removeFromLoadingBuckets = (store, bucketId) ->
   store.update 'loadingTransformationBuckets', (loadingTransformationBuckets) ->
     loadingTransformationBuckets.remove(loadingTransformationBuckets.indexOf(bucketId))
 
+enhanceTransformation = (transformation) ->
+  transformation.set('queriesString', transformation.get('queries').join("\n\n"))
+
 TransformationsStore = StoreUtils.createStore
 
   ###
@@ -122,7 +125,7 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.TRANSFORMATIONS_LOAD_SUCCESS
       _store = _store.withMutations((store) ->
         _.each(action.transformations, (transformation) ->
-          tObj = Immutable.fromJS(transformation)
+          tObj = enhanceTransformation(Immutable.fromJS(transformation))
           store = store.setIn ['transformationsByBucketId', action.bucketId, tObj.get 'id'], tObj
         )
         store = removeFromLoadingBuckets(store, action.bucketId)
@@ -131,7 +134,7 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.TRANSFORMATION_CREATE_SUCCESS
       _store = _store.setIn ['transformationsByBucketId', action.bucketId, action.transformation.id],
-        Immutable.fromJS(action.transformation)
+        enhanceTransformation(Immutable.fromJS(action.transformation))
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_OVERVIEW_LOAD
@@ -210,7 +213,7 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
       _store = _store.withMutations (store) ->
-        tObj = Immutable.fromJS(action.data)
+        tObj = enhanceTransformation(Immutable.fromJS(action.data))
         store = store
           .setIn ['transformationsByBucketId', action.bucketId, action.transformationId], tObj
           .deleteIn ['pendingActions', action.bucketId, action.transformationId, action.pendingAction]
@@ -232,7 +235,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         _.each(action.buckets, (bucket) ->
           _.each(bucket.transformations, (transformation) ->
-            tObj = Immutable.fromJS(transformation)
+            tObj = enhanceTransformation(Immutable.fromJS(transformation))
             store = store.setIn ['transformationsByBucketId', bucket.id, tObj.get 'id'], tObj
           )
         )

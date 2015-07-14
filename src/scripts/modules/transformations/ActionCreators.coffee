@@ -7,6 +7,8 @@ InstalledComponentsActionCreators = require '../components/InstalledComponentsAc
 RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
+parseSqlQuery = require './utils/parseSqlQuery'
+
 
 module.exports =
 
@@ -221,51 +223,6 @@ module.exports =
       index: index
     )
 
-  saveTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-    data = TransformationsStore.getEditingTransformationData(bucketId, transformationId).toJS()
-
-    # parse queries
-    if (data.backend == 'mysql' || data.backend == 'redshift')
-      # taken and modified from
-      # http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
-      regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|' +
-        '"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\#.*|\\/\\*[\\w\\W]*?(?=\\*\\/)\\*\\/|--.*|[^"\';#])+(?:;|$))';
-      re = new RegExp(regex, 'g')
-      matches = data.queries.match(re)
-      matches = _.map(_.filter(matches, (line) ->
-        line.trim() != ''
-      ), (line) ->
-        line.trim()
-      )
-      data.queries = matches
-    else
-      data.queries = [data.queries]
-
-    transformationsApi
-    .saveTransformation(bucketId, transformationId, data)
-    .then (response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-        transformationId: transformationId
-        bucketId: bucketId
-        data: response
-      )
-    .catch (error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-        transformationId: transformationId
-        bucketId: bucketId
-        error: error
-      )
-      throw error
-
-
   changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
@@ -359,7 +316,10 @@ module.exports =
         throw error
     else
       transformation = TransformationsStore.getTransformation(bucketId, transformationId)
-      transformation = transformation.set fieldId, value
+      if fieldId == 'queriesString'
+        transformation = transformation.set 'queries', parseSqlQuery(value)
+      else
+        transformation = transformation.set fieldId, value
 
       transformationsApi
       .saveTransformation(bucketId, transformationId, transformation.toJS())

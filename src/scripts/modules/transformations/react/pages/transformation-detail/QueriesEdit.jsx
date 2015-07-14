@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
-import parseQueries from './parseQueries';
 
 export default React.createClass({
   propTypes: {
-    queries: PropTypes.object.isRequired,
+    queries: PropTypes.string.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -18,7 +17,7 @@ export default React.createClass({
         <div>
           <div className="edit">
             <CodeMirror
-              value={this.props.queries.join('\n\n')}
+              value={this.props.queries}
               theme="solarized"
               lineNumbers={true}
               mode="text/x-mysql"
@@ -41,8 +40,6 @@ export default React.createClass({
   },
 
   handleChange(e) {
-    const parsed = parseQueries(e.target.value);
-    console.log('q', parsed);
-    this.props.onChange(parsed);
+    this.props.onChange(e.target.value);
   }
 });

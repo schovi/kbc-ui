@@ -227,21 +227,21 @@ TransformationDetailStatic = React.createClass
       React.createElement Queries,
         bucketId: @props.bucket.get('id')
         transformation: @props.transformation
-        isEditing: @props.editingFields.has('queries')
-        isSaving: @props.pendingActions.has('save-queries')
-        queries: @props.editingFields.get('queries', @props.transformation.get("queries"))
+        isEditing: @props.editingFields.has('queriesString')
+        isSaving: @props.pendingActions.has('save-queriesString')
+        queries: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
         onEditStart: =>
           TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-            @props.transformationId, 'queries')
+            @props.transformationId, 'queriesString')
         onEditCancel: =>
           TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queries')
+            @props.transformationId, 'queriesString')
         onEditChange: (newValue) =>
           TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queries', newValue)
+            @props.transformationId, 'queriesString', newValue)
         onEditSubmit: =>
           TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queries')
+            @props.transformationId, 'queriesString')
 
   render: ->
     props = @props
