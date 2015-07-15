@@ -9,7 +9,7 @@ TransformationTableTypeLabel = React.createFactory(require '../../components/Tra
 InputMappingModal = require '../../modals/InputMapping'
 actionCreators = require '../../../ActionCreators'
 
-{span, div, a, button, i, h4, small, em} = React.DOM
+{span, div, a, button, i, h4, small, em, code} = React.DOM
 
 module.exports = React.createClass(
   displayName: 'InputMappingRow'
@@ -47,11 +47,11 @@ module.exports = React.createClass(
               tooltip: 'Delete Input'
               isPending: @props.pendingActions.get('delete-input-' + @props.mappingIndex)
               confirm:
-                title: 'Delete Output'
+                title: 'Delete Input'
                 text: span null,
                   "Do you really want to delete input mapping for "
                   code null,
-                    @props.outputMapping.get('source')
+                    @props.inputMapping.get('source')
                   "?"
                 onConfirm: @_handleDelete
             React.createElement OverlayTrigger,
