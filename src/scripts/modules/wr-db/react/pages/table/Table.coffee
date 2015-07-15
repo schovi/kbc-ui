@@ -19,9 +19,11 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('tableId')
-    columns = WrDbStore.getColumns(driver, configId, tableId)
+    tableConfig = WrDbStore.getTableConfig(driver, configId, tableId)
 
-    columns: columns.get('columns')
+    #state
+    tableConfig: tableConfig
+    columns: tableConfig.get('columns')
 
   render: ->
     console.log 'render columns', @state.columns.toJS()

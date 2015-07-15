@@ -19,7 +19,7 @@ module.exports =
     .then (response) ->
       response.body
 
-  getColumns: (driver, configId, tableId) ->
+  getTable: (driver, configId, tableId) ->
     path = "tables/#{tableId}"
     createRequest('GET', driver, configId, path)
     .promise()

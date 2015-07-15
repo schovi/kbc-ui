@@ -8,7 +8,7 @@ constants = require './constants'
 _store = Map
   credentials: Map() #driver#configId
   tables: Map() #driver#configId
-  columns: Map() #driver#configId#tableId
+  tablesConfig: Map() #driver#configId#tableId
   updatingTables: Map() #driver#configId#tableId
 
 
@@ -35,21 +35,21 @@ WrDbStore = StoreUtils.createStore
   getUpdatingTables: (driver, configId) ->
     _store.getIn ['updatingTables', driver, configId], Map()
 
-  hasColumns: (driver, configId, tableId) ->
-    _store.hasIn ['columns', driver, configId, tableId]
+  hasTableConfig: (driver, configId, tableId) ->
+    _store.hasIn ['tablesConfig', driver, configId, tableId]
 
-  getColumns: (driver, configId, tableId) ->
-    _store.getIn ['columns', driver, configId, tableId]
+  getTableConfig: (driver, configId, tableId) ->
+    _store.getIn ['tablesConfig', driver, configId, tableId]
 
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
-    when constants.ActionTypes.WR_DB_GET_COLUMNS_SUCCESS
+    when constants.ActionTypes.WR_DB_GET_TABLE_SUCCESS
       driver = action.driver
       configId = action.configId
       tableId = action.tableId
-      columns = action.columns
-      _store = _store.setIn ['columns', driver, configId, tableId], fromJS(columns)
+      tableConfig = action.tableConfig
+      _store = _store.setIn ['tablesConfig', driver, configId, tableId], fromJS(tableConfig)
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SET_TABLE_START
