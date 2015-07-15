@@ -12,8 +12,8 @@ _store = Map
   updatingTables: Map() #driver#configId#tableId
 
 
-WrDbStore = StoreUtils.createStore
 
+WrDbStore = StoreUtils.createStore
   hasConfiguration: (driver, configId) ->
     @hasTables(driver, configId)
 
@@ -76,7 +76,7 @@ Dispatcher.register (payload) ->
           name: dbName
           export: isExported
       else
-        table = table.set('dbName', dbName)
+        table = table.set('name', dbName)
         table = table.set('export', isExported)
       tables = tables.map (t) ->
         if t.get('id') == tableId

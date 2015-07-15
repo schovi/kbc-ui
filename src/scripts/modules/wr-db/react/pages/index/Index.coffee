@@ -113,8 +113,8 @@ module.exports = React.createClass
     newExportedValue = !isExported
     table = @_getConfigTable(tableId)
     dbName = tableId
-    if table and table.get('dbName')
-      dbName = table.get('dbName')
+    if table and table.get('name')
+      dbName = table.get('name')
     WrDbActions.setTableToExport(driver, @state.configId, tableId, dbName, newExportedValue)
 
   _isPendingTable: (tableId) ->
