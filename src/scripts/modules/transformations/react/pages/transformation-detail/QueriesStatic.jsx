@@ -36,8 +36,11 @@ export default React.createClass({
     const rowClassName = index % 2 === 0 ? 'row stripe-odd' : 'row';
     return (
       <div className={rowClassName} key={index}>
-        <div className="col-md-1 vertical-center">
+        <div className="col-md-1 vertical-center query-number noselect">
           {index + 1}
+          <span className="btn btn-link query-edit" onClick={this.startEdit.bind(this, index)}>
+            <span className="kbc-icon-pencil"/>
+          </span>
         </div>
         <div className="col-md-11 vertical-center">
           <span className="static">
@@ -50,9 +53,6 @@ export default React.createClass({
               lineWrapping={true}
               />
           </span>
-          <button className="btn btn-link" onClick={this.startEdit.bind(this, index)}>
-            <span className="kbc-icon-pencil"/> Edit Query
-          </button>
         </div>
       </div>
     );

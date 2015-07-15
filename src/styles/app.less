@@ -12,6 +12,15 @@ pre.CodeMirror-placeholder {
   background-color: #000;
 }
 
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .react-autosuggest {
    &__suggestions {
     font-size: inherit;
@@ -126,6 +135,9 @@ svg.kb-graph  {
 .kbc-main-content .CodeMirror {
   height: auto;
   background: none;
+  .CodeMirror-cursors {
+
+  }
 }
 
 .kbc-main-content .edit .CodeMirror {
@@ -138,6 +150,19 @@ svg.kb-graph  {
 
 .kbc-main-content .edit .CodeMirror .CodeMirror-scroll {
   min-height: 100px;
+}
+
+
+.kbc-main-content .query-number {
+
+}
+
+.kbc-main-content .query-number .btn.query-edit {
+  display: none;
+}
+
+.kbc-main-content .row:hover .query-number .btn.query-edit {
+  display: inline;
 }
 
 .kbc-overview {
