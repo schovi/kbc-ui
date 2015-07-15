@@ -26,6 +26,7 @@ Requires = require './Requires'
 Packages = require './Packages'
 Queries = require './Queries'
 Scripts = require './Scripts'
+Phase = require './Phase'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
 InlineEditArea = require '../../../../../react/common/InlineEditArea'
@@ -267,8 +268,6 @@ module.exports = React.createClass
           @props.transformationId, 'queriesString')
 
   render: ->
-    props = @props
-    component = @
     div {},
       div className: 'kbc-row kbc-header',
         div className: 'col-xs-8',
@@ -292,16 +291,16 @@ module.exports = React.createClass
                 @props.transformationId, 'description')
         div {className: 'col-xs-4'},
           div className: 'pull-right',
-            span {className: 'label kbc-label-rounded-small label-default'},
-              'Phase: '
-              @props.transformation.get 'phase'
+            React.createElement Phase,
+              bucketId: @props.bucketId
+              transformation: @props.transformation
             ' '
             TransformationTypeLabel
               backend: @props.transformation.get 'backend'
               type: @props.transformation.get 'type'
 
       div className: '',
-        if props.showDetails
+        if @props.showDetails
           @_renderDetail()
         else
           div {className: 'kbc-row'},
