@@ -396,3 +396,25 @@ module.exports =
         type: constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_ERROR
         jobId: jobId
       throw e
+
+  retryOrchestrationJob: (jobId, tasks) ->
+    actions = @
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_START
+      jobId: jobId
+
+    orchestrationsApi
+    .retryJob(
+      jobId
+      tasks
+    )
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_SUCCESS
+        jobId: jobId
+      actions.loadJobForce jobId
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_ERROR
+        jobId: jobId
+      throw e

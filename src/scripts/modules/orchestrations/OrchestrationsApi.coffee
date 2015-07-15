@@ -85,4 +85,13 @@ orchestrationsApi =
       response.body
     )
 
+  retryJob: (jobId, tasks) ->
+    createRequest('POST', "jobs/#{jobId}/retry")
+    .send(
+      tasks: tasks
+    )
+    .promise()
+    .then (response) ->
+      response.body
+
 module.exports = orchestrationsApi
