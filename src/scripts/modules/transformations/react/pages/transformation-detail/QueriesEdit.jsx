@@ -26,8 +26,10 @@ export default React.createClass({
               lineNumbers={true}
               mode={this.editorMode()}
               lineWrapping={true}
+              autofocus={true}
               onChange={this.handleChange}
               readOnly={this.props.isSaving}
+              placeholder="CREATE VIEW `sample-transformed` AS SELECT `id`  FROM `in.c-main.sample`;"
               />
           </div>
         </div>

@@ -31,6 +31,7 @@ export default React.createClass({
               theme="solarized"
               lineNumbers={true}
               mode="text/x-rsrc"
+              autofocus={true}
               lineWrapping={true}
               onChange={this.handleChange}
               readOnly={this.props.isSaving}
