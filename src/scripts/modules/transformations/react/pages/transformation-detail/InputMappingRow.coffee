@@ -48,7 +48,11 @@ module.exports = React.createClass(
               isPending: @props.pendingActions.get('delete-input-' + @props.mappingIndex)
               confirm:
                 title: 'Delete Output'
-                text: "Do you really want to delete input?"
+                text: span null,
+                  "Do you really want to delete input mapping for "
+                  code null,
+                    @props.outputMapping.get('source')
+                  "?"
                 onConfirm: @_handleDelete
             React.createElement OverlayTrigger,
               overlay: React.createElement Tooltip, null, 'Edit Input'

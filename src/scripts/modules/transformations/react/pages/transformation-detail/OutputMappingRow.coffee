@@ -8,7 +8,7 @@ DeleteButton = require '../../../../../react/common/DeleteButton'
 OutputMappingModal = require '../../modals/OutputMapping'
 actionCreators = require '../../../ActionCreators'
 
-{span, div, a, button, i, h4, small, em} = React.DOM
+{span, div, a, button, i, h4, small, em, code} = React.DOM
 
 OutputMappingRow = React.createClass(
   displayName: 'OutputMappingRow'
@@ -50,7 +50,11 @@ OutputMappingRow = React.createClass(
               isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
               confirm:
                 title: 'Delete Output'
-                text: "Do you really want to delete output?"
+                text: span null,
+                  "Do you really want to delete output mapping for "
+                  code null,
+                    @props.outputMapping.get('source')
+                  "?"
                 onConfirm: @_handleDelete
             React.createElement OverlayTrigger,
               overlay: React.createElement Tooltip, null, 'Edit Output'
