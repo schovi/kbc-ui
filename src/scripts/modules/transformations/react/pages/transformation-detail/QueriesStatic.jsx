@@ -1,12 +1,15 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react/addons';
 import CodeMirror from 'react-code-mirror';
 
 export default React.createClass({
+  mixins: [React.addons.PureRenderMixin],
   propTypes: {
-    queries: PropTypes.object.isRequired
+    queries: PropTypes.object.isRequired,
+    onEditStart: PropTypes.func.isRequired
   },
 
   render() {
+    console.log('render static');
     return this.props.queries.count() ? this.queriesList() : this.emptyState();
   },
 
@@ -47,6 +50,9 @@ export default React.createClass({
               lineWrapping={true}
               />
           </span>
+          <button className="btn btn-link" onClick={this.startEdit.bind(this, index)}>
+            <span className="kbc-icon-pencil"/> Edit Query
+          </button>
         </div>
       </div>
     );
@@ -54,9 +60,13 @@ export default React.createClass({
 
   startEditButton() {
     return (
-      <button className="btn btn-link" onClick={this.props.onEditStart}>
+      <button className="btn btn-link" onClick={this.startEdit.bind(this, 0)}>
         <span className="kbc-icon-pencil"></span> Edit Queries
       </button>
     );
+  },
+
+  startEdit(queryNumber) {
+    this.props.onEditStart(queryNumber);
   }
 });
