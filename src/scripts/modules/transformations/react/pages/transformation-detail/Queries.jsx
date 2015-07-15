@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Static from './QueriesStatic';
 import Edit from './QueriesEdit';
+import Clipboard from '../../../../../react/common/Clipboard';
 
 /*global require */
 require('codemirror/mode/sql/sql');
@@ -21,7 +22,9 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <h2>Queries</h2>
+        <h2>
+          Queries <small><Clipboard text={this.props.queries}/></small>
+        </h2>
         {this.queries()}
       </div>
     );
