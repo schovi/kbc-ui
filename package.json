@@ -29,7 +29,7 @@
     "prettycron": "~0.10.0",
     "react": "~0.13.3",
     "react-autosuggest": "git+https://github.com/keboola/react-autosuggest",
-    "react-bootstrap": "~0.23.0",
+    "react-bootstrap": "~0.23.7",
     "react-code-mirror": "~3.0.4",
     "react-datepicker": "~0.6.2",
     "react-dnd": "~0.9.8",
