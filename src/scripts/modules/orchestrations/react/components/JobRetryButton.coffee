@@ -25,9 +25,6 @@ module.exports = React.createClass
     job: JobsStore.getJob jobId
 
   _handleRetry: ->
-    console.log('retry request')
-    console.log(@state.job.get('id'))
-    console.log(@state.job.get('tasks').toJS())
     ActionCreators.retryOrchestrationJob(@state.job.get('id'), @state.job.get('tasks').toJS())
 
   _canBeRetried: ->
