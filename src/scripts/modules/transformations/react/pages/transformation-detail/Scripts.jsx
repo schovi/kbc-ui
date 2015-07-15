@@ -1,15 +1,15 @@
 import React, {PropTypes} from 'react';
-import Static from './QueriesStatic';
-import Edit from './QueriesEdit';
+import Static from './ScriptsStatic';
+import Edit from './ScriptsEdit';
 
 /*global require */
-require('codemirror/mode/sql/sql');
+require('codemirror/mode/r/r');
 
 export default React.createClass({
   propTypes: {
     bucketId: PropTypes.string.isRequired,
     transformation: PropTypes.object.isRequired,
-    queries: PropTypes.string.isRequired,
+    scripts: PropTypes.string.isRequired,
     isEditing: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onEditStart: PropTypes.func.isRequired,
@@ -21,18 +21,17 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <h2>Queries</h2>
-        {this.queries()}
+        <h2>Scripts</h2>
+        {this.scripts()}
       </div>
     );
   },
 
-  queries() {
+  scripts() {
     if (this.props.isEditing) {
       return (
         <Edit
-          queries={this.props.queries}
-          backend={this.props.transformation.get('backend')}
+          script={this.props.scripts}
           isSaving={this.props.isSaving}
           onSave={this.props.onEditSubmit}
           onChange={this.props.onEditChange}
@@ -42,7 +41,7 @@ export default React.createClass({
     } else {
       return (
         <Static
-          queries={this.props.transformation.get('queries')}
+          script={this.props.transformation.get('queries').get(0)}
           onEditStart={this.props.onEditStart}
           />
       );

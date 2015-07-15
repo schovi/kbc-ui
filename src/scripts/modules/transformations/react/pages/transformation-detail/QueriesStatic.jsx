@@ -42,7 +42,7 @@ export default React.createClass({
               theme="solarized"
               lineNumbers={false}
               value={query}
-              readOnly={true}
+              readOnly="nocursor"
               mode="text/x-mysql"
               lineWrapping={true}
               />

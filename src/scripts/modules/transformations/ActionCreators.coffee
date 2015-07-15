@@ -7,7 +7,7 @@ InstalledComponentsActionCreators = require '../components/InstalledComponentsAc
 RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
-parseSqlQuery = require './utils/parseSqlQuery'
+parseQueries = require './utils/parseQueries'
 
 
 module.exports =
@@ -317,7 +317,7 @@ module.exports =
     else
       transformation = TransformationsStore.getTransformation(bucketId, transformationId)
       if fieldId == 'queriesString'
-        transformation = transformation.set 'queries', parseSqlQuery(value)
+        transformation = transformation.set 'queries', parseQueries(transformation, value)
       else
         transformation = transformation.set fieldId, value
 

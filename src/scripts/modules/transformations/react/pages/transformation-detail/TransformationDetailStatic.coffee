@@ -15,7 +15,6 @@ InputMappingRow = React.createFactory(require './InputMappingRow')
 InputMappingDetail = React.createFactory(require './InputMappingDetail')
 OutputMappingRow = React.createFactory(require './OutputMappingRow')
 OutputMappingDetail = React.createFactory(require './OutputMappingDetail')
-CodeMirror = React.createFactory(require 'react-code-mirror')
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 {Panel, ModalTrigger} = require('react-bootstrap')
@@ -26,16 +25,15 @@ SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigge
 Requires = require './Requires'
 Packages = require './Packages'
 Queries = require './Queries'
+Scripts = require './Scripts'
 AddOutputMapping = require './AddOutputMapping'
 AddInputMapping = require './AddInputMapping'
 InlineEditArea = require '../../../../../react/common/InlineEditArea'
 
-require('codemirror/mode/sql/sql')
-require('codemirror/mode/r/r')
 
 {div, span, input, strong, form, button, h2, i, ul, li, button, a, small, p, code, em} = React.DOM
 
-TransformationDetailStatic = React.createClass
+module.exports = React.createClass
   displayName: 'TransformationDetailStatic'
 
   mixins: [ImmutableRenderMixin]
@@ -239,24 +237,34 @@ TransformationDetailStatic = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
-      React.createElement Queries,
-        bucketId: @props.bucket.get('id')
-        transformation: @props.transformation
-        isEditing: @props.editingFields.has('queriesString')
-        isSaving: @props.pendingActions.has('save-queriesString')
-        queries: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
-        onEditStart: =>
-          TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-            @props.transformationId, 'queriesString')
-        onEditCancel: =>
-          TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queriesString')
-        onEditChange: (newValue) =>
-          TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queriesString', newValue)
-        onEditSubmit: =>
-          TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'queriesString')
+      @_renderCodeEditor()
+
+
+  _renderCodeEditor: ->
+    if  @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+      element = Scripts
+    else
+      element = Queries
+
+    React.createElement element,
+      bucketId: @props.bucket.get('id')
+      transformation: @props.transformation
+      isEditing: @props.editingFields.has('queriesString')
+      isSaving: @props.pendingActions.has('save-queriesString')
+      queries: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
+      scripts: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
+      onEditStart: =>
+        TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+          @props.transformationId, 'queriesString')
+      onEditCancel: =>
+        TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+          @props.transformationId, 'queriesString')
+      onEditChange: (newValue) =>
+        TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+          @props.transformationId, 'queriesString', newValue)
+      onEditSubmit: =>
+        TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+          @props.transformationId, 'queriesString')
 
   render: ->
     props = @props
@@ -299,15 +307,3 @@ TransformationDetailStatic = React.createClass
           div {className: 'kbc-row'},
             div {className: 'well'},
               "This transformation is not supported in UI."
-
-  _codeMirrorMode: ->
-    mode = 'text/text'
-    if @props.transformation.get('backend') == 'mysql'
-      mode = 'text/x-mysql'
-    else if @props.transformation.get('backend') == 'redshift'
-      mode = 'text/x-sql'
-    else if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
-      mode = 'text/x-rsrc'
-    return mode
-
-module.exports = TransformationDetailStatic
