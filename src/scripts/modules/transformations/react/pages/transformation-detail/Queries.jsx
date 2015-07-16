@@ -63,6 +63,7 @@ export default React.createClass({
       return (
         <Static
           queries={this.props.transformation.get('queries')}
+          backend={this.props.transformation.get('backend')}
           onEditStart={this.handleEditStart}
           />
       );

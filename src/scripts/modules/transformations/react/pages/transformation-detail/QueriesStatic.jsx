@@ -1,10 +1,14 @@
 import React, {PropTypes} from 'react/addons';
-import CodeMirror from 'react-code-mirror';
+import Highlight from './Highlight';
+
+/*global require */
+require('codemirror/mode/sql/sql');
 
 export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
     queries: PropTypes.object.isRequired,
+    backend: PropTypes.object.isRequired,
     onEditStart: PropTypes.func.isRequired
   },
 
@@ -44,14 +48,7 @@ export default React.createClass({
         </div>
         <div className="col-md-11 vertical-center">
           <span className="static">
-            <CodeMirror
-              theme="solarized"
-              lineNumbers={false}
-              value={query}
-              readOnly="nocursor"
-              mode="text/x-mysql"
-              lineWrapping={true}
-              />
+            <Highlight script={query} mode={this.editorMode()} />
           </span>
         </div>
       </div>
@@ -64,6 +61,15 @@ export default React.createClass({
         <span className="kbc-icon-pencil"></span> Edit Queries
       </button>
     );
+  },
+
+  editorMode() {
+    switch (this.props.backend) {
+      case 'redshift':
+        return 'text/x-sql';
+      case 'mysql':
+        return 'text/x-mysql';
+    }
   },
 
   startEdit(queryNumber) {

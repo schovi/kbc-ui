@@ -7,8 +7,7 @@ export default React.createClass({
   },
 
   render() {
-    console.log('r', this.props);
-    return this.props.script.length ? this.script() : this.emptyState();
+    return this.props.script && this.props.script.length ? this.script() : this.emptyState();
   },
 
   script() {
