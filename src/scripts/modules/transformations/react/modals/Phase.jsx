@@ -19,7 +19,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal {...this.props} title="Transformation Phase" bsStyle="small">
+      <Modal {...this.props} title="Transformation Phase">
         <div className="modal-body">
           <div className="form-horizontal">
             <div className="form-group">
@@ -34,7 +34,7 @@ export default React.createClass({
                   Phase # <input
                     type="number"
                     className="form-control"
-                    value={this.state.phase}
+                    value={parseInt(this.state.phase)}
                     onChange={this.handlePhaseChange}
                     disabled={this.state.isSaving}
                     style={{width: '50px', display: 'inline-block'}}
@@ -49,6 +49,7 @@ export default React.createClass({
             isSaving={this.state.isSaving}
             onCancel={this.props.onRequestHide}
             onSave={this.handleSave}
+            isDisabled={!this.isValid()}
             />
         </div>
       </Modal>
@@ -56,7 +57,7 @@ export default React.createClass({
   },
 
   handlePhaseChange(e) {
-    if (e.target.value < 1) {
+    if (e.target.value < 0) {
       return;
     }
     this.setState({
@@ -81,6 +82,10 @@ export default React.createClass({
       });
       throw e;
     });
+  },
+
+  isValid() {
+    return this.state.phase >= 1;
   }
 
 });
