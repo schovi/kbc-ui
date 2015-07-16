@@ -23,5 +23,7 @@ TransformationTypeLabel = React.createClass
     else if @props.backend == 'docker' && @props.type == 'r'
       span {className: 'label label-info'},
         'R'
+    else
+      null
 
 module.exports = TransformationTypeLabel
