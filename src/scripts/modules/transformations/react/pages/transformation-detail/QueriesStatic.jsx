@@ -41,7 +41,7 @@ export default React.createClass({
     return (
       <div className={rowClassName} key={index}>
         <div className="col-md-1 vertical-center query-number noselect">
-          {index + 1}
+          <span data-query-number={index + 1} className="query-number-value"/>
           <span className="btn btn-link query-edit" onClick={this.startEdit.bind(this, index)}>
             <span className="kbc-icon-pencil"/>
           </span>

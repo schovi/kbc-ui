@@ -153,9 +153,6 @@ svg.kb-graph  {
 }
 
 
-.kbc-main-content .query-number {
-
-}
 
 .kbc-main-content .query-number .btn.query-edit {
   display: none;
@@ -163,6 +160,10 @@ svg.kb-graph  {
 
 .kbc-main-content .row:hover .query-number .btn.query-edit {
   display: inline;
+}
+
+.kbc-main-content .query-number .query-number-value:before {
+  content: attr(data-query-number);
 }
 
 .kbc-overview {
