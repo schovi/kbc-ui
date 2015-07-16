@@ -27,6 +27,13 @@ module.exports =
         error: err
       throw err
 
+  setEditingData: (driver, configId, path, data) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_SET_EDITING
+      driver: driver
+      configId: configId
+      path: path
+      data: data
 
 
   loadConfiguration: (driver, configId) ->

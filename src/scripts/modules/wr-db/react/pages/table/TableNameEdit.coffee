@@ -30,10 +30,8 @@ module.exports = React.createClass
 
 
   render: ->
-    console.log @props
     isEditing = (!!@props.editingValue)
     isSaving = @props.isSaving
-    console.log "is saving", isSaving
     text = if isEditing then @props.editingValue else @props.currentValue
 
     InlineEditText

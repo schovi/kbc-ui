@@ -10,6 +10,7 @@ _store = Map
   tables: Map() #driver#configId
   tablesConfig: Map() #driver#configId#tableId
   updatingTables: Map() #driver#configId#tableId
+  editing: Map() #driver#configId whatever
 
 
 
@@ -41,9 +42,25 @@ WrDbStore = StoreUtils.createStore
   getTableConfig: (driver, configId, tableId) ->
     _store.getIn ['tablesConfig', driver, configId, tableId]
 
+  getEditingByPath: (driver, configId, path) ->
+    editPath = ['editing', driver, configId].concat(path)
+    _store.getIn editPath
+
+  getEditing: (driver, configId) ->
+    _store.getIn(['editing', driver, configId], Map())
+
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when constants.ActionTypes.WR_DB_SET_EDITING
+      driver = action.driver
+      configId = action.configId
+      path = action.path
+      data = action.data
+      editPath = ['editing', driver, configId].concat(path)
+      _store = _store.setIn editPath, data
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_GET_TABLE_SUCCESS
       driver = action.driver
       configId = action.configId

@@ -26,44 +26,47 @@ module.exports = React.createClass
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     tableConfig = WrDbStore.getTableConfig(driver, configId, tableId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    tables = WrDbStore.getTables(driver, configId)
-    tableExportInfo = tables.find((tab) ->
+    tablesExportInfo = WrDbStore.getTables(driver, configId)
+    exportInfo = tablesExportInfo.find((tab) ->
       tab.get('id') == tableId)
-    tableDbName = tableExportInfo?.get('name') or tableId
-    isTableExportedValue = tableExportInfo?.get('export') or false
     isUpdatingTable = WrDbStore.isUpdatingTable(driver, configId, tableId)
-
+    editingData = WrDbStore.getEditing(driver, configId)
 
     #state
+    editingData: editingData
     isUpdatingTable: isUpdatingTable
     tableConfig: tableConfig
     columns: tableConfig.get('columns')
     tableId: tableId
     configId: configId
     localState: localState
-    tableDbName: tableDbName
-    isTableExportedValue: isTableExportedValue
+    exportInfo: exportInfo
+
 
   render: ->
-    console.log 'render tableConfig', @state.tableId, @state.tableConfig.toJS()
+    console.log 'render table', @state.tableId, @state.tableConfig.toJS(), "EDITING DATA", @state.editingData.toJS()
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
-        div className: '',
-          strong null, 'Database table name'
-          ' '
-          TableNameEdit
-            tableId: @state.tableId
-            table: @state.table
-            configId: @state.configId
-            tableExportedValue: @state.isTableExportedValue
-            currentValue: @state.tableDbName
-            isSaving: @state.isUpdatingTable
-            editingValue: @state.localState?.getIn(['editingDbNames', @state.tableId])
-            setEditValueFn: (value) =>
-              path = ['editingDbNames', @state.tableId]
-              @_updateLocalState(path, value)
-            driver: driver
-          ' '
+        @_renderTableEdit()
+
+
+  _renderTableEdit: ->
+    div className: '',
+      strong null, 'Database table name'
+      ' '
+      TableNameEdit
+        tableId: @state.tableId
+        table: @state.table
+        configId: @state.configId
+        tableExportedValue: @state.exportInfo?.get('export') or false
+        currentValue: @state.exportInfo?.get('name') or @state.tableId
+        isSaving: @state.isUpdatingTable
+        editingValue: @state.editingData.getIn(['editingDbNames', @state.tableId])
+        setEditValueFn: (value) =>
+          path = ['editingDbNames', @state.tableId]
+          WrDbActions.setEditingData(driver, @state.configId, path, value)
+        driver: driver
+      ' '
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)

@@ -10,3 +10,5 @@ module.exports =
     WR_DB_SET_TABLE_START: null
     WR_DB_SET_TABLE_SUCCESS: null
     WR_DB_GET_TABLE_SUCCESS: null
+
+    WR_DB_SET_EDITING: null
