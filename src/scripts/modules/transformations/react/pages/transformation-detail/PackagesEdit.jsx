@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Select from 'react-select';
-import _ from 'underscore';
+import {fromJS} from 'immutable';
 
 export default React.createClass({
   propTypes: {
@@ -22,7 +22,7 @@ export default React.createClass({
         <div className="form-group">
           <Select
             name="requires"
-            value={this.props.packages}
+            value={this.props.packages.toArray()}
             multi="true"
             disabled={this.props.isSaving}
             allowCreate="true"
@@ -42,7 +42,8 @@ export default React.createClass({
   },
 
   handleValueChange(newValue, newArray) {
-    this.props.onChange(_.pluck(newArray, 'value'));
+    const values = fromJS(newArray).map((item) => item.get('value'));
+    this.props.onChange(values);
   }
 
 });

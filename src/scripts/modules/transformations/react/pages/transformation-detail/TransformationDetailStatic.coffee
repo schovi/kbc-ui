@@ -225,7 +225,7 @@ module.exports = React.createClass
             transformations: @props.transformations
             isEditing: @props.editingFields.has('packages')
             isSaving: @props.pendingActions.has('save-packages')
-            packages: @props.editingFields.get('packages', @props.transformation.get("packages", List())).toJSON()
+            packages: @props.editingFields.get('packages', @props.transformation.get("packages", List()))
             onEditStart: =>
               TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
                 @props.transformationId, 'packages')
@@ -234,7 +234,7 @@ module.exports = React.createClass
                 @props.transformationId, 'packages')
             onEditChange: (newValue) =>
               TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'packages', Immutable.fromJS(newValue))
+                @props.transformationId, 'packages', newValue)
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
