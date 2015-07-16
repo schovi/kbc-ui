@@ -26,6 +26,14 @@ module.exports =
     .then (response) ->
       response.body
 
+  setTableColumns: (driver, configId, tableId, columns) ->
+    path = "tables/#{tableId}/columns"
+    createRequest('POST', driver, configId, path)
+    .send columns
+    .promise()
+    .then (response) ->
+      response.body
+
   setTable: (driver, configId, tableId, dbName, isExported) ->
     exported = if isExported then 1 else 0
     path = "tables/#{tableId}"

@@ -11,6 +11,7 @@ _store = Map
   tablesConfig: Map() #driver#configId#tableId
   updatingTables: Map() #driver#configId#tableId
   editing: Map() #driver#configId whatever
+  updatingColumns: Map() #driver#configId#tableId
 
 
 
@@ -49,9 +50,29 @@ WrDbStore = StoreUtils.createStore
   getEditing: (driver, configId) ->
     _store.getIn(['editing', driver, configId], Map())
 
+  getUpdatingColumns: (driver, configId, tableId) ->
+    _store.getIn(['updatingColumns', driver, configId, tableId])
+
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
+      driver = action.driver
+      configId = action.configId
+      tableId = action.tableId
+      columns = action.columns
+      _store = _store.setIn ['updatingColumns', driver, configId, tableId], columns
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
+      driver = action.driver
+      configId = action.configId
+      tableId = action.tableId
+      columns = action.columns
+      _store = _store.deleteIn ['updatingColumns', driver, configId, tableId]
+      _store = _store.setIn ['tablesConfig', driver, configId, tableId, 'columns'], columns
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_SET_EDITING
       driver = action.driver
       configId = action.configId

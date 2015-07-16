@@ -63,6 +63,33 @@ module.exports =
         error: err
       throw err
 
+  saveTableColumns: (driver, configId, tableId, columns) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
+      driver: driver
+      configId: configId
+      tableId: tableId
+      columns: columns
+
+    api.setTableColumns(driver, configId, tableId, columns.toJS())
+    .then (result) ->
+      console.log "SET COLUMNS API RESULT", result
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
+        driver: driver
+        configId: configId
+        tableId: tableId
+        columns: columns
+
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        driver: driver
+        configId: configId
+        error: err
+      throw err
+
+
   setTableToExport: (driver, configId, tableId, dbName, isExported) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SET_TABLE_START
