@@ -1,5 +1,5 @@
 React = require 'react'
-ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+ImmutableRenderMixin = require '../../../../../../react/mixins/ImmutableRendererMixin'
 {Input, Button, ListGroup, ListGroupItem} = require('react-bootstrap')
 Input = React.createFactory Input
 Button = React.createFactory Button

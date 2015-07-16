@@ -104,7 +104,7 @@ module.exports = React.createClass
 
   render: ->
     component = @
-    React.DOM.div {className: 'panel-body'},
+    React.DOM.div {className: 'form-horizontal clearfix'},
       React.DOM.div null,
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',

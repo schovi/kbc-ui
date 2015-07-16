@@ -3,7 +3,6 @@ Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 
 TransformationDetailStatic = React.createFactory(require './TransformationDetailStatic')
-TransformationDetailEdit = React.createFactory(require './TransformationDetailEdit')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationsStore  = require('../../../stores/TransformationsStore')
@@ -22,7 +21,7 @@ EditButtons = React.createFactory(require('../../../../../react/common/EditButto
 
 {div, span, ul, li, a, em} = React.DOM
 
-TransformationDetail = React.createClass
+module.exports = React.createClass
   displayName: 'TransformationDetail'
 
   mixins: [
@@ -38,32 +37,19 @@ TransformationDetail = React.createClass
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
-    pendingActions: TransformationsStore.getPendingActions(bucketId)
+    editingFields: TransformationsStore.getTransformationEditingFields(bucketId, transformationId)
+    pendingActions: TransformationsStore.getTransformationPendingActions(bucketId, transformationId)
     tables: StorageTablesStore.getAll()
     buckets: StorageBucketsStore.getAll()
     bucketId: bucketId
     transformationId: transformationId
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
-    openEditingInputMappings: TransformationsStore.getOpenEditingInputMappings(bucketId, transformationId)
-    openEditingOutputMappings: TransformationsStore.getOpenEditingOutputMappings(bucketId, transformationId)
-    isEditing: TransformationsStore.isEditing(bucketId, transformationId)
-    isSaving: TransformationsStore.isSaving(bucketId, transformationId)
-    editValue: TransformationsStore.getEditingTransformationData(bucketId, transformationId)
     transformations: TransformationsStore.getTransformations(bucketId)
 
   getInitialState: ->
     sandboxMode: 'prepare'
     sandboxRedirect: true
-
-  _handleEditStart: ->
-    TransformationsActionCreators.startTransformationEdit(@state.bucketId, @state.transformationId)
-
-  _handleEditSave: ->
-    TransformationsActionCreators.saveTransformationEdit(@state.bucketId, @state.transformationId)
-
-  _handleEditCancel: ->
-    TransformationsActionCreators.cancelTransformationEdit(@state.bucketId, @state.transformationId)
 
   _deleteTransformation: ->
     transformationId = @state.transformation.get('id')
@@ -71,9 +57,6 @@ TransformationDetail = React.createClass
     TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
     @transitionTo 'transformationBucket',
       bucketId: bucketId
-
-  _handleEditChange: (data) ->
-    TransformationsActionCreators.updateTransformationEdit(@state.bucketId, @state.transformationId, data)
 
   _handleActiveChange: (newValue) ->
     TransformationsActionCreators.changeTransformationProperty(@state.bucketId,
@@ -84,159 +67,99 @@ TransformationDetail = React.createClass
     @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
-  _handleInputMappingAdd: ->
-    TransformationsActionCreators.addInputMapping(
-      @state.bucketId,
-      @state.transformationId
-    )
-
-  _handleDeleteInputMapping: (key) ->
-    TransformationsActionCreators.deleteInputMapping(
-      @state.bucketId,
-      @state.transformationId,
-      key
-    )
-
-  _handleToggleOpenInputMapping: (key) ->
-    TransformationsActionCreators.toggleOpenEditingInputMapping(
-      @state.bucketId,
-      @state.transformationId,
-      key
-    )
-
-  _handleAddOutputMapping: ->
-    TransformationsActionCreators.addOutputMapping(
-      @state.bucketId,
-      @state.transformationId
-    )
-
-  _handleDeleteOutputMapping: (key) ->
-    TransformationsActionCreators.deleteOutputMapping(
-      @state.bucketId,
-      @state.transformationId,
-      key
-    )
-
-  _handleToggleOpenOutputMapping: (key) ->
-    TransformationsActionCreators.toggleOpenEditingOutputMapping(
-      @state.bucketId,
-      @state.transformationId,
-      key
-    )
-
   render: ->
-    component = @
-    if (@state.isEditing)
-      div className: 'container-fluid',
-        div className: 'kbc-main-content',
-          TransformationDetailEdit
+    div className: 'container-fluid',
+      div className: 'col-md-9 kbc-main-content',
+          TransformationDetailStatic
+            bucket: @state.bucket
+            transformation: @state.transformation
+            editingFields: @state.editingFields
             transformations: @state.transformations
-            transformation: @state.editValue
+            pendingActions: @state.pendingActions
             tables: @state.tables
             buckets: @state.buckets
-            isSaving: @state.isSaving
-            onChange: @_handleEditChange
-            openInputMappings: @state.openEditingInputMappings
-            openOutputMappings: @state.openEditingOutputMappings
-            onAddInputMapping: @_handleInputMappingAdd
-            onDeleteInputMapping: @_handleDeleteInputMapping
-            toggleOpenInputMapping: @_handleToggleOpenInputMapping
-            onAddOutputMapping: @_handleAddOutputMapping
-            onDeleteOutputMapping: @_handleDeleteOutputMapping
-            toggleOpenOutputMapping: @_handleToggleOpenOutputMapping
-    else
-      div className: 'container-fluid',
-        div className: 'col-md-9 kbc-main-content',
-            TransformationDetailStatic
-              bucket: @state.bucket
-              transformation: @state.transformation
-              transformations: @state.transformations
-              pendingActions: @state.pendingActions
-              tables: @state.tables
-              bucketId: @state.bucketId
-              transformationId: @state.transformationId
-              openInputMappings: @state.openInputMappings
-              openOutputMappings: @state.openOutputMappings
-              showDetails: @_showDetails()
-        div className: 'col-md-3 kbc-main-sidebar',
-          ul className: 'nav nav-stacked',
-            li {},
-              Link
-                to: 'transformationDetailGraph'
-                params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
-              ,
-                span className: 'fa fa-search fa-fw'
-                ' Overview'
+            bucketId: @state.bucketId
+            transformationId: @state.transformationId
+            openInputMappings: @state.openInputMappings
+            openOutputMappings: @state.openOutputMappings
+            showDetails: @_showDetails()
+      div className: 'col-md-3 kbc-main-sidebar',
+        ul className: 'nav nav-stacked',
+          li {},
+            Link
+              to: 'transformationDetailGraph'
+              params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
+            ,
+              span className: 'fa fa-search fa-fw'
+              ' Overview'
+          li {},
+            RunComponentButton(
+              title: "Run transformation"
+              component: 'transformation'
+              mode: 'link'
+              runParams: =>
+                configBucketId: @state.bucketId
+                transformations: [@state.transformation.get('id')]
+            ,
+              "You are about to run transformation #{@state.transformation.get('name')}."
+            )
+          li {},
+            ActivateDeactivateButton
+              mode: 'link'
+              activateTooltip: 'Enable transformation'
+              deactivateTooltip: 'Disable transformation'
+              isActive: !@state.transformation.get('disabled')
+              isPending: @state.pendingActions.has 'change-disabled'
+              onChange: @_handleActiveChange
+
+          if @state.transformation.get('backend') == 'redshift' or
+          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
             li {},
               RunComponentButton(
-                title: "Run transformation"
+                icon: 'fa-wrench'
+                title: "Create sandbox"
                 component: 'transformation'
+                method: 'run'
                 mode: 'link'
+                redirect: @state.sandboxRedirect
                 runParams: =>
                   configBucketId: @state.bucketId
-                  transformations: [@state.transformation.get('id')]
+                  transformations: [@state.transformationId]
+                  mode: @state.sandboxMode
               ,
-                "You are about to run transformation #{@state.transformation.get('name')}."
-              )
-            li {},
-              ActivateDeactivateButton
-                mode: 'link'
-                activateTooltip: 'Enable transformation'
-                deactivateTooltip: 'Disable transformation'
-                isActive: !@state.transformation.get('disabled')
-                isPending: @state.pendingActions.hasIn [@state.transformation.get('id'), 'change-disabled']
-                onChange: @_handleActiveChange
 
-            if @state.transformation.get('backend') == 'redshift' or
-            @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
-              li {},
-                RunComponentButton(
-                  icon: 'fa-wrench'
-                  title: "Create sandbox"
-                  component: 'transformation'
-                  method: 'run'
-                  mode: 'link'
+                ConfigureTransformationSandboxMode
+                  backend: @state.transformation.get("backend")
+                  mode: @state.sandboxMode
                   redirect: @state.sandboxRedirect
-                  runParams: =>
-                    configBucketId: @state.bucketId
-                    transformations: [@state.transformationId]
-                    mode: @state.sandboxMode
-                ,
+                  onChange: (values) =>
+                    console.log values
+                    @setState
+                      sandboxMode: values.mode
+                      sandboxRedirect: values.redirect
+              )
 
-                  ConfigureTransformationSandboxMode
-                    backend: @state.transformation.get("backend")
-                    mode: @state.sandboxMode
-                    redirect: @state.sandboxRedirect
-                    onChange: (values) =>
-                      console.log values
-                      @setState
-                        sandboxMode: values.mode
-                        sandboxRedirect: values.redirect
-                )
-
-            if @state.transformation.get('backend') == 'redshift' or
-                @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
-              li {},
-                SqlDepModalTrigger
-                  backend: @state.transformation.get('backend')
-                  bucketId: @state.bucketId
-                  transformationId: @state.transformationId
-                ,
-                  a {},
-                    span className: 'fa fa-sitemap fa-fw'
-                    ' SQLDep'
-
+          if @state.transformation.get('backend') == 'redshift' or
+              @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
             li {},
-              a {},
-                React.createElement Confirm,
-                  text: 'Delete transformation'
-                  title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
-                  buttonLabel: 'Delete'
-                  buttonType: 'danger'
-                  onConfirm: @_deleteTransformation
-                ,
-                  span {},
-                    span className: 'fa kbc-icon-cup fa-fw'
-                    ' Delete transformation'
+              SqlDepModalTrigger
+                backend: @state.transformation.get('backend')
+                bucketId: @state.bucketId
+                transformationId: @state.transformationId
+              ,
+                a {},
+                  span className: 'fa fa-sitemap fa-fw'
+                  ' SQLDep'
 
-module.exports = TransformationDetail
+          li {},
+            a {},
+              React.createElement Confirm,
+                text: 'Delete transformation'
+                title: "Do you really want to delete transformation #{@state.transformation.get('name')}?"
+                buttonLabel: 'Delete'
+                buttonType: 'danger'
+                onConfirm: @_deleteTransformation
+              ,
+                span {},
+                  span className: 'fa kbc-icon-cup fa-fw'
+                  ' Delete transformation'

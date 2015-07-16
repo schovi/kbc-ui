@@ -7,6 +7,8 @@ InstalledComponentsActionCreators = require '../components/InstalledComponentsAc
 RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
+parseQueries = require './utils/parseQueries'
+
 
 module.exports =
 
@@ -221,122 +223,7 @@ module.exports =
       index: index
     )
 
-  startTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_START
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-  cancelTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_CANCEL
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-  saveTransformationEdit: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-    data = TransformationsStore.getEditingTransformationData(bucketId, transformationId).toJS()
-
-    # parse queries
-    if (data.backend == 'mysql' || data.backend == 'redshift')
-      # taken and modified from
-      # http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
-      regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|' +
-        '"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\#.*|\\/\\*[\\w\\W]*?(?=\\*\\/)\\*\\/|--.*|[^"\';#])+(?:;|$))';
-      re = new RegExp(regex, 'g')
-      matches = data.queries.match(re)
-      matches = _.map(_.filter(matches, (line) ->
-        line.trim() != ''
-      ), (line) ->
-        line.trim()
-      )
-      data.queries = matches
-    else
-      data.queries = [data.queries]
-
-    transformationsApi
-    .saveTransformation(bucketId, transformationId, data)
-    .then (response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-        transformationId: transformationId
-        bucketId: bucketId
-        data: response
-      )
-    .catch (error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-        transformationId: transformationId
-        bucketId: bucketId
-        error: error
-      )
-      throw error
-
-
-  updateTransformationEdit: (bucketId, transformationId, data) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_CHANGE
-      transformationId: transformationId
-      bucketId: bucketId
-      data: data
-    )
-
-  toggleOpenEditingInputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_OPEN_TOGGLE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  toggleOpenEditingOutputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_OPEN_TOGGLE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  deleteInputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_DELETE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  addInputMapping: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_INPUT_MAPPING_ADD
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
-
-  deleteOutputMapping: (bucketId, transformationId, index) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_DELETE
-      transformationId: transformationId
-      bucketId: bucketId
-      index: index
-    )
-
-  addOutputMapping: (bucketId, transformationId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATION_EDIT_OUTPUT_MAPPING_ADD
-      transformationId: transformationId
-      bucketId: bucketId
-    )
-
   changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
-    console.log 'change', propertyName, newValue
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
       bucketId: bucketId
@@ -370,3 +257,158 @@ module.exports =
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_BUCKETS_TOGGLE
       bucketId: bucketId
+
+  startTransformationFieldEdit: (bucketId, transformationId, fieldId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_START_EDIT_FIELD
+      bucketId: bucketId
+      transformationId: transformationId
+      fieldId: fieldId
+
+  updateTransformationEditingField: (bucketId, transformationId, fieldId, newValue) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_UPDATE_EDITING_FIELD
+      bucketId: bucketId
+      transformationId: transformationId
+      fieldId: fieldId
+      newValue: newValue
+
+  cancelTransformationEditingField: (bucketId, transformationId, fieldId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.TRANSFORMATION_CANCEL_EDITING_FIELD
+      bucketId: bucketId
+      transformationId: transformationId
+      fieldId: fieldId
+
+  saveTransformationEditingField: (bucketId, transformationId, fieldId) ->
+    value = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(fieldId)
+
+    pendingAction = "save-#{fieldId}"
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+      pendingAction: pendingAction
+    )
+
+    if fieldId in ['description']
+      transformationsApi
+      .updateTransformationProperty(bucketId, transformationId, fieldId, value)
+      .then ->
+        transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          data: transformation.set(fieldId, value).toJS()
+        )
+      .catch (error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          error: error
+        )
+        throw error
+    else
+      transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+      if fieldId == 'queriesString'
+        transformation = transformation.set 'queries', parseQueries(transformation, value)
+      else
+        transformation = transformation.set fieldId, value
+
+      transformationsApi
+      .saveTransformation(bucketId, transformationId, transformation.toJS())
+      .then (response) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          data: response
+        )
+      .catch (error) ->
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+          transformationId: transformationId
+          bucketId: bucketId
+          editingId: fieldId
+          pendingAction: pendingAction
+          error: error
+        )
+        throw error
+
+  ###
+    Create new or update existing output mapping
+  ###
+  saveTransformationMapping: (bucketId, transformationId, mappingType, editingId, mappingIndex = null) ->
+    mapping = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(editingId)
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+
+    transformation = transformation.update mappingType, (mappings) ->
+      if mappingIndex
+        mappings.set mappingIndex, mapping
+      else
+        mappings.push mapping
+
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        editingId: editingId
+        data: response
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        error: error
+      )
+      throw error
+
+  deleteTransformationMapping: (bucketId, transformationId, mappingType, mappingIndex) ->
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+
+    transformation = transformation.update mappingType, (mappings) ->
+      mappings.delete(mappingIndex)
+
+    pendingAction = "delete-#{mappingType}-#{mappingIndex}"
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+      pendingAction: pendingAction
+    )
+
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        data: response
+        pendingAction: pendingAction
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        pendingAction: pendingAction
+        error: error
+      )
+      throw error
+
+
+
+
