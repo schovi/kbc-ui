@@ -2,7 +2,7 @@ React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 Immutable = require('immutable')
-{Map} = Immutable
+{Map, List} = Immutable
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
 _ = require('underscore')
 
@@ -225,7 +225,7 @@ module.exports = React.createClass
             transformations: @props.transformations
             isEditing: @props.editingFields.has('packages')
             isSaving: @props.pendingActions.has('save-packages')
-            packages: @props.editingFields.get('packages', @props.transformation.get("packages"))
+            packages: @props.editingFields.get('packages', @props.transformation.get("packages", List())).toJSON()
             onEditStart: =>
               TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
                 @props.transformationId, 'packages')
@@ -234,7 +234,7 @@ module.exports = React.createClass
                 @props.transformationId, 'packages')
             onEditChange: (newValue) =>
               TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'packages', newValue)
+                @props.transformationId, 'packages', Immutable.fromJS(newValue))
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
-import ItemsListEditor from '../../../../../react/common/ItemsListEditor';
+import Select from 'react-select';
+import _ from 'underscore';
 
 export default React.createClass({
   propTypes: {
@@ -11,12 +12,6 @@ export default React.createClass({
     onSave: PropTypes.func.isRequired
   },
 
-  getInitialState() {
-    return {
-      input: ''
-    };
-  },
-
   render() {
     return (
       <div className="well">
@@ -25,12 +20,15 @@ export default React.createClass({
           Do not forget to load them using <code>library()</code>.
         </p>
         <div className="form-group">
-          <ItemsListEditor
+          <Select
+            name="requires"
             value={this.props.packages}
-            input={this.state.input}
+            multi="true"
             disabled={this.props.isSaving}
-            onChangeValue={this.props.onChange}
-            onChangeInput={this.handleInputChange}
+            allowCreate="true"
+            delimiter=','
+            onChange={this.handleValueChange}
+            placeholder="Add packages..."
             />
         </div>
         <ConfirmButtons
@@ -43,10 +41,8 @@ export default React.createClass({
     );
   },
 
-  handleInputChange(newValue) {
-    this.setState({
-      input: newValue
-    });
+  handleValueChange(newValue, newArray) {
+    this.props.onChange(_.pluck(newArray, 'value'));
   }
 
 });
