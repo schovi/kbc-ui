@@ -23,5 +23,6 @@ module.exports = React.createClass
     span null,
       JobRetryButton
         job: @state.job
+        notify: true
       JobTerminateButton
         job: @state.job

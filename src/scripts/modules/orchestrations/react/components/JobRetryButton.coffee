@@ -12,7 +12,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore)]
   propTypes:
     job: React.PropTypes.object.isRequired
-    tooltipPlacement: React.PropTypes.string
+    notify: React.PropTypes.bool
 
   getDefaultProps: ->
     tooltipPlacement: 'top'
@@ -25,7 +25,12 @@ module.exports = React.createClass
     job: JobsStore.getJob jobId
 
   _handleRetry: ->
-    ActionCreators.retryOrchestrationJob(@state.job.get('id'), @state.job.get('tasks').toJS())
+    ActionCreators.retryOrchestrationJob(
+      @state.job.get('id')
+      @state.job.get('tasks').toJS()
+      @state.job.get('orchestrationId')
+      @props.notify
+    )
 
   _canBeRetried: ->
     status = @state.job.get('status')

@@ -397,7 +397,7 @@ module.exports =
         jobId: jobId
       throw e
 
-  retryOrchestrationJob: (jobId, tasks) ->
+  retryOrchestrationJob: (jobId, tasks, orchestrationId, notify = false) ->
     actions = @
     dispatcher.handleViewAction
       type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_START
@@ -408,11 +408,26 @@ module.exports =
       jobId
       tasks
     )
-    .then (response) ->
+    .then (newJob) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_SUCCESS
         jobId: jobId
-      actions.loadJobForce jobId
+        job: newJob
+      actions.loadOrchestrationJobsForce orchestrationId
+      if notify
+        ApplicationActionCreators.sendNotification
+          message: React.createClass
+            render: ->
+              React.DOM.span null,
+                "Orchestration scheduled. You can track the progress "
+                React.createElement Link,
+                  to: 'orchestrationJob'
+                  params:
+                    jobId: newJob.id
+                    orchestrationId: orchestrationId
+                  onClick: @props.onClick
+                ,
+                  'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_ERROR
