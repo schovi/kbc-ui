@@ -174,7 +174,7 @@ InputMappingDetail = React.createClass(
                 "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
 
     ]
-    ListGroup {}, _.reject(ListGroupItems, (obj) -> obj == undefined)
+    ListGroup {className: "clearfix"}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
 
 module.exports = InputMappingDetail
