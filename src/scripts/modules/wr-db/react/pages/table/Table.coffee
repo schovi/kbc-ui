@@ -4,6 +4,8 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 TableNameEdit = React.createFactory require './TableNameEdit'
+ColumnsEditor = React.createFactory require './ColumnsEditor'
+ColumnRow = require './ColumnRow'
 
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
@@ -45,9 +47,18 @@ module.exports = React.createClass
 
   render: ->
     console.log 'render table', @state.tableId, @state.tableConfig.toJS(), "EDITING DATA", @state.editingData.toJS()
+
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
         @_renderTableEdit()
+      ColumnsEditor
+        columns: @state.columns
+        renderRowFn: @_renderRow
+
+
+  _renderRow: (column) ->
+    React.createElement ColumnRow,
+      column: column
 
 
   _renderTableEdit: ->
@@ -67,6 +78,8 @@ module.exports = React.createClass
           WrDbActions.setEditingData(driver, @state.configId, path, value)
         driver: driver
       ' '
+
+
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
