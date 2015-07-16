@@ -19,23 +19,13 @@ export default React.createClass({
     onSave: PropTypes.func.isRequired
   },
 
-  isValid(props) {
-    if (!props) {
-      props = this.props;
-    }
-    return !!props.mapping.get('source');
-  },
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      isValid: this.isValid(nextProps)
-    });
+  isValid() {
+    return !!this.props.mapping.get('source');
   },
 
   getInitialState() {
     return {
-      isSaving: false,
-      isValid: this.isValid()
+      isSaving: false
     };
   },
 
@@ -51,7 +41,7 @@ export default React.createClass({
             isSaving={this.state.isSaving}
             onCancel={this.handleCancel}
             onSave={this.handleSave}
-            isDisabled={!this.state.isValid}
+            isDisabled={!this.isValid()}
             />
         </div>
       </Modal>
