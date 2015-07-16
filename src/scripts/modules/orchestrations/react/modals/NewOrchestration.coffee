@@ -20,7 +20,7 @@ NewOrchestration = React.createClass
   render: ->
     Modal title: "New Orchestration", onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
-        form className: 'form-horizontal',
+        form className: 'form-horizontal', onSubmit: @_handleSubmit,
           div className: 'form-group',
             label className: 'col-sm-4 control-label', 'Name'
             div className: 'col-sm-6',
@@ -37,6 +37,10 @@ NewOrchestration = React.createClass
           saveLabel: 'Create'
           onCancel: @props.onRequestHide
           onSave: @_handleCreate
+
+  _handleSubmit: (e) ->
+    e.preventDefault()
+    @_handleCreate() if @state.isValid
 
   _handleCreate: ->
     @setState

@@ -23,12 +23,11 @@ module.exports = React.createClass
     @refs.name.getInputDOMNode().focus()
 
 
-
   _handleChange: (propName, event) ->
     @props.onChange(@props.configuration.set propName, event.target.value)
 
   render: ->
-    form className: 'form-horizontal',
+    form className: 'form-horizontal', onSubmit: @_handleSubmit,
       FormHeader
         component: @props.component
         onCancel: @props.onCancel
@@ -79,3 +78,8 @@ module.exports = React.createClass
   _setAgreedLicense: (checked) ->
     #@props.onChange(@props.configuration.setIn(@vendorInfoPath, newData))
     @props.onChange(@props.configuration.set 'agreed', checked)
+
+  _handleSubmit: (e) ->
+    e.preventDefault()
+    if @props.isValid and @_isLicenseAgreed()
+      @props.onSave()

@@ -67,7 +67,7 @@ export default React.createClass({
 
   form() {
     return (
-      <form className="form-horizontal">
+      <form className="form-horizontal" onSubmit={this.handleSubmit}>
         <p className="help-block">
           Create new transformation in bucket <strong>{ this.props.bucket.get('name') }</strong>
         </p>
@@ -122,6 +122,13 @@ export default React.createClass({
     this.setState({
       data: this.state.data.set(field, e.target.value)
     });
+  },
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.isValid()) {
+      this.handleCreate();
+    }
   },
 
   handleCreate() {

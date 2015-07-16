@@ -23,6 +23,7 @@ export default React.createClass({
   },
 
   render() {
+    console.log('€end');
     return (
       <div>
         <div>

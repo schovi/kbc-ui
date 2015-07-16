@@ -20,7 +20,7 @@ module.exports = React.createClass
   render: ->
     Modal title: "New Transformation Bucket", onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
-        form className: 'form-horizontal',
+        form className: 'form-horizontal', onSubmit: @_handleSubmit,
           p className: 'help-block',
             'Transformation bucket is a container for related transformations.'
             ' '
@@ -50,6 +50,10 @@ module.exports = React.createClass
           saveLabel: 'Create'
           onCancel: @props.onRequestHide
           onSave: @_handleCreate
+
+  _handleSubmit: (e) ->
+    e.preventDefault()
+    @_handleCreate() if @_isValid()
 
   _handleCreate: ->
     @setState
