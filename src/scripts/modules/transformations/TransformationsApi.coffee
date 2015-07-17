@@ -54,6 +54,8 @@ transformationsApi =
       response.body
 
   saveTransformation: (bucketId, transformationId, data) ->
+    if data.queriesString
+      delete data.queriesString
     createRequest('PUT', "configs/#{bucketId}/items/#{transformationId}")
     .send(data)
     .promise()
