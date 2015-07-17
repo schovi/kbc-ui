@@ -2,10 +2,12 @@ React = require 'react'
 {fromJS, Map, List} = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 SearchRow = require '../../../../../react/common/SearchRow'
 
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
@@ -85,8 +87,19 @@ module.exports = React.createClass
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       div className: 'kbc-buttons kbc-text-light',
-        span null,
-          'TODO '
+        React.createElement ComponentMetadata,
+          componentId: componentId
+          configId: @state.configId
+
+      ul className: 'nav nav-stacked',
+        li null,
+          Link
+            to: 'wr-db-credentials'
+            params:
+              config: @state.configId
+          ,
+            i className: 'fa fa-fw fa-user'
+            ' Database Credentials'
 
 
   _renderTableRow: (table) ->

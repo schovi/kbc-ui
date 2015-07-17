@@ -1,5 +1,6 @@
 dbwrIndex = require './react/pages/index/Index'
 dbWrTableDetail = require './react/pages/table/Table'
+dbWrCredentialsDetail = require './react/pages/credentials/Credentials'
 ActionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
@@ -34,4 +35,15 @@ module.exports =
       (params) ->
         ActionCreators.loadTableConfig driver, params.config, params.tableId
     ]
+  ,
+    name: 'wr-db-credentials'
+    path: 'credentials'
+    handler: dbWrCredentialsDetail
+    title: (routerState) ->
+      'Credentials'
+    # requireData: [
+    #   (params) ->
+    #     ActionCreators.loadTableConfig driver, params.config, params.tableId
+    # ]
+
   ]
