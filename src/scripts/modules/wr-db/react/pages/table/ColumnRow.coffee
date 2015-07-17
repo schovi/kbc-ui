@@ -1,6 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
-{option, tr, td, div, span} = React.DOM
+{input, option, tr, td, div, span} = React.DOM
 Check = React.createFactory(require('kbc-react-components').Check)
 Input = React.createFactory(require('react-bootstrap').Input)
 
@@ -25,8 +25,7 @@ module.exports = React.createClass
       td null, @props.column.get('name')
       td null, @_createInput('dbName')
       @_renderTypeSelect()
-
-      td null, @_createInput('null', 'checkbox')
+      td null, @_createCheckbox('null')
       td null, @_createInput('default')
 
   _renderTypeSelect: ->
@@ -63,21 +62,28 @@ module.exports = React.createClass
       ,
         op
 
+  _createCheckbox: (property) ->
+    if @props.editingColumn.get('type') == 'IGNORE'
+      return ''
+    isChecked = @props.editingColumn.get(property) == '1'
+    div className: 'text-center',
+      input
+        type: 'checkbox'
+        checked: isChecked
+        onChange: (e) =>
+          newValue = if e.target.checked then '1' else '0'
+          newColumn = @props.editingColumn.set(property, newValue)
+          @props.editColumnFn(newColumn)
 
   _createInput: (property, type = 'text') ->
     if @props.editingColumn.get('type') == 'IGNORE'
       return ''
-
-    isChecked = @props.editingColumn.get(property) == '1'
     Input
-      checked: isChecked
       type: type
       value: @props.editingColumn.get property
       disabled: @props.isSaving
       onChange: (e) =>
         newValue = e.target.value
-        if type == 'checkbox'
-          newValue = if e.target.checked then '1' else '0'
         newColumn = @props.editingColumn.set(property, newValue)
         @props.editColumnFn(newColumn)
 
