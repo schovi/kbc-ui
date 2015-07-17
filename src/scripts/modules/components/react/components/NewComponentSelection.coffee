@@ -28,7 +28,8 @@ ComponentBox = React.createClass
         params:
           componentId: component.get 'id'
       ,
-        span className: 'kbc-icon-plus', 'Add'
+        span className: 'kbc-icon-plus'
+        ' Add'
 
 
 module.exports = React.createClass
