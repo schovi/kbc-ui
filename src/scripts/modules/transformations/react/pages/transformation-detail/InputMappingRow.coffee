@@ -20,6 +20,8 @@ module.exports = React.createClass(
     tables: React.PropTypes.object.isRequired
     transformation: React.PropTypes.object.isRequired
     bucket: React.PropTypes.object.isRequired
+    editingId: React.PropTypes.string.isRequired
+    mappingIndex: React.PropTypes.string.isRequired
 
   render: ->
     span {className: 'table'},

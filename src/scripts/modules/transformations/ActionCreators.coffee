@@ -351,7 +351,7 @@ module.exports =
     transformation = TransformationsStore.getTransformation(bucketId, transformationId)
 
     transformation = transformation.update mappingType, (mappings) ->
-      if mappingIndex
+      if mappingIndex != null
         mappings.set mappingIndex, mapping
       else
         mappings.push mapping
