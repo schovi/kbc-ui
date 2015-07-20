@@ -3,7 +3,7 @@ Link = React.createFactory(require('react-router').Link)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
-{ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
+{OverlayTrigger, Tooltip} = require 'react-bootstrap'
 DeleteButton = require '../../../../../react/common/DeleteButton'
 OutputMappingModal = require '../../modals/OutputMapping'
 actionCreators = require '../../../ActionCreators'
@@ -24,6 +24,19 @@ OutputMappingRow = React.createClass(
     buckets: React.PropTypes.object.isRequired
     bucket: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
+
+  getInitialState: ->
+    showModal: false
+
+  openModal: (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    @setState
+      showModal: true
+
+  closeModal: ->
+    @setState
+      showModal: false
 
   render: ->
     span {className: 'table'},
@@ -60,26 +73,24 @@ OutputMappingRow = React.createClass(
               overlay: React.createElement Tooltip, null, 'Edit Output'
               placement: 'top'
             ,
-              React.createElement ModalTrigger,
-                modal: React.createElement OutputMappingModal,
-                  mode: 'edit'
-                  tables: @props.tables
-                  buckets: @props.buckets
-                  backend: @props.transformation.get("backend")
-                  type: @props.transformation.get("type")
-                  mapping: @props.editingOutputMapping
-                  onChange: @_handleChange
-                  onCancel: @_handleCancel
-                  onSave: @_handleSave
+              React.DOM.button
+                className: "btn btn-link"
+                onClick: @openModal
               ,
-                React.DOM.button
-                  className: "btn btn-link"
-                  onClick: (e) ->
-                    e.preventDefault()
-                    e.stopPropagation()
-                ,
-                  React.DOM.span null,
-                    React.DOM.span {className: 'fa fa-fa kbc-icon-pencil'}
+                React.DOM.span null,
+                  React.DOM.span {className: 'fa fa-fa kbc-icon-pencil'}
+            React.createElement OutputMappingModal,
+              mode: 'edit'
+              tables: @props.tables
+              buckets: @props.buckets
+              backend: @props.transformation.get("backend")
+              type: @props.transformation.get("type")
+              mapping: @props.editingOutputMapping
+              onChange: @_handleChange
+              onCancel: @_handleCancel
+              onSave: @_handleSave
+              show: @state.showModal
+              onHide: @closeModal
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),

@@ -34,6 +34,7 @@ module.exports = React.createClass
   getInitialState: ->
     showDetails: false
 
+
   _handleToggleShowDetails: (e) ->
     @setState(
       showDetails: e.target.checked
@@ -152,6 +153,9 @@ module.exports = React.createClass
                   placeholder: 'Destination table in Storage'
                   value: @props.value.get("destination", "")
                   onChange: @_handleChangeDestination
+                  id: 'output-destination'
+                  name: 'output-destination'
+
               if @state.showDetails
                 Input
                   standalone: true
@@ -193,6 +197,8 @@ module.exports = React.createClass
                     placeholder: 'Select column'
                     value: @props.value.get("deleteWhereColumn", "")
                     onChange: @_handleChangeDeleteWhereColumn
+                    id: 'output-delete-rows'
+                    name: 'output-delete-rows'
               React.DOM.div className: 'col-xs-2',
                 Input
                   bsSize: 'small'

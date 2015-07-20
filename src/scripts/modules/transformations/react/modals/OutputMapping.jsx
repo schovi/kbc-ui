@@ -15,7 +15,9 @@ export default React.createClass({
     type: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onHide: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
   },
 
   isValid() {
@@ -30,8 +32,16 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal {...this.props} title="Output Mapping" bsSize="large" onChange={() => null}>
-        <div className="modal-body">
+      <Modal
+        onHide={this.props.onHide}
+        show={this.props.show}
+        bsSize="large"
+        animation={false}
+        >
+        <Modal.Header closeButton>
+          <Modal.Title>Output Mapping</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <OutputMappingRowEditor
             fill={true}
             value={this.props.mapping}
@@ -42,8 +52,8 @@ export default React.createClass({
             backend={this.props.backend}
             type={this.props.type}
             />
-          </div>
-        <div className="modal-footer">
+        </Modal.Body>
+        <Modal.Footer>
           <ConfirmButtons
             saveLabel={this.props.mode === MODE_CREATE ? 'Create' : 'Save'}
             isSaving={this.state.isSaving}
@@ -51,13 +61,13 @@ export default React.createClass({
             onSave={this.handleSave}
             isDisabled={!this.isValid()}
             />
-        </div>
+        </Modal.Footer>
       </Modal>
     );
   },
 
   handleCancel() {
-    this.props.onRequestHide();
+    this.props.onHide();
     this.props.onCancel();
   },
 
@@ -71,7 +81,7 @@ export default React.createClass({
         this.setState({
           isSaving: false
         });
-        this.props.onRequestHide();
+        this.props.onHide();
       })
       .catch((e) => {
         this.setState({
