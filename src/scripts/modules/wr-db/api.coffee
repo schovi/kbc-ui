@@ -13,6 +13,13 @@ module.exports =
     .then (response) ->
       response.body
 
+  postCredentials: (driver, configId, credentials) ->
+    createRequest('POST', driver, configId, 'credentials')
+    .send credentials
+    .promise()
+    .then (response) ->
+      response.body
+
   getTables: (driver, configId) ->
     createRequest('GET', driver, configId, 'tables')
     .promise()

@@ -12,12 +12,16 @@ _store = Map
   updatingTables: Map() #driver#configId#tableId
   editing: Map() #driver#configId whatever
   updatingColumns: Map() #driver#configId#tableId
+  savingCredentials: Map() #driver#configId
 
 
 
 WrDbStore = StoreUtils.createStore
   hasConfiguration: (driver, configId) ->
     @hasTables(driver, configId)
+
+  getSavingCredentials: (driver, configId) ->
+    _store.getIn ['savingCredentials', driver, configId]
 
   hasTables: (driver, configId) ->
     _store.hasIn ['tables', driver, configId]
@@ -56,6 +60,21 @@ WrDbStore = StoreUtils.createStore
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_START
+      driver = action.driver
+      configId = action.configId
+      credentials = action.credentials
+      _store = _store.setIn ['savingCredentials', driver, configId], credentials
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
+      driver = action.driver
+      configId = action.configId
+      credentials = action.credentials
+      _store = _store.deleteIn ['savingCredentials', driver, configId]
+      _store = _store.setIn ['credentials', driver, configId], fromJS(credentials)
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
       driver = action.driver
       configId = action.configId
@@ -131,5 +150,14 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['tables',      driver, configId], fromJS(tables)
       _store = _store.setIn ['credentials', driver, configId], fromJS(credentials)
       WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_API_ERROR
+      driver = action.driver
+      configId = action.configId
+      path = action.errorPath
+      if path
+        _store = _store.deleteIn path
+      WrDbStore.emitChange()
+
 
 module.exports = WrDbStore

@@ -26,9 +26,16 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     credentials = WrDbStore.getCredentials(driver, configId)
+    isEditing = !! WrDbStore.getEditingByPath(driver, configId, 'creds')
+    if isEditing
+      credentials = WrDbStore.getEditingByPath(driver, configId, 'creds')
+    isSaving = !! WrDbStore.getSavingCredentials(driver, configId)
 
     credentials: credentials
     configId: configId
+    isEditing: isEditing
+    isSaving: isSaving
+
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -45,10 +52,12 @@ module.exports = React.createClass
       value = parseInt event.target.value
     else
       value = event.target.value
+    creds = @state.credentials.set propName, value
+    WrDbActions.setEditingData driver, @state.configId, 'creds', creds
     #@props.onChange(@state.credentials.set propName, value)
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
-    if false #@props.enabled
+    if @state.isEditing
       Input
         label: labelValue
         type: type

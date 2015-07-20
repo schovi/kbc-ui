@@ -35,6 +35,28 @@ module.exports =
       path: path
       data: data
 
+  saveCredentials: (driver, configId, credentials) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_START
+      driver: driver
+      configId: configId
+      credentials: credentials
+    api.postCredentials(driver, configId, credentials.toJS())
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
+        driver: driver
+        configId: configId
+        credentials: credentials
+
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        driver: driver
+        configId: configId
+        errorPath: ['savingCredentials', driver, configId]
+        error: err
+      throw err
 
   loadConfiguration: (driver, configId) ->
     if store.hasConfiguration(driver, configId)

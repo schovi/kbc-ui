@@ -4,6 +4,7 @@ dbWrCredentialsDetail = require './react/pages/credentials/Credentials'
 ActionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
+CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 
 driver = 'mysql'
 componentId = 'wr-db'
@@ -39,6 +40,7 @@ module.exports =
     name: 'wr-db-credentials'
     path: 'credentials'
     handler: dbWrCredentialsDetail
+    headerButtonsHandler: CredentialsHeader
     title: (routerState) ->
       'Credentials'
     # requireData: [

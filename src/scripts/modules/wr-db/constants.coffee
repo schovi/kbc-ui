@@ -11,6 +11,10 @@ module.exports =
     WR_DB_SET_TABLE_SUCCESS: null
     WR_DB_GET_TABLE_SUCCESS: null
 
+    WR_DB_SAVE_CREDENTIALS_START: null
+    WR_DB_SAVE_CREDENTIALS_SUCCESS: null
+
+
     WR_DB_SET_EDITING: null
 
     WR_DB_SAVE_COLUMNS_SUCCESS: null
