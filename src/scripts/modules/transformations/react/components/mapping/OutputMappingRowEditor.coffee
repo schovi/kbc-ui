@@ -4,8 +4,8 @@ _ = require('underscore')
 Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
 Select = React.createFactory(require('react-select'))
-Autosuggest = require 'react-autosuggest'
 fuzzy = require 'fuzzy'
+AutosuggestWrapper = require './AutoSuggestWrapper'
 
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
@@ -33,7 +33,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     showDetails: false
-
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -146,16 +145,13 @@ module.exports = React.createClass
           React.DOM.div className: 'form-group',
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'
             React.DOM.div className: 'col-xs-10',
-              React.createElement Autosuggest,
+              React.createElement AutosuggestWrapper,
                 suggestions: createGetSuggestions(@_getTablesAndBuckets)
-                inputAttributes:
-                  className: 'form-control'
-                  placeholder: 'Destination table in Storage'
-                  value: @props.value.get("destination", "")
-                  onChange: @_handleChangeDestination
-                  id: 'output-destination'
-                  name: 'output-destination'
-
+                value: @props.value.get("destination", "")
+                onChange: @_handleChangeDestination
+                id: 'output-destination'
+                name: 'output-destination'
+                placeholder: 'Destination table in Storage'
               if @state.showDetails
                 Input
                   standalone: true
@@ -190,15 +186,13 @@ module.exports = React.createClass
             React.DOM.div className: 'form-group form-group-sm',
               React.DOM.label className: 'col-xs-2 control-label', 'Delete rows'
               React.DOM.div className: 'col-xs-4',
-                React.createElement Autosuggest,
+                React.createElement AutosuggestWrapper,
                   suggestions: createGetSuggestions(@_getColumns)
-                  inputAttributes:
-                    className: 'form-control'
-                    placeholder: 'Select column'
-                    value: @props.value.get("deleteWhereColumn", "")
-                    onChange: @_handleChangeDeleteWhereColumn
-                    id: 'output-delete-rows'
-                    name: 'output-delete-rows'
+                  placeholder: 'Select column'
+                  value: @props.value.get("deleteWhereColumn", "")
+                  onChange: @_handleChangeDeleteWhereColumn
+                  id: 'output-delete-rows'
+                  name: 'output-delete-rows'
               React.DOM.div className: 'col-xs-2',
                 Input
                   bsSize: 'small'
