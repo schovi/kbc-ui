@@ -35,7 +35,8 @@ module.exports = React.createClass
   _handleCreate: ->
     editingCredentials =  WrDbStore.getEditingByPath(driver, @state.currentConfigId, 'creds')
     ActionCreators
-    .saveCredentials driver, @state.currentConfigId, editingCredentials
+    .saveCredentials(driver, @state.currentConfigId, editingCredentials).then =>
+      @_handleCancel()
 
   render: ->
     if @state.isEditing

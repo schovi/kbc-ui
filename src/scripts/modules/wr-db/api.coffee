@@ -14,6 +14,7 @@ module.exports =
       response.body
 
   postCredentials: (driver, configId, credentials) ->
+    credentials.allowedTypes = undefined
     createRequest('POST', driver, configId, 'credentials')
     .send credentials
     .promise()
