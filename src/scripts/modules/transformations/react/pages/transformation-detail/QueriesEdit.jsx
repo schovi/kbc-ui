@@ -1,6 +1,10 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
+import Sticky from 'react-sticky';
+
+/* global require */
+require('./queries.less');
 
 export default React.createClass({
   propTypes: {
@@ -23,14 +27,22 @@ export default React.createClass({
   },
 
   render() {
-    console.log('€end');
     return (
-      <div>
+      <div className="kbc-queries-edit">
         <div>
           <div className="well">
             {this.hint()}
           </div>
-          <div className="edit form-group">
+          <div className="edit form-group kbc-queries-editor">
+            <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-60} stickyStyle={{}}>
+              <ConfirmButtons
+                isSaving={this.props.isSaving}
+                onSave={this.props.onSave}
+                onCancel={this.props.onCancel}
+                placement="right"
+                saveLabel="Save Queries"
+                />
+            </Sticky>
             <CodeMirror
               ref="CodeMirror"
               value={this.props.queries}
@@ -45,14 +57,6 @@ export default React.createClass({
               placeholder="CREATE VIEW `sample-transformed` AS SELECT `id`  FROM `in.c-main.sample`;"
               />
           </div>
-        </div>
-        <div>
-          <ConfirmButtons
-            isSaving={this.props.isSaving}
-            onSave={this.props.onSave}
-            onCancel={this.props.onCancel}
-            placement="left"
-            />
         </div>
       </div>
     );
@@ -79,4 +83,5 @@ export default React.createClass({
   handleChange(e) {
     this.props.onChange(e.target.value);
   }
+
 });

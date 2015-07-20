@@ -1,6 +1,10 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
+import Sticky from 'react-sticky';
+
+/* global require */
+require('./queries.less');
 
 export default React.createClass({
   propTypes: {
@@ -13,7 +17,7 @@ export default React.createClass({
 
   render() {
     return (
-      <div>
+      <div className="kbc-queries-edit">
         <div>
           <div className="well">
             Read on <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/devel-space/transformations/backends/docker/r-limitations-and-best-practices">
@@ -25,7 +29,16 @@ export default React.createClass({
             (relative path <code>in/tables</code> ,save all tables for output mapping to
             <code>/data/out/tables</code> (relative path <code>out/tables</code>).
           </div>
-          <div className="edit form-group">
+          <div className="edit form-group kbc-queries-editor">
+            <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-60} stickyStyle={{}}>
+              <ConfirmButtons
+                isSaving={this.props.isSaving}
+                onSave={this.props.onSave}
+                onCancel={this.props.onCancel}
+                placement="right"
+                saveLabel="Save Scripts"
+                />
+            </Sticky>
             <CodeMirror
               value={this.props.script}
               theme="solarized"
@@ -37,14 +50,6 @@ export default React.createClass({
               readOnly={this.props.isSaving}
               />
           </div>
-        </div>
-        <div>
-          <ConfirmButtons
-            isSaving={this.props.isSaving}
-            onSave={this.props.onSave}
-            onCancel={this.props.onCancel}
-            placement="left"
-            />
         </div>
       </div>
     );
