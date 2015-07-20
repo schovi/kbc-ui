@@ -71,11 +71,9 @@ export default React.createClass({
   },
 
   handleEditStart(queryNumber) {
-    if (queryNumber) {
-      this.setState({
-        cursorPos: getQueryPosition(this.props.transformation.get('queries'), queryNumber)
-      });
-    }
+    this.setState({
+      cursorPos: getQueryPosition(this.props.transformation.get('queries'), queryNumber)
+    });
     this.props.onEditStart();
   }
 
