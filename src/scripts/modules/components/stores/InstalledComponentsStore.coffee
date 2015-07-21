@@ -66,6 +66,9 @@ InstalledComponentsStore = StoreUtils.createStore
       when 'name' then value.trim().length > 0
 
 
+  getDeletingConfigurations: ->
+    _store.get 'deletingConfigurations'
+
   isDeletingConfig: (componentId, configId) ->
     _store.hasIn ['deletingConfigurations', componentId, configId]
 

@@ -36,8 +36,7 @@ Header = React.createClass
     nav {className: 'navbar navbar-fixed-top kbc-navbar', role: 'navigation'},
       div {className: 'col-xs-3 kbc-logo'},
         a href: @props.homeUrl,
-          span className: "kbc-icon-keboola", null
-          'Connection'
+          span className: "kbc-icon-logo", null
       div {className: 'col-xs-9 col-xs-offset-3 kbc-main-header-container'},
         div {className: 'kbc-main-header kbc-header'},
           div {className: 'kbc-title'},

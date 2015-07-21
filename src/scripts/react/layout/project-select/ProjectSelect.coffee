@@ -21,7 +21,7 @@ module.exports = React.createClass
     div className: "kbc-project-select dropdown #{className}",
       button onClick: @_handleDropdownClick, title: @props.currentProject.get('name'),
         span null,
-          span className: 'kbc-icon-pickerDouble'
+          span className: 'kbc-icon-picker-double'
           span className: 'kbc-project-name',
             @props.currentProject.get('name')
       div className: 'dropdown-menu',
