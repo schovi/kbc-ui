@@ -2,12 +2,14 @@ React = require 'react'
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 ComponentsStore = require ('../../../components/stores/ComponentsStore')
 
-TaskSelectTable = React.createFactory(require '../components/TaskSelectTable')
+#TaskSelectTable = React.createFactory(require '../components/TaskSelectTable')
+TaskSelectTable = require '../components/TaskSelectTable'
 
 
-{Modal, Button} = require('react-bootstrap')
+{Modal, Button, Panel} = require('react-bootstrap')
 {div, p, strong, form, input, label} = React.DOM
 
+Panel  = React.createFactory Panel
 ConfirmButtons = require('../../../../react/common/ConfirmButtons')
 
 OrchestrationsApi = require('../../OrchestrationsApi')
@@ -35,9 +37,13 @@ module.exports = React.createClass
       div className: 'modal-body',
         p null,
           'You are about to run orchestration again'
-        TaskSelectTable
-          tasks: tasks
-          onTaskUpdate: @_handleTaskUpdate
+        Panel
+          header: 'Choose orchestration tasks to run'
+          collapsible: true
+        ,
+            React.createElement TaskSelectTable,
+            tasks: tasks
+            onTaskUpdate: @_handleTaskUpdate
       div className: 'modal-footer',
         div null,
           div className: 'col-sm-6'
