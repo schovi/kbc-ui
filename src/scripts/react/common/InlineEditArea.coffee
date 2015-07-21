@@ -73,7 +73,7 @@ EditArea = React.createFactory React.createClass
           disabled: @props.isSaving
           onClick: @props.onCancel
         ,
-          span className: 'kbc-icon-cross2'
+          span className: 'kbc-icon-cross'
         Button
           className: 'kbc-inline-edit-submit'
           bsStyle: 'info'

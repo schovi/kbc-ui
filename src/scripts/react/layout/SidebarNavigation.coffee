@@ -27,7 +27,7 @@ _pages = [
   ,
     id: 'orchestrations'
     title: 'Orchestrations'
-    icon: 'kbc-icon-orchestration'
+    icon: 'kbc-icon-orchestrations'
   ,
     id: 'storage'
     title: 'Storage'
