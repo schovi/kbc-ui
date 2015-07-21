@@ -1,5 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
+{Map} = require 'immutable'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
@@ -9,6 +10,7 @@ InstalledComponentsActionCreators = require '../../InstalledComponentsActionCrea
 Link = React.createFactory require('react-router').Link
 ComponentConfigurationLink = React.createFactory require('../components/ComponentConfigurationLink')
 ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
+ComponentRow = require './ComponentRow'
 
 NewComponentSelection = require '../components/NewComponentSelection'
 
@@ -33,14 +35,17 @@ module.exports = (type) ->
 
     getStateFromStores: ->
       installedComponents: InstalledComponentsStore.getAllForType(type)
+      deletingConfigurations: InstalledComponentsStore.getDeletingConfigurations()
       components: ComponentsStore.getFilteredForType(type)
       filter: ComponentsStore.getFilter(type)
 
     render: ->
-      console.log 'installed components', @state.installedComponents.toJS()
       if @state.installedComponents.count()
         rows =  @state.installedComponents.map((component) ->
-          @renderComponentRow component
+          React.createElement ComponentRow,
+            component: component
+            deletingConfigurations: @state.deletingConfigurations.get(component.get('id'), Map())
+            key: component.get('id')
         , @).toArray()
 
         div className: 'container-fluid kbc-main-content kbc-components-list',
@@ -87,7 +92,7 @@ module.exports = (type) ->
             td className: 'text-right kbc-component-buttons',
               span className: 'kbc-component-author',
                 'Created By '
-                strong null, 'Martin'
+                strong null, config.getIn ['creatorToken', 'description']
               React.DOM.button className: 'btn btn-link',
                 React.DOM.span className: 'kbc-icon-cup'
               React.DOM.button className: 'btn btn-link',
