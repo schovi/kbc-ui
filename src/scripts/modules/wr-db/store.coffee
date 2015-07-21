@@ -13,10 +13,19 @@ _store = Map
   editing: Map() #driver#configId whatever
   updatingColumns: Map() #driver#configId#tableId
   savingCredentials: Map() #driver#configId
+  provisioningCredentials: Map() #driver#configId
+  loadingProvCredentials: Map() #driver#configId
 
 
 
 WrDbStore = StoreUtils.createStore
+
+  isLoadingProvCredentials: (driver, configId) ->
+    _store.hasIn ['loadingProvCredentials', driver, configId]
+
+  getProvisioningCredentials: (driver, configId) ->
+    _store.getIn ['provisioningCredentials', driver, configId]
+
   hasConfiguration: (driver, configId) ->
     @hasTables(driver, configId)
 
@@ -60,6 +69,19 @@ WrDbStore = StoreUtils.createStore
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
+      driver = action.driver
+      configId = action.configId
+      _store = _store.setIn ['loadingProvCredentials', driver, configId], true
+      WrDbStore.emitChange()
+    when constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
+      driver = action.driver
+      configId = action.configId
+      credentials = fromJS action.credentials
+      _store = _store.deleteIn ['loadingProvCredentials', driver, configId]
+      _store = _store.setIn ['provisioningCredentials', driver, configId], credentials
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_START
       driver = action.driver
       configId = action.configId
