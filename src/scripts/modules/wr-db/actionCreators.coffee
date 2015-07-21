@@ -3,7 +3,31 @@ api = require('./api')
 store = require('./store')
 dispatcher = require('../../Dispatcher')
 constants = require './constants'
+provisioningUtils = require './provisioningUtils'
+
+driver = 'mysql'
+
 module.exports =
+  loadProvisioningCredentials: (driver, configId, isReadOnly) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
+      driver: driver
+      configId: configId
+    provisioningUtils.getCredentials(isReadOnly).then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
+        driver: driver
+        configId: configId
+        credentials: result
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        driver: driver
+        configId: configId
+        error: err
+      throw err
+
+
   loadTableConfig: (driver, configId, tableId) ->
     if store.hasTableConfig(driver, configId, tableId)
       return Promise.resolve()
