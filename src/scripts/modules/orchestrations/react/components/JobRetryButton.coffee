@@ -16,6 +16,7 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
 {ComponentIcon, ComponentName} = require '../../../../react/common/common'
 {Tree, Check} = require 'kbc-react-components'
+#Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {table, thead, tbody, th, td, tr, input, button, span} = React.DOM
 
@@ -34,6 +35,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     components: ComponentsStore.getAll()
+    isSaving: false
 
   getStateFromStores: ->
     jobId = @_getJobId()
@@ -58,7 +60,7 @@ module.exports = React.createClass
 
   render: ->
     tasks = @state.job.get('tasks')
-    if @_canBeRetried()
+    if @_canBeRetried() && tasks
       ModalTrigger
         modal: TaskSelectModal
           job: @props.job
@@ -70,6 +72,8 @@ module.exports = React.createClass
           onClick: @_handleRetrySelectStart
           className: 'btn btn-link'
         ,
+#          if @state.isSaving
+#            Loader()
           span
             className: 'fa fa-fw fa-play'
           ' Job retry'
