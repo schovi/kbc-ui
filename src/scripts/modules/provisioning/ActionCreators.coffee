@@ -1,10 +1,9 @@
-
-
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 provisioningApi = require './ProvisioningApi'
 mySqlSandboxCredentialsStore = require './stores/MySqlSandboxCredentialsStore'
 redshiftSandboxCredentialsStore = require './stores/RedshiftSandboxCredentialsStore'
+WrDbCredentialsStore = require './stores/WrDbCredentialsStore'
 Promise = require 'bluebird'
 HttpError = require '../../utils/HttpError'
 
@@ -189,6 +188,110 @@ module.exports =
     ).catch((error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_REFRESH_ERROR
+      )
+      throw error
+    )
+
+  ###
+   WR DB CREDENTIALS ACTIONS
+  ###
+  loadWrDbCredentialsForce: (permissionType, token) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD
+      permission: permissionType
+      token: token
+    )
+
+    provisioningApi
+    .getCredentials('wrdb', permissionType, token)
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD_SUCCESS
+        credentials: response.credentials
+        permission: permissionType
+        token: token
+      )
+      return
+    ).catch(HttpError, (error) ->
+      if error.response.status == 404
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD_SUCCESS
+          credentials: null
+          permission: permissionType
+          token: token
+        )
+      else
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD_ERROR
+          permission: permissionType
+          token: token
+        )
+        throw error
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD_ERROR
+        permission: permissionType
+        token: token
+      )
+      throw error
+    )
+
+  loadWrDbCredentials: (permissionType, token) ->
+    isLoaded = WrDbCredentialsStore.getIsLoaded(permissionType, token)
+    return Promise.resolve() if isLoaded
+    @loadWrDbCredentialsForce(permissionType, token)
+
+
+  createWrDbCredentials: (permissionType, token) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_WRDB_CREATE
+      permission: permissionType
+      token: token
+
+    )
+
+    provisioningApi
+    .createCredentials('wrdb', permissionType, token)
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_CREATE_SUCCESS
+        credentials: response.credentials
+        permission: permissionType
+        token: token
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_CREATE_ERROR
+        permission: permissionType
+        token: token
+
+      )
+      throw error
+    )
+
+  dropWrDbCredentials: (permissionType, token) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_WRDB_DROP
+      permission: permissionType
+      token: token
+    )
+    credentials = WrDbCredentialsStore.getCredentials(permissionType, token)
+    provisioningApi
+    .dropCredentials('wrdb', credentials.get("id"), token)
+    .then( ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_DROP_SUCCESS
+        permission: permissionType
+        token: token
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_WRDB_DROP_ERROR
+        permission: permissionType
+        token: token
       )
       throw error
     )
