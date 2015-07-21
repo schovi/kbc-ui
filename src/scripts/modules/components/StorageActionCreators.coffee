@@ -88,3 +88,20 @@ module.exports =
     return Promise.resolve() if StorageTokensStore.getIsLoaded()
     @loadTokensForce()
 
+  createToken: (params) ->
+    storageApi
+    .createToken(params)
+    .then((token) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.STORAGE_TOKEN_CREATE_SUCCESS
+        token: token
+      )
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.STORAGE_TOKEN_CREATE_ERROR
+        status: error.status
+        response: error.response
+      )
+      throw error
+    )

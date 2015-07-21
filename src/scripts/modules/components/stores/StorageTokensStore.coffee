@@ -1,4 +1,3 @@
-
 Dispatcher = require('../../../Dispatcher')
 constants = require '../Constants'
 Immutable = require('immutable')
@@ -28,6 +27,12 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when constants.ActionTypes.STORAGE_TOKEN_CREATE_SUCCESS
+      token = Immutable.fromJS(action.token)
+      tokenId = action.token.id
+      _store = _store.setIn ['tokens', tokenId], token
+      StorageTokensStore.emitChange()
+
     when constants.ActionTypes.STORAGE_TOKENS_LOAD
       _store = _store.set 'isLoading', true
       StorageTokensStore.emitChange()
