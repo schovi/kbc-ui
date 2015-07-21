@@ -12,7 +12,7 @@ ComponentIcon = React.createFactory(require '../../../../react/common/ComponentI
 
 NewComponentSelection = require '../components/NewComponentSelection'
 
-{div, table, tbody, tr, td, ul, li, a, span, small} = React.DOM
+{div, table, tbody, tr, td, ul, li, a, span, small, strong} = React.DOM
 
 TEXTS =
   noComponents:
@@ -43,9 +43,8 @@ module.exports = (type) ->
           @renderComponentRow component
         , @).toArray()
 
-        div className: 'container-fluid kbc-main-content',
-          table className: 'table table-bordered kbc-table-full-width kbc-components-list',
-            tbody null, rows
+        div className: 'container-fluid kbc-main-content kbc-components-list',
+          rows
       else
         React.createElement NewComponentSelection,
           className: 'container-fluid kbc-main-content'
@@ -58,29 +57,40 @@ module.exports = (type) ->
             React.DOM.p null, TEXTS['installFirst'][type]
 
     renderComponentRow: (component) ->
-      tr key: component.get('id'),
-        td null,
-          ComponentIcon
-            component: component
-            size: '32'
-          component.get('name')
-        td null, @renderConfigs(component)
+      div null,
+        div {className: 'kbc-header', key: component.get('id')},
+          div {className: 'kbc-title'},
+            React.DOM.h2 null,
+              ComponentIcon
+                component: component
+                size: '32'
+              component.get('name')
+        table {className: 'table table-hover'},
+          @renderConfigs(component)
 
     renderConfigs: (component) ->
-      ul null,
+      tbody null,
         component.get('configurations').map((config) ->
-          li key: config.get('id'),
-            ComponentConfigurationLink
-              componentId: component.get 'id'
-              configId: config.get 'id'
-            ,
-              span className: 'kbc-config-name',
-                if config.get 'name'
-                  config.get 'name'
-                else
-                  '---'
-              if config.get 'description'
-                small null, config.get('description')
-            span className: 'kbc-icon-arrow-right'
+          tr null,
+            td key: config.get('id'),
+              ComponentConfigurationLink
+                componentId: component.get 'id'
+                configId: config.get 'id'
+              ,
+                strong className: 'kbc-config-name',
+                  if config.get 'name'
+                    config.get 'name'
+                  else
+                    '---'
+                if config.get 'description'
+                  small null, ' - ' + config.get('description')
+            td className: 'text-right kbc-component-buttons',
+              span className: 'kbc-component-author',
+                'Created By '
+                strong null, 'Martin'
+              React.DOM.button className: 'btn btn-link',
+                React.DOM.span className: 'kbc-icon-cup'
+              React.DOM.button className: 'btn btn-link',
+                React.DOM.span className: 'fa fa-fw fa-play'
 
         ).toArray()
