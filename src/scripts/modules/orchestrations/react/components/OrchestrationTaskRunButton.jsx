@@ -1,14 +1,15 @@
 import React from 'react';
 import {Tooltip, OverlayTrigger, ModalTrigger} from 'react-bootstrap';
 import RunOrchestrationModal from '../modals/RunOrchestration';
-import {runOrchestration} from '../../ActionCreators';
 import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
   propTypes: {
     orchestration: React.PropTypes.object.isRequired,
+    task: React.PropTypes.object.isRequired,
     notify: React.PropTypes.bool,
-    tooltipPlacement: React.PropTypes.string
+    tooltipPlacement: React.PropTypes.string,
+    onRun: React.PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -62,14 +63,15 @@ export default React.createClass({
     this.setState({
       isLoading: true
     });
-    runOrchestration(this.props.orchestration.get('id'), null, this.props.notify)
-    .finally(() => {
-      if (this.isMounted()) {
-        this.setState({
-          isLoading: false
-        });
-      }
-    });
+
+    return this.props.onRun(this.props.task)
+      .finally(() => {
+        if (this.isMounted()) {
+          this.setState({
+            isLoading: false
+          });
+        }
+      });
   },
 
   handleButtonClick(e) {

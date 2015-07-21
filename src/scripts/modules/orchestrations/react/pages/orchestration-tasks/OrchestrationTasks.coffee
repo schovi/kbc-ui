@@ -51,6 +51,19 @@ OrchestrationTasks = React.createClass
   _handleTasksChange: (newTasks) ->
     OrchestrationsActionCreators.updateOrchestrationsTasksEdit(@state.orchestration.get('id'), newTasks)
 
+  _handleTaskRun: (task) ->
+    if @state.tasks.count()
+      tasks = @state.tasks.map((item) ->
+        if item.get('id') is task.get('id')
+          task.set('active', true)
+        else
+          task.set('active', false)
+      ).toJS()
+    else
+      tasks = {}
+
+    OrchestrationsActionCreators.runOrchestration(@state.orchestration.get('id'), tasks, true)
+
   render: ->
     div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
@@ -71,7 +84,10 @@ OrchestrationTasks = React.createClass
           div null,
             TasksTable
               tasks: @state.tasks
+              orchestration: @state.orchestration
               components: @state.components
+              onRun: @_handleTaskRun
+
 
 
 module.exports = OrchestrationTasks

@@ -368,10 +368,16 @@ module.exports =
     Run and termination
   ###
 
-  runOrchestration: (id, notify = false) ->
+  runOrchestration: (id, tasks, notify = false) ->
+    data = {}
+    if tasks
+      data = {tasks: tasks}
 
     orchestrationsApi
-    .runOrchestration(id)
+    .runOrchestration(
+      id
+      data
+    )
     .then((newJob) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.ORCHESTRATION_JOB_LOAD_SUCCESS

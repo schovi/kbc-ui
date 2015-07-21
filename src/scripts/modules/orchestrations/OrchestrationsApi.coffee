@@ -40,8 +40,9 @@ orchestrationsApi =
     createRequest('DELETE', "orchestrations/#{id}")
     .promise()
 
-  runOrchestration: (id) ->
+  runOrchestration: (id, data) ->
     createRequest('POST', "orchestrations/#{id}/jobs")
+    .send(data)
     .promise()
     .then((response) ->
       response.body
