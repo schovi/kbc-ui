@@ -70,32 +70,31 @@ module.exports = (type) ->
                 component: component
                 size: '32'
               component.get('name')
-        table {className: 'table table-hover'},
+        div {className: 'table table-hover'},
           @renderConfigs(component)
 
     renderConfigs: (component) ->
-      tbody null,
-        component.get('configurations').map((config) ->
-          tr null,
-            td key: config.get('id'),
-              ComponentConfigurationLink
-                componentId: component.get 'id'
-                configId: config.get 'id'
-              ,
-                strong className: 'kbc-config-name',
-                  if config.get 'name'
-                    config.get 'name'
-                  else
-                    '---'
-                if config.get 'description'
-                  small null, ' - ' + config.get('description')
-            td className: 'text-right kbc-component-buttons',
-              span className: 'kbc-component-author',
-                'Created By '
-                strong null, config.getIn ['creatorToken', 'description']
-              React.DOM.button className: 'btn btn-link',
-                React.DOM.span className: 'kbc-icon-cup'
-              React.DOM.button className: 'btn btn-link',
-                React.DOM.span className: 'fa fa-fw fa-play'
+      component.get('configurations').map((config) ->
+        ComponentConfigurationLink
+          className: 'tr'
+          componentId: component.get 'id'
+          configId: config.get 'id'
+        ,
+          span {className: 'td', key: config.get('id')},
+            strong className: 'kbc-config-name',
+              if config.get 'name'
+                config.get 'name'
+              else
+                '---'
+            if config.get 'description'
+              small null, ' - ' + config.get('description')
+          span className: 'td text-right kbc-component-buttons',
+            span className: 'kbc-component-author',
+              'Created By '
+              strong null, config.getIn ['creatorToken', 'description']
+            React.DOM.button className: 'btn btn-link',
+              React.DOM.span className: 'kbc-icon-cup'
+            React.DOM.button className: 'btn btn-link',
+              React.DOM.span className: 'fa fa-fw fa-play'
 
-        ).toArray()
+      ).toArray()
