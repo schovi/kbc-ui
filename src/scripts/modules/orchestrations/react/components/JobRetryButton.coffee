@@ -3,9 +3,21 @@ createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 JobsStore = require('../../stores/OrchestrationJobsStore')
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
+TaskSelectTable = React.createFactory(require './TaskSelectTable')
 Confirm = React.createFactory(require '../../../../react/common/Confirm')
+TasksTable = React.createFactory(require('../pages/orchestration-tasks/TasksTable'))
+TasksTableRow = React.createFactory(require('../pages/orchestration-tasks/TasksTableRow'))
+ComponentsStore = require '../../../components/stores/ComponentsStore'
+JobActionCreators = require '../../ActionCreators'
+OrchestrationJobStore = require ('../../stores/OrchestrationJobsStore')
 
-{button, span} = React.DOM
+TaskSelectModal = React.createFactory(require('../modals/TaskSelect'))
+ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+
+{ComponentIcon, ComponentName} = require '../../../../react/common/common'
+{Tree, Check} = require 'kbc-react-components'
+
+{table, thead, tbody, th, td, tr, input, button, span} = React.DOM
 
 module.exports = React.createClass
   displayName: 'JobRetryButton'
@@ -20,14 +32,16 @@ module.exports = React.createClass
   _getJobId: ->
     RoutesStore.getCurrentRouteIntParam 'jobId'
 
+  getInitialState: ->
+    components: ComponentsStore.getAll()
+
   getStateFromStores: ->
     jobId = @_getJobId()
     job: JobsStore.getJob jobId
 
-  _handleRetry: ->
+  _handleRun: ->
     ActionCreators.retryOrchestrationJob(
       @state.job.get('id')
-      @state.job.get('tasks').toJS()
       @state.job.get('orchestrationId')
       @props.notify
     )
@@ -43,14 +57,17 @@ module.exports = React.createClass
           status is 'warn'
 
   render: ->
+    tasks = @state.job.get('tasks')
     if @_canBeRetried()
-      Confirm
-        title: 'Retry job'
-        text: "You are about to run orchestration again"
-        buttonLabel: 'Run'
-        onConfirm: @_handleRetry
+      ModalTrigger
+        modal: TaskSelectModal
+          job: @props.job
+          tasks: OrchestrationJobStore.getEditingValue @props.job.get('id'), 'tasks'
+          onChange: @_handleTaskChange
+          onRun: @_handleRun
       ,
         button
+          onClick: @_handleRetrySelectStart
           className: 'btn btn-link'
         ,
           span
@@ -58,3 +75,15 @@ module.exports = React.createClass
           ' Job retry'
     else
       null
+
+  _handleRetrySelectStart: ->
+    JobActionCreators.startJobRetryTasksEdit(@state.job.get('id'))
+
+  _handleTaskChange: (updatedTask) ->
+    tasks = OrchestrationJobStore.getEditingValue @props.job.get('id'), 'tasks'
+    index = tasks.findIndex((task) -> task.get('id') == updatedTask.get('id'))
+
+    JobActionCreators.updateJobRetryTasksEdit(
+      @props.job.get('id')
+      tasks.set(index, tasks.get(index).set('active', updatedTask.get('active')))
+    )

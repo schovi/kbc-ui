@@ -311,6 +311,23 @@ module.exports =
       )
       throw e
 
+
+  ###
+    Editing tasks on job retry
+  ###
+  startJobRetryTasksEdit: (jobId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_START
+      jobId: jobId
+    )
+
+  updateJobRetryTasksEdit: (jobId, tasks) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_UPDATE
+      jobId: jobId
+      tasks: tasks
+    )
+
   ###
     Editing notifications
   ###
@@ -397,7 +414,9 @@ module.exports =
         jobId: jobId
       throw e
 
-  retryOrchestrationJob: (jobId, tasks, orchestrationId, notify = false) ->
+  retryOrchestrationJob: (jobId, orchestrationId, notify = false) ->
+    tasks = OrchestrationJobsStore.getEditingValue(jobId, 'tasks')
+
     actions = @
     dispatcher.handleViewAction
       type: constants.ActionTypes.ORCHESTRATION_JOB_RETRY_START

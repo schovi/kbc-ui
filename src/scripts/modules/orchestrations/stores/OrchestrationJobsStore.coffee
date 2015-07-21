@@ -8,6 +8,7 @@ StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
   jobsByOrchestrationId: Map()
+  editing: Map() # [jobId][tasks] - edit value
   loadingOrchestrationJobs: List()
   loadingJobs: List()
   terminatingJobs: List()
@@ -44,7 +45,6 @@ setOrchestrationJob = (store, orchestrationId, job) ->
     .filter((job) -> job.get('id') != jobId)
     .push job
   )
-
 
 OrchestrationJobsStore = StoreUtils.createStore
 
@@ -86,6 +86,8 @@ OrchestrationJobsStore = StoreUtils.createStore
   isLoading: (idOrchestration) ->
     _store.get('loadingOrchestrationJobs').contains idOrchestration
 
+  getEditingValue: (jobId, field) ->
+    _store.getIn ['editing', jobId, field]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -129,6 +131,16 @@ Dispatcher.register (payload) ->
         Constants.ActionTypes.ORCHESTRATION_JOB_TERMINATE_SUCCESS
 
       _store = removeFromTerminatingJobs _store, action.jobId
+      OrchestrationJobsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_START
+      console.log(action.tasks)
+      _store = _store.setIn ['editing', action.jobId, 'tasks'],
+        OrchestrationJobsStore.getJob(action.jobId).get('tasks')
+      OrchestrationJobsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_UPDATE
+      _store = _store.setIn ['editing', action.jobId, 'tasks'], action.tasks
       OrchestrationJobsStore.emitChange()
 
 module.exports = OrchestrationJobsStore
