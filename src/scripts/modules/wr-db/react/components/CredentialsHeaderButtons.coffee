@@ -63,4 +63,4 @@ module.exports = React.createClass
           onClick: @_handleEditStart
         ,
           span className: 'fa fa-edit'
-          ' Edit Credentials'
+          ' Reset Credentials'
