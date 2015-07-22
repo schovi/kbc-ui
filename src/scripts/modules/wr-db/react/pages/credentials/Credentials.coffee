@@ -57,6 +57,13 @@ module.exports = React.createClass
     #if current credentials are provisioning creds then we trigger
     #readonly load of credentials
     creds = @state.credentials.toJS()
+    state = @state.localState.get 'credentialsState'
+    if state in [
+      States.SAVING_NEW_CREDS
+      States.PREPARING_PROV_WRITE
+      States.LOADING_PROV_READ
+      States.CREATE_NEW_CREDS]
+      return
     hasReadCredentials = @state.provisioningCredentials?.get('read')
     if @_hasDbConnection()
       if @_isProvCredentials()
