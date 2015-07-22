@@ -24,7 +24,7 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 driver = 'mysql'
 componentId = 'wr-db'
-isProvisioning = false
+isProvisioning = true
 
 module.exports = React.createClass
 

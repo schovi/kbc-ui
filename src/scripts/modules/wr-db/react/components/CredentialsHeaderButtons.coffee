@@ -14,7 +14,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 driver = 'mysql'
 componentId = 'wr-db'
 
-isProvisioning = false
+isProvisioning = true
 
 {button, span} = React.DOM
 
