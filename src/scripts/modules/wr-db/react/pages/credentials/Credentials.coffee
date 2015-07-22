@@ -177,6 +177,7 @@ module.exports = React.createClass
       credentials: credentials
       onChangeFn: @_handleChange
       isSaving: isSaving
+      isProvisioning: @_isProvCredentials()
 
   _isProvCredentials: ->
     result = @state.credentials?.get('host') == 'wr-db.keboola.com'
