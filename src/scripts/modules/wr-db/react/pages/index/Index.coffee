@@ -2,6 +2,7 @@ React = require 'react'
 {fromJS, Map, List} = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
@@ -15,7 +16,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
-
+DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
 componentId = 'wr-db'
@@ -100,6 +101,21 @@ module.exports = React.createClass
           ,
             i className: 'fa fa-fw fa-user'
             ' Database Credentials'
+        li null,
+          RunButtonModal
+            title: "Upload tables"
+            tooltip: "Upload all selected tables"
+            mode: 'link'
+            icon: 'fa fa-upload fa-fw'
+            component: 'wr-db'
+            runParams: =>
+              writer: @props.configId
+          ,
+           "You are about to run upload of all seleted tables"
+        li null,
+          React.createElement DeleteConfigurationButton,
+            componentId: componentId
+            configId: @state.configId
 
 
   _renderTableRow: (table) ->
