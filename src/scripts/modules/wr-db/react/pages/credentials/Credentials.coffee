@@ -205,5 +205,4 @@ module.exports = React.createClass
       path = [path]
     console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
-    console.log "new local state", newLocalState.toJS()
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)

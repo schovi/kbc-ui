@@ -4,8 +4,15 @@ store = require('./store')
 dispatcher = require('../../Dispatcher')
 constants = require './constants'
 provisioningUtils = require './provisioningUtils'
-
+{fromJS} = require 'immutable'
 driver = 'mysql'
+
+convertFromProvCredentials = (creds) ->
+  host: creds.get 'hostname'
+  database: creds.get 'db'
+  port: "3306" #todo1!
+  password: creds.get 'password'
+  user: creds.get 'user'
 
 module.exports =
   loadProvisioningCredentials: (driver, configId, isReadOnly) ->
@@ -13,12 +20,22 @@ module.exports =
       type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
       driver: driver
       configId: configId
-    provisioningUtils.getCredentials(isReadOnly).then (result) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
-        driver: driver
-        configId: configId
-        credentials: result
+    provisioningUtils.getCredentials(isReadOnly).then (result) =>
+      if isReadOnly
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
+          driver: driver
+          configId: configId
+          credentials: result
+      else
+        writeCreds = fromJS(convertFromProvCredentials(result.write))
+        @saveCredentials(driver, configId, writeCreds).then ->
+          dispatcher.handleViewAction
+            type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
+            driver: driver
+            configId: configId
+            credentials: result
+
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
@@ -126,7 +143,6 @@ module.exports =
 
     api.setTableColumns(driver, configId, tableId, columns.toJS())
     .then (result) ->
-      console.log "SET COLUMNS API RESULT", result
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
         driver: driver
