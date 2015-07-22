@@ -21,11 +21,11 @@ export default React.createClass({
             </h2>
           </div>
         </div>
-        <table className="table table-hover">
-          <tbody>
-          {this.configurations()}
-          </tbody>
-        </table>
+        <div className="table table-hover">
+          <span className="tbody">
+            {this.configurations()}
+          </span>
+        </div>
       </div>
     );
   },

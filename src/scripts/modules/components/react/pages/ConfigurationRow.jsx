@@ -14,37 +14,36 @@ export default React.createClass({
 
   render() {
     return (
-      <tr>
-        <td>
-          <ConfigurationLink
-            componentId={this.props.componentId}
-            configId={this.props.config.get('id')}
-            >
-            <strong className="kbc-config-name">
-              {this.props.config.get('name', '---')}
-            </strong>
-            {this.description()}
-          </ConfigurationLink>
-        </td>
-        <td className="text-right kbc-component-buttons">
+      <ConfigurationLink
+        componentId={this.props.componentId}
+        configId={this.props.config.get('id')}
+        className="tr"
+        >
+        <span className="td">
+          <strong className="kbc-config-name">
+            {this.props.config.get('name', '---')}
+          </strong>
+          {this.description()}
+        </span>
+        <span className="td text-right kbc-component-buttons">
           <span className="kbc-component-author">
             Created by <strong>{this.props.config.getIn(['creatorToken', 'description'])}</strong>
           </span>
           <DeleteButton
-            tooltip="Delete Configuration"
-            isPending={this.props.isDeleting}
-            confirm={this.deleteConfirmProps()}
-            />
+              tooltip="Delete Configuration"
+              isPending={this.props.isDeleting}
+              confirm={this.deleteConfirmProps()}
+              />
           <RunConfigurationButton
-            title="Run"
-            component={this.props.componentId}
-            runParams={this.runParams()}
+              title="Run"
+              component={this.props.componentId}
+              runParams={this.runParams()}
 
-            >
-              You are about to run component
-            </RunConfigurationButton>
-        </td>
-      </tr>
+              >
+            You are about to run component
+          </RunConfigurationButton>
+        </span>
+      </ConfigurationLink>
     );
   },
 
