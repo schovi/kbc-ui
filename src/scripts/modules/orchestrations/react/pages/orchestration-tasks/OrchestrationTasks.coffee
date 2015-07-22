@@ -55,9 +55,9 @@ OrchestrationTasks = React.createClass
     if @state.tasks.count()
       tasks = @state.tasks.map((item) ->
         if item.get('id') is task.get('id')
-          task.set('active', true)
+          item.set('active', true)
         else
-          task.set('active', false)
+          item.set('active', false)
       ).toJS()
     else
       tasks = {}
