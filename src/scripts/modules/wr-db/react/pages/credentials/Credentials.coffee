@@ -54,10 +54,8 @@ module.exports = React.createClass
 
   componentDidMount: ->
     console.log "COMPONENT DIDI MOUNT"
-    #if current credentials are provisioning creds then we trigger
-    #readonly load of credentials
-    creds = @state.credentials.toJS()
     state = @state.localState.get 'credentialsState'
+    # ignore setting state in some cases
     if state in [
       States.SAVING_NEW_CREDS
       States.PREPARING_PROV_WRITE
@@ -99,7 +97,7 @@ module.exports = React.createClass
         when States.LOADING_PROV_READ
           div className: 'well', 'Loading provisioning credentials...'
         when States.PREPARING_PROV_WRITE
-          div className: 'well', 'Preparing credentials...'
+          div className: 'well', 'Preparing provisioning credentials...'
         when States.SHOW_PROV_READ_CREDS
           @_renderCredentialsForm(@_prepareProvReadCredentials(), false)
         when States.SHOW_STORED_CREDS
