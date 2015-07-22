@@ -17,20 +17,26 @@ module.exports = React.createClass
   propTypes:
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
+    className: React.PropTypes.string
 
   render: ->
     if RoutesStore.hasRoute(@props.componentId)
       Link
+        className: @props.className
         to: @props.componentId
         params:
           config: @props.configId
       ,
         @props.children
     else if ComponentsStore.hasComponentLegacyUI(@props.componentId)
-      a href: ComponentsStore.getComponentDetailLegacyUrl(@props.componentId, @props.configId),
+      a
+        href: ComponentsStore.getComponentDetailLegacyUrl(@props.componentId, @props.configId)
+        className: @props.className
+      ,
         @props.children
     else
       Link
+        className: @props.className
         to: 'generic-detail-' + @getComponentType()
         params:
           config: @props.configId
