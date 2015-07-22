@@ -14,6 +14,8 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 driver = 'mysql'
 componentId = 'wr-db'
 
+isProvisioning = false
+
 {button, span} = React.DOM
 
 module.exports = React.createClass
@@ -33,14 +35,20 @@ module.exports = React.createClass
     localState: localState
 
   _handleResetStart: ->
-    @_updateLocalState('credentialsState', States.INIT)
-    # creds = @state.currentCredentials
-    # ActionCreators.resetCredentials driver, @state.currentConfigId
-    #ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', null
+    if isProvisioning
+      @_updateLocalState('credentialsState', States.INIT)
+    else
+      creds = @state.currentCredentials
+      #ActionCreators.resetCredentials driver, @state.currentConfigId
+      ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', creds
+      @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
 
   _handleCancel: ->
-    @_updateLocalState('credentialsState', States.INIT)
-    #ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', null
+    if isProvisioning
+      @_updateLocalState('credentialsState', States.INIT)
+    else
+      ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', null
+      @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
 
 
   _handleCreate: ->
@@ -53,6 +61,10 @@ module.exports = React.createClass
 
   render: ->
     state = @state.localState.get 'credentialsState'
+    buttonText = ' Edit'
+    if isProvisioning
+      buttonText = ' Reset Credentials'
+
     if state in [States.SHOW_PROV_READ_CREDS, States.SHOW_STORED_CREDS]
       return React.DOM.div null,
         button
@@ -61,7 +73,8 @@ module.exports = React.createClass
           onClick: @_handleResetStart
         ,
           span className: 'fa fa-edit'
-          ' Reset Credentials'
+          buttonText
+
     if state in [States.CREATE_NEW_CREDS, States.SAVING_NEW_CREDS]
       return React.DOM.div className: 'kbc-buttons',
         if @state.isSaving

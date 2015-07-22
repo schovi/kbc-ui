@@ -23,6 +23,7 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 driver = 'mysql'
 componentId = 'wr-db'
+isProvisioning = false
 
 module.exports = React.createClass
 
@@ -62,6 +63,10 @@ module.exports = React.createClass
       States.LOADING_PROV_READ
       States.CREATE_NEW_CREDS]
       return
+    if isProvisioning == false
+      @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
+      return
+
     hasReadCredentials = @state.provisioningCredentials?.get('read')
     if @_hasDbConnection()
       if @_isProvCredentials()
@@ -80,13 +85,23 @@ module.exports = React.createClass
     WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
-
+  render: ->
+    if isProvisioning
+      @renderWithProvisioning()
+    else
+      @renderNoProvisioning()
 
   renderNoProvisioning: ->
+    credentials = @state.credentials
+    state = @state.localState.get 'credentialsState'
+    isEditing = false
+    if state in [States.SAVING_NEW_CREDS, States.CREATE_NEW_CREDS, States.INIT]
+      isEditing = true
+      credentials = @state.editingCredentials
     div {className: 'container-fluid kbc-main-content'},
-      @_renderCredentialsForm(@state.credentials)
+      @_renderCredentialsForm(credentials, isEditing)
 
-  render: ->
+  renderWithProvisioning: ->
     credentials = @state.credentials
     state = @state.localState.get 'credentialsState'
     console.log "render credentials", state, @state.localState.toJS()
