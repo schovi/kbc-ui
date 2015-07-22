@@ -60,7 +60,7 @@ module.exports = React.createClass
       key: 'changePassword'
       href: @props.urlTemplates.get 'changePassword'
     ,
-      'Change Password'
+      'Account Settings'
 
     links.push React.createElement MenuItem,
       key: 'avatar'
