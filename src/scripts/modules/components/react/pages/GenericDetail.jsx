@@ -11,8 +11,8 @@ import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
-
-import {Button} from 'react-bootstrap';
+import Configuration from '../components/Configuration';
+import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
 
 export default React.createClass({
@@ -26,7 +26,11 @@ export default React.createClass({
       componentId: componentId,
       configData: InstalledComponentStore.getConfigData(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
-      latestJobs: LatestJobsStore.getJobs(componentId, configId)
+      latestJobs: LatestJobsStore.getJobs(componentId, configId),
+      isEditing: InstalledComponentStore.isEditingRawConfigData(componentId, configId),
+      isSaving: InstalledComponentStore.isSavingConfigData(componentId, configId),
+      editingConfigData: InstalledComponentStore.getEditingRawConfigData(componentId, configId, '{}'),
+      isValidEditingConfigData: InstalledComponentStore.isValidEditingConfigData(componentId, configId)
     };
   },
 
@@ -42,12 +46,17 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
-              <p>This component has to be configured manually, please contact our support for assistance.</p>
-              <div className="kbc-buttons">
-                <Button onClick={this.contactSupport} bsStyle="success">
-                  Contact Support
-                </Button>
-              </div>
+              <p className="help-block">This component has to be configured manually.</p>
+              <Configuration
+                data={this.getConfigData()}
+                isEditing={this.state.isEditing}
+                isSaving={this.state.isSaving}
+                onEditStart={this.onEditStart}
+                onEditCancel={this.onEditCancel}
+                onEditChange={this.onEditChange}
+                onEditSubmit={this.onEditSubmit}
+                isValid={this.state.isValidEditingConfigData}
+                />
             </div>
           </div>
         </div>
@@ -95,6 +104,29 @@ export default React.createClass({
       url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
     });
     Zenbox.show();
-  }
+  },
 
+  getConfigData() {
+    if(this.state.isEditing) {
+      return this.state.editingConfigData;
+    } else {
+      return JSON.stringify(this.state.configData.toJSON(), null, '  ');
+    }
+  },
+
+  onEditStart() {
+    InstalledComponentsActionCreators.startEditComponentRawConfigData(this.state.componentId, this.state.config.get('id'));
+  },
+
+  onEditCancel() {
+    InstalledComponentsActionCreators.cancelEditComponentRawConfigData(this.state.componentId, this.state.config.get('id'));
+  },
+
+  onEditChange(newValue) {
+    InstalledComponentsActionCreators.updateEditComponentRawConfigData(this.state.componentId, this.state.config.get('id'), newValue);
+  },
+
+  onEditSubmit() {
+    InstalledComponentsActionCreators.saveComponentRawConfigData(this.state.componentId, this.state.config.get('id'));
+  }
 });

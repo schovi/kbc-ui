@@ -21,7 +21,7 @@ ComponentMetadata = React.createClass
           @props.config.getIn ['creatorToken', 'description']
       React.DOM.div null,
         React.DOM.small null,
-          'ON '
+          'on '
           React.DOM.strong null,
             date.format(@props.config.get 'created')
 

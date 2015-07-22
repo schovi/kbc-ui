@@ -15,7 +15,7 @@ module.exports = React.createClass
       div className: 'col-xs-10',
         span null, 'This is a 3rd party application with the following terms and conditions:'
         ul null,
-          li null, 'Extra money will be charged.'
+          li null, 'An extra fee may be charged.'
           li null, 'Data may be sent out of Keboola Connection.'
         div null,
           "Application developed by"

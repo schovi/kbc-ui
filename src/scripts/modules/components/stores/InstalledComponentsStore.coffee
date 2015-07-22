@@ -8,7 +8,8 @@ _store = Map(
   configData: Map() #componentId #configId - configuration detail JSON
   configDataLoading: Map() #componentId #configId - configuration detail JSON
   configDataEditing: Map() #componentId #configId - configuration
-#detail JSON
+  rawConfigDataEditing: Map() #componentId #configId - configuration stringified JSON
+  #detail JSON
   configDataSaving: Map()
   localState: Map()
 
@@ -43,6 +44,9 @@ InstalledComponentsStore = StoreUtils.createStore
   getEditingConfigData: (componentId, configId, defaultValue) ->
     _store.getIn ['configDataEditing', componentId, configId], defaultValue
 
+  getEditingRawConfigData: (componentId, configId, defaultValue) ->
+    _store.getIn ['rawConfigDataEditing', componentId, configId], defaultValue
+
   getSavingConfigData: (componentId, configId) ->
     _store.getIn ['configDataSaving', componentId, configId]
 
@@ -55,6 +59,12 @@ InstalledComponentsStore = StoreUtils.createStore
   isEditingConfig: (componentId, configId, field) ->
     _store.hasIn ['editingConfigurations', componentId, configId, field]
 
+  isEditingConfigData: (componentId, configId) ->
+    _store.hasIn ['editingConfigData', componentId, configId]
+
+  isEditingRawConfigData: (componentId, configId) ->
+    _store.hasIn ['rawConfigDataEditing', componentId, configId]
+
   getEditingConfig: (componentId, configId, field) ->
     _store.getIn ['editingConfigurations', componentId, configId, field]
 
@@ -65,6 +75,12 @@ InstalledComponentsStore = StoreUtils.createStore
       when 'description' then true
       when 'name' then value.trim().length > 0
 
+  isValidEditingConfigData: (componentId, configId) ->
+    value = @getEditingRawConfigData(componentId, configId)
+    try
+      JSON.parse(value)
+      return true
+    return false
 
   getDeletingConfigurations: ->
     _store.get 'deletingConfigurations'
@@ -74,6 +90,9 @@ InstalledComponentsStore = StoreUtils.createStore
 
   isSavingConfig: (componentId, configId, field) ->
     _store.hasIn ['savingConfigurations', componentId, configId, field]
+
+  isSavingConfigData: (componentId, configId) ->
+    _store.hasIn ['configDataSaving', componentId, configId]
 
   getIsLoading: ->
     _store.get 'isLoading'
@@ -109,6 +128,23 @@ Dispatcher.register (payload) ->
       _store = _store.deleteIn path
       InstalledComponentsStore.emitChange()
 
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_START
+      path = ['rawConfigDataEditing', action.componentId, action.configId]
+      configData = InstalledComponentsStore.getConfigData(action.componentId, action.configId)
+      _store = _store.setIn path, JSON.stringify(configData, null, '  ')
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_UPDATE
+      path = ['rawConfigDataEditing', action.componentId, action.configId]
+      configData = action.data
+      _store = _store.setIn path, configData
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_CANCEL
+      path = ['rawConfigDataEditing', action.componentId, action.configId]
+      _store = _store.deleteIn path
+      InstalledComponentsStore.emitChange()
+
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD
       _store = _store.setIn ['configDataLoading', action.componentId, action.configId], true
       InstalledComponentsStore.emitChange()
@@ -121,6 +157,28 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR
       _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_START
+      componentId = action.componentId
+      configId = action.configId
+      editingDataJson = JSON.parse(InstalledComponentsStore.getEditingRawConfigData(componentId, configId))
+      editingData = Immutable.fromJS(editingDataJson)
+      dataToSave = editingData
+      _store = _store.setIn ['configDataSaving', componentId, configId], dataToSave
+
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_SUCCESS
+      configData = _store.getIn ['rawConfigDataEditing', action.componentId, action.configId]
+      configDataObject = Immutable.fromJS(JSON.parse(configData))
+      _store = _store.setIn ['configData', action.componentId, action.configId], configDataObject
+      _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
+      _store = _store.deleteIn ['rawConfigDataEditing', action.componentId, action.configId]
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_ERROR
+      _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
@@ -143,6 +201,7 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_ERROR
       _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()
+
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_LOAD
       _store = _store.set 'isLoading', true

@@ -69,6 +69,31 @@ module.exports =
     return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded()
     @loadComponentConfigDataForce(componentId, configId)
 
+  saveComponentRawConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_START
+      componentId: componentId
+      configId: configId
+    )
+    dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
+    dataToSave = dataToSave?.toJS()
+    dataToSave = {configuration: JSON.stringify(dataToSave)}
+
+    installedComponentsApi
+    .updateComponentConfiguration(componentId, configId, dataToSave).then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_SUCCESS
+        componentId: componentId
+        configId: configId
+        configData: response.configuration
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_ERROR
+        componentId: componentId
+        configId: configId
+      )
+      throw error
 
   saveComponentConfigData: (componentId, configId, forceData) ->
     dispatcher.handleViewAction(
@@ -123,6 +148,28 @@ module.exports =
   cancelEditComponentConfigData: (componentId, configId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_CANCEL
+      componentId: componentId
+      configId: configId
+    )
+
+  startEditComponentRawConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_START
+      componentId: componentId
+      configId: configId
+    )
+
+  updateEditComponentRawConfigData: (componentId, configId, newData) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_UPDATE
+      componentId: componentId
+      configId: configId
+      data: newData
+    )
+
+  cancelEditComponentRawConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_CANCEL
       componentId: componentId
       configId: configId
     )
