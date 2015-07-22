@@ -3,7 +3,9 @@ _ = require 'underscore'
 {fromJS} = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+{States} = require './StateConstants'
 WrDbActions = require '../../../actionCreators'
+InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
 WrDbStore = require '../../../store'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -15,9 +17,12 @@ Input = React.createFactory(require('react-bootstrap').Input)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 {Protected} = require 'kbc-react-components'
 
+
+
 {a, h4, form, div, label, p, option} = React.DOM
 
 driver = 'mysql'
+componentId = 'wr-db'
 
 module.exports = React.createClass
 
@@ -29,43 +34,75 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     credentials = WrDbStore.getCredentials(driver, configId)
     isEditing = !! WrDbStore.getEditingByPath(driver, configId, 'creds')
+    editingCredentials = null
     if isEditing
-      credentials = WrDbStore.getEditingByPath(driver, configId, 'creds')
+      editingCredentials = WrDbStore.getEditingByPath(driver, configId, 'creds')
     isSaving = !! WrDbStore.getSavingCredentials(driver, configId)
 
     provisioningCredentials = WrDbStore.getProvisioningCredentials(driver, configId)
     isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(driver, configId)
+    localState = InstalledComponentsStore.getLocalState(componentId, configId)
 
+    localState: localState
     provisioningCredentials: provisioningCredentials
     credentials: credentials
     configId: configId
+    editingCredentials: editingCredentials
     isEditing: isEditing
     isSaving: isSaving
-    loadingProvisioningCredentials: isLoadingProvCredentials
+    loadingProvisioning: isLoadingProvCredentials
 
   componentDidMount: ->
+    console.log "COMPONENT DIDI MOUNT"
     #if current credentials are provisioning creds then we trigger
     #readonly load of credentials
     creds = @state.credentials.toJS()
-    if @_hasDbConnection(creds)
+    hasReadCredentials = @state.provisioningCredentials?.get('read')
+    if @_hasDbConnection()
       if @_isProvCredentials()
-        if not @state.provisioningCredentials?.get('read')
-          isReadOnly = true
-          WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly)
+        if hasReadCredentials
+          @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
+        else
+          @_runLoadProvReadCredentials()
+      else
+        @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
+    else
+      @_updateLocalState('credentialsState', States.INIT)
 
+  _runLoadProvReadCredentials: ->
+    isReadOnly = true
+    @_updateLocalState('credentialsState', States.LOADING_PROV_READ)
+    WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly).then =>
+      @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
+
+
+
+  renderNoProvisioning: ->
+    div {className: 'container-fluid kbc-main-content'},
+      @_renderCredentialsForm(@state.credentials)
 
   render: ->
     credentials = @state.credentials
-    if @_isProvCredentials()
-      credentials = @_prepareProvReadCredentials()
+    state = @state.localState.get 'credentialsState'
+    console.log "render credentials", state, @state.localState.toJS()
     div {className: 'container-fluid kbc-main-content'},
-      if @_hasDbConnection(@state.credentials?.toJS())
-        if @state.loadingProvisioningCredentials
-          div className: 'well', 'Loading credentials...'
-        else
-          @_renderCredentialsForm(credentials) if credentials
-      else
-        @_renderInit()
+      switch state
+        when States.INIT
+          @_renderInit()
+        when States.LOADING_PROV_READ
+          div className: 'well', 'Loading provisioning credentials...'
+        when States.PREPARING_PROV_WRITE
+          div className: 'well', 'Preparing credentials...'
+        when States.SHOW_PROV_READ_CREDS
+          @_renderCredentialsForm(@_prepareProvReadCredentials(), false)
+        when States.SHOW_STORED_CREDS
+          @_renderCredentialsForm(@state.credentials, false)
+        when States.CREATE_NEW_CREDS
+          @_renderCredentialsForm(@state.editingCredentials, true)
+        when States.SAVING_NEW_CREDS
+          @_renderCredentialsForm(@state.editingCredentials, true)
+
+
 
   _renderInit: ->
     div className: 'panel panel-default',
@@ -75,21 +112,30 @@ module.exports = React.createClass
         div className: 'list-group',
           a
             className: 'list-group-item text-center'
-            onClick: ->
-              console.log "clickeeed"
+            onClick: @_toggleCreateOwnCredentials
           ,
             h4 className: 'list-group-item-heading', 'Own MySQL database'
             p className: 'list-group-item-text', 'User has own mysql database and will provide credenetials'
           a
             className: 'list-group-item text-center'
-            onClick: =>
-              isReadOnly = false
-              WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly)
+            onClick: @_toggleCreateProvWriteCredentials
+
           ,
             h4 className: 'list-group-item-heading', 'Keboola MySQL database'
             p className: 'list-group-item-text', 'Keboola will provide and setup \
             dedicated database and user will be given readonly credentials.'
 
+  _toggleCreateOwnCredentials: ->
+    credentials = @state.credentials
+    WrDbActions.setEditingData driver, @state.configId, 'creds', credentials
+    @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
+
+
+  _toggleCreateProvWriteCredentials: ->
+    @_updateLocalState('credentialsState', States.PREPARING_PROV_WRITE)
+    isReadOnly = false
+    WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly).then =>
+      @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
 
 
@@ -104,11 +150,13 @@ module.exports = React.createClass
       password: creds.get 'password'
       user: creds.get 'user'
 
-  _renderCredentialsForm: (credentials) ->
+  _renderCredentialsForm: (credentials, isEditing) ->
+    isSaving = @state.localState.get('credentialsState') == States.SAVING_NEW_CREDS
     React.createElement CredentialsForm,
-      isEditing: @state.isEditing
+      isEditing: isEditing
       credentials: credentials
-      onChangeFn: @_handleChange.bind @
+      onChangeFn: @_handleChange
+      isSaving: isSaving
 
   _isProvCredentials: ->
     result = @state.credentials?.get('host') == 'wr-db.keboola.com'
@@ -123,8 +171,17 @@ module.exports = React.createClass
     WrDbActions.setEditingData driver, @state.configId, 'creds', creds
     #@props.onChange(@state.credentials.set propName, value)
 
-  _hasDbConnection: (credentials) ->
+  _hasDbConnection: ->
+    credentials = @state.credentials.toJS()
     not( _.isEmpty(credentials?.host) or
     _.isEmpty(credentials?.database) or
     _.isEmpty(credentials?.password) or
     _.isEmpty(credentials?.user))
+
+  _updateLocalState: (path, data) ->
+    if _.isString path
+      path = [path]
+    console.log "UPDATE STATE", path, data
+    newLocalState = @state.localState.setIn(path, data)
+    console.log "new local state", newLocalState.toJS()
+    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)

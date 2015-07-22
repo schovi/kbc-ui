@@ -14,6 +14,7 @@ module.exports = React.createClass
     isEditing: React.PropTypes.bool
     credentials: React.PropTypes.object
     onChangeFn: React.PropTypes.func
+    isSaving: React.PropTypes.bool
 
   render: ->
     form className: 'form-horizontal',
@@ -30,10 +31,12 @@ module.exports = React.createClass
       Input
         label: labelValue
         type: type
+        disabled: @props.isSaving
         value: @props.credentials.get propName
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
-        onChange: @props.onChangeFn.bind propName
+        onChange: (event) =>
+          @props.onChangeFn(propName, event)
     else if isProtected
       StaticText
         label: labelValue

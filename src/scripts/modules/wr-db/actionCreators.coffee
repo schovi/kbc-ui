@@ -51,6 +51,13 @@ module.exports =
         error: err
       throw err
 
+  resetCredentials: (driver, configId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
+      driver: driver
+      configId: configId
+      credentials: null
+
   setEditingData: (driver, configId, path, data) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SET_EDITING
