@@ -1,5 +1,5 @@
 React = require 'react'
-
+Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
 {div} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
@@ -19,7 +19,7 @@ module.exports = React.createClass
   render: ->
 
     form className: 'form-horizontal',
-      h4 null
+      div className: 'row',
         if @props.isProvisioning
           h4 null,
             'Keboola provided database credentials'
@@ -57,9 +57,12 @@ module.exports = React.createClass
       ,
         React.createElement Protected, null,
           @props.credentials.get propName
+        Clipboard text: @props.credentials.get propName
     else
       StaticText
         label: labelValue
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
-      , @props.credentials.get propName
+      ,
+        @props.credentials.get propName
+        Clipboard text: @props.credentials.get propName
