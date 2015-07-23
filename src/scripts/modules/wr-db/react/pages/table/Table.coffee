@@ -20,7 +20,6 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
 #componentId = 'wr-db'
-#driver = 'mysql'
 
 #IGNORE is automatically included
 mysqlDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
@@ -28,10 +27,10 @@ mysqlDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIM
 {label, input, p, ul, li, span, button, strong, div, i} = React.DOM
 
 
-module.exports = (componentId, driver) ->
-  React.createClass templateFn(componentId, driver)
+module.exports = (componentId) ->
+  React.createClass templateFn(componentId)
 
-templateFn = (componentId, driver) ->
+templateFn = (componentId) ->
   displayName: "WrDbTableDetail"
   mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore)]
 

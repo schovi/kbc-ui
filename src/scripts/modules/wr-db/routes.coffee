@@ -19,7 +19,7 @@ createRoute = (componentId, driver, isProvisioning) ->
     configName = InstalledComponentsStore.getConfig(componentId, configId).get('name')
     return "#{componentName} - #{configName}"
   isComponent: true
-  defaultRouteHandler: dbwrIndex(componentId, driver)
+  defaultRouteHandler: dbwrIndex(componentId)
   requireData: [
     (params) ->
       ActionCreators.loadConfiguration componentId, params.config
@@ -28,7 +28,7 @@ createRoute = (componentId, driver, isProvisioning) ->
     #isComponent: true
     name: "#{componentId}-table"
     path: 'table/:tableId'
-    handler: dbWrTableDetail(componentId, driver)
+    handler: dbWrTableDetail(componentId)
     title: (routerState) ->
       tableId = routerState.getIn ['params', 'tableId']
       return tableId
@@ -41,7 +41,7 @@ createRoute = (componentId, driver, isProvisioning) ->
     name: "#{componentId}-credentials"
     path: 'credentials'
     handler: dbWrCredentialsDetail(componentId, driver, isProvisioning)
-    headerButtonsHandler: CredentialsHeader(componentId, driver, isProvisioning)
+    headerButtonsHandler: CredentialsHeader(componentId, isProvisioning)
     title: (routerState) ->
       'Credentials'
   ]

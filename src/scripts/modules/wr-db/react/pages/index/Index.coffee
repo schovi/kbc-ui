@@ -25,10 +25,10 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
-module.exports = (componentId, driver) ->
-  React.createClass templateFn(componentId, driver)
+module.exports = (componentId) ->
+  React.createClass templateFn(componentId)
 
-templateFn = (componentId, driver) ->
+templateFn = (componentId) ->
   displayName: 'wrdbIndex'
 
   mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, WrDbStore)]

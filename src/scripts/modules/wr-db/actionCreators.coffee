@@ -5,9 +5,9 @@ dispatcher = require('../../Dispatcher')
 constants = require './constants'
 provisioningUtils = require './provisioningUtils'
 {fromJS} = require 'immutable'
-driver = 'mysql'
 
-convertFromProvCredentials = (creds) ->
+
+convertFromProvCredentials = (creds, driver) ->
   host: creds.get 'hostname'
   database: creds.get 'db'
   port: "3306" #todo1!
@@ -16,7 +16,7 @@ convertFromProvCredentials = (creds) ->
   driver: driver
 
 module.exports =
-  loadProvisioningCredentials: (componentId, configId, isReadOnly) ->
+  loadProvisioningCredentials: (componentId, configId, isReadOnly, driver) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
       componentId: componentId
@@ -29,7 +29,7 @@ module.exports =
           configId: configId
           credentials: result
       else
-        writeCreds = fromJS(convertFromProvCredentials(result.write))
+        writeCreds = fromJS(convertFromProvCredentials(result.write, driver))
         @saveCredentials(componentId, configId, writeCreds).then ->
           dispatcher.handleViewAction
             type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS

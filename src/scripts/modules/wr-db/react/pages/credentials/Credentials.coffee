@@ -164,7 +164,7 @@ templateFn = (componentId, driver, isProvisioning) ->
   _toggleCreateProvWriteCredentials: ->
     @_updateLocalState('credentialsState', States.PREPARING_PROV_WRITE)
     isReadOnly = false
-    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly).then =>
+    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly, driver).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
 
