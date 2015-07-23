@@ -1,6 +1,7 @@
 React = require 'react'
 Immutable = require('immutable')
 {ul, li, span, div, a, p, h2, label, input, form} = React.DOM
+Check = React.createFactory(require('kbc-react-components').Check)
 _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
@@ -70,6 +71,7 @@ module.exports = (componentId) ->
       language = null
       if @_isLangParam()
         language = parameters?.get('language') or 'en'
+      useBeta = parameters?.get('use_beta') or false
 
       data_column: parameters?.get 'data_column'
       id_column: parameters?.get 'id_column'
@@ -81,6 +83,7 @@ module.exports = (componentId) ->
       configId: configId
       latestJobs: LatestJobsStore.getJobs componentId, configId
       runMessage: runMessage
+      useBeta: useBeta
 
     componentWillMount: ->
       storageActionCreators.loadTables()
@@ -136,6 +139,29 @@ module.exports = (componentId) ->
                 @_createInput('Primary Key', @state.id_column, @tooltips.id_column)
                 @_createInput('Output Table', @state.outtable, @tooltips.outtable, @_tableExists(@state.outtable))
                 @_createInput('Language', @_getLangLabel(@state.language), @tooltips.language) if @_isLangParam()
+                @_renderUseBeta()
+
+
+    _renderUseBeta: ->
+      if @state.isEditing
+        div className: 'form-group',
+          label className: 'col-xs-2 control-label', 'Use Beta Version'
+          div className: 'col-xs-10',
+            input
+              type: 'checkbox'
+              checked: @state.editingData.use_beta
+              onChange: (event) =>
+                newEditingData = @state.editingData
+                newEditingData.use_beta = event.target.checked
+                @setState
+                  editingData: newEditingData
+                @_updateEditingConfig()
+      else
+        StaticText
+          label: 'Use Beta Version'
+          labelClassName: 'col-xs-4'
+          wrapperClassName: 'col-xs-8'
+        , Check isChecked: @state.useBeta
 
 
     _renderEditorRow: ->
@@ -238,6 +264,7 @@ module.exports = (componentId) ->
                   ]
             ,
               p className: 'help-block', @tooltips.language
+        @_renderUseBeta()
 
 
     _getTables: ->
@@ -302,6 +329,7 @@ module.exports = (componentId) ->
       id_column: params?.get 'id_column'
       data_column: params?.get 'data_column'
       language: language
+      use_beta: params?.get 'use_beta' or false
 
 
     _updateEditingConfig: ->
@@ -316,6 +344,7 @@ module.exports = (componentId) ->
           output:
             tables: [{source: setup.outtable, destination: setup.outtable}]
         parameters:
+          'use_beta': setup.use_beta
           'id_column': setup.id_column
           data_column: setup.data_column
           user_key: '9cf1a9a51553e32fda1ecf101fc630d5'
