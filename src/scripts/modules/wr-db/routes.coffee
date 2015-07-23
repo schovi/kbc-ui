@@ -41,7 +41,7 @@ createRoute = (componentId, driver, isProvisioning) ->
     name: "#{componentId}-credentials"
     path: 'credentials'
     handler: dbWrCredentialsDetail(componentId, driver, isProvisioning)
-    headerButtonsHandler: CredentialsHeader(componentId, isProvisioning)
+    headerButtonsHandler: CredentialsHeader(componentId, driver, isProvisioning)
     title: (routerState) ->
       'Credentials'
   ]

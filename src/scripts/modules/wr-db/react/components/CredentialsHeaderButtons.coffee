@@ -17,10 +17,10 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
 
-module.exports = (componentId, isProvisioning) ->
-  React.createClass templateFn(componentId, isProvisioning)
+module.exports = (componentId, driver, isProvisioning) ->
+  React.createClass templateFn(componentId, driver, isProvisioning)
 
-templateFn = (componentId, isProvisioning) ->
+templateFn = (componentId, driver, isProvisioning) ->
   displayName: 'CredentialsHeaderButtons'
   mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore), Navigation]
 
@@ -41,6 +41,7 @@ templateFn = (componentId, isProvisioning) ->
       @_updateLocalState('credentialsState', States.INIT)
     else
       creds = @state.currentCredentials
+      creds = creds?.set 'driver', driver
       #ActionCreators.resetCredentials componentId, @state.currentConfigId
       ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', creds
       @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
