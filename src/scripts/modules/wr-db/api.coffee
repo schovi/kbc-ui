@@ -1,13 +1,14 @@
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
-componentId = 'wr-db'
+#componentId = 'wr-db'
 
-createRequest = (method, configId, path) ->
-  #path = "#{driver}/#{configId}/#{path}"
-  path = "#{configId}/#{path}"
-  SyrupApi.createRequest(componentId, method, path)
+module.exports = (componentId) ->
+  createRequest = (method, configId, path) ->
+    #path = "#{driver}/#{configId}/#{path}"
+    path = "#{configId}/#{path}"
+    SyrupApi.createRequest(componentId, method, path)
 
-module.exports =
+
   getCredentials: (configId) ->
     createRequest('GET', configId, 'credentials')
     .promise()

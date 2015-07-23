@@ -53,7 +53,7 @@ module.exports =
       @loadTableConfigForce(componentId, configId, tableId)
 
   loadTableConfigForce: (componentId, configId, tableId) ->
-    api.getTable(configId, tableId)
+    api(componentId).getTable(configId, tableId)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_GET_TABLE_SUCCESS
@@ -90,7 +90,7 @@ module.exports =
       componentId: componentId
       configId: configId
       credentials: credentials
-    api.postCredentials(configId, credentials.toJS())
+    api(componentId).postCredentials(configId, credentials.toJS())
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
@@ -118,8 +118,8 @@ module.exports =
     Promise.props
       componentId: componentId
       configId: configId
-      credentials: api.getCredentials(configId)
-      tables: api.getTables(configId)
+      credentials: api(componentId).getCredentials(configId)
+      tables: api(componentId).getTables(configId)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_GET_CONFIGURATION_SUCCESS
@@ -142,7 +142,7 @@ module.exports =
       tableId: tableId
       columns: columns
 
-    api.setTableColumns(configId, tableId, columns.toJS())
+    api(componentId).setTableColumns(configId, tableId, columns.toJS())
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
@@ -168,7 +168,7 @@ module.exports =
       tableId: tableId
       dbName: dbName
       isExported: isExported
-    api.setTable(configId, tableId, dbName, isExported)
+    api(componentId).setTable(configId, tableId, dbName, isExported)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SET_TABLE_SUCCESS
