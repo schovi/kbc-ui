@@ -5,7 +5,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 {Protected} = require 'kbc-react-components'
 
-{form, div, h4, small, label, p, option} = React.DOM
+{form, div, h2, small, label, p, option} = React.DOM
 
 module.exports = React.createClass
 
@@ -15,19 +15,20 @@ module.exports = React.createClass
     credentials: React.PropTypes.object
     onChangeFn: React.PropTypes.func
     isSaving: React.PropTypes.bool
+    isProvisioning: React.PropTypes.bool
 
   render: ->
 
     form className: 'form-horizontal',
       div className: 'row',
         if @props.isProvisioning
-          h4 null,
+          h2 null,
             'Keboola provided database credentials'
             div null,
               small null, 'This is readonly credentials to the database provided by Keboola.'
 
         else
-          h4 null,
+          h2 null,
             'User specified database credentials'
 
       div className: 'row',

@@ -33,6 +33,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(InstalledComponentsStore, WrDbStore)]
 
   getStateFromStores: ->
+
     configId = RoutesStore.getCurrentRouteParam('config')
     credentials = WrDbStore.getCredentials(driver, configId)
     isEditing = !! WrDbStore.getEditingByPath(driver, configId, 'creds')
@@ -44,6 +45,7 @@ module.exports = React.createClass
     provisioningCredentials = WrDbStore.getProvisioningCredentials(driver, configId)
     isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(driver, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
+    console.log 'get states from store', localState.toJS()
 
     localState: localState
     provisioningCredentials: provisioningCredentials
@@ -147,7 +149,10 @@ module.exports = React.createClass
             dedicated database and user will be given readonly credentials.'
 
   _toggleCreateOwnCredentials: ->
-    credentials = @state.credentials
+    credentials = @state.credentials.map (value, key) ->
+      if key in ['database', 'db', 'host', 'hostanem', 'password', 'schema', 'user']
+        return ''
+      else return value
     WrDbActions.setEditingData driver, @state.configId, 'creds', credentials
     @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
 
@@ -172,13 +177,15 @@ module.exports = React.createClass
       user: creds.get 'user'
 
   _renderCredentialsForm: (credentials, isEditing) ->
-    isSaving = @state.localState.get('credentialsState') == States.SAVING_NEW_CREDS
+    state = @state.localState.get('credentialsState')
+    isSaving =  state == States.SAVING_NEW_CREDS
+    isProvisioningProp = state == States.SHOW_PROV_READ_CREDS
     React.createElement CredentialsForm,
       isEditing: isEditing
       credentials: credentials
       onChangeFn: @_handleChange
       isSaving: isSaving
-      isProvisioning: @_isProvCredentials()
+      isProvisioning: isProvisioningProp
 
   _isProvCredentials: ->
     result = @state.credentials?.get('host') == 'wr-db.keboola.com'
