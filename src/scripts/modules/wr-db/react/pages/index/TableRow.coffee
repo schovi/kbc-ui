@@ -21,11 +21,12 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   render: ->
     Link
       className: 'tr'
-      to: 'wr-db-table'
+      to: "#{@props.componentId}-table"
       params:
         config: @props.configId
         tableId: @props.table.get('id')

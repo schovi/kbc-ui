@@ -10,8 +10,8 @@ CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 #componentId = 'wr-db'
 
 createRoute = (componentId, driver, isProvisioning) ->
-  name: 'wr-db'
-  path: 'wr-db/:config'
+  name: componentId
+  path: "#{componentId}/:config"
   title: (routerState) ->
     component = ComponentsStore.getComponent componentId
     configId = routerState.getIn ['params', 'config']
@@ -26,7 +26,7 @@ createRoute = (componentId, driver, isProvisioning) ->
   ]
   childRoutes: [
     #isComponent: true
-    name: 'wr-db-table'
+    name: "#{componentId}-table"
     path: 'table/:tableId'
     handler: dbWrTableDetail(componentId, driver)
     title: (routerState) ->
@@ -38,7 +38,7 @@ createRoute = (componentId, driver, isProvisioning) ->
         ActionCreators.loadTableConfig componentId, params.config, params.tableId
     ]
   ,
-    name: 'wr-db-credentials'
+    name: "#{componentId}-credentials"
     path: 'credentials'
     handler: dbWrCredentialsDetail(componentId, driver, isProvisioning)
     headerButtonsHandler: CredentialsHeader(componentId, driver, isProvisioning)

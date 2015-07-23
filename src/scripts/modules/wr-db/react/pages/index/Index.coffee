@@ -98,7 +98,7 @@ templateFn = (componentId, driver) ->
       ul className: 'nav nav-stacked',
         li null,
           Link
-            to: 'wr-db-credentials'
+            to: "#{componentId}-credentials"
             params:
               config: @state.configId
           ,
@@ -128,6 +128,7 @@ templateFn = (componentId, driver) ->
       tableDbName: @_getConfigTable(table.get('id')).get('name')
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
+      componentId: componentId
       onExportChangeFn: =>
         @_handleExportChange(table.get('id'))
       table: table
