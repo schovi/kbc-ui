@@ -153,6 +153,7 @@ module.exports = React.createClass
       if key in ['database', 'db', 'host', 'hostanem', 'password', 'schema', 'user']
         return ''
       else return value
+    credentials = credentials.set 'driver', driver
     WrDbActions.setEditingData driver, @state.configId, 'creds', credentials
     @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
 
@@ -175,6 +176,7 @@ module.exports = React.createClass
       port: @state.credentials.get 'port'
       password: creds.get 'password'
       user: creds.get 'user'
+      driver: driver
 
   _renderCredentialsForm: (credentials, isEditing) ->
     state = @state.localState.get('credentialsState')
@@ -196,7 +198,7 @@ module.exports = React.createClass
       value = parseInt event.target.value
     else
       value = event.target.value
-    creds = @state.credentials.set propName, value
+    creds = @state.editingCredentials.set propName, value
     WrDbActions.setEditingData driver, @state.configId, 'creds', creds
     #@props.onChange(@state.credentials.set propName, value)
 

@@ -13,6 +13,7 @@ convertFromProvCredentials = (creds) ->
   port: "3306" #todo1!
   password: creds.get 'password'
   user: creds.get 'user'
+  driver: driver
 
 module.exports =
   loadProvisioningCredentials: (driver, configId, isReadOnly) ->
