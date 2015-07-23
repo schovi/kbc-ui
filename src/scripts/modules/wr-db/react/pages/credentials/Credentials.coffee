@@ -191,6 +191,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       onChangeFn: @_handleChange
       isSaving: isSaving
       isProvisioning: isProvisioningProp
+      componentId: componentId
 
   _isProvCredentials: ->
     result = @state.credentials?.get('host') == 'wr-db.keboola.com'

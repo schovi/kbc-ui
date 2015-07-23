@@ -1,5 +1,7 @@
 React = require 'react'
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
+fieldNames = require '../../../templates/credentialsFieldNames'
+
 {div} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
@@ -16,6 +18,7 @@ module.exports = React.createClass
     onChangeFn: React.PropTypes.func
     isSaving: React.PropTypes.bool
     isProvisioning: React.PropTypes.bool
+    componentId: React.PropTypes.string
 
   render: ->
 
@@ -42,7 +45,7 @@ module.exports = React.createClass
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     if @props.isEditing
       Input
-        label: labelValue
+        label: @_getName(propName) or labelValue
         type: type
         disabled: @props.isSaving
         value: @props.credentials.get propName
@@ -52,7 +55,7 @@ module.exports = React.createClass
           @props.onChangeFn(propName, event)
     else if isProtected
       StaticText
-        label: labelValue
+        label: @_getName(propName) or labelValue
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
       ,
@@ -61,9 +64,14 @@ module.exports = React.createClass
         Clipboard text: @props.credentials.get propName
     else
       StaticText
-        label: labelValue
+        label: @_getName(propName) or labelValue
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
       ,
         @props.credentials.get propName
         Clipboard text: @props.credentials.get propName
+
+  _getName: (field) ->
+    templates = fieldNames[@props.componentId]
+    if templates
+      return templates[field]
