@@ -6,10 +6,10 @@ InstalledComponentsStore = require '../components/stores/InstalledComponentsStor
 ComponentsStore = require '../components/stores/ComponentsStore'
 CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 
-driver = 'mysql'
-componentId = 'wr-db'
+#driver = 'mysql'
+#componentId = 'wr-db'
 
-module.exports =
+createRoute = (componentId, driver, isProvisioning) ->
   name: 'wr-db'
   path: 'wr-db/:config'
   title: (routerState) ->
@@ -40,13 +40,10 @@ module.exports =
   ,
     name: 'wr-db-credentials'
     path: 'credentials'
-    handler: dbWrCredentialsDetail(componentId, driver, true)
-    headerButtonsHandler: CredentialsHeader(componentId, driver, true)
+    handler: dbWrCredentialsDetail(componentId, driver, isProvisioning)
+    headerButtonsHandler: CredentialsHeader(componentId, driver, isProvisioning)
     title: (routerState) ->
       'Credentials'
-    # requireData: [
-    #   (params) ->
-    #     ActionCreators.loadTableConfig componentId, params.config, params.tableId
-    # ]
-
   ]
+
+module.exports = createRoute
