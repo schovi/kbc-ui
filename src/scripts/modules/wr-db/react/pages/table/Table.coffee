@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableNameEdit = React.createFactory require './TableNameEdit'
 ColumnsEditor = React.createFactory require './ColumnsEditor'
 ColumnRow = require './ColumnRow'
-
+dataTypes = require '../../../templates/dataTypes'
 
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
@@ -22,7 +22,7 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 #componentId = 'wr-db'
 
 #IGNORE is automatically included
-mysqlDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
+defaultDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
 
 {label, input, p, ul, li, span, button, strong, div, i} = React.DOM
 
@@ -73,7 +73,7 @@ templateFn = (componentId) ->
           div className: 'col-sm-5', @_renderEditButtons()
 
       ColumnsEditor
-        dataTypes: mysqlDataTypes
+        dataTypes: dataTypes[componentId] or defaultDataTypes
         columns: @state.columns
         renderRowFn: @_renderColumnRow
         editingColumns: @state.editingColumns
