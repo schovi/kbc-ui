@@ -1,6 +1,6 @@
 Dispatcher = require('../../Dispatcher')
 {Map, fromJS, List} = require 'immutable'
-
+_ = require 'underscore'
 StoreUtils = require('../../utils/StoreUtils')
 constants = require './constants'
 
@@ -42,7 +42,10 @@ WrDbStore = StoreUtils.createStore
     _store.hasIn ['credentials', componentId, configId]
 
   getCredentials: (componentId, configId) ->
-    _store.getIn ['credentials', componentId, configId]
+    creds = _store.getIn ['credentials', componentId, configId]
+    if _.isEmpty(creds?.toJS())
+      creds = Map()
+    return creds
 
   isUpdatingTable: (componentId, configId, tableId) ->
     _store.hasIn ['updatingTables', componentId, configId, tableId]
