@@ -123,6 +123,8 @@ routes =
     ,
       createDbWriterRoutes('wr-db', 'mysql', true)
     ,
+      createDbWriterRoutes('wr-db-mysql', 'mysql', true)
+    ,
       createGenericDetailRoute 'writer'
 
     ]
