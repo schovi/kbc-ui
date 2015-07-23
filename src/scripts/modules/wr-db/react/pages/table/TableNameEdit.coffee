@@ -8,7 +8,7 @@ module.exports = React.createClass
   propTypes:
     table: React.PropTypes.object
     configId: React.PropTypes.string
-    driver: React.PropTypes.string
+    componentId: React.PropTypes.string
     setEditValueFn: React.PropTypes.func
     editingValue: React.PropTypes.string
     currentValue: React.PropTypes.string
@@ -19,7 +19,7 @@ module.exports = React.createClass
   _handleEditSave: ->
     isExported = @props.tableExportedValue
     setFn = actionCreators.setTableToExport
-    setFn(@props.driver, @props.configId, @props.tableId, @props.editingValue, isExported).then =>
+    setFn(@props.componentId, @props.configId, @props.tableId, @props.editingValue, isExported).then =>
       @props.setEditValueFn(null)
 
   _handleEditCancel: ->

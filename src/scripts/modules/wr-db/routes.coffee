@@ -8,6 +8,7 @@ CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 
 driver = 'mysql'
 componentId = 'wr-db'
+
 module.exports =
   name: 'wr-db'
   path: 'wr-db/:config'
@@ -21,7 +22,7 @@ module.exports =
   defaultRouteHandler: dbwrIndex
   requireData: [
     (params) ->
-      ActionCreators.loadConfiguration driver, params.config
+      ActionCreators.loadConfiguration componentId, params.config
   ]
   childRoutes: [
     #isComponent: true
@@ -34,7 +35,7 @@ module.exports =
 
     requireData: [
       (params) ->
-        ActionCreators.loadTableConfig driver, params.config, params.tableId
+        ActionCreators.loadTableConfig componentId, params.config, params.tableId
     ]
   ,
     name: 'wr-db-credentials'
@@ -45,7 +46,7 @@ module.exports =
       'Credentials'
     # requireData: [
     #   (params) ->
-    #     ActionCreators.loadTableConfig driver, params.config, params.tableId
+    #     ActionCreators.loadTableConfig componentId, params.config, params.tableId
     # ]
 
   ]

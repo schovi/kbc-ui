@@ -34,15 +34,15 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('tableId')
-    tableConfig = WrDbStore.getTableConfig(driver, configId, tableId)
+    tableConfig = WrDbStore.getTableConfig(componentId, configId, tableId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    tablesExportInfo = WrDbStore.getTables(driver, configId)
+    tablesExportInfo = WrDbStore.getTables(componentId, configId)
     exportInfo = tablesExportInfo.find((tab) ->
       tab.get('id') == tableId)
-    isUpdatingTable = WrDbStore.isUpdatingTable(driver, configId, tableId)
-    editingData = WrDbStore.getEditing(driver, configId)
+    isUpdatingTable = WrDbStore.isUpdatingTable(componentId, configId, tableId)
+    editingData = WrDbStore.getEditing(componentId, configId)
     editingColumns = editingData.getIn ['columns', tableId]
-    isSavingColumns = !!WrDbStore.getUpdatingColumns(driver, configId, tableId)
+    isSavingColumns = !!WrDbStore.getUpdatingColumns(componentId, configId, tableId)
     hideIgnored = localState.getIn ['hideIgnored', tableId], false
 
     #state
@@ -78,7 +78,7 @@ module.exports = React.createClass
         editColumnFn: (newColumn) =>
           cname = newColumn.get('name')
           path = ['columns', @state.tableId, cname]
-          WrDbActions.setEditingData(driver, @state.configId, path, newColumn)
+          WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
         filterColumnsFn: @_hideIgnoredFilter
         filterColumnFn: @_filterColumn
 
@@ -112,19 +112,19 @@ module.exports = React.createClass
     path = ['columns', @state.tableId]
     columns = @state.columns.toMap().mapKeys (key, column) ->
       column.get 'name'
-    WrDbActions.setEditingData(driver, @state.configId, path, columns)
+    WrDbActions.setEditingData(componentId, @state.configId, path, columns)
 
   _handleEditColumnsSave: ->
     #to preserve order remap according the original columns
     columns = @state.columns.map (c) =>
       @state.editingColumns.get(c.get('name'))
-    WrDbActions.saveTableColumns(driver, @state.configId, @state.tableId, columns).then =>
+    WrDbActions.saveTableColumns(componentId, @state.configId, @state.tableId, columns).then =>
       @_handleEditColumnsCancel()
 
 
   _handleEditColumnsCancel: ->
     path = ['columns', @state.tableId]
-    WrDbActions.setEditingData(driver, @state.configId, path, null)
+    WrDbActions.setEditingData(componentId, @state.configId, path, null)
 
   _renderTableEdit: ->
     div className: '',
@@ -140,8 +140,8 @@ module.exports = React.createClass
         editingValue: @state.editingData.getIn(['editingDbNames', @state.tableId])
         setEditValueFn: (value) =>
           path = ['editingDbNames', @state.tableId]
-          WrDbActions.setEditingData(driver, @state.configId, path, value)
-        driver: driver
+          WrDbActions.setEditingData(componentId, @state.configId, path, value)
+        componentId: componentId
       ' '
 
   _renderEditButtons: ->

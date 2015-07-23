@@ -16,137 +16,137 @@ convertFromProvCredentials = (creds) ->
   driver: driver
 
 module.exports =
-  loadProvisioningCredentials: (driver, configId, isReadOnly) ->
+  loadProvisioningCredentials: (componentId, configId, isReadOnly) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
-      driver: driver
+      componentId: componentId
       configId: configId
     provisioningUtils.getCredentials(isReadOnly).then (result) =>
       if isReadOnly
         dispatcher.handleViewAction
           type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
-          driver: driver
+          componentId: componentId
           configId: configId
           credentials: result
       else
         writeCreds = fromJS(convertFromProvCredentials(result.write))
-        @saveCredentials(driver, configId, writeCreds).then ->
+        @saveCredentials(componentId, configId, writeCreds).then ->
           dispatcher.handleViewAction
             type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
-            driver: driver
+            componentId: componentId
             configId: configId
             credentials: result
 
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
         error: err
       throw err
 
 
-  loadTableConfig: (driver, configId, tableId) ->
-    if store.hasTableConfig(driver, configId, tableId)
+  loadTableConfig: (componentId, configId, tableId) ->
+    if store.hasTableConfig(componentId, configId, tableId)
       return Promise.resolve()
     else
-      @loadTableConfigForce(driver, configId, tableId)
+      @loadTableConfigForce(componentId, configId, tableId)
 
-  loadTableConfigForce: (driver, configId, tableId) ->
-    api.getTable(driver, configId, tableId)
+  loadTableConfigForce: (componentId, configId, tableId) ->
+    api.getTable(configId, tableId)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_GET_TABLE_SUCCESS
-        driver: driver
+        componentId: componentId
         configId: configId
         tableId: tableId
         tableConfig: result
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
         error: err
       throw err
 
-  resetCredentials: (driver, configId) ->
+  resetCredentials: (componentId, configId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
-      driver: driver
+      componentId: componentId
       configId: configId
       credentials: null
 
-  setEditingData: (driver, configId, path, data) ->
+  setEditingData: (componentId, configId, path, data) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SET_EDITING
-      driver: driver
+      componentId: componentId
       configId: configId
       path: path
       data: data
 
-  saveCredentials: (driver, configId, credentials) ->
+  saveCredentials: (componentId, configId, credentials) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_START
-      driver: driver
+      componentId: componentId
       configId: configId
       credentials: credentials
-    api.postCredentials(driver, configId, credentials.toJS())
+    api.postCredentials(configId, credentials.toJS())
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
-        driver: driver
+        componentId: componentId
         configId: configId
         credentials: credentials
 
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
-        errorPath: ['savingCredentials', driver, configId]
+        errorPath: ['savingCredentials', componentId, configId]
         error: err
       throw err
 
-  loadConfiguration: (driver, configId) ->
-    if store.hasConfiguration(driver, configId)
+  loadConfiguration: (componentId, configId) ->
+    if store.hasConfiguration(componentId, configId)
       return Promise.resolve()
     else
-      @loadConfigurationForce(driver, configId)
+      @loadConfigurationForce(componentId, configId)
 
 
-  loadConfigurationForce: (driver, configId) ->
+  loadConfigurationForce: (componentId, configId) ->
     Promise.props
-      driver: driver
+      componentId: componentId
       configId: configId
-      credentials: api.getCredentials(driver, configId)
-      tables: api.getTables(driver, configId)
+      credentials: api.getCredentials(configId)
+      tables: api.getTables(configId)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_GET_CONFIGURATION_SUCCESS
-        driver: driver
+        componentId: componentId
         configId: configId
         config: result #credentials&tables
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
         error: err
       throw err
 
-  saveTableColumns: (driver, configId, tableId, columns) ->
+  saveTableColumns: (componentId, configId, tableId, columns) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
-      driver: driver
+      componentId: componentId
       configId: configId
       tableId: tableId
       columns: columns
 
-    api.setTableColumns(driver, configId, tableId, columns.toJS())
+    api.setTableColumns(configId, tableId, columns.toJS())
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
-        driver: driver
+        componentId: componentId
         configId: configId
         tableId: tableId
         columns: columns
@@ -154,25 +154,25 @@ module.exports =
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
         error: err
       throw err
 
 
-  setTableToExport: (driver, configId, tableId, dbName, isExported) ->
+  setTableToExport: (componentId, configId, tableId, dbName, isExported) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SET_TABLE_START
-      driver: driver
+      componentId: componentId
       configId: configId
       tableId: tableId
       dbName: dbName
       isExported: isExported
-    api.setTable(driver, configId, tableId, dbName, isExported)
+    api.setTable(configId, tableId, dbName, isExported)
     .then (result) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_SET_TABLE_SUCCESS
-        driver: driver
+        componentId: componentId
         configId: configId
         tableId: tableId
         dbName: dbName
@@ -180,7 +180,7 @@ module.exports =
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
-        driver: driver
+        componentId: componentId
         configId: configId
         error: err
       throw err

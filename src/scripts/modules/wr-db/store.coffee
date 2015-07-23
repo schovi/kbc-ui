@@ -6,147 +6,147 @@ constants = require './constants'
 
 
 _store = Map
-  credentials: Map() #driver#configId
-  tables: Map() #driver#configId
-  tablesConfig: Map() #driver#configId#tableId
-  updatingTables: Map() #driver#configId#tableId
-  editing: Map() #driver#configId whatever
-  updatingColumns: Map() #driver#configId#tableId
-  savingCredentials: Map() #driver#configId
-  provisioningCredentials: Map() #driver#configId
-  loadingProvCredentials: Map() #driver#configId
+  credentials: Map() #componentId#configId
+  tables: Map() #componentId#configId
+  tablesConfig: Map() #componentId#configId#tableId
+  updatingTables: Map() #componentId#configId#tableId
+  editing: Map() #componentId#configId whatever
+  updatingColumns: Map() #componentId#configId#tableId
+  savingCredentials: Map() #componentId#configId
+  provisioningCredentials: Map() #componentId#configId
+  loadingProvCredentials: Map() #componentId#configId
 
 
 
 WrDbStore = StoreUtils.createStore
 
-  isLoadingProvCredentials: (driver, configId) ->
-    _store.hasIn ['loadingProvCredentials', driver, configId]
+  isLoadingProvCredentials: (componentId, configId) ->
+    _store.hasIn ['loadingProvCredentials', componentId, configId]
 
-  getProvisioningCredentials: (driver, configId) ->
-    _store.getIn ['provisioningCredentials', driver, configId]
+  getProvisioningCredentials: (componentId, configId) ->
+    _store.getIn ['provisioningCredentials', componentId, configId]
 
-  hasConfiguration: (driver, configId) ->
-    @hasTables(driver, configId)
+  hasConfiguration: (componentId, configId) ->
+    @hasTables(componentId, configId)
 
-  getSavingCredentials: (driver, configId) ->
-    _store.getIn ['savingCredentials', driver, configId]
+  getSavingCredentials: (componentId, configId) ->
+    _store.getIn ['savingCredentials', componentId, configId]
 
-  hasTables: (driver, configId) ->
-    _store.hasIn ['tables', driver, configId]
+  hasTables: (componentId, configId) ->
+    _store.hasIn ['tables', componentId, configId]
 
-  getTables: (driver, configId) ->
-    _store.getIn ['tables', driver, configId]
+  getTables: (componentId, configId) ->
+    _store.getIn ['tables', componentId, configId]
 
-  hasCredentials: (driver, configId) ->
-    _store.hasIn ['credentials', driver, configId]
+  hasCredentials: (componentId, configId) ->
+    _store.hasIn ['credentials', componentId, configId]
 
-  getCredentials: (driver, configId) ->
-    _store.getIn ['credentials', driver, configId]
+  getCredentials: (componentId, configId) ->
+    _store.getIn ['credentials', componentId, configId]
 
-  isUpdatingTable: (driver, configId, tableId) ->
-    _store.hasIn ['updatingTables', driver, configId, tableId]
+  isUpdatingTable: (componentId, configId, tableId) ->
+    _store.hasIn ['updatingTables', componentId, configId, tableId]
 
-  getUpdatingTables: (driver, configId) ->
-    _store.getIn ['updatingTables', driver, configId], Map()
+  getUpdatingTables: (componentId, configId) ->
+    _store.getIn ['updatingTables', componentId, configId], Map()
 
-  hasTableConfig: (driver, configId, tableId) ->
-    _store.hasIn ['tablesConfig', driver, configId, tableId]
+  hasTableConfig: (componentId, configId, tableId) ->
+    _store.hasIn ['tablesConfig', componentId, configId, tableId]
 
-  getTableConfig: (driver, configId, tableId) ->
-    _store.getIn ['tablesConfig', driver, configId, tableId]
+  getTableConfig: (componentId, configId, tableId) ->
+    _store.getIn ['tablesConfig', componentId, configId, tableId]
 
-  getEditingByPath: (driver, configId, path) ->
-    editPath = ['editing', driver, configId].concat(path)
+  getEditingByPath: (componentId, configId, path) ->
+    editPath = ['editing', componentId, configId].concat(path)
     _store.getIn editPath
 
-  getEditing: (driver, configId) ->
-    _store.getIn(['editing', driver, configId], Map())
+  getEditing: (componentId, configId) ->
+    _store.getIn(['editing', componentId, configId], Map())
 
-  getUpdatingColumns: (driver, configId, tableId) ->
-    _store.getIn(['updatingColumns', driver, configId, tableId])
+  getUpdatingColumns: (componentId, configId, tableId) ->
+    _store.getIn(['updatingColumns', componentId, configId, tableId])
 
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
     when constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
-      _store = _store.setIn ['loadingProvCredentials', driver, configId], true
+      _store = _store.setIn ['loadingProvCredentials', componentId, configId], true
       WrDbStore.emitChange()
     when constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       credentials = fromJS action.credentials
-      _store = _store.deleteIn ['loadingProvCredentials', driver, configId]
-      _store = _store.setIn ['provisioningCredentials', driver, configId], credentials
+      _store = _store.deleteIn ['loadingProvCredentials', componentId, configId]
+      _store = _store.setIn ['provisioningCredentials', componentId, configId], credentials
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_START
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       credentials = action.credentials
-      _store = _store.setIn ['savingCredentials', driver, configId], credentials
+      _store = _store.setIn ['savingCredentials', componentId, configId], credentials
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       credentials = action.credentials
-      _store = _store.deleteIn ['savingCredentials', driver, configId]
-      _store = _store.setIn ['credentials', driver, configId], fromJS(credentials)
+      _store = _store.deleteIn ['savingCredentials', componentId, configId]
+      _store = _store.setIn ['credentials', componentId, configId], fromJS(credentials)
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       tableId = action.tableId
       columns = action.columns
-      _store = _store.setIn ['updatingColumns', driver, configId, tableId], columns
+      _store = _store.setIn ['updatingColumns', componentId, configId, tableId], columns
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SAVE_COLUMNS_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       tableId = action.tableId
       columns = action.columns
-      _store = _store.deleteIn ['updatingColumns', driver, configId, tableId]
-      _store = _store.setIn ['tablesConfig', driver, configId, tableId, 'columns'], columns
+      _store = _store.deleteIn ['updatingColumns', componentId, configId, tableId]
+      _store = _store.setIn ['tablesConfig', componentId, configId, tableId, 'columns'], columns
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SET_EDITING
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       path = action.path
       data = action.data
-      editPath = ['editing', driver, configId].concat(path)
+      editPath = ['editing', componentId, configId].concat(path)
       _store = _store.setIn editPath, data
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_GET_TABLE_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       tableId = action.tableId
       tableConfig = action.tableConfig
-      _store = _store.setIn ['tablesConfig', driver, configId, tableId], fromJS(tableConfig)
+      _store = _store.setIn ['tablesConfig', componentId, configId, tableId], fromJS(tableConfig)
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SET_TABLE_START
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       tableId = action.tableId
-      _store = _store.setIn ['updatingTables', driver, configId, tableId], true
+      _store = _store.setIn ['updatingTables', componentId, configId, tableId], true
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SET_TABLE_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       tableId = action.tableId
       dbName = action.dbName
       isExported = action.isExported
-      _store = _store.deleteIn ['updatingTables', driver, configId, tableId]
+      _store = _store.deleteIn ['updatingTables', componentId, configId, tableId]
 
-      tables = WrDbStore.getTables(driver, configId)
+      tables = WrDbStore.getTables(componentId, configId)
       table = tables.find (table) ->
         table.get('id') == tableId
       if not table
@@ -161,20 +161,20 @@ Dispatcher.register (payload) ->
         if t.get('id') == tableId
           return t = table
         return t
-      _store = _store.setIn ['tables', driver, configId], tables
+      _store = _store.setIn ['tables', componentId, configId], tables
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_GET_CONFIGURATION_SUCCESS
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       credentials = action.config.credentials
       tables = action.config.tables
-      _store = _store.setIn ['tables',      driver, configId], fromJS(tables)
-      _store = _store.setIn ['credentials', driver, configId], fromJS(credentials)
+      _store = _store.setIn ['tables',      componentId, configId], fromJS(tables)
+      _store = _store.setIn ['credentials', componentId, configId], fromJS(credentials)
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_API_ERROR
-      driver = action.driver
+      componentId = action.componentId
       configId = action.configId
       path = action.errorPath
       if path

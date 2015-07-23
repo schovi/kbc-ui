@@ -35,15 +35,15 @@ module.exports = React.createClass
   getStateFromStores: ->
 
     configId = RoutesStore.getCurrentRouteParam('config')
-    credentials = WrDbStore.getCredentials(driver, configId)
-    isEditing = !! WrDbStore.getEditingByPath(driver, configId, 'creds')
+    credentials = WrDbStore.getCredentials(componentId, configId)
+    isEditing = !! WrDbStore.getEditingByPath(componentId, configId, 'creds')
     editingCredentials = null
     if isEditing
-      editingCredentials = WrDbStore.getEditingByPath(driver, configId, 'creds')
-    isSaving = !! WrDbStore.getSavingCredentials(driver, configId)
+      editingCredentials = WrDbStore.getEditingByPath(componentId, configId, 'creds')
+    isSaving = !! WrDbStore.getSavingCredentials(componentId, configId)
 
-    provisioningCredentials = WrDbStore.getProvisioningCredentials(driver, configId)
-    isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(driver, configId)
+    provisioningCredentials = WrDbStore.getProvisioningCredentials(componentId, configId)
+    isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     console.log 'get states from store', localState.toJS()
 
@@ -85,7 +85,7 @@ module.exports = React.createClass
   _runLoadProvReadCredentials: ->
     isReadOnly = true
     @_updateLocalState('credentialsState', States.LOADING_PROV_READ)
-    WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly).then =>
+    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
   render: ->
@@ -154,14 +154,14 @@ module.exports = React.createClass
         return ''
       else return value
     credentials = credentials.set 'driver', driver
-    WrDbActions.setEditingData driver, @state.configId, 'creds', credentials
+    WrDbActions.setEditingData componentId, @state.configId, 'creds', credentials
     @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
 
 
   _toggleCreateProvWriteCredentials: ->
     @_updateLocalState('credentialsState', States.PREPARING_PROV_WRITE)
     isReadOnly = false
-    WrDbActions.loadProvisioningCredentials(driver, @state.configId, isReadOnly).then =>
+    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
 
@@ -199,7 +199,7 @@ module.exports = React.createClass
     else
       value = event.target.value
     creds = @state.editingCredentials.set propName, value
-    WrDbActions.setEditingData driver, @state.configId, 'creds', creds
+    WrDbActions.setEditingData componentId, @state.configId, 'creds', creds
     #@props.onChange(@state.credentials.set propName, value)
 
   _hasDbConnection: ->

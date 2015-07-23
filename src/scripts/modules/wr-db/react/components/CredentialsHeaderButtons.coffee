@@ -24,13 +24,13 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
-    currentCredentials = WrDbStore.getCredentials driver, configId
+    currentCredentials = WrDbStore.getCredentials componentId, configId
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     credsState = localState.get 'credentialsState'
 
     currentCredentials: currentCredentials
     currentConfigId: configId
-    isEditing: !! WrDbStore.getEditingByPath(driver, configId, 'creds')
+    isEditing: !! WrDbStore.getEditingByPath(componentId, configId, 'creds')
     isSaving: credsState == States.SAVING_NEW_CREDS
     localState: localState
 
@@ -39,23 +39,23 @@ module.exports = React.createClass
       @_updateLocalState('credentialsState', States.INIT)
     else
       creds = @state.currentCredentials
-      #ActionCreators.resetCredentials driver, @state.currentConfigId
-      ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', creds
+      #ActionCreators.resetCredentials componentId, @state.currentConfigId
+      ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', creds
       @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
 
   _handleCancel: ->
     if isProvisioning
       @_updateLocalState('credentialsState', States.INIT)
     else
-      ActionCreators.setEditingData driver, @state.currentConfigId, 'creds', null
+      ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', null
       @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
 
 
   _handleCreate: ->
     @_updateLocalState('credentialsState', States.SAVING_NEW_CREDS)
-    editingCredentials =  WrDbStore.getEditingByPath(driver, @state.currentConfigId, 'creds')
+    editingCredentials =  WrDbStore.getEditingByPath(componentId, @state.currentConfigId, 'creds')
     ActionCreators
-    .saveCredentials(driver, @state.currentConfigId, editingCredentials).then =>
+    .saveCredentials(componentId, @state.currentConfigId, editingCredentials).then =>
       @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
 
 

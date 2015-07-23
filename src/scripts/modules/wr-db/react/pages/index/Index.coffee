@@ -35,16 +35,16 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles', Map())
 
-    tables = WrDbStore.getTables(driver, configId)
-    credentials = WrDbStore.getCredentials(driver, configId)
+    tables = WrDbStore.getTables(componentId, configId)
+    credentials = WrDbStore.getCredentials(componentId, configId)
     console.log 'CONFIG tables:', tables.toJS(), 'credentials:', credentials.toJS()
 
     #state
-    updatingTables: WrDbStore.getUpdatingTables(driver, configId)
+    updatingTables: WrDbStore.getUpdatingTables(componentId, configId)
     tables: tables
     credentials: credentials
     configId: configId
-    hasCredentials: WrDbStore.hasCredentials(driver, configId)
+    hasCredentials: WrDbStore.hasCredentials(componentId, configId)
     localState: localState
     bucketToggles: toggles
 
@@ -144,7 +144,7 @@ module.exports = React.createClass
     dbName = tableId
     if table and table.get('name')
       dbName = table.get('name')
-    WrDbActions.setTableToExport(driver, @state.configId, tableId, dbName, newExportedValue)
+    WrDbActions.setTableToExport(componentId, @state.configId, tableId, dbName, newExportedValue)
 
   _isPendingTable: (tableId) ->
     return @state.updatingTables.has(tableId)
