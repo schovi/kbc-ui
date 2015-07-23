@@ -19,15 +19,19 @@ EditButtons = React.createFactory(require('../../../../../react/common/EditButto
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
-componentId = 'wr-db'
-driver = 'mysql'
+#componentId = 'wr-db'
+#driver = 'mysql'
 
 #IGNORE is automatically included
 mysqlDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
 
 {label, input, p, ul, li, span, button, strong, div, i} = React.DOM
 
-module.exports = React.createClass
+
+module.exports = (componentId, driver) ->
+  React.createClass templateFn(componentId, driver)
+
+templateFn = (componentId, driver) ->
   displayName: "WrDbTableDetail"
   mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore)]
 

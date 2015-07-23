@@ -19,7 +19,7 @@ module.exports =
     configName = InstalledComponentsStore.getConfig(componentId, configId).get('name')
     return "#{componentName} - #{configName}"
   isComponent: true
-  defaultRouteHandler: dbwrIndex
+  defaultRouteHandler: dbwrIndex(componentId, driver)
   requireData: [
     (params) ->
       ActionCreators.loadConfiguration componentId, params.config
@@ -28,7 +28,7 @@ module.exports =
     #isComponent: true
     name: 'wr-db-table'
     path: 'table/:tableId'
-    handler: dbWrTableDetail
+    handler: dbWrTableDetail(componentId, driver)
     title: (routerState) ->
       tableId = routerState.getIn ['params', 'tableId']
       return tableId
@@ -40,8 +40,8 @@ module.exports =
   ,
     name: 'wr-db-credentials'
     path: 'credentials'
-    handler: dbWrCredentialsDetail
-    headerButtonsHandler: CredentialsHeader
+    handler: dbWrCredentialsDetail(componentId, driver, true)
+    headerButtonsHandler: CredentialsHeader(componentId, driver, true)
     title: (routerState) ->
       'Credentials'
     # requireData: [

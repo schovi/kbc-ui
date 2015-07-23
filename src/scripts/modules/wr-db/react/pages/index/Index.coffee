@@ -19,13 +19,16 @@ WrDbActions = require '../../../actionCreators'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
-componentId = 'wr-db'
-driver = 'mysql'
+#componentId = 'wr-db'
+#driver = 'mysql'
 
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
-module.exports = React.createClass
+module.exports = (componentId, driver) ->
+  React.createClass templateFn(componentId, driver)
+
+templateFn = (componentId, driver) ->
   displayName: 'wrdbIndex'
 
   mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, WrDbStore)]

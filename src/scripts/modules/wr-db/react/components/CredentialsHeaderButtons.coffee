@@ -11,14 +11,17 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 {States} = require '../pages/credentials/StateConstants'
 
 
-driver = 'mysql'
-componentId = 'wr-db'
+#driver = 'mysql'
+#componentId = 'wr-db'
 
-isProvisioning = true
+#isProvisioning = true
 
 {button, span} = React.DOM
 
-module.exports = React.createClass
+module.exports = (componentId, driver, isProvisioning) ->
+  React.createClass templateFn(componentId, driver, isProvisioning)
+
+templateFn = (componentId, driver, isProvisioning) ->
   displayName: 'CredentialsHeaderButtons'
   mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore), Navigation]
 

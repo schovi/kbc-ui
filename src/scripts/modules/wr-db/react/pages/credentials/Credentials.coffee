@@ -22,11 +22,14 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 {a, h4, form, div, label, p, option} = React.DOM
 
-driver = 'mysql'
-componentId = 'wr-db'
-isProvisioning = true
+#driver = 'mysql'
+#componentId = 'wr-db'
+#isProvisioning = true
 
-module.exports = React.createClass
+module.exports = (componentId, driver, isProvisioning) ->
+  React.createClass templateFn(componentId, driver, isProvisioning)
+
+templateFn = (componentId, driver, isProvisioning) ->
 
   displayName: 'WrDbCredentials'
 
