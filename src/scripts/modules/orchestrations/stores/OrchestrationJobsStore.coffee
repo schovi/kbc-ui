@@ -1,4 +1,3 @@
-
 Dispatcher = require '../../../Dispatcher'
 Immutable = require('immutable')
 {Map, List} = Immutable
@@ -106,7 +105,15 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations((store) ->
         removeFromLoadingOrchestrations(store, action.orchestrationId)
         .update('jobsByOrchestrationId', (jobsByOrchestrationId) ->
-          jobsByOrchestrationId.set action.orchestrationId, Immutable.fromJS(action.jobs)
+          jobs = jobsByOrchestrationId.get(action.orchestrationId, List())
+          #append new jobs preserving already existing ones in the
+          # orchestration jobs
+          for newJob in action.jobs
+            jobs = jobs.filter (filterJob) ->
+              filterJob.get('id') != newJob.id
+            jobs = jobs.push Immutable.fromJS(newJob)
+          #set the new result jobs
+          jobsByOrchestrationId.set(action.orchestrationId, jobs)
         )
       )
       OrchestrationJobsStore.emitChange()
