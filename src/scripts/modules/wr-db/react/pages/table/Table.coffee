@@ -9,6 +9,8 @@ ColumnsEditor = React.createFactory require './ColumnsEditor'
 ColumnRow = require './ColumnRow'
 dataTypes = require '../../../templates/dataTypes'
 
+storageApi = require '../../../../components/StorageApi'
+
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -61,6 +63,20 @@ templateFn = (componentId) ->
     exportInfo: exportInfo
     isSavingColumns: isSavingColumns
 
+  getInitialState: ->
+    dataPreview: null
+
+
+  componentDidMount: ->
+    tableId = RoutesStore.getCurrentRouteParam('tableId')
+    component = @
+    storageApi
+    .exportTable tableId,
+      limit: 10
+    .then (csv) ->
+      component.setState
+        dataPreview: csv
+
 
   render: ->
     console.log 'render table', @state.tableId, @state.tableConfig.toJS(), "EDITING DATA", @state.editingData.toJS()
@@ -84,6 +100,7 @@ templateFn = (componentId) ->
           WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
         filterColumnsFn: @_hideIgnoredFilter
         filterColumnFn: @_filterColumn
+        dataPreview: @state.dataPreview
 
   _filterColumn: (column) ->
     not (column.get('type') == 'IGNORE' and @state.hideIgnored)

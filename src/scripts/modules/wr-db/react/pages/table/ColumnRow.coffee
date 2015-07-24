@@ -3,6 +3,7 @@ _ = require 'underscore'
 {input, option, tr, td, div, span} = React.DOM
 Check = React.createFactory(require('kbc-react-components').Check)
 Input = React.createFactory(require('react-bootstrap').Input)
+ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
 
 module.exports = React.createClass
   displayName: "WrColumnRow"
@@ -12,7 +13,7 @@ module.exports = React.createClass
     editColumnFn: React.PropTypes.func
     dataTypes: React.PropTypes.array
     isSaving: React.PropTypes.bool
-
+    dataPreview: React.PropTypes.array
 
   render: ->
     if @props.editingColumn
@@ -27,6 +28,11 @@ module.exports = React.createClass
       @_renderTypeSelect()
       td null, @_createCheckbox('null')
       td null, @_createInput('default')
+      td null,
+        ColumnDataPreview
+          columnName: @props.column.get('name')
+          tableData: @props.dataPreview
+
 
   _renderTypeSelect: ->
     dtype = @props.editingColumn.get 'type'
@@ -95,6 +101,11 @@ module.exports = React.createClass
       @_renderType()
       @_renderNull()
       @_renderDefault()
+      td null,
+        ColumnDataPreview
+          columnName: @props.column.get('name')
+          tableData: @props.dataPreview
+
 
 
   _renderDefault: ->

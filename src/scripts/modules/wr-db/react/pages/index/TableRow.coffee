@@ -17,7 +17,6 @@ module.exports = React.createClass
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
     onExportChangeFn: React.PropTypes.func.isRequired
-    prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
