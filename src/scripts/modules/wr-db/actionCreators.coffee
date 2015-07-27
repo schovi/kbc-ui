@@ -24,7 +24,7 @@ module.exports =
       type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_START
       componentId: componentId
       configId: configId
-    provisioningUtils.getCredentials(isReadOnly).then (result) =>
+    provisioningUtils.getCredentials(isReadOnly, driver).then (result) =>
       if isReadOnly
         dispatcher.handleViewAction
           type: constants.ActionTypes.WR_DB_LOAD_PROVISIONING_SUCCESS

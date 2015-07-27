@@ -88,7 +88,7 @@ templateFn = (componentId, driver, isProvisioning) ->
   _runLoadProvReadCredentials: ->
     isReadOnly = true
     @_updateLocalState('credentialsState', States.LOADING_PROV_READ)
-    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly).then =>
+    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly, driver).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
   render: ->
@@ -179,6 +179,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       result[key] =  creds.get mappings[key]
     result['port'] = provisioningTemplates[driver].defaultPort
     result['driver'] = driver
+    return fromJS result
 
   _renderCredentialsForm: (credentials, isEditing) ->
     state = @state.localState.get('credentialsState')
