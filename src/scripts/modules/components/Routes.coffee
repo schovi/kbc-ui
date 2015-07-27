@@ -127,7 +127,7 @@ routes =
     ,
       createDbWriterRoutes('wr-db-oracle', 'oracle', false)
     ,
-      createDbWriterRoutes('wr-db-redshift', 'redshift', false)
+      createDbWriterRoutes('wr-db-redshift', 'redshift', true)
     ,
       createGenericDetailRoute 'writer'
 
