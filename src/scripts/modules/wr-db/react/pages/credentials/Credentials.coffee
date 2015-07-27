@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 WrDbActions = require '../../../actionCreators'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
-
+provisioningTemplates = require '../../../templates/provisioning'
 WrDbStore = require '../../../store'
 RoutesStore = require '../../../../../stores/RoutesStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -173,13 +173,12 @@ templateFn = (componentId, driver, isProvisioning) ->
     creds = @state.provisioningCredentials?.get('read')
     if not creds
       return null
-    return fromJS
-      host: creds.get 'hostname'
-      database: creds.get 'db'
-      port: @state.credentials.get 'port'
-      password: creds.get 'password'
-      user: creds.get 'user'
-      driver: driver
+    mappings = provisioningTemplates[driver].fieldsMapping
+    result = {}
+    for key in _.keys(mappings)
+      result[key] =  creds.get mappings[key]
+    result['port'] = provisioningTemplates[driver].defaultPort
+    result['driver'] = driver
 
   _renderCredentialsForm: (credentials, isEditing) ->
     state = @state.localState.get('credentialsState')

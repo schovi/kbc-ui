@@ -1,19 +1,22 @@
 Promise = require('bluebird')
+_ = require 'underscore'
 api = require('./api')
 store = require('./store')
 dispatcher = require('../../Dispatcher')
 constants = require './constants'
 provisioningUtils = require './provisioningUtils'
 {fromJS} = require 'immutable'
+provisioningTemplates = require './templates/provisioning'
 
 
 convertFromProvCredentials = (creds, driver) ->
-  host: creds.get 'hostname'
-  database: creds.get 'db'
-  port: "3306" #todo1!
-  password: creds.get 'password'
-  user: creds.get 'user'
-  driver: driver
+  mappings = provisioningTemplates[driver].fieldsMapping
+  result = {}
+  for key in _.keys(mappings)
+    result[key] =  creds.get mappings[key]
+  result['port'] = provisioningTemplates[driver].defaultPort
+  result['driver'] = driver
+  return result
 
 module.exports =
   loadProvisioningCredentials: (componentId, configId, isReadOnly, driver) ->
