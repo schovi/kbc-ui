@@ -1,6 +1,7 @@
 React = require 'react'
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
 fieldsTemplates = require '../../../templates/credentialsFields'
+
 _ = require 'underscore'
 
 {div} = React.DOM
@@ -31,7 +32,6 @@ module.exports = React.createClass
 
   render: ->
     fields = fieldsTemplates[@props.componentId] or defaultFields
-
 
     form className: 'form-horizontal',
       div className: 'row',

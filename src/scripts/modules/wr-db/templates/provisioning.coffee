@@ -6,6 +6,7 @@ module.exports =
       password: 'password'
       user: 'user'
     defaultPort: '3306'
+    name: 'MySQL'
   redshift:
     fieldsMapping:
       host: 'hostname'
@@ -14,3 +15,4 @@ module.exports =
       user: 'user'
       schema: 'schema'
     defaultPort: '5439'
+    name: 'Redshift'

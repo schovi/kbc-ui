@@ -131,6 +131,7 @@ templateFn = (componentId, driver, isProvisioning) ->
 
 
   _renderInit: ->
+    driverName = provisioningTemplates[driver].name
     div className: 'panel panel-default',
       div className: 'panel-heading',
         h4 null, 'Choose which database to use:'
@@ -140,16 +141,16 @@ templateFn = (componentId, driver, isProvisioning) ->
             className: 'list-group-item text-center'
             onClick: @_toggleCreateOwnCredentials
           ,
-            h4 className: 'list-group-item-heading', 'Own MySQL database'
-            p className: 'list-group-item-text', 'User has own mysql database and will provide credenetials'
+            h4 className: 'list-group-item-heading', "Own #{driverName} database"
+            p className: 'list-group-item-text', "User has own #{driverName} database and will provide credenetials"
           a
             className: 'list-group-item text-center'
             onClick: @_toggleCreateProvWriteCredentials
 
           ,
-            h4 className: 'list-group-item-heading', 'Keboola MySQL database'
-            p className: 'list-group-item-text', 'Keboola will provide and setup \
-            dedicated database and user will be given readonly credentials.'
+            h4 className: 'list-group-item-heading', "Keboola #{driverName} database"
+            p className: 'list-group-item-text', "Keboola will provide and setup \
+            dedicated #{driverName} database and user will be given readonly credentials."
 
   _toggleCreateOwnCredentials: ->
     credentials = @state.credentials.map (value, key) ->

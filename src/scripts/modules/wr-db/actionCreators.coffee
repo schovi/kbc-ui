@@ -13,7 +13,7 @@ convertFromProvCredentials = (creds, driver) ->
   mappings = provisioningTemplates[driver].fieldsMapping
   result = {}
   for key in _.keys(mappings)
-    result[key] =  creds.[mappings[key]]
+    result[key] =  creds.get mappings[key]
   result['port'] = provisioningTemplates[driver].defaultPort
   result['driver'] = driver
   return result
