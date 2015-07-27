@@ -24,7 +24,14 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 #componentId = 'wr-db'
 
 #IGNORE is automatically included
-defaultDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
+#defaultDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
+defaultDataTypes =
+['INT','BIGINT',
+'VARCHAR': {defaultSize: '255'},
+'TEXT',
+'DECIMAL': {defaultSize: '12,2'},
+'DATE', 'DATETIME'
+]
 
 {label, input, p, ul, li, span, button, strong, div, i} = React.DOM
 

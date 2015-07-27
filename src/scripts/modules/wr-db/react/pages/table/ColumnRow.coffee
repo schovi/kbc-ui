@@ -5,6 +5,8 @@ Check = React.createFactory(require('kbc-react-components').Check)
 Input = React.createFactory(require('react-bootstrap').Input)
 ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
 
+
+
 module.exports = React.createClass
   displayName: "WrColumnRow"
   propTypes:
@@ -46,27 +48,39 @@ module.exports = React.createClass
           newColumn = @props.editingColumn.set('type', value)
           if value == 'IGNORE'
             newColumn = newColumn.set('default', '')
-          if value == 'VARCHAR'
-            newColumn = newColumn.set('size', '255')
-          if value == 'DECIMAL'
-            newColumn = newColumn.set('size', '12,2')
-          if value not in ['VARCHAR', 'DECIMAL']
+          if _.isString @_getSizeParam(value)
+            defaultSize = @_getSizeParam(value)
+            newColumn = newColumn.set('size', defaultSize)
+          else
             newColumn = newColumn.set('size', '')
-
-          console.log newColumn.toJS()
           @props.editColumnFn(newColumn)
       ,
         @_selectOptions()
-      @_createInput('size') if dtype in ['VARCHAR', 'DECIMAL']
+      @_createInput('size') if _.isString @_getSizeParam(dtype)
+
+  _getSizeParam: (dataType) ->
+    dt = _.find @props.dataTypes, (d) ->
+      _.isObject(d) and _.keys(d)[0] == dataType
+    dt?[dataType]?.defaultSize
+
+
+  _getDataTypes: ->
+    return _.map @props.dataTypes, (dataType) ->
+      #it could be object eg {VARCHAR: {defaultSize:''}}
+      if _.isObject dataType
+        return _.keys(dataType)[0]
+      else #or string
+        return dataType
 
 
   _selectOptions: ->
-    _.map @props.dataTypes.concat('IGNORE'), (op) ->
+    dataTypes = @_getDataTypes()
+    _.map dataTypes.concat('IGNORE'), (opKey, opValue) ->
       option
-        value: op
-        key: op
+        value: opKey
+        key: opKey
       ,
-        op
+        opKey
 
   _createCheckbox: (property) ->
     if @props.editingColumn.get('type') == 'IGNORE'
