@@ -49,7 +49,7 @@ module.exports = React.createClass
             tooltip: "Upload #{@props.table.get('id')}"
             mode: 'button'
             icon: 'fa fa-upload fa-fw'
-            component: 'wr-db'
+            component: @props.componentId
             runParams: =>
               table: @props.table.get('id')
               writer: @props.configId

@@ -89,6 +89,7 @@ templateFn = (componentId) ->
               ' Setup Credentials'
 
   _renderSideBar: ->
+    console.log "redner sidebar", componentId
     div {className: 'col-md-3 kbc-main-sidebar'},
       div className: 'kbc-buttons kbc-text-light',
         React.createElement ComponentMetadata,
@@ -110,7 +111,7 @@ templateFn = (componentId) ->
             tooltip: "Upload all selected tables"
             mode: 'link'
             icon: 'fa fa-upload fa-fw'
-            component: 'wr-db'
+            component: componentId
             runParams: =>
               writer: @state.configId
           ,
