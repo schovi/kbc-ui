@@ -37,13 +37,22 @@ TransformationBucket = React.createClass
   _renderTable: ->
     div className: 'table table-striped table-hover',
       span {className: 'tbody'},
-        @state.transformations.map((transformation) ->
+        @_getSortedTransformations().map((transformation) ->
           TransformationRow
             transformation: transformation
             bucket: @state.bucket
             pendingActions: @state.pendingActions.get transformation.get('id'), Immutable.Map()
             key: transformation.get 'id'
         , @).toArray()
+
+  _getSortedTransformations: ->
+    sorted = @state.transformations.sortBy((transformation) ->
+      # phase with padding
+      phase = ("0000" + transformation.get('phase')).slice(-4)
+      name = transformation.get('name')
+      phase + name.toLowerCase()
+    )
+    return sorted
 
   _renderEmptyState: ->
     div {className: 'table table-striped'},
