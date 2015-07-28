@@ -11,13 +11,6 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 {form, div, h2, small, label, p, option} = React.DOM
 
-defaultFields = [
-  [ 'Host name', 'host']
-  [ 'Port', 'port', 'number']
-  [ 'Username', 'user']
-  [ 'Password', 'password', 'password', true]
-  [ 'Database Name', 'database', 'text']
-]
 
 module.exports = React.createClass
 
@@ -31,7 +24,7 @@ module.exports = React.createClass
     componentId: React.PropTypes.string
 
   render: ->
-    fields = fieldsTemplates[@props.componentId] or defaultFields
+    fields = fieldsTemplates(@props.componentId)
 
     form className: 'form-horizontal',
       div className: 'row',
