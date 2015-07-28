@@ -123,9 +123,7 @@ module.exports = React.createClass
                 mapping: @props.editingFields.get('new-input-mapping', Map())
         if @props.transformation.get('input').count()
           div {},
-            @props.transformation.get('input').sortBy((inputMapping) ->
-              inputMapping.get('source').toLowerCase()
-            ).map((input, key) ->
+            @props.transformation.get('input').map((input, key) ->
               Panel
                 className: 'kbc-panel-heading-with-table'
                 key: key
@@ -174,9 +172,7 @@ module.exports = React.createClass
                 mapping: @props.editingFields.get('new-output-mapping', Map())
         if @props.transformation.get('output').count()
           div {},
-            @props.transformation.get('output').sortBy((outputMapping) ->
-              outputMapping.get('source').toLowerCase()
-            ).map((output, key) ->
+            @props.transformation.get('output').map((output, key) ->
               Panel
                 className: 'kbc-panel-heading-with-table'
                 key: key
