@@ -112,7 +112,7 @@ templateFn = (componentId) ->
             icon: 'fa fa-upload fa-fw'
             component: 'wr-db'
             runParams: =>
-              writer: @props.configId
+              writer: @state.configId
           ,
            "You are about to run upload of all seleted tables"
         li null,
