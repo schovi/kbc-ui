@@ -64,7 +64,7 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.CREDENTIALS_WRDB_CREATE_SUCCESS
       token = action.token
       permission = action.permission
-      credentials = action.credentials
+      credentials = fromJS action.credentials
       _store = _store.deleteIn ['creatingCredentials', permission, token]
       _store = _store.setIn ['credentials', permission, token], credentials
       provisioningStore.emitChange()
