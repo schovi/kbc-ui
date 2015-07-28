@@ -195,8 +195,14 @@ templateFn = (componentId, driver, isProvisioning) ->
       componentId: componentId
 
   _isProvCredentials: ->
-    result = @state.credentials?.get('host') == 'wr-db.keboola.com'
-    result
+    host = @state.credentials?.get('host')
+    if driver == 'mysql'
+      return host == 'wr-db.keboola.com'
+
+    if driver == 'redshift'
+      return _.str.include(host,'redshift.amazonaws.com') and _.str.include(host, 'sapi')
+
+    return false
 
   _handleChange: (propName, event) ->
     if ['port', 'retries'].indexOf(propName) >= 0
