@@ -63,6 +63,11 @@ templateFn = (componentId) ->
       @_renderMainContent()
       @_renderSideBar()
 
+  _hasTablesToExport: ->
+    @state.tables.reduce((reduction, table) ->
+      (table.get('export') == true) or reduction
+    , false)
+
   _hasValidCredentials: ->
     if not @state.hasCredentials
       return false
@@ -104,9 +109,12 @@ templateFn = (componentId) ->
             ,
               i className: 'fa fa-fw fa-user'
               ' Setup Credentials First'
+
   _disabledToRun: ->
     if not @_hasValidCredentials()
       return 'No database credentials provided'
+    if not @_hasTablesToExport()
+      return 'No tables selected to export'
     return null
 
 
