@@ -129,6 +129,8 @@ routes =
     ,
       createDbWriterRoutes('wr-db-redshift', 'redshift', true)
     ,
+      createDbWriterRoutes('wr-tableau', 'mysql', true)
+    ,
       createGenericDetailRoute 'writer'
 
     ]

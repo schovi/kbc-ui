@@ -3,7 +3,7 @@ ApplicationStore = require '../../../stores/ApplicationStore'
 
 # hardcoded array of hiden components(under construction components)
 # possible alternative is hasUI component property
-hiddenComponents = ['wr-dropbox', 'wr-db', 'wr-db-oracle', 'wr-db-mysql', 'wr-db-redshift']
+hiddenComponents = ['wr-dropbox', 'wr-db', 'wr-db-oracle', 'wr-db-mysql', 'wr-db-redshift', 'wr-tableau']
 
 module.exports =
   isComponentAllowed: (componentId) ->
