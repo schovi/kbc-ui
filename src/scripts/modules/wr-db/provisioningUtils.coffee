@@ -28,16 +28,28 @@ getWrDbToken = (driver) ->
 
 retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver) ->
   console.log "retrieve credentials", wrDbToken
-  writePromise = null
-  if not isReadOnly
-    writePromise = loadCredentials('write', wrDbToken, driver)
   readPromise = loadCredentials('read', wrDbToken, driver).then (creds) ->
     console.log 'READ PROMISE RETURN', creds
     creds
 
-  return Promise.props
-    read: readPromise
-    write: writePromise
+  writePromise = null
+  if not isReadOnly
+    if driver == 'redshift'
+      return readPromise.then( (readResult) ->
+        writePromise = loadCredentials('write', wrDbToken, driver)
+        return Promise.props
+          read: readResult
+          write: writePromise
+      )
+    else
+      writePromise = loadCredentials('write', wrDbToken, driver)
+      return Promise.props
+        read: readPromise
+        write: writePromise
+  else
+    return Promise.props
+      read: readPromise
+      write: writePromise
 
 
 module.exports =
