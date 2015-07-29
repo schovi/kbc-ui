@@ -18,6 +18,7 @@ Dispatcher.register (payload) ->
     when ActionTypes.WR_GDRIVE_LOAD_FILES_SUCCESS
       files = fromJS action.files
       configId = action.configId
+      console.log 'fileees', files
       files = files.toMap().mapKeys (index, file) ->
         file.get 'tableId'
       _store = _store.setIn ['files', configId], files

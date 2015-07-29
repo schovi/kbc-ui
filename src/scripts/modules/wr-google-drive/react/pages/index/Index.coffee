@@ -5,6 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
 SearchRow = require '../../../../../react/common/SearchRow'
+GdriveStore = require '../../../wrGdriveStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
@@ -15,7 +16,7 @@ ComponentDescription = React.createFactory(ComponentDescription)
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-
+TableRow = React.createFactory(require './TableRow')
 
 {i, strong, span, div, p, ul, li} = React.DOM
 
@@ -26,15 +27,18 @@ module.exports = React.createClass
   mixins: [createStoreMixin(InstalledComponentsStore)]
 
   getStateFromStores: ->
+
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-
+    files = GdriveStore.getFiles configId
 
     #state
+    files: files
     configId: configId
     localState: localState
+
   render: ->
-    console.log 'render'
+    console.log 'render', @state.files.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -119,26 +123,23 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Type'
       span className: 'th',
-        strong null, 'Preview'
-      span className: 'th',
         strong null, 'Folder'
+      span className: 'th',
+        strong null, 'Preview'
 
   _renderTableRow: (table) ->
-    div className: 'tr',
-      span className: 'td',
-        table.get 'name'
-      span className: 'td',
-        i className: 'fa fa-fw fa-long-arrow-right'
-      span className: 'td',
-        'xxx'
-      span className: 'td',
-        'xxx'
-      span className: 'td',
-        'xxx'
-      span className: 'td',
-        'xxx'
-      span className: 'td',
-        'xxx'
+    tableId = table.get 'id'
+    TableRow
+      configId: @state.configId
+      isTableExported: false #@_isTableExported(tableId)
+      isPending: false #@_isPendingTable(tableId)
+      onExportChangeFn: ->
+        #@_handleExportChange(tableId)
+      table: table
+      file: @state.files.find (f) ->
+        f.get('tableId') == tableId
+
+
 
   _isAuthorized: ->
     return true
