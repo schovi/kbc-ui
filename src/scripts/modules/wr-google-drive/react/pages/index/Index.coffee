@@ -103,6 +103,8 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
+        ''
+      span className: 'th',
         strong null, 'Title'
       span className: 'th',
         strong null, 'Operation'
@@ -110,13 +112,17 @@ module.exports = React.createClass
         strong null, 'Type'
       span className: 'th',
         strong null, 'Preview'
+      span className: 'th',
+        strong null, 'Folder'
 
   _renderTableRow: (table) ->
     div className: 'tr',
       span className: 'td',
-        'xxx'
-      span className: 'td',
         table.get 'name'
+      span className: 'td',
+        i className: 'fa fa-fw fa-long-arrow-right'
+      span className: 'td',
+        'xxx'
       span className: 'td',
         'xxx'
       span className: 'td',
