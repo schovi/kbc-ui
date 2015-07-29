@@ -18,6 +18,7 @@ class EventsService
     @_events = Map()
     @_query = ''
     @_isLoading = false
+    @_loadingEvents = Map()
     @_loadingOlder = false
     @_hasMore = true
     @_timer = timer
@@ -46,6 +47,21 @@ class EventsService
     return if @_autoReload
     @_autoReload = true
     @_timer.poll(@loadNew, 5)
+
+  loadEvent: (id) ->
+    id = parseInt(id)
+
+    if @_events.has(id)
+      return
+
+    @_loadingEvents = @_loadingEvents.set id, true
+    @api
+    .getEvent(id)
+    .then (event) =>
+      @_loadingEvents = @_loadingEvents.delete id
+      @_appendEvents [event]
+    .catch =>
+      @_loadingEvents = @_loadingEvents.delete id
 
   load: ->
     @_isLoading = true
@@ -94,11 +110,17 @@ class EventsService
     .toSeq()
     .sortBy (event) -> event.get('id') * -1
 
+  getEvent: (id) ->
+    @_events.get parseInt(id)
+
   getIsLoadingOlder: ->
     @_loadingOlder
 
   getIsLoading: ->
     @_isLoading
+
+  getIsLoadingEvent: (id) ->
+    @_loadingEvents.has parseInt(id)
 
   getHasMore: ->
     @_hasMore

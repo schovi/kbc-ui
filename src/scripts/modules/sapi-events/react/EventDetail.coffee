@@ -2,7 +2,7 @@ React = require 'react'
 date = require '../../../utils/date'
 filesize = require('../../../utils/utils').filesize
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
-
+{Link} = require 'react-router'
 
 sapiEventsUtils = require '../utils'
 Tree = React.createFactory(require('kbc-react-components').Tree)
@@ -14,10 +14,10 @@ module.exports = React.createClass
   mixins: [PureRendererMixin]
   props:
     event: React.PropTypes.object.isRequired
-    onGoBack: React.PropTypes.func.isRequired
+    link: React.PropTypes.object.isRequired
   render: ->
     div null,
-      a onClick: @props.onGoBack,
+      React.createElement Link, @props.link,
         span className: 'fa fa-chevron-left', null,
         ' Back'
       h2 null,

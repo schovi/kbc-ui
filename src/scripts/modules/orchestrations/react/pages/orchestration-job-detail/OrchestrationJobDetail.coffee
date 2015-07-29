@@ -26,10 +26,12 @@ OrchestrationJobDetail = React.createClass
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
     jobId = RoutesStore.getCurrentRouteIntParam 'jobId'
     return {
+      orchestrationId: orchestrationId
       job: OrchestrationJobsStore.getJob jobId
       isLoading: OrchestrationJobsStore.isJobLoading jobId
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
+      openedTab: if RoutesStore.getRouterState().hasIn(['query', 'eventId']) then 'log' else 'overview'
     }
 
   componentDidMount: ->
@@ -49,11 +51,16 @@ OrchestrationJobDetail = React.createClass
             activeJobId: @state.job.get 'id'
       div {className: 'col-md-9 kb-orchestrations-main kbc-main-content-with-nav'},
         div {},
-          TabbedArea defaultActiveKey: 'overview', animation: false,
+          TabbedArea defaultActiveKey: @state.openedTab, animation: false,
             TabPane eventKey: 'overview', tab: 'Overview',
               JobOverview(job: @state.job)
             TabPane eventKey: 'log', tab: 'Log',
               Events
+                link:
+                  to: 'orchestrationJob'
+                  params:
+                    orchestrationId: @state.orchestrationId
+                    jobId: @state.job.get('id')
                 params:
                   runId: @state.job.get('id')
                 autoReload: @state.job.get('status') == 'waiting' ||  @state.job.get('status') == 'processing'

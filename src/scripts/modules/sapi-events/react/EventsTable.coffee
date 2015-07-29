@@ -3,30 +3,32 @@ TableRow = React.createFactory(require './EventsTableRow')
 {Loader} = require('kbc-react-components')
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
-{table, thead, tbody, tr, th, td} = React.DOM
+{div} = React.DOM
 
 module.exports = React.createClass
   displayName: 'EventsTable'
   mixins: [PureRendererMixin]
   propTypes:
     events: React.PropTypes.object.isRequired
-    onEventSelect: React.PropTypes.func.isRequired
+    link: React.PropTypes.object.isRequired
     isLoading: React.PropTypes.bool.isRequired
 
   render: ->
-    table className: 'table table-striped table-hover',
-      thead null,
-        tr null,
-          th null, 'Created'
-          th null,
+    div className: 'table table-striped table-hover',
+      div className: 'thead',
+        div className: 'tr',
+          div className: 'th',
+            'Created'
+          div className: 'th',
             'Event'
             ' '
             (React.createElement(Loader) if @props.isLoading)
-      tbody null,
+      div className: 'tbody',
         @props.events.map( (event) ->
           TableRow
             onClick: @_handleEventSelect.bind(@, event)
             event: event
+            link: @props.link
             key: event.get('id')
         , @).toArray()
 
