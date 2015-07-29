@@ -4,7 +4,6 @@ ApplicationStore = require '../../stores/ApplicationStore'
 
 Header = React.createFactory(require '././Header')
 SidebarNavigation = React.createFactory(require '././SidebarNavigation')
-Notifications = React.createFactory(require './Notifications')
 FloatingNotifications = require './FloatingNotifications'
 ErrorPage = React.createFactory(require './../pages/ErrorPage')
 LoadingPage = React.createFactory(require './../pages/LoadingPage')
