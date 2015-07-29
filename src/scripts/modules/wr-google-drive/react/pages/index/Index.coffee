@@ -3,6 +3,8 @@ React = require 'react'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
+
+SearchRow = require '../../../../../react/common/SearchRow'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
@@ -44,6 +46,12 @@ module.exports = React.createClass
           componentId: componentId
           configId: @state.configId
 
+
+      if @_isAuthorized()
+        React.createElement SearchRow,
+          className: 'row kbc-search-row'
+          onChange: @_handleSearchQueryChange
+          query: @state.localState.get('searchQuery') or ''
       if @_isAuthorized()
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
@@ -137,6 +145,10 @@ module.exports = React.createClass
 
   _disabledToRun: ->
     "TODO!!"
+
+  _handleSearchQueryChange: (newQuery) ->
+    @_updateLocalState(['searchQuery'], newQuery)
+
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
