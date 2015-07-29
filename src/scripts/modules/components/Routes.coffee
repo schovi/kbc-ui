@@ -21,6 +21,7 @@ goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
+googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 
 routes =
 
@@ -120,6 +121,8 @@ routes =
       goodDataWriterRoutes
     ,
       dropoxWriterRoutes
+    ,
+      googleDriveWriterRoutes
     ,
       createDbWriterRoutes('wr-db', 'mysql', true)
     ,
