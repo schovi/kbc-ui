@@ -4,8 +4,6 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory(require('react-select'))
-MySqlIndexesContainer = React.createFactory(require("./input/MySqlIndexesContainer"))
-MySqlDataTypesContainer = React.createFactory(require("./input/MySqlDataTypesContainer"))
 
 module.exports = React.createClass
   displayName: 'InputMappingRowDockjerEditor'

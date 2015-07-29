@@ -95,6 +95,38 @@ module.exports =
       )
       throw error
 
+  saveComponentRawConfigDataParameters: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_START
+      componentId: componentId
+      configId: configId
+    )
+    parametersToSave = InstalledComponentsStore.getSavingConfigDataParameters(componentId, configId)
+    parametersToSave = parametersToSave?.toJS()
+    # rest of the config
+    dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
+    dataToSave = dataToSave?.toJS()
+    dataToSave.parameters = parametersToSave
+    dataToSave = {configuration: JSON.stringify(dataToSave)}
+
+    installedComponentsApi
+    .updateComponentConfiguration(componentId, configId, dataToSave).then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_SUCCESS
+        componentId: componentId
+        configId: configId
+        configData: response.configuration
+      )
+
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_ERROR
+        componentId: componentId
+        configId: configId
+      )
+      throw error
+
+
   saveComponentConfigData: (componentId, configId, forceData) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
@@ -170,6 +202,28 @@ module.exports =
   cancelEditComponentRawConfigData: (componentId, configId) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_EDIT_CANCEL
+      componentId: componentId
+      configId: configId
+    )
+
+  startEditComponentRawConfigDataParameters: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_EDIT_START
+      componentId: componentId
+      configId: configId
+    )
+
+  updateEditComponentRawConfigDataParameters: (componentId, configId, newData) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_EDIT_UPDATE
+      componentId: componentId
+      configId: configId
+      data: newData
+    )
+
+  cancelEditComponentRawConfigDataParameters: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_EDIT_CANCEL
       componentId: componentId
       configId: configId
     )
