@@ -36,6 +36,7 @@ Dispatcher.register (payload) ->
       index = _store.get('notifications').findIndex (notification) ->
         notification.get('id') == action.notificationId
 
+      console.log 'delete', index, action.notificationId
       if index >= 0
         _store = _store.update 'notifications', (notifications) ->
           notifications.delete index
