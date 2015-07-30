@@ -5,9 +5,10 @@ Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
 
 _store = Map(
-  configData: Map() #componentId #configId - configuration detail JSON
+  configData: Map() #componentId #configId
   configDataLoading: Map() #componentId #configId - configuration detail JSON
   configDataEditing: Map() #componentId #configId - configuration
+  configDataEditingObject: Map() #componentId #configId - configuration
   configDataParametersEditing: Map() #componentId #configId - configuration
   rawConfigDataEditing: Map() #componentId #configId - configuration stringified JSON
   rawConfigDataParametersEditing: Map() #componentId #configId - configuration stringified JSON
@@ -22,6 +23,8 @@ _store = Map(
   deletingConfigurations: Map()
   isLoaded: false
   isLoading: false
+  pendingActions: Map()
+  openMappings: Map()
 )
 
 InstalledComponentsStore = StoreUtils.createStore
@@ -61,6 +64,9 @@ InstalledComponentsStore = StoreUtils.createStore
 
   getConfigData: (componentId, configId) ->
     _store.getIn ['configData', componentId, configId]
+
+  getEditingConfigDataObject: (componentId, configId) ->
+    _store.getIn ['configDataEditingObject', componentId, configId], Map()
 
   getConfigDataParameters: (componentId, configId) ->
     _store.getIn ['configData', componentId, configId, 'parameters']
@@ -119,13 +125,17 @@ InstalledComponentsStore = StoreUtils.createStore
   isSavingConfigDataParameters: (componentId, configId) ->
     _store.hasIn ['configDataParametersSaving', componentId, configId]
 
-
   getIsLoading: ->
     _store.get 'isLoading'
 
   getIsLoaded: ->
     _store.get 'isLoaded'
 
+  getPendingActions: (componentId, configId) ->
+    _store.getIn ['pendingActions', componentId, configId], Map()
+
+  getOpenMappings: (componentId, configId) ->
+    _store.getIn ['openMappings', componentId, configId], Map()
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -284,7 +294,6 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_EDIT_UPDATE
-      console.log 'update', action.field, action.value
       _store = _store.setIn ['editingConfigurations', action.componentId, action.configurationId, action.field],
         action.value
       InstalledComponentsStore.emitChange()
@@ -360,6 +369,99 @@ Dispatcher.register (payload) ->
         store.setIn ['components', action.componentId, 'configurations', action.configuration.id],
           Immutable.fromJS action.configuration
 
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_TOGGLE_MAPPING
+      if (_store.getIn(['openMappings', action.componentId, action.configId, action.index], false))
+        _store = _store.setIn(['openMappings', action.componentId, action.configId, action.index], false)
+      else
+        _store = _store.setIn(['openMappings', action.componentId, action.configId, action.index], true)
+
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_START
+      currentMapping = InstalledComponentsStore.getConfigData(action.componentId, action.configId)
+      .getIn(['storage', action.mappingType, action.storage, action.index])
+      path = [
+        'configDataEditingObject', action.componentId,
+        action.configId, 'storage', action.mappingType, action.storage, action.index
+      ]
+      _store = _store.setIn(path, currentMapping)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_CANCEL
+      path = [
+        'configDataEditingObject', action.componentId,
+        action.configId, 'storage', action.mappingType, action.storage, action.index
+      ]
+      _store = _store.deleteIn(path)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_CHANGE
+      path = [
+        'configDataEditingObject', action.componentId,
+        action.configId, 'storage', action.mappingType, action.storage, action.index
+      ]
+      _store = _store.setIn(path, action.value)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_START
+      path = [
+        'pendingActions', action.componentId,
+        action.configId, action.mappingType, action.storage, action.index, 'save'
+      ]
+      _store = _store.setIn(path, true)
+      InstalledComponentsStore.emitChange()
+
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_SUCCESS
+      _store = _store.withMutations (store) ->
+        path = [
+          'pendingActions', action.componentId,
+          action.configId, action.mappingType, action.storage, action.index, 'save'
+        ]
+        store = store.deleteIn(path)
+
+        storePath = ['configData', action.componentId, action.configId]
+        store.setIn storePath, Immutable.fromJS(action.data.configuration)
+
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_ERROR
+      path = [
+        'pendingActions', action.componentId,
+        action.configId, action.mappingType, action.storage, action.index, 'save'
+      ]
+      _store = _store.deleteIn(path)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_START
+      path = [
+        'pendingActions', action.componentId,
+        action.configId, action.mappingType, action.storage, action.index, 'delete'
+      ]
+      _store = _store.setIn(path, true)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        path = [
+          'pendingActions', action.componentId,
+          action.configId, action.mappingType, action.storage, action.index, 'delete'
+        ]
+        store = store.deleteIn(path)
+
+        storePath = ['configData', action.componentId, action.configId]
+        store.setIn storePath, Immutable.fromJS(action.data.configuration)
+
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_ERROR
+      path = [
+        'pendingActions', action.componentId,
+        action.configId, action.mappingType, action.storage, action.index, 'delete'
+      ]
+      _store = _store.deleteIn(path)
       InstalledComponentsStore.emitChange()
 
 

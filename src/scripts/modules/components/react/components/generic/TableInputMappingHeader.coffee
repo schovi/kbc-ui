@@ -5,7 +5,7 @@ DeleteButton = require '../../../../../react/common/DeleteButton'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 TableSizeLabel = React.createFactory(require '../../../../transformations/react/components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../../../transformations/react/components/TableBackendLabel')
-#TableInputMappingModal = require './TableInputMappingModal'
+TableInputMappingModal = require './TableInputMappingModal'
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
@@ -15,17 +15,18 @@ module.exports = React.createClass(
 
   propTypes:
     inputMapping: React.PropTypes.object.isRequired
+    editingInputMapping: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
-    transformation: React.PropTypes.object.isRequired
-    bucket: React.PropTypes.object.isRequired
-    editingId: React.PropTypes.string.isRequired
-    mappingIndex: React.PropTypes.string.isRequired
+    mappingIndex: React.PropTypes.number.isRequired
     onChange: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
     onCancel: React.PropTypes.func.isRequired
     onDelete: React.PropTypes.func.isRequired
+    pendingActions: React.PropTypes.object.isRequired
+    onEditStart: React.PropTypes.func.isRequired
 
   render: ->
+    component = @
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
@@ -38,11 +39,11 @@ module.exports = React.createClass(
           span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
           span {className: 'td col-xs-3'},
-            'in/tables/' + @props.inputMapping.get 'destination'
+            'in/tables/' + @props.inputMapping.get('destination', @props.inputMapping.get('source'))
           span {className: 'td col-xs-1 text-right kbc-no-wrap'},
             React.createElement DeleteButton,
               tooltip: 'Delete Input'
-              isPending: @props.pendingActions.get('delete-input-' + @props.mappingIndex)
+              isPending: @props.pendingActions.getIn(['input', 'tables', @props.mappingIndex, 'delete'], false)
               confirm:
                 title: 'Delete Input'
                 text: span null,
@@ -59,8 +60,6 @@ module.exports = React.createClass(
                 modal: React.createElement TableInputMappingModal,
                   mode: 'edit'
                   tables: @props.tables
-                  backend: @props.transformation.get("backend")
-                  type: @props.transformation.get("type")
                   mapping: @props.editingInputMapping
                   onChange: @props.onChange
                   onCancel: @props.onCancel
@@ -69,6 +68,7 @@ module.exports = React.createClass(
                 React.DOM.button
                   className: "btn btn-link"
                   onClick: (e) ->
+                    component.props.onEditStart()
                     e.preventDefault()
                     e.stopPropagation()
                 ,

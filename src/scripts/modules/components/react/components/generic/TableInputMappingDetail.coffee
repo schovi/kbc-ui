@@ -14,13 +14,13 @@ _ = require('underscore')
 
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
+Immutable = require 'immutable'
 
 TableInputMappingDetail = React.createClass(
   displayName: 'TableInputMappingDetail'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
-    transformationBackend: React.PropTypes.string.isRequired
     inputMapping: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
 
@@ -52,7 +52,7 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Columns'
         span {className: "col-md-6"},
-          if @props.inputMapping.get('columns').count()
+          if @props.inputMapping.get('columns', Immutable.List()).count()
             @props.inputMapping.get('columns').join(', ')
           else
             'Use all columns'
@@ -71,17 +71,17 @@ TableInputMappingDetail = React.createClass(
               ' '
               strong {},
                 @props.inputMapping.get('where_values').join(', ')
-          if @props.inputMapping.get('days') != 0 && @props.inputMapping.get('whereColumn')
+          if @props.inputMapping.get('days', 0) != 0 && @props.inputMapping.get('whereColumn')
             ' and '
-          if @props.inputMapping.get('days') != 0
+          if @props.inputMapping.get('days', 0) != 0
             span {},
               if @props.inputMapping.get('where_column')
                 'changed in last '
               else
                 'Changed in last '
-              @props.inputMapping.get('days')
+              @props.inputMapping.get('days', 0)
               ' days'
-          if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
+          if @props.inputMapping.get('days', 0) == 0 && !@props.inputMapping.get('whereColumn')
             'N/A'
 
     ]

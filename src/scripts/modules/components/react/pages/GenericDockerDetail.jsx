@@ -12,28 +12,34 @@ import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
-//import TableInputMapping from '../components/generic/TableInputMapping';
+import TableInputMapping from '../components/generic/TableInputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
-
+import StorageTablesStore from '../../stores/StorageTablesStore';
+import {List} from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component');
 
-    console.log(InstalledComponentStore.getConfigDataParameters(componentId, configId));
+    console.log('configData', InstalledComponentStore.getConfigData(componentId, configId).toJS());
 
     return {
       componentId: componentId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
+      configData: InstalledComponentStore.getConfigData(componentId, configId),
+      editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
       isParametersEditing: InstalledComponentStore.isEditingRawConfigDataParameters(componentId, configId),
       isParametersSaving: InstalledComponentStore.isSavingConfigDataParameters(componentId, configId),
       editingConfigDataParameters: InstalledComponentStore.getEditingRawConfigDataParameters(componentId, configId, '{}'),
-      isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId)
+      isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId),
+      tables: StorageTablesStore.getAll(),
+      pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
+      openMappings: InstalledComponentStore.getOpenMappings(componentId, configId)
     };
   },
 
@@ -49,7 +55,15 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
-              <div>Input Mapping Tables</div>
+              <TableInputMapping
+                componentId={this.state.componentId}
+                configId={this.state.config.get('id')}
+                input={this.state.configData.getIn(['storage', 'input', 'tables'], List())}
+                editingInput={this.state.editingConfigData.getIn(['storage', 'input', 'tables'], List())}
+                tables={this.state.tables}
+                pendingActions={this.state.pendingActions}
+                openMappings={this.state.openMappings}
+                />
               <div>Input Mapping Files</div>
               <div>Output Mapping Tables</div>
               <div>Output Mapping Files</div>

@@ -2,7 +2,9 @@ React = require 'react'
 
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
 InstalledComponentsActions = require './InstalledComponentsActionCreators'
+StorageActions = require './StorageActionCreators'
 GenericDetail = require './react/pages/GenericDetail'
+GenericDockerDetail = require './react/pages/GenericDockerDetail'
 ComponentNameEdit = require './react/components/ComponentName'
 
 ComponentsStore = require './stores/ComponentsStore'
@@ -27,6 +29,10 @@ module.exports = (componentType) ->
   requireData: [
     (params) ->
       InstalledComponentsActions.loadComponentConfigData params.component, params.config
+  ,
+    ->
+      StorageActions.loadTables()
+
   ]
   poll:
     interval: 10

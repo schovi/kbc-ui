@@ -365,3 +365,109 @@ module.exports =
                 '.'
       )
       job
+
+  toggleMapping: (componentId, configId, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_TOGGLE_MAPPING
+      componentId: componentId
+      configId: configId
+      index: index
+    )
+
+  startEditingMapping: (componentId, configId, type, storage, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_START
+      componentId: componentId
+      configId: configId
+      mappingType: type
+      storage: storage
+      index: index
+    )
+
+  cancelEditingMapping: (componentId, configId, type, storage, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_CANCEL
+      componentId: componentId
+      configId: configId
+      mappingType: type
+      storage: storage
+      index: index
+    )
+
+  changeEditingMapping: (componentId, configId, type, storage, index, value) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_CHANGE
+      componentId: componentId
+      configId: configId
+      mappingType: type
+      storage: storage
+      index: index
+      value: value
+    )
+
+  saveEditingMapping: (componentId, configId, type, storage, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_START
+      componentId: componentId
+      configId: configId
+      mappingType: type
+      storage: storage
+      index: index
+    )
+
+    dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
+    mappingData = InstalledComponentsStore.getEditingConfigDataObject(componentId, configId)
+    path = ['storage', type, storage, index]
+    data =
+      configuration: JSON.stringify(dataToSave.setIn(path, mappingData.getIn(path)).toJSON())
+    installedComponentsApi
+    .updateComponentConfiguration componentId, configId, data
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_SUCCESS
+        componentId: componentId
+        configId: configId
+        mappingType: type
+        storage: storage
+        index: index
+        data: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_ERROR
+        componentId: componentId
+        configId: configId
+        error: e
+      throw e
+
+  deleteMapping: (componentId, configId, type, storage, index) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_START
+      componentId: componentId
+      configId: configId
+      mappingType: type
+      storage: storage
+      index: index
+    )
+
+    dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
+    path = ['storage', type, storage, index]
+    data =
+      configuration: JSON.stringify(dataToSave.deleteIn(path).toJSON())
+    installedComponentsApi
+    .updateComponentConfiguration componentId, configId, data
+    .then (response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_SUCCESS
+        componentId: componentId
+        configId: configId
+        mappingType: type
+        storage: storage
+        index: index
+        data: response
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_ERROR
+        componentId: componentId
+        configId: configId
+        error: e
+      throw e
