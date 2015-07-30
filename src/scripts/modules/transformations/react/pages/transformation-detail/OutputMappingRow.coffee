@@ -44,7 +44,7 @@ OutputMappingRow = React.createClass(
         span {className: 'tr'},
           span {className: 'td col-xs-4'},
             if @props.transformation.get('backend') == 'docker'
-              'in/tables/' + @props.outputMapping.get 'source'
+              'out/tables/' + @props.outputMapping.get 'source'
             else
               @props.outputMapping.get 'source'
           span {className: 'td col-xs-1'},
