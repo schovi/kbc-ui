@@ -17,6 +17,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 TableRow = React.createFactory(require './TableRow')
+gdriveActions = require '../../../wrGdriveActionCreators'
 
 {i, strong, span, div, p, ul, li} = React.DOM
 
@@ -32,10 +33,13 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     files = GdriveStore.getFiles configId
 
+    email = configId #temporal TODO
+
     #state
     files: files
     configId: configId
     localState: localState
+    folderNames: GdriveStore.getGoogleInfo(email)
 
   render: ->
     console.log 'render', @state.files.toJS()
@@ -138,8 +142,12 @@ module.exports = React.createClass
       table: table
       file: @state.files.find (f) ->
         f.get('tableId') == tableId
+      folderNames: @state.folderNames
+      loadFolderFn: @_loadFolderName
 
-
+  _loadFolderName: (folderId) ->
+    email = @state.configId #temporal TODO
+    gdriveActions.loadGoogleInfo(email, folderId)
 
   _isAuthorized: ->
     return true

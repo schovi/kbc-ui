@@ -26,3 +26,30 @@ module.exports =
         configId: configId
         error: err
       throw err
+
+  loadGoogleInfo: (email, googleId) ->
+
+    isLoading = store.getLoadingGoogleInfo(email, googleId)
+    console.log "loadGoogleInfo", email, googleId, isLoading
+    if !!isLoading
+      console.log 'RETUUUURN'
+      return
+
+    dispatcher.handleViewAction
+      type: ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_START
+      googleId: googleId
+      email: email
+    console.log 'DISPATCHER WR_GDRIVE_LOAD_GOOGLEINFO_START'
+    api.getFileInfo(googleId).then (result) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_SUCCESS
+        info: result
+        googleId: googleId
+        email: email
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_API_ERROR
+        googleId: googleId
+        email: email
+        error: err
+      throw err

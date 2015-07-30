@@ -11,3 +11,10 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+  getFileInfo: (googleId) ->
+    console.log 'GET FILE API', googleId
+    createRequest('GET', "remote-file/#{googleId}")
+    .promise()
+    .then (response) ->
+      response.body

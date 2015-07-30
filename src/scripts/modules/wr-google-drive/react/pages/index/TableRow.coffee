@@ -3,6 +3,7 @@ React = require 'react'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, i, button, strong, div} = React.DOM
 Link = React.createFactory(require('react-router').Link)
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
@@ -19,8 +20,17 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     file: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
+    folderNames: React.PropTypes.object.isRequired
+    loadFolderFn: React.PropTypes.func.isRequired
+
+  # componentDidMount: ->
+  #   folderId = @props.file?.get('targetFolder')
+  #   folderName = @props.folderNames?.get(folderId) if folderId
+  #   if not folderName
+  #     @props.loadFolderFn(folderId)
 
   render: ->
+    console.log 'TABLE ROW', @props.folderNames
     div className: 'tr',
       span className: 'td',
         @props.table.get 'name'
@@ -33,8 +43,18 @@ module.exports = React.createClass
       span className: 'td',
         @props.file?.get 'type'
       span className: 'td',
-        @props.file?.get('targetFolder')
+        @_renderTargetfolder()
       span className: 'td',
         'preview todo'
       span className: 'td',
         'actions'
+
+  _renderTargetfolder: ->
+    folderId = @props.file?.get('targetFolder')
+    folderName = @props.folderNames?.get(folderId) if folderId
+
+    if not folderName
+      #if not @props.loadingFolders.get(folderId)
+      return Loader()
+    else
+      return folderName
