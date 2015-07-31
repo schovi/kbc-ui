@@ -1,5 +1,6 @@
 React = require 'react'
 {Map} = require 'immutable'
+_ = require 'underscore'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -25,7 +26,7 @@ componentId = 'wr-google-drive'
 
 module.exports = React.createClass
   displayName: 'WrGdriveIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, GdriveStore)]
 
   getStateFromStores: ->
 
@@ -33,19 +34,25 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     files = GdriveStore.getFiles configId
 
-    email = configId #temporal TODO
-
     #state
     files: files
     configId: configId
     localState: localState
-    folderNames: GdriveStore.getGoogleInfo(email)
+    folderNames: GdriveStore.getGoogleInfo(configId)
 
   render: ->
-    console.log 'render', @state.files.toJS()
+    console.log 'render wrgdrive index', @state.files.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
+
+  componentDidMount: ->
+    @state.files.forEach (file, tableId) =>
+      targetFolder = file.get 'targetFolder'
+      if not _.isEmpty(targetFolder)
+        @_loadFolderName(targetFolder)
+
+
 
   _renderMainContent: ->
     div {className: 'col-md-9 kbc-main-content'},
@@ -143,11 +150,9 @@ module.exports = React.createClass
       file: @state.files.find (f) ->
         f.get('tableId') == tableId
       folderNames: @state.folderNames
-      loadFolderFn: @_loadFolderName
 
   _loadFolderName: (folderId) ->
-    email = @state.configId #temporal TODO
-    gdriveActions.loadGoogleInfo(email, folderId)
+    gdriveActions.loadGoogleInfo(@state.configId, folderId)
 
   _isAuthorized: ->
     return true

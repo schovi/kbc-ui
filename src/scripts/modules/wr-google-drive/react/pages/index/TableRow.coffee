@@ -21,7 +21,7 @@ module.exports = React.createClass
     file: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
     folderNames: React.PropTypes.object.isRequired
-    loadFolderFn: React.PropTypes.func.isRequired
+
 
   # componentDidMount: ->
   #   folderId = @props.file?.get('targetFolder')
@@ -51,10 +51,12 @@ module.exports = React.createClass
 
   _renderTargetfolder: ->
     folderId = @props.file?.get('targetFolder')
-    folderName = @props.folderNames?.get(folderId) if folderId
-
-    if not folderName
-      #if not @props.loadingFolders.get(folderId)
-      return Loader()
+    if not folderId
+      return 'n/a'
     else
-      return folderName
+      folderName = @props.folderNames?.get(folderId)
+      console.log folderName?.toJS(),folderId
+      if not folderName
+        return Loader()
+      else
+        return folderName.get 'title'

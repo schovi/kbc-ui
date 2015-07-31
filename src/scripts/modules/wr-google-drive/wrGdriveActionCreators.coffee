@@ -27,29 +27,25 @@ module.exports =
         error: err
       throw err
 
-  loadGoogleInfo: (email, googleId) ->
-
-    isLoading = store.getLoadingGoogleInfo(email, googleId)
-    console.log "loadGoogleInfo", email, googleId, isLoading
+  loadGoogleInfo: (configId, googleId) ->
+    isLoading = store.getLoadingGoogleInfo(configId, googleId)
     if !!isLoading
-      console.log 'RETUUUURN'
       return
 
     dispatcher.handleViewAction
       type: ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_START
       googleId: googleId
-      email: email
-    console.log 'DISPATCHER WR_GDRIVE_LOAD_GOOGLEINFO_START'
-    api.getFileInfo(googleId).then (result) ->
+      configId: configId
+    api.getFileInfo(configId, googleId).then (result) ->
       dispatcher.handleViewAction
         type: ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_SUCCESS
-        info: result
+        googleInfo: result
         googleId: googleId
-        email: email
+        configId: configId
     .catch (err) ->
       dispatcher.handleViewAction
         type: ActionTypes.WR_GDRIVE_API_ERROR
         googleId: googleId
-        email: email
+        configId: configId
         error: err
       throw err

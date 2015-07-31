@@ -12,9 +12,8 @@ module.exports =
     .then (response) ->
       response.body
 
-  getFileInfo: (googleId) ->
-    console.log 'GET FILE API', googleId
-    createRequest('GET', "remote-file/#{googleId}")
+  getFileInfo: (configId, googleId) ->
+    createRequest('GET', "remote-file/#{configId}/#{googleId}")
     .promise()
     .then (response) ->
       response.body

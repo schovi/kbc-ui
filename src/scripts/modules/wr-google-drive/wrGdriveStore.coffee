@@ -5,46 +5,44 @@ Dispatcher = require('../../Dispatcher')
 _store = Map
   files: Map() #configId#tableId
   loading: Map() #what #configId #tableID
-  googleInfo: Map() #email#googleId
+  googleInfo: Map() #configId#googleId
 
 WrGdriveStore = storeUtils.createStore
   getFiles: (configId) ->
     _store.getIn ['files', configId]
 
-  getLoadingGoogleInfo: (email, googleId) ->
-    _store.getIn ['loading', 'googleInfo', email, googleId]
+  getLoadingGoogleInfo: (configId, googleId) ->
+    _store.getIn ['loading', 'googleInfo', configId, googleId]
 
-  getGoogleInfo: (email) ->
-    _store.getIn ['googleInfo', email]
+  getGoogleInfo: (configId) ->
+    _store.getIn ['googleInfo', configId]
 
 
 Dispatcher.register (payload) ->
   action = payload.action
-  console.log 'ACTION', action.type
   switch action.type
     when ActionTypes.WR_GDRIVE_LOAD_FILES_SUCCESS
       files = fromJS action.files
       configId = action.configId
-      console.log 'fileees', files
       files = files.toMap().mapKeys (index, file) ->
         file.get 'tableId'
       _store = _store.setIn ['files', configId], files
       WrGdriveStore.emitChange()
 
     when ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_START
-      console.log 'TUUUUUUUUUUUUUUUUUU'
+
       googleId = action.googleId
-      email = action.email
-      console.log 'setting STAAART', email, googleId
-      _store = _store.setIn ['loading', 'googleInfo', email, googleId], true
+      configId = action.configId
+
+      _store = _store.setIn ['loading', 'googleInfo', configId, googleId], true
       WrGdriveStore.emitChange()
 
     when ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_SUCCESS
       googleId = action.googleId
-      email = action.email
-      google = action.google
-      _store = _store.deleteIn ['loading', 'googleInfo', email, googleId]
-      _store = _store.setIn ['googleInfo', email, googleId], google
+      configId = action.configId
+      googleInfo = fromJS action.googleInfo
+      _store = _store.deleteIn ['loading', 'googleInfo', configId, googleId]
+      _store = _store.setIn ['googleInfo', configId, googleId], googleInfo
       WrGdriveStore.emitChange()
 
 
