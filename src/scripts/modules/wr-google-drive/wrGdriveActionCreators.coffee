@@ -13,6 +13,39 @@ module.exports =
     else
       @loadFilesForce(configId)
 
+  saveFile: (configId, tableId, file) ->
+    dispatcher.handleViewAction
+      type: ActionTypes.WR_GDRIVE_SAVEFILE_START
+      tableId: tableId
+      file: file
+      configId: configId
+    fileId = file.get 'id'
+    if fileId
+      apiOperation = api.putfile(configId, fileId, file.toJS())
+    else
+      apiOperation = api.postFile(configId, file)
+
+    apiOperation.then (result) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_SAVEFILE_SUCCESS
+        tableId: tableId
+        configId: configId
+        file: result
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_API_ERROR
+        configId: configId
+        error: err
+      throw err
+
+  setGoogleInfo: (configId, googleId, info) ->
+    dispatcher.handleViewAction
+      type: ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_SUCCESS
+      googleInfo: info
+      googleId: googleId
+      configId: configId
+
+
   loadFilesForce: (configId) ->
     api.getFiles(configId)
     .then (result) ->
@@ -49,3 +82,10 @@ module.exports =
         configId: configId
         error: err
       throw err
+
+  setEditingData: (configId, path, data) ->
+    dispatcher.handleViewAction
+      type: ActionTypes.WR_GDRIVE_SET_EDITING
+      configId: configId
+      path: path
+      data: data

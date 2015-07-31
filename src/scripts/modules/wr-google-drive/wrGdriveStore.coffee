@@ -6,6 +6,8 @@ _store = Map
   files: Map() #configId#tableId
   loading: Map() #what #configId #tableID
   googleInfo: Map() #configId#googleId
+  editing: Map()
+  updating: Map() #what# configId
 
 WrGdriveStore = storeUtils.createStore
   getFiles: (configId) ->
@@ -17,10 +19,42 @@ WrGdriveStore = storeUtils.createStore
   getGoogleInfo: (configId) ->
     _store.getIn ['googleInfo', configId]
 
+  getEditingByPath: (configId, path) ->
+    editPath = ['editing', configId].concat(path)
+    _store.getIn editPath
+
+  getEditing: (configId) ->
+    _store.getIn(['editing', configId], Map())
+
+  getSavingFiles: (configId) ->
+    _store.getIn(['updating','files', configId], Map())
+
 
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when ActionTypes.WR_GDRIVE_SAVEFILE_START
+      configId = action.configId
+      tableId = action.tableId
+      _store = _store.setIn ['updating', 'files', configId, tableId], true
+      WrGdriveStore.emitChange()
+
+    when ActionTypes.WR_GDRIVE_SAVEFILE_SUCCESS
+      configId = action.configId
+      tableId = action.tableId
+      file = fromJS action.file
+      _store = _store.deleteIn ['updating', 'files', configId, tableId]
+      _store = _store.setIn ['files', configId, tableId], file
+      WrGdriveStore.emitChange()
+
+    when ActionTypes.WR_GDRIVE_SET_EDITING
+      configId = action.configId
+      path = action.path
+      data = action.data
+      editPath = ['editing', configId].concat(path)
+      _store = _store.setIn editPath, data
+      WrGdriveStore.emitChange()
+
     when ActionTypes.WR_GDRIVE_LOAD_FILES_SUCCESS
       files = fromJS action.files
       configId = action.configId

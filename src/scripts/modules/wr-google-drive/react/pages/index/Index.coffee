@@ -33,15 +33,19 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     files = GdriveStore.getFiles configId
+    editingFiles = GdriveStore.getEditingByPath(configId, 'files')
+    savingFiles = GdriveStore.getSavingFiles(configId)
 
     #state
+    savingFiles: savingFiles
+    editingFiles: editingFiles
     files: files
     configId: configId
     localState: localState
     folderNames: GdriveStore.getGoogleInfo(configId)
 
   render: ->
-    console.log 'render wrgdrive index', @state.files.toJS()
+    console.log 'render wrgdrive index', @state.files?.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -136,13 +140,18 @@ module.exports = React.createClass
         strong null, 'Type'
       span className: 'th',
         strong null, 'Folder'
-      span className: 'th',
-        strong null, 'Preview'
 
   _renderTableRow: (table) ->
     tableId = table.get 'id'
     TableRow
+      key: tableId
       configId: @state.configId
+      editFn: (data) =>
+        @_setEditingFile tableId, data
+      saveFn: (data) =>
+        gdriveActions.saveFile(@state.configId, tableId, data)
+      isSaving: @state.savingFiles?.get tableId
+      editData: @state.editingFiles?.get tableId
       isTableExported: false #@_isTableExported(tableId)
       isPending: false #@_isPendingTable(tableId)
       onExportChangeFn: ->
@@ -151,6 +160,12 @@ module.exports = React.createClass
       file: @state.files.find (f) ->
         f.get('tableId') == tableId
       folderNames: @state.folderNames
+      updateGoogleFolderFn: (info, googleId) =>
+        @_updateGoogleFolder(@state.configId, googleId, info)
+
+  _setEditingFile: (tableId, data) ->
+    path = ['files', tableId]
+    gdriveActions.setEditingData(@state.configId, path, data)
 
   _loadFolderName: (folderId) ->
     gdriveActions.loadGoogleInfo(@state.configId, folderId)
@@ -182,6 +197,9 @@ module.exports = React.createClass
 
   _getAuthorizedForCaption: ->
     'TODO!!'
+
+  _updateGoogleFolder: (configId, googleId, info) ->
+    gdriveActions.setGoogleInfo(configId, googleId, info)
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
