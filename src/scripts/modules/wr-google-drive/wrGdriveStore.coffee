@@ -42,9 +42,12 @@ Dispatcher.register (payload) ->
     when ActionTypes.WR_GDRIVE_SAVEFILE_SUCCESS
       configId = action.configId
       tableId = action.tableId
-      file = fromJS action.file
+
+      files = fromJS action.files
+      files = files.toMap().mapKeys (index, file) ->
+        file.get 'tableId'
+      _store = _store.setIn ['files', configId], files
       _store = _store.deleteIn ['updating', 'files', configId, tableId]
-      _store = _store.setIn ['files', configId, tableId], file
       WrGdriveStore.emitChange()
 
     when ActionTypes.WR_GDRIVE_SET_EDITING

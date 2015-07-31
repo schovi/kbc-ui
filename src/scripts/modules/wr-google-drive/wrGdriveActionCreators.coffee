@@ -21,7 +21,7 @@ module.exports =
       configId: configId
     fileId = file.get 'id'
     if fileId
-      apiOperation = api.putfile(configId, fileId, file.toJS())
+      apiOperation = api.putFile(configId, fileId, file.toJS())
     else
       apiOperation = api.postFile(configId, file)
 
@@ -30,7 +30,7 @@ module.exports =
         type: ActionTypes.WR_GDRIVE_SAVEFILE_SUCCESS
         tableId: tableId
         configId: configId
-        file: result
+        files: result
     .catch (err) ->
       dispatcher.handleViewAction
         type: ActionTypes.WR_GDRIVE_API_ERROR
