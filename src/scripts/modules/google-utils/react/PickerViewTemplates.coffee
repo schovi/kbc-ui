@@ -54,3 +54,25 @@ module.exports =
       recentView.setSelectFolderEnabled(true)
     recentView.setIncludeFolders(true)
     return recentView
+
+  recentFolders: ->
+    recentView = new google.picker.DocsView(google.picker.ViewId.RECENTLY_PICKED)
+    recentView.setMimeTypes('application/vnd.google-apps.folder')
+    recentView.setSelectFolderEnabled(true)
+    recentView.setIncludeFolders(true)
+    return recentView
+
+  flatFolders: ->
+    allFoldersView = new google.picker.DocsView()
+    allFoldersView.setIncludeFolders(true)
+    allFoldersView.setSelectFolderEnabled(true)
+    allFoldersView.setMimeTypes('application/vnd.google-apps.folder')
+    return allFoldersView
+
+  rootFolder: ->
+    view = new google.picker.DocsView()
+    view.setIncludeFolders(true)
+    view.setSelectFolderEnabled(true)
+    view.setMimeTypes('application/vnd.google-apps.folder')
+    view.setParent("root")
+    return view
