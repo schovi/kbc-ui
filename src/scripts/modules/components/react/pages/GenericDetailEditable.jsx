@@ -3,6 +3,7 @@ import React from 'react';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
+import ComponentStore from '../../stores/ComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 
 import ComponentDescription from '../components/ComponentDescription';
@@ -14,13 +15,14 @@ import Configuration from '../components/Configuration';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component');
 
     return {
+      component: ComponentStore.getComponent(componentId),
       componentId: componentId,
       configData: InstalledComponentStore.getConfigData(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
@@ -30,6 +32,18 @@ export default React.createClass({
       editingConfigData: InstalledComponentStore.getEditingRawConfigData(componentId, configId, '{}'),
       isValidEditingConfigData: InstalledComponentStore.isValidEditingConfigData(componentId, configId)
     };
+  },
+
+  documentationLink() {
+    if (this.state.component.get('documentationUrl')) {
+      return (
+        <span>
+          See the <a href={this.state.component.get('documentationUrl')}>documentation</a> for more details.
+        </span>
+      );
+    } else {
+      return null;
+    }
   },
 
   render() {
@@ -44,7 +58,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
-              <p className="help-block">This component has to be configured manually. </p>
+              <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
               <Configuration
                 data={this.getConfigData()}
                 isEditing={this.state.isEditing}
