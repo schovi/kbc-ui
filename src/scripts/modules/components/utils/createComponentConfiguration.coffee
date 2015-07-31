@@ -52,13 +52,12 @@ createGoodDataWriter = (configuration) ->
   .then ->
     id: writerId
 
-
 module.exports = (componentId, configuration) ->
   component = ComponentsStore.getComponent componentId
-
+  flags = component.get('flags')
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
-  else if component.get('uri') and componentHasApi(component.get('id'))
+  else if component.get('uri') and componentHasApi(component.get('id')) and !(flags.includes 'genericUI')
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigManually(configuration)
