@@ -23,14 +23,11 @@ module.exports = React.createClass
     folderNames: React.PropTypes.object.isRequired
 
 
-  # componentDidMount: ->
-  #   folderId = @props.file?.get('targetFolder')
-  #   folderName = @props.folderNames?.get(folderId) if folderId
-  #   if not folderName
-  #     @props.loadFolderFn(folderId)
-
   render: ->
     console.log 'TABLE ROW', @props.folderNames
+    if not @props.file
+      return @_renderEmptyFile()
+
     div className: 'tr',
       span className: 'td',
         @props.table.get 'name'
@@ -49,10 +46,16 @@ module.exports = React.createClass
       span className: 'td',
         'actions'
 
+  _renderEmptyFile: ->
+    div className: 'tr',
+      span className: 'td'
+      ,
+        @props.table.get 'name'
+
   _renderTargetfolder: ->
-    folderId = @props.file?.get('targetFolder')
+    folderId = @props.file.get('targetFolder')
     if not folderId
-      return 'n/a'
+      return '/'
     else
       folderName = @props.folderNames?.get(folderId)
       console.log folderName?.toJS(),folderId

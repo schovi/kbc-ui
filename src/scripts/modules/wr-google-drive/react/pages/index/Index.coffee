@@ -73,7 +73,8 @@ module.exports = React.createClass
           renderHeaderRowFn: @_renderHeaderRow
           filterFn: @_filterBuckets
           searchQuery: @state.localState.get('searchQuery')
-          isTableExportedFn: -> false #@_isTableExported
+          isTableExportedFn: (tableId) =>
+            @state.files.has(tableId)
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
       else
@@ -181,6 +182,7 @@ module.exports = React.createClass
 
   _getAuthorizedForCaption: ->
     'TODO!!'
+
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
