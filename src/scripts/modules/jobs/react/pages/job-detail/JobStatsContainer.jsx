@@ -6,10 +6,12 @@ import later from 'later';
 import {getRunIdStats} from '../../../../components/StorageApi';
 import JobStats from './JobStats';
 
+
 export default React.createClass({
   propTypes: {
     runId: React.PropTypes.string.isRequired,
-    autoRefresh: React.PropTypes.bool.isRequired
+    autoRefresh: React.PropTypes.bool.isRequired,
+    mode: React.PropTypes.string.isRequired
   },
 
   mixins: [addons.PureRenderMixin],
@@ -72,7 +74,11 @@ export default React.createClass({
   render() {
     if (this.state.stats) {
       return (
-        <JobStats stats={this.state.stats} isLoading={this.state.isLoading}/>
+        <JobStats
+          stats={this.state.stats}
+          isLoading={this.state.isLoading}
+          mode={this.props.mode}
+          />
       );
     } else {
       return (

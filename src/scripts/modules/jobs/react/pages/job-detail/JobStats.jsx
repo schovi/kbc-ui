@@ -21,6 +21,9 @@ const MESSAGES = {
     'other {# files total}}'
 };
 
+const MODE_TRANSFORMATION = 'transformation';
+const MODE_DEFAULT = 'default';
+
 function message(id, params) {
   return new IntlMessageFormat(MESSAGES[id]).format(params);
 }
@@ -28,7 +31,8 @@ function message(id, params) {
 export default React.createClass({
   propTypes: {
     stats: React.PropTypes.object.isRequired,
-    isLoading: React.PropTypes.bool.isRequired
+    isLoading: React.PropTypes.bool.isRequired,
+    mode: React.PropTypes.oneOf([MODE_DEFAULT, MODE_TRANSFORMATION])
   },
   mixins: [addons.PureRenderMixin],
 
@@ -56,19 +60,20 @@ export default React.createClass({
   },
 
   render() {
+    const isTransformation = this.props.mode === MODE_TRANSFORMATION;
     return (
       <div className="clearfix">
         <div className="col-md-4">
           <h4>
-            Imported Tables {this.importsTotal()} {this.loader()}
+            {isTransformation ? 'Input' : 'Imported Tables'} {this.importsTotal()} {this.loader()}
           </h4>
-          <TablesList tables={this.props.stats.getIn(['tables', 'import'])}/>
+          <TablesList tables={this.props.stats.getIn(['tables', isTransformation ? 'export' : 'import'])}/>
         </div>
         <div className="col-md-4">
           <h4>
-            Exported Tables {this.exportsTotal()}
+            {isTransformation ? 'Output' : 'Exported Tables'} {this.exportsTotal()}
           </h4>
-          <TablesList tables={this.props.stats.getIn(['tables', 'export'])}/>
+          <TablesList tables={this.props.stats.getIn(['tables', isTransformation ? 'import' : 'export'])}/>
         </div>
         <div className="col-md-4">
           <h4>
@@ -95,11 +100,17 @@ export default React.createClass({
   },
 
   importsTotal() {
+    if (this.props.mode === MODE_TRANSFORMATION) {
+      return null;
+    }
     const total = this.props.stats.getIn(['tables', 'import', 'totalCount']);
     return total > 0 ? <small>{message('TOTAL_IMPORTS', {totalCount: total})}</small> : null;
   },
 
   exportsTotal() {
+    if (this.props.mode === MODE_TRANSFORMATION) {
+      return null;
+    }
     const total = this.props.stats.getIn(['tables', 'export', 'totalCount']);
     return total > 0 ? <small>{message('TOTAL_EXPORTS', {totalCount: total})}</small> : null;
   }

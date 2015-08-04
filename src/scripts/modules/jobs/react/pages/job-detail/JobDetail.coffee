@@ -199,6 +199,7 @@ module.exports = React.createClass
                 'N/A'
 
   _renderAccordion: (job) ->
+    isTransformation = job.get('component') == 'transformation'
     React.createElement PanelGroup,
       accordion: true
       className: 'kbc-accordion kbc-panel-heading-with-table'
@@ -219,12 +220,14 @@ module.exports = React.createClass
         @_renderParamsRow(job)
 
       React.createElement Panel,
-        header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
+        header: accordionHeader((if isTransformation then 'Mapping' else 'Storage Stats'),
+          @state.activeAccordion == 'stats')
         eventKey: 'stats'
       ,
         React.createElement JobStats,
           runId: job.get 'runId'
-          autoRefresh: !job.get 'endTime'
+          autoRefresh: !job.get('endTime')
+          mode: if isTransformation then 'transformation' else 'default'
 
   _renderParamsRow: (job) ->
     status = job.get 'status'
