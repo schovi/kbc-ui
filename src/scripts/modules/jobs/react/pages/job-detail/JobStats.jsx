@@ -76,11 +76,22 @@ export default React.createClass({
           </h4>
           <div className="text-center">
             <h1>{this.dataSize()}</h1>
-            <FilesPie data={this.pieData()}/>
+            {this.filesPie()}
           </div>
         </div>
       </div>
     );
+  },
+
+  filesPie() {
+    const pieData = this.pieData();
+    if (pieData.count() <= 1) {
+      return null;
+    } else {
+      return (
+        <FilesPie data={pieData}/>
+      );
+    }
   },
 
   importsTotal() {
