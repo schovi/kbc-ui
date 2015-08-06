@@ -64,7 +64,13 @@ module.exports = React.createClass
       ' to GoodData project?'
 
     synchronizeTableText = React.DOM.span null,
-      'Are you sure you want to execute synchronize operation on '
+      'Are you sure you want to execute '
+      React.DOM.a
+        href: 'https://developer.gooddata.com/article/maql-ddl#synchronize'
+        target: '_blank'
+      ,
+        'synchronize'
+      ' operation on '
       @state.table.getIn ['data', 'name']
       ' dataset?'
 
