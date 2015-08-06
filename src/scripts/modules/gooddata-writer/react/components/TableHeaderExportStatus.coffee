@@ -3,7 +3,8 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 RoutesStore = require '../../../../stores/RoutesStore'
 
-{Tooltip, Loader} = require '../../../../react/common/common'
+{Tooltip} = require '../../../../react/common/common'
+{Loader} = require 'kbc-react-components'
 
 {button, span} = React.DOM
 
@@ -37,7 +38,8 @@ module.exports = React.createClass
   _loader: ->
     isSaving = @state.table.get('savingFields').contains 'isExported'
     isReset = @state.table.get('pendingActions').contains 'resetTable'
-    if isSaving || isReset
+    isSync = @state.table.get('pendingActions').contains 'syncTable'
+    if isSaving || isReset || isSync
       React.DOM.span null,
         ' '
         React.createElement Loader

@@ -441,6 +441,26 @@ dispatcher.register (payload) ->
         actions.delete(actions.indexOf('resetTable'))
       GoodDataWriterStore.emitChange()
 
+    when constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_START
+      _store = _store.updateIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'pendingActions'
+      ], (actions) ->
+        actions.push 'syncTable'
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_SUCCESS
+      _store = _store.updateIn [
+        'tables'
+        action.configurationId
+        action.tableId
+        'pendingActions'
+      ], (actions) ->
+        actions.delete(actions.indexOf('syncTable'))
+      GoodDataWriterStore.emitChange()
+
     when constants.ActionTypes.GOOD_DATA_WRITER_UPLOAD_START
 
       if action.tableId
