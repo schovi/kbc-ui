@@ -38,6 +38,11 @@ routes =
           jobId = routerState.getIn(['params', 'jobId'])
           "Job " + jobId
         reloaderHandler: JobDetailReloaderButton
+        isRunning: (routerState) ->
+          jobId = routerState.getIn(['params', 'jobId'])
+          job = JobsStore.get parseInt(jobId)
+          job && !job.get('isFinished')
+
         handler: JobDetail
         headerButtonsHandler: JobDetailButtons
         poll:

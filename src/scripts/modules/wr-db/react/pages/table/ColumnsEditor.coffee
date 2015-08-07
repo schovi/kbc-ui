@@ -13,6 +13,7 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool
     allColumns: React.PropTypes.object
     filterColumnFn: React.PropTypes.func
+    dataPreview: React.PropTypes.array
 
   render: ->
     columns = @props.columns.filter( (c) =>
@@ -32,6 +33,7 @@ module.exports = React.createClass
         editingColumn: editingColumn
         dataTypes: @props.dataTypes
         editColumnFn: @props.editColumnFn
+        dataPreview: @props.dataPreview
       )
 
     console.log rows.count()

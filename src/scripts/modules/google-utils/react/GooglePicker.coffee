@@ -61,14 +61,20 @@ module.exports = React.createClass
     views: React.PropTypes.array
     viewGroups: React.PropTypes.array
     email: React.PropTypes.string
+    buttonProps: React.PropTypes.object
 
   componentDidMount: ->
     injectGoogleApiScript()
 
   render: ->
-    React.createElement Button,
-      onClick: @_ButtonClick
+    buttonProps =
       className: 'btn btn-success'
+    if @props.buttonProps
+      buttonProps = @props.buttonProps
+    buttonProps['onClick'] = @_ButtonClick
+
+    React.createElement Button,
+      buttonProps
     ,
       @props.buttonLabel
   getDefaultProps: ->

@@ -1,4 +1,3 @@
-
 request = require '../../utils/request'
 parse = require '../../utils/parseCsv'
 ApplicationStore = require '../../stores/ApplicationStore'
@@ -27,6 +26,15 @@ storageApi =
     .then((response) ->
       response.body
     )
+
+  createToken: (params) ->
+    createRequest 'POST', 'tokens'
+    .type 'form'
+    .send params
+    .promise()
+    .then (response) ->
+      response.body
+
 
   getTokens: ->
     createRequest 'GET', 'tokens'

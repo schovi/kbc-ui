@@ -195,7 +195,7 @@ module.exports =
   ###
    WR DB CREDENTIALS ACTIONS
   ###
-  loadWrDbCredentialsForce: (permissionType, token) ->
+  loadWrDbCredentialsForce: (permissionType, token, driver) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD
       permission: permissionType
@@ -203,7 +203,7 @@ module.exports =
     )
 
     provisioningApi
-    .getCredentials('wrdb', permissionType, token)
+    .getCredentials(driver, permissionType, token)
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_WRDB_LOAD_SUCCESS
@@ -237,13 +237,13 @@ module.exports =
       throw error
     )
 
-  loadWrDbCredentials: (permissionType, token) ->
+  loadWrDbCredentials: (permissionType, token, driver) ->
     isLoaded = WrDbCredentialsStore.getIsLoaded(permissionType, token)
     return Promise.resolve() if isLoaded
-    @loadWrDbCredentialsForce(permissionType, token)
+    @loadWrDbCredentialsForce(permissionType, token, driver)
 
 
-  createWrDbCredentials: (permissionType, token) ->
+  createWrDbCredentials: (permissionType, token, driver) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.CREDENTIALS_WRDB_CREATE
       permission: permissionType
@@ -252,7 +252,7 @@ module.exports =
     )
 
     provisioningApi
-    .createCredentials('wrdb', permissionType, token)
+    .createCredentials(driver, permissionType, token)
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_WRDB_CREATE_SUCCESS
@@ -271,7 +271,7 @@ module.exports =
       throw error
     )
 
-  dropWrDbCredentials: (permissionType, token) ->
+  dropWrDbCredentials: (permissionType, token, driver) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.CREDENTIALS_WRDB_DROP
       permission: permissionType
@@ -279,7 +279,7 @@ module.exports =
     )
     credentials = WrDbCredentialsStore.getCredentials(permissionType, token)
     provisioningApi
-    .dropCredentials('wrdb', credentials.get("id"), token)
+    .dropCredentials(driver, credentials.get("id"), token)
     .then( ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_WRDB_DROP_SUCCESS

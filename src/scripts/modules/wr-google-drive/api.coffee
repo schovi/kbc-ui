@@ -1,0 +1,34 @@
+SyrupApi = require '../components/SyrupComponentApi'
+Immutable = require 'immutable'
+
+createRequest = (method, path) ->
+  SyrupApi.createRequest('wr-google-drive', method, path)
+
+module.exports =
+
+  getFiles: (configId) ->
+    createRequest('GET', "files/#{configId}")
+    .promise()
+    .then (response) ->
+      response.body
+
+  postFile: (configId, file) ->
+    createRequest('POST', "files/#{configId}")
+    .send file
+    .promise()
+    .then (response) ->
+      response.body
+
+  putFile: (configId, fileId, file) ->
+    createRequest('PUT', "files/#{configId}/#{fileId}")
+    .send file
+    .promise()
+    .then (response) ->
+      response.body
+
+
+  getFileInfo: (configId, googleId) ->
+    createRequest('GET', "remote-file/#{configId}/#{googleId}")
+    .promise()
+    .then (response) ->
+      response.body

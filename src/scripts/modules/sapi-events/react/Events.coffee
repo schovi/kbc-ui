@@ -3,10 +3,11 @@ Button = React.createFactory(require('react-bootstrap').Button)
 Immutable = require 'immutable'
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 _ = require 'underscore'
-
-{div} = React.DOM
+{Link} = require 'react-router'
+{div, span, p} = React.DOM
 
 EventService = require('../EventService')
+RoutesStore = require '../../../stores/RoutesStore'
 
 SearchRow = React.createFactory(require('../../../react/common/common').SearchRow)
 EventsTable = React.createFactory(require './EventsTable')
@@ -18,6 +19,22 @@ Events = React.createClass
   propTypes:
     params: React.PropTypes.object
     autoReload: React.PropTypes.bool
+    link: React.PropTypes.object
+
+  _handleChange: ->
+    currentEventId = RoutesStore.getRouterState().getIn ['query', 'eventId']
+    @_events.loadEvent(currentEventId) if currentEventId
+
+    if @isMounted()
+      @setState
+        searchQuery: @_events.getQuery()
+        events: @_events.getEvents()
+        currentEventId: currentEventId
+        currentEvent: @_events.getEvent(currentEventId)
+        isLoadingCurrentEvent: @_events.getIsLoadingEvent(currentEventId)
+        isLoading: @_events.getIsLoading()
+        isLoadingOlder: @_events.getIsLoadingOlder()
+        hasMore: @_events.getHasMore()
 
   getInitialState: ->
     events: Immutable.List()
@@ -25,12 +42,19 @@ Events = React.createClass
     isLoading: false
     hasMore: true
     searchQuery: ''
-    selectedEvent: null
+    currentEvent: null
+    currentEventId: null
+    isLoadingCurrentEvent: false
 
   componentDidMount: ->
     @_createEventsService(@props.params)
     @_events.load()
     @_events.setAutoReload @props.autoReload
+
+    RoutesStore.addChangeListener(@_handleChange)
+
+    if @state.currentEventId
+      @_events.loadEvent(@state.currentEventId)
 
   componentWillReceiveProps: (nextProps) ->
     if !_.isEqual(nextProps.params, @props.params)
@@ -38,12 +62,13 @@ Events = React.createClass
       @_createEventsService(nextProps.params)
       @_events.setQuery @state.searchQuery
       @_events.load()
-      @_resetSelectedEvent()
+
 
     @_events.setAutoReload nextProps.autoReload
 
   componentWillUnmount: ->
     @_destroyEventsService()
+    RoutesStore.removeChangeListener(@_handleChange)
 
   _createEventsService: (params) ->
     @_events =  EventService.factory(params)
@@ -54,21 +79,35 @@ Events = React.createClass
     @_events.reset()
 
   render: ->
+    console.log 'render events', @props.currentEventId
     div null,
       div null,
         SearchRow
           query: @state.searchQuery
           onSubmit: @_handleQueryChange
-        if @state.selectedEvent
-          EventDetail
-            event: @state.selectedEvent
-            onGoBack: @_resetSelectedEvent
-        else if @state.events.size
+        if @state.currentEventId
+          if @state.currentEvent
+            EventDetail
+              link: @props.link
+              event: @state.currentEvent
+              isLoading: @state.isLoading
+          else if @state.isLoadingCurrentEvent
+            div className: 'well',
+              'Loading event '
+          else
+            div className: 'well',
+              React.createElement Link, @props.link,
+                span className: 'fa fa-chevron-left', null,
+                  ' Back'
+              p null,
+                "Event #{@props.currentEventId} not found."
+        else if @state.events.count()
           div null,
             (EventsTable
               isLoading: @state.isLoading
               events: @state.events
               onEventSelect: @_handleEventSelect
+              link: @props.link
             ),
             @_renderMoreButton()
         else
@@ -92,27 +131,9 @@ Events = React.createClass
   _handleLoadMore: ->
     @_events.loadMore()
 
-  _handleEventSelect: (selectedEvent) ->
-    @setState
-      selectedEvent: selectedEvent
-
-  _resetSelectedEvent: ->
-    @setState
-      selectedEvent: null
-
   _handleQueryChange: (query) ->
     @_events.setQuery(query)
     @_events.load()
-    console.log 'query change', query
-
-  _handleChange: ->
-    if @isMounted()
-      @setState
-        searchQuery: @_events.getQuery()
-        events: @_events.getEvents()
-        isLoading: @_events.getIsLoading()
-        isLoadingOlder: @_events.getIsLoadingOlder()
-        hasMore: @_events.getHasMore()
 
 
 module.exports = Events

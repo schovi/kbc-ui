@@ -1,6 +1,8 @@
 React = require 'react'
 Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
-fieldNames = require '../../../templates/credentialsFieldNames'
+fieldsTemplates = require '../../../templates/credentialsFields'
+
+_ = require 'underscore'
 
 {div} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)
@@ -8,6 +10,7 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 {Protected} = require 'kbc-react-components'
 
 {form, div, h2, small, label, p, option} = React.DOM
+
 
 module.exports = React.createClass
 
@@ -21,6 +24,7 @@ module.exports = React.createClass
     componentId: React.PropTypes.string
 
   render: ->
+    fields = fieldsTemplates(@props.componentId)
 
     form className: 'form-horizontal',
       div className: 'row',
@@ -35,12 +39,8 @@ module.exports = React.createClass
             'User specified database credentials'
 
       div className: 'row',
-        @_createInput 'Host name', 'host'
-        @_createInput 'Port', 'port', 'number'
-        @_createInput 'Username', 'user'
-        @_createInput 'Password', 'password', 'password', true
-        @_createInput 'Database Name', 'database', 'text'
-
+        _.map fields, (field) =>
+          @_createInput(field[0], field[1], field[2], field[3], field[4])
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     if @props.isEditing
@@ -72,6 +72,7 @@ module.exports = React.createClass
         Clipboard text: @props.credentials.get propName
 
   _getName: (field) ->
+    return null
     templates = fieldNames[@props.componentId]
     if templates
       return templates[field]

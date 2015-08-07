@@ -6,6 +6,7 @@ ApplicationStore = require '../../../../../stores/ApplicationStore'
 JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+PureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
@@ -42,7 +43,7 @@ accordionHeader = (text, isActive) ->
                 text
 
 module.exports = React.createClass
-  mixins: [createStoreMixin(JobsStore, InstalledComponentsStore)]
+  mixins: [createStoreMixin(JobsStore, InstalledComponentsStore), PureRendererMixin]
 
 
   getStateFromStores: ->
@@ -54,6 +55,7 @@ module.exports = React.createClass
       configuration = InstalledComponentsStore.getConfig(getComponentId(job), config)
 
     job: job
+    query: JobsStore.getQuery()
     configuration: configuration
     canUpdateErrorNote: ApplicationStore.getKbcVars().get('canDoSupport')
 
@@ -197,6 +199,7 @@ module.exports = React.createClass
                 'N/A'
 
   _renderAccordion: (job) ->
+    isTransformation = job.get('component') == 'transformation'
     React.createElement PanelGroup,
       accordion: true
       className: 'kbc-accordion kbc-panel-heading-with-table'
@@ -217,12 +220,14 @@ module.exports = React.createClass
         @_renderParamsRow(job)
 
       React.createElement Panel,
-        header: accordionHeader('Storage Stats', @state.activeAccordion == 'stats')
+        header: accordionHeader((if isTransformation then 'Mapping' else 'Storage Stats'),
+          @state.activeAccordion == 'stats')
         eventKey: 'stats'
       ,
         React.createElement JobStats,
           runId: job.get 'runId'
-          autoRefresh: !job.get 'endTime'
+          autoRefresh: !job.get('endTime')
+          mode: if isTransformation then 'transformation' else 'default'
 
   _renderParamsRow: (job) ->
     status = job.get 'status'
@@ -260,6 +265,12 @@ module.exports = React.createClass
     div {className: 'col-md-12'},
       h2 null, 'Log'
       Events
+        link:
+          to: 'jobDetail'
+          params:
+            jobId: @state.job.get('id')
+          query:
+            q: @state.query
         params:
           runId: job.get('runId')
         autoReload: job.get('status') == 'waiting' || job.get('status') == 'processing'

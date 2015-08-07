@@ -41,7 +41,7 @@ export default React.createClass({
   refreshGraph() {
     this.chart.data = this.getData();
     this.chart.svg.style('width', WIDTH);
-    this.chart.draw(200);
+    this.chart.draw();
   },
 
   render() {

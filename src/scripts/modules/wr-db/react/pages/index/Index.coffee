@@ -1,5 +1,8 @@
 React = require 'react'
 {fromJS, Map, List} = require('immutable')
+_ = require 'underscore'
+classnames = require 'classnames'
+
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
@@ -18,6 +21,8 @@ WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+
+fieldsTemplate = require '../../../templates/credentialsFields'
 
 #componentId = 'wr-db'
 #driver = 'mysql'
@@ -58,7 +63,19 @@ templateFn = (componentId) ->
       @_renderMainContent()
       @_renderSideBar()
 
+  _hasTablesToExport: ->
+    @state.tables.reduce((reduction, table) ->
+      (table.get('export') == true) or reduction
+    , false)
 
+  _hasValidCredentials: ->
+    if not @state.hasCredentials
+      return false
+    fields = fieldsTemplate(componentId)
+    result = _.reduce(fields, (memo, field) =>
+      not _.isEmpty(@state.credentials.get(field[1])) and memo
+    , true)
+    return result
 
   _renderMainContent: ->
     div {className: 'col-md-9 kbc-main-content'},
@@ -66,12 +83,12 @@ templateFn = (componentId) ->
         ComponentDescription
           componentId: componentId
           configId: @state.configId
-      if true or @state.hasCredentials
+      if @_hasValidCredentials()
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery') or ''
-      if @state.hasCredentials
+      if @_hasValidCredentials()
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
@@ -84,9 +101,22 @@ templateFn = (componentId) ->
         div className: 'row component-empty-state text-center',
           div null,
             p null, 'No credentials provided.'
-            span className: 'btn btn-success',
-              i className: 'fa fa-fw fa-dropbox'
-              ' Setup Credentials'
+            Link
+              className: 'btn btn-success'
+              to: "#{componentId}-credentials"
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Setup Credentials First'
+
+  _disabledToRun: ->
+    if not @_hasValidCredentials()
+      return 'No database credentials provided'
+    if not @_hasTablesToExport()
+      return 'No tables selected to export'
+    return null
+
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -96,23 +126,26 @@ templateFn = (componentId) ->
           configId: @state.configId
 
       ul className: 'nav nav-stacked',
-        li null,
-          Link
-            to: "#{componentId}-credentials"
-            params:
-              config: @state.configId
-          ,
-            i className: 'fa fa-fw fa-user'
-            ' Database Credentials'
-        li null,
+        if @_hasValidCredentials()
+          li null,
+            Link
+              to: "#{componentId}-credentials"
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Database Credentials'
+        li className: classnames(disabled: !!@_disabledToRun()),
           RunButtonModal
+            disabled: !!@_disabledToRun()
+            disabledReason: @_disabledToRun()
             title: "Upload tables"
             tooltip: "Upload all selected tables"
             mode: 'link'
             icon: 'fa fa-upload fa-fw'
-            component: 'wr-db'
+            component: componentId
             runParams: =>
-              writer: @props.configId
+              writer: @state.configId
           ,
            "You are about to run upload of all seleted tables"
         li null,

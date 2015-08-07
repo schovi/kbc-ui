@@ -28,7 +28,7 @@ module.exports = React.createClass
     @props.onChange @props.configuration.set(propName, event.target.value)
 
   render: ->
-    form className: 'form-horizontal',
+    form className: 'form-horizontal', onSubmit: @_handleSubmit,
       FormHeader
         component: @props.component
         onCancel: @props.onCancel
@@ -154,4 +154,9 @@ module.exports = React.createClass
           wrapperClassName: 'col-xs-8'
           onChange: @_handleChange.bind @, 'pid'
           disabled: @props.isSaving
+
+  _handleSubmit: (e) ->
+    e.preventDefault()
+    if @props.isValid
+      @props.onSave()
 

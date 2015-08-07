@@ -303,9 +303,56 @@ module.exports =
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_SUCCESS
         configurationId: configurationId
         tableId: tableId
+
+      applicationActionCreators.sendNotification
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Table reset has been initiated. You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.job
+                onClick: @props.onClick
+              ,
+                'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        error: e
+      throw e
+
+  synchronizeTable: (configurationId, tableId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_START
+      configurationId: configurationId
+      tableId: tableId
+
+    goodDataWriterApi
+    .synchronizeTable configurationId, tableId
+    .then (job) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+
+      applicationActionCreators.sendNotification
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Dataset synchronize has been initiated. You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.job
+                onClick: @props.onClick
+              ,
+                'here'
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_ERROR
         configurationId: configurationId
         tableId: tableId
         error: e

@@ -19,7 +19,8 @@ module.exports = (type) ->
       @setState(@getStateFromStores())
 
     getStateFromStores: ->
-      components: ComponentsStore.getFilteredForType(type)
+      components: ComponentsStore.getFilteredForType(type).filter (component) ->
+        !component.get('flags').includes 'excludeFromNewList'
       filter: ComponentsStore.getFilter(type)
 
     render: ->

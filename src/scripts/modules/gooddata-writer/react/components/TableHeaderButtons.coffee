@@ -38,6 +38,10 @@ module.exports = React.createClass
     actionCreators.resetTable @state.configurationId,
       @state.table.get 'id'
 
+  _handleSynchronizeTable: ->
+    actionCreators.synchronizeTable @state.configurationId,
+      @state.table.get 'id'
+
   _handleUpload: ->
     actionCreators.uploadToGoodData @state.configurationId, @state.table.get('id')
 
@@ -58,6 +62,17 @@ module.exports = React.createClass
       'Are you sure you want to upload '
       @state.table.getIn ['data', 'name']
       ' to GoodData project?'
+
+    synchronizeTableText = React.DOM.span null,
+      'Are you sure you want to execute '
+      React.DOM.a
+        href: 'https://developer.gooddata.com/article/maql-ddl#synchronize'
+        target: '_blank'
+      ,
+        'synchronize'
+      ' operation on '
+      @state.table.getIn ['data', 'name']
+      ' dataset?'
 
     div null,
       TableLoadType
@@ -84,6 +99,15 @@ module.exports = React.createClass
               onConfirm: @_handleResetTable
             ,
               React.DOM.span null, 'Reset table'
+          React.createElement MenuItem, null,
+            React.createElement Confirm,
+              title: 'Synchronize dataset'
+              text: synchronizeTableText
+              buttonLabel: 'Synchronize'
+              buttonType: 'success'
+              onConfirm: @_handleSynchronizeTable
+            ,
+              React.DOM.span null, 'Synchronize dataset'
         if @state.table.get('pendingActions').contains 'uploadTable'
           React.createElement Button, null,
             React.createElement Loader, className: 'fa-fw'

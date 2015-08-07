@@ -5,6 +5,7 @@ List = Immutable.List
 Error = require '../utils/Error'
 StoreUtils = require '../utils/StoreUtils'
 _ = require 'underscore'
+JobsStore = require '../modules/jobs/stores/JobsStore'
 
 Immutable = require('immutable')
 Constants = require '../constants/KbcConstants'
@@ -54,6 +55,15 @@ getRouteTitle = (store, routeName) ->
     title(store.get 'routerState')
   else
     title
+
+
+getRouteIsRunning = (store, routeName) ->
+  route = getRoute(store, routeName)
+  isRunning = if route then route.get 'isRunning' else false
+  if _.isFunction isRunning
+    isRunning(store.get 'routerState')
+  else
+    isRunning
 
 getCurrentRouteName = (store) ->
   routes = store.getIn ['routerState', 'routes'], List()
@@ -116,6 +126,10 @@ RoutesStore = StoreUtils.createStore
   getCurrentRouteTitle: ->
     currentRouteName = getCurrentRouteName(_store)
     getRouteTitle(_store, currentRouteName)
+
+  getCurrentRouteIsRunning: ->
+    currentRouteName = getCurrentRouteName(_store)
+    getRouteIsRunning(_store, currentRouteName)
 
   ###
     If it'is a component route, component id is returned
@@ -184,6 +198,9 @@ Dispatcher.register (payload) ->
         _store = _store.set 'isPending', true
 
     when Constants.ActionTypes.ROUTER_ROUTE_CHANGE_SUCCESS
+      # jobs status (playing icon in header) can be changed so wait for it
+      Dispatcher.waitFor([JobsStore.dispatchToken])
+
       _store = _store.withMutations (store) ->
         newState = Immutable.fromJS(action.routerState)
         notFound = newState.get('routes').last().get('name') == 'notFound'

@@ -21,6 +21,7 @@ goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
+googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 
 routes =
 
@@ -121,11 +122,17 @@ routes =
     ,
       dropoxWriterRoutes
     ,
+      googleDriveWriterRoutes
+    ,
       createDbWriterRoutes('wr-db', 'mysql', true)
     ,
       createDbWriterRoutes('wr-db-mysql', 'mysql', true)
     ,
       createDbWriterRoutes('wr-db-oracle', 'oracle', false)
+    ,
+      createDbWriterRoutes('wr-db-redshift', 'redshift', true)
+    ,
+      createDbWriterRoutes('wr-tableau', 'mysql', true)
     ,
       createGenericDetailRoute 'writer'
 

@@ -5,19 +5,29 @@ createStoreMixin = require '../mixins/createStoreMixin'
 RoutesStore = require '../../stores/RoutesStore'
 ApplicationStore = require '../../stores/ApplicationStore'
 
+flattenBreadcrumbs = (breadcrumbs) ->
+  breadcrumbs
+  .map (page) ->
+    page.get 'title'
+  .join ' / '
+
 module.exports = React.createClass
   displayName: 'PageTitle'
   mixins: [createStoreMixin(RoutesStore)]
 
   getStateFromStores: ->
-    pageTitle: ApplicationStore.getCurrentProject().get('name') + ' - ' + @breadcrumbs()
-
-  breadcrumbs: ->
-    RoutesStore
-    .getBreadcrumbs()
-    .map (page) ->
-      page.get 'title'
-    .join ' / '
+    breadcrumbs: RoutesStore.getBreadcrumbs()
+    isPlaying: RoutesStore.getCurrentRouteIsRunning()
+    pageTitle: ApplicationStore.getCurrentProject().get('name')
 
   render: ->
-    DocumentTitle title: @state.pageTitle
+    DocumentTitle title: @pageTitle()
+
+  pageTitle: ->
+    "#{@playIcon()} #{@state.pageTitle} - #{flattenBreadcrumbs(@state.breadcrumbs)}"
+
+  playIcon: ->
+    if @state.isPlaying
+      '▶ '
+    else
+      ''

@@ -26,7 +26,7 @@ export default React.createClass({
           </div>
           <div className="well">
             All source tables are stored in <code>/data/in/tables</code>
-            (relative path <code>in/tables</code> ,save all tables for output mapping to
+            (relative path <code>in/tables</code> , save all tables for output mapping to
             <code>/data/out/tables</code> (relative path <code>out/tables</code>).
           </div>
           <div className="edit form-group kbc-queries-editor">

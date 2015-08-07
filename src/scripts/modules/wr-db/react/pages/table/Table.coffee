@@ -1,5 +1,5 @@
 React = require 'react'
-
+_ = require 'underscore'
 
 {fromJS, Map, List} = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -8,6 +8,8 @@ TableNameEdit = React.createFactory require './TableNameEdit'
 ColumnsEditor = React.createFactory require './ColumnsEditor'
 ColumnRow = require './ColumnRow'
 dataTypes = require '../../../templates/dataTypes'
+
+storageApi = require '../../../../components/StorageApi'
 
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
@@ -22,9 +24,16 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 #componentId = 'wr-db'
 
 #IGNORE is automatically included
-defaultDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
+#defaultDataTypes = ['INT','BIGINT', 'VARCHAR', 'TEXT', 'DECIMAL', 'DATE', 'DATETIME']
+defaultDataTypes =
+['INT','BIGINT',
+'VARCHAR': {defaultSize: '255'},
+'TEXT',
+'DECIMAL': {defaultSize: '12,2'},
+'DATE', 'DATETIME'
+]
 
-{label, input, p, ul, li, span, button, strong, div, i} = React.DOM
+{option, select, label, input, p, ul, li, span, button, strong, div, i} = React.DOM
 
 
 module.exports = (componentId) ->
@@ -61,6 +70,20 @@ templateFn = (componentId) ->
     exportInfo: exportInfo
     isSavingColumns: isSavingColumns
 
+  getInitialState: ->
+    dataPreview: null
+
+
+  componentDidMount: ->
+    tableId = RoutesStore.getCurrentRouteParam('tableId')
+    component = @
+    storageApi
+    .exportTable tableId,
+      limit: 10
+    .then (csv) ->
+      component.setState
+        dataPreview: csv
+
 
   render: ->
     console.log 'render table', @state.tableId, @state.tableConfig.toJS(), "EDITING DATA", @state.editingData.toJS()
@@ -70,7 +93,8 @@ templateFn = (componentId) ->
         div className: 'col-sm-12',
           div className: 'col-sm-5', @_renderTableEdit()
           div className: 'col-sm-2', @_renderHideIngored()
-          div className: 'col-sm-5', @_renderEditButtons()
+          div className: 'col-sm-2', @_renderSetColumnsType() if !!@state.editingColumns
+          div className: 'col-sm-3', @_renderEditButtons()
 
       ColumnsEditor
         dataTypes: dataTypes[componentId] or defaultDataTypes
@@ -78,12 +102,15 @@ templateFn = (componentId) ->
         renderRowFn: @_renderColumnRow
         editingColumns: @state.editingColumns
         isSaving: @state.isSavingColumns
-        editColumnFn: (newColumn) =>
-          cname = newColumn.get('name')
-          path = ['columns', @state.tableId, cname]
-          WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
+        editColumnFn: @_onEditColumn
         filterColumnsFn: @_hideIgnoredFilter
         filterColumnFn: @_filterColumn
+        dataPreview: @state.dataPreview
+
+  _onEditColumn: (newColumn) ->
+    cname = newColumn.get('name')
+    path = ['columns', @state.tableId, cname]
+    WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
 
   _filterColumn: (column) ->
     not (column.get('type') == 'IGNORE' and @state.hideIgnored)
@@ -96,7 +123,7 @@ templateFn = (componentId) ->
     newCols
 
   _renderHideIngored: ->
-    label null,
+    label className: 'pull-right',
       input
         type: 'checkbox'
         label: 'Hide IGNORED'
@@ -124,6 +151,33 @@ templateFn = (componentId) ->
     WrDbActions.saveTableColumns(componentId, @state.configId, @state.tableId, columns).then =>
       @_handleEditColumnsCancel()
 
+  _renderSetColumnsType: ->
+    dataTypes = @_getDataTypes()
+    options = _.map dataTypes.concat('IGNORE'), (opKey, opValue) ->
+      option
+        value: opKey
+        key: opKey
+      ,
+        opKey
+    span null,
+      span null, 'Set All Coumns To'
+      select
+        onChange: (e) =>
+          value = e.target.value
+          @state.editingColumns.map (ec) =>
+            newColumn = ec.set 'type', value
+            @_onEditColumn(newColumn)
+        options
+
+
+  _getDataTypes: ->
+    dtypes = dataTypes[componentId] or defaultDataTypes
+    return _.map dtypes, (dataType) ->
+      #it could be object eg {VARCHAR: {defaultSize:''}}
+      if _.isObject dataType
+        return _.keys(dataType)[0]
+      else #or string
+        return dataType
 
   _handleEditColumnsCancel: ->
     path = ['columns', @state.tableId]

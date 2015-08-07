@@ -74,6 +74,15 @@ module.exports =
     .then (response) ->
       response.body
 
+  synchronizeTable: (configurationId, tableId) ->
+    createRequest('POST', 'sync-datasets')
+    .send
+      tables: [tableId]
+      config: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
   uploadTable: (configurationId, tableId) ->
     createRequest('POST', 'upload-table')
     .send

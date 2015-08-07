@@ -48,7 +48,9 @@ module.exports = React.createClass
         onSave: @_handleSave
 
   _getFormHandler: ->
-    hasUI = @state.component.get('hasUI') || hiddenComponents.hasDevelPreview(@state.component.get('id'))
+    hasUI = @state.component.get('hasUI') ||
+      hiddenComponents.hasDevelPreview(@state.component.get('id')) ||
+      @state.component.get('flags').includes 'genericUI'
     if !hasUI
       return ManualConfigurationForm
 

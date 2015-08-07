@@ -133,7 +133,6 @@ module.exports = React.createClass
                   mode: @state.sandboxMode
                   redirect: @state.sandboxRedirect
                   onChange: (values) =>
-                    console.log values
                     @setState
                       sandboxMode: values.mode
                       sandboxRedirect: values.redirect

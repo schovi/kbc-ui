@@ -1,19 +1,28 @@
 React = require 'react'
 date = require '../../../utils/date'
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
+{Link} = require 'react-router'
 sapiEventsUtils = require '../utils'
+classnames = require 'classnames'
+_ = require 'underscore'
 
-{table, thead, tbody, tr, th, td} = React.DOM
+{div} = React.DOM
 
 module.exports = React.createClass
   displayName: 'TableRow'
   mixins: [PureRendererMixin]
+  propTypes:
+    event: React.PropTypes.object.isRequired
+    link: React.PropTypes.object.isRequired
   render: ->
-    tr
-      className: sapiEventsUtils.classForEventType(@props.event.get('type'))
-      onClick: @props.onClick,
+    React.createElement Link,
+      to: @props.link.to
+      params: @props.link.params
+      query: _.extend {}, @props.link.query,
+        eventId: @props.event.get('id')
+      className: classnames('tr', sapiEventsUtils.classForEventType(@props.event.get('type')))
     ,
-      td null,
+      div className: 'td',
         date.format @props.event.get('created'),
-      td null,
+      div className: 'td',
         @props.event.get('message')

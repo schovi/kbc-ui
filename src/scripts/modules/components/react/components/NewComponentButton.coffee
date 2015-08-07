@@ -20,7 +20,11 @@ createNewComponentButton = (text, to, type) ->
 
     render: ->
       if @state.hasInstalled
-        Link to: to, className: 'btn btn-success',
+        Link
+          to: to
+          className: 'btn btn-success'
+          activeClassName: ''
+        ,
           span className: 'kbc-icon-plus'
           text
       else

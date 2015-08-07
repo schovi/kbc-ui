@@ -4,8 +4,6 @@ import NotificationsStore from '../../stores/NotificationsStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 import {Alert} from 'react-bootstrap';
 
-const CSSTransitionGroup = React.addons.CSSTransitionGroup;
-
 const classMap = {
   success: 'info',
   error: 'danger'
@@ -21,12 +19,9 @@ export default React.createClass({
   },
 
   render() {
-    console.log('nofs', this.state.notifications.toJS());
     return (
       <div className="kbc-notifications">
-        <CSSTransitionGroup transitionName="kbcNotificationTransition">
-          {this.state.notifications.map(this.renderNotification)}
-        </CSSTransitionGroup>
+        {this.state.notifications.map(this.renderNotification)}
       </div>
     );
   },

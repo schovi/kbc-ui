@@ -17,7 +17,6 @@ module.exports = React.createClass
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
     onExportChangeFn: React.PropTypes.func.isRequired
-    prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
@@ -50,7 +49,7 @@ module.exports = React.createClass
             tooltip: "Upload #{@props.table.get('id')}"
             mode: 'button'
             icon: 'fa fa-upload fa-fw'
-            component: 'wr-db'
+            component: @props.componentId
             runParams: =>
               table: @props.table.get('id')
               writer: @props.configId

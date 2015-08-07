@@ -69,7 +69,7 @@ JobsStore = StoreUtils.createStore
 
 
 
-Dispatcher.register (payload) ->
+JobsStore.dispatchToken = Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type

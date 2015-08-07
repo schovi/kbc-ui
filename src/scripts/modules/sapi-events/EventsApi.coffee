@@ -22,5 +22,11 @@ eventsApi =
       response.body
     )
 
+  getEvent: (id) ->
+    createRequest('GET', "events/#{id}")
+    .promise()
+    .then (response) ->
+      response.body
+
 
 module.exports = eventsApi

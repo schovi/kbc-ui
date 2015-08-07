@@ -29,8 +29,8 @@ Dispatcher.register (payload) ->
   switch action.type
     when constants.ActionTypes.STORAGE_TOKEN_CREATE_SUCCESS
       token = Immutable.fromJS(action.token)
-      tokenId = action.token.id
-      _store = _store.setIn ['tokens', tokenId], token
+      tokens = _store.get('tokens', List())
+      _store = _store.set('tokens', tokens.push(token))
       StorageTokensStore.emitChange()
 
     when constants.ActionTypes.STORAGE_TOKENS_LOAD

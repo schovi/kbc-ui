@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 WrDbActions = require '../../../actionCreators'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
-
+provisioningTemplates = require '../../../templates/provisioning'
 WrDbStore = require '../../../store'
 RoutesStore = require '../../../../../stores/RoutesStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -88,7 +88,7 @@ templateFn = (componentId, driver, isProvisioning) ->
   _runLoadProvReadCredentials: ->
     isReadOnly = true
     @_updateLocalState('credentialsState', States.LOADING_PROV_READ)
-    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly).then =>
+    WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly, driver).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
   render: ->
@@ -131,6 +131,7 @@ templateFn = (componentId, driver, isProvisioning) ->
 
 
   _renderInit: ->
+    driverName = provisioningTemplates[driver].name
     div className: 'panel panel-default',
       div className: 'panel-heading',
         h4 null, 'Choose which database to use:'
@@ -140,16 +141,16 @@ templateFn = (componentId, driver, isProvisioning) ->
             className: 'list-group-item text-center'
             onClick: @_toggleCreateOwnCredentials
           ,
-            h4 className: 'list-group-item-heading', 'Own MySQL database'
-            p className: 'list-group-item-text', 'User has own mysql database and will provide credenetials'
+            h4 className: 'list-group-item-heading', "Own #{driverName} database"
+            p className: 'list-group-item-text', "User has own #{driverName} database and will provide credenetials"
           a
             className: 'list-group-item text-center'
             onClick: @_toggleCreateProvWriteCredentials
 
           ,
-            h4 className: 'list-group-item-heading', 'Keboola MySQL database'
-            p className: 'list-group-item-text', 'Keboola will provide and setup \
-            dedicated database and user will be given readonly credentials.'
+            h4 className: 'list-group-item-heading', "Keboola #{driverName} database"
+            p className: 'list-group-item-text', "Keboola will provide and setup \
+            dedicated #{driverName} database and user will be given readonly credentials."
 
   _toggleCreateOwnCredentials: ->
     credentials = @state.credentials.map (value, key) ->
@@ -173,13 +174,13 @@ templateFn = (componentId, driver, isProvisioning) ->
     creds = @state.provisioningCredentials?.get('read')
     if not creds
       return null
-    return fromJS
-      host: creds.get 'hostname'
-      database: creds.get 'db'
-      port: @state.credentials.get 'port'
-      password: creds.get 'password'
-      user: creds.get 'user'
-      driver: driver
+    mappings = provisioningTemplates[driver].fieldsMapping
+    result = {}
+    for key in _.keys(mappings)
+      result[key] =  creds.get mappings[key]
+    result['port'] = provisioningTemplates[driver].defaultPort
+    result['driver'] = driver
+    return fromJS result
 
   _renderCredentialsForm: (credentials, isEditing) ->
     state = @state.localState.get('credentialsState')
@@ -194,8 +195,14 @@ templateFn = (componentId, driver, isProvisioning) ->
       componentId: componentId
 
   _isProvCredentials: ->
-    result = @state.credentials?.get('host') == 'wr-db.keboola.com'
-    result
+    host = @state.credentials?.get('host')
+    if driver == 'mysql'
+      return host == 'wr-db.keboola.com'
+
+    if driver == 'redshift'
+      return _.str.include(host,'redshift.amazonaws.com') and _.str.include(host, 'sapi')
+
+    return false
 
   _handleChange: (propName, event) ->
     if ['port', 'retries'].indexOf(propName) >= 0

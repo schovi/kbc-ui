@@ -18,7 +18,6 @@ module.exports = React.createClass
     tasks: React.PropTypes.array.isRequired
 
   render: ->
-    console.log "TASKS", @props.tasks
     div className: 'table table-striped table-hover',
       div className: 'thead', key: 'table-header',
         div className: 'tr',
@@ -50,7 +49,10 @@ module.exports = React.createClass
               status = StatusLabel({status: task.event?.type})
               if task.event.params?.details
                 eventParams = Immutable.fromJS task.event.params.details
-                details = React.createElement(Tree, {data: eventParams})
+                if typeof eventParams == 'string'
+                  details = eventParams
+                else
+                  details = React.createElement(Tree, {data: eventParams})
               started = date.format(started.toISOString())
             div className: 'tr',
               @_renderCell(taskId.toString())
