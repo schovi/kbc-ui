@@ -153,7 +153,6 @@ export default React.createClass({
   },
 
   getConfigDataParameters() {
-    console.log(this.state.configDataParameters);
     if(this.state.isParametersEditing) {
       return this.state.editingConfigDataParameters;
     } else {
