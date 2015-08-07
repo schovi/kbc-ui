@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import Detail from './TableInputMappingDetail';
-import Header from './TableInputMappingHeader';
+import Detail from './FileInputMappingDetail';
+import Header from './FileInputMappingHeader';
 import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
-import Add from './AddTableInputMapping';
+import Add from './AddFileInputMapping';
 
 export default React.createClass({
   propTypes: {
@@ -12,7 +12,6 @@ export default React.createClass({
     configId: PropTypes.string.isRequired,
     editingValue: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
-    tables: PropTypes.object.isRequired,
     pendingActions: PropTypes.object.isRequired,
     openMappings: PropTypes.object.isRequired
   },
@@ -23,7 +22,6 @@ export default React.createClass({
       addButton = (
         <span className="pull-right">
           <Add
-            tables={this.props.tables}
             componentId={this.props.componentId}
             configId={this.props.configId}
             mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}
@@ -33,7 +31,7 @@ export default React.createClass({
     }
     return (
       <div>
-        <h2>Table Input Mapping
+        <h2>File Input Mapping
           {addButton}
         </h2>
         {this.content()}
@@ -42,27 +40,27 @@ export default React.createClass({
   },
 
   toggleMapping(key) {
-    return InstalledComponentsActions.toggleMapping(this.props.componentId, this.props.configId, 'table-input-' + key);
+    return InstalledComponentsActions.toggleMapping(this.props.componentId, this.props.configId, 'file-input-' + key);
   },
 
   onChangeMapping(key, value) {
-    return InstalledComponentsActions.changeEditingMapping(this.props.componentId, this.props.configId, 'input', 'tables', key, value);
+    return InstalledComponentsActions.changeEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key, value);
   },
 
   onEditStart(key) {
-    return InstalledComponentsActions.startEditingMapping(this.props.componentId, this.props.configId, 'input', 'tables', key);
+    return InstalledComponentsActions.startEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
   },
 
   onSaveMapping(key) {
-    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'tables', key);
+    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
   },
 
   onCancelEditMapping(key) {
-    return InstalledComponentsActions.cancelEditingMapping(this.props.componentId, this.props.configId, 'input', 'tables', key);
+    return InstalledComponentsActions.cancelEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
   },
 
   onDeleteMapping(key) {
-    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'tables', key);
+    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
   },
 
   content() {
@@ -75,7 +73,7 @@ export default React.createClass({
             key: key,
             collapsible: true,
             eventKey: key,
-            expanded: component.props.openMappings.get('table-input-' + key, false),
+            expanded: component.props.openMappings.get('file-input-' + key, false),
             header: React.createElement('div',
               {
                 onClick: function () {
@@ -85,7 +83,6 @@ export default React.createClass({
                 {
                   value: input,
                   editingValue: component.props.editingValue.get(key, Immutable.Map()),
-                  tables: component.props.tables,
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
                   onEditStart: function() {
@@ -108,8 +105,7 @@ export default React.createClass({
           React.createElement(Detail,
             {
               fill: true,
-              value: input,
-              tables: component.props.tables
+              value: input
             }
           )
         );
@@ -122,9 +118,8 @@ export default React.createClass({
     } else {
       return (
         <div className="well text-center">
-          <p>No table input mapping assigned.</p>
+          <p>No file input mapping assigned.</p>
           <Add
-            tables={this.props.tables}
             componentId={this.props.componentId}
             configId={this.props.configId}
             mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}

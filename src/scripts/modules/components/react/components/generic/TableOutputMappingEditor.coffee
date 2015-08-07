@@ -52,7 +52,9 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangePrimaryKey: (e) ->
-    parsedValues = _.invoke(e.target.value.split(","), "trim")
+    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
+      value != ''
+    )
     value = @props.value.set("primary_key", Immutable.fromJS(parsedValues))
     @props.onChange(value)
 
@@ -66,7 +68,9 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeDeleteWhereValues: (e) ->
-    parsedValues = _.invoke(e.target.value.split(","), "trim")
+    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
+      value != ''
+    )
     if parsedValues.length == 0
       value = @props.value.set("delete_where_values", Immutable.List())
     else

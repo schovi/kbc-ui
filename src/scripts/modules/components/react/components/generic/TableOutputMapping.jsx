@@ -35,7 +35,7 @@ export default React.createClass({
     }
     return (
       <div>
-        <h2>Output Mapping
+        <h2>Table Output Mapping
           {addButton}
         </h2>
         {this.content()}
