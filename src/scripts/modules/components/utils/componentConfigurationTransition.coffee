@@ -9,7 +9,8 @@ module.exports = (componentId, configurationId) ->
       config: configurationId
   else if ComponentsStore.hasComponentLegacyUI(componentId)
     window.location = ComponentsStore.getComponentDetailLegacyUrl(componentId, configurationId)
-  else if components.getIn([componentId, 'flags']).includes 'genericUI'
+  else if components.getIn([componentId, 'flags']).includes('genericUI') or
+      components.getIn([componentId, 'flags']).includes('genericDockerUI')
     RoutesStore.getRouter().transitionTo "generic-detail-" + components.getIn([componentId, 'type']),
       component: componentId
       config: configurationId

@@ -48,9 +48,11 @@ module.exports = React.createClass
         onSave: @_handleSave
 
   _getFormHandler: ->
-    hasUI = @state.component.get('hasUI') ||
-      hiddenComponents.hasDevelPreview(@state.component.get('id')) ||
-      @state.component.get('flags').includes 'genericUI'
+    hasUI = @state.component.get('hasUI') or
+      hiddenComponents.hasDevelPreview(@state.component.get('id')) or
+      @state.component.get('flags').includes('genericUI') or
+      @state.component.get('flags').includes('genericDockerUI')
+
     if !hasUI
       return ManualConfigurationForm
 

@@ -5,6 +5,7 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import ComponentStore from '../../stores/ComponentsStore';
 
 import GenericDetailStatic from './GenericDetailStatic';
+import GenericDockerDetail from './GenericDockerDetail';
 import GenericDetailEditable from './GenericDetailEditable';
 
 export default React.createClass({
@@ -19,7 +20,9 @@ export default React.createClass({
   },
 
   render() {
-    if (this.state.component.get('flags').includes('genericUI')) {
+    if (this.state.component.get('flags').includes('genericDockerUI')) {
+      return (<GenericDockerDetail />);
+    } else if (this.state.component.get('flags').includes('genericUI')) {
       return (<GenericDetailEditable />);
     } else {
       return (<GenericDetailStatic />);

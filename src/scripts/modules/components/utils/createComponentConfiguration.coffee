@@ -57,7 +57,10 @@ module.exports = (componentId, configuration) ->
   flags = component.get('flags')
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
-  else if component.get('uri') and componentHasApi(component.get('id')) and !(flags.includes 'genericUI')
+  else if component.get('uri') and
+      componentHasApi(component.get('id')) and
+      !(flags.includes 'genericUI') and
+      !(flags.includes 'genericDockerUI')
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigManually(configuration)

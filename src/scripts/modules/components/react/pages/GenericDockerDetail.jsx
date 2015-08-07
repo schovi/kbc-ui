@@ -28,8 +28,6 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component');
 
-    console.log('configData', InstalledComponentStore.getConfigData(componentId, configId).toJS());
-
     return {
       componentId: componentId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
@@ -155,6 +153,7 @@ export default React.createClass({
   },
 
   getConfigDataParameters() {
+    console.log(this.state.configDataParameters);
     if(this.state.isParametersEditing) {
       return this.state.editingConfigDataParameters;
     } else {
