@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import Detail from './FileInputMappingDetail';
-import Header from './FileInputMappingHeader';
+import Detail from './FileOutputMappingDetail';
+import Header from './FileOutputMappingHeader';
 import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
-import Add from './AddFileInputMapping';
+import Add from './AddFileOutputMapping';
 
 export default React.createClass({
   propTypes: {
@@ -31,51 +31,50 @@ export default React.createClass({
     }
     return (
       <div>
-        <h2>File Input Mapping
+        <h2>File Output Mapping
           {addButton}
         </h2>
-        <small className="help-block">Multiple files may match the given criteria. All files will be stored in <code>/data/in/files/</code> with their IDs as file names.
-          <br />All metadata will be stored in a manifest file.</small>
+        <small className="help-block">All files from <code>/out/data/files/</code> will be transferred, this allows you to configure the details or override the manifests.</small>
         {this.content()}
       </div>
     );
   },
 
   toggleMapping(key) {
-    return InstalledComponentsActions.toggleMapping(this.props.componentId, this.props.configId, 'file-input-' + key);
+    return InstalledComponentsActions.toggleMapping(this.props.componentId, this.props.configId, 'file-output-' + key);
   },
 
   onChangeMapping(key, value) {
-    return InstalledComponentsActions.changeEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key, value);
+    return InstalledComponentsActions.changeEditingMapping(this.props.componentId, this.props.configId, 'output', 'files', key, value);
   },
 
   onEditStart(key) {
-    return InstalledComponentsActions.startEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.startEditingMapping(this.props.componentId, this.props.configId, 'output', 'files', key);
   },
 
   onSaveMapping(key) {
-    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'output', 'files', key);
   },
 
   onCancelEditMapping(key) {
-    return InstalledComponentsActions.cancelEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.cancelEditingMapping(this.props.componentId, this.props.configId, 'output', 'files', key);
   },
 
   onDeleteMapping(key) {
-    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'output', 'files', key);
   },
 
   content() {
     var component = this;
     if (this.props.value.count() >= 1) {
-      var mappings = this.props.value.map(function(input, key) {
+      var mappings = this.props.value.map(function(output, key) {
         return React.createElement(Panel,
           {
             className: 'kbc-panel-heading-with-table',
             key: key,
             collapsible: true,
             eventKey: key,
-            expanded: component.props.openMappings.get('file-input-' + key, false),
+            expanded: component.props.openMappings.get('file-output-' + key, false),
             header: React.createElement('div',
               {
                 onClick: function () {
@@ -83,7 +82,7 @@ export default React.createClass({
                 }
               }, React.createElement(Header,
                 {
-                  value: input,
+                  value: output,
                   editingValue: component.props.editingValue.get(key, Immutable.Map()),
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
@@ -107,7 +106,7 @@ export default React.createClass({
           React.createElement(Detail,
             {
               fill: true,
-              value: input
+              value: output
             }
           )
         );
@@ -120,7 +119,7 @@ export default React.createClass({
     } else {
       return (
         <div className="well text-center">
-          <p>No file input mapping assigned.</p>
+          <p>No file output mapping assigned.</p>
           <Add
             componentId={this.props.componentId}
             configId={this.props.configId}

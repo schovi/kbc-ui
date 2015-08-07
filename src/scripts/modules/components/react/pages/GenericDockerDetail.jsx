@@ -15,6 +15,7 @@ import Configuration from '../components/Configuration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
 import TableOutputMapping from '../components/generic/TableOutputMapping';
+import FileOutputMapping from '../components/generic/FileOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
@@ -76,7 +77,6 @@ export default React.createClass({
                 pendingActions={this.state.pendingActions}
                 openMappings={this.state.openMappings}
                 />
-              <div>Input Mapping Files</div>
               <TableOutputMapping
                 componentId={this.state.componentId}
                 configId={this.state.config.get('id')}
@@ -87,7 +87,14 @@ export default React.createClass({
                 pendingActions={this.state.pendingActions}
                 openMappings={this.state.openMappings}
                 />
-              <div>Output Mapping Files</div>
+              <FileOutputMapping
+                componentId={this.state.componentId}
+                configId={this.state.config.get('id')}
+                value={this.state.configData.getIn(['storage', 'output', 'files'], List())}
+                editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'files'], List())}
+                pendingActions={this.state.pendingActions}
+                openMappings={this.state.openMappings}
+                />
               <Configuration
                 data={this.getConfigDataParameters()}
                 isEditing={this.state.isParametersEditing}

@@ -4,7 +4,7 @@ Link = React.createFactory(require('react-router').Link)
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 DeleteButton = require '../../../../../react/common/DeleteButton'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-Modal = require './FileInputMappingModal'
+Modal = require './FileOutputMappingModal'
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
@@ -28,7 +28,12 @@ module.exports = React.createClass(
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
-          span {className: 'td col-xs-3'},
+          span {className: 'td col-xs-4'},
+            'out/files/'
+            @props.value.get('source')
+          span {className: 'td col-xs-1'},
+            span {className: 'fa fa-chevron-right fa-fw'}
+          span {className: 'td col-xs-6'},
             if @props.value.get('tags').count()
               @props.value.get('tags').map((tag) ->
                 span
@@ -39,33 +44,20 @@ module.exports = React.createClass(
               ).toArray()
             else
               'N/A'
-          span {className: 'td col-xs-4'},
-            if @props.value.get('query', '') != ''
-              code null,
-                @props.value.get('query')
-          span {className: 'td col-xs-1'},
-            span {className: 'fa fa-chevron-right fa-fw'}
-          span {className: 'td col-xs-3'},
-            'in/files/*'
+
           span {className: 'td col-xs-1 text-right kbc-no-wrap'},
             React.createElement DeleteButton,
-              tooltip: 'Delete Input'
-              isPending: @props.pendingActions.getIn(['input', 'files', @props.mappingIndex, 'delete'], false)
+              tooltip: 'Delete Output'
+              isPending: @props.pendingActions.getIn(['output', 'files', @props.mappingIndex, 'delete'], false)
               confirm:
-                title: 'Delete Input'
+                title: 'Delete Output'
                 text: span null,
-                  "Do you really want to delete input mapping for "
-                  code null,
-                    'tags: '
-                    JSON.stringify(@props.value.get('tags', Immutable.List()).toJS())
-                  ', '
-                  code null,
-                    'query: '
-                    @props.value.get('query')
+                  "Do you really want to delete output mapping for out/files/"
+                  @props.value.get('source')
                   "?"
                 onConfirm: @props.onDelete
             React.createElement OverlayTrigger,
-              overlay: React.createElement Tooltip, null, 'Edit Input'
+              overlay: React.createElement Tooltip, null, 'Edit Output'
               placement: 'top'
             ,
               React.createElement ModalTrigger,

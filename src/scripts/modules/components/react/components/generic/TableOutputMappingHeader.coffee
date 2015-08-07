@@ -32,7 +32,7 @@ module.exports = React.createClass(
       span {className: 'tbody'},
         span {className: 'tr'},
           span {className: 'td col-xs-4'},
-            'in/tables/' + @props.value.get 'source'
+            'out/tables/' + @props.value.get 'source'
           span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
           span {className: 'td col-xs-3'},
