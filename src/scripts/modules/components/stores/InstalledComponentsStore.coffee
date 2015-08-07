@@ -422,17 +422,31 @@ Dispatcher.register (payload) ->
         ]
         store = store.deleteIn(path)
 
+        path = [
+          'configDataEditingObject', action.componentId, action.configId,
+          'storage', action.mappingType, action.storage, action.index
+        ]
+        store = store.deleteIn(path)
+
         storePath = ['configData', action.componentId, action.configId]
         store.setIn storePath, Immutable.fromJS(action.data.configuration)
 
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_ERROR
-      path = [
-        'pendingActions', action.componentId,
-        action.configId, action.mappingType, action.storage, action.index, 'save'
-      ]
-      _store = _store.deleteIn(path)
+      _store = _store.withMutations (store) ->
+        path = [
+          'pendingActions', action.componentId,
+          action.configId, action.mappingType, action.storage, action.index, 'save'
+        ]
+        store = store.deleteIn(path)
+
+        path = [
+          'configDataEditingObject', action.componentId,action.configId,
+          'storage', action.mappingType, action.storage, action.index
+        ]
+        store.deleteIn(path)
+
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_START

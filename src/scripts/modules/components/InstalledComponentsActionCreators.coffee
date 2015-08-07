@@ -2,6 +2,7 @@ Promise = require 'bluebird'
 React = require 'react'
 _ = require 'underscore'
 Link = require('react-router').Link
+Immutable = require('immutable')
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 JobsActionCreators = require '../../modules/jobs/ActionCreators'
@@ -417,9 +418,16 @@ module.exports =
 
     dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
     mappingData = InstalledComponentsStore.getEditingConfigDataObject(componentId, configId)
-    path = ['storage', type, storage, index]
+
+    pathSource = ['storage', type, storage, index]
+    if index == 'new-mapping'
+      lastIndex = dataToSave.getIn(['storage', type, storage], Immutable.List()).count()
+      pathDestination = ['storage', type, storage, lastIndex]
+    else
+      pathDestination = pathSource
+
     data =
-      configuration: JSON.stringify(dataToSave.setIn(path, mappingData.getIn(path)).toJSON())
+      configuration: JSON.stringify(dataToSave.setIn(pathDestination, mappingData.getIn(pathSource)).toJSON())
     installedComponentsApi
     .updateComponentConfiguration componentId, configId, data
     .then (response) ->

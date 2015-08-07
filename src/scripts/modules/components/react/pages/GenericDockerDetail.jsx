@@ -58,8 +58,8 @@ export default React.createClass({
               <TableInputMapping
                 componentId={this.state.componentId}
                 configId={this.state.config.get('id')}
-                input={this.state.configData.getIn(['storage', 'input', 'tables'], List())}
-                editingInput={this.state.editingConfigData.getIn(['storage', 'input', 'tables'], List())}
+                value={this.state.configData.getIn(['storage', 'input', 'tables'], List())}
+                editingValue={this.state.editingConfigData.getIn(['storage', 'input', 'tables'], List())}
                 tables={this.state.tables}
                 pendingActions={this.state.pendingActions}
                 openMappings={this.state.openMappings}

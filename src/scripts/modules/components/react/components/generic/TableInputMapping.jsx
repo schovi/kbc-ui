@@ -4,22 +4,38 @@ import Header from './TableInputMappingHeader';
 import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
+import Add from './AddTableInputMapping';
 
 export default React.createClass({
   propTypes: {
     componentId: PropTypes.string.isRequired,
     configId: PropTypes.string.isRequired,
-    editingInput: PropTypes.object.isRequired,
-    input: PropTypes.object.isRequired,
+    editingValue: PropTypes.object.isRequired,
+    value: PropTypes.object.isRequired,
     tables: PropTypes.object.isRequired,
     pendingActions: PropTypes.object.isRequired,
     openMappings: PropTypes.object.isRequired
   },
 
   render() {
+    var addButton;
+    if (this.props.value.count() >= 1) {
+      addButton = (
+        <span className="pull-right">
+          <Add
+            tables={this.props.tables}
+            componentId={this.props.componentId}
+            configId={this.props.configId}
+            mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}
+            />
+        </span>
+      );
+    }
     return (
       <div>
-        <h2>InputMapping</h2>
+        <h2>Input Mapping
+          {addButton}
+        </h2>
         {this.content()}
       </div>
     );
@@ -51,8 +67,8 @@ export default React.createClass({
 
   content() {
     var component = this;
-    if (this.props.input.count() >= 1) {
-      var mappings = this.props.input.map(function(input, key) {
+    if (this.props.value.count() >= 1) {
+      var mappings = this.props.value.map(function(input, key) {
         return React.createElement(Panel,
           {
             className: 'kbc-panel-heading-with-table',
@@ -63,12 +79,12 @@ export default React.createClass({
             header: React.createElement('div',
               {
                 onClick: function () {
-                  component.toggleInputMapping(key);
+                  component.toggleMapping(key);
                 }
               }, React.createElement(Header,
                 {
-                  inputMapping: input,
-                  editingInputMapping: component.props.editingInput.get(key, Immutable.Map()),
+                  value: input,
+                  editingValue: component.props.editingValue.get(key, Immutable.Map()),
                   tables: component.props.tables,
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
@@ -92,7 +108,7 @@ export default React.createClass({
           React.createElement(Detail,
             {
               fill: true,
-              inputMapping: input,
+              value: input,
               tables: component.props.tables
             }
           )
@@ -100,8 +116,6 @@ export default React.createClass({
       }).toJS();
       return (
         <span>
-          <div>Mappings</div>
-          <code>{JSON.stringify(this.props.input.toJSON())}</code>
           {mappings}
         </span>
       );
@@ -109,6 +123,12 @@ export default React.createClass({
       return (
         <div className="well text-center">
           <p>No table input mapping assigned.</p>
+          <Add
+            tables={this.props.tables}
+            componentId={this.props.componentId}
+            configId={this.props.configId}
+            mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}
+            />
         </div>
       );
     }

@@ -21,7 +21,7 @@ TableInputMappingDetail = React.createClass(
   mixins: [ImmutableRenderMixin]
 
   propTypes:
-    inputMapping: React.PropTypes.object.isRequired
+    value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
 
   render: ->
@@ -31,14 +31,14 @@ TableInputMappingDetail = React.createClass(
           'Source table size'
         span {className: "col-md-6"},
           FileSize
-            size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']
+            size: @props.tables.getIn [@props.value.get('source'), 'dataSizeBytes']
 
       ListGroupItem {key: 'rowsCount'},
         strong {className: "col-md-4"},
           'Source table rows'
         span {className: "col-md-6"},
-          if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
-            numeral(@props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']).format('0,0')
+          if @props.tables.getIn [@props.value.get('source'), 'rowsCount']
+            numeral(@props.tables.getIn [@props.value.get('source'), 'rowsCount']).format('0,0')
           else
             'N/A'
 
@@ -46,14 +46,14 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Storage type'
         span {className: "col-md-6"},
-          @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
+          @props.tables.getIn [@props.value.get('source'), 'bucket', 'backend']
 
       ListGroupItem {key: 'columns'},
         strong {className: "col-md-4"},
           'Columns'
         span {className: "col-md-6"},
-          if @props.inputMapping.get('columns', Immutable.List()).count()
-            @props.inputMapping.get('columns').join(', ')
+          if @props.value.get('columns', Immutable.List()).count()
+            @props.value.get('columns').join(', ')
           else
             'Use all columns'
 
@@ -61,27 +61,27 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Filters'
         span {className: "col-md-6"},
-          if @props.inputMapping.get('whereColumn')
+          if @props.value.get('whereColumn')
             span {},
               'Where '
               strong {},
-                @props.inputMapping.get('where_column')
+                @props.value.get('where_column')
               ' '
-              @props.inputMapping.get('where_operator')
+              @props.value.get('where_operator')
               ' '
               strong {},
-                @props.inputMapping.get('where_values').join(', ')
-          if @props.inputMapping.get('days', 0) != 0 && @props.inputMapping.get('whereColumn')
+                @props.value.get('where_values').join(', ')
+          if @props.value.get('days', 0) != 0 && @props.value.get('whereColumn')
             ' and '
-          if @props.inputMapping.get('days', 0) != 0
+          if @props.value.get('days', 0) != 0
             span {},
-              if @props.inputMapping.get('where_column')
+              if @props.value.get('where_column')
                 'changed in last '
               else
                 'Changed in last '
-              @props.inputMapping.get('days', 0)
+              @props.value.get('days', 0)
               ' days'
-          if @props.inputMapping.get('days', 0) == 0 && !@props.inputMapping.get('whereColumn')
+          if @props.value.get('days', 0) == 0 && !@props.value.get('whereColumn')
             'N/A'
 
     ]

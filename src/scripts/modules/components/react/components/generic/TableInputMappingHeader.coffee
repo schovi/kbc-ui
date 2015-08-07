@@ -14,8 +14,8 @@ module.exports = React.createClass(
   mixins: [ImmutableRenderMixin]
 
   propTypes:
-    inputMapping: React.PropTypes.object.isRequired
-    editingInputMapping: React.PropTypes.object.isRequired
+    value: React.PropTypes.object.isRequired
+    editingValue: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
     mappingIndex: React.PropTypes.number.isRequired
     onChange: React.PropTypes.func.isRequired
@@ -31,15 +31,15 @@ module.exports = React.createClass(
       span {className: 'tbody'},
         span {className: 'tr'},
           span {className: 'td col-xs-3'},
-            TableSizeLabel {size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']}
+            TableSizeLabel {size: @props.tables.getIn [@props.value.get('source'), 'dataSizeBytes']}
             ' '
-            TableBackendLabel {backend: @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']}
+            TableBackendLabel {backend: @props.tables.getIn [@props.value.get('source'), 'bucket', 'backend']}
           span {className: 'td col-xs-4'},
-            @props.inputMapping.get 'source'
+            @props.value.get 'source'
           span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
           span {className: 'td col-xs-3'},
-            'in/tables/' + @props.inputMapping.get('destination', @props.inputMapping.get('source'))
+            'in/tables/' + @props.value.get('destination', @props.value.get('source'))
           span {className: 'td col-xs-1 text-right kbc-no-wrap'},
             React.createElement DeleteButton,
               tooltip: 'Delete Input'
@@ -49,7 +49,7 @@ module.exports = React.createClass(
                 text: span null,
                   "Do you really want to delete input mapping for "
                   code null,
-                    @props.inputMapping.get('source')
+                    @props.value.get('source')
                   "?"
                 onConfirm: @props.onDelete
             React.createElement OverlayTrigger,
@@ -60,7 +60,7 @@ module.exports = React.createClass(
                 modal: React.createElement TableInputMappingModal,
                   mode: 'edit'
                   tables: @props.tables
-                  mapping: @props.editingInputMapping
+                  mapping: @props.editingValue
                   onChange: @props.onChange
                   onCancel: @props.onCancel
                   onSave: @props.onSave
