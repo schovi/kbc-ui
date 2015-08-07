@@ -89,7 +89,9 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeWhereValues: (e) ->
-    parsedValues = _.invoke(e.target.value.split(","), "trim")
+    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
+      value != ''
+    )
     value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
     @props.onChange(value)
 
