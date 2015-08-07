@@ -5,6 +5,7 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
+import ComponentStore from '../../stores/ComponentsStore';
 
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
@@ -42,9 +43,23 @@ export default React.createClass({
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll(),
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
-      openMappings: InstalledComponentStore.getOpenMappings(componentId, configId)
+      openMappings: InstalledComponentStore.getOpenMappings(componentId, configId),
+      component: ComponentStore.getComponent(componentId)
     };
   },
+
+  documentationLink() {
+    if (this.state.component.get('documentationUrl')) {
+      return (
+        <span>
+          See the <a href={this.state.component.get('documentationUrl')}>documentation</a> for more details.
+        </span>
+      );
+    } else {
+      return null;
+    }
+  },
+
 
   render() {
     return (
@@ -58,6 +73,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
+              <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
               <TableInputMapping
                 componentId={this.state.componentId}
                 configId={this.state.config.get('id')}
