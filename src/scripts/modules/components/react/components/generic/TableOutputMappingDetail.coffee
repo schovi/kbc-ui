@@ -1,35 +1,28 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
-TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
-TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
+TableSizeLabel = React.createFactory(require '../../../../transformations/react/components/TableSizeLabel')
+TableBackendLabel = React.createFactory(require '../../../../transformations/react/components/TableBackendLabel')
+TransformationTableTypeLabel = React.createFactory(
+  require '../../../../transformations/react/components/TransformationTableTypeLabel'
+)
 FileSize = React.createFactory(require '../../../../../react/common/FileSize')
 Check = React.createFactory(require('kbc-react-components').Check)
-{span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
-numeral = require 'numeral'
 ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
 
+{span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
+numeral = require 'numeral'
+Immutable = require 'immutable'
 
-OutputMappingDetail = React.createClass(
-  displayName: 'TableOuputMappingDetail'
+TableInputMappingDetail = React.createClass(
+  displayName: 'TableOutputMappingDetail'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
-    transformationBackend: React.PropTypes.string.isRequired
-    outputMapping: React.PropTypes.object.isRequired
+    value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
-
-  _getTableBackend: (tableId) ->
-    table = @props.tables.find((table) ->
-      table.getIn(["bucket", "id"]) == tableId.substr(0, tableId.lastIndexOf("."))
-    )
-    if table
-      return table.getIn(['bucket', 'backend'])
-    else
-      return "N/A"
 
   render: ->
     ListGroupItems = [
@@ -38,14 +31,14 @@ OutputMappingDetail = React.createClass(
           'Destination table size'
         span {className: "col-md-6"},
           FileSize
-            size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
+            size: @props.tables.getIn [@props.value.get('destination'), 'dataSizeBytes']
 
       ListGroupItem {key: 'rowsCount'},
         strong {className: "col-md-4"},
           'Destination table rows'
         span {className: "col-md-6"},
-          if @props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']
-            numeral(@props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']).format('0,0')
+          if @props.tables.getIn [@props.value.get('destination'), 'rowsCount']
+            numeral(@props.tables.getIn [@props.value.get('destination'), 'rowsCount']).format('0,0')
           else
             'N/A'
 
@@ -53,42 +46,43 @@ OutputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Storage type'
         span {className: "col-md-6"},
-          @_getTableBackend @props.outputMapping.get('destination')
-
-      ListGroupItem {key: 'primaryKey'},
-        strong {className: "col-md-4"},
-          'Primary key'
-        span {className: "col-md-6"},
-          if @props.outputMapping.get('primaryKey').count()
-            @props.outputMapping.get('primaryKey').join(', ')
-          else
-            'N/A'
+          @props.tables.getIn [@props.value.get('destination'), 'bucket', 'backend']
 
       ListGroupItem {key: 'incremental'},
         strong {className: "col-md-4"},
           'Incremental'
         span {className: "col-md-6"},
           Check
-            isChecked: @props.outputMapping.get('incremental')
+            isChecked: @props.value.get('incremental')
 
-      ListGroupItem {key: 'deleteWhere'},
+      ListGroupItem {key: 'primary_key'},
+        strong {className: "col-md-4"},
+          'Primary key'
+        span {className: "col-md-6"},
+          if @props.value.get('primary_key', Immutable.List()).count()
+            @props.value.get('primary_key').join(', ')
+          else
+            'N/A'
+
+      ListGroupItem {key: 'delete_where_column'},
         strong {className: "col-md-4"},
           'Delete'
         span {className: "col-md-6"},
-          if @props.outputMapping.get('deleteWhereColumn')
+          if @props.value.get('delete_where_column')
             span {},
               'Where '
               strong {},
-                @props.outputMapping.get('deleteWhereColumn')
+                @props.value.get('delete_where_column')
               ' '
-              @props.outputMapping.get('deleteWhereOperator')
+              @props.value.get('delete_where_operator')
               ' '
               strong {},
-                @props.outputMapping.get('deleteWhereValues').join(', ')
+                @props.value.get('delete_where_values').join(', ')
           else
             'N/A'
+
     ]
-    ListGroup {}, _.reject(ListGroupItems, (obj) -> obj == undefined)
+    ListGroup {className: "clearfix"}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
 
-module.exports = OutputMappingDetail
+module.exports = TableInputMappingDetail

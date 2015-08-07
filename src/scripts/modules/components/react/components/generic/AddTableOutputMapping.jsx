@@ -1,11 +1,12 @@
 import React from 'react';
 import {ModalTrigger} from 'react-bootstrap';
-import Modal from './TableInputMappingModal';
+import Modal from './TableOutputMappingModal';
 import actionCreators from '../../../InstalledComponentsActionCreators';
 
 export default React.createClass({
   propTypes: {
     tables: React.PropTypes.object.isRequired,
+    buckets: React.PropTypes.object.isRequired,
     mapping: React.PropTypes.object.isRequired,
     componentId: React.PropTypes.string.isRequired,
     configId: React.PropTypes.string.isRequired
@@ -15,7 +16,7 @@ export default React.createClass({
     return (
       <ModalTrigger modal={this.modal()}>
         <button className="btn btn-primary" onClick={this.handleClick}>
-          <span className="kbc-icon-plus"></span> Add Table Input
+          <span className="kbc-icon-plus"></span> Add Table Output
         </button>
       </ModalTrigger>
     );
@@ -26,6 +27,7 @@ export default React.createClass({
       mode: 'create',
       mapping: this.props.mapping,
       tables: this.props.tables,
+      buckets: this.props.buckets,
       onChange: this.handleChange,
       onCancel: this.handleCancel,
       onSave: this.handleSave
@@ -41,7 +43,7 @@ export default React.createClass({
   handleChange(newMapping) {
     actionCreators.changeEditingMapping(this.props.componentId,
       this.props.configId,
-      'input',
+      'output',
       'tables',
       'new-mapping',
       newMapping
@@ -51,7 +53,7 @@ export default React.createClass({
   handleCancel() {
     actionCreators.cancelEditingMapping(this.props.componentId,
       this.props.configId,
-      'input',
+      'output',
       'tables',
       'new-mapping'
     );
@@ -61,7 +63,7 @@ export default React.createClass({
     // returns promise
     return actionCreators.saveEditingMapping(this.props.componentId,
       this.props.configId,
-      'input',
+      'output',
       'tables',
       'new-mapping'
     );

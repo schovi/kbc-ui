@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
-import Editor from './TableInputMappingEditor';
+import Editor from './TableOutputMappingEditor';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -10,6 +10,7 @@ export default React.createClass({
     mode: PropTypes.oneOf([MODE_CREATE, MODE_EDIT]),
     mapping: PropTypes.object.isRequired,
     tables: PropTypes.object.isRequired,
+    buckets: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
@@ -27,7 +28,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal {...this.props} title="Input Mapping" bsSize="large" onChange={() => null}>
+      <Modal {...this.props} title="Output Mapping" bsSize="large" onChange={() => null}>
         <div className="modal-body">
           {this.editor()}
         </div>
@@ -48,8 +49,10 @@ export default React.createClass({
     const props = {
       value: this.props.mapping,
       tables: this.props.tables,
+      buckets: this.props.buckets,
       disabled: this.state.isSaving,
-      onChange: this.props.onChange
+      onChange: this.props.onChange,
+      backend: 'docker'
     };
     return React.createElement(Editor, props);
   },

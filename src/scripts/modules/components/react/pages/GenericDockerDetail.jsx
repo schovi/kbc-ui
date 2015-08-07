@@ -13,8 +13,10 @@ import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
 import TableInputMapping from '../components/generic/TableInputMapping';
+import TableOutputMapping from '../components/generic/TableOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import StorageTablesStore from '../../stores/StorageTablesStore';
+import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {List} from 'immutable';
 
 export default React.createClass({
@@ -38,6 +40,7 @@ export default React.createClass({
       editingConfigDataParameters: InstalledComponentStore.getEditingRawConfigDataParameters(componentId, configId, '{}'),
       isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId),
       tables: StorageTablesStore.getAll(),
+      buckets: StorageBucketsStore.getAll(),
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
       openMappings: InstalledComponentStore.getOpenMappings(componentId, configId)
     };
@@ -66,6 +69,16 @@ export default React.createClass({
                 />
               <div>Input Mapping Files</div>
               <div>Output Mapping Tables</div>
+              <TableOutputMapping
+                componentId={this.state.componentId}
+                configId={this.state.config.get('id')}
+                value={this.state.configData.getIn(['storage', 'output', 'tables'], List())}
+                editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'tables'], List())}
+                tables={this.state.tables}
+                buckets={this.state.buckets}
+                pendingActions={this.state.pendingActions}
+                openMappings={this.state.openMappings}
+                />
               <div>Output Mapping Files</div>
               <Configuration
                 data={this.getConfigDataParameters()}

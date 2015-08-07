@@ -5,7 +5,7 @@ Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
 Select = React.createFactory(require('react-select'))
 fuzzy = require 'fuzzy'
-AutosuggestWrapper = require './AutoSuggestWrapper'
+AutosuggestWrapper = require '../../../../transformations/react/components/mapping/AutoSuggestWrapper.jsx'
 
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
@@ -19,7 +19,7 @@ createGetSuggestions = (getOptions) ->
     callback(null, suggestions.toJS())
 
 module.exports = React.createClass
-  displayName: 'OutputMappingRowEditor'
+  displayName: 'TableOutputMappingEditor'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
@@ -29,7 +29,6 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     backend: React.PropTypes.string.isRequired
-    type: React.PropTypes.string.isRequired
 
   getInitialState: ->
     showDetails: false
@@ -54,27 +53,31 @@ module.exports = React.createClass
 
   _handleChangePrimaryKey: (e) ->
     parsedValues = _.invoke(e.target.value.split(","), "trim")
-    value = @props.value.set("primaryKey", Immutable.fromJS(parsedValues))
+    value = @props.value.set("primary_key", Immutable.fromJS(parsedValues))
     @props.onChange(value)
 
   _handleChangeDeleteWhereColumn: (newValue) ->
-    value = @props.value.set("deleteWhereColumn", newValue)
+    value = @props.value.set("delete_where_column", newValue)
+    value = value.set("delete_where_operator", value.get("delete_where_operator", 'eq'))
     @props.onChange(value)
 
   _handleChangeDeleteWhereOperator: (e) ->
-    value = @props.value.set("deleteWhereOperator", e.target.value)
+    value = @props.value.set("delete_where_operator", e.target.value)
     @props.onChange(value)
 
   _handleChangeDeleteWhereValues: (e) ->
     parsedValues = _.invoke(e.target.value.split(","), "trim")
-    value = @props.value.set("deleteWhereValues", Immutable.fromJS(parsedValues))
+    if parsedValues.length == 0
+      value = @props.value.set("delete_where_values", Immutable.List())
+    else
+      value = @props.value.set("delete_where_values", Immutable.fromJS(parsedValues))
     @props.onChange(value)
 
   _getPrimaryKeyValue: ->
-    @props.value.get("primaryKey", Immutable.List()).join(",")
+    @props.value.get("primary_key", Immutable.List()).join(",")
 
   _getDeleteWhereValues: ->
-    @props.value.get("deleteWhereValues", Immutable.List()).join(",")
+    @props.value.get("delete_where_values", Immutable.List()).join(",")
 
   _getTablesAndBuckets: ->
     tablesAndBuckets = @props.tables.merge(@props.buckets)
@@ -116,31 +119,19 @@ module.exports = React.createClass
                 checked: @state.showDetails
                 onChange: @_handleToggleShowDetails
         React.DOM.div {className: "row col-md-12"},
-          if @props.backend == 'docker' && @props.type == 'r'
-            Input
-              type: 'text'
-              name: 'source'
-              label: 'File'
-              value: @props.value.get("source")
-              disabled: @props.disabled
-              placeholder: "File name"
-              onChange: @_handleChangeSource
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
-              help: React.DOM.span {},
-                "File will be uploaded from"
-                React.DOM.code {}, "/data/out/tables"
-          else
-            Input
-              type: 'text'
-              name: 'source'
-              label: 'Source'
-              value: @props.value.get("source")
-              disabled: @props.disabled
-              placeholder: "Source table in transformation DB"
-              onChange: @_handleChangeSource
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
+          Input
+            type: 'text'
+            name: 'source'
+            label: 'File'
+            value: @props.value.get("source")
+            disabled: @props.disabled
+            placeholder: "File name"
+            onChange: @_handleChangeSource
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            help: React.DOM.span {},
+              "File will be uploaded from"
+              React.DOM.code {}, "/data/out/tables"
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group',
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'
@@ -189,7 +180,7 @@ module.exports = React.createClass
                 React.createElement AutosuggestWrapper,
                   suggestions: createGetSuggestions(@_getColumns)
                   placeholder: 'Select column'
-                  value: @props.value.get("deleteWhereColumn", "")
+                  value: @props.value.get("delete_where_column", "")
                   onChange: @_handleChangeDeleteWhereColumn
                   id: 'output-delete-rows'
                   name: 'output-delete-rows'
@@ -198,7 +189,7 @@ module.exports = React.createClass
                   bsSize: 'small'
                   type: 'select'
                   name: 'deleteWhereOperator'
-                  value: @props.value.get("deleteWhereOperator")
+                  value: @props.value.get("delete_where_operator")
                   disabled: @props.disabled
                   onChange: @_handleChangeDeleteWhereOperator
                 ,

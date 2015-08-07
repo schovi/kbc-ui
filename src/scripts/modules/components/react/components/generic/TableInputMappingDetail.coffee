@@ -61,7 +61,7 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Filters'
         span {className: "col-md-6"},
-          if @props.value.get('whereColumn')
+          if @props.value.get('where_column')
             span {},
               'Where '
               strong {},
@@ -70,8 +70,8 @@ TableInputMappingDetail = React.createClass(
               @props.value.get('where_operator')
               ' '
               strong {},
-                @props.value.get('where_values').join(', ')
-          if @props.value.get('days', 0) != 0 && @props.value.get('whereColumn')
+                @props.value.get('where_values', Immutable.List()).join(', ')
+          if @props.value.get('days', 0) != 0 && @props.value.get('where_column')
             ' and '
           if @props.value.get('days', 0) != 0
             span {},
@@ -81,7 +81,7 @@ TableInputMappingDetail = React.createClass(
                 'Changed in last '
               @props.value.get('days', 0)
               ' days'
-          if @props.value.get('days', 0) == 0 && !@props.value.get('whereColumn')
+          if @props.value.get('days', 0) == 0 && !@props.value.get('where_column')
             'N/A'
 
     ]

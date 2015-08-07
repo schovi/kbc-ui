@@ -32,7 +32,9 @@ module.exports = (componentType) ->
   ,
     ->
       StorageActions.loadTables()
-
+  ,
+    ->
+      StorageActions.loadBuckets()
   ]
   poll:
     interval: 10
