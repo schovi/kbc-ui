@@ -60,6 +60,76 @@ export default React.createClass({
     }
   },
 
+  tableInputMapping() {
+    if (this.state.component.get('flags').includes('genericDockerUI-tableInput')) {
+      return (
+        <TableInputMapping
+          componentId={this.state.componentId}
+          configId={this.state.config.get('id')}
+          value={this.state.configData.getIn(['storage', 'input', 'tables'], List())}
+          editingValue={this.state.editingConfigData.getIn(['storage', 'input', 'tables'], List())}
+          tables={this.state.tables}
+          pendingActions={this.state.pendingActions}
+          openMappings={this.state.openMappings}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  fileInputMapping() {
+    if (this.state.component.get('flags').includes('genericDockerUI-fileInput')) {
+      return (
+        <FileInputMapping
+          componentId={this.state.componentId}
+          configId={this.state.config.get('id')}
+          value={this.state.configData.getIn(['storage', 'input', 'files'], List())}
+          editingValue={this.state.editingConfigData.getIn(['storage', 'input', 'files'], List())}
+          pendingActions={this.state.pendingActions}
+          openMappings={this.state.openMappings}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  tableOutputMapping() {
+    if (this.state.component.get('flags').includes('genericDockerUI-tableOutput')) {
+      return (
+        <TableOutputMapping
+          componentId={this.state.componentId}
+          configId={this.state.config.get('id')}
+          value={this.state.configData.getIn(['storage', 'output', 'tables'], List())}
+          editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'tables'], List())}
+          tables={this.state.tables}
+          buckets={this.state.buckets}
+          pendingActions={this.state.pendingActions}
+          openMappings={this.state.openMappings}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  fileOutputMapping() {
+    if (this.state.component.get('flags').includes('genericDockerUI-fileOutput')) {
+      return (
+        <FileOutputMapping
+          componentId={this.state.componentId}
+          configId={this.state.config.get('id')}
+          value={this.state.configData.getIn(['storage', 'output', 'files'], List())}
+          editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'files'], List())}
+          pendingActions={this.state.pendingActions}
+          openMappings={this.state.openMappings}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
 
   render() {
     return (
@@ -74,41 +144,10 @@ export default React.createClass({
           <div className="row">
             <div classNmae="col-xs-4">
               <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
-              <TableInputMapping
-                componentId={this.state.componentId}
-                configId={this.state.config.get('id')}
-                value={this.state.configData.getIn(['storage', 'input', 'tables'], List())}
-                editingValue={this.state.editingConfigData.getIn(['storage', 'input', 'tables'], List())}
-                tables={this.state.tables}
-                pendingActions={this.state.pendingActions}
-                openMappings={this.state.openMappings}
-                />
-              <FileInputMapping
-                componentId={this.state.componentId}
-                configId={this.state.config.get('id')}
-                value={this.state.configData.getIn(['storage', 'input', 'files'], List())}
-                editingValue={this.state.editingConfigData.getIn(['storage', 'input', 'files'], List())}
-                pendingActions={this.state.pendingActions}
-                openMappings={this.state.openMappings}
-                />
-              <TableOutputMapping
-                componentId={this.state.componentId}
-                configId={this.state.config.get('id')}
-                value={this.state.configData.getIn(['storage', 'output', 'tables'], List())}
-                editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'tables'], List())}
-                tables={this.state.tables}
-                buckets={this.state.buckets}
-                pendingActions={this.state.pendingActions}
-                openMappings={this.state.openMappings}
-                />
-              <FileOutputMapping
-                componentId={this.state.componentId}
-                configId={this.state.config.get('id')}
-                value={this.state.configData.getIn(['storage', 'output', 'files'], List())}
-                editingValue={this.state.editingConfigData.getIn(['storage', 'output', 'files'], List())}
-                pendingActions={this.state.pendingActions}
-                openMappings={this.state.openMappings}
-                />
+              {this.tableInputMapping()}
+              {this.fileInputMapping()}
+              {this.tableOutputMapping()}
+              {this.fileOutputMapping()}
               <Configuration
                 data={this.getConfigDataParameters()}
                 isEditing={this.state.isParametersEditing}
