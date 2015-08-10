@@ -50,7 +50,6 @@ module.exports = React.createClass
     folderNames: GdriveStore.getGoogleInfo(configId)
 
   render: ->
-    console.log 'render wrgdrive index', @state.files?.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -194,7 +193,6 @@ module.exports = React.createClass
   _disabledToRun: ->
     if not @_isAuthorized()
       return 'No Google Drive Account'
-    console.log 'CUNT', @state.files?.count()
     if @state.files?.count() == 0
       return 'No tables configured'
 

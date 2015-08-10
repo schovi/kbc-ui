@@ -41,7 +41,6 @@ module.exports = React.createClass
 
 
   render: ->
-    console.log 'TABLE ROW', @props.table.get('id'), @props
     if !!@props.editData
       return @_renderEditFile()
     if not @props.file
@@ -90,7 +89,6 @@ module.exports = React.createClass
             buttonLabel: 'Remove'
             onConfirm: =>
               rowId = @props.file.get('id')
-              console.log 'delete row id', rowId
               @props.deleteRowFn(rowId)
           ,
             button className: 'btn btn-link',
@@ -187,7 +185,7 @@ module.exports = React.createClass
       span className: 'td', ''
       span className: 'td', ''
       span className: 'td', ''
-      span className: 'td',
+      span className: 'td text-right kbc-no-wrap',
         button
           className: 'btn btn-link'
           onClick: =>
@@ -240,7 +238,6 @@ module.exports = React.createClass
       return '/'
     else
       folderName = @props.folderNames?.get(folderId)
-      console.log folderName?.toJS(),folderId
       if not folderName
         return Loader()
       else
