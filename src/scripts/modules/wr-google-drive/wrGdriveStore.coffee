@@ -8,6 +8,7 @@ _store = Map
   googleInfo: Map() #configId#googleId
   editing: Map()
   updating: Map() #what# configId
+  deleting: Map() #configId#tableID
 
 WrGdriveStore = storeUtils.createStore
   getFiles: (configId) ->
@@ -29,10 +30,26 @@ WrGdriveStore = storeUtils.createStore
   getSavingFiles: (configId) ->
     _store.getIn(['updating','files', configId], Map())
 
+  getDeletingFiles: (configId) ->
+    _store.getIn(['deleting', configId], Map())
+
 
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when ActionTypes.WR_GDRIVE_DELETE_ROW_START
+      configId = action.configId
+      tableId = action.tableId
+      _store = _store.setIn ['deleting', configId, tableId], true
+      WrGdriveStore.emitChange()
+
+    when ActionTypes.WR_GDRIVE_DELETE_ROW_SUCCESS
+      configId = action.configId
+      tableId = action.tableId
+      _store = _store.deleteIn ['deleting', configId, tableId]
+      _store = _store.deleteIn ['files', configId, tableId]
+      WrGdriveStore.emitChange()
+
     when ActionTypes.WR_GDRIVE_SAVEFILE_START
       configId = action.configId
       tableId = action.tableId
@@ -42,7 +59,6 @@ Dispatcher.register (payload) ->
     when ActionTypes.WR_GDRIVE_SAVEFILE_SUCCESS
       configId = action.configId
       tableId = action.tableId
-
       files = fromJS action.files
       files = files.toMap().mapKeys (index, file) ->
         file.get 'tableId'
@@ -67,10 +83,8 @@ Dispatcher.register (payload) ->
       WrGdriveStore.emitChange()
 
     when ActionTypes.WR_GDRIVE_LOAD_GOOGLEINFO_START
-
       googleId = action.googleId
       configId = action.configId
-
       _store = _store.setIn ['loading', 'googleInfo', configId, googleId], true
       WrGdriveStore.emitChange()
 

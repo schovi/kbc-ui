@@ -26,6 +26,11 @@ module.exports =
     .then (response) ->
       response.body
 
+  deleteFile: (configId, rowId) ->
+    createRequest('DELETE', "files/#{configId}/#{rowId}")
+    .promise()
+    .then (response) ->
+      response.body
 
   getFileInfo: (configId, googleId) ->
     createRequest('GET', "remote-file/#{configId}/#{googleId}")

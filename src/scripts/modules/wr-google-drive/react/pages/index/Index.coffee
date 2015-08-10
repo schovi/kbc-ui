@@ -35,8 +35,10 @@ module.exports = React.createClass
     files = GdriveStore.getFiles configId
     editingFiles = GdriveStore.getEditingByPath(configId, 'files')
     savingFiles = GdriveStore.getSavingFiles(configId)
+    deletingFiles = GdriveStore.getDeletingFiles(configId)
 
     #state
+    deletingFiles: deletingFiles
     savingFiles: savingFiles
     editingFiles: editingFiles
     files: files
@@ -143,14 +145,18 @@ module.exports = React.createClass
 
   _renderTableRow: (table) ->
     tableId = table.get 'id'
+    isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
+    console.log 'IS DELETIG', tableId, @state.deletingFiles.get(tableId), @state.savingFiles.get(tableId), isSaving
     TableRow
       key: tableId
       configId: @state.configId
       editFn: (data) =>
         @_setEditingFile tableId, data
+      deleteRowFn: (rowId) =>
+        gdriveActions.deleteRow(@state.configId, rowId, tableId)
       saveFn: (data) =>
         gdriveActions.saveFile(@state.configId, tableId, data)
-      isSaving: @state.savingFiles?.get tableId
+      isSaving: isSaving
       editData: @state.editingFiles?.get tableId
       isTableExported: false #@_isTableExported(tableId)
       isPending: false #@_isPendingTable(tableId)

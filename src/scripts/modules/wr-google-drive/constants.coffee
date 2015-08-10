@@ -13,3 +13,6 @@ module.exports =
     WR_GDRIVE_SAVEFILE_START: null
 
     WR_GDRIVE_SAVEFILE_SUCCESS: null
+
+    WR_GDRIVE_DELETE_ROW_START: null
+    WR_GDRIVE_DELETE_ROW_DELETE: null

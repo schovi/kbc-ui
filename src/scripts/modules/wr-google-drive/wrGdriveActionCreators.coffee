@@ -60,6 +60,25 @@ module.exports =
         error: err
       throw err
 
+  deleteRow: (configId, rowId, tableId) ->
+    dispatcher.handleViewAction
+      type: ActionTypes.WR_GDRIVE_DELETE_ROW_START
+      configId: configId
+      tableId: tableId
+    api.deleteFile(configId, rowId).then (result) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_DELETE_ROW_SUCCESS
+        configId: configId
+        tableId: tableId
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_API_ERROR
+        googleId: googleId
+        configId: configId
+        error: err
+      throw err
+
+
   loadGoogleInfo: (configId, googleId) ->
     isLoading = store.getLoadingGoogleInfo(configId, googleId)
     if !!isLoading

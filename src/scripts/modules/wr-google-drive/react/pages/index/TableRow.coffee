@@ -31,6 +31,7 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool
     editFn: React.PropTypes.func.isRequired
     saveFn: React.PropTypes.func.isRequired
+    deleteRowFn: React.PropTypes.func.isRequired
 
 
   render: ->
@@ -56,15 +57,29 @@ module.exports = React.createClass
         @props.file.get 'type'
       span className: 'td',
         @_renderTargetfolder()
-      span className: 'td',
-        Button
-          bsStyle: 'default'
-          bsSize: 'small'
-          disabled: false
-          onClick: =>
-            @props.editFn(@props.file)
-        ,
-          'edit'
+      if @props.isSaving
+        span className: 'td',
+          Loader()
+      else
+        span className: 'td',
+          Button
+            bsStyle: 'default'
+            bsSize: 'small'
+            disabled: false
+            onClick: =>
+              @props.editFn(@props.file)
+          ,
+            'edit'
+          Button
+            bsStyle: 'default'
+            bsSize: 'small'
+            disabled: false
+            onClick: =>
+              rowId = @props.file.get('id')
+              console.log 'delete row id', rowId
+              @props.deleteRowFn(rowId)
+          ,
+            'remove'
 
   _renderEditFile: ->
     buttonSize = 'small'
