@@ -161,8 +161,9 @@ module.exports = React.createClass
 
   _renderEmptyFile: ->
     tableId = @props.table.get 'id'
+    tableName = @props.table.get 'name'
     emptyFile =
-      title: tableId
+      title: tableName
       tableId: tableId
       operation: 'update'
       type: 'sheet'
