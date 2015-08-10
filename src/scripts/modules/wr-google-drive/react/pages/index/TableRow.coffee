@@ -103,26 +103,22 @@ module.exports = React.createClass
         @_renderSelect(['sheet', 'file'], 'type')
       span className: 'td',
         @_renderPicker()
-      span className: 'td',
-        if @props.isSaving
+
+      if @props.isSaving
+        span className: 'td text-right kbc-no-wrap',
           Loader()
-        else
-          div className: 'form-group',
-            div className: 'col-xs-12',
-              Button
-                bsStyle: 'success'
-                bsSize: buttonSize
-                disabled: false
-                onClick: @_startSaving
-              ,
-                'Save'
-              Button
-                bsStyle: 'default'
-                bsSize: buttonSize
-                disabled: false
-                onClick: @_cancel
-              ,
-                'cancel'
+      else
+        span className: 'td text-right kbc-no-wrap',
+            button
+              className: 'btn btn-success btn-sm'
+              onClick: @_startSaving
+            ,
+              'Save'
+            button
+              className: 'btn btn-link btn-sm'
+              onClick: @_cancel
+            ,
+              'Cancel'
 
   _cancel: ->
     @props.editFn(null)
