@@ -37,7 +37,7 @@ module.exports = React.createClass
         else
           span className: 'text-muted',
             'Untitled'
-      span className: 'td',
+      span className: 'td kbc-break-all',
         @props.query.get 'outputTable'
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
