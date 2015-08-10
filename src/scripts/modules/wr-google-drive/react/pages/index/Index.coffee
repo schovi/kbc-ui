@@ -90,6 +90,16 @@ module.exports = React.createClass
         div className: 'row component-empty-state text-center',
           div null,
             p null, 'No Google Drive Account Authorized.'
+            Link
+              className: 'btn btn-success'
+              to: 'wr-google-drive-authorize'
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              ' Authorize Google Account'
+
+
 
 
   _renderSideBar: ->
@@ -104,14 +114,15 @@ module.exports = React.createClass
           configId: @state.configId
 
       ul className: 'nav nav-stacked',
-        li null,
-          Link
-            to: 'wr-google-drive-authorize'
-            params:
-              config: @state.configId
-          ,
-            i className: 'fa fa-fw fa-user'
-            'Authorize'
+        if @_isAuthorized()
+          li null,
+            Link
+              to: 'wr-google-drive-authorize'
+              params:
+                config: @state.configId
+            ,
+              i className: 'fa fa-fw fa-user'
+              'Authorize'
         li className: classnames(disabled: !!@_disabledToRun()),
           RunButtonModal
             disabled: !!@_disabledToRun()
@@ -179,10 +190,14 @@ module.exports = React.createClass
     gdriveActions.loadGoogleInfo(@state.configId, folderId)
 
   _isAuthorized: ->
-    return true
+    return !!@state.account?.get('email')
 
   _disabledToRun: ->
-    "TODO!!"
+    if not @_isAuthorized()
+      return 'No Google Drive Account'
+
+    return null
+
 
   _handleSearchQueryChange: (newQuery) ->
     @_updateLocalState(['searchQuery'], newQuery)

@@ -47,7 +47,7 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.get 'name'
       span className: 'td',
-        i className: 'fa fa-fw fa-long-arrow-right'
+        i className: 'kbc-icon-arrow-right'
       span className: 'td',
         @props.file.get 'title'
       span className: 'td',
@@ -87,7 +87,7 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.get 'name'
       span className: 'td',
-        i className: 'fa fa-fw fa-long-arrow-right'
+        i className: 'kbc-icon-arrow-right'
       span className: 'td',
         input
           value: @props.editData?.get 'title'
