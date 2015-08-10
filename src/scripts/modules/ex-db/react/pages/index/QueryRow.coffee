@@ -31,7 +31,7 @@ module.exports = React.createClass
         config: @props.configurationId
         query: @props.query.get 'id'
     ,
-      span className: 'td',
+      span className: 'td kbc-break-all',
         if @props.query.get 'name'
           @props.query.get 'name'
         else
@@ -42,7 +42,7 @@ module.exports = React.createClass
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
       span className: 'td',
-        @props.query.get 'primaryKey'
+        @props.query.get('primaryKey').split(',').join(', ')
       span className: 'td text-right kbc-no-wrap',
         QueryDeleteButton
           query: @props.query
