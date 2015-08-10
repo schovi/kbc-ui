@@ -79,6 +79,7 @@ module.exports = React.createClass
           ,
             button className: 'btn btn-link',
               i className: 'kbc-icon-cup'
+          @_renderRunButton()
 
 
   _renderEditFile: ->
@@ -199,6 +200,21 @@ module.exports = React.createClass
           label
         )
 
+  _renderRunButton: ->
+    React.createElement Tooltip,
+      tooltip: 'Upload table to Google Drive'
+    ,
+      RunButtonModal
+        title: "Upload #{@props.table.get('id')}"
+        tooltip: "Upload #{@props.table.get('id')}"
+        mode: 'button'
+        icon: 'fa fa-upload fa-fw'
+        component: 'wr-google-drive'
+        runParams: =>
+          file: @props.file.get 'id'
+          config: @props.configId
+      ,
+       "You are about to run upload of #{@props.table.get('id')} to Google Drive."
 
 
 

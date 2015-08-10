@@ -100,8 +100,6 @@ module.exports = React.createClass
               ' Authorize Google Account'
 
 
-
-
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       div className: 'kbc-buttons kbc-text-light',
@@ -133,7 +131,7 @@ module.exports = React.createClass
             icon: 'fa fa-upload fa-fw'
             component: componentId
             runParams: =>
-              writer: @state.configId
+              config: @state.configId
           ,
            "You are about to run upload of all seleted tables"
         li null,
@@ -159,7 +157,7 @@ module.exports = React.createClass
   _renderTableRow: (table) ->
     tableId = table.get 'id'
     isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
-    console.log 'IS DELETIG', tableId, @state.deletingFiles.get(tableId), @state.savingFiles.get(tableId), isSaving
+
     TableRow
       key: tableId
       configId: @state.configId
@@ -195,6 +193,9 @@ module.exports = React.createClass
   _disabledToRun: ->
     if not @_isAuthorized()
       return 'No Google Drive Account'
+    console.log 'CUNT', @state.files?.count()
+    if @state.files?.count() == 0
+      return 'No tables configured'
 
     return null
 
