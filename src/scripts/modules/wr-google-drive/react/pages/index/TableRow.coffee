@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 {fromJS} = require 'immutable'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
-{button, option, span, i, button, strong, div, input} = React.DOM
+{small, button, option, span, i, button, strong, div, input} = React.DOM
 Link = React.createFactory(require('react-router').Link)
 Input = React.createFactory(require('react-bootstrap').Input)
 Loader = React.createFactory(require('kbc-react-components').Loader)
@@ -12,6 +12,12 @@ ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+
+tooltips =
+  file: 'uploads selected table as csv a file'
+  sheet: 'uploads selected table as google drive spreadsheet'
+  update: 'always update the same file or sheet, if does not exist create one'
+  create: 'always create new file with unique name by appending current date and time to the name.'
 
 
 module.exports = React.createClass
@@ -25,6 +31,7 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     file: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
+    email: React.PropTypes.string.isRequired
     folderNames: React.PropTypes.object.isRequired
     editData: React.PropTypes.object.isRequired
     isSaving: React.PropTypes.bool
@@ -51,9 +58,18 @@ module.exports = React.createClass
       span className: 'td',
         @props.file.get 'title'
       span className: 'td',
-        @props.file.get 'operation'
+        React.createElement Tooltip,
+          tooltip: tooltips[@props.file.get('operation')]
+        ,
+          span null,
+            @props.file.get 'operation'
       span className: 'td',
-        @props.file.get 'type'
+        React.createElement Tooltip,
+          tooltip: tooltips[@props.file.get('type')]
+        ,
+          span null,
+            @props.file.get 'type'
+
       span className: 'td',
         @_renderTargetfolder()
       if @props.isSaving
@@ -133,7 +149,7 @@ module.exports = React.createClass
     folderId = file.get 'targetFolder'
     folderName = @props.folderNames?.get(folderId).get 'title' if folderId
     Picker
-      #email: @state.config.get('email')
+      email: @props.email
       dialogTitle: 'Select a folder'
       buttonLabel: folderName or '/'
       onPickedFn: (data) =>
@@ -183,7 +199,7 @@ module.exports = React.createClass
 
   _renderSelect: (options, prop) ->
     return Input
-
+      bsSize: "small"
       type: 'select'
       value: @props.editData?.get(prop) or options[0]
       onChange: (e) =>
@@ -192,8 +208,8 @@ module.exports = React.createClass
         @props.editFn(data)
     ,
       _.map(options, (label) ->
-
         option
+          title: tooltips[label]
           value: label
           key: label
         ,

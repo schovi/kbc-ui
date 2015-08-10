@@ -159,6 +159,7 @@ module.exports = React.createClass
     isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
 
     TableRow
+      email: @state.account?.get 'email'
       key: tableId
       configId: @state.configId
       editFn: (data) =>
