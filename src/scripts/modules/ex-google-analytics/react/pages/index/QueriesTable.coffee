@@ -36,10 +36,10 @@ module.exports = React.createClass
         div className: 'td', row.get('metrics').join(', ')
         div className: 'td', row.get('dimensions').join(', ')
         div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
-        div className: 'td', @_getProfileName(row.get('profile'))
+        div className: 'td kbc-break-all', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
-        div className: 'td', @props.config.get('outputBucket') + '.' + queryName
+        div className: 'td kbc-break-all', @props.config.get('outputBucket') + '.' + queryName
         div className: 'td text-right kbc-no-wrap',
           if @_isQueryDeleting(queryName)
             Loader()
@@ -92,6 +92,7 @@ module.exports = React.createClass
 
   _getProfileName: (profileId) ->
     profiles = @props.profiles
+    console.log 'profiles', profiles
     if not profileId
       return '--all--'
 
