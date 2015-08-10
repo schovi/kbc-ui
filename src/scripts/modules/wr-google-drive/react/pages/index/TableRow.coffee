@@ -1,7 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
 {fromJS} = require 'immutable'
-
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {button, option, span, i, button, strong, div, input} = React.DOM
 Link = React.createFactory(require('react-router').Link)
@@ -61,28 +60,29 @@ module.exports = React.createClass
         span className: 'td',
           Loader()
       else
-        span className: 'td',
-          Button
-            bsStyle: 'default'
-            bsSize: 'small'
-            disabled: false
+        span className: 'td text-right kbc-no-wrap',
+          button
+            className: 'btn btn-link'
             onClick: =>
               @props.editFn(@props.file)
           ,
-            'edit'
-          Button
-            bsStyle: 'default'
-            bsSize: 'small'
-            disabled: false
-            onClick: =>
+            i className: 'fa fa-fw fa-gear'
+          React.createElement Confirm,
+            key: @props.table.get 'id'
+            title: 'Remove table configuration.'
+            text: 'You are about to remove table from the writer configuration.'
+            buttonLabel: 'Remove'
+            onConfirm: =>
               rowId = @props.file.get('id')
               console.log 'delete row id', rowId
               @props.deleteRowFn(rowId)
           ,
-            'remove'
+            button className: 'btn btn-link',
+              i className: 'kbc-icon-cup'
+
 
   _renderEditFile: ->
-    buttonSize = 'small'
+    buttonSize = 'xsmall'
     div className: 'tr',
       span className: 'td',
         @props.table.get 'name'
@@ -110,7 +110,7 @@ module.exports = React.createClass
           div className: 'form-group',
             div className: 'col-xs-12',
               Button
-                bsStyle: 'primary'
+                bsStyle: 'success'
                 bsSize: buttonSize
                 disabled: false
                 onClick: @_startSaving
@@ -175,14 +175,13 @@ module.exports = React.createClass
       span className: 'td', ''
       span className: 'td', ''
       span className: 'td',
-        Button
-          bsStyle: 'default'
-          bsSize: 'small'
-          disabled: false
+        button
+          className: 'btn btn-link'
           onClick: =>
             @props.editFn(fromJS(emptyFile))
         ,
-          'add'
+          i className: 'fa fa-fw fa-plus'
+
 
 
   _renderSelect: (options, prop) ->
