@@ -4,6 +4,7 @@ _ = require 'underscore'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
+Link = React.createFactory(require('react-router').Link)
 
 SearchRow = require '../../../../../react/common/SearchRow'
 GdriveStore = require '../../../wrGdriveStore'
@@ -36,8 +37,10 @@ module.exports = React.createClass
     editingFiles = GdriveStore.getEditingByPath(configId, 'files')
     savingFiles = GdriveStore.getSavingFiles(configId)
     deletingFiles = GdriveStore.getDeletingFiles(configId)
+    account = GdriveStore.getAccount(configId)
 
     #state
+    account: account
     deletingFiles: deletingFiles
     savingFiles: savingFiles
     editingFiles: editingFiles
@@ -101,15 +104,14 @@ module.exports = React.createClass
           configId: @state.configId
 
       ul className: 'nav nav-stacked',
-        if @_isAuthorized()
-          li null,
-            span
-              to: 'wr-google-drive-authorize'
-              params:
-                config: @state.configId
-            ,
-              i className: 'fa fa-fw fa-user'
-              'Authorize TODO'
+        li null,
+          Link
+            to: 'wr-google-drive-authorize'
+            params:
+              config: @state.configId
+          ,
+            i className: 'fa fa-fw fa-user'
+            'Authorize'
         li className: classnames(disabled: !!@_disabledToRun()),
           RunButtonModal
             disabled: !!@_disabledToRun()
@@ -201,8 +203,15 @@ module.exports = React.createClass
     bucketToggles = @state.localState.get 'bucketToggles', Map()
     !!bucketToggles.get(bucketId)
 
+  _getEmail: ->
+    @state.account.get 'email'
+
   _getAuthorizedForCaption: ->
-    'TODO!!'
+    email = @_getEmail()
+    if not email
+      return 'not authorized'
+    else
+      email
 
   _updateGoogleFolder: (configId, googleId, info) ->
     gdriveActions.setGoogleInfo(configId, googleId, info)

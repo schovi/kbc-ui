@@ -9,6 +9,7 @@ _store = Map
   editing: Map()
   updating: Map() #what# configId
   deleting: Map() #configId#tableID
+  accounts: Map() #configId
 
 WrGdriveStore = storeUtils.createStore
   getFiles: (configId) ->
@@ -33,10 +34,20 @@ WrGdriveStore = storeUtils.createStore
   getDeletingFiles: (configId) ->
     _store.getIn(['deleting', configId], Map())
 
+  getAccount: (configId) ->
+    _store.getIn(['accounts', configId])
+
+
 
 Dispatcher.register (payload) ->
   action = payload.action
   switch action.type
+    when ActionTypes.WR_GDRIVE_LOAD_ACCOUNT_SUCCESS
+      configId = action.configId
+      data = fromJS action.account
+      _store = _store.setIn ['accounts', configId], data
+      WrGdriveStore.emitChange()
+
     when ActionTypes.WR_GDRIVE_DELETE_ROW_START
       configId = action.configId
       tableId = action.tableId

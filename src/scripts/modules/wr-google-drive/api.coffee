@@ -12,6 +12,12 @@ module.exports =
     .then (response) ->
       response.body
 
+  getAccount: (configId) ->
+    createRequest('GET', "accounts/#{configId}")
+    .promise()
+    .then (response) ->
+      response.body
+
   postFile: (configId, file) ->
     createRequest('POST', "files/#{configId}")
     .send file
@@ -25,6 +31,9 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+
+
 
   deleteFile: (configId, rowId) ->
     createRequest('DELETE', "files/#{configId}/#{rowId}")

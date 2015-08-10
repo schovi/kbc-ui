@@ -47,12 +47,16 @@ module.exports =
 
 
   loadFilesForce: (configId) ->
-    api.getFiles(configId)
+    api.getAccount(configId)
     .then (result) ->
       dispatcher.handleViewAction
         type: ActionTypes.WR_GDRIVE_LOAD_FILES_SUCCESS
         configId: configId
-        files: result
+        files: result.items
+      dispatcher.handleViewAction
+        type: ActionTypes.WR_GDRIVE_LOAD_ACCOUNT_SUCCESS
+        configId: configId
+        account: result
     .catch (err) ->
       dispatcher.handleViewAction
         type: ActionTypes.WR_GDRIVE_API_ERROR

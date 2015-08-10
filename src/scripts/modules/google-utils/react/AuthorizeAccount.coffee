@@ -22,6 +22,10 @@ module.exports = React.createClass
     sendEmailFn: React.PropTypes.func.isRequired
     sendingLink: React.PropTypes.bool
     isExtLinkOnly: React.PropTypes.bool
+    isInstantOnly: React.PropTypes.bool
+
+  getDefaultProps: ->
+    isInstantOnly: false
 
 
   getInitialState: ->
@@ -51,26 +55,26 @@ module.exports = React.createClass
                   className: 'btn btn-primary'
                   type: 'submit',
                     'Authorize Google account now'
-
-        TabPane eventKey: 'external', tab: 'External Authorization',
-          form {className: 'form-horizontal'},
-            div className: 'row',
-              div className: 'well',
-                'Generated external link allows to authorize the Google account \
-                 without having an access to the KBC. The link is temporary valid and \
-                 expires 48 hours after the generation.'
-              @_renderExtLink() if @props.extLink
-            div className: 'row',
-              Button
-                className: 'btn btn-primary'
-                onClick: @_generateExternalLink
-                disabled: @props.isGeneratingExtLink
-                type: 'button',
-                  if @props.extLink
-                    'Regenerate External Link'
-                  else
-                    'Generate External Link'
-              Loader() if @props.isGeneratingExtLink
+        if not @props.isInstantOnly
+          TabPane eventKey: 'external', tab: 'External Authorization',
+            form {className: 'form-horizontal'},
+              div className: 'row',
+                div className: 'well',
+                  'Generated external link allows to authorize the Google account \
+                   without having an access to the KBC. The link is temporary valid and \
+                   expires 48 hours after the generation.'
+                @_renderExtLink() if @props.extLink
+              div className: 'row',
+                Button
+                  className: 'btn btn-primary'
+                  onClick: @_generateExternalLink
+                  disabled: @props.isGeneratingExtLink
+                  type: 'button',
+                    if @props.extLink
+                      'Regenerate External Link'
+                    else
+                      'Generate External Link'
+                Loader() if @props.isGeneratingExtLink
 
   _renderExtLink: ->
     div className: 'form-horizontal',
