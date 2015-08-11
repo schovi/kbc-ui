@@ -82,7 +82,7 @@ module.exports = React.createClass
             onClick: =>
               @props.editFn(@props.file)
           ,
-            i className: 'fa fa-fw fa-gear'
+            i className: 'fa fa-fw kbc-icon-pencil'
           React.createElement Confirm,
             key: @props.table.get 'id'
             title: 'Remove table configuration.'
@@ -232,7 +232,6 @@ module.exports = React.createClass
        "You are about to run upload of #{@props.table.get('id')} to Google Drive."
 
   _renderPreviewLink: ->
-    console.log @props.file.toJS()
     googleId = @props.file?.get 'googleId'
     if not _.isEmpty(googleId)
       googleInfo = @props.googleInfo?.get(googleId)

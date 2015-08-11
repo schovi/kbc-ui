@@ -3,6 +3,8 @@ React = require 'react'
 _ = require 'underscore'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
 RoutesStore = require '../../../../../stores/RoutesStore'
 Link = React.createFactory(require('react-router').Link)
 
@@ -27,7 +29,7 @@ componentId = 'wr-google-drive'
 
 module.exports = React.createClass
   displayName: 'WrGdriveIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore, GdriveStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, GdriveStore, LatestJobsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -37,8 +39,10 @@ module.exports = React.createClass
     savingFiles = GdriveStore.getSavingFiles(configId)
     deletingFiles = GdriveStore.getDeletingFiles(configId)
     account = GdriveStore.getAccount(configId)
+    console.log "FILES", files.toJS()
 
     #state
+    latestJobs: LatestJobsStore.getJobs(componentId, configId)
     account: account
     deletingFiles: deletingFiles
     savingFiles: savingFiles
@@ -136,6 +140,8 @@ module.exports = React.createClass
           React.createElement DeleteConfigurationButton,
             componentId: componentId
             configId: @state.configId
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
 
   _renderHeaderRow: ->
     div className: 'tr',
