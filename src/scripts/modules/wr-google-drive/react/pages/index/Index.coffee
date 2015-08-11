@@ -39,7 +39,7 @@ module.exports = React.createClass
     savingFiles = GdriveStore.getSavingFiles(configId)
     deletingFiles = GdriveStore.getDeletingFiles(configId)
     account = GdriveStore.getAccount(configId)
-    console.log "FILES", files.toJS()
+    #console.log "FILES", files.toJS()
 
     #state
     latestJobs: LatestJobsStore.getJobs(componentId, configId)
@@ -66,6 +66,14 @@ module.exports = React.createClass
 
 
   _renderMainContent: ->
+    forceShow = @state.files.count() == 0
+    toogleShowAllFn = =>
+      showAll = @state.localState.get('showAll', false)
+      @_updateLocalState(['showAll'], !showAll)
+
+    if forceShow
+      toogleShowAllFn = null
+
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
         ComponentDescription
@@ -88,6 +96,8 @@ module.exports = React.createClass
             @state.files.has(tableId)
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
+          showAllTables: @state.localState.get('showAll', false) or forceShow
+          toggleShowAllFn: toogleShowAllFn
       else
         div className: 'row component-empty-state text-center',
           div null,
@@ -184,6 +194,7 @@ module.exports = React.createClass
         @_loadGoogleInfo(googleId)
       isLoadingGoogleInfoFn: (googleId) =>
         GdriveStore.getLoadingGoogleInfo(@state.configId, googleId)
+
 
 
   _setEditingFile: (tableId, data) ->

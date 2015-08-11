@@ -21,6 +21,8 @@ module.exports = React.createClass
     isTableExportedFn: React.PropTypes.func
     onToggleBucketFn: React.PropTypes.func
     isBucketToggledFn: React.PropTypes.func
+    showAllTables: React.PropTypes.bool
+    toggleShowAllFn: React.PropTypes.func
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
@@ -30,30 +32,44 @@ module.exports = React.createClass
     isTablesLoading: isTablesLoading
     tables: tables
 
-
   componentDidMount: ->
     storageActionCreators.loadTables()
+
+  getDefaultProps: ->
+    showAllTables: true
 
   render: ->
     isTablesLoading = @state.isTablesLoading
     buckets = @_getFilteredBuckets()
+    forceExpand = buckets.count() == 1
+    console.log "force expand", forceExpand
     if isTablesLoading
       div className: 'well',
         'Loading Tables...'
     else
       if buckets.count()
-        div
-          className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-        ,
-          buckets.map (bucket, bucketId) ->
-            @_renderBucketPanel bucketId, bucket.get 'tables'
-          , @
-          .toArray()
+        div null,
+          div
+            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+          ,
+            buckets.map (bucket, bucketId) ->
+              @_renderBucketPanel bucketId, bucket.get('tables'), forceExpand
+            , @
+            .toArray()
+          if @props.toggleShowAllFn
+            button
+              onClick: =>
+                @props.toggleShowAllFn()
+              className: 'btn btn-link',
+              if @props.showAllTables
+                'Only Configured Tables'
+              else
+                'All tables'
       else
         @_renderNotFound()
 
 
-  _renderBucketPanel: (bucketId, tables) ->
+  _renderBucketPanel: (bucketId, tables, forceExpand) ->
     activeCount = 0
     if @props.isTableExportedFn
       activeCount = tables.filter((table) =>
@@ -75,7 +91,7 @@ module.exports = React.createClass
       header: header
       key: bucketId
       eventKey: bucketId
-      expanded: !!@props.searchQuery?.length || @_isBucketToggled(bucketId)
+      expanded: (!!@props.searchQuery?.length) or (@_isBucketToggled(bucketId)) or forceExpand
       collapsible: true
       onSelect: @_handleBucketSelect.bind(@, bucketId)
     ,
@@ -153,9 +169,16 @@ module.exports = React.createClass
     query = @props.searchQuery
     tables = bucket.get('tables')
     if not query
-      return tables
+      query = ''
     newTables = tables.filter( (table) ->
       tableId = table.get('id')
-      fuzzy.match(query, tableId)
+      return fuzzy.match(query, tableId)
     )
+    if not @props.showAllTables
+      newTables = newTables.filter( (table) =>
+        tableId = table.get('id')
+        isExported = @props.isTableExportedFn(tableId)
+        return isExported
+      )
+
     return newTables
