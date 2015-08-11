@@ -30,7 +30,6 @@ module.exports = React.createClass
   mixins: [createStoreMixin(InstalledComponentsStore, GdriveStore)]
 
   getStateFromStores: ->
-
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     files = GdriveStore.getFiles configId
@@ -47,7 +46,7 @@ module.exports = React.createClass
     files: files
     configId: configId
     localState: localState
-    folderNames: GdriveStore.getGoogleInfo(configId)
+    googleInfo: GdriveStore.getGoogleInfo(configId)
 
   render: ->
     div {className: 'container-fluid'},
@@ -58,7 +57,7 @@ module.exports = React.createClass
     @state.files.forEach (file, tableId) =>
       targetFolder = file.get 'targetFolder'
       if not _.isEmpty(targetFolder)
-        @_loadFolderName(targetFolder)
+        @_loadGoogleInfo(targetFolder)
 
 
 
@@ -169,23 +168,24 @@ module.exports = React.createClass
         gdriveActions.saveFile(@state.configId, tableId, data)
       isSaving: isSaving
       editData: @state.editingFiles?.get tableId
-      isTableExported: false #@_isTableExported(tableId)
-      isPending: false #@_isPendingTable(tableId)
-      onExportChangeFn: ->
-        #@_handleExportChange(tableId)
       table: table
       file: @state.files.find (f) ->
         f.get('tableId') == tableId
-      folderNames: @state.folderNames
+      googleInfo: @state.googleInfo
       updateGoogleFolderFn: (info, googleId) =>
         @_updateGoogleFolder(@state.configId, googleId, info)
+      loadGoogleInfoFn: (googleId) =>
+        @_loadGoogleInfo(googleId)
+      isLoadingGoogleInfoFn: (googleId) =>
+        GdriveStore.getLoadingGoogleInfo(@state.configId, googleId)
+
 
   _setEditingFile: (tableId, data) ->
     path = ['files', tableId]
     gdriveActions.setEditingData(@state.configId, path, data)
 
-  _loadFolderName: (folderId) ->
-    gdriveActions.loadGoogleInfo(@state.configId, folderId)
+  _loadGoogleInfo: (googleId) ->
+    gdriveActions.loadGoogleInfo(@state.configId, googleId)
 
   _isAuthorized: ->
     return !!@state.account?.get('email')

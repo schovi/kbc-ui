@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 {fromJS} = require 'immutable'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
-{small, button, option, span, i, button, strong, div, input} = React.DOM
+{a, small, button, option, span, i, button, strong, div, input} = React.DOM
 Link = React.createFactory(require('react-router').Link)
 Input = React.createFactory(require('react-bootstrap').Input)
 Loader = React.createFactory(require('kbc-react-components').Loader)
@@ -25,19 +25,18 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
 
   propTypes:
-    isTableExported: React.PropTypes.bool.isRequired
-    isPending: React.PropTypes.bool.isRequired
-    onExportChangeFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
     file: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
     email: React.PropTypes.string.isRequired
-    folderNames: React.PropTypes.object.isRequired
+    googleInfo: React.PropTypes.object.isRequired
     editData: React.PropTypes.object.isRequired
     isSaving: React.PropTypes.bool
     editFn: React.PropTypes.func.isRequired
     saveFn: React.PropTypes.func.isRequired
+    loadGoogleInfoFn: React.PropTypes.func.isRequired
     deleteRowFn: React.PropTypes.func.isRequired
+    isLoadingGoogleInfoFn: React.PropTypes.func.isRequired
 
 
   render: ->
@@ -55,7 +54,9 @@ module.exports = React.createClass
       span className: 'td',
         i className: 'kbc-icon-arrow-right'
       span className: 'td',
-        @props.file.get 'title'
+        span null,
+          @props.file.get 'title'
+          @_renderPreviewLink()
       span className: 'td',
         React.createElement Tooltip,
           tooltip: tooltips[@props.file.get('operation')]
@@ -145,7 +146,7 @@ module.exports = React.createClass
   _renderPicker: ->
     file = @props.editData
     folderId = file.get 'targetFolder'
-    folderName = @props.folderNames?.get(folderId).get 'title' if folderId
+    folderName = @props.googleInfo?.get(folderId).get 'title' if folderId
     Picker
       email: @props.email
       dialogTitle: 'Select a folder'
@@ -230,6 +231,33 @@ module.exports = React.createClass
       ,
        "You are about to run upload of #{@props.table.get('id')} to Google Drive."
 
+  _renderPreviewLink: ->
+    console.log @props.file.toJS()
+    googleId = @props.file?.get 'googleId'
+    if not _.isEmpty(googleId)
+      googleInfo = @props.googleInfo?.get(googleId)
+      if googleInfo
+        url = googleInfo.get('alternateLink')
+        name = googleInfo.get('title') or googleInfo.get('originalFilename')
+        return div null,
+          a {href: url, target: '_blank'},
+            small null, name
+      else
+        return div 'kbc-no-wrap pull-right',
+          if @props.isLoadingGoogleInfoFn(googleId)
+            Loader()
+          else
+            button
+              style:
+                padding: '0'
+              className: 'btn btn-link btn-sm',
+              onClick: =>
+                @props.loadGoogleInfoFn(googleId)
+              small null,
+                'Link To Google Drive'
+    else
+      return span null, ''
+
 
 
   _renderTargetfolder: ->
@@ -237,7 +265,7 @@ module.exports = React.createClass
     if not folderId
       return '/'
     else
-      folderName = @props.folderNames?.get(folderId)
+      folderName = @props.googleInfo?.get(folderId)
       if not folderName
         return Loader()
       else
