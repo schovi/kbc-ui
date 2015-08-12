@@ -101,8 +101,8 @@ module.exports = React.createClass
             @state.files.has(tableId)
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
-          showAllTables: @state.localState.get('showAll', false)
-          toggleShowAllFn: toogleShowAllFn
+          showAllTables: false
+          toggleShowAllFn: null
       else
         div className: 'row component-empty-state text-center',
           div null,
