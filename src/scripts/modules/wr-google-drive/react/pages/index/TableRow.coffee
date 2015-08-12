@@ -6,9 +6,8 @@ _ = require 'underscore'
 Link = React.createFactory(require('react-router').Link)
 Input = React.createFactory(require('react-bootstrap').Input)
 Loader = React.createFactory(require('kbc-react-components').Loader)
-Button = React.createFactory(require('react-bootstrap').Button)
-Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
-ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
+
+RowEditor = require './RowEditor'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
@@ -45,7 +44,6 @@ module.exports = React.createClass
     if not @props.file
       return @_renderEmptyFile()
     return @_renderStaticFile()
-
 
   _renderStaticFile: ->
     div className: 'tr',
@@ -98,78 +96,14 @@ module.exports = React.createClass
 
 
   _renderEditFile: ->
-    buttonSize = 'xsmall'
-    div className: 'tr',
-      span className: 'td',
-        @props.table.get 'name'
-      span className: 'td',
-        i className: 'kbc-icon-arrow-right'
-      span className: 'td',
-        input
-          value: @props.editData?.get 'title'
-          type: 'text'
-          onChange: (event) =>
-            data = event.target.value
-            editData = @props.editData.set 'title', data
-            @props.editFn(editData)
-
-      span className: 'td',
-        @_renderSelect(['update', 'create'], 'operation')
-      span className: 'td',
-        @_renderSelect(['sheet', 'file'], 'type')
-      span className: 'td',
-        @_renderPicker()
-
-      if @props.isSaving
-        span className: 'td text-right kbc-no-wrap',
-          Loader()
-      else
-        span className: 'td text-right kbc-no-wrap',
-            button
-              className: 'btn btn-success btn-sm'
-              onClick: @_startSaving
-            ,
-              'Save'
-            button
-              className: 'btn btn-link btn-sm'
-              onClick: @_cancel
-            ,
-              'Cancel'
-
-  _cancel: ->
-    @props.editFn(null)
-
-  _startSaving: ->
-    @props.saveFn(@props.editData).then =>
-      @props.editFn(null)
-
-  _renderPicker: ->
-    file = @props.editData
-    folderId = file.get 'targetFolder'
-    folderName = @props.googleInfo?.get(folderId).get 'title' if folderId
-    Picker
+    return React.createElement RowEditor,
+      table: @props.table
+      editFn: @props.editFn
+      editData: @props.editData
+      isSaving: @props.isSaving
       email: @props.email
-      dialogTitle: 'Select a folder'
-      buttonLabel: folderName or '/'
-      onPickedFn: (data) =>
-        data = _.filter data, (file) ->
-          file.type == 'folder'
-        console.log "PICKED folder", data
-        folderId = data[0].id
-        folderName = data[0].name
-        data[0].title = folderName
-        @props.updateGoogleFolderFn(data[0], folderId)
-        data = @props.editData.set('targetFolder', folderId)
-        @props.editFn(data)
-      buttonProps:
-        bsStyle: 'default'
-        bsSize: 'small'
-      views: [
-        ViewTemplates.rootFolder
-        ViewTemplates.flatFolders
-        ViewTemplates.recentFolders
-      ]
-
+      googleInfo: @props.googleInfo
+      saveFn: @props.saveFn
 
   _renderEmptyFile: ->
     tableId = @props.table.get 'id'
@@ -196,24 +130,6 @@ module.exports = React.createClass
 
 
 
-  _renderSelect: (options, prop) ->
-    return Input
-      bsSize: "small"
-      type: 'select'
-      value: @props.editData?.get(prop) or options[0]
-      onChange: (e) =>
-        value = e.target.value
-        data = @props.editData.set(prop, value)
-        @props.editFn(data)
-    ,
-      _.map(options, (label) ->
-        option
-          title: tooltips[label]
-          value: label
-          key: label
-        ,
-          label
-        )
 
   _renderRunButton: ->
     React.createElement Tooltip,
