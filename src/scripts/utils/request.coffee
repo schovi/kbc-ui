@@ -21,4 +21,4 @@ Request.prototype.promise = ->
 
 module.exports = (method, url) ->
   request(method, url)
-  .timeout 30000
+  .timeout 60000
