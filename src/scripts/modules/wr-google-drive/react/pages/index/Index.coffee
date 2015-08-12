@@ -63,16 +63,21 @@ module.exports = React.createClass
       if not _.isEmpty(targetFolder)
         @_loadGoogleInfo(targetFolder)
 
+    #if no files are configured then show all tables
+    if @state.files.count() == 0
+      @_updateLocalState(['showAll'], true)
 
 
   _renderMainContent: ->
-    forceShow = @state.files.count() == 0
     toogleShowAllFn = =>
       showAll = @state.localState.get('showAll', false)
       @_updateLocalState(['showAll'], !showAll)
 
-    if forceShow
+    #if no files are configured then show all tables by default and
+    #dont toggle between them
+    if @state.files.count() == 0
       toogleShowAllFn = null
+
 
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
@@ -96,7 +101,7 @@ module.exports = React.createClass
             @state.files.has(tableId)
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
-          showAllTables: @state.localState.get('showAll', false) or forceShow
+          showAllTables: @state.localState.get('showAll', false)
           toggleShowAllFn: toogleShowAllFn
       else
         div className: 'row component-empty-state text-center',
@@ -222,7 +227,7 @@ module.exports = React.createClass
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') == 'out' or bucket.get('stage') == 'in'
     return buckets
 
   _handleToggleBucket: (bucketId) ->
