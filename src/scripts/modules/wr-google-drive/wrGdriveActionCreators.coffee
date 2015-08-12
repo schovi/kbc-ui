@@ -19,7 +19,7 @@ module.exports =
       tableId: tableId
       file: file
       configId: configId
-    fileId = file.get 'id'
+    fileId = file?.get 'id'
     if fileId
       apiOperation = api.putFile(configId, fileId, file.toJS())
     else

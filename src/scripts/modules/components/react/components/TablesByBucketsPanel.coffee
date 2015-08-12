@@ -28,6 +28,8 @@ module.exports = React.createClass
     isTablesLoading = storageTablesStore.getIsLoading()
     tables = storageTablesStore.getAll()
 
+    console.log 'tables', tables?.toJS()
+
     #state
     isTablesLoading: isTablesLoading
     tables: tables

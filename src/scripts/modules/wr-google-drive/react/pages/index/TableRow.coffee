@@ -30,7 +30,7 @@ module.exports = React.createClass
     email: React.PropTypes.string.isRequired
     googleInfo: React.PropTypes.object.isRequired
     editData: React.PropTypes.object.isRequired
-    isSaving: React.PropTypes.bool
+    isSavingFn: React.PropTypes.bool
     editFn: React.PropTypes.func.isRequired
     saveFn: React.PropTypes.func.isRequired
     loadGoogleInfoFn: React.PropTypes.func.isRequired
@@ -70,7 +70,7 @@ module.exports = React.createClass
 
       span className: 'td',
         @_renderTargetfolder()
-      if @props.isSaving
+      if @props.isSavingFn()
         span className: 'td',
           Loader()
       else
@@ -100,7 +100,7 @@ module.exports = React.createClass
       table: @props.table
       editFn: @props.editFn
       editData: @props.editData
-      isSaving: @props.isSaving
+      isSavingFn: @props.isSavingFn
       email: @props.email
       googleInfo: @props.googleInfo
       saveFn: @props.saveFn

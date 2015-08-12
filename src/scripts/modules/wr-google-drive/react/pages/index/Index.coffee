@@ -1,5 +1,5 @@
 React = require 'react'
-{Map} = require 'immutable'
+{Map, fromJS} = require 'immutable'
 _ = require 'underscore'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -7,6 +7,7 @@ LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 RoutesStore = require '../../../../../stores/RoutesStore'
 Link = React.createFactory(require('react-router').Link)
+RowEditor = require './RowEditor'
 
 SearchRow = require '../../../../../react/common/SearchRow'
 GdriveStore = require '../../../wrGdriveStore'
@@ -23,7 +24,7 @@ RunButtonModal = React.createFactory(require('../../../../components/react/compo
 TableRow = React.createFactory(require './TableRow')
 gdriveActions = require '../../../wrGdriveActionCreators'
 
-{i, strong, span, div, p, ul, li} = React.DOM
+{button, i, strong, span, div, p, ul, li} = React.DOM
 
 componentId = 'wr-google-drive'
 
@@ -36,12 +37,14 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     files = GdriveStore.getFiles configId
     editingFiles = GdriveStore.getEditingByPath(configId, 'files')
+    newTableEditData = GdriveStore.getEditingByPath(configId, 'newtable')
     savingFiles = GdriveStore.getSavingFiles(configId)
     deletingFiles = GdriveStore.getDeletingFiles(configId)
     account = GdriveStore.getAccount(configId)
     #console.log "FILES", files.toJS()
 
     #state
+    newTableEditData: newTableEditData
     latestJobs: LatestJobsStore.getJobs(componentId, configId)
     account: account
     deletingFiles: deletingFiles
@@ -69,22 +72,11 @@ module.exports = React.createClass
 
 
   _renderMainContent: ->
-    toogleShowAllFn = =>
-      showAll = @state.localState.get('showAll', false)
-      @_updateLocalState(['showAll'], !showAll)
-
-    #if no files are configured then show all tables by default and
-    #dont toggle between them
-    if @state.files.count() == 0
-      toogleShowAllFn = null
-
-
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
         ComponentDescription
           componentId: componentId
           configId: @state.configId
-
 
       if @_isAuthorized()
         React.createElement SearchRow,
@@ -103,6 +95,8 @@ module.exports = React.createClass
           isBucketToggledFn: @_isBucketToggled
           showAllTables: false
           toggleShowAllFn: null
+      if @_isAuthorized()
+        @_renderAddNewTable()
       else
         div className: 'row component-empty-state text-center',
           div null,
@@ -173,6 +167,39 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Folder'
 
+  _renderAddNewTable: ->
+    if @state.newTableEditData
+      return div className: 'table table-striped',
+        div className: 'thead',
+          @_renderHeaderRow()
+        div className: 'tbody',
+          React.createElement RowEditor,
+            table: null
+            email: @state.account?.get 'email'
+            googleInfo: @state.googleInfo
+            saveFn: (data) =>
+              tableId = data.get 'tableId'
+              gdriveActions.saveFile(@state.configId, tableId, data)
+            editData: @state.newTableEditData
+            editFn: (data) =>
+              path = ['newtable']
+              gdriveActions.setEditingData(@state.configId, path, data)
+            isSavingFn: (tableId) =>
+              !!@state.savingFiles.get(tableId)
+    else
+      return button
+        className: 'btn pull-right btn-success'
+        onClick: =>
+          emptyFile =
+            title: ''
+            tableId: ''
+            operation: 'update'
+            type: 'sheet'
+          path = ['newtable']
+          gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
+
+        'Add New Table'
+
   _renderTableRow: (table) ->
     tableId = table.get 'id'
     isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
@@ -187,7 +214,8 @@ module.exports = React.createClass
         gdriveActions.deleteRow(@state.configId, rowId, tableId)
       saveFn: (data) =>
         gdriveActions.saveFile(@state.configId, tableId, data)
-      isSaving: isSaving
+      isSavingFn: (tableId) ->
+        isSaving
       editData: @state.editingFiles?.get tableId
       table: table
       file: @state.files.find (f) ->
