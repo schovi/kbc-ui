@@ -33,7 +33,16 @@ module.exports = React.createClass
     tables: tables
 
   componentDidMount: ->
-    storageActionCreators.loadTables()
+    storageActionCreators.loadTables().then =>
+      #force expand of the first bucket if is the only one
+      tables = storageTablesStore.getAll()
+      buckets = @_getFilteredBuckets(tables)
+      forceExpand = buckets.count() == 1
+      if forceExpand
+        bucketId = buckets.keySeq().first()
+        if not @_isBucketToggled(bucketId)
+          @props.onToggleBucketFn bucketId
+
 
   getDefaultProps: ->
     showAllTables: true
@@ -41,8 +50,6 @@ module.exports = React.createClass
   render: ->
     isTablesLoading = @state.isTablesLoading
     buckets = @_getFilteredBuckets()
-    forceExpand = buckets.count() == 1
-    console.log "force expand", forceExpand
     if isTablesLoading
       div className: 'well',
         'Loading Tables...'
@@ -53,7 +60,7 @@ module.exports = React.createClass
             className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
           ,
             buckets.map (bucket, bucketId) ->
-              @_renderBucketPanel bucketId, bucket.get('tables'), forceExpand
+              @_renderBucketPanel bucketId, bucket.get('tables')
             , @
             .toArray()
           if @props.toggleShowAllFn
@@ -69,7 +76,7 @@ module.exports = React.createClass
         @_renderNotFound()
 
 
-  _renderBucketPanel: (bucketId, tables, forceExpand) ->
+  _renderBucketPanel: (bucketId, tables) ->
     activeCount = 0
     if @props.isTableExportedFn
       activeCount = tables.filter((table) =>
@@ -81,7 +88,7 @@ module.exports = React.createClass
           span className: 'tr',
             span className: 'td',
               bucketId
-            if @props.isTableExportedFn
+            if @props.isTableExportedFn and @props.showAllTables
               span className: 'td text-right',
                 React.createElement ActiveCountBadge,
                   totalCount: tables.size
@@ -91,7 +98,7 @@ module.exports = React.createClass
       header: header
       key: bucketId
       eventKey: bucketId
-      expanded: (!!@props.searchQuery?.length) or (@_isBucketToggled(bucketId)) or forceExpand
+      expanded: (!!@props.searchQuery?.length) or (@_isBucketToggled(bucketId))
       collapsible: true
       onSelect: @_handleBucketSelect.bind(@, bucketId)
     ,
@@ -118,8 +125,6 @@ module.exports = React.createClass
     div className: 'tr',
       span className: 'th',
         strong null, 'Table name'
-
-
 
   _getTablesByBucketsList: (tables) ->
     groupedBuckets = tables.groupBy (value, key) ->
@@ -151,8 +156,9 @@ module.exports = React.createClass
           div {className: 'td'}, 'No tables found'
 
   #load buckets and tables from storage store and filter them
-  _getFilteredBuckets: ->
-    tables = @state.tables
+  _getFilteredBuckets: (tables) ->
+    if not tables
+      tables = @state.tables
     buckets = @_getTablesByBucketsList(tables)
     if @props.filterFn
       filteredBuckets = @props.filterFn(buckets)
