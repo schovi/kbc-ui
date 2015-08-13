@@ -10,7 +10,14 @@ scope = 'https://www.googleapis.com/auth/drive.readonly'
 clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com'
 apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc'
 
+
+setZIndex = ->
+  elements = document.getElementsByClassName("picker")
+  for el in elements
+    el.style.zIndex = '1500'
+
 window.handleGoogleClientLoad = ->
+
   console.log  "GAPI LOADED", window.gapi
   gapi.load('picker', -> )
   gapi.load('auth', -> )
@@ -47,7 +54,8 @@ createGdrivePicker = (views, viewGroups) ->
 
   for view in views
     picker = picker.addView(view())
-
+  console.log picker
+  #picker.A.style.zIndex = 2000
   return picker
 
 
@@ -105,6 +113,7 @@ module.exports = React.createClass
       .setCallback(@_onPicked)
       .setOAuthToken(@state.accessToken)
     picker.build().setVisible(true)
+    setZIndex()
 
   _onPicked: (data) ->
     if data.action != 'picked'
