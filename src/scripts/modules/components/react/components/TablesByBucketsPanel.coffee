@@ -1,5 +1,6 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
+{fromJS} = require 'immutable'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ActiveCountBadge = require './ActiveCountBadge'
 storageTablesStore = require '../../stores/StorageTablesStore'
@@ -23,12 +24,12 @@ module.exports = React.createClass
     isBucketToggledFn: React.PropTypes.func
     showAllTables: React.PropTypes.bool
     toggleShowAllFn: React.PropTypes.func
+    configuredTables: React.PropTypes.array
+    renderDeletedTableRowFn: React.PropTypes.func
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
     tables = storageTablesStore.getAll()
-
-    console.log 'tables', tables?.toJS()
 
     #state
     isTablesLoading: isTablesLoading
@@ -48,9 +49,13 @@ module.exports = React.createClass
 
   getDefaultProps: ->
     showAllTables: true
+    configuredTables: []
+
+
 
   render: ->
     isTablesLoading = @state.isTablesLoading
+    deletedTables = @_getDeletedTables()
     buckets = @_getFilteredBuckets()
     if isTablesLoading
       div className: 'well',
@@ -65,6 +70,12 @@ module.exports = React.createClass
               @_renderBucketPanel bucketId, bucket.get('tables')
             , @
             .toArray()
+          if deletedTables.count() > 0
+            div null,
+              div
+                className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+                @_renderBucketPanel 'Nonexisting tables', deletedTables, @props.renderDeletedTableRowFn
+
           if @props.toggleShowAllFn
             button
               onClick: =>
@@ -78,7 +89,7 @@ module.exports = React.createClass
         @_renderNotFound()
 
 
-  _renderBucketPanel: (bucketId, tables) ->
+  _renderBucketPanel: (bucketId, tables, renderRowFn = @props.renderTableRowFn) ->
     activeCount = 0
     if @props.isTableExportedFn
       activeCount = tables.filter((table) =>
@@ -104,11 +115,11 @@ module.exports = React.createClass
       collapsible: true
       onSelect: @_handleBucketSelect.bind(@, bucketId)
     ,
-      @_renderTablesList(tables)
+      @_renderTablesList(tables, renderRowFn)
 
-  _renderTablesList: (tables) ->
-    childs = tables.map((table) =>
-      @props.renderTableRowFn(table)
+  _renderTablesList: (tables, renderRowFn) ->
+    childs = tables.map((table) ->
+      renderRowFn(table)
     , @).toArray()
 
     header = @_renderDefaultHeaderRow()
@@ -190,3 +201,13 @@ module.exports = React.createClass
       )
 
     return newTables
+
+  #return tables that no longer exists but are still in the configuration
+  _getDeletedTables: ->
+    tables = @state.tables.keySeq().toJS()
+    result = []
+    for configuredTable in @props.configuredTables
+      if configuredTable not in tables
+        result.push
+          id: configuredTable
+    return fromJS result
