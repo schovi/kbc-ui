@@ -79,20 +79,21 @@ module.exports = React.createClass
           ComponentDescription
             componentId: componentId
             configId: @state.configId
-        div className: 'col-sm-4 kbc-buttons',
-          @_renderAddNewTable()
-          button
-            className: 'btn pull-right btn-success'
-            onClick: =>
-              emptyFile =
-                title: ''
-                tableId: ''
-                operation: 'update'
-                type: 'sheet'
-              path = ['newtable']
-              gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
+        if @_isAuthorized()
+          div className: 'col-sm-4 kbc-buttons',
+            @_renderAddNewTable()
+            button
+              className: 'btn pull-right btn-success'
+              onClick: =>
+                emptyFile =
+                  title: ''
+                  tableId: ''
+                  operation: 'update'
+                  type: 'sheet'
+                path = ['newtable']
+                gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
 
-            'Add New Table'
+              'Add New Table'
 
       if @_isAuthorized()
         React.createElement SearchRow,
