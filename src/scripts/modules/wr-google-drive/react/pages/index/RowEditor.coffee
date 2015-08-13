@@ -7,8 +7,9 @@ SapiTableSelector = require '../../../../components/react/components/SapiTableSe
 Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
 ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 
-{a, small, button, option, span, i, button, strong, div, input} = React.DOM
+{label, a, small, button, option, span, i, button, strong, div, input} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)
+Modal = require('react-bootstrap').Modal
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 tooltips =
@@ -28,7 +29,7 @@ module.exports = React.createClass
     email: React.PropTypes.string.isRequired
     googleInfo: React.PropTypes.object.isRequired
     saveFn: React.PropTypes.func.isRequired
-    renderToForm: React.PropTypes.bool.isRequired
+    renderToModal: React.PropTypes.bool.isRequired
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
@@ -40,8 +41,8 @@ module.exports = React.createClass
 
 
   render: ->
-    if @props.renderToForm
-      return @_renderToForm()
+    if @props.renderToModal
+      return @_renderToModal()
 
     div className: 'tr',
       span className: 'td',
@@ -64,39 +65,58 @@ module.exports = React.createClass
           @_renderSaveButton()
           @_renderCancelButton()
 
-  _renderToForm: ->
+  _renderToModal: ->
     operationSelect = @_renderSelect(['update', 'create'], 'operation')
     typeSelect = @_renderSelect(['sheet', 'file'], 'type')
+    React.createElement Modal,
+      onHide: =>
+        @_cancel()
+      title: 'Add New Table'
+      div className: 'modal-body',
+        div className: 'form-horizontal clearfix',
+          div className: 'row col-md-12',
+            @_renderFormControl('Storage Table', @_renderTableSelector())
+            @_renderFormControl('Title Table', @_renderTitleInput())
+            @_renderFormControl('Operation', operationSelect)
+            @_renderFormControl('Type', typeSelect)
+            @_renderFormControl('Folder', @_renderPicker())
+        if @props.isSavingFn(@props.editData.get('tableId'))
+          div className: 'modal-footer',
+            Loader()
+        else
+          div className: 'modal-footer',
+            @_renderSaveButton()
+            @_renderCancelButton()
 
-    div className: 'form-horizontal',
-      div className: 'row col-md-12',
-        @_renderFormControl('Storage Table', @_renderTableSelector())
-        @_renderFormControl('Title Table', @_renderTitleInput())
-        @_renderFormControl('Operation', operationSelect)
-        @_renderFormControl('Type', typeSelect)
-
-  _renderFormControl: (label, control) ->
+  _renderFormControl: (controlLabel, control) ->
     div className: 'form-group',
-      label className: 'col-xs-2 control-label', label
-      div className: 'col-xs-10',
+      label className: 'col-xs-3 control-label', controlLabel
+      div className: 'col-xs-9',
         control
 
 
   _cancel: ->
     @props.editFn(null)
 
+
   _renderSaveButton: ->
     isValid = @props.editData.get('tableId') and @props.editData.get('title')
+    className = 'btn btn-success btn-sm'
+    if @props.renderToModal
+      className = 'btn btn-success'
     button
-      className: 'btn btn-success btn-sm'
+      className: className
       onClick: @_startSaving
       disabled: not isValid
     ,
       'Save'
 
   _renderCancelButton: ->
+    className = 'btn btn-link btn-sm'
+    if @props.renderToModal
+      className = 'btn btn-link'
     button
-      className: 'btn btn-link btn-sm'
+      className: className
       onClick: @_cancel
     ,
       'Cancel'
@@ -111,9 +131,12 @@ module.exports = React.createClass
         @props.editFn(newData)
 
   _renderTitleInput: ->
+    bsize = 'small'
+    if @props.renderToModal
+      bsize = 'medium'
     Input
       value: @props.editData?.get 'title'
-      bsSize: 'small'
+      bsSize: bsize
       type: 'text'
       onChange: (event) =>
         data = event.target.value
@@ -127,6 +150,9 @@ module.exports = React.createClass
 
   _renderPicker: ->
     file = @props.editData
+    bsize = 'small'
+    if @props.renderToModal
+      bsize = 'medium'
     folderId = file.get 'targetFolder' if file
     folderName = @props.googleInfo?.get(folderId).get 'title' if folderId
     Picker
@@ -145,7 +171,7 @@ module.exports = React.createClass
         @props.editFn(data)
       buttonProps:
         bsStyle: 'default'
-        bsSize: 'small'
+        bsSize: bsize
       views: [
         ViewTemplates.rootFolder
         ViewTemplates.flatFolders
@@ -153,8 +179,12 @@ module.exports = React.createClass
       ]
 
   _renderSelect: (options, prop) ->
+    bsize = 'small'
+    if @props.renderToModal
+      bsize = 'medium'
+
     return Input
-      bsSize: 'small'
+      bsSize: bsize
       type: 'select'
       value: @props.editData?.get(prop) or options[0]
       onChange: (e) =>

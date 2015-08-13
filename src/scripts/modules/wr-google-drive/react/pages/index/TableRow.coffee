@@ -36,6 +36,8 @@ module.exports = React.createClass
     loadGoogleInfoFn: React.PropTypes.func.isRequired
     deleteRowFn: React.PropTypes.func.isRequired
     isLoadingGoogleInfoFn: React.PropTypes.func.isRequired
+    isDeleted: React.PropTypes.bool
+
 
 
   render: ->
@@ -75,12 +77,13 @@ module.exports = React.createClass
           Loader()
       else
         span className: 'td text-right kbc-no-wrap',
-          button
-            className: 'btn btn-link'
-            onClick: =>
-              @props.editFn(@props.file)
-          ,
-            i className: 'fa fa-fw kbc-icon-pencil'
+          if not @props.isDeleted
+            button
+              className: 'btn btn-link'
+              onClick: =>
+                @props.editFn(@props.file)
+            ,
+              i className: 'fa fa-fw kbc-icon-pencil'
           React.createElement Confirm,
             key: @props.table.get 'id'
             title: 'Remove table configuration.'
@@ -92,7 +95,8 @@ module.exports = React.createClass
           ,
             button className: 'btn btn-link',
               i className: 'kbc-icon-cup'
-          @_renderRunButton()
+          if not @props.isDeleted
+            @_renderRunButton()
 
 
   _renderEditFile: ->
@@ -127,8 +131,6 @@ module.exports = React.createClass
             @props.editFn(fromJS(emptyFile))
         ,
           i className: 'fa fa-fw fa-plus'
-
-
 
 
   _renderRunButton: ->

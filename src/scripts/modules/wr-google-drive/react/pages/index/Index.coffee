@@ -72,11 +72,27 @@ module.exports = React.createClass
 
 
   _renderMainContent: ->
+    tablesIds = @state.files?.keySeq()
     div {className: 'col-md-9 kbc-main-content'},
-      div className: 'row',
-        ComponentDescription
-          componentId: componentId
-          configId: @state.configId
+      div className: 'row kbc-header',
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: componentId
+            configId: @state.configId
+        div className: 'col-sm-4 kbc-buttons',
+          @_renderAddNewTable()
+          button
+            className: 'btn pull-right btn-success'
+            onClick: =>
+              emptyFile =
+                title: ''
+                tableId: ''
+                operation: 'update'
+                type: 'sheet'
+              path = ['newtable']
+              gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
+
+            'Add New Table'
 
       if @_isAuthorized()
         React.createElement SearchRow,
@@ -95,8 +111,10 @@ module.exports = React.createClass
           isBucketToggledFn: @_isBucketToggled
           showAllTables: false
           toggleShowAllFn: null
-      if @_isAuthorized()
-        @_renderAddNewTable()
+          configuredTables: tablesIds.toJS()
+          renderDeletedTableRowFn: (table) =>
+            @_renderTableRow(table, true)
+
       else
         div className: 'row component-empty-state text-center',
           div null,
@@ -169,38 +187,29 @@ module.exports = React.createClass
 
   _renderAddNewTable: ->
     if @state.newTableEditData
-      return div className: 'table table-striped',
-        div className: 'thead',
-          @_renderHeaderRow()
-        div className: 'tbody',
-          React.createElement RowEditor,
-            table: null
-            email: @state.account?.get 'email'
-            googleInfo: @state.googleInfo
-            saveFn: (data) =>
-              tableId = data.get 'tableId'
-              gdriveActions.saveFile(@state.configId, tableId, data)
-            editData: @state.newTableEditData
-            editFn: (data) =>
-              path = ['newtable']
-              gdriveActions.setEditingData(@state.configId, path, data)
-            isSavingFn: (tableId) =>
-              !!@state.savingFiles.get(tableId)
-    else
-      return button
-        className: 'btn pull-right btn-success'
-        onClick: =>
-          emptyFile =
-            title: ''
-            tableId: ''
-            operation: 'update'
-            type: 'sheet'
+      #return div className: 'table table-striped',
+        # div className: 'thead',
+        #   @_renderHeaderRow()
+        # div className: 'tbody',
+      return React.createElement RowEditor,
+        table: null
+        updateGoogleFolderFn: (info, googleId) =>
+          @_updateGoogleFolder(@state.configId, googleId, info)
+        email: @state.account?.get 'email'
+        googleInfo: @state.googleInfo
+        saveFn: (data) =>
+          tableId = data.get 'tableId'
+          gdriveActions.saveFile(@state.configId, tableId, data)
+        editData: @state.newTableEditData
+        editFn: (data) =>
           path = ['newtable']
-          gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
+          gdriveActions.setEditingData(@state.configId, path, data)
+        isSavingFn: (tableId) =>
+          !!@state.savingFiles.get(tableId)
+        renderToModal: true
 
-        'Add New Table'
+  _renderTableRow: (table, isDeleted = false) ->
 
-  _renderTableRow: (table) ->
     tableId = table.get 'id'
     isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
 
@@ -227,6 +236,7 @@ module.exports = React.createClass
         @_loadGoogleInfo(googleId)
       isLoadingGoogleInfoFn: (googleId) =>
         GdriveStore.getLoadingGoogleInfo(@state.configId, googleId)
+      isDeleted: isDeleted
 
 
 
