@@ -13,6 +13,7 @@ module.exports = React.createClass
     onSelectTableFn: React.PropTypes.func.isRequired
     placeholder: React.PropTypes.string.isRequired
     value: React.PropTypes.string.isRequired
+    excludeTableFn: React.PropTypes.func.isRequired
 
 
   getStateFromStores: ->
@@ -41,9 +42,9 @@ module.exports = React.createClass
 
   _getTables: ->
     tables = @state.tables
-    tables = tables.filter (table) ->
+    tables = tables.filter (table) =>
       stage = table.get('bucket').get('stage')
-      stage in ['in','out']
+      stage in ['in','out'] and not @props.excludeTableFn(table.get('id'))
     tables = tables.map (table) ->
       tableId = table.get 'id'
       {

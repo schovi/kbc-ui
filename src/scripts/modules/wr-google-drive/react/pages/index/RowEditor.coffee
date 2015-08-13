@@ -30,6 +30,7 @@ module.exports = React.createClass
     googleInfo: React.PropTypes.object.isRequired
     saveFn: React.PropTypes.func.isRequired
     renderToModal: React.PropTypes.bool.isRequired
+    configuredTableIds: React.PropTypes.array.isRequired
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
@@ -39,6 +40,8 @@ module.exports = React.createClass
     isTablesLoading: isTablesLoading
     tables: tables
 
+  getDefaultProps: ->
+    configuredTableIds: []
 
   render: ->
     if @props.renderToModal
@@ -129,6 +132,9 @@ module.exports = React.createClass
       onSelectTableFn: (newValue) =>
         newData = @props.editData.set 'tableId', newValue
         @props.editFn(newData)
+      excludeTableFn: (tableId) =>
+        tableId in @props.configuredTableIds
+
 
   _renderTitleInput: ->
     bsize = 'small'

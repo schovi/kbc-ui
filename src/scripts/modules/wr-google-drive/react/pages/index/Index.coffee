@@ -186,6 +186,7 @@ module.exports = React.createClass
         strong null, 'Folder'
 
   _renderAddNewTable: ->
+    tablesIds = @state.files?.keySeq().toJS()
     if @state.newTableEditData
       #return div className: 'table table-striped',
         # div className: 'thead',
@@ -207,9 +208,9 @@ module.exports = React.createClass
         isSavingFn: (tableId) =>
           !!@state.savingFiles.get(tableId)
         renderToModal: true
+        configuredTableIds: tablesIds
 
   _renderTableRow: (table, isDeleted = false) ->
-
     tableId = table.get 'id'
     isSaving = (@state.savingFiles.get(tableId) or @state.deletingFiles.get(tableId))
 
