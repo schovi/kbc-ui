@@ -45,7 +45,6 @@ templateFn = (componentId) ->
 
     tables = WrDbStore.getTables(componentId, configId)
     credentials = WrDbStore.getCredentials(componentId, configId)
-    console.log 'CONFIG tables:', tables.toJS(), 'credentials:', credentials.toJS()
 
     #state
     updatingTables: WrDbStore.getUpdatingTables(componentId, configId)
@@ -78,6 +77,10 @@ templateFn = (componentId) ->
     return result
 
   _renderMainContent: ->
+    configuredTables = @state.tables.filter (table) ->
+      table.get('export')
+    configuredIds = configuredTables.map((table) ->
+      table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
         ComponentDescription
@@ -97,6 +100,7 @@ templateFn = (componentId) ->
           isTableExportedFn: @_isTableExported
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
+          configuredTableIds: configuredIds
       else
         div className: 'row component-empty-state text-center',
           div null,
