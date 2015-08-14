@@ -24,6 +24,7 @@ TransformationTypeLabel = React.createFactory(require '../../components/Transfor
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 Requires = require './Requires'
 Packages = require './Packages'
+SavedFiles = require './SavedFiles'
 Queries = require './Queries'
 Scripts = require './Scripts'
 Phase = require './Phase'
@@ -234,6 +235,28 @@ module.exports = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
+      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+        div {},
+          h2 {}, 'Saved Files'
+          React.createElement SavedFiles,
+            bucketId: @props.bucket.get('id')
+            isEditing: @props.editingFields.has('tags')
+            isSaving: @props.pendingActions.has('save-tags')
+            tags: @props.editingFields.get('tags', @props.transformation.get("tags", List()))
+            onEditStart: =>
+              TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+                @props.transformationId, 'tags')
+            onEditCancel: =>
+              TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'tags')
+            onEditChange: (newValue) =>
+              TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'tags', newValue)
+            onEditSubmit: =>
+              TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+                @props.transformationId, 'tags')
+
+
       @_renderCodeEditor()
 
 
