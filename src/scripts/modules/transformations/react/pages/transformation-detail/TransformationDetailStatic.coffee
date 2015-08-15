@@ -237,7 +237,7 @@ module.exports = React.createClass
                 @props.transformationId, 'packages')
       if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
         div {},
-          h2 {}, 'Saved Files'
+          h2 {}, 'Stored Files'
           React.createElement SavedFiles,
             bucketId: @props.bucket.get('id')
             isEditing: @props.editingFields.has('tags')
