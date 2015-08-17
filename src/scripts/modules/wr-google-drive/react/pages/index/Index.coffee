@@ -79,28 +79,16 @@ module.exports = React.createClass
           ComponentDescription
             componentId: componentId
             configId: @state.configId
-        if @_isAuthorized()
+        if @_isAuthorized() and @_isConfigured()
           div className: 'col-sm-4 kbc-buttons',
             @_renderAddNewTable()
-            button
-              className: 'btn pull-right btn-success'
-              onClick: =>
-                emptyFile =
-                  title: ''
-                  tableId: ''
-                  operation: 'update'
-                  type: 'sheet'
-                path = ['newtable']
-                gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
-
-              'Add New Table'
-
-      if @_isAuthorized()
+            @_addNewTableButton()
+      if @_isAuthorized() and @_isConfigured()
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery') or ''
-      if @_isAuthorized()
+      if @_isAuthorized() and @_isConfigured()
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
@@ -118,16 +106,37 @@ module.exports = React.createClass
 
       else
         div className: 'row component-empty-state text-center',
-          div null,
-            p null, 'No Google Drive Account Authorized.'
-            Link
-              className: 'btn btn-success'
-              to: 'wr-google-drive-authorize'
-              params:
-                config: @state.configId
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Authorize Google Account'
+          if not @_isAuthorized()
+            div null,
+              p null, 'No Google Drive Account Authorized.'
+              Link
+                className: 'btn btn-success'
+                to: 'wr-google-drive-authorize'
+                params:
+                  config: @state.configId
+              ,
+                i className: 'fa fa-fw fa-user'
+                ' Authorize Google Account'
+          else
+            div null,
+              p null, 'No tables configured yet.'
+              @_renderAddNewTable()
+              @_addNewTableButton()
+
+
+  _addNewTableButton: ->
+    button
+      className: 'btn btn-success'
+      onClick: =>
+        emptyFile =
+          title: ''
+          tableId: ''
+          operation: 'update'
+          type: 'sheet'
+        path = ['newtable']
+        gdriveActions.setEditingData(@state.configId, path, fromJS(emptyFile))
+
+      'Add New Table'
 
 
   _renderSideBar: ->
@@ -260,6 +269,8 @@ module.exports = React.createClass
 
     return null
 
+  _isConfigured: ->
+    @state.files?.count() > 0
 
   _handleSearchQueryChange: (newQuery) ->
     @_updateLocalState(['searchQuery'], newQuery)
