@@ -65,8 +65,8 @@ module.exports = React.createClass
           Loader()
       else
         span className: 'td text-right kbc-no-wrap',
-          @_renderSaveButton()
           @_renderCancelButton()
+          @_renderSaveButton()
 
   _renderToModal: ->
     operationSelect = @_renderSelect(['update', 'create'], 'operation')
@@ -88,8 +88,8 @@ module.exports = React.createClass
             Loader()
         else
           div className: 'modal-footer',
-            @_renderSaveButton()
             @_renderCancelButton()
+            @_renderSaveButton()
 
   _renderFormControl: (controlLabel, control) ->
     div className: 'form-group',
