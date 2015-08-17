@@ -3,7 +3,7 @@ ApplicationStore = require '../../../stores/ApplicationStore'
 
 # hardcoded array of hiden components(under construction components)
 # possible alternative is hasUI component property
-hiddenComponents = []
+hiddenComponents = ['tde-exporter']
 
 module.exports =
   isComponentAllowed: (componentId) ->
