@@ -70,6 +70,12 @@ TasksEditTableRow = React.createClass
         ,
           Tree data: @props.task.get('actionParameters')
       td null,
+        span
+          className: 'label label-default'
+        ,
+          'Phase: '
+          @props.task.get('phase')
+      td null,
         input
           type: 'checkbox'
           disabled: @props.disabled
