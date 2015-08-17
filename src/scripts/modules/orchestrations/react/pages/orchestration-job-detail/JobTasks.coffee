@@ -40,7 +40,7 @@ JobTasks = React.createClass
       span className: 'table',
         span className: 'tbody',
           span className: 'tr',
-            span className: 'td col-xs-8',
+            span className: 'td col-xs-7',
             if component
               span {},
                 ComponentIcon size: '32', component: component
@@ -48,6 +48,9 @@ JobTasks = React.createClass
                 ComponentName component: component
             else
               task.get 'componentUrl'
+            span className: 'td col-xs-1 text-right',
+              span className: 'label kbc-label-rounded label-default',
+                task.get('phase')
             span className: 'td col-xs-2 text-right',
               Duration startTime: task.get('startTime'), endTime: task.get('endTime')
             span className: 'td col-xs-2 text-right',
