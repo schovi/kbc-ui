@@ -27,7 +27,7 @@ App = React.createClass
           organizations: @props.organizations
           urlTemplates: @props.urlTemplates
           focus: true
-          canCreateProject: true
+          canCreateProject: @props.canCreateProject
 
 
 global.kbcApp =
@@ -39,6 +39,7 @@ global.kbcApp =
       urlTemplates: Immutable.fromJS(appOptions.data.kbc.urlTemplates)
       maintainers: Immutable.fromJS(appOptions.data.maintainers)
       organizations: Immutable.fromJS(appOptions.data.organizations)
+      canCreateProject: appOptions.data.kbc.canCreateProject
     ), document.body)
 
   helpers: require './helpers'

@@ -6,6 +6,7 @@ _ = require 'underscore'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 NewProjectModal = React.createFactory(require '../NewProjectModal')
+Emptylist = require './EmptyList'
 
 {div, ul, li, a, span, input} = React.DOM
 
@@ -33,6 +34,8 @@ module.exports = React.createClass
       @refs.searchInput.getDOMNode().focus()
 
   render: ->
+    if !@props.organizations.count() && !@props.canCreateProject
+      return React.createElement Emptylist
     div null,
       ul className: 'list-unstyled',
         li className: 'dropdown-header kb-nav-search kbc-search',
