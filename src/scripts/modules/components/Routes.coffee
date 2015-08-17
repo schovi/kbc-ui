@@ -22,6 +22,7 @@ dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
+tdeRoutes = require '../tde-exporter/tdeRoutes'
 
 routes =
 
@@ -121,6 +122,8 @@ routes =
       goodDataWriterRoutes
     ,
       dropoxWriterRoutes
+    ,
+      tdeRoutes
     ,
       googleDriveWriterRoutes
     ,
