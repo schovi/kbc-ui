@@ -29,6 +29,7 @@ module.exports = React.createClass
     email: React.PropTypes.string.isRequired
     googleInfo: React.PropTypes.object.isRequired
     saveFn: React.PropTypes.func.isRequired
+    updateGoogleFolderFn: React.PropTypes.func.isRequired
     renderToModal: React.PropTypes.bool.isRequired
     configuredTableIds: React.PropTypes.array.isRequired
 

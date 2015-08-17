@@ -37,6 +37,7 @@ module.exports = React.createClass
     deleteRowFn: React.PropTypes.func.isRequired
     isLoadingGoogleInfoFn: React.PropTypes.func.isRequired
     isDeleted: React.PropTypes.bool
+    updateGoogleFolderFn: React.PropTypes.func.isRequired
 
 
 
@@ -108,6 +109,7 @@ module.exports = React.createClass
       email: @props.email
       googleInfo: @props.googleInfo
       saveFn: @props.saveFn
+      updateGoogleFolderFn: @props.updateGoogleFolderFn
 
   _renderEmptyFile: ->
     tableId = @props.table.get 'id'
