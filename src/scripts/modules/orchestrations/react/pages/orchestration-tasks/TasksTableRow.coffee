@@ -37,7 +37,6 @@ module.exports = React.createClass
         span
           className: 'label label-default'
         ,
-          'Phase: '
           @props.task.get('phase')
       td null,
         React.createElement Check, isChecked: @props.task.get('active')
