@@ -35,7 +35,7 @@ module.exports = React.createClass
         React.createElement Tree, data: @props.task.get('actionParameters')
       td null,
         span
-          className: 'label label-default'
+          className: 'label label-default kbc-label-rounded'
         ,
           @props.task.get('phase')
       td null,
