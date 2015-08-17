@@ -18,11 +18,12 @@ module.exports =
     configId = routerState.getIn ['params', 'config']
     'Google Drive - ' + InstalledComponentsStore.getConfig('wr-google-drive', configId).get 'name'
 
-  requireData: (params) ->
-    [
+  requireData: [
+    (params) ->
       actions.loadFiles(params.config)
     ,
-      storageActionCreators.loadTables()
+      ->
+        storageActionCreators.loadTables()
     ]
   childRoutes: [
     name: 'wr-google-drive-authorize'
