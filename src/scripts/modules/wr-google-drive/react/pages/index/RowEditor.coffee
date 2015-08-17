@@ -60,13 +60,11 @@ module.exports = React.createClass
         @_renderSelect(['sheet', 'file'], 'type')
       span className: 'td',
         @_renderPicker()
-      if @props.isSavingFn(@props.editData.get('tableId'))
-        span className: 'td text-right kbc-no-wrap',
+      span className: 'td text-right kbc-no-wrap',
+        if @_isSaving()
           Loader()
-      else
-        span className: 'td text-right kbc-no-wrap',
-          @_renderCancelButton()
-          @_renderSaveButton()
+        @_renderCancelButton()
+        @_renderSaveButton()
 
   _renderToModal: ->
     operationSelect = @_renderSelect(['update', 'create'], 'operation')
@@ -116,7 +114,7 @@ module.exports = React.createClass
     button
       className: className
       onClick: @_startSaving
-      disabled: not isValid
+      disabled: (not isValid) or @_isSaving()
     ,
       'Save'
 
@@ -127,6 +125,7 @@ module.exports = React.createClass
     button
       className: className
       onClick: @_cancel
+      disabled: @_isSaving()
     ,
       'Cancel'
 
