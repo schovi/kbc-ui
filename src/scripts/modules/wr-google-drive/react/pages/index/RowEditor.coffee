@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 
-
+ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
 SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
 
 Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
@@ -83,13 +83,19 @@ module.exports = React.createClass
             @_renderFormControl('Operation', operationSelect)
             @_renderFormControl('Type', typeSelect)
             @_renderFormControl('Folder', @_renderPicker())
-        if @props.isSavingFn(@props.editData.get('tableId'))
-          div className: 'modal-footer',
-            Loader()
-        else
-          div className: 'modal-footer',
-            @_renderCancelButton()
-            @_renderSaveButton()
+      div className: 'modal-footer',
+        React.createElement ConfirmButtons,
+          isSaving: @_isSaving()
+          isDisabled: @_isSaving() or (not @_isValid())
+          saveLabel: 'Save'
+          onCancel: @_cancel
+          onSave: @_startSaving
+
+  _isValid: ->
+    !! (@props.editData.get('tableId') and @props.editData.get('title'))
+
+  _isSaving: ->
+    @props.isSavingFn(@props.editData.get('tableId'))
 
   _renderFormControl: (controlLabel, control) ->
     div className: 'form-group',
