@@ -3,6 +3,7 @@ actions = require './wrGdriveActionCreators'
 authorizePage = require './react/pages/authorize/Authorize'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
+storageActionCreators = require '../components/StorageActionCreators'
 
 module.exports =
   name: 'wr-google-drive'
@@ -18,7 +19,11 @@ module.exports =
     'Google Drive - ' + InstalledComponentsStore.getConfig('wr-google-drive', configId).get 'name'
 
   requireData: (params) ->
-    actions.loadFiles(params.config)
+    [
+      actions.loadFiles(params.config)
+    ,
+      storageActionCreators.loadTables()
+    ]
   childRoutes: [
     name: 'wr-google-drive-authorize'
     path: 'authorize'
