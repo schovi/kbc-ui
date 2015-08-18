@@ -10,6 +10,7 @@ StoreUtils = require '../../../utils/StoreUtils'
 _store = Map(
   orchestrationsById: Map()
   orchestrationsPendingActions: Map() # by orchestration id
+  tasksToRun: Map() # [orchestrationId] - tasks
   editing: Map() # [orchestrationId][tasks] - edit value
   saving: Map() # [orchestrationId][tasks] - bool value
   orchestrationTasksById: Map()
@@ -80,6 +81,9 @@ OrchestrationStore = StoreUtils.createStore
 
   getEditingValue: (orchestrationId, field) ->
     _store.getIn ['editing', orchestrationId, field]
+
+  getTasksToRun: (orchestrationId) ->
+    _store.getIn ['tasksToRun', orchestrationId]
 
   ###
     Returns all orchestrations filtered by current filter value
@@ -242,6 +246,23 @@ Dispatcher.register (payload) ->
         .deleteIn ['editing', action.orchestrationId, action.field]
       OrchestrationStore.emitChange()
 
+
+    when Constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_START
+      _store = _store.setIn ['tasksToRun', action.orchestrationId],
+        OrchestrationStore.getOrchestrationTasks(action.orchestrationId)
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_CANCEL
+      _store = _store.deleteIn ['tasksToRun', action.orchestrationId]
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_SUCCESS
+      _store = _store.deleteIn ['tasksToRun', action.orchestrationId]
+      OrchestrationStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_UPDATE
+      _store = _store.setIn ['tasksToRun', action.orchestrationId], action.tasks
+      OrchestrationStore.emitChange()
 
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_START
