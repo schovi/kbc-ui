@@ -11,9 +11,21 @@ module.exports = React.createClass
     dataPreview: React.PropTypes.array
 
   render: ->
+    if @props.editing
+      return @_renderEditing()
+
     tr null,
       td null, @props.column
       td null, @props.tdeType.get('type')
+      td null,
+        ColumnDataPreview
+          columnName: @props.column
+          tableData: @props.dataPreview
+
+  _renderEditing: ->
+    tr null,
+      td null, @props.column
+      td null, 'editing'
       td null,
         ColumnDataPreview
           columnName: @props.column

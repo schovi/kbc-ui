@@ -1,5 +1,6 @@
 index = require './react/pages/Index/Index'
 tableDetail = require './react/pages/Table/Table'
+tableEditButtons = require './react/components/TableHeaderButtons'
 
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
@@ -32,6 +33,7 @@ module.exports =
     name: "tde-exporter-table"
     path: 'table/:tableId'
     handler: tableDetail
+    headerButtonsHandler: tableEditButtons
     title: (routerState) ->
       tableId = routerState.getIn ['params', 'tableId']
       return tableId

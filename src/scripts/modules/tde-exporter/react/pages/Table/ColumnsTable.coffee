@@ -9,15 +9,18 @@ module.exports = React.createClass
     table: React.PropTypes.object
     columnsTypes: React.PropTypes.object
     dataPreview: React.PropTypes.array
+    editingData: React.PropTypes.object
 
   render: ->
     tableId = @props.table.get('id')
     columns = @props.table.get('columns')
+
     rows = columns.map (column) =>
+      editingColumn = @props.editingData?.get(column)
       React.createElement ColumnRow,
         column: column
         tdeType: @props.columnsTypes.get(column, Map())
-        editing: null
+        editing: editingColumn
         dataPreview: @props.dataPreview
 
     if rows.count() > 0

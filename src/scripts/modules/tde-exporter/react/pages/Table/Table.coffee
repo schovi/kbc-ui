@@ -44,6 +44,8 @@ module.exports = React.createClass
     #state
     table: table
     columnsTypes: columnsTypes
+    localState: localState
+    tableId: tableId
 
   render: ->
     div className: 'container-fluid kbc-main-content',
@@ -51,6 +53,7 @@ module.exports = React.createClass
         table: @state.table
         columnsTypes: @state.columnsTypes
         dataPreview: @state.dataPreview
+        editingData: @state.localState.getIn(['editing', @state.tableId])
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
