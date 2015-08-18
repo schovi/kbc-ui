@@ -141,7 +141,6 @@ Dispatcher.register (payload) ->
       OrchestrationJobsStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_START
-      console.log(action.tasks)
       _store = _store.setIn ['editing', action.jobId, 'tasks'],
         OrchestrationJobsStore.getJob(action.jobId).get('tasks')
       OrchestrationJobsStore.emitChange()
