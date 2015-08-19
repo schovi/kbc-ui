@@ -12,6 +12,7 @@ createUrl = (path) ->
 
 createRequest = (method, path) ->
   request(method, createUrl(path))
+  .timeout(240000)
   .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
 
 handleEmptyConfiguration = (response) ->
