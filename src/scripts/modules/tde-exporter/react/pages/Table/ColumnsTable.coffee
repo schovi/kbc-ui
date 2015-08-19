@@ -10,8 +10,11 @@ module.exports = React.createClass
     columnsTypes: React.PropTypes.object
     dataPreview: React.PropTypes.array
     editingData: React.PropTypes.object
+    onChange: React.PropTypes.func
+    isSaving: React.PropTypes.bool
 
   render: ->
+    console.log 'render', @props.editingData?.toJS()
     tableId = @props.table.get('id')
     columns = @props.table.get('columns')
 
@@ -21,7 +24,11 @@ module.exports = React.createClass
         column: column
         tdeType: @props.columnsTypes.get(column, Map())
         editing: editingColumn
+        isSaving: @props.isSaving
         dataPreview: @props.dataPreview
+        onChange: (data) =>
+          newData = @props.editingData.set(column, data)
+          @props.onChange(newData)
 
     if rows.count() > 0
       div style: {overflow: 'scroll'},

@@ -35,13 +35,15 @@ module.exports = React.createClass
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     typedefs = configData.getIn(['parameters', 'typedefs'], Map()) or Map()
+    isSaving = InstalledComponentsStore.getSavingConfigData(componentId, configId)
 
     table = StorageStore.getAll().find (table) ->
       table.get('id') == tableId
     columnsTypes = typedefs.get(tableId, Map())
 
-    console.log 'table', table.toJS()
     #state
+    isSaving: isSaving
+    configId: configId
     table: table
     columnsTypes: columnsTypes
     localState: localState
@@ -54,6 +56,12 @@ module.exports = React.createClass
         columnsTypes: @state.columnsTypes
         dataPreview: @state.dataPreview
         editingData: @state.localState.getIn(['editing', @state.tableId])
+        onChange: @_handleEditChange
+        isSaving: @state.isSaving
+
+  _handleEditChange: (data) ->
+    path = ['editing', @state.tableId]
+    @_updateLocalState(path, data)
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
