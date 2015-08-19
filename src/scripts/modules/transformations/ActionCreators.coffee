@@ -355,7 +355,7 @@ module.exports =
         mappings.set mappingIndex, mapping
       else
         mappings.push mapping
-
+    return Promise.resolve() if not mapping
     transformationsApi
     .saveTransformation(bucketId, transformationId, transformation.toJS())
     .then (response) ->
@@ -408,7 +408,3 @@ module.exports =
         error: error
       )
       throw error
-
-
-
-
