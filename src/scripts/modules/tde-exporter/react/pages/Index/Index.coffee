@@ -5,7 +5,10 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 RoutesStore = require '../../../../../stores/RoutesStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableRow = require './TableRow'
+SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
+{ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
 
+ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
@@ -48,6 +51,7 @@ module.exports = React.createClass
             configId: @state.configId
         div className: 'col-sm-4 kbc-buttons',
           @_addNewTableButton()
+          @_renderAddNewTable()
       @_renderTables()
 
   _renderTables: ->
@@ -88,11 +92,45 @@ module.exports = React.createClass
       bucket.get('stage') == 'out' or bucket.get('stage') == 'in'
     return buckets
 
+  _renderAddNewTable: ->
+    show = !!@state.localState?.getIn(['newTable','show'])
+    React.createElement Modal,
+      show: show
+      onHide: =>
+        @_updateLocalState(['newTable'], Map())
+      React.createElement ModalHeader, {closeButton: true},
+        React.createElement  ModalTitle, null, 'Add Table'
+      React.createElement ModalBody, null,
+        React.createElement SapiTableSelector,
+          value: @state.localState?.getIn(['newTable', 'id'])
+          onSelectTableFn: (value) =>
+            @_updateLocalState(['newTable', 'id'], value)
+          excludeTableFn: (tableId) =>
+            @state.configData.hasIn ['parameters', 'typedefs',tableId]
+      React.createElement ModalFooter, null,
+        React.createElement ConfirmButtons,
+          isSaving: false
+          isDisabled: not !! @state.localState?.getIn(['newTable', 'id'])
+          cancelLabel: 'Cancel'
+          saveLabel: 'Select'
+          onCancel: =>
+            @_updateLocalState(['newTable'], Map())
+          onSave: =>
+            RoutesStore.getRouter().transitionTo("tde-exporter-table",
+              config: @state.configId
+              tableId: @state.localState?.getIn(['newTable', 'id'])
+            )
+            @_updateLocalState(['newTable'], Map())
+
+
+
+
 
   _addNewTableButton: ->
     button
       className: 'btn btn-success'
-      onClick: ->
+      onClick: =>
+        @_updateLocalState(['newTable', 'show'], true)
       span className: 'kbc-icon-plus'
       ' Add Table'
 
