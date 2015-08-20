@@ -44,6 +44,7 @@ storageApi =
 
   getFiles: (params) ->
     createRequest('GET', 'files')
+    .query params
     .promise()
     .then((response) ->
       response.body

@@ -92,7 +92,6 @@ module.exports =
     storageApi
     .createToken(params)
     .then((token) ->
-      console.log 'token', token
       dispatcher.handleViewAction(
         type: constants.ActionTypes.STORAGE_TOKEN_CREATE_SUCCESS
         token: token
@@ -126,4 +125,4 @@ module.exports =
 
   loadFiles: (params) ->
     return Promise.resolve() if StorageFilesStore.getIsLoaded()
-    @loadFilesForce()
+    @loadFilesForce(params)
