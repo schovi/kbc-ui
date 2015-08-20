@@ -28,8 +28,8 @@ module.exports = React.createClass
 
     editingData = localState.getIn(['editing',tableId])
     isValid = not editingData?.reduce((memo, value) ->
-      format = value.get 'format'
-      memo or (value.get('type') in ['date', 'datetime'] and _.isEmpty(format))
+      format = value?.get('format')
+      memo or (value?.get('type') in ['date', 'datetime'] and _.isEmpty(format))
     , false)
     #state
     isSaving: isSaving

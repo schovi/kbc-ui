@@ -1,5 +1,5 @@
 React = require 'react'
-{Map} = require 'immutable'
+{fromJS, Map} = require 'immutable'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -21,6 +21,16 @@ module.exports = React.createClass
 
   componentDidMount: ->
     tableId = RoutesStore.getCurrentRouteParam('tableId')
+    if not @state.columnstypes?.count()
+      table = StorageStore.getAll().find (t) ->
+        t.get('id') == tableId
+      columns = Map()
+      table.get('columns').forEach (column) ->
+        columns = columns.set(column, fromJS type: 'IGNORE')
+      path = ['editing', tableId]
+      @_updateLocalState(path, columns)
+
+
     component = @
     storageApi
     .exportTable tableId,
