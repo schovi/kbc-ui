@@ -89,7 +89,10 @@ module.exports = React.createClass
       defaultValue: @props.query.get('profile') or ''
       type: 'select'
       onChange: (event) =>
-        @props.onChange(@props.query.set('profile', event.target.value))
+        value = event.target.value
+        if value == ''
+          value = null
+        @props.onChange(@props.query.set('profile', value))
     ,
       option
         value: ''
