@@ -83,6 +83,10 @@ module.exports =
     STORAGE_TOKENS_LOAD_SUCCESS: null
     STORAGE_TOKENS_LOAD_ERROR: null
 
+    STORAGE_FILES_LOAD: null
+    STORAGE_FILES_LOAD_SUCCESS: null
+    STORAGE_FILES_LOAD_ERROR: null
+
 
   GoodDataWriterModes: keyMirror
     NEW: null

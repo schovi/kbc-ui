@@ -42,6 +42,13 @@ storageApi =
     .then (response) ->
       response.body
 
+  getFiles: (params) ->
+    createRequest('GET', 'files')
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   getRunIdStats: (runId) ->
     createRequest 'GET', 'stats'
     .query runId: runId

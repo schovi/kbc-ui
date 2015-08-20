@@ -12,6 +12,7 @@ componentRunner = require './ComponentRunner'
 StorageBucketsStore = require './stores/StorageBucketsStore'
 StorageTablesStore = require './stores/StorageTablesStore'
 StorageTokensStore = require './stores/StorageTokensStore'
+StorageFilesStore = require './stores/StorageFilesStore'
 storageApi = require './StorageApi'
 
 module.exports =
@@ -71,7 +72,6 @@ module.exports =
   loadTokensForce: ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.STORAGE_TOKENS_LOAD
-
     storageApi
     .getTokens()
     .then (tokens) ->
@@ -106,3 +106,24 @@ module.exports =
       )
       throw error
     )
+
+
+
+  loadFilesForce: (params) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_FILES_LOAD
+    storageApi
+    .getFiles(params)
+    .then (files) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_FILES_LOAD_SUCCESS
+        files: files
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_FILES_LOAD_ERROR
+        errors: error
+      throw error
+
+  loadFiles: (params) ->
+    return Promise.resolve() if StorageFilesStore.getIsLoaded()
+    @loadFilesForce()
