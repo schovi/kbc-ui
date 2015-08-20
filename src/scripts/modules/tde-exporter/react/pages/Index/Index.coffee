@@ -2,6 +2,7 @@ React = require 'react'
 {Map} = require 'immutable'
 
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableRow = require './TableRow'
@@ -29,6 +30,7 @@ module.exports = React.createClass
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     typedefs = configData.getIn(['parameters', 'typedefs'], Map()) or Map()
+    console.log StorageFilesStore.getAll().toJS()
 
     #state
     configId: configId
