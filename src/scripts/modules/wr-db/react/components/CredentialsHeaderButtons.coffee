@@ -63,7 +63,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     ActionCreators
     .saveCredentials(componentId, @state.currentConfigId, editingCredentials).then =>
       @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
-
+      RoutesStore.getRouter().transitionTo(componentId, config: @state.currentConfigId)
 
   render: ->
     state = @state.localState.get 'credentialsState'
@@ -105,7 +105,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       path = [path]
     #console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
-    console.log "new local state", newLocalState.toJS()
+    #console.log "new local state", newLocalState.toJS()
     InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState)
 
 
