@@ -1,5 +1,6 @@
 React = require 'react'
 {Map} = require 'immutable'
+moment = require 'moment'
 
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
@@ -30,9 +31,10 @@ module.exports = React.createClass
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     typedefs = configData.getIn(['parameters', 'typedefs'], Map()) or Map()
-    console.log StorageFilesStore.getAll().toJS()
+    files = StorageFilesStore.getAll()
 
     #state
+    files: files
     configId: configId
     configData: configData
     localState: localState
@@ -88,6 +90,7 @@ module.exports = React.createClass
     React.createElement TableRow,
       table: table
       configId: @state.configId
+      tdeFile: @_getLastTdeFile(tableId)
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
@@ -144,6 +147,22 @@ module.exports = React.createClass
         strong null, 'Last TDE File'
       span className: 'th',
         strong null, ''
+
+  _getLastTdeFile: (tableId) ->
+    idReplaced = tableId.replace(/-/g,"_")
+    filename = "#{idReplaced}.tde"
+    files = @state.files.filter (file) ->
+      file.get('name') == filename
+    latestFile = files.max (a, b) ->
+      adate = moment(a.get('created'))
+      bdate = moment(b.get('created'))
+      if adate == bdate
+        return 0
+      if adate > bdate
+        return 1
+      else
+        return -1
+    return latestFile
 
 
   _handleToggleBucket: (bucketId) ->
