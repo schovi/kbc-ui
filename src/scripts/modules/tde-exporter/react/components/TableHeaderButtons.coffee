@@ -68,8 +68,7 @@ module.exports = React.createClass
     tableId = @state.tableId
     editingData = @state.editingData
     editingData = editingData.filter (value, column) ->
-      value.get('type') not in ['IGONRE', '']
-
+      value.get('type') not in ['IGNORE', '']
     tableToSave = fromJS
       source: tableId
       columns: editingData.keySeq().toJS()

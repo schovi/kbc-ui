@@ -1,7 +1,7 @@
 React = require 'react'
-{Map} = require 'immutable'
+{Map, fromJS} = require 'immutable'
 moment = require 'moment'
-
+classnames = require 'classnames'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -10,6 +10,7 @@ TableRow = require './TableRow'
 SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
 {ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
 
+RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -32,6 +33,7 @@ module.exports = React.createClass
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     typedefs = configData.getIn(['parameters', 'typedefs'], Map()) or Map()
     files = StorageFilesStore.getAll()
+    isSaving = InstalledComponentsStore.getSavingConfigData(componentId, configId)
 
     #state
     files: files
@@ -39,6 +41,7 @@ module.exports = React.createClass
     configData: configData
     localState: localState
     typedefs: typedefs
+    isSaving: isSaving
 
   render: ->
     console.log @state.configData.toJS()
@@ -84,6 +87,19 @@ module.exports = React.createClass
           React.createElement DeleteConfigurationButton,
             componentId: componentId
             configId: @state.configId
+        li className: classnames(disabled: !!@_disabledToRun()),
+          RunButtonModal
+            #disabled: !!@_disabledToRun()
+            #disabledReason: @_disabledToRun()
+            title: "Export tables"
+            tooltip: "Export all configured tables"
+            mode: 'link'
+            component: componentId
+            runParams: =>
+              config: @state.configId
+          ,
+           "You are about to run expot of all configured tables to TDE"
+
 
   _renderTableRow: (table, isDeleted = false) ->
     tableId = table.get 'id'
@@ -91,6 +107,11 @@ module.exports = React.createClass
       table: table
       configId: @state.configId
       tdeFile: @_getLastTdeFile(tableId)
+      prepareRunDataFn: =>
+        @_prepareRunTableData(tableId)
+      deleteRowFn: =>
+        @_deleteTable(tableId)
+
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
@@ -127,10 +148,6 @@ module.exports = React.createClass
             )
             @_updateLocalState(['newTable'], Map())
 
-
-
-
-
   _addNewTableButton: ->
     button
       className: 'btn btn-success'
@@ -163,6 +180,38 @@ module.exports = React.createClass
       else
         return -1
     return latestFile
+
+  _deleteTable: (tableId) ->
+    configData = @state.configData
+    intables = configData.getIn ['storage', 'input', 'tables']
+    if intables
+      intables = intables.filter (intable) ->
+        intable.get('source') != tableId
+      configData = configData.setIn ['storage', 'input', 'tables'], intables
+    configData = configData.deleteIn ['parameters', 'typedefs', tableId]
+
+    updateFn = InstalledComponentsActions.saveComponentConfigData
+    tableId = @state.tableId
+    updateFn(componentId, @state.configId, configData)
+
+  _prepareRunTableData: (tableId) ->
+    configData = @state.configData
+    intables = configData.getIn ['storage', 'input', 'tables']
+    intables = intables.filter (intable) ->
+      intable.get('source') == tableId
+    configData = configData.setIn ['storage', 'input', 'tables'], intables
+    typedefs = configData.getIn ['parameters', 'typedefs', tableId]
+    configData = configData.setIn ['parameters', 'typedefs'], Map()
+    configData = configData.setIn ['parameters', 'typedefs', tableId], typedefs
+    tags = ["config-#{@state.configId}"]
+    configData = configData.setIn ['parameters', 'tags'], fromJS(tags)
+    data = {configData: configData.toJS()}
+    console.log 'RUN', data
+    return data
+
+
+  _disabledToRun: ->    #TODO!
+    return null
 
 
   _handleToggleBucket: (bucketId) ->

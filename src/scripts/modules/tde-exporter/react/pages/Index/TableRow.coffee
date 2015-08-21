@@ -14,6 +14,8 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
     tdeFile: React.PropTypes.object
+    deleteRowFn: React.PropTypes.func
+    prepareRunDataFn: React.PropTypes.func
 
   render: ->
     div className: 'tr',
@@ -54,12 +56,11 @@ module.exports = React.createClass
         ,
           React.createElement Confirm,
             key: @props.table.get 'id'
-            title: 'Remove table configuration.'
-            text: 'You are about to remove table from the writer configuration.'
+            title: "Remove #{@props.table.get('id')}"
+            text: 'You are about to remove table from the configuration.'
             buttonLabel: 'Remove'
             onConfirm: =>
-              rowId = @props.file.get('id')
-              @props.deleteRowFn(rowId)
+              @props.deleteRowFn()
           ,
             button className: 'btn btn-link',
               i className: 'kbc-icon-cup'
@@ -75,9 +76,8 @@ module.exports = React.createClass
         title: "Export #{@props.table.get('id')} to TDE"
         tooltip: "Export #{@props.table.get('id')} to TDE"
         mode: 'button'
-        component: 'wr-google-drive'
+        component: 'tde-exporter'
         runParams: =>
-          file: @props.file.get 'id'
-          config: @props.configId
+          @props.prepareRunDataFn()
       ,
        "You are about to run export of #{@props.table.get('id')} to TDE."
