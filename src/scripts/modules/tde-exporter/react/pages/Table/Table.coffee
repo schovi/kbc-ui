@@ -21,7 +21,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     tableId = RoutesStore.getCurrentRouteParam('tableId')
-    if not @state.columnstypes?.count()
+    if not @state.columnsTypes?.count()
       table = StorageStore.getAll().find (t) ->
         t.get('id') == tableId
       columns = Map()

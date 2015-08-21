@@ -31,6 +31,9 @@ module.exports = React.createClass
       format = value?.get('format')
       memo or (value?.get('type') in ['date', 'datetime'] and _.isEmpty(format))
     , false)
+    isOneColumnType = editingData?.reduce( (memo, value) ->
+      memo or value?.get('type') != 'IGNORE'
+    , false)
     #state
     isSaving: isSaving
     table: table
@@ -41,7 +44,7 @@ module.exports = React.createClass
     configData: configData
     isEditing: !! localState.getIn(['editing',tableId])
     editingData: editingData
-    isValid: isValid
+    isValid: isValid and isOneColumnType
 
 
   render: ->
