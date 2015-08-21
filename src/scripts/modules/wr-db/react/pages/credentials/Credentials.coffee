@@ -7,6 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 WrDbActions = require '../../../actionCreators'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
+credentialsTemplate = require '../../../templates/credentialsFields'
 provisioningTemplates = require '../../../templates/provisioning'
 WrDbStore = require '../../../store'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -154,9 +155,11 @@ templateFn = (componentId, driver, isProvisioning) ->
 
   _toggleCreateOwnCredentials: ->
     credentials = @state.credentials.map (value, key) ->
-      if key in ['database', 'db', 'host', 'hostanem', 'password', 'schema', 'user']
+      if key in ['database', 'db', 'host', 'hostname', 'password', 'schema', 'user']
         return ''
       else return value
+    defaultPort = @_getDefaultPort()
+    credentials = credentials.set 'port', defaultPort
     credentials = credentials.set 'driver', driver
     WrDbActions.setEditingData componentId, @state.configId, 'creds', credentials
     @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
@@ -168,7 +171,12 @@ templateFn = (componentId, driver, isProvisioning) ->
     WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly, driver).then =>
       @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
 
-
+  _getDefaultPort: ->
+    fields = credentialsTemplate(componentId)
+    for field in fields
+      if field[1] == 'port'
+        return field[4]
+    return ''
 
   _prepareProvReadCredentials: ->
     creds = @state.provisioningCredentials?.get('read')
