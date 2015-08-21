@@ -74,7 +74,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       return
 
     hasReadCredentials = @state.provisioningCredentials?.get('read')
-    if @_hasDbConnection()
+    if @_hasDbConnection(@state.credentials)
       if @_isProvCredentials()
         if hasReadCredentials
           @_updateLocalState('credentialsState', States.SHOW_PROV_READ_CREDS)
@@ -210,11 +210,11 @@ templateFn = (componentId, driver, isProvisioning) ->
     else
       value = event.target.value
     creds = @state.editingCredentials.set propName, value
-    WrDbActions.setEditingData componentId, @state.configId, 'creds', creds
-    #@props.onChange(@state.credentials.set propName, value)
 
-  _hasDbConnection: ->
-    credentials = @state.credentials.toJS()
+    WrDbActions.setEditingData componentId, @state.configId, 'creds', creds
+
+  _hasDbConnection: (credentials) ->
+    credentials = credentials?.toJS()
     not( _.isEmpty(credentials?.host) or
     _.isEmpty(credentials?.database) or
     _.isEmpty(credentials?.password) or

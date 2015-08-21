@@ -30,6 +30,9 @@ templateFn = (componentId, driver, isProvisioning) ->
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     credsState = localState.get 'credentialsState'
 
+    editingCredentials = WrDbStore.getEditingByPath(componentId, configId, 'creds')
+    #state
+    editingCredsValid: @_hasDbConnection(editingCredentials)
     currentCredentials: currentCredentials
     currentConfigId: configId
     isEditing: !! WrDbStore.getEditingByPath(componentId, configId, 'creds')
@@ -90,7 +93,7 @@ templateFn = (componentId, driver, isProvisioning) ->
           'Cancel'
         button
           className: 'btn btn-success'
-          disabled: @state.isSaving
+          disabled: @state.isSaving or (not @state.editingCredsValid)
           onClick: @_handleCreate
         ,
           'Save'
@@ -100,7 +103,15 @@ templateFn = (componentId, driver, isProvisioning) ->
   _updateLocalState: (path, data) ->
     if _.isString path
       path = [path]
-    console.log "UPDATE STATE", path, data
+    #console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
     console.log "new local state", newLocalState.toJS()
     InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState)
+
+
+  _hasDbConnection: (credentials) ->
+    credentials = credentials?.toJS()
+    not( _.isEmpty(credentials?.host) or
+    _.isEmpty(credentials?.database) or
+    _.isEmpty(credentials?.password) or
+    _.isEmpty(credentials?.user))
