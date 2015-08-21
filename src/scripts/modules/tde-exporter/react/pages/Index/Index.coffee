@@ -2,6 +2,10 @@ React = require 'react'
 {Map, fromJS} = require 'immutable'
 moment = require 'moment'
 classnames = require 'classnames'
+
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
+
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -25,7 +29,7 @@ componentId = 'tde-exporter'
 
 module.exports = React.createClass
   displayName: 'tdeindex'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -36,6 +40,7 @@ module.exports = React.createClass
     isSaving = InstalledComponentsStore.getSavingConfigData(componentId, configId)
 
     #state
+    latestJobs: LatestJobsStore.getJobs(componentId, configId)
     files: files
     configId: configId
     configData: configData
@@ -83,10 +88,6 @@ module.exports = React.createClass
           componentId: componentId
           configId: @state.configId
       ul className: 'nav nav-stacked',
-        li null,
-          React.createElement DeleteConfigurationButton,
-            componentId: componentId
-            configId: @state.configId
         li className: classnames(disabled: !!@_disabledToRun()),
           RunButtonModal
             #disabled: !!@_disabledToRun()
@@ -99,6 +100,13 @@ module.exports = React.createClass
               config: @state.configId
           ,
            "You are about to run expot of all configured tables to TDE"
+        li null,
+          React.createElement DeleteConfigurationButton,
+            componentId: componentId
+            configId: @state.configId
+
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
 
 
   _renderTableRow: (table, isDeleted = false) ->

@@ -2,7 +2,7 @@ _ = require 'underscore'
 index = require './react/pages/Index/Index'
 tableDetail = require './react/pages/Table/Table'
 tableEditButtons = require './react/components/TableHeaderButtons'
-
+JobsActionCreators = require '../jobs/ActionCreators'
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 storageActionCreators = require '../components/StorageActionCreators'
@@ -15,6 +15,11 @@ module.exports =
   path: "#{componentId}/:config"
   defaultRouteHandler: index
   isComponent: true
+  poll:
+    interval: 7
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('tde-exporter', params.config)
+
   requireData: [
     (params) ->
       installedComponentsActions.loadComponentConfigData componentId, params.config
