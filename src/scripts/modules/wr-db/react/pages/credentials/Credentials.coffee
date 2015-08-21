@@ -49,7 +49,6 @@ templateFn = (componentId, driver, isProvisioning) ->
     provisioningCredentials = WrDbStore.getProvisioningCredentials(componentId, configId)
     isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    console.log 'get states from store', localState.toJS()
 
     localState: localState
     provisioningCredentials: provisioningCredentials
@@ -61,7 +60,6 @@ templateFn = (componentId, driver, isProvisioning) ->
     loadingProvisioning: isLoadingProvCredentials
 
   componentDidMount: ->
-    console.log "COMPONENT DIDI MOUNT"
     state = @state.localState.get 'credentialsState'
     # ignore setting state in some cases
     if state in [
@@ -111,7 +109,6 @@ templateFn = (componentId, driver, isProvisioning) ->
   renderWithProvisioning: ->
     credentials = @state.credentials
     state = @state.localState.get 'credentialsState'
-    console.log "render credentials", state, @state.localState.toJS()
     div {className: 'container-fluid kbc-main-content'},
       switch state
         when States.INIT
@@ -231,6 +228,5 @@ templateFn = (componentId, driver, isProvisioning) ->
   _updateLocalState: (path, data) ->
     if _.isString path
       path = [path]
-    console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)

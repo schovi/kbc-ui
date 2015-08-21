@@ -9,7 +9,7 @@ InstalledComponentsStore = require '../../../components/stores/InstalledComponen
 InstalledComponentsActions = require '../../../components/InstalledComponentsActionCreators'
 Loader = React.createFactory(require('kbc-react-components').Loader)
 {States} = require '../pages/credentials/StateConstants'
-
+credentialsTemplates = require '../../templates/credentialsFields'
 
 #componentId = 'wr-db'
 
@@ -45,6 +45,9 @@ templateFn = (componentId, driver, isProvisioning) ->
     else
       creds = @state.currentCredentials
       creds = creds?.set 'driver', driver
+      defaultPort = @_getDefaultPort()
+      port = creds?.get 'port', defaultPort
+      creds = creds?.set 'port', port
       #ActionCreators.resetCredentials componentId, @state.currentConfigId
       ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', creds
       @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
@@ -114,4 +117,12 @@ templateFn = (componentId, driver, isProvisioning) ->
     not( _.isEmpty(credentials?.host) or
     _.isEmpty(credentials?.database) or
     _.isEmpty(credentials?.password) or
+    _.isEmpty(credentials?.port) or
     _.isEmpty(credentials?.user))
+
+  _getDefaultPort: ->
+    fields = credentialsTemplates(componentId)
+    for field in fields
+      if field[1] == 'port'
+        return field[4]
+    return ''
