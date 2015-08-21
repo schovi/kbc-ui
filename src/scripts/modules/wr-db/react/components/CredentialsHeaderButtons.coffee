@@ -118,7 +118,8 @@ templateFn = (componentId, driver, isProvisioning) ->
     _.isEmpty(credentials?.database) or
     _.isEmpty(credentials?.password) or
     _.isEmpty(credentials?.port) or
-    _.isEmpty(credentials?.user))
+    _.isEmpty(credentials?.user) or
+    credentials?.port == "NaN")
 
   _getDefaultPort: ->
     fields = credentialsTemplates(componentId)

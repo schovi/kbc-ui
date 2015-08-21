@@ -214,6 +214,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       value = parseInt event.target.value
     else
       value = event.target.value
+    value = value.toString()
     creds = @state.editingCredentials.set propName, value
 
     WrDbActions.setEditingData componentId, @state.configId, 'creds', creds
@@ -223,7 +224,8 @@ templateFn = (componentId, driver, isProvisioning) ->
     not( _.isEmpty(credentials?.host) or
     _.isEmpty(credentials?.database) or
     _.isEmpty(credentials?.password) or
-    _.isEmpty(credentials?.user))
+    _.isEmpty(credentials?.user) or
+    credentials?.port == "NaN")
 
   _updateLocalState: (path, data) ->
     if _.isString path
