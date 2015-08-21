@@ -5,6 +5,7 @@ ActionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
 CredentialsHeader = require './react/components/CredentialsHeaderButtons'
+storageActionCreators = require '../components/StorageActionCreators'
 
 #driver = 'mysql'
 #componentId = 'wr-db'
@@ -23,6 +24,10 @@ createRoute = (componentId, driver, isProvisioning) ->
   requireData: [
     (params) ->
       ActionCreators.loadConfiguration componentId, params.config
+    ,
+      ->
+        storageActionCreators.loadTables()
+
   ]
   childRoutes: [
     #isComponent: true
