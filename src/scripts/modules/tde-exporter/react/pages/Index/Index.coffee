@@ -61,25 +61,34 @@ module.exports = React.createClass
           ComponentDescription
             componentId: componentId
             configId: @state.configId
+      if not @_isEmptyConfig()
         div className: 'col-sm-4 kbc-buttons',
           @_addNewTableButton()
           @_renderAddNewTable()
       @_renderTables()
 
   _renderTables: ->
-    TablesByBucketsPanel
-      renderTableRowFn: @_renderTableRow
-      renderHeaderRowFn: @_renderHeaderRow
-      filterFn: @_filterBuckets
-      isTableExportedFn: (tableId) =>
-        @state.typedefs?.has tableId
-      onToggleBucketFn: @_handleToggleBucket
-      isBucketToggledFn: @_isBucketToggled
-      showAllTables: false
-      toggleShowAllFn: null
-      configuredTables: @state.typedefs?.keySeq().toJS()
-      #renderDeletedTableRowFn: (table) =>
-      #  @_renderTableRow(table, true)
+    if not @_isEmptyConfig()
+      TablesByBucketsPanel
+        renderTableRowFn: @_renderTableRow
+        renderHeaderRowFn: @_renderHeaderRow
+        filterFn: @_filterBuckets
+        isTableExportedFn: (tableId) =>
+          @state.typedefs?.has tableId
+        onToggleBucketFn: @_handleToggleBucket
+        isBucketToggledFn: @_isBucketToggled
+        showAllTables: false
+        toggleShowAllFn: null
+        configuredTables: @state.typedefs?.keySeq().toJS()
+        #renderDeletedTableRowFn: (table) =>
+        #  @_renderTableRow(table, true)
+    else
+      div className: 'row component-empty-state text-center',
+        div null,
+          p null, 'No tables configured.'
+          @_addNewTableButton()
+          @_renderAddNewTable()
+
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -221,6 +230,9 @@ module.exports = React.createClass
   _disabledToRun: ->    #TODO!
     return null
 
+  _isEmptyConfig: ->
+    tables = @state.configData.getIn ['storage', 'input', 'tables']
+    tables?.count() == 0
 
   _handleToggleBucket: (bucketId) ->
     newValue = !@_isBucketToggled(bucketId)
