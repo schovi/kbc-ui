@@ -57,7 +57,10 @@ templateFn = (componentId) ->
     isSavingColumns = !!WrDbStore.getUpdatingColumns(componentId, configId, tableId)
     hideIgnored = localState.getIn ['hideIgnored', tableId], false
 
+    columnsValidation = editingData.getIn(['validation', tableId], Map())
+
     #state
+    columnsValidation: columnsValidation
     hideIgnored: hideIgnored
     editingColumns: editingColumns
     editingData: editingData
@@ -103,13 +106,20 @@ templateFn = (componentId) ->
         editingColumns: @state.editingColumns
         isSaving: @state.isSavingColumns
         editColumnFn: @_onEditColumn
+        columnsValidation: @state.columnsValidation
+        setValidationFn: @_onValidateColumn
         filterColumnsFn: @_hideIgnoredFilter
         filterColumnFn: @_filterColumn
         dataPreview: @state.dataPreview
 
+  _onValidateColumn: (cname, isValid) ->
+    path = ['validation', @state.tableId, cname]
+    WrDbActions.setEditingData(componentId, @state.configId, path, isValid)
+
   _onEditColumn: (newColumn) ->
     cname = newColumn.get('name')
     path = ['columns', @state.tableId, cname]
+
     WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
 
   _filterColumn: (column) ->
@@ -182,6 +192,9 @@ templateFn = (componentId) ->
   _handleEditColumnsCancel: ->
     path = ['columns', @state.tableId]
     WrDbActions.setEditingData(componentId, @state.configId, path, null)
+    path = ['validation', @state.tableId]
+    WrDbActions.setEditingData(componentId, @state.configId, path, Map())
+
 
   _renderTableEdit: ->
     div className: '',
@@ -202,11 +215,18 @@ templateFn = (componentId) ->
       ' '
 
   _renderEditButtons: ->
+    isValid = @state.columnsValidation?.reduce((memo, value) ->
+      memo and value
+    , true)
+    hasColumns = @state.editingColumns?.reduce( (memo, c) ->
+      type = c.get('type')
+      type != 'IGNORE' or memo
+    , false)
     div className: 'kbc-buttons pull-right',
       EditButtons
         isEditing: @state.editingColumns
         isSaving: @state.isSavingColumns
-        isDisabled: false
+        isDisabled: not (isValid and hasColumns)
         onCancel: @_handleEditColumnsCancel
         onSave: @_handleEditColumnsSave
         onEditStart: @_handleEditColumnsStart

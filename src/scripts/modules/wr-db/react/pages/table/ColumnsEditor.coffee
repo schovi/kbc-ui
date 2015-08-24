@@ -14,6 +14,9 @@ module.exports = React.createClass
     allColumns: React.PropTypes.object
     filterColumnFn: React.PropTypes.func
     dataPreview: React.PropTypes.array
+    setValidationFn: React.PropTypes.func
+    columnsValidation: React.PropTypes.object
+
 
   render: ->
     columns = @props.columns.filter( (c) =>
@@ -21,13 +24,17 @@ module.exports = React.createClass
         c = @props.editingColumns.get(c.get('name'))
       @props.filterColumnFn(c)
       )
-
     rows = columns.map((column) =>
       cname = column.get('name')
       editingColumn = null
+      isValid = true
       if @props.editingColumns
         editingColumn = @props.editingColumns.get(cname)
+        isValid = @props.columnsValidation.get(cname, true)
+
       @props.renderRowFn
+        isValid: isValid
+        setValidationFn: @props.setValidationFn
         isSaving: @props.isSaving
         column: column
         editingColumn: editingColumn
@@ -36,7 +43,6 @@ module.exports = React.createClass
         dataPreview: @props.dataPreview
       )
 
-    console.log rows.count()
     if rows.count() > 0
       div style: {overflow: 'scroll'},
         table className: 'table table-striped kbc-table-editor',

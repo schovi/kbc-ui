@@ -13,9 +13,11 @@ module.exports = React.createClass
     column: React.PropTypes.object
     editingColumn: React.PropTypes.object
     editColumnFn: React.PropTypes.func
+    setValidationFn: React.PropTypes.func
     dataTypes: React.PropTypes.array
     isSaving: React.PropTypes.bool
     dataPreview: React.PropTypes.array
+    isValid: React.PropTypes.bool
 
   render: ->
     if @props.editingColumn
@@ -24,7 +26,8 @@ module.exports = React.createClass
       @_renderStatic()
 
   _renderEditing: ->
-    tr null,
+    trClass = 'danger' if not @props.isValid
+    tr className: trClass,
       td null, @props.column.get('name')
       td null, @_createInput('dbName')
       @_renderTypeSelect()
@@ -34,6 +37,17 @@ module.exports = React.createClass
         ColumnDataPreview
           columnName: @props.column.get('name')
           tableData: @props.dataPreview
+
+  _validateColumn: (column) ->
+    type = column.get 'type'
+    size = column.get 'size'
+    dbName = column.get 'dbName'
+    valid = true
+    if _.isString(@_getSizeParam(type)) and _.isEmpty(size)
+      valid = false
+    if _.isEmpty(dbName)
+      valid = false
+    @props.setValidationFn(column.get('name'), valid)
 
 
   _renderTypeSelect: ->
@@ -54,6 +68,7 @@ module.exports = React.createClass
           else
             newColumn = newColumn.set('size', '')
           @props.editColumnFn(newColumn)
+          @_validateColumn(newColumn)
       ,
         @_selectOptions()
       @_createInput('size') if _.isString @_getSizeParam(dtype)
@@ -94,6 +109,7 @@ module.exports = React.createClass
           newValue = if e.target.checked then '1' else '0'
           newColumn = @props.editingColumn.set(property, newValue)
           @props.editColumnFn(newColumn)
+          @_validateColumn(newColumn)
 
   _createInput: (property, type = 'text') ->
     if @props.editingColumn.get('type') == 'IGNORE'
@@ -106,6 +122,7 @@ module.exports = React.createClass
         newValue = e.target.value
         newColumn = @props.editingColumn.set(property, newValue)
         @props.editColumnFn(newColumn)
+        @_validateColumn(newColumn)
 
 
   _renderStatic: ->
