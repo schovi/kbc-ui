@@ -54,6 +54,7 @@ module.exports = React.createClass
     dtype = @props.editingColumn.get 'type'
     td null,
       Input
+        bsSize: 'small'
         type: 'select'
         value: dtype
         disabled: @props.isSaving
@@ -116,6 +117,7 @@ module.exports = React.createClass
       return ''
     Input
       type: type
+      bsSize: 'small'
       value: @props.editingColumn.get property
       disabled: @props.isSaving
       onChange: (e) =>
