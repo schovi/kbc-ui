@@ -1,5 +1,6 @@
 React = require 'react'
 {fromJS, Map} = require 'immutable'
+_ = require 'underscore'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -50,6 +51,10 @@ module.exports = React.createClass
     table = StorageStore.getAll().find (table) ->
       table.get('id') == tableId
     columnsTypes = typedefs.get(tableId, Map())
+
+    #enforce empty Map(not List) workaround
+    if _.isEmpty(columnsTypes?.toJS())
+      columnsTypes = Map()
 
     #state
     isSaving: isSaving

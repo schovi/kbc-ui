@@ -79,7 +79,10 @@ module.exports = React.createClass
     inputTables = inputTables.push tableToSave
 
     configData = @state.configData.setIn ['storage', 'input', 'tables'], inputTables
+
     typedefs = configData.getIn ['parameters', 'typedefs'], Map()
+    if _.isEmpty(typedefs?.toJS())
+      typedefs = Map()
     typedefs = typedefs.set(tableId, editingData)
     configData = configData.setIn ['parameters', 'typedefs'], typedefs
     console.log 'SAVE CONFIG', configData.toJS()
