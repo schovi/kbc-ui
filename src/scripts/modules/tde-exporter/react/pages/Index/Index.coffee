@@ -61,33 +61,35 @@ module.exports = React.createClass
           ComponentDescription
             componentId: componentId
             configId: @state.configId
+        if not @_isEmptyConfig()
+          div className: 'col-sm-4 kbc-buttons',
+            @_addNewTableButton()
+            @_renderAddNewTable()
       if not @_isEmptyConfig()
-        div className: 'col-sm-4 kbc-buttons',
-          @_addNewTableButton()
-          @_renderAddNewTable()
-      @_renderTables()
+        @_renderTables()
+      else
+        div className: 'row component-empty-state text-center',
+          div null,
+            p null, 'No tables configured.'
+            @_addNewTableButton()
+            @_renderAddNewTable()
+
 
   _renderTables: ->
-    if not @_isEmptyConfig()
-      TablesByBucketsPanel
-        renderTableRowFn: @_renderTableRow
-        renderHeaderRowFn: @_renderHeaderRow
-        filterFn: @_filterBuckets
-        isTableExportedFn: (tableId) =>
-          @state.typedefs?.has tableId
-        onToggleBucketFn: @_handleToggleBucket
-        isBucketToggledFn: @_isBucketToggled
-        showAllTables: false
-        toggleShowAllFn: null
-        configuredTables: @state.typedefs?.keySeq().toJS()
-        #renderDeletedTableRowFn: (table) =>
-        #  @_renderTableRow(table, true)
-    else
-      div className: 'row component-empty-state text-center',
-        div null,
-          p null, 'No tables configured.'
-          @_addNewTableButton()
-          @_renderAddNewTable()
+    TablesByBucketsPanel
+      renderTableRowFn: @_renderTableRow
+      renderHeaderRowFn: @_renderHeaderRow
+      filterFn: @_filterBuckets
+      isTableExportedFn: (tableId) =>
+        @state.typedefs?.has tableId
+      onToggleBucketFn: @_handleToggleBucket
+      isBucketToggledFn: @_isBucketToggled
+      showAllTables: false
+      toggleShowAllFn: null
+      configuredTables: @state.typedefs?.keySeq().toJS()
+      #renderDeletedTableRowFn: (table) =>
+      #  @_renderTableRow(table, true)
+
 
 
   _renderSideBar: ->
