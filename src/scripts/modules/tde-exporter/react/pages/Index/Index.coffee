@@ -99,8 +99,8 @@ module.exports = React.createClass
       ul className: 'nav nav-stacked',
         li className: classnames(disabled: !!@_disabledToRun()),
           RunButtonModal
-            #disabled: !!@_disabledToRun()
-            #disabledReason: @_disabledToRun()
+            disabled: !!@_disabledToRun()
+            disabledReason: @_disabledToRun()
             title: "Export tables"
             tooltip: "Export all configured tables"
             mode: 'link'
@@ -149,7 +149,9 @@ module.exports = React.createClass
           onSelectTableFn: (value) =>
             @_updateLocalState(['newTable', 'id'], value)
           excludeTableFn: (tableId) =>
-            @state.configData.hasIn ['parameters', 'typedefs',tableId]
+            hasIn = !! @state.configData.getIn ['parameters', 'typedefs', tableId]
+            #@state.configData.hasIn ['parameters', 'typedefs', tableId]
+            hasIn
       React.createElement ModalFooter, null,
         React.createElement ConfirmButtons,
           isSaving: false
@@ -227,12 +229,14 @@ module.exports = React.createClass
     return data
 
 
-  _disabledToRun: ->    #TODO!
+  _disabledToRun: ->
+    if @_isEmptyConfig()
+      return "No tables configured"
     return null
 
   _isEmptyConfig: ->
     tables = @state.configData.getIn ['storage', 'input', 'tables']
-    tables?.count() == 0
+    not (tables and tables.count() > 0)
 
   _handleToggleBucket: (bucketId) ->
     newValue = !@_isBucketToggled(bucketId)

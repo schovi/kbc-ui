@@ -74,11 +74,10 @@ module.exports = React.createClass
       columns: editingData.keySeq().toJS()
 
     inputTables = @state.configData.getIn(['storage', 'input', 'tables'], List())
-    inputTables = inputTables.map (table) ->
-      if table.get('source') != tableId
-        return table
-      else
-        return tableToSave
+    inputTables = inputTables.filter (table) ->
+      table.get('source') != tableId
+    inputTables = inputTables.push tableToSave
+
     configData = @state.configData.setIn ['storage', 'input', 'tables'], inputTables
     typedefs = configData.getIn ['parameters', 'typedefs'], Map()
     typedefs = typedefs.set(tableId, editingData)
