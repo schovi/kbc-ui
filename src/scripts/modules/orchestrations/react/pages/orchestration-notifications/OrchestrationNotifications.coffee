@@ -23,6 +23,7 @@ module.exports = React.createClass
   getInitialState: ->
     inputs: Map
       error: ''
+      warning: ''
       processing: ''
       waiting: ''
 

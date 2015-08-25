@@ -36,6 +36,7 @@ module.exports = React.createClass
   render: ->
     console.log 'render', @props.notifications.toJS()
     errorEmails = @_getNotificationsForChannel 'error'
+    warningEmails = @_getNotificationsForChannel 'warning'
     processingEmails = @_getNotificationsForChannel 'processing'
 
     div {className: 'kbc-block-with-padding'},
@@ -51,6 +52,14 @@ module.exports = React.createClass
           else
             React.createElement SubscribersList,
               emails: errorEmails
+        h2 null, 'Warnings'
+          p null,
+            'Notified when the orchestration finished with warning.'
+          if @props.isEditing
+            @_renderNotificationsEditor 'warning', warningEmails
+          else
+            React.createElement SubscribersList,
+              emails: warningEmails
       div null,
         h2 null, 'Processing'
         if @props.isEditing && processingEmails.count()
