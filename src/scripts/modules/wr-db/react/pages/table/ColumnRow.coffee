@@ -13,7 +13,6 @@ module.exports = React.createClass
     column: React.PropTypes.object
     editingColumn: React.PropTypes.object
     editColumnFn: React.PropTypes.func
-    setValidationFn: React.PropTypes.func
     dataTypes: React.PropTypes.array
     isSaving: React.PropTypes.bool
     dataPreview: React.PropTypes.array
@@ -38,18 +37,6 @@ module.exports = React.createClass
           columnName: @props.column.get('name')
           tableData: @props.dataPreview
 
-  _validateColumn: (column) ->
-    type = column.get 'type'
-    size = column.get 'size'
-    dbName = column.get 'dbName'
-    valid = true
-    if _.isString(@_getSizeParam(type)) and _.isEmpty(size)
-      valid = false
-    if _.isEmpty(dbName)
-      valid = false
-    @props.setValidationFn(column.get('name'), valid)
-
-
   _renderTypeSelect: ->
     dtype = @props.editingColumn.get 'type'
     td null,
@@ -69,7 +56,6 @@ module.exports = React.createClass
           else
             newColumn = newColumn.set('size', '')
           @props.editColumnFn(newColumn)
-          @_validateColumn(newColumn)
       ,
         @_selectOptions()
       ' '
@@ -111,7 +97,7 @@ module.exports = React.createClass
           newValue = if e.target.checked then '1' else '0'
           newColumn = @props.editingColumn.set(property, newValue)
           @props.editColumnFn(newColumn)
-          @_validateColumn(newColumn)
+
 
   _createInput: (property, type = 'text') ->
     if @props.editingColumn.get('type') == 'IGNORE'
@@ -125,7 +111,7 @@ module.exports = React.createClass
         newValue = e.target.value
         newColumn = @props.editingColumn.set(property, newValue)
         @props.editColumnFn(newColumn)
-        @_validateColumn(newColumn)
+
 
 
   _renderStatic: ->

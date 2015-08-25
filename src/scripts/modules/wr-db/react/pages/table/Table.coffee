@@ -108,20 +108,31 @@ templateFn = (componentId) ->
         isSaving: @state.isSavingColumns
         editColumnFn: @_onEditColumn
         columnsValidation: @state.columnsValidation
-        setValidationFn: @_onValidateColumn
         filterColumnsFn: @_hideIgnoredFilter
         filterColumnFn: @_filterColumn
         dataPreview: @state.dataPreview
 
-  _onValidateColumn: (cname, isValid) ->
+  _setValidateColumn: (cname, isValid) ->
     path = ['validation', @state.tableId, cname]
     WrDbActions.setEditingData(componentId, @state.configId, path, isValid)
+
+  _validateColumn: (column) ->
+    type = column.get 'type'
+    size = column.get 'size'
+    dbName = column.get 'dbName'
+    valid = true
+    if _.isString(@_getSizeParam(type)) and _.isEmpty(size)
+      valid = false
+    if _.isEmpty(dbName)
+      valid = false
+    @_setValidateColumn(column.get('name'), valid)
+
 
   _onEditColumn: (newColumn) ->
     cname = newColumn.get('name')
     path = ['columns', @state.tableId, cname]
-
     WrDbActions.setEditingData(componentId, @state.configId, path, newColumn)
+    @_validateColumn(newColumn)
 
   _filterColumn: (column) ->
     not (column.get('type') == 'IGNORE' and @state.hideIgnored)
@@ -177,8 +188,20 @@ templateFn = (componentId) ->
           value = e.target.value
           @state.editingColumns.map (ec) =>
             newColumn = ec.set 'type', value
+            if _.isString @_getSizeParam(value)
+              defaultSize = @_getSizeParam(value)
+              newColumn = newColumn.set('size', defaultSize)
+            else
+              newColumn = newColumn.set('size', '')
             @_onEditColumn(newColumn)
         options
+
+  _getSizeParam: (dataType) ->
+    dtypes = dataTypes[componentId] or defaultDataTypes
+    dt = _.find dtypes, (d) ->
+      _.isObject(d) and _.keys(d)[0] == dataType
+    result = dt?[dataType]?.defaultSize
+    return result
 
 
   _getDataTypes: ->
@@ -193,6 +216,9 @@ templateFn = (componentId) ->
   _handleEditColumnsCancel: ->
     path = ['columns', @state.tableId]
     WrDbActions.setEditingData(componentId, @state.configId, path, null)
+    @_clearValidation()
+
+  _clearValidation: ->
     path = ['validation', @state.tableId]
     WrDbActions.setEditingData(componentId, @state.configId, path, Map())
 

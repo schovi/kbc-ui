@@ -14,7 +14,6 @@ module.exports = React.createClass
     allColumns: React.PropTypes.object
     filterColumnFn: React.PropTypes.func
     dataPreview: React.PropTypes.array
-    setValidationFn: React.PropTypes.func
     columnsValidation: React.PropTypes.object
 
 
@@ -34,7 +33,6 @@ module.exports = React.createClass
 
       @props.renderRowFn
         isValid: isValid
-        setValidationFn: @props.setValidationFn
         isSaving: @props.isSaving
         column: column
         editingColumn: editingColumn
