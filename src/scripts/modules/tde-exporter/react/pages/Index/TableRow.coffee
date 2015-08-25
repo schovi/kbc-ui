@@ -1,5 +1,5 @@
 React = require 'react'
-
+filesize = require 'filesize'
 Link = React.createFactory(require('react-router').Link)
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 {button, i,a, strong, span, div, p, ul, li} = React.DOM
@@ -18,6 +18,7 @@ module.exports = React.createClass
     prepareRunDataFn: React.PropTypes.func
 
   render: ->
+    console.log @props.tdeFile?.toJS()
     div className: 'tr',
       span className: 'td',
         @props.table.get 'name'
@@ -27,7 +28,10 @@ module.exports = React.createClass
             overlay: React.createElement Tooltip,
               null
             ,
-              date.format @props.tdeFile.get('created')
+              div null, @props.tdeFile.getIn(['creatorToken','description'])
+              div null, date.format @props.tdeFile.get('created')
+              div null, filesize(@props.tdeFile.get('sizeBytes'))
+
             placement: 'top'
           ,
             a href: @props.tdeFile.get('url'),
