@@ -57,4 +57,4 @@ module.exports = React.createClass
           tbody null,
             rows
     else
-      div className: 'well text-center', 'No Columns.'
+      div className: 'row', 'No Columns.'

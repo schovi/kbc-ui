@@ -72,6 +72,7 @@ module.exports = React.createClass
           @_validateColumn(newColumn)
       ,
         @_selectOptions()
+      ' '
       @_createInput('size') if _.isString @_getSizeParam(dtype)
 
   _getSizeParam: (dataType) ->

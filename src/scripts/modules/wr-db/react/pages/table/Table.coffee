@@ -89,15 +89,16 @@ templateFn = (componentId) ->
 
 
   render: ->
-    console.log 'render table', @state.tableId, @state.tableConfig.toJS(), "EDITING DATA", @state.editingData.toJS()
-
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
-        div className: 'col-sm-12',
-          div className: 'col-sm-5', @_renderTableEdit()
-          div className: 'col-sm-2', @_renderHideIngored()
-          div className: 'col-sm-2', @_renderSetColumnsType() if !!@state.editingColumns
-          div className: 'col-sm-3', @_renderEditButtons()
+        div className: 'col-sm-5', @_renderTableEdit()
+        div className: 'col-sm-2', @_renderHideIngored()
+        div className: 'col-sm-2',
+          if !!@state.editingColumns
+            @_renderSetColumnsType()
+          else
+            ' '
+        div className: 'col-sm-3 kbc-buttons', @_renderEditButtons()
 
       ColumnsEditor
         dataTypes: dataTypes[componentId] or defaultDataTypes
