@@ -79,9 +79,10 @@ module.exports = React.createClass
     InstalledComponentsActionCreators
     .runComponent params
     .then @_handleStarted
-    .catch =>
+    .catch (error) =>
       @setState
         isLoading: false
+      throw error
 
   _handleStarted: (response) ->
     if @isMounted()
