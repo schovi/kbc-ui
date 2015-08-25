@@ -106,7 +106,10 @@ module.exports = React.createClass
         fuzzy.match(filter, project.get('name'))
       )
     .filter (organization) ->
-      organization.get('projects').size > 0
+      return true if !filter
+      return true if organization.get('projects').count() > 0
+      return true if fuzzy.match(filter, organization.get('name'))
+      return false
 
   _projectUrl: (id) ->
     _.template(@props.urlTemplates.get('project'))(projectId: id)
