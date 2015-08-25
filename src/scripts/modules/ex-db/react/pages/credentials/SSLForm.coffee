@@ -1,8 +1,9 @@
 React = require 'react'
 _ = require 'underscore'
-Input = React.createFactory(require('react-bootstrap').Input)
 
-{form, div, label, p, a} = React.DOM
+Textarea = require 'react-textarea-autosize'
+{Input} = require 'react-bootstrap'
+{form, div, label, p, a, label} = React.DOM
 
 _helpUrl = 'https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/ui-articles/-db-ex-ssl-credentials'
 
@@ -36,11 +37,16 @@ module.exports = React.createClass
 
   _createInput: (labelValue, propName) ->
     if @props.enabled
-      Input
-        label: labelValue
-        type: 'textarea'
-        value: @props.credentials.getIn ['ssl', propName]
-        onChange: @_handleChange.bind @, propName
+      div className: 'form-group',
+        label className: 'control-label',
+          labelValue
+        React.createElement Textarea,
+          label: labelValue
+          type: 'textarea'
+          value: @props.credentials.getIn ['ssl', propName]
+          onChange: @_handleChange.bind @, propName
+          className: 'form-control'
+          minRows: 4
     else
       @_createStaticControl labelValue, propName
 
@@ -50,4 +56,7 @@ module.exports = React.createClass
         labelValue
       div null,
         p className: 'form-control-static',
-          @props.credentials.getIn ['ssl', propName]
+          if @props.credentials.getIn(['ssl', propName])
+            @props.credentials.getIn(['ssl', propName])
+          else
+            'Not set.'

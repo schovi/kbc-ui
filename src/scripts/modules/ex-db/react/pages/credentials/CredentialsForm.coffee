@@ -90,4 +90,5 @@ module.exports = React.createClass
         label: labelValue
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
-      , @props.credentials.get propName
+      ,
+        @props.credentials.get(propName)
