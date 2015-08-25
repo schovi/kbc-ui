@@ -6,6 +6,7 @@ Link = React.createFactory(require('react-router').Link)
 {Confirm} = require '../../../../../react/common/common'
 date = require '../../../../../utils/date'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+SapiTableLinkEx = require '../../components/StorageApiTableLinkEx'
 
 module.exports = React.createClass
   displayName: 'tablerowtde'
@@ -18,10 +19,12 @@ module.exports = React.createClass
     prepareRunDataFn: React.PropTypes.func
 
   render: ->
-    console.log @props.tdeFile?.toJS()
     div className: 'tr',
       span className: 'td',
-        @props.table.get 'name'
+        React.createElement SapiTableLinkEx,
+          tableId: @props.table.get 'id'
+        ,
+          @props.table.get 'name'
       span className: 'td',
         if @props.tdeFile
           React.createElement OverlayTrigger,
