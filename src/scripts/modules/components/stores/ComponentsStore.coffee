@@ -32,7 +32,8 @@ ComponentsStore = StoreUtils.createStore
   getFilteredForType: (type) ->
     filter = @getFilter(type)
     all = @getAllForType(type)
-    all.filter((component) -> fuzzy.match(filter, component.get 'name'))
+    all.filter (component) ->
+      fuzzy.match(filter, component.get 'name') || fuzzy.match(filter, component.get 'description')
 
   getFilter: (type) ->
     _store.getIn(['filter', type]) || ''
