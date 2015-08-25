@@ -226,7 +226,9 @@ module.exports = React.createClass
     configData = configData.setIn ['parameters', 'typedefs', tableId], typedefs
     tags = ["config-#{@state.configId}"]
     configData = configData.setIn ['parameters', 'tags'], fromJS(tags)
-    data = {configData: configData.toJS()}
+    data =
+      configData: configData.toJS()
+      config: @state.configId
     console.log 'RUN', data
     return data
 
