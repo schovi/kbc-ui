@@ -27,7 +27,7 @@ module.exports = React.createClass
   _renderEditing: ->
     trClass = 'danger' if not @props.isValid
     tr className: trClass,
-      td null, @props.column.get('name')
+      td className: 'kbc-static-cell', @props.column.get('name')
       td null, @_createInput('dbName')
       @_renderTypeSelect()
       td null, @_createCheckbox('null')
@@ -89,7 +89,7 @@ module.exports = React.createClass
     if @props.editingColumn.get('type') == 'IGNORE'
       return ''
     isChecked = @props.editingColumn.get(property) == '1'
-    div className: 'text-center',
+    div className: 'text-center checkbox',
       input
         type: 'checkbox'
         checked: isChecked
@@ -116,8 +116,8 @@ module.exports = React.createClass
 
   _renderStatic: ->
     tr null,
-      td null, @props.column.get('name')
-      td null, @props.column.get('dbName')
+      td className: 'kbc-static-cell', @props.column.get('name')
+      td className: 'kbc-static-cell', @props.column.get('dbName')
       @_renderType()
       @_renderNull()
       @_renderDefault()
@@ -132,7 +132,7 @@ module.exports = React.createClass
     val = @props.column.get 'default'
     if @_isIgnored()
       val = 'N/A'
-    return td null, val
+    return td className: 'kbc-static-cell', val
 
 
   _renderType: ->
@@ -140,14 +140,14 @@ module.exports = React.createClass
     size = @props.column.get('size')
     if size
       type = "#{type}(#{size})"
-    return td null, type
+    return td className: 'kbc-static-cell', type
 
   _renderNull: ->
     isChecked = @props.column.get('null') == '1'
     nullVal = Check({isChecked: isChecked})
     if @_isIgnored()
       nullVal = 'N/A'
-    return td null, nullVal
+    return td className: 'kbc-static-cell', nullVal
 
   _isIgnored: ->
     @props.column.get('type') == 'IGNORE'

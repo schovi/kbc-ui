@@ -90,15 +90,15 @@ templateFn = (componentId) ->
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'row kbc-header',
+      div className: 'row kbc-table-editor-header',
         div className: 'col-sm-5', @_renderTableEdit()
         div className: 'col-sm-2', @_renderHideIngored()
-        div className: 'col-sm-2',
+        div className: 'col-sm-3',
           if !!@state.editingColumns
             @_renderSetColumnsType()
           else
             ' '
-        div className: 'col-sm-3 kbc-buttons', @_renderEditButtons()
+        div className: 'col-sm-2 kbc-buttons', @_renderEditButtons()
 
       ColumnsEditor
         dataTypes: dataTypes[componentId] or defaultDataTypes
@@ -145,15 +145,16 @@ templateFn = (componentId) ->
     newCols
 
   _renderHideIngored: ->
-    label className: 'pull-right',
-      input
-        type: 'checkbox'
-        label: 'Hide IGNORED'
-        onChange: (e) =>
-          path = ['hideIgnored', @state.tableId]
-          @_updateLocalState(path, e.target.checked)
+    div className: 'checkbox',
+      label className: '',
+        input
+          type: 'checkbox'
+          label: 'Hide IGNORED'
+          onChange: (e) =>
+            path = ['hideIgnored', @state.tableId]
+            @_updateLocalState(path, e.target.checked)
 
-      ' Hide Ignored'
+        ' Hide Ignored'
 
 
   _renderColumnRow: (props) ->
@@ -182,7 +183,7 @@ templateFn = (componentId) ->
       ,
         opKey
     span null,
-      span null, 'Set All Coumns To'
+      span null, 'Set All Columns To '
       select
         onChange: (e) =>
           value = e.target.value

@@ -21,7 +21,7 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 
 
 
-{a, h4, form, div, label, p, option} = React.DOM
+{a, h2, h4, form, div, label, p, option, span} = React.DOM
 
 #driver = 'mysql'
 #componentId = 'wr-db'
@@ -130,25 +130,31 @@ templateFn = (componentId, driver, isProvisioning) ->
 
   _renderInit: ->
     driverName = provisioningTemplates[driver].name
-    div className: 'panel panel-default',
-      div className: 'panel-heading',
-        h4 null, 'Choose which database to use:'
-      div className: 'panel-body',
-        div className: 'list-group',
+    div null,
+      div className: 'kbc-header kbc-row',
+        div className: 'kbc-title',
+          h2 null, 'Choose which database to use'
+      div
+        className: 'table table-hover'
+        style:
+          marginTop: '-1px'
+      ,
+        div className: 'tbody',
           a
-            className: 'list-group-item text-center'
+            className: 'tr'
             onClick: @_toggleCreateOwnCredentials
           ,
-            h4 className: 'list-group-item-heading', "Own #{driverName} database"
-            p className: 'list-group-item-text', "User has own #{driverName} database and will provide credenetials"
+            span className: 'td',
+              h4 className: 'list-group-item-heading', "Own #{driverName} database"
+              p className: 'list-group-item-text', "User has own #{driverName} database and will provide credenetials"
           a
-            className: 'list-group-item text-center'
+            className: 'tr'
             onClick: @_toggleCreateProvWriteCredentials
-
           ,
-            h4 className: 'list-group-item-heading', "Keboola #{driverName} database"
-            p className: 'list-group-item-text', "Keboola will provide and setup \
-            dedicated #{driverName} database and user will be given readonly credentials."
+            span className: 'td',
+              h4 className: 'list-group-item-heading', "Keboola #{driverName} database"
+              p className: 'list-group-item-text', "Keboola will provide and setup \
+              dedicated #{driverName} database and user will be given readonly credentials."
 
   _toggleCreateOwnCredentials: ->
     credentials = @state.credentials.map (value, key) ->

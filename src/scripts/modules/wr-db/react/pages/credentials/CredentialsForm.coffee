@@ -27,16 +27,17 @@ module.exports = React.createClass
     fields = fieldsTemplates(@props.componentId)
 
     form className: 'form-horizontal',
-      div className: 'row',
-        if @props.isProvisioning
-          h2 null,
-            'Keboola provided database credentials'
-            div null,
-              small null, 'This is readonly credentials to the database provided by Keboola.'
+      div className: 'row kbc-header',
+        div className: 'kbc-title',
+          if @props.isProvisioning
+            h2 null,
+              'Keboola provided database credentials'
+              div null,
+                small null, 'This is readonly credentials to the database provided by Keboola.'
 
-        else
-          h2 null,
-            'User specified database credentials'
+          else
+            h2 null,
+              'User specified database credentials'
 
       div className: 'row',
         _.map fields, (field) =>
