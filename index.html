@@ -1368,8 +1368,30 @@
             "data": {},
             "flags": [],
             "uri": "https://syrup.keboola.com/wr-db"
+          },
+          {
+              "id": "wr-tableau-server",
+              "type": "writer",
+              "name": "Tableau Server Writer",
+              "description": "Uploads TDE file from SAPI File Upload to Tableau Server",
+              "hasUI": false,
+              "hasRun": true,
+              "ico32": "https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/tableau-32-1.png",
+              "ico64": "https:\/\/d3iz2gfan5zufq.cloudfront.net\/images\/cloud-services\/tableau-64-1.png",
+              "data": {
+                  "definition": {
+                      "type": "dockerhub",
+                      "uri": "keboola\/tableau-server-writer"
+                  }
+              },
+              "flags": [
+                  "excludeFromNewList"
+              ],
+              "uri": "https:\/\/syrup.keboola.com\/docker\/wr-tableau-server",
+              "documentationUrl": "https:\/\/github.com\/keboola\/tableau-server-writer"
           }
-        ];
+
+    ];
         var organizations = [
             {
                 "name": "Keboola Demo",
