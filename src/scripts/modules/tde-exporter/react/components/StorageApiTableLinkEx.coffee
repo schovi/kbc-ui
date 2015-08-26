@@ -1,5 +1,8 @@
 React = require 'react'
-{OverlayTrigger, Tooltip} = require 'react-bootstrap'
+{ListGroup, ListGroupItem, OverlayTrigger, Tooltip} = require 'react-bootstrap'
+Popover = React.createFactory(require('react-bootstrap').Popover)
+
+
 filesize = require 'filesize'
 
 date = require '../../../../utils/date'
@@ -7,6 +10,7 @@ storageTablesStore = require '../../../components/stores/StorageTablesStore'
 storageActionCreators = require '../../../components/StorageActionCreators'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ApplicationStore = require '../../../../stores/ApplicationStore'
+PureRenderMixin = require '../../../../react/mixins/ImmutableRendererMixin'
 
 {button, i,a, strong, span, div, p, ul, li} = React.DOM
 
@@ -15,8 +19,12 @@ module.exports = React.createClass
   propTypes:
     tableId: React.PropTypes.string
     children: React.PropTypes.any
+    placement: React.PropTypes.string
 
-  mixins: [createStoreMixin(storageTablesStore)]
+  getDefaultProps: ->
+    placement: 'bottom'
+
+  mixins: [createStoreMixin(storageTablesStore), PureRenderMixin]
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
@@ -25,6 +33,7 @@ module.exports = React.createClass
     table = null
     if tables
       table = tables.get @props.tableId
+      console.log table.toJS()
 
     #state
     isTablesLoading: isTablesLoading
@@ -37,22 +46,61 @@ module.exports = React.createClass
     if not @state.table
       span null, @props.tableId
     else
-      @_renderTableWithInfo()
+      span null,
+        @_renderTableWithTooltipInfo()
+        #@_renderTableWithPopoverInfo()
 
-
-  _renderTableWithInfo: ->
-    React.createElement OverlayTrigger,
-      overlay: React.createElement Tooltip,
-        null
+  _renderTableWithPopoverInfo: ->
+    span null,
+      @_renderTableUrl()
+      React.createElement OverlayTrigger,
+        placement: @props.placement
+        overlay: @_renderPopover()
+        trigger: 'click'
+        rootClose: true
       ,
-        div null, date.format @state.table.get('lastChangeDate')
-        div null, filesize(@state.table.get('dataSizeBytes'))
-        div null, "#{@state.table.get('rowsCount')} rows"
+        React.DOM.button className: 'btn btn-link',
+          React.DOM.span className: 'fa fa-eye'
 
+  _renderPopover: ->
+    Popover
+      style: {maxWidth: "350px"}
+      title: "#{@props.tableId}"
+    ,
+      ul null,
+        @_renderTableRow 'Created', date.format @state.table.get('created')
+        @_renderTableRow 'Last Import', date.format @state.table.get('lastImportDate')
+        @_renderTableRow 'Last Change', date.format @state.table.get('lastChangeDate')
+        @_renderTableRow 'Rows count', "#{@state.table.get('rowsCount')} rows"
+        @_renderTableRow 'Data size', filesize(@state.table.get('dataSizeBytes'))
+        @_renderTableRow 'Columns', (@state.table.get('columns')?.toJS().join(', '))
+
+
+
+  _renderTableRow: (label, value) ->
+    console.log "redener row ", label, value
+    li null,
+      "#{label}: #{value}"
+
+
+  _renderTableWithTooltipInfo: ->
+    React.createElement OverlayTrigger,
+      overlay: @_renderTooltip()
       placement: 'top'
     ,
-      a href: @_tableUrl(),
-        @props.children or @props.tableId
+      @_renderTableUrl()
+
+  _renderTableUrl: ->
+    a href: @_tableUrl(),
+      @props.children or @props.tableId
+
+  _renderTooltip: ->
+    React.createElement Tooltip,
+      null
+    ,
+      div null, date.format @state.table.get('lastChangeDate')
+      div null, filesize(@state.table.get('dataSizeBytes'))
+      div null, "#{@state.table.get('rowsCount')} rows"
 
 
   _tableUrl: ->
