@@ -8,7 +8,7 @@ TabPane = React.createFactory(require('react-bootstrap').TabPane)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
 Loader = React.createFactory(require('kbc-react-components').Loader)
-{textarea, label, div, span, form, pre } = React.DOM
+{button, input, textarea, label, div, span, form, pre } = React.DOM
 
 module.exports = React.createClass
   displayName: 'authorize'
@@ -23,13 +23,19 @@ module.exports = React.createClass
     sendingLink: React.PropTypes.bool
     isExtLinkOnly: React.PropTypes.bool
     isInstantOnly: React.PropTypes.bool
+    renderToForm: React.PropTypes.bool
+    caption: React.PropTypes.string
+    children: React.PropTypes.any
+
 
   getDefaultProps: ->
     isInstantOnly: false
+    noConfig: false #if has kbc config
+    caption: 'Authorize Google Account now'
+    renderToForm: false
 
 
   getInitialState: ->
-    console.log "asda", @props.isExtLinkOnly
     configId = RoutesStore.getCurrentRouteParam('config')
     token = ApplicationStore.getSapiTokenString()
     currentUserEmail = ApplicationStore.getCurrentAdmin().get 'email'
@@ -39,7 +45,11 @@ module.exports = React.createClass
     currentUserEmail: currentUserEmail
     defaultActiveKey: if @props.isExtLinkOnly then 'external' else 'instant'
 
+
   render: ->
+    if @props.renderToForm
+      return @_renderToForm()
+
     div {className: 'container-fluid kbc-main-content'},
       TabbedArea defaultActiveKey: @state.defaultActiveKey, animation: false,
         if not @props.isExtLinkOnly
@@ -47,14 +57,15 @@ module.exports = React.createClass
             form {className: 'form-horizontal', action: @_getOAuthUrl(), method: 'POST'},
               div  className: 'row',
                 div className: 'well',
-                  'Authorize Google account now.',
+                  @props.caption
                 @_createHiddenInput('token', @state.token)
-                @_createHiddenInput('account', @state.configId)
+                @_createHiddenInput('account', @state.configId) if not @props.noConfig
                 @_createHiddenInput('referrer', @_getReferrer())
+                @_createHiddenInput('external', '1') if @props.noConfig
                 Button
                   className: 'btn btn-primary'
                   type: 'submit',
-                    'Authorize Google account now'
+                    @props.caption
         if not @props.isInstantOnly
           TabPane eventKey: 'external', tab: 'External Authorization',
             form {className: 'form-horizontal'},
@@ -75,6 +86,19 @@ module.exports = React.createClass
                     else
                       'Generate External Link'
                 Loader() if @props.isGeneratingExtLink
+
+  _renderToForm: ->
+    form {className: 'form-horizontal', action: @_getOAuthUrl(), method: 'POST'},
+        @_createHiddenInput('token', @state.token)
+        @_createHiddenInput('account', @state.configId) if not @props.noConfig
+        @_createHiddenInput('referrer', @_getReferrer())
+        @_createHiddenInput('external', '1') if @props.noConfig
+        @props.children
+
+        # Button
+        #   className: 'btn btn-primary'
+        #   type: 'submit',
+        #     @props.caption
 
   _renderExtLink: ->
     div className: 'form-horizontal',
@@ -137,7 +161,7 @@ module.exports = React.createClass
     # return referrer #encodeURIComponent(referrer)
 
   _createHiddenInput: (name, value) ->
-    Input
+    input
       name: name
       type: 'hidden'
       value: value
