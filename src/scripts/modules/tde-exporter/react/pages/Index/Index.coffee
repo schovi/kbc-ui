@@ -6,6 +6,8 @@ classnames = require 'classnames'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
+Link = React.createFactory(require('react-router').Link)
+
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -103,18 +105,28 @@ module.exports = React.createClass
           RunButtonModal
             disabled: !!@_disabledToRun()
             disabledReason: @_disabledToRun()
-            title: "Export tables"
-            tooltip: "Export all configured tables"
+            title: "Export tables to TDE"
+            tooltip: "Export all configured tables to TDE files"
             mode: 'link'
             component: componentId
             runParams: =>
               config: @state.configId
           ,
-           "You are about to run expot of all configured tables to TDE"
+           "You are about to run export of all configured tables to TDE"
         li null,
           React.createElement DeleteConfigurationButton,
             componentId: componentId
             configId: @state.configId
+        li null,
+          Link
+            to: 'tde-exporter-destination'
+            className: 'btn btn-link'
+            params:
+              config: @state.configId
+          ,
+            'Setup TDE destination'
+
+
 
       React.createElement LatestJobs,
         jobs: @state.latestJobs
