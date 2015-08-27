@@ -10,9 +10,9 @@ ComponentDescription = require '../../../../components/react/components/Componen
 ComponentDescription = React.createFactory(ComponentDescription)
 SearchRow = require '../../../../../react/common/SearchRow'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
-OAuthStore = require('../../../OAuthStore')
+OAuthStore = require('../../../../components/stores/OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
-OAuthActions = require('../../../OAuthActionCreators')
+OAuthActions = require('../../../../components/OAuthActionCreators')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
@@ -90,8 +90,6 @@ module.exports = React.createClass
               span className: 'btn btn-success',
                 i className: 'fa fa-fw fa-dropbox'
                 ' Authorize Dropbox Account'
-
-
 
   _renderTableRow: (table) ->
     TableRow

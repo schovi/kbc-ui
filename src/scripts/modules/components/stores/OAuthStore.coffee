@@ -1,7 +1,7 @@
-StoreUtils = require '../../utils/StoreUtils'
+StoreUtils = require '../../../utils/StoreUtils'
 Immutable = require 'immutable'
-dispatcher = require '../../Dispatcher'
-Constants = require './OAuthConstants'
+dispatcher = require '../../../Dispatcher'
+Constants = require '../OAuthConstants'
 fuzzy = require 'fuzzy'
 
 {Map, List} = Immutable

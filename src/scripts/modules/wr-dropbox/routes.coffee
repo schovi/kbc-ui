@@ -1,8 +1,9 @@
 IndexPage = require './react/pages/index/Index'
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 installedComponentsStore = require '../components/stores/InstalledComponentsStore'
-oauthStore = require('./OAuthStore')
-oauthActions = require('./OAuthActionCreators')
+oauthStore = require('../components/stores/OAuthStore')
+oauthActions = require('../components/OAuthActionCreators')
+
 Immutable = require 'immutable'
 RouterStore = require('../../stores/RoutesStore')
 {Navigation} = require 'react-router'
