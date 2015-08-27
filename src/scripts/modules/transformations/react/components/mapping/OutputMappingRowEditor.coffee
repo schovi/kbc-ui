@@ -30,9 +30,10 @@ module.exports = React.createClass
     disabled: React.PropTypes.bool.isRequired
     backend: React.PropTypes.string.isRequired
     type: React.PropTypes.string.isRequired
+    initialShowDetails: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    showDetails: false
+    showDetails: @props.initialShowDetails
 
   _handleToggleShowDetails: (e) ->
     @setState(

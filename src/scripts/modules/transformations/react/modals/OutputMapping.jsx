@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import OutputMappingRowEditor from '../components/mapping/OutputMappingRowEditor';
+import resolveOutputShowDetails from './resolveOutputShowDetails';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -51,6 +52,7 @@ export default React.createClass({
             disabled={this.state.isSaving}
             backend={this.props.backend}
             type={this.props.type}
+            initialShowDetails={resolveOutputShowDetails(this.props.mapping)}
             />
         </Modal.Body>
         <Modal.Footer>

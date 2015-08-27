@@ -14,9 +14,10 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+    initialShowDetails: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    showDetails: false
+    showDetails: @props.initialShowDetails
 
   shouldComponentUpdate: (nextProps, nextState) ->
     should = @props.value != nextProps.value ||

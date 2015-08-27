@@ -4,6 +4,7 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import InputMappingRowMySqlEditor from '../components/mapping/InputMappingRowMySqlEditor';
 import InputMappingRowDockerEditor from '../components/mapping/InputMappingRowDockerEditor';
 import InputMappingRowRedshiftEditor from '../components/mapping/InputMappingRowRedshiftEditor';
+import resolveInputShowDetails from './resolveInputShowDetails';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -53,7 +54,8 @@ export default React.createClass({
       value: this.props.mapping,
       tables: this.props.tables,
       disabled: this.state.isSaving,
-      onChange: this.props.onChange
+      onChange: this.props.onChange,
+      initialShowDetails: resolveInputShowDetails(this.props.backend, this.props.type, this.props.mapping)
     };
     if (this.props.backend === 'mysql' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowMySqlEditor, props);
