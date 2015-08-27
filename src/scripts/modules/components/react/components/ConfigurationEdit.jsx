@@ -3,6 +3,10 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
 import Sticky from 'react-sticky';
 
+/*global require */
+require('codemirror/addon/lint/lint');
+require('../../../../utils/codemirror/json-lint');
+
 /* global require */
 require('./configuration.less');
 
@@ -35,11 +39,13 @@ export default React.createClass({
               value={this.props.data}
               theme="solarized"
               lineNumbers={true}
-              mode="application/javascript"
+              mode="application/json"
               autofocus={true}
               lineWrapping={true}
               onChange={this.handleChange}
               readOnly={this.props.isSaving}
+              lint={true}
+              gutters={['CodeMirror-lint-markers']}
               />
           </div>
         </div>

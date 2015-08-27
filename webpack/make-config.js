@@ -93,7 +93,7 @@ module.exports = function (options) {
                     test: /\.jsx?$/,
                     loader: "eslint-loader",
                     include:  path.resolve(__dirname, "../src/scripts"),
-                    exclude: /node_modules/
+                    exclude: [/node_modules/, path.resolve(__dirname, "../src/scripts/utils/codemirror/parser.js")]
                 }
             ],
             loaders: [
