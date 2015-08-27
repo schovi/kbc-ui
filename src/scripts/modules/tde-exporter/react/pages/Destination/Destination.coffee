@@ -10,8 +10,9 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 {Map, fromJS} = require 'immutable'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 
-
+DropboxRow = React.createFactory require './DropboxRow'
 GdriveRow = React.createFactory require './GdriveRow'
+TableauServerRow = React.createFactory require './TableauServerRow'
 
 {button, strong, div, h2, span, h4, section, p} = React.DOM
 
@@ -40,44 +41,34 @@ module.exports = React.createClass
       @_renderTableauServer()
 
   _renderGoogleDrive: ->
-    gdriveComponentId = 'wr-google-drive'
-    component = ComponentsStore.getComponent(gdriveComponentId)
-
     GdriveRow
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
       account: @state.configData.getIn ['parameters', 'gdrive']
       setConfigDataFn: @_saveConfigData
-      renderComponent: ->
-        div {className: 'col-md-4'},
-          span {className: ''},
-            ComponentIcon {component: component, size: '32'}
-            ' '
-            ComponentName {component: component}
-
-
-
+      renderComponent: =>
+        @_renderComponentCol('wr-google-drive')
 
   _renderDropbox: ->
-    dropboxComponentId = 'wr-dropbox'
-    component = ComponentsStore.getComponent(dropboxComponentId)
-    div {className: 'row'},
-      div {className: 'col-md-4'},
-        span {className: ''},
-          ComponentIcon {component: component, size: '32'}
-          ' '
-          ComponentName {component: component}
+    DropboxRow
+      configId: @state.configId
+      localState: @state.localState
+      updateLocalStateFn: @_updateLocalState
+      account: @state.configData.getIn ['parameters', 'dropbox']
+      setConfigDataFn: @_saveConfigData
+      renderComponent: =>
+        @_renderComponentCol('wr-dropbox')
 
   _renderTableauServer: ->
-    tableauComponentId = 'wr-tableau-server'
-    component = ComponentsStore.getComponent(tableauComponentId)
-    div {className: 'row'},
-      div {className: 'col-md-4'},
-        span {className: ''},
-          ComponentIcon {component: component, size: '32'}
-          ' '
-          ComponentName {component: component}
+    TableauServerRow
+      configId: @state.configId
+      localState: @state.localState
+      updateLocalStateFn: @_updateLocalState
+      account: @state.configData.getIn ['parameters', 'dropbox']
+      setConfigDataFn: @_saveConfigData
+      renderComponent: =>
+        @_renderComponentCol('wr-tableau-server')
 
   _saveConfigData: (path, data) ->
     newData = @state.configData.setIn path, data
@@ -88,3 +79,11 @@ module.exports = React.createClass
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+
+  _renderComponentCol: (pcomponentId) ->
+    component = ComponentsStore.getComponent(pcomponentId)
+    div {className: 'col-md-4'},
+      span {className: ''},
+        ComponentIcon {component: component, size: '32'}
+        ' '
+        ComponentName {component: component}
