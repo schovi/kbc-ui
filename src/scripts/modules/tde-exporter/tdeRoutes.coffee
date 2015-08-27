@@ -5,6 +5,9 @@ destinationPage = require './react/pages/Destination/Destination'
 tableEditButtons = require './react/components/TableHeaderButtons'
 JobsActionCreators = require '../jobs/ActionCreators'
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
+oauthStore = require '../components/stores/OAuthStore'
+oauthActions = require '../components/OAuthActionCreators'
+
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 ApplicationActionCreators = require('../../actions/ApplicationActionCreators')
 storageActionCreators = require '../components/StorageActionCreators'
@@ -61,13 +64,12 @@ module.exports =
     name: 'tde-exporter-gdrive-redirect'
     path: 'oauth/gdrive'
     title: (routerState) ->
-      return 'Google Drive Redirect'
+      return 'Google Drive Authorization verifying...'
     requireData: [
       (params) ->
+        router =  RouterStore.getRouter()
         installedComponentsActions.loadComponentConfigData(componentId, params.config).then ->
           configuration = InstalledComponentsStore.getConfigData(componentId, params.config)
-
-          router =  RouterStore.getRouter()
           query = router.getCurrentQuery()
           console.log "configuration", configuration?.toJS()
           if query['access-token'] and query['refresh-token']
@@ -86,16 +88,47 @@ module.exports =
               ApplicationActionCreators.sendNotification
                 message: notification
               router.transitionTo('tde-exporter-destination', config: params.config)
-            , (err) ->
+            .catch (err) ->
               notification = 'Failed to authorize the Google Drive account, please contact us on support@keboola.com'
               ApplicationActionCreators.sendNotification
                 message: notification
                 type: 'error'
               router.transitionTo(componentId, config: params.config)
-
-
-
-
-
     ]
+  ,
+    name: 'tde-exporter-dropbox-redirect'
+    path: 'oauth/dropbox'
+    title: ->
+      return 'Dropbox authorization verifying..'
+    requireData: [
+      (params) ->
+        installedComponentsActions.loadComponentConfigData(componentId, params.config).then ->
+          configuration = InstalledComponentsStore.getConfigData(componentId, params.config)
+          credentialsId = "tde-exporter-#{params.config}"
+          router = RouterStore.getRouter()
+          oauthActions.loadCredentials('wr-dropbox', credentialsId).then ->
+            credentials = oauthStore.getCredentials('wr-dropbox', credentialsId).toJS()
+            description = credentials?.description
+            dropboxAccount =
+              description: description
+              id: credentialsId
+            saveFn = installedComponentsActions.saveComponentConfigData
+            newConfig = configuration.setIn ['parameters', 'dropbox'], dropboxAccount
+            saveFn(componentId, params.config, fromJS(newConfig)).then ->
+
+              notification = "Dropbox account #{description} succesfully authorized."
+              ApplicationActionCreators.sendNotification
+                message: notification
+              router.transitionTo('tde-exporter-destination', config: params.config)
+          .catch (err) ->
+            notification = 'Failed to authorize the Dropbox account, please contact us on support@keboola.com'
+            ApplicationActionCreators.sendNotification
+              message: notification
+              type: 'error'
+            router.transitionTo('tde-exporter', config: params.config)
+
+
+
+  ] #requiredata end
+
   ]

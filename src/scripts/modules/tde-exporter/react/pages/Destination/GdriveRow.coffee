@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 GdriveModal = React.createFactory require './AuthorizeGdriveModal'
-{button, strong, div, h2, span, h4, section, p} = React.DOM
+{i, button, strong, div, h2, span, h4, section, p} = React.DOM
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
@@ -29,6 +29,7 @@ module.exports = React.createClass
           onClick: =>
             @props.updateLocalStateFn(['gdrivemodal', 'show'], true)
         ,
+          i className: 'fa fa-fw fa-google'
           if @_isAuthorized()
             'Reauthorize Google Drive Account'
           else
