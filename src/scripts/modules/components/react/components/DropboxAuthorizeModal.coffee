@@ -1,11 +1,11 @@
 React = require('react')
-ApplicationStore = require '../../../../../stores/ApplicationStore'
+ApplicationStore = require '../../../../stores/ApplicationStore'
 _ = require('underscore')
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Modal = React.createFactory(require('react-bootstrap').Modal)
 Input = React.createFactory(require('react-bootstrap').Input)
-RouterStore = require('../../../../../stores/RoutesStore')
+RouterStore = require('../../../../stores/RoutesStore')
 
 {i, span, div, p, strong, form, input, label, div} = React.DOM
 
@@ -15,6 +15,7 @@ module.exports = React.createClass
   propTypes:
     configId: React.PropTypes.string.isRequired
     redirectRouterPath: React.PropTypes.string
+    credentialsId: React.PropTypes.string
 
   getInitialState: ->
     oauthUrl = 'https://syrup.keboola.com/oauth/auth20'
@@ -40,7 +41,7 @@ module.exports = React.createClass
           action: @state.oauthUrl
           method: 'POST'
           @_createHiddenInput('api', 'wr-dropbox')
-          @_createHiddenInput('id', @props.configId)
+          @_createHiddenInput('id', @props.credentialsId or @props.configId)
           @_createHiddenInput('token', @state.token)
           @_createHiddenInput('returnUrl', @_getRedirectUrl())
         ,
