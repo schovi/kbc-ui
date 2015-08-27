@@ -88,7 +88,7 @@ module.exports =
               ApplicationActionCreators.sendNotification
                 message: notification
               router.transitionTo('tde-exporter-destination', config: params.config)
-            .catch (err) ->
+            .error (err) ->
               notification = 'Failed to authorize the Google Drive account, please contact us on support@keboola.com'
               ApplicationActionCreators.sendNotification
                 message: notification
@@ -120,7 +120,7 @@ module.exports =
               ApplicationActionCreators.sendNotification
                 message: notification
               router.transitionTo('tde-exporter-destination', config: params.config)
-          .catch (err) ->
+          .error (err) ->
             notification = 'Failed to authorize the Dropbox account, please contact us on support@keboola.com'
             ApplicationActionCreators.sendNotification
               message: notification

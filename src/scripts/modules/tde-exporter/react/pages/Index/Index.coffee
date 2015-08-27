@@ -124,7 +124,8 @@ module.exports = React.createClass
             params:
               config: @state.configId
           ,
-            'Setup TDE destination'
+            i className: 'fa fa-fw fa-gear'
+            'Setup Upload Destinations'
 
 
 
@@ -142,6 +143,11 @@ module.exports = React.createClass
         @_prepareRunTableData(tableId)
       deleteRowFn: =>
         @_deleteTable(tableId)
+      configData: @state.configData
+      uploadComponentId: @state.localState.get('uploadComponentId')
+      uploadComponentIdSetFn: (uploadComponentId) =>
+        @_updateLocalState(['uploadComponentId'], uploadComponentId)
+
 
 
   _filterBuckets: (buckets) ->
