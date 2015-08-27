@@ -7,12 +7,13 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
-{Map} = require 'immutable'
+{Map, fromJS} = require 'immutable'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 
-GdriveModal = React.createFactory require './AuthorizeGdriveModal'
 
-{strong, div, h2, span, h4, section, p} = React.DOM
+GdriveRow = React.createFactory require './GdriveRow'
+
+{button, strong, div, h2, span, h4, section, p} = React.DOM
 
 componentId = 'tde-exporter'
 module.exports = React.createClass
@@ -22,6 +23,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
+
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
 
@@ -31,36 +33,35 @@ module.exports = React.createClass
     localState: localState
 
   render: ->
+    console.log "DESTINATION config", @state.configData?.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderGoogleDrive()
       @_renderDropbox()
       @_renderTableauServer()
 
   _renderGoogleDrive: ->
-    componentId = 'wr-google-drive'
-    component = ComponentsStore.getComponent(componentId)
-    div {className: 'row'},
-      div {className: 'col-md-4'},
-        span {className: ''},
-          ComponentIcon {component: component, size: '32'}
-          ' '
-          ComponentName {component: component}
-      div className: 'col-md-8',
-        React.createElement Button,
-          onClick: =>
-            @_updateLocalState(['gdrivemodal', 'show'], true)
-        ,
-          'Authorize Account Now'
-        GdriveModal
-          configId: @state.configId
-          localState: @state.localState.get('gdrivemodal', Map())
-          updateLocalState: (data) =>
-            @_updateLocalState(['gdrivemodal'], data)
+    gdriveComponentId = 'wr-google-drive'
+    component = ComponentsStore.getComponent(gdriveComponentId)
+
+    GdriveRow
+      configId: @state.configId
+      localState: @state.localState
+      updateLocalStateFn: @_updateLocalState
+      account: @state.configData.getIn ['parameters', 'gdrive']
+      setConfigDataFn: @_saveConfigData
+      renderComponent: ->
+        div {className: 'col-md-4'},
+          span {className: ''},
+            ComponentIcon {component: component, size: '32'}
+            ' '
+            ComponentName {component: component}
+
+
 
 
   _renderDropbox: ->
-    componentId = 'wr-dropbox'
-    component = ComponentsStore.getComponent(componentId)
+    dropboxComponentId = 'wr-dropbox'
+    component = ComponentsStore.getComponent(dropboxComponentId)
     div {className: 'row'},
       div {className: 'col-md-4'},
         span {className: ''},
@@ -69,8 +70,8 @@ module.exports = React.createClass
           ComponentName {component: component}
 
   _renderTableauServer: ->
-    componentId = 'wr-tableau-server'
-    component = ComponentsStore.getComponent(componentId)
+    tableauComponentId = 'wr-tableau-server'
+    component = ComponentsStore.getComponent(tableauComponentId)
     div {className: 'row'},
       div {className: 'col-md-4'},
         span {className: ''},
@@ -78,19 +79,10 @@ module.exports = React.createClass
           ' '
           ComponentName {component: component}
 
-  _renderModal: (title, modalBody, modalFooter) ->
-    show = !!@state.localState?.getIn([title, 'show'])
-    React.createElement Modal,
-      show: show
-      onHide: =>
-        @_updateLocalState([title], Map())
-      React.createElement ModalHeader, {closeButton: true},
-        React.createElement  ModalTitle, null, title
-      React.createElement ModalBody, null,
-        modalBody
-      React.createElement ModalFooter, null,
-
-
+  _saveConfigData: (path, data) ->
+    newData = @state.configData.setIn path, data
+    saveFn = InstalledComponentsActions.saveComponentConfigData
+    saveFn(componentId, @state.configId, fromJS(newData))
 
 
   _updateLocalState: (path, data) ->
