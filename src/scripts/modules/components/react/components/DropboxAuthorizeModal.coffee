@@ -14,6 +14,7 @@ module.exports = React.createClass
 
   propTypes:
     configId: React.PropTypes.string.isRequired
+    redirectRouterPath: React.PropTypes.string
 
   getInitialState: ->
     oauthUrl = 'https://syrup.keboola.com/oauth/auth20'
@@ -21,6 +22,9 @@ module.exports = React.createClass
     token: ApplicationStore.getSapiTokenString()
     oauthUrl: oauthUrl
     router: RouterStore.getRouter()
+
+  getDefaultProps: ->
+    redirectRouterPath: 'wr-dropbox-oauth-redirect'
 
   componentDidMount: ->
     @refs.description.getInputDOMNode().focus()
@@ -78,7 +82,7 @@ module.exports = React.createClass
 
   _getRedirectUrl: ->
     origin = 'https://connection.keboola.com'
-    url = @state.router.makeHref('wr-dropbox-oauth-redirect', config: @props.configId)
+    url = @state.router.makeHref(@props.redirectRouterPath, config: @props.configId)
     console.log "url=", url
     projectUrl = ApplicationStore.getProjectBaseUrl()
     console.log "project url =", projectUrl
