@@ -65,7 +65,7 @@ module.exports = React.createClass
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
-      account: @state.configData.getIn ['parameters', 'dropbox']
+      account: @state.configData.getIn ['parameters', 'tableauServer']
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
