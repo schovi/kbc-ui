@@ -270,7 +270,6 @@ module.exports = React.createClass
       return 'No Google Drive Account'
     if @state.files?.count() == 0
       return 'No tables configured'
-
     return null
 
   _isConfigured: ->

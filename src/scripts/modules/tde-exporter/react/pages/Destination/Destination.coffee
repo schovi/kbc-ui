@@ -6,6 +6,7 @@ ComponentIcon = React.createFactory(require('../../../../../react/common/Compone
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
+
 RoutesStore = require '../../../../../stores/RoutesStore'
 {Map, fromJS} = require 'immutable'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
@@ -36,9 +37,9 @@ module.exports = React.createClass
   render: ->
     console.log "DESTINATION config", @state.configData?.toJS()
     div {className: 'container-fluid kbc-main-content'},
-      @_renderGoogleDrive()
-      @_renderDropbox()
       @_renderTableauServer()
+      @_renderDropbox()
+      @_renderGoogleDrive()
 
   _renderGoogleDrive: ->
     GdriveRow
@@ -47,6 +48,12 @@ module.exports = React.createClass
       updateLocalStateFn: @_updateLocalState
       account: @state.configData.getIn ['parameters', 'gdrive']
       setConfigDataFn: @_saveConfigData
+      saveTargetFolderFn: (folderId, folderName) =>
+        path = ['parameters', 'gdrive']
+        gdrive = @state.configData.getIn path, Map()
+        gdrive = gdrive.set('targetFolder', folderId)
+        gdrive = gdrive.set('targetFolderName', folderName)
+        @_saveConfigData(path, gdrive)
       renderComponent: =>
         @_renderComponentCol('wr-google-drive')
 
