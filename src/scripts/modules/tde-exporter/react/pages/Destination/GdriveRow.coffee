@@ -57,6 +57,22 @@ module.exports = React.createClass
           ,
             'reset'
 
+  _renderAuthorizeButton: ->
+    div null,
+      Button
+        #bsSize: 'small'
+        className: 'btn btn-primary'
+        onClick: =>
+          @props.updateLocalStateFn(['gdrivemodal', 'show'], true)
+      ,
+        i className: 'fa fa-fw fa-google'
+        'Authorize Google Drive Account'
+      GdriveModal
+        configId: @props.configId
+        localState: @props.localState.get('gdrivemodal', Map())
+        updateLocalState: (data) =>
+          @props.updateLocalStateFn(['gdrivemodal'], data)
+
   _renderPicker: ->
     file = @props.account
     folderId = file.get 'targetFolder'
@@ -83,21 +99,6 @@ module.exports = React.createClass
         ViewTemplates.recentFolders
       ]
 
-  _renderAuthorizeButton: ->
-    div null,
-      Button
-        #bsSize: 'small'
-        className: 'btn btn-primary'
-        onClick: =>
-          @props.updateLocalStateFn(['gdrivemodal', 'show'], true)
-      ,
-        i className: 'fa fa-fw fa-google'
-        'Authorize Google Drive Account'
-      GdriveModal
-        configId: @props.configId
-        localState: @props.localState.get('gdrivemodal', Map())
-        updateLocalState: (data) =>
-          @props.updateLocalStateFn(['gdrivemodal'], data)
 
   _isAuthorized: ->
     @props.account and

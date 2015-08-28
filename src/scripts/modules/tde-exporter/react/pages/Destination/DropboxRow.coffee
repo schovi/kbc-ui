@@ -24,27 +24,36 @@ module.exports = React.createClass
     div {className: 'row'},
       @props.renderComponent()
       div className: 'col-md-4',
-        @_renderAuthorizedInfo()
+        @_renderAuthorization()
       div className: 'col-md-3',
-        ModalTrigger
-          modal: DropboxModal
-            configId: @props.configId
-            redirectRouterPath: 'tde-exporter-dropbox-redirect'
-            credentialsId: "tde-exporter-#{@props.configId}"
-        ,
-          span className: 'btn btn-primary btn-sm',
-            i className: 'fa fa-fw fa-dropbox'
-            if @_isAuthorized()
-              'Reauthorize Dropbox Account'
-            else
-              'Authorize Dropbox Account'
+
+  _renderAuthorization: ->
+    if @_isAuthorized()
+      div className: 'well well-sm text-center',
+        @_renderAuthorizedInfo()
+    else
+      div className: 'well well-sm text-center',
+        div null, 'Not Authorized.'
+        @_renderAuthorizeButton()
+
+  _renderAuthorizeButton: ->
+    ModalTrigger
+      modal: DropboxModal
+        configId: @props.configId
+        redirectRouterPath: 'tde-exporter-dropbox-redirect'
+        credentialsId: "tde-exporter-#{@props.configId}"
+    ,
+      span className: 'btn btn-primary',
+        i className: 'fa fa-fw fa-dropbox'
+        'Authorize Dropbox Account'
+
 
   _renderAuthorizedInfo: ->
-    if @_isAuthorized()
-      span null,
-        'Authorized for '
-        strong null,
-          @props.account.get 'description'
+    span null,
+      'Authorized for '
+      strong null,
+        @props.account.get 'description'
+      div null,
         React.createElement Confirm,
           title: 'Reset Authorization'
           text: "Do you really want to reset authorization for #{@props.account.get('description')}"
@@ -52,14 +61,12 @@ module.exports = React.createClass
           onConfirm: =>
             @props.setConfigDataFn(['parameters', 'dropbox'], null)
             oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
-
         ,
           Button
             bsSize: 'small'
           ,
             'reset'
-    else
-      'Not Authorized'
+
 
   _isAuthorized: ->
     @props.account and
