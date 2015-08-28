@@ -23,7 +23,7 @@ componentGetRunJson =
       credentials: account.get('id')
       mode: true
     result =
-      config: configId
+      #config: configId
       configData:
         storage: storage
         parameters: runParameters
@@ -33,7 +33,7 @@ componentGetRunJson =
     storage = storageInputFileTemplate(tdeFile.get('id'))
     credentials = parameters.get 'tableauServer'
     result =
-      config: configId
+      #config: configId
       configData:
         storage: storage
         parameters: credentials.toJS()
