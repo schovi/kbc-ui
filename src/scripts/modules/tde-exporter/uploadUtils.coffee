@@ -7,40 +7,41 @@ storageInputFileTemplate = (fileId) ->
           query: "id:#{fileId}"
         ]
   return storage
+componentGetRunJson =
+  'wr-google-drive': (parameters, tdeFile, configId) ->
+    account = parameters.get 'gdrive'
+    result =
+      external:
+        account: account.toJS()
+        query: "id:#{tdeFile.get('id')}"
+        targetFolder: account.get('targetFolder')
+
+  'wr-dropbox': (parameters, tdeFile, configId) ->
+    storage = storageInputFileTemplate(tdeFile.get('id'))
+    account = parameters.get 'dropbox'
+    runParameters =
+      credentials: account.get('id')
+      mode: true
+    result =
+      config: configId
+      configData:
+        storage: storage
+        parameters: runParameters
+    return result
+
+  'wr-tableau-server': (parameters, tdeFile, configId) ->
+    storage = storageInputFileTemplate(tdeFile.get('id'))
+    credentials = parameters.get 'tableauServer'
+    result =
+      config: configId
+      configData:
+        storage: storage
+        parameters: credentials.toJS()
+    return result
+
 
 module.exports =
 
-  componentGetRunJson:
-    'wr-google-drive': (parameters) ->
-      account = parameters.get 'gdrive'
-      result =
-        external:
-          account: account.toJS()
-          query: "id:#{tdeFile.get('id')}"
-          targetFolder: null #todo!!
-
-    'wr-dropbox': (parameters, tdeFile, configId) ->
-      storage = storageInputFileTemplate(tdeFile.get('id'))
-      account = parameters.get 'dropbox'
-      runParameters =
-        credentials: account.get('id')
-        mode: true
-      result =
-        config: configId
-        configData:
-          storage: storage
-          parameters: runParameters
-      return result
-
-    'wr-tableau-server': (parameters, tdeFile, configId) ->
-      storage = storageInputFileTemplate(tdeFile.get('id'))
-      credentials = parameters.get 'tableauServer'
-      result =
-        config: configId
-        configData:
-          storage: storage
-          parameters: credentials.toJS()
-      return result
 
 
   isTableauServerAuthorized: (parameters) ->
@@ -65,4 +66,5 @@ module.exports =
       not _.isEmpty(account.get('email'))
 
   prepareUploadRunParams: (componentId, parameters, tdeFile, configId) ->
-    return @componentGetRunJson[componentId](parameters, tdeFile, configId)
+    getParamsFn = componentGetRunJson[componentId]
+    getParamsFn(parameters, tdeFile, configId)

@@ -35,8 +35,9 @@ module.exports = React.createClass
           tooltip: "Upload #{fileName}"
           mode: 'button'
           icon: 'fa fa-upload fa-fw'
-          component: @props.uploadComponentId
-          runParams: @_generateRunParams
+          component: @props.uploadComponentId or destinationOptions.initValue
+          runParams: =>
+            @_generateRunParams(@props.uploadComponentId or destinationOptions.initValue)
         ,
           @_renderRunModalBody(destinationOptions, fileName)
 
@@ -63,17 +64,13 @@ module.exports = React.createClass
           destinationOptions.options
 
 
-  _generateRunParams: ->
-    console.log @props.uploadComponentId, @props.configData?.toJS()
-
+  _generateRunParams: (uploadComponentId) ->
     result = uploadUtils.prepareUploadRunParams(
-      @props.uploadComponentId
+      uploadComponentId
       @props.configData.get('parameters')
       @props.tdeFile
       @props.configId
     )
-
-    console.log "reun dataaaa", result
     return result
 
   _generateOption: (id, caption) ->
