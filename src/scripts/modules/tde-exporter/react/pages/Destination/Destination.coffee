@@ -6,6 +6,7 @@ ComponentIcon = React.createFactory(require('../../../../../react/common/Compone
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
+OrchestrationModal = require './OrchestrationModal'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
 {Map, fromJS} = require 'immutable'
@@ -76,6 +77,15 @@ module.exports = React.createClass
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
+
+  _renderOrchestrationModal: (uploadComponentId) ->
+    OrchestrationModal
+      uploadComponentId: uploadComponentId
+      updateLocalStateFn: (path, data) =>
+        path = ['orchestrationModal'].concat path
+        @_updateLocalState(path, data)
+      localState: @state.localState.get('orchestrationModal', Map())
+
 
   _saveConfigData: (path, data) ->
     newData = @state.configData.setIn path, data

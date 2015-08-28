@@ -34,7 +34,7 @@ module.exports = React.createClass
         div null, 'No Credentials.'
         @_renderAuthorizeButton('Setup credentials to Tableau Server')
 
-  _renderAuthorizeButton: (caption, className = 'btn btn-primary')->
+  _renderAuthorizeButton: (caption, className = 'btn btn-primary') ->
     span null,
       Button
         className: className
