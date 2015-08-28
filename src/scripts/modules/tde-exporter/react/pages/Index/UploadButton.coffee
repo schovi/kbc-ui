@@ -29,32 +29,32 @@ module.exports = React.createClass
     ,
       RunButtonModal
         title: "Upload #{fileName}"
-        disabled: _.isEmpty destinationOptions
+        disabled: _.isEmpty destinationOptions.options
         tooltip: "Upload #{fileName}"
         mode: 'button'
         icon: 'fa fa-upload fa-fw'
         component: @props.uploadComponentId
         runParams: @_generateRunParams
-        div null,
-          "You are about to run upload of #{fileName} to:"
-            select
-              onChange: (e) =>
-                value = e.target.value
-                @props.uploadComponentIdSetFn(value)
-              destinationOptions
+      ,
+        @_renderRunModalBody(destinationOptions, fileName)
+
+  _renderRunModalBody: (destinationOptions, fileName) ->
+    div null,
+      "You are about to run upload of #{fileName} to:"
+        select
+          value: @props.uploadComponentId or destinationOptions.initValue
+          onChange: (e) =>
+            value = e.target.value
+            @props.uploadComponentIdSetFn(value)
+          destinationOptions.options
 
 
   _generateRunParams: ->
     console.log @props.uploadComponentId, @props.configData?.toJS()
-    account = @props.configData.getIn ['parameters', 'tableauServer']
-    if @props.uploadComponentId == 'wr-google-drive'
-      account = @props.configData.getIn ['parameters', 'gdrive']
-    if @props.uploadComponentId == 'wr-dropbox'
-      account = @props.configData.getIn ['parameters', 'dropbox']
-      
+
     result = uploadUtils.prepareUploadRunParams(
       @props.uploadComponentId
-      account
+      @props.configData.get('parameters')
       @props.tdeFile
       @props.configId
     )
@@ -62,32 +62,34 @@ module.exports = React.createClass
     console.log "reun dataaaa", result
     return result
 
+  _generateOption: (id, caption) ->
+    option
+      value: id
+      key: id
+    ,
+      caption
+
 
   _generateDestinationOptions: (parameters) ->
     result = []
-    if uploadUtils.isDropboxAuthorized(parameters.get('dropbox'))
-      result.push(
-        option
-          value: 'wr-dropbox'
-          key: 'wr-dropbox'
-        ,
-          'Dropbox'
-      )
-    if uploadUtils.isGdriveAuthorized(parameters.get('gdrive'))
-      result.push(
-        option
-          value: 'wr-google-drive'
-          key: 'wr-google-drive'
-        ,
-          'Google Drive'
-      )
-    if uploadUtils.isTableauServerAuthorized(parameters.get('tableauServer'))
-      result.push(
-        option
-          value: 'wr-tableau-server'
-          key: 'wr-tableau-server'
-        ,
-          'Tableau Server'
-      )
-    console.log "DESTINATION OPTIONS", result
-    return result
+    initValue = ''
+    if uploadUtils.isDropboxAuthorized(parameters)
+      initValue = 'wr-dropbox'
+      result.push(@_generateOption(
+        'wr-dropbox'
+        'Dropbox'
+      ))
+    if uploadUtils.isGdriveAuthorized(parameters)
+      initValue = 'wr-google-drive'
+      result.push(@_generateOption(
+        'wr-google-drive'
+        'Google Drive'
+      ))
+
+    if uploadUtils.isTableauServerAuthorized(parameters)
+      initValue = 'wr-tableau-server'
+      result.push(@_generateOption(
+        'wr-tableau-server'
+        'Tableau Server'
+      ))
+    return { options: result, initValue: initValue}
