@@ -95,7 +95,6 @@ GanalStore = StoreUtils.createStore
       metrics: []
       dimensions: []
       filters: ""
-      profile: ""
 
     _store.setIn ['newQuery', configId], newQuery
     return newQuery
