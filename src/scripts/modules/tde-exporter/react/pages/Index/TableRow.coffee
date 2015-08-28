@@ -8,7 +8,7 @@ Link = React.createFactory(require('react-router').Link)
 date = require '../../../../../utils/date'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 SapiTableLinkEx = require '../../components/StorageApiTableLinkEx'
-utils = require '../../../utils'
+UploadButton = React.createFactory require './UploadButton'
 
 module.exports = React.createClass
   displayName: 'tablerowtde'
@@ -82,67 +82,14 @@ module.exports = React.createClass
           @_renderRunButton()
 
   _renderUploadIcon: ->
-    fileName = @props.tdeFile.get('name')
-    destinationOptions = @_generateDestinationOptions(@props.configData.get('parameters'))
-    React.createElement OverlayTrigger,
-      overlay: React.createElement Tooltip, null, 'Upload File'
-      placement: 'top'
-    ,
-      RunButtonModal
-        title: "Upload #{fileName}"
-        disabled: _.isEmpty destinationOptions
-        tooltip: "Upload #{fileName}"
-        mode: 'button'
-        icon: 'fa fa-upload fa-fw'
-        component: @props.uploadComponentId
-        runParams: =>
-          console.log @props.uploadComponentId, @props.configData?.toJS()
-          account = @props.configData.getIn ['parameters', 'tableauServer']
-          if @props.uploadComponentId == 'wr-google-drive'
-            account = @props.configData.getIn ['parameters', 'gdrive']
-          if @props.uploadComponentId == 'wr-dropbox'
-            account = @props.configData.getIn ['parameters', 'dropbox']
-          result = utils.prepareUploadRunParams(@props.uploadComponentId, account, @props.tdeFile, @props.configId)
-          console.log "reun dataaaa", result
-          return result
-      ,
-        div null,
-          "You are about to run upload of #{fileName} to:"
-            select
-              onChange: (e) =>
-                value = e.target.value
-                @props.uploadComponentIdSetFn(value)
-              destinationOptions
+    UploadButton
+      tdeFile: @props.tdeFile
+      configData: @props.configData
+      uploadComponentId: @props.uploadComponentId
+      uploadComponentIdSetFn: @props.uploadComponentIdSetFn
+      configId: @props.configId
 
 
-  _generateDestinationOptions: (parameters) ->
-    result = []
-    if utils.isDropboxAuthorized(parameters.get('dropbox'))
-      result.push(
-        option
-          value: 'wr-dropbox'
-          key: 'wr-dropbox'
-        ,
-          'Dropbox'
-      )
-    if utils.isGdriveAuthorized(parameters.get('gdrive'))
-      result.push(
-        option
-          value: 'wr-google-drive'
-          key: 'wr-google-drive'
-        ,
-          'Google Drive'
-      )
-    if utils.isTableauServerAuthorized(parameters.get('tableauServer'))
-      result.push(
-        option
-          value: 'wr-tableau-server'
-          key: 'wr-tableau-server'
-        ,
-          'Tableau Server'
-      )
-    console.log "DESTINATION OPTIONS", result
-    return result
 
 
   _renderRunButton: ->
