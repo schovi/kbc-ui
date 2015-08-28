@@ -82,8 +82,9 @@ module.exports = React.createClass
 
   _renderComponentCol: (pcomponentId) ->
     component = ComponentsStore.getComponent(pcomponentId)
-    div {className: 'col-md-4'},
+    div {className: 'col-md-3'},
       span {className: ''},
         ComponentIcon {component: component, size: '32'}
         ' '
-        ComponentName {component: component}
+        span null,
+          component.get('name')
