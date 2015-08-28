@@ -23,20 +23,34 @@ module.exports = React.createClass
   render: ->
     fileName = @props.tdeFile.get('name')
     destinationOptions = @_generateDestinationOptions(@props.configData.get('parameters'))
+    if _.isEmpty destinationOptions.options
+      @_renderDisabledRunButton()
+    else
+      React.createElement OverlayTrigger,
+        overlay: React.createElement Tooltip, null, 'Upload File to a configured destination.'
+        placement: 'top'
+      ,
+        RunButtonModal
+          title: "Upload #{fileName}"
+          tooltip: "Upload #{fileName}"
+          mode: 'button'
+          icon: 'fa fa-upload fa-fw'
+          component: @props.uploadComponentId
+          runParams: @_generateRunParams
+        ,
+          @_renderRunModalBody(destinationOptions, fileName)
+
+  _renderDisabledRunButton: ->
     React.createElement OverlayTrigger,
-      overlay: React.createElement Tooltip, null, 'Upload File'
+      overlay: React.createElement Tooltip, null, 'Upload File. No upload destination configured'
       placement: 'top'
     ,
-      RunButtonModal
-        title: "Upload #{fileName}"
-        disabled: _.isEmpty destinationOptions.options
-        tooltip: "Upload #{fileName}"
-        mode: 'button'
-        icon: 'fa fa-upload fa-fw'
-        component: @props.uploadComponentId
-        runParams: @_generateRunParams
+      button
+        className: 'btn btn-link'
+        disabled: true
       ,
-        @_renderRunModalBody(destinationOptions, fileName)
+        i className: 'fa fa-upload fa-fw'
+
 
   _renderRunModalBody: (destinationOptions, fileName) ->
     div null,
