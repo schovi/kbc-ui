@@ -12,7 +12,6 @@ DateDimensionModal = React.createFactory(require './DateDimensionSelectModal')
 ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
 DateFormatHint = React.createFactory(require './DateFormatHint')
 PureRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-#PureRenderMixin = require('react/addons').addons.PureRenderMixin
 
 
 {ColumnTypes, DataTypes, SortOrderOptions} = require '../../../constants'
@@ -25,6 +24,7 @@ visibleParts = keyMirror(
   REFERENCE: null
   SCHEMA_REFERENCE: null
   IDENTIFIER_LABEL: null
+  IDENTIFIER_TIME: null
 )
 
 
@@ -86,6 +86,7 @@ module.exports = React.createClass
       if @props.showIdentifier
         td null,
           @_renderIdentifierLabel()
+          @_renderIdentifierTime()
       td null,
         ColumnDataPreview
           columnName: @props.column.get 'name'
@@ -111,6 +112,14 @@ module.exports = React.createClass
         value: @props.column.get 'identifierLabel'
         disabled: @props.isSaving
         onChange: @_handleInputChange.bind @, 'identifierLabel'
+
+  _renderIdentifierTime: ->
+    if @_shouldRenderPart visibleParts.IDENTIFIER_TIME
+      @_createInput
+        type: 'text'
+        value: @props.column.get 'identifierTime'
+        disabled: @props.isSaving
+        onChange: @_handleInputChange.bind @, 'identifierTime'
 
   _renderReferenceSelect: ->
     if @_shouldRenderPart visibleParts.REFERENCE
@@ -225,7 +234,7 @@ module.exports = React.createClass
         visibleParts.SORT_LABEL,
         visibleParts.IDENTIFIER_LABEL
       ]
-      when ColumnTypes.DATE then [visibleParts.DATE]
+      when ColumnTypes.DATE then [visibleParts.DATE, visibleParts.IDENTIFIER_TIME]
       when ColumnTypes.FACT then [visibleParts.DATA_TYPE]
       when ColumnTypes.HYPERLINK then [visibleParts.REFERENCE]
       when ColumnTypes.LABEL then [visibleParts.REFERENCE, visibleParts.DATA_TYPE]
