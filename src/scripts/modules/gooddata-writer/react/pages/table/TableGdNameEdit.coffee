@@ -10,12 +10,14 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
     fieldName: React.PropTypes.string.isRequired
     placeholder: React.PropTypes.string.isRequired
+    canEdit: React.PropTypes.bool.isRequired
+    editTooltip: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     fieldName: 'title'
 
   _handleEditStart: ->
-    return if @props.table.getIn ['data', 'isExported']
+    return if !@props.canEdit
     actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), @props.fieldName)
 
   _handleEditSave: ->
@@ -41,14 +43,9 @@ module.exports = React.createClass
     else
       text = @props.table.getIn(['data', @props.fieldName])
 
-    if @props.table.getIn ['data', 'isExported']
-      editTooltip = 'Table cannot be renamed. It is already exported to GoodData'
-    else
-      editTooltip = 'Edit table name in GoodData'
-
     InlineEditText
       text: text
-      editTooltip: editTooltip
+      editTooltip: @props.editTooltip
       placeholder: @props.placeholder
       isSaving: isSaving
       isEditing: isEditing

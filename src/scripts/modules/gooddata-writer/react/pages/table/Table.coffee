@@ -70,7 +70,11 @@ module.exports = React.createClass
             configurationId: @state.configurationId
             fieldName: 'title'
             placeholder: 'Table Name'
-          ' '
+            canEdit: !@state.table.getIn(['data', 'isExported'], true)
+            editTooltip: (if @state.table.getIn ['data', 'isExported']
+              'Table cannot be renamed. It is already exported to GoodData'
+            else
+              'Edit table name in GoodData')
         if @state.showIdentifier
           p className: '',
             strong null, 'GoodData Identifier'
@@ -79,7 +83,7 @@ module.exports = React.createClass
               table: @state.table
               configurationId: @state.configurationId
               fieldName: 'identifier'
-            ' '
+              canEdit: true
         div className: 'kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns
