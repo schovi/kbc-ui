@@ -267,7 +267,7 @@ dispatcher.register (payload) ->
       columns = Immutable.OrderedMap(action.table.columns)
         .map (value) ->
           Map(value)
-          .filter (value, key) ->
+          .filter((value, key) ->
             key in [
               'gdName'
               'type'
@@ -285,6 +285,11 @@ dispatcher.register (payload) ->
               'identifierTime',
               'title'
             ]
+          )
+        .map (column) ->
+          if !column.get('title')
+            column = column.set('title', column.get('gdName'))
+          column
 
       table = Immutable.fromJS(action.table)
         .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
