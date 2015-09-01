@@ -60,6 +60,38 @@ dispatcher.register (payload) ->
 
       DimensionsStore.emitChange()
 
+    when constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_START
+      _store = _store.updateIn [
+        'dimensionsById'
+        action.configurationId
+        action.dimensionName
+        'pendingActions'
+      ], (actions) ->
+        actions.push 'upload'
+      DimensionsStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_SUCCESS, constants.ActionTypes
+      .GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_ERROR
+        _store = _store.withMutations (store) ->
+          store
+          .updateIn [
+            'dimensionsById'
+            action.configurationId
+            action.dimensionName
+            'pendingActions'
+          ], (actions) ->
+            actions.delete(actions.indexOf 'upload')
+        DimensionsStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_ERROR
+      _store = _store.updateIn [
+        'dimensionsById'
+        action.configurationId
+        action.dimensionName
+        'pendingActions'
+      ], (actions) ->
+        actions.delete(actions.indexOf 'delete')
+      DimensionsStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_DELETE_START
       _store = _store.updateIn [

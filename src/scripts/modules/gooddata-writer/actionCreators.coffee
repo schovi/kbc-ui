@@ -243,6 +243,45 @@ module.exports =
         error: e
       throw e
 
+  uploadDateDimensionToGoodData: (configurationId, dimensionName) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_START
+      configurationId: configurationId
+      dimensionName: dimensionName
+
+    goodDataWriterApi
+    .uploadDateDimension(configurationId, dimensionName)
+    .then (job) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_SUCCESS
+        configurationId: configurationId
+        dimensionName: dimensionName
+        job: job
+
+      applicationActionCreators.sendNotification
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "GoodData upload of dimension "
+              React.DOM.strong null, dimensionName
+              " has been initiated You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.job
+                onClick: @props.onClick
+              ,
+                'here'
+
+    .catch (e) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_ERROR
+        configurationId: configurationId
+        dimensionName: dimensionName
+        error: e
+      throw e
+
+
 
   uploadToGoodData: (configurationId, tableId = null) ->
     dispatcher.handleViewAction

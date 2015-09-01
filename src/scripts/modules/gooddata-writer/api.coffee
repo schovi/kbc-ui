@@ -92,6 +92,15 @@ module.exports =
     .then (response) ->
       response.body
 
+  uploadDateDimension: (configurationId, dimensionName) ->
+    createRequest('POST', 'upload-date-dimension')
+    .send
+      name: dimensionName
+      config: configurationId
+    .promise()
+    .then (response) ->
+      response.body
+
   uploadProject: (configurationId) ->
     createRequest('POST', 'upload-project')
     .send
