@@ -66,6 +66,7 @@ module.exports =
       'password'
       'port'
       'user'
+      'ssl'
     ]
     createRequest 'POST', 'test'
     .send _.pick credentials, allowedColumns...
