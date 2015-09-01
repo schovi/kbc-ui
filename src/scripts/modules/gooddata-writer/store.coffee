@@ -142,6 +142,9 @@ GoodDataWriterStore = StoreUtils.createStore
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
 
+  isNewWriter: (configurationId) ->
+    @getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
+
   getWriterTablesFilter: (configurationId) ->
     _store.getIn ['filters', configurationId, 'tables'], ''
 

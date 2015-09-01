@@ -140,7 +140,7 @@ module.exports =
       field: fieldName
       value: newValue
 
-    isNewWriter = goodDataWriterStore.getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
+    isNewWriter = goodDataWriterStore.isNewWriter(configurationId)
     if fieldName == 'title' && !isNewWriter
       saveFieldName = 'name'
     else
@@ -217,7 +217,7 @@ module.exports =
       configurationId: configurationId
       tableId: tableId
 
-    isNewWriter = goodDataWriterStore.getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
+    isNewWriter = goodDataWriterStore.isNewWriter(configurationId)
     if isNewWriter
       columns = columns.map((column) -> column.remove('gdName'))
     else

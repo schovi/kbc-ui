@@ -54,7 +54,7 @@ Immutable = require 'immutable'
 
 {table, tr, th, tbody, thead, div} = React.DOM
 
-Row = React.createFactory(require './DatasetColumnEditorRow')
+Row = require './DatasetColumnEditorRow'
 pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 {ColumnTypes} = require '../../../constants'
@@ -72,6 +72,7 @@ module.exports = React.createClass
     onColumnChange: React.PropTypes.func.isRequired
     configurationId: React.PropTypes.string.isRequired
     dataPreview: React.PropTypes.array
+    showIdentifier: React.PropTypes.bool.isRequired
 
   _handleColumnChange: (column) ->
     @props.onColumnChange column
@@ -88,11 +89,15 @@ module.exports = React.createClass
             th null, 'Sort Label'
             th null, ' '
             th null, 'Data Type'
+            if @props.showIdentifier
+              th null, 'Identifier'
+            if @props.showIdentifier
+              th null, 'Identifier Label'
             th null
         tbody null,
           @props.columns.map (currentColumn) ->
             colName = currentColumn.get 'name'
-            Row
+            React.createElement Row,
               column: currentColumn
               referenceableTables: @props.referenceableTables
               referenceableColumns: @props.columnsReferences.getIn [colName, 'referenceableColumns'], Immutable.Map()
@@ -104,6 +109,7 @@ module.exports = React.createClass
               key: currentColumn.get 'name'
               onChange: @_handleColumnChange
               dataPreview: @props.dataPreview
+              showIdentifier: @props.showIdentifier
           , @
           .toArray()
 

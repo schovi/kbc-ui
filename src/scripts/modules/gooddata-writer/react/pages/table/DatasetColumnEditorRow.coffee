@@ -24,6 +24,7 @@ visibleParts = keyMirror(
   DATE: null
   REFERENCE: null
   SCHEMA_REFERENCE: null
+  IDENTIFIER_LABEL: null
 )
 
 
@@ -41,6 +42,7 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
     dataPreview: React.PropTypes.array
+    showIdentifier: React.PropTypes.bool.isRequired
 
   render: ->
     column = @props.column
@@ -74,6 +76,16 @@ module.exports = React.createClass
         @_renderSortOrderSelect()
       td null,
         @_renderDataTypeSelect()
+      if @props.showIdentifier
+        td null,
+          @_createInput
+            type: 'text'
+            value: column.get 'identifier'
+            disabled: @props.isSaving
+            onChange: @_handleInputChange.bind @, 'identifier'
+      if @props.showIdentifier
+        td null,
+          @_renderIdentifierLabel()
       td null,
         ColumnDataPreview
           columnName: @props.column.get 'name'
@@ -91,6 +103,14 @@ module.exports = React.createClass
           @props.referenceableTables
           .set('', '')
         )
+
+  _renderIdentifierLabel: ->
+    if @_shouldRenderPart visibleParts.IDENTIFIER_LABEL
+      @_createInput
+        type: 'text'
+        value: @props.column.get 'identifierLabel'
+        disabled: @props.isSaving
+        onChange: @_handleInputChange.bind @, 'identifierLabel'
 
   _renderReferenceSelect: ->
     if @_shouldRenderPart visibleParts.REFERENCE
@@ -198,9 +218,13 @@ module.exports = React.createClass
 
   _shouldRenderPart: (partName) ->
     allowedPartsForType = switch @props.column.get 'type'
-      when ColumnTypes.ATTRIBUTE then [visibleParts.DATA_TYPE, visibleParts.SORT_LABEL]
+      when ColumnTypes.ATTRIBUTE then [visibleParts.DATA_TYPE, visibleParts.SORT_LABEL, visibleParts.IDENTIFIER_LABEL]
       when ColumnTypes.IGNORE then []
-      when ColumnTypes.CONNECTION_POINT then [visibleParts.DATA_TYPE, visibleParts.SORT_LABEL]
+      when ColumnTypes.CONNECTION_POINT then [
+        visibleParts.DATA_TYPE,
+        visibleParts.SORT_LABEL,
+        visibleParts.IDENTIFIER_LABEL
+      ]
       when ColumnTypes.DATE then [visibleParts.DATE]
       when ColumnTypes.FACT then [visibleParts.DATA_TYPE]
       when ColumnTypes.HYPERLINK then [visibleParts.REFERENCE]

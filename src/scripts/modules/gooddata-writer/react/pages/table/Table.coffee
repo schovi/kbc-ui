@@ -29,6 +29,7 @@ module.exports = React.createClass
     isSavingColumns: goodDataWriterStore.isSavingTableColumns(configurationId, tableId)
     referenceableTables: goodDataWriterStore.getReferenceableTablesForTable(configurationId, tableId)
     invalidColumns: goodDataWriterStore.getTableColumnsValidation(configurationId, tableId)
+    showIdentifier: goodDataWriterStore.isNewWriter(configurationId)
     columnsReferences: goodDataWriterStore.getTableColumnsReferences(configurationId, tableId)
     columns: goodDataWriterStore.getTableColumns(configurationId,
       tableId,
@@ -84,6 +85,7 @@ module.exports = React.createClass
         invalidColumns: @state.invalidColumns
         columnsReferences: @state.columnsReferences
         referenceableTables: @state.referenceableTables
+        showIdentifier: @state.showIdentifier
         isEditing: @state.isEditingColumns
         isSaving: @state.isSavingColumns
         onColumnChange: @_handleEditUpdate
