@@ -11,7 +11,6 @@ storageApi = require '../../../../components/StorageApi'
 
 ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
-
 TableGdName = React.createFactory(require './TableGdNameEdit')
 
 module.exports = React.createClass

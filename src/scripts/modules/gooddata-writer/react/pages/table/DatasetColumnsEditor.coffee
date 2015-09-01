@@ -55,6 +55,7 @@ Immutable = require 'immutable'
 {table, tr, th, tbody, thead, div} = React.DOM
 
 Row = require './DatasetColumnEditorRow'
+Hint = require './Hint'
 pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 {ColumnTypes} = require '../../../constants'
@@ -90,7 +91,15 @@ module.exports = React.createClass
             th null, ' '
             th null, 'Data Type'
             if @props.showIdentifier
-              th null, 'Identifier'
+              th null,
+                'Identifier'
+                ' '
+                React.createElement Hint,
+                  title: 'Identifier'
+                ,
+                  'Identifier of column in GoodData.'
+                  'This can be useful when you are migrating project from CloudConnect.'
+                  'Otherwise defaults should be fine.'
             if @props.showIdentifier
               th null, 'Identifier Label'
             th null
