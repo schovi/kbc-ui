@@ -97,8 +97,8 @@ module.exports = React.createClass
                 React.createElement Hint,
                   title: 'Identifier'
                 ,
-                  'Identifier of column in GoodData.'
-                  'This can be useful when you are migrating project from CloudConnect.'
+                  'Identifier of column in GoodData. '
+                  'This can be useful when you are migrating project from CloudConnect. '
                   'Otherwise defaults should be fine.'
             if @props.showIdentifier
               th null, 'Identifier Label'

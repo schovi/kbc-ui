@@ -3,33 +3,44 @@ React = require 'react'
 InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
 actionCreators = require '../../../actionCreators'
 
-FIELD = 'title'
-
 module.exports = React.createClass
   displayName: 'TableGdName'
+  propTypes:
+    table: React.PropTypes.object.isRequired
+    configurationId: React.PropTypes.string.isRequired
+    fieldName: React.PropTypes.string.isRequired
+    placeholder: React.PropTypes.string.isRequired
+
+  getDefaultProps: ->
+    fieldName: 'title'
 
   _handleEditStart: ->
     return if @props.table.getIn ['data', 'isExported']
-    actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD)
+    actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), @props.fieldName)
 
   _handleEditSave: ->
     actionCreators.saveTableField(
       @props.configurationId,
       @props.table.get('id'),
-      FIELD,
-      @props.table.getIn(['editingFields', FIELD])
+      @props.fieldName,
+      @props.table.getIn(['editingFields', @props.fieldName])
     )
 
   _handleEditCancel: ->
-    actionCreators.cancelTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD)
+    actionCreators.cancelTableFieldEdit(@props.configurationId, @props.table.get('id'), @props.fieldName)
 
   _handleEditChange: (column) ->
-    actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD, column)
+    actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), @props.fieldName, column)
 
   render: ->
-    isEditing = @props.table.hasIn ['editingFields', FIELD]
-    isSaving = @props.table.get('savingFields').contains FIELD
-    text = if isEditing then @props.table.getIn(['editingFields', FIELD]) else @props.table.getIn(['data', FIELD])
+    isEditing = @props.table.hasIn ['editingFields', @props.fieldName]
+    isSaving = @props.table.get('savingFields').contains @props.fieldName
+
+    if isEditing
+      text = @props.table.getIn(['editingFields', @props.fieldName])
+    else
+      text = @props.table.getIn(['data', @props.fieldName])
+
     if @props.table.getIn ['data', 'isExported']
       editTooltip = 'Table cannot be renamed. It is already exported to GoodData'
     else
@@ -38,7 +49,7 @@ module.exports = React.createClass
     InlineEditText
       text: text
       editTooltip: editTooltip
-      placeholder: 'Table Name'
+      placeholder: @props.placeholder
       isSaving: isSaving
       isEditing: isEditing
       isValid: true

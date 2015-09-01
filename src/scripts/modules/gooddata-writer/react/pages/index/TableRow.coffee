@@ -27,7 +27,7 @@ module.exports = React.createClass
       span className: 'td',
         @props.table.getIn ['data', 'sapiName']
       span className: 'td',
-        @props.table.getIn ['data', 'name']
+        @props.table.getIn ['data', 'title']
       span className: 'td text-right',
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Enable Export'

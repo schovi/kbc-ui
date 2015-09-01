@@ -126,6 +126,7 @@ extendTable = (table) ->
   table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
   if !table.get('name')?.length
     table = table.set('name', table.get('id')) # fallback to table id if name not set
+
   if !table.get('title')?.length
     table = table.set('title', table.get('id'))
   table

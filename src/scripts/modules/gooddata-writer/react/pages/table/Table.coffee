@@ -7,7 +7,7 @@ goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
 storageApi = require '../../../../components/StorageApi'
 
-{strong, br, ul, li, div, span, i} = React.DOM
+{strong, br, ul, li, div, span, i, p} = React.DOM
 
 ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
@@ -62,13 +62,24 @@ module.exports = React.createClass
   render: ->
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
-        div className: '',
-          strong null, 'GoodData name'
+        p className: '',
+          strong null, 'GoodData Name'
           ' '
           TableGdName
             table: @state.table
             configurationId: @state.configurationId
+            fieldName: 'title'
+            placeholder: 'Table Name'
           ' '
+        if @state.showIdentifier
+          p className: '',
+            strong null, 'GoodData Identifier'
+            ' '
+            TableGdName
+              table: @state.table
+              configurationId: @state.configurationId
+              fieldName: 'identifier'
+            ' '
         div className: 'kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns
