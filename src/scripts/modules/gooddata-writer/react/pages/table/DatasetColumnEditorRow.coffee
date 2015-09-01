@@ -206,6 +206,7 @@ module.exports = React.createClass
       when ColumnTypes.HYPERLINK then [visibleParts.REFERENCE]
       when ColumnTypes.LABEL then [visibleParts.REFERENCE, visibleParts.DATA_TYPE]
       when ColumnTypes.REFERENCE then [visibleParts.SCHEMA_REFERENCE]
+      else []
 
     allowedPartsForType.indexOf(partName) >= 0
 
