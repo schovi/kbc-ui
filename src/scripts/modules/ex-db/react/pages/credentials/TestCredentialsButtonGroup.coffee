@@ -1,9 +1,11 @@
 React = require 'react'
+classnames = require 'classnames'
 Button = React.createFactory(require('react-bootstrap').Button)
 
 Loader = React.createFactory(require('kbc-react-components').Loader)
 ExDbActionCreators = require '../../../exDbActionCreators'
 Link = React.createFactory(require('react-router').Link)
+
 
 {div, span} = React.DOM
 
@@ -11,6 +13,10 @@ module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
     credentials: React.PropTypes.object.isRequired
+    hasOffset: React.PropTypes.bool.isRequired
+
+  getDefaultProps: ->
+    hasOffset: true
 
   getInitialState: ->
     isTesting: false
@@ -32,7 +38,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'form-group',
-      div className: 'col-xs-offset-4 col-xs-8',
+      div className: classnames('col-xs-8', 'col-xs-offset-4': @props.hasOffset),
         Button
           bsStyle: 'primary'
           disabled: @state.isTesting

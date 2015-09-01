@@ -4,6 +4,7 @@ _ = require 'underscore'
 Textarea = require 'react-textarea-autosize'
 {Input} = require 'react-bootstrap'
 {form, div, label, p, a, label} = React.DOM
+TestCredentials = require './TestCredentialsButtonGroup'
 
 _helpUrl = 'https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/ui-articles/-db-ex-ssl-credentials'
 
@@ -33,6 +34,9 @@ module.exports = React.createClass
         @_createInput 'SSL Client Certificate (client-cert.pem)', 'cert'
         @_createInput 'SSL Client Key (client-key.pem)', 'key'
         @_createInput 'SSL CA Certificate (ca-cert.pem)', 'ca'
+        React.createElement TestCredentials,
+          credentials: @props.credentials
+          hasOffset: false
 
 
   _createInput: (labelValue, propName) ->
