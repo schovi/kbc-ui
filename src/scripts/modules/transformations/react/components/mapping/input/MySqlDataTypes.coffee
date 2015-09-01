@@ -69,6 +69,7 @@ module.exports = React.createClass
             disabled: @props.disabled || !@props.selectValue
             placeholder: "Eg. VARCHAR(255)"
             onChange: @_handleInputOnChange
+            autoComplete: 'off'
         React.DOM.span {className: "col-xs-2 kbc-col-button"},
           Button
             bsSize: 'small'
