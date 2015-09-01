@@ -85,7 +85,7 @@ getInvalidColumns = (columns) ->
   columns
   .filter (column) ->
     # empty name
-    return true if column.get('gdName').trim() == ''
+    return true if column.get('title').trim() == ''
 
     # reference not set
     if [ColumnTypes.LABEL, ColumnTypes.HYPERLINK].indexOf(column.get('type')) >= 0
@@ -126,6 +126,8 @@ extendTable = (table) ->
   table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
   if !table.get('name')?.length
     table = table.set('name', table.get('id')) # fallback to table id if name not set
+  if !table.get('title')?.length
+    table = table.set('title', table.get('id'))
   table
 
 GoodDataWriterStore = StoreUtils.createStore
@@ -319,7 +321,6 @@ dispatcher.register (payload) ->
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_UPDATE
-      console.time 'modify'
       currentColumn = _store.getIn [
         'tableColumns'
         action.configurationId

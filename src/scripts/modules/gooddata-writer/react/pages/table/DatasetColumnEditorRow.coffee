@@ -51,9 +51,9 @@ module.exports = React.createClass
       td null,
         @_createInput
           type: 'text'
-          value: column.get 'gdName'
+          value: column.get 'title'
           disabled: @props.isSaving
-          onChange: @_handleInputChange.bind @, 'gdName'
+          onChange: @_handleInputChange.bind @, 'title'
       td null,
         @_createInput
           type: 'select'

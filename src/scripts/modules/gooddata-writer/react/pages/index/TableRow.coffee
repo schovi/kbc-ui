@@ -52,7 +52,6 @@ module.exports = React.createClass
               button className: 'btn btn-link',
                 span className: 'fa fa-upload fa-fw'
 
-
   _uploadText: ->
     span null,
       'Are you sure you want to upload table '

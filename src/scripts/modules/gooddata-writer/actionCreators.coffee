@@ -75,7 +75,6 @@ module.exports =
 
     goodDataWriterApi.getReferenceableTables(configurationId)
     .then (tables) ->
-      console.log 'tables', tables
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_LOAD_REFERENCABLE_TABLES_SUCCESS
         configurationId: configurationId
@@ -141,8 +140,14 @@ module.exports =
       field: fieldName
       value: newValue
 
+    isNewWriter = goodDataWriterStore.getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
+    if fieldName == 'title' && !isNewWriter
+      saveFieldName = 'name'
+    else
+      saveFieldName = fieldName
+
     data = {}
-    data[fieldName] = newValue
+    data[saveFieldName] = newValue
     goodDataWriterApi
     .updateTable(configurationId, tableId, data)
     .then ->
@@ -212,9 +217,16 @@ module.exports =
       configurationId: configurationId
       tableId: tableId
 
+    isNewWriter = goodDataWriterStore.getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
+    if isNewWriter
+      columns = columns.map((column) -> column.remove('gdName'))
+    else
+      columns = columns.map (column) ->
+        column.set('gdName', column.get('title'))
+
     goodDataWriterApi
     .updateTable(configurationId, tableId,
-      columns: columns.toJS()
+      columns: columns
     )
     .then ->
       dispatcher.handleViewAction

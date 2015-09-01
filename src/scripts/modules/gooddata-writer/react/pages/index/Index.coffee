@@ -33,7 +33,6 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
-    console.log 'writer', writer.toJS(), writer
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
