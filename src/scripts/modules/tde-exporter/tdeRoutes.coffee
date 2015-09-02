@@ -35,7 +35,6 @@ module.exports =
       ->
         tags = ['tde', 'table-export']
         params = "q": _.map(tags, (t) -> "+tags:#{t}").join(' ')
-        console.log "loaaad files", params
         storageActionCreators.loadFiles(params)
   ]
   title: (routerState) ->
@@ -76,9 +75,7 @@ module.exports =
         installedComponentsActions.loadComponentConfigData(componentId, params.config).then ->
           configuration = InstalledComponentsStore.getConfigData(componentId, params.config)
           query = router.getCurrentQuery()
-          console.log "configuration", configuration?.toJS()
           if query['access-token'] and query['refresh-token']
-            console.log "AUTHORIZED"
             email = query['email'] or 'unknown'
             gdrive =
               accessToken: query['access-token']
@@ -86,9 +83,9 @@ module.exports =
               targetFolder: null
               targetFolderName: ''
               email: email
-            newConfig = configuration.setIn ['parameters', 'gdrive'], gdrive
+            newConfig = configuration.setIn ['parameters', 'gdrive'], fromJS(gdrive)
             saveFn = installedComponentsActions.saveComponentConfigData
-            saveFn(componentId, params.config, fromJS(newConfig)).then ->
+            saveFn(componentId, params.config, newConfig).then ->
               notification = "Google drive account #{email} succesfully authorized."
               ApplicationActionCreators.sendNotification
                 message: notification
@@ -118,8 +115,8 @@ module.exports =
               description: description
               id: credentialsId
             saveFn = installedComponentsActions.saveComponentConfigData
-            newConfig = configuration.setIn ['parameters', 'dropbox'], dropboxAccount
-            saveFn(componentId, params.config, fromJS(newConfig)).then ->
+            newConfig = configuration.setIn ['parameters', 'dropbox'], fromJS(dropboxAccount)
+            saveFn(componentId, params.config, newConfig).then ->
 
               notification = "Dropbox account #{description} succesfully authorized."
               ApplicationActionCreators.sendNotification
