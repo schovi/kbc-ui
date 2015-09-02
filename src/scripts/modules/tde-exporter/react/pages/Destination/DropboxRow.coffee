@@ -69,6 +69,7 @@ module.exports = React.createClass
 
 
   _isAuthorized: ->
+    console.log "DROPBOX IS AUTHORIZED:", Object.keys(@props.account), @props.account, @props.account?.toJS()
     @props.account and
       @props.account.has('description') and
       @props.account.has('id')
