@@ -13,10 +13,19 @@ User interface for Keboola Connection
 
 Application will be opened in your browser and will be hot reloaded after each change in source files.
 
-## Build dist package
+### Build dist package
 
 * `npm run build` (It is executed by Travis after each push)
 
+##  Application Architecture
+
+ * Single page application running in browser data fetching from Keboola REST APIs.
+ * Written in [ES2015](https://babeljs.io/docs/learn-es2015/) (ES6) compiled to JS using [Babel](https://babeljs.io/) (older parts are written in Coffeescript). 
+ * Bundled by [Webpack](https://webpack.github.io/). 
+ * View layer is composed by [React](http://facebook.github.io/react/) components
+ * [Flux Architecture](https://facebook.github.io/flux/docs/overview.html) with unidirectional data flow controlling whole application. Vanilla Flux implementation is used.
+ * [React Router](http://rackt.github.io/react-router/) for routing
+ * [Keboola Bootstrap](https://github.com/keboola/kbc-bootstrap) for UI components style. It is based on [Twitter Bootstrap](http://getbootstrap.com/)
 
 ## HOW TO
 
