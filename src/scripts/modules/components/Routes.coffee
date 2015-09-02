@@ -1,8 +1,9 @@
 React = require 'react'
 
-createComponentsIndex = require './react/pages/ComponentsIndex'
-createNewComponentPage = require './react/pages/NewComponent'
-createNewComponentButton = require './react/components/NewComponentButton'
+injectProps = require './react/injectProps'
+ComponentsIndex = require './react/pages/ComponentsIndex'
+NewComponent = require './react/pages/NewComponent'
+NewComponentButton = require './react/components/NewComponentButton'
 
 
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
@@ -24,6 +25,10 @@ createGenericDetailRoute = require './createGenericDetailRoute'
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 
+extractor = injectProps(type: 'extractor')
+writer = injectProps(type: 'writer')
+application = injectProps(type: 'application')
+
 routes =
 
   applications:
@@ -31,13 +36,17 @@ routes =
     title: 'Applications'
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
-    defaultRouteHandler: createComponentsIndex('application')
-    headerButtonsHandler: createNewComponentButton('New Application', 'new-application', 'application')
+    defaultRouteHandler: application(ComponentsIndex)
+    headerButtonsHandler: injectProps(
+      text: 'New Application'
+      to: 'new-application'
+      type: 'application'
+    )(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
       name: 'new-application'
       title: 'New Application'
-      defaultRouteHandler: createNewComponentPage('application')
+      defaultRouteHandler: application(NewComponent)
       childRoutes: [
         name: 'new-application-form'
         title: (routerState) ->
@@ -69,13 +78,13 @@ routes =
     title: 'Extractors'
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
-    defaultRouteHandler: createComponentsIndex('extractor')
-    headerButtonsHandler: createNewComponentButton('New Extractor', 'new-extractor', 'extractor')
+    defaultRouteHandler: extractor(ComponentsIndex)
+    headerButtonsHandler: injectProps(text: 'New Extractor', to: 'new-extractor', type: 'extractor')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
       name: 'new-extractor'
       title: 'New Extractor'
-      defaultRouteHandler: createNewComponentPage('extractor')
+      defaultRouteHandler: extractor(NewComponent)
       childRoutes: [
         name: 'new-extractor-form'
         title: (routerState) ->
@@ -101,13 +110,13 @@ routes =
     title: 'Writers'
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
-    defaultRouteHandler: createComponentsIndex('writer')
-    headerButtonsHandler: createNewComponentButton('New Writer', 'new-writer', 'writer')
+    defaultRouteHandler: writer(ComponentsIndex)
+    headerButtonsHandler: injectProps(text: 'New Writer', to: 'new-writer', type: 'writer')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
       name: 'new-writer'
       title: 'New Writer'
-      defaultRouteHandler: createNewComponentPage('writer')
+      defaultRouteHandler: writer(NewComponent)
       childRoutes: [
         name: 'new-writer-form'
         title: (routerState) ->
