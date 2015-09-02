@@ -26,6 +26,12 @@ Application will be opened in your browser and will be hot reloaded after each c
  * [Flux Architecture](https://facebook.github.io/flux/docs/overview.html) with unidirectional data flow controlling whole application. Vanilla Flux implementation is used.
  * [React Router](http://rackt.github.io/react-router/) for routing
  * [Keboola Bootstrap](https://github.com/keboola/kbc-bootstrap) for UI components style. It is based on [Twitter Bootstrap](http://getbootstrap.com/)
+ 
+### React Components Best Practices
+
+ * It has to be pure it means rendered result is dependent only on components `props` and `state`. [PureRenderer mixin](https://facebook.github.io/react/docs/pure-render-mixin.html) can be then utilized
+ * Component props and state should be [Immutable](http://facebook.github.io/immutable-js/) structures
+ * Separate component which involves some data fetching to container components holding the fetched state and simple component rendering the data received using `props`. [Read more about this pattern](https://medium.com/@learnreact/container-components-c0e67432e005)
 
 ## HOW TO
 
