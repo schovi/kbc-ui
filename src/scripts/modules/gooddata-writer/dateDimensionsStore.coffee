@@ -16,7 +16,9 @@ _store = Map
 DimensionsStore = StoreUtils.createStore
 
   getAll: (configurationId) ->
-    _store.getIn ['dimensionsById', configurationId]
+    _store
+    .getIn(['dimensionsById', configurationId], Map())
+    .sortBy (dimension) -> dimension.get('id')
 
   isLoading: (configurationId) ->
     _store.hasIn ['isLoading', configurationId]

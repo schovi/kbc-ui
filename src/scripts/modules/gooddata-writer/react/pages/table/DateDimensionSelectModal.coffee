@@ -6,7 +6,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 Check = React.createFactory(require('kbc-react-components').Check)
 NewDimensionForm = React.createFactory(require './../../components/NewDimensionForm')
 
-
+{TabbedArea, TabPane} = require 'react-bootstrap'
 actionCreators = require '../../../actionCreators'
 dateDimensionStore = require '../../../dateDimensionsStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -24,12 +24,9 @@ module.exports = React.createClass
     column: React.PropTypes.object.isRequired
     onSelect: React.PropTypes.func.isRequired
 
-
   componentDidMount: ->
     actionCreators.loadDateDimensions(@props.configurationId)
 
-  getInitialState: ->
-    selectedDimension: @props.column.get 'dateDimension'
 
   getStateFromStores: ->
     isLoading: dateDimensionStore.isLoading(@props.configurationId)
@@ -41,50 +38,51 @@ module.exports = React.createClass
     actionCreators
     .saveNewDateDimension(@props.configurationId)
     .then (dateDimension) =>
-      @setState
+      @props.onRequestHide()
+      @props.onSelect
         selectedDimension: dateDimension.get('name')
 
   _handleNewDimensionUpdate: (newDimension) ->
     actionCreators.updateNewDateDimension(@props.configurationId, newDimension)
 
-  _handleConfirm: ->
-    @props.onRequestHide()
-    @props.onSelect
-      selectedDimension: @state.selectedDimension
-
   render: ->
     Modal
       title: @_title()
       onRequestHide: @props.onRequestHide
+      bsSize: 'large'
     ,
       div className: 'modal-body',
-        if @state.isLoading
-          div className: 'well',
-            'Loading...'
-        @_renderTable() if @state.dimensions
-        div className: 'well',
-          NewDimensionForm
-            className: 'form-inline'
-            isPending: @state.isCreatingNewDimension
-            dimension: @state.newDimension
-            onChange: @_handleNewDimensionUpdate
-            onSubmit: @_handleNewDimensionSave
+        React.createElement TabbedArea, null,
+          React.createElement TabPane,
+            eventKey: 'select'
+            tab: 'Select from existing'
+          ,
+            if @state.isLoading
+              p className: 'panel-body',
+                'Loading ...'
+            else
+              @_renderTable()
+          React.createElement TabPane,
+            eventKey: 'new'
+            tab: 'Create new'
+          ,
+            NewDimensionForm
+              isPending: @state.isCreatingNewDimension
+              dimension: @state.newDimension
+              onChange: @_handleNewDimensionUpdate
+              onSubmit: @_handleNewDimensionSave
+              buttonLabel: 'Create and select'
       div className: 'modal-footer',
         ButtonToolbar null,
           Button
             onClick: @props.onRequestHide
             bsStyle: 'link'
           ,
-            'Cancel'
-          Button
-            onClick: @_handleConfirm
-            disabled: !@state.selectedDimension
-            bsStyle: 'success'
-          ,
-            'Choose'
+            'Close'
 
   _handleSelectedDimensionChange: (e) ->
-    @setState
+    @props.onRequestHide()
+    @props.onSelect
       selectedDimension: e.target.value
 
   _renderTable: ->
@@ -108,13 +106,13 @@ module.exports = React.createClass
               td null,
                 input
                   type: 'radio'
-                  checked: dimension.get('id') == @state.selectedDimension
+                  checked: dimension.get('id') == @props.column.get('dateDimension')
                   value: dimension.get('id')
                   onChange: @_handleSelectedDimensionChange
           , @
           .toArray()
     else
-      div className: 'well',
+      p className: 'panel-body',
         'There are no date dimensions yet. Please create new one.'
 
   _title: ->

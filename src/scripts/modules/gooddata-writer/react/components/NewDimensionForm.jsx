@@ -9,14 +9,16 @@ export default React.createClass({
     onSubmit: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     dimension: PropTypes.object.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
+    buttonLabel: PropTypes.string
   },
 
   mixins: [React.addons.PureRenderMixin],
 
   getDefaultProps() {
     return {
-      className: 'form-horizontal'
+      className: 'form-horizontal',
+      buttonLabel: 'Create'
     };
   },
 
@@ -103,7 +105,7 @@ export default React.createClass({
                 disabled={this.props.isPending || !this.isValid()}
                 onClick={this.props.onSubmit}
                 >
-                Create
+                {this.props.buttonLabel}
               </Button> {isPending ? <Loader/> : null}
             </div>
           </div>
