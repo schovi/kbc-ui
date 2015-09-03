@@ -459,6 +459,11 @@ module.exports =
   saveNewDateDimension: (configurationId) ->
     dateDimension = dimensionsStore.getNewDimension(configurationId)
 
+    if dateDimension.get('template') == constants.DateDimensionTemplates.CUSTOM
+      dateDimension = dateDimension
+        .set('template', dateDimension.get('customTemplate'))
+        .delete('customTemplate')
+
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_NEW_DATE_DIMENSION_SAVE_START
       configurationId: configurationId

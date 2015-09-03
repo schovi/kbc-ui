@@ -29,6 +29,9 @@ DimensionsStore = StoreUtils.createStore
       Map
         name: ''
         includeTime: false
+        template: constants.DateDimensionTemplates.GOOD_DATA
+        customTemplate: ''
+        identifier: ''
 
 dispatcher.register (payload) ->
   action = payload.action

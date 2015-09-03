@@ -98,3 +98,8 @@ module.exports =
   SortOrderOptions: keyMirror
     ASC: null
     DESC: null
+
+  DateDimensionTemplates:
+    GOOD_DATA: 'gooddata'
+    KEBOOLA: 'keboola'
+    CUSTOM: 'custom'
