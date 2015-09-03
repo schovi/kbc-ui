@@ -60,30 +60,35 @@ module.exports = React.createClass
     actionCreators.updateTableColumnsEdit(@state.configurationId, @state.table.get('id'), column)
 
   render: ->
+    canEditTitle = @state.showIdentifier || !@state.table.getIn(['data', 'isExported'], true)
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-header',
+        if @state.showIdentifier
+          p className: '',
+            strong className: 'col-xs-2', 'Identifier'
+            ' '
+            TableGdName
+              table: @state.table
+              configurationId: @state.configurationId
+              fieldName: 'identifier'
+              canEdit: !@state.table.getIn(['data', 'isExported'], true)
+              editTooltip: (if @state.table.getIn ['data', 'isExported']
+                'Identifier cannot be changed. It is already exported to GoodData'
+              else
+                'Edit GoodData identifier')
         p className: '',
-          strong null, 'GoodData Name'
+          strong className: 'col-xs-2', 'Title'
           ' '
           TableGdName
             table: @state.table
             configurationId: @state.configurationId
             fieldName: 'title'
             placeholder: 'Table Name'
-            canEdit: !@state.table.getIn(['data', 'isExported'], true)
-            editTooltip: (if @state.table.getIn ['data', 'isExported']
-              'Table cannot be renamed. It is already exported to GoodData'
+            canEdit: canEditTitle
+            editTooltip: (if !canEditTitle
+              'Title cannot be changed. It is already exported to GoodData'
             else
-              'Edit table name in GoodData')
-        if @state.showIdentifier
-          p className: '',
-            strong null, 'GoodData Identifier'
-            ' '
-            TableGdName
-              table: @state.table
-              configurationId: @state.configurationId
-              fieldName: 'identifier'
-              canEdit: true
+              'Edit title in GoodData')
         div className: 'kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns
