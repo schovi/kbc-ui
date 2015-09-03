@@ -7,8 +7,8 @@ dateDimensionsStore = require '../../../dateDimensionsStore'
 actionCreators = require '../../../actionCreators'
 
 
-DateDimensionsTable = React.createFactory(require './DimensionsTable')
-NewDimensionForm = React.createFactory(require './../../components/NewDimensionForm')
+DateDimensionsTable = require './DateDimensionsTable'
+NewDimensionForm = require './../../components/NewDimensionForm'
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
@@ -32,14 +32,14 @@ module.exports = React.createClass
 
   render: ->
     div className: 'container-fluid kbc-main-content',
-      div className: 'row',
-        div className: 'col-sm-8',
-          DateDimensionsTable
-            dimensions: @state.dimensions
-            configurationId: @state.configurationId
-          NewDimensionForm
-            isPending: @state.isCreatingNewDimension
-            dimension: @state.newDimension
-            onChange: @_handleNewDimensionUpdate
-            onSubmit: @_handleNewDimensionSave
+      div className: 'kbc-main-content-with-sidebar col-sm-8',
+        React.createElement DateDimensionsTable,
+          dimensions: @state.dimensions
+          configurationId: @state.configurationId
+      div className: 'col-sm-4',
+        React.createElement NewDimensionForm,
+          isPending: @state.isCreatingNewDimension
+          dimension: @state.newDimension
+          onChange: @_handleNewDimensionUpdate
+          onSubmit: @_handleNewDimensionSave
 
