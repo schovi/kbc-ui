@@ -33,6 +33,8 @@ Application will be opened in your browser and will be hot reloaded after each c
  * Component props and state should be [Immutable](http://facebook.github.io/immutable-js/) structures
  * Define [Prop Types](https://facebook.github.io/react/docs/reusable-components.html#prop-validation) form component. It is validated in development runtime and also in build step using [ESlint](http://eslint.org/)
  * Separate component which involves some data fetching to container components holding the fetched state and simple component rendering the data received using `props`. [Read more about this pattern](https://medium.com/@learnreact/container-components-c0e67432e005)
+   * Most of component should be "dumb" only with `props`, these are easiest to understand and most reusabled. Only top level components and container component should be connected to Flux stores. `state` can be of course used for things like open modal or acccordion status or temporary edit values in modal. 
+   * If you want to enhance component behaviour or inject some data consider using [High Order Components](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750) It allows great composability using  functions.
 
 ## UX Guidelines
  * Try to reuse components from [KBC Bootstrap](http://kbc-bootstrap-jakub-devel.keboola.com/examples/)
