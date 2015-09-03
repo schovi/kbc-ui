@@ -43,6 +43,7 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     dataPreview: React.PropTypes.array
     showIdentifier: React.PropTypes.bool.isRequired
+    isExported: React.PropTypes.bool.isRequired
 
   render: ->
     column = @props.column
@@ -81,7 +82,7 @@ module.exports = React.createClass
           @_createInput
             type: 'text'
             value: column.get 'identifier'
-            disabled: @props.isSaving
+            disabled: @props.isExported || @props.isSaving
             onChange: @_handleInputChange.bind @, 'identifier'
       if @props.showIdentifier
         td null,
@@ -110,7 +111,7 @@ module.exports = React.createClass
       @_createInput
         type: 'text'
         value: @props.column.get 'identifierLabel'
-        disabled: @props.isSaving
+        disabled: @props.isExported || @props.isSaving
         onChange: @_handleInputChange.bind @, 'identifierLabel'
 
   _renderIdentifierTime: ->
@@ -118,7 +119,7 @@ module.exports = React.createClass
       @_createInput
         type: 'text'
         value: @props.column.get 'identifierTime'
-        disabled: @props.isSaving
+        disabled: @props.isExported || @props.isSaving
         onChange: @_handleInputChange.bind @, 'identifierTime'
 
   _renderReferenceSelect: ->

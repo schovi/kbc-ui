@@ -105,3 +105,4 @@ module.exports = React.createClass
         onColumnChange: @_handleEditUpdate
         configurationId: @state.configurationId
         dataPreview: @state.dataPreview
+        isExported: @state.table.getIn(['data', 'isExported'], false)

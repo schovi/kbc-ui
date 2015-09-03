@@ -74,6 +74,7 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
     dataPreview: React.PropTypes.array
     showIdentifier: React.PropTypes.bool.isRequired
+    isExported: React.PropTypes.bool.isRequired
 
   _handleColumnChange: (column) ->
     @props.onColumnChange column
@@ -119,6 +120,7 @@ module.exports = React.createClass
               onChange: @_handleColumnChange
               dataPreview: @props.dataPreview
               showIdentifier: @props.showIdentifier
+              isExported: @props.isExported
           , @
           .toArray()
 
