@@ -85,7 +85,7 @@ module.exports = React.createClass
         thead null,
           tr null,
             th null, 'Column'
-            th null, 'GoodData name'
+            th null, 'GoodData title'
             th null, 'Type'
             th null, 'Reference'
             th null, 'Sort Label'

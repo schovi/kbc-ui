@@ -26,7 +26,7 @@ module.exports = React.createClass
             span className: 'th',
               strong null, 'Table name'
             span className: 'th',
-              strong null, 'Good Data name'
+              strong null, 'GoodData title'
             span className: 'th'
         div className: 'tbody',
           childs
