@@ -1,5 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 {Input, ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
@@ -54,9 +56,13 @@ module.exports = React.createClass
 
 
   _renderRunModalBody: (destinationOptions, fileName) ->
-    div null,
-      "You are about to run upload of #{fileName} to:"
-        select
+    div className: 'modal-body',
+      div className: 'form form-horizontal',
+        React.createElement Input,
+          type: 'select'
+          labelClassName: 'col-sm-12'
+          wrapperClassName: 'col-sm-10'
+          label: "You are about to run upload of #{fileName} to:"
           value: @props.uploadComponentId or destinationOptions.initValue
           onChange: (e) =>
             value = e.target.value
@@ -74,33 +80,40 @@ module.exports = React.createClass
     return result
 
   _generateOption: (id, caption) ->
+    component = ComponentsStore.getComponent(id)
+    #icon = ComponentIcon {component: component, size: '32'}
     option
       value: id
       key: id
     ,
-      caption
-
+      span {className: ''},
+        span null,
+          component.get('name')
+          ' - '
+          caption
 
   _generateDestinationOptions: (parameters) ->
     result = []
+    console.log parameters?.toJS()
     initValue = ''
     if uploadUtils.isDropboxAuthorized(parameters)
       initValue = 'wr-dropbox'
       result.push(@_generateOption(
         'wr-dropbox'
-        'Dropbox'
+        parameters.getIn ['dropbox','description']
       ))
     if uploadUtils.isGdriveAuthorized(parameters)
       initValue = 'wr-google-drive'
       result.push(@_generateOption(
         'wr-google-drive'
-        'Google Drive'
+        parameters.getIn ['gdrive', 'email']
       ))
 
     if uploadUtils.isTableauServerAuthorized(parameters)
       initValue = 'wr-tableau-server'
       result.push(@_generateOption(
         'wr-tableau-server'
-        'Tableau Server'
+        "#{parameters.getIn(['tableauServer', 'server_url'])}"
+
       ))
     return { options: result, initValue: initValue}
