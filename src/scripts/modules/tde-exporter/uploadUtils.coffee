@@ -1,4 +1,7 @@
 _ = require 'underscore'
+OrchestrationsStore = require '../orchestrations/stores/OrchestrationsStore'
+OrchestrationsActions = require '../orchestrations/ActionCreators'
+{fromJS} = require 'immutable'
 
 storageInputFileTemplate = (fileId) ->
   storage =
@@ -39,10 +42,79 @@ componentGetRunJson =
         parameters: credentials.toJS()
     return result
 
+appendExportTask = (tasks, configId) ->
+  found = tasks.find (task) ->
+    isTde = task.get('component') == 'tde-exporter'
+    hasConfig = task.getIn(['actionParameters', 'config']) == configId
+    return isTde and hasConfig
+  if not found
+    task =
+      component: 'tde-exporter'
+      active: true
+      action: 'run'
+      actionParameters:
+        config: configId
+    tasks = tasks.push(fromJS(task))
+  return tasks
+
+getUploadTaskParameters = (uploadComponentId, account, configId) ->
+  result = null
+  storage =
+    input:
+      files: [
+        filterByRunId: true
+        tags: ['tde']
+      ]
+  switch uploadComponentId
+    when 'wr-tableau-server'
+      result =
+        configData:
+          storage: storage
+          parameters: account.toJS()
+    when 'wr-dropbox'
+      result =
+        configData:
+          storage: storage
+          parameters:
+            mode: true
+            credentials: account.get('id')
+    when 'wr-google-drive'
+      gdrive = account.toJS()
+      result =
+        external:
+          account:
+            email: gdrive.email
+            accessToken: gdrive.accessToken
+            refreshToken: gdrive.refreshToken
+          query: "+tags:tde +tags:table-export +tags:config-#{configId}"
+          filterByRunId: true
+          targetFolder: gdrive.targetFolder
+  return result
+
+
+
+
+appendUploadTask = (tasks, uploadComponentId, account, configId) ->
+  tdeIdx = tasks.findIndex (task) ->
+    isTde = task.get('component') == 'tde-exporter'
+    hasConfig = task.getIn(['actionParameters', 'config']) == configId
+    return isTde and hasConfig
+
+  if tdeIdx == null or tdeIdx == undefined
+    throw Error('TDE task not found')
+
+  taskParams = getUploadTaskParameters(uploadComponentId, account, configId)
+  task =
+    component: uploadComponentId
+    action: 'run'
+    active: true
+    actionParameters: taskParams
+
+  tasks = tasks.splice(tdeIdx + 1, 0, fromJS(task))
+  return tasks
+
 
 module.exports =
-
-
 
   isTableauServerAuthorized: (parameters) ->
     account = parameters.get('tableauServer')
@@ -68,3 +140,15 @@ module.exports =
   prepareUploadRunParams: (componentId, parameters, tdeFile, configId) ->
     getParamsFn = componentGetRunJson[componentId]
     getParamsFn(parameters, tdeFile, configId)
+
+
+  appendToOrchestration: (orchId, configId, uploadComponentId, account) ->
+    orchId = parseInt orchId
+    OrchestrationsActions.loadOrchestration(orchId).then ->
+      tasks = OrchestrationsStore.getOrchestrationTasks(orchId)
+      tasks = appendExportTask(tasks, configId)
+      tasks = appendUploadTask(tasks, uploadComponentId, account, configId)
+      console.log "TASKS TO PUT", tasks?.toJS()
+      OrchestrationsActions.startOrchestrationTasksEdit(orchId)
+      OrchestrationsActions.updateOrchestrationsTasksEdit(orchId, tasks)
+      OrchestrationsActions.saveOrchestrationTasks(orchId)

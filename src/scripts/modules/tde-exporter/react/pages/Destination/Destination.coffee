@@ -3,10 +3,12 @@ ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+uploadUtils = require '../../../uploadUtils'
+
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
-OrchestrationModal = require './OrchestrationModal'
+OrchestrationModal = React.createFactory require './OrchestrationModal'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
 {Map, fromJS} = require 'immutable'
@@ -16,24 +18,38 @@ DropboxRow = React.createFactory require './DropboxRow'
 GdriveRow = React.createFactory require './GdriveRow'
 TableauServerRow = React.createFactory require './TableauServerRow'
 
+OrchestrationsStore = require '../../../../../modules/orchestrations/stores/OrchestrationsStore'
+OrchestrationsActions = require '../../../../../modules/orchestrations/ActionCreators'
+
 {button, strong, div, h2, span, h4, section, p} = React.DOM
 
 componentId = 'tde-exporter'
 module.exports = React.createClass
   displayName: 'TDEDestination'
 
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationsStore)]
+
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
 
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
+    orchestrations = OrchestrationsStore.getAll()
+    #loadingOrchestrations
+    isLoadingOrchestrations = OrchestrationsStore.getIsLoading()
+
+    console.log 'ORCHESTRAIONS', orchestrations?.toJS()
 
     #state
+    isLoadingOrchestrations: isLoadingOrchestrations
+    orchestrations: orchestrations
     configId: configId
     configData: configData
     localState: localState
+
+  componentDidMount: ->
+    OrchestrationsActions.loadOrchestrations()
 
   render: ->
     console.log "DESTINATION config", @state.configData?.toJS()
@@ -69,22 +85,46 @@ module.exports = React.createClass
         @_renderComponentCol('wr-dropbox')
 
   _renderTableauServer: ->
+    account = @state.configData.getIn ['parameters', 'tableauServer']
+    description = account.get 'server_url'
     TableauServerRow
+      orchestrationModal: @_renderOrchestrationModal('wr-tableau-server', description, account)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
-      account: @state.configData.getIn ['parameters', 'tableauServer']
+      account: account
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
 
-  _renderOrchestrationModal: (uploadComponentId) ->
+  _renderOrchestrationModal: (uploadComponentId, description, account) ->
+    pathId = "orchModal"
     OrchestrationModal
+      description: description or uploadComponentId
       uploadComponentId: uploadComponentId
       updateLocalStateFn: (path, data) =>
-        path = ['orchestrationModal'].concat path
+        path = [pathId].concat path
         @_updateLocalState(path, data)
-      localState: @state.localState.get('orchestrationModal', Map())
+      localState: @state.localState.get(pathId, Map())
+      orchestrationsList: @state.orchestrations
+      isLoadingOrchestrations: @state.isLoadingOrchestrations
+      selectOrchestrationFn: (orchId) =>
+        path = ['orchSelect']
+        @_updateLocalState(path, orchId)
+      selectedOrchestration: @state.localState.get('orchSelect')
+      onAppendClick: =>
+        @_appendToOrchestration(uploadComponentId, account)
+      isAppending: @state.localState.get('isAppending')
+
+  _appendToOrchestration: (uploadComponentId, account) ->
+    orchId = @state.localState.get 'orchSelect'
+    @_updateLocalState(['isAppending'], true)
+    uploadUtils.appendToOrchestration(orchId, @state.configId, uploadComponentId, account).then =>
+      @_updateLocalState(['isAppending'], false)
+      @_updateLocalState(['orchModal', 'show'], false)
+    .catch =>
+      @_updateLocalState(['isAppending'], false)
+
 
 
   _saveConfigData: (path, data) ->
