@@ -38,7 +38,9 @@ module.exports = React.createClass
         onClick: =>
           @props.updateLocalStateFn('show', true)
       ,
-        'Add Upload task To Orchestration'
+        i className: 'kbc-icon-orchestrations'
+        ' '
+        'Setup Orchestration Tasks'
       @_renderModal()
 
   _renderModal: ->
@@ -98,8 +100,9 @@ module.exports = React.createClass
       label: "Select Orchestration:"
       value: @props.selectedOrchestration or ''
       placeholder: ''
-      help: "Export of onfigured tables to TDE files and their upload \
-       to #{@props.description} will be appended as tasks to the selected orchestration"
+      help: "Export of configured tables to TDE files and their upload \
+       to #{@props.description} will be appended as tasks to the selected orchestration. \
+       No task will be deleted."
       onChange: (e) =>
         value = e.target.value
         @props.selectOrchestrationFn(value)

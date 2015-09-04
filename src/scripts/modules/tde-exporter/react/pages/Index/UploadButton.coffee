@@ -58,11 +58,10 @@ module.exports = React.createClass
   _renderRunModalBody: (destinationOptions, fileName) ->
     div className: 'modal-body',
       div className: 'form form-horizontal',
+        p className: '', "You are about to run upload of #{fileName} to:"
         React.createElement Input,
           type: 'select'
-          labelClassName: 'col-sm-12'
           wrapperClassName: 'col-sm-10'
-          label: "You are about to run upload of #{fileName} to:"
           value: @props.uploadComponentId or destinationOptions.initValue
           onChange: (e) =>
             value = e.target.value
