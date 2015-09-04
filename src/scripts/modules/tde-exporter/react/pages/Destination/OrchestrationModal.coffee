@@ -30,10 +30,12 @@ module.exports = React.createClass
     onAppendClick: React.PropTypes.func
     isAppending: React.PropTypes.bool
     account: React.PropTypes.object
+    isAuthorized: React.PropTypes.bool
 
   render: ->
     span null,
       Button
+        disabled: not @props.isAuthorized
         className: 'btn btn-default'
         onClick: =>
           @props.updateLocalStateFn('show', true)

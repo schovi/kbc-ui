@@ -59,10 +59,12 @@ module.exports = React.createClass
       @_renderGoogleDrive()
 
   _renderGoogleDrive: ->
+    parameters = @state.configData.get 'parameters'
     account = @state.configData.getIn ['parameters', 'gdrive']
     description = account?.get 'email'
+    isAuthorized = uploadUtils.isGdriveAuthorized(parameters)
     GdriveRow
-      orchestrationModal: @_renderOrchestrationModal('wr-google-drive', description, account)
+      orchestrationModal: @_renderOrchestrationModal('wr-google-drive', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -78,11 +80,12 @@ module.exports = React.createClass
         @_renderComponentCol('wr-google-drive')
 
   _renderDropbox: ->
+    parameters = @state.configData.get 'parameters'
     account = @state.configData.getIn ['parameters', 'dropbox']
     description = account?.get 'description'
-
+    isAuthorized = uploadUtils.isDropboxAuthorized(parameters)
     DropboxRow
-      orchestrationModal: @_renderOrchestrationModal('wr-dropbox', description, account)
+      orchestrationModal: @_renderOrchestrationModal('wr-dropbox', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -92,11 +95,12 @@ module.exports = React.createClass
         @_renderComponentCol('wr-dropbox')
 
   _renderTableauServer: ->
+    parameters = @state.configData.get 'parameters'
     account = @state.configData.getIn ['parameters', 'tableauServer']
     description = account?.get 'server_url'
-
+    isAuthorized = uploadUtils.isTableauServerAuthorized(parameters)
     TableauServerRow
-      orchestrationModal: @_renderOrchestrationModal('wr-tableau-server', description, account)
+      orchestrationModal: @_renderOrchestrationModal('wr-tableau-server', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -105,7 +109,8 @@ module.exports = React.createClass
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
 
-  _renderOrchestrationModal: (uploadComponentId, description, account) ->
+  _renderOrchestrationModal: (uploadComponentId, description, account, isAuthorized) ->
+
     pathId = "#{uploadComponentId}orchModal"
     return React.createElement OrchestrationModal,
       description: description or uploadComponentId
@@ -123,6 +128,7 @@ module.exports = React.createClass
       onAppendClick: =>
         @_appendToOrchestration(uploadComponentId, account)
       isAppending: @state.localState.get('isAppending')
+      isAuthorized: isAuthorized
 
 
   _appendToOrchestration: (uploadComponentId, account) ->
@@ -135,9 +141,6 @@ module.exports = React.createClass
     .catch (err) =>
       @_updateLocalState(['isAppending'], false)
       throw err
-
-
-
 
   _saveConfigData: (path, data) ->
     newData = @state.configData.setIn path, data
