@@ -14,7 +14,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 
 
-{div, p, strong, form, input, label, table, tbody, thead, tr, th, td, div} = React.DOM
+{div, p, strong, form, input, label, table, tbody, thead, tr, th, td, div, a} = React.DOM
 
 module.exports = React.createClass
   displayName: 'DateDimensionSelectModal'
@@ -80,35 +80,35 @@ module.exports = React.createClass
           ,
             'Close'
 
-  _handleSelectedDimensionChange: (e) ->
+  _selectDimension: (id) ->
     @props.onRequestHide()
     @props.onSelect
-      selectedDimension: e.target.value
+      selectedDimension: id
 
   _renderTable: ->
     if @state.dimensions.count()
-      table className: 'table table-striped',
-        thead null,
-          tr null,
-            th null, 'Name'
-            th null, 'Include time'
-            th null, 'Selected'
-        tbody null,
+      div className: 'table table-striped table-hover',
+        div className: 'thead',
+          div className: 'tr',
+            div className: 'th', 'Name'
+            div className: 'th', 'Include time'
+            div className: 'th', 'Selected'
+        div className: 'tbody',
           @state.dimensions.map (dimension) ->
-            tr
+            a
+              className: 'tr'
               key: dimension.get 'id'
+              onClick: @_selectDimension.bind @, dimension.get('id')
             ,
-              td null,
+              div className: 'td',
                 dimension.getIn ['data', 'name']
-              td null,
+              div className: 'td',
                 Check
                   isChecked: dimension.getIn ['data', 'includeTime']
-              td null,
-                input
-                  type: 'radio'
-                  checked: dimension.get('id') == @props.column.get('dateDimension')
-                  value: dimension.get('id')
-                  onChange: @_handleSelectedDimensionChange
+              div className: 'td',
+                if dimension.get('id') == @props.column.get('dateDimension')
+                  Check
+                    isChecked: true
           , @
           .toArray()
     else
