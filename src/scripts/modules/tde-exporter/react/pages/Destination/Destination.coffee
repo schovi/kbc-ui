@@ -8,7 +8,7 @@ uploadUtils = require '../../../uploadUtils'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
-OrchestrationModal = React.createFactory require './OrchestrationModal'
+OrchestrationModal = require './OrchestrationModal'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
 {Map, fromJS} = require 'immutable'
@@ -59,7 +59,10 @@ module.exports = React.createClass
       @_renderGoogleDrive()
 
   _renderGoogleDrive: ->
+    account = @state.configData.getIn ['parameters', 'gdrive']
+    description = account?.get 'email'
     GdriveRow
+      orchestrationModal: @_renderOrchestrationModal('wr-google-drive', description, account)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -75,7 +78,11 @@ module.exports = React.createClass
         @_renderComponentCol('wr-google-drive')
 
   _renderDropbox: ->
+    account = @state.configData.getIn ['parameters', 'dropbox']
+    description = account?.get 'description'
+
     DropboxRow
+      orchestrationModal: @_renderOrchestrationModal('wr-dropbox', description, account)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -86,7 +93,8 @@ module.exports = React.createClass
 
   _renderTableauServer: ->
     account = @state.configData.getIn ['parameters', 'tableauServer']
-    description = account.get 'server_url'
+    description = account?.get 'server_url'
+
     TableauServerRow
       orchestrationModal: @_renderOrchestrationModal('wr-tableau-server', description, account)
       configId: @state.configId
@@ -98,8 +106,8 @@ module.exports = React.createClass
         @_renderComponentCol('wr-tableau-server')
 
   _renderOrchestrationModal: (uploadComponentId, description, account) ->
-    pathId = "orchModal"
-    OrchestrationModal
+    pathId = "#{uploadComponentId}orchModal"
+    return React.createElement OrchestrationModal,
       description: description or uploadComponentId
       uploadComponentId: uploadComponentId
       updateLocalStateFn: (path, data) =>
@@ -116,14 +124,18 @@ module.exports = React.createClass
         @_appendToOrchestration(uploadComponentId, account)
       isAppending: @state.localState.get('isAppending')
 
+
   _appendToOrchestration: (uploadComponentId, account) ->
     orchId = @state.localState.get 'orchSelect'
     @_updateLocalState(['isAppending'], true)
     uploadUtils.appendToOrchestration(orchId, @state.configId, uploadComponentId, account).then =>
       @_updateLocalState(['isAppending'], false)
-      @_updateLocalState(['orchModal', 'show'], false)
-    .catch =>
+      @_updateLocalState(["#{uploadComponentId}orchModal", 'show'], false)
+
+    .catch (err) =>
       @_updateLocalState(['isAppending'], false)
+      throw err
+
 
 
 

@@ -29,6 +29,7 @@ module.exports = React.createClass
     description: React.PropTypes.string
     onAppendClick: React.PropTypes.func
     isAppending: React.PropTypes.bool
+    account: React.PropTypes.object
 
   render: ->
     span null,

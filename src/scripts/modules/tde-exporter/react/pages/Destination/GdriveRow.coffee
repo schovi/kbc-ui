@@ -20,13 +20,14 @@ module.exports = React.createClass
     configId: React.PropTypes.string
     account: React.PropTypes.object
     saveTargetFolderFn: React.PropTypes.func
-
+    orchestrationModal: React.PropTypes.object
   render: ->
     div {className: 'row'},
       @props.renderComponent()
       div className: 'col-md-5',
         @_renderAuthorization()
       div className: 'col-md-3',
+        @props.orchestrationModal
 
   _renderAuthorization: ->
     if @_isAuthorized()

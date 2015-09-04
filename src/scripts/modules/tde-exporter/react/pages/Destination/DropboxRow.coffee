@@ -18,7 +18,7 @@ module.exports = React.createClass
     localState: React.PropTypes.object
     configId: React.PropTypes.string
     account: React.PropTypes.object
-
+    orchestrationModal: React.PropTypes.object
 
   render: ->
     div {className: 'row'},
@@ -26,6 +26,8 @@ module.exports = React.createClass
       div className: 'col-md-4',
         @_renderAuthorization()
       div className: 'col-md-3',
+        @props.orchestrationModal
+
 
   _renderAuthorization: ->
     if @_isAuthorized()
