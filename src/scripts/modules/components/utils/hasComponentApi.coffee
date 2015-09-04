@@ -3,7 +3,7 @@ ComponentsStore = require '../stores/ComponentsStore'
 
 COMPONENTS_WITHOUT_API = ['wr-dropbox', 'tde-exporter', 'geneea-topic-detection',
 'geneea-language-detection', 'geneea-lemmatization', 'geneea-sentiment-analysis', 'geneea-text-correction',\
- 'geneea-entity-recognition']
+ 'geneea-entity-recognition', 'ex-adform']
 
 
 module.exports = (componentId) ->
