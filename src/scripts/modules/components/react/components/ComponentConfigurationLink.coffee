@@ -20,7 +20,15 @@ module.exports = React.createClass
     className: React.PropTypes.string
 
   render: ->
-    if RoutesStore.hasRoute(@props.componentId)
+    if @props.componentId == 'transformation'
+      Link
+        className: @props.className
+        to: 'transformationBucket'
+        params:
+          bucketId: @props.configId
+      ,
+        @props.children
+    else if RoutesStore.hasRoute(@props.componentId)
       Link
         className: @props.className
         to: @props.componentId
