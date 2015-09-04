@@ -73,10 +73,6 @@ TasksEditor = React.createClass
     if component.get('id') == 'gooddata-writer'
       task.action = 'upload-project'
 
-    if component.get('id') == 'transformation'
-      task.actionParameters =
-        configBucketId: configuration.get('id')
-
     if _.contains ['ex-netsuite'], component.get('id')
       task.actionParameters =
         configurationId: configuration.get('id')
