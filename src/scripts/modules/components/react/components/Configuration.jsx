@@ -14,13 +14,20 @@ export default React.createClass({
     onEditCancel: PropTypes.func.isRequired,
     onEditChange: PropTypes.func.isRequired,
     onEditSubmit: PropTypes.func.isRequired,
-    isValid: PropTypes.bool.isRequired
+    isValid: PropTypes.bool.isRequired,
+    headerText: PropTypes.string
+  },
+
+  getDefaultProps() {
+    return {
+      headerText: 'Configuration Data'
+    };
   },
 
   render() {
     return (
       <div>
-        <h2>Configuration Data</h2>
+        <h2>{this.props.headerText}</h2>
         {this.scripts()}
       </div>
     );
