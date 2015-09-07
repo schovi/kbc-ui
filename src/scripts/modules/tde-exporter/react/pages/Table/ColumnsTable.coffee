@@ -42,12 +42,12 @@ module.exports = React.createClass
 
     if rows.count() > 0
       div style: {overflow: 'scroll'},
-        table className: 'table table-striped kbc-table-editor',
+        table className: 'table table-striped kbc-table-layout-fixed kbc-table-editor',
           thead null,
             tr null,
-              th null, 'KB Storage Column'
-              th null, 'TDE Data Type'
-              th null, 'Preview'
+              th style: {width: '35%'}, 'KB Storage Column'
+              th style: {width: '50%'}, 'TDE Data Type'
+              th style: {width: '15%'}, 'Preview'
           tbody null,
             rows
     else

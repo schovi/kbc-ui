@@ -1,10 +1,10 @@
 React = require 'react'
 _ = require 'underscore'
-{table, tr, th, tbody, thead, div, span, td, option} = React.DOM
+{select, input, table, tr, th, tbody, thead, div, span, td, option} = React.DOM
 ColumnDataPreview = React.createFactory(require './ColumnDataPreview')
 
 Input = React.createFactory(require('react-bootstrap').Input)
-
+DateFormatHint = React.createFactory(require './DateFormatHint')
 columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
 defaults =
   date: "%Y-%m-%d"
@@ -68,35 +68,40 @@ module.exports = React.createClass
   _renderTypeSelect: ->
     dtype = @props.editing.get 'type'
     showFormat = dtype in ['date', 'datetime']
-    span null,
-      Input
-        type: 'select'
-        value: dtype
-        disabled: @props.isSaving
-        onChange: (e) =>
-          value = e.target.value
-          newData = @props.editing.set('type', value)
-          if value not in ['date', 'datetime'] or value == 'IGNORE'
-            newData = newData.delete('format')
-          if value == 'date'
-            newData = newData.set('format', defaults.date)
-          if value == 'datetime'
-            newData = newData.set('format', defaults.datetime)
-          @props.onChange(newData)
-      ,
-        @_selectOptions()
+    div className: 'form form-horizontal',
+      div className: 'col-sm-5',
+        select
+          className: 'form-control'
+          type: 'select'
+          value: dtype
+          disabled: @props.isSaving
+          onChange: (e) =>
+            value = e.target.value
+            newData = @props.editing.set('type', value)
+            if value not in ['date', 'datetime'] or value == 'IGNORE'
+              newData = newData.delete('format')
+            if value == 'date'
+              newData = newData.set('format', defaults.date)
+            if value == 'datetime'
+              newData = newData.set('format', defaults.datetime)
+            @props.onChange(newData)
+        ,
+          @_selectOptions()
       @_renderDatetFormatInput() if showFormat
 
   _renderDatetFormatInput: ->
     format = @props.editing.get 'format'
     Input
       type: 'text'
-      bsSize: 'small'
+      #bsSize: 'small'
+      wrapperClassName: ''
+      groupClassName: 'col-sm-7'
       value: format
       disabled: @props.isSaving
       onChange: (e) =>
         newData = @props.editing.set('format', event.target.value)
         @props.onChange(newData)
+      addonAfter: DateFormatHint()
 
 
   _selectOptions: ->
