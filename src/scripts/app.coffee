@@ -1,4 +1,7 @@
 console.time('load')
+console.log 'start'
+
+require './utils/react-shim'
 
 React = require 'react'
 Router = require 'react-router'

@@ -1,6 +1,9 @@
 ###
   Entry point for non app pages, provides some basic parts implemented in React
 ###
+
+require './utils/react-shim'
+
 global.kbcApp =
   helpers: require './helpers'
   parts:
