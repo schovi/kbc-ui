@@ -10,7 +10,7 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 ColumnsTable = require './ColumnsTable'
 storageApi = require '../../../../components/StorageApi'
 
-{button, i, strong, span, div, p, ul, li} = React.DOM
+{select, option, button, i, strong, span, div, p, ul, li} = React.DOM
 componentId = 'tde-exporter'
 
 module.exports = React.createClass
@@ -65,7 +65,15 @@ module.exports = React.createClass
     tableId: tableId
 
   render: ->
+    isEditing = !!@state.localState.getIn(['editing', @state.tableId])
     div className: 'container-fluid kbc-main-content',
+      div className: 'row kbc-table-editor-header',
+        #div className: 'col-sm-2', @_renderHideIngored()
+        div className: 'col-sm-3',
+          if isEditing
+            @_renderSetColumnsType()
+          else
+            ' '
       React.createElement ColumnsTable,
         table: @state.table
         columnsTypes: @state.columnsTypes
@@ -74,11 +82,56 @@ module.exports = React.createClass
         onChange: @_handleEditChange
         isSaving: @state.isSaving
 
+  _renderHideIngored: ->
+    div className: 'checkbox',
+      label className: '',
+        input
+          type: 'checkbox'
+          label: 'Hide IGNORED'
+          onChange: (e) =>
+            path = ['hideIgnored', @state.tableId]
+            @_updateLocalState(path, e.target.checked)
+
+        ' Hide Ignored'
+
+
+  _renderSetColumnsType: ->
+    columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
+    defaults =
+      date: "%Y-%m-%d"
+      datetime: "%Y-%m-%d %H:%M:%S"
+
+    options = _.map columnTdeTypes.concat('IGNORE').concat(''), (opKey, opValue) ->
+      option
+        value: opKey
+        key: opKey
+      ,
+        opKey
+
+    span null,
+      span null, 'Set All Columns To '
+      select
+        defaultValue: ''
+        onChange: (e) =>
+          value = e.target.value
+          if _.isEmpty(value)
+            return
+          editingColumns = @_geteditingColumns()
+          newColumns = editingColumns.map (ec) ->
+            newColumn = ec.set 'type', value
+            if value in _.keys(defaults)
+              newColumn = newColumn.set('format', defaults[value])
+            else
+              newColumn = newColumn.set('format', null)
+          @_handleEditChange(newColumns)
+        options
+
   _handleEditChange: (data) ->
     path = ['editing', @state.tableId]
     @_updateLocalState(path, data)
 
-
+  _geteditingColumns: ->
+    @state.localState.getIn(['editing', @state.tableId])
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
