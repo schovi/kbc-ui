@@ -76,16 +76,21 @@ module.exports = React.createClass
                    expires 48 hours after the generation.'
                 @_renderExtLink() if @props.extLink
               div className: 'row',
-                Button
-                  className: 'btn btn-primary'
-                  onClick: @_generateExternalLink
-                  disabled: @props.isGeneratingExtLink
-                  type: 'button',
-                    if @props.extLink
-                      'Regenerate External Link'
-                    else
-                      'Generate External Link'
-                Loader() if @props.isGeneratingExtLink
+                div className: 'kbc-buttons',
+                  Button
+                    className: 'btn btn-primary'
+                    onClick: @_generateExternalLink
+                    disabled: @props.isGeneratingExtLink
+                    type: 'button',
+                      if @props.extLink
+                        'Regenerate External Link'
+                      else
+                        'Generate External Link'
+                  span null,
+                    ' '
+                    Loader() if @props.isGeneratingExtLink
+
+
 
   _renderToForm: ->
     form {className: 'form-horizontal', action: @_getOAuthUrl(), method: 'POST'},
@@ -112,7 +117,6 @@ module.exports = React.createClass
             wrapperClassName: 'col-sm-9'
             labelClassName: 'col-sm-3'
             label: 'Email Link To:'
-            className: 'form-control'
             type: 'email'
             value: @state.email
             placeholder: 'email address of the recipient'
@@ -129,19 +133,22 @@ module.exports = React.createClass
                 onChange: (event) =>
                   @setState
                     message: event.target.value
-          Button
-            bsStyle: 'primary'
-            className: 'col-sm-offset-3 col-sm-2'
-            disabled: not @state.email or @props.sendingLink
-            onClick: =>
-              @props.sendEmailFn(
-                @state.currentUserEmail,
-                @state.email,
-                @state.message,
-                @props.extLink.get('link'))
-          ,
-            'Send Email'
-          Loader() if @props.sendingLink
+          div className: 'form-group',
+            div className: 'col-sm-offset-3 col-sm-4',
+              Button
+                bsStyle: 'primary'
+                disabled: not @state.email or @props.sendingLink
+                onClick: =>
+                  @props.sendEmailFn(
+                    @state.currentUserEmail,
+                    @state.email,
+                    @state.message,
+                    @props.extLink.get('link'))
+              ,
+                'Send Email '
+              span null,
+                ' '
+                Loader() if @props.sendingLink
 
 
   _generateExternalLink: ->
