@@ -11,6 +11,12 @@ ColumnsTable = require './ColumnsTable'
 storageApi = require '../../../../components/StorageApi'
 
 {label, input, select, option, button, i, strong, span, div, p, ul, li} = React.DOM
+
+columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
+defaults =
+  date: "%Y-%m-%d"
+  datetime: "%Y-%m-%d %H:%M:%S"
+
 componentId = 'tde-exporter'
 
 module.exports = React.createClass
@@ -98,11 +104,6 @@ module.exports = React.createClass
 
 
   _renderSetColumnsType: ->
-    columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
-    defaults =
-      date: "%Y-%m-%d"
-      datetime: "%Y-%m-%d %H:%M:%S"
-
     options = _.map columnTdeTypes.concat('IGNORE').concat(''), (opKey, opValue) ->
       option
         value: opKey
@@ -120,6 +121,7 @@ module.exports = React.createClass
             return
           @_prefillSelectedType(value)
         options
+
   _prefillSelectedType: (value) ->
     editingColumns = @_geteditingColumns()
     newColumns = editingColumns.map (ec) ->
