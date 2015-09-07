@@ -11,12 +11,22 @@ module.exports = React.createClass
     dataPreview: React.PropTypes.array
     editingData: React.PropTypes.object
     onChange: React.PropTypes.func
+    filterColumnFn: React.PropTypes.func
     isSaving: React.PropTypes.bool
 
   render: ->
-    console.log 'render', @props.editingData?.toJS()
+    isEditing = !! @props.editingData
     tableId = @props.table.get('id')
     columns = @props.table.get('columns')
+    #filter ignored
+    columns = columns.filterNot (c) =>
+      typePath = [c, 'type']
+      isStaticIgnored = not( !!@props.columnsTypes.getIn(typePath))
+      isEditingIgnored = @props.editingData?.getIn(typePath) == 'IGNORE'
+      if isEditing
+        @props.hideIgnored and isEditingIgnored
+      else
+        @props.hideIgnored and isStaticIgnored
 
     rows = columns.map (column) =>
       editingColumn = @props.editingData?.get(column)

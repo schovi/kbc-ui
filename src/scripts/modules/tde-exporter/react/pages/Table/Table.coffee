@@ -10,7 +10,7 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 ColumnsTable = require './ColumnsTable'
 storageApi = require '../../../../components/StorageApi'
 
-{select, option, button, i, strong, span, div, p, ul, li} = React.DOM
+{label, input, select, option, button, i, strong, span, div, p, ul, li} = React.DOM
 componentId = 'tde-exporter'
 
 module.exports = React.createClass
@@ -68,7 +68,7 @@ module.exports = React.createClass
     isEditing = !!@state.localState.getIn(['editing', @state.tableId])
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-table-editor-header',
-        #div className: 'col-sm-2', @_renderHideIngored()
+        div className: 'col-sm-2', @_renderHideIngored()
         div className: 'col-sm-3',
           if isEditing
             @_renderSetColumnsType()
@@ -81,6 +81,8 @@ module.exports = React.createClass
         editingData: @state.localState.getIn(['editing', @state.tableId])
         onChange: @_handleEditChange
         isSaving: @state.isSaving
+        hideIgnored: !! @state.localState.getIn ['hideIgnored', @state.tableId]
+
 
   _renderHideIngored: ->
     div className: 'checkbox',
@@ -116,15 +118,17 @@ module.exports = React.createClass
           value = e.target.value
           if _.isEmpty(value)
             return
-          editingColumns = @_geteditingColumns()
-          newColumns = editingColumns.map (ec) ->
-            newColumn = ec.set 'type', value
-            if value in _.keys(defaults)
-              newColumn = newColumn.set('format', defaults[value])
-            else
-              newColumn = newColumn.set('format', null)
-          @_handleEditChange(newColumns)
+          @_prefillSelectedType(value)
         options
+  _prefillSelectedType: (value) ->
+    editingColumns = @_geteditingColumns()
+    newColumns = editingColumns.map (ec) ->
+      newColumn = ec.set 'type', value
+      if value in _.keys(defaults)
+        newColumn = newColumn.set('format', defaults[value])
+      else
+        newColumn = newColumn.set('format', null)
+    @_handleEditChange(newColumns)
 
   _handleEditChange: (data) ->
     path = ['editing', @state.tableId]

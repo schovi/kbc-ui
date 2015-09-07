@@ -38,7 +38,6 @@ module.exports = React.createClass
   render: ->
     if @props.editing
       return @_renderEditing()
-
     tr null,
       td null, @props.column
       td null, @_renderStaticType()
@@ -55,6 +54,7 @@ module.exports = React.createClass
         "#{type} (#{format})"
     else
       span null, type
+
   _renderEditing: ->
     tr null,
       td null, @props.column
@@ -68,7 +68,7 @@ module.exports = React.createClass
   _renderTypeSelect: ->
     dtype = @props.editing.get 'type'
     showFormat = dtype in ['date', 'datetime']
-    td null,
+    span null,
       Input
         type: 'select'
         value: dtype
