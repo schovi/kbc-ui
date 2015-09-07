@@ -1,6 +1,7 @@
 React = require 'react'
 ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
 ApplicationStore = require '../../stores/ApplicationStore'
+contactSupport = require '../../utils/contactSupport'
 
 {div, ul, li, a, span} = React.DOM
 
@@ -9,10 +10,7 @@ module.exports = React.createClass
   mixins: [ImmutableRendererMixin]
 
   _openSupportModal: (e) ->
-    window.Zenbox.init
-      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'dropboxId'])
-      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
-    window.Zenbox.show() # zendesk global
+    contactSupport(type: 'project')
     e.preventDefault()
     e.stopPropagation()
 

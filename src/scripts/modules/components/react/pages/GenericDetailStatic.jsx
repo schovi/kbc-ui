@@ -2,7 +2,6 @@ import React from 'react';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
-import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 
@@ -11,6 +10,7 @@ import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
+import contactSupport from '../../../../utils/contactSupport';
 
 import {Button} from 'react-bootstrap';
 
@@ -87,14 +87,10 @@ export default React.createClass({
   },
 
   contactSupport() {
-    /*global Zenbox*/
-    /* eslint camelcase: 0 */
-    Zenbox.init({
-      request_subject: 'Configuration assistance request',
-      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'dropboxId']),
-      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
+    contactSupport({
+      type: 'project',
+      subject: 'Configuration assistance request'
     });
-    Zenbox.show();
   }
 
 });

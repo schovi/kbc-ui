@@ -1,7 +1,7 @@
 React = require 'react'
 FormHeader = React.createFactory(require './FormHeader')
 Button = React.createFactory(require('react-bootstrap').Button)
-ApplicationStore = require '../../../../../stores/ApplicationStore'
+contactSupport = require '../../../../../utils/contactSupport'
 
 {div, form, p} = React.DOM
 
@@ -39,10 +39,9 @@ module.exports = React.createClass
        please contact our support for assistance.'
 
   _contactSupport: ->
-    Zenbox.init
-      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'dropboxId'])
-      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
-      request_subject: "#{@props.component.get('name')} #{@props.component.get('type')}
+    constactSupport(
+      subject: "#{@props.component.get('name')} #{@props.component.get('type')}
         configuration assistance request"
-    Zenbox.show()
+      type: "project"
+    )
 

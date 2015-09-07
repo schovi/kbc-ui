@@ -23,6 +23,8 @@ ActionCreators = require '../../../ActionCreators'
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 ErrorNote = require './ErrorNote'
 
+contactSupport = require '../../../../../utils/contactSupport'
+
 date = require '../../../../../utils/date'
 {Tree} = require 'kbc-react-components'
 {strong,div, h2, span, h4, section, p} = React.DOM
@@ -279,11 +281,10 @@ module.exports = React.createClass
     getComponentId(@state.job) == 'gooddata-writer'
 
   _contactSupport: ->
-    Zenbox.init
-      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'direct', 'dropboxId'])
-      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'direct', 'url'])
-      request_subject: "Help with job #{@state.job.get('id')}"
-    Zenbox.show()
+    contactSupport(
+      subject: "Help with job #{@state.job.get('id')}"
+      type: "direct"
+    )
 
   _handleErrorNoteSave: (errorNote) ->
     ActionCreators.jobErrorNoteUpdated(@state.job.get('id'), errorNote)

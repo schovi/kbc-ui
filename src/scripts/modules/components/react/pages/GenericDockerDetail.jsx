@@ -2,7 +2,6 @@ import React from 'react';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
-import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
@@ -21,6 +20,7 @@ import InstalledComponentsActionCreators from '../../InstalledComponentsActionCr
 import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {List} from 'immutable';
+import contactSupport from '../../../../utils/contactSupport';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore)],
@@ -197,14 +197,10 @@ export default React.createClass({
   },
 
   contactSupport() {
-    /*global Zenbox*/
-    /* eslint camelcase: 0 */
-    Zenbox.init({
-      request_subject: 'Configuration assistance request',
-      dropboxID: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'dropboxId']),
-      url: ApplicationStore.getKbcVars().getIn(['zendesk', 'project', 'url'])
+    contactSupport({
+      type: 'project',
+      subject: 'Configuration assistance request'
     });
-    Zenbox.show();
   },
 
   getConfigDataParameters() {
