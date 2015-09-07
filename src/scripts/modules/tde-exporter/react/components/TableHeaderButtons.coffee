@@ -88,6 +88,7 @@ module.exports = React.createClass
     console.log 'SAVE CONFIG', configData.toJS()
     updateFn(componentId, @state.configId, configData).then =>
       @_cancel()
+      RoutesStore.getRouter().transitionTo 'tde-exporter', {config: @state.configId}
 
 
   _editStart: ->
