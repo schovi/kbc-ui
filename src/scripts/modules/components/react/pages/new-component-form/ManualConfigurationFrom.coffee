@@ -39,7 +39,7 @@ module.exports = React.createClass
        please contact our support for assistance.'
 
   _contactSupport: ->
-    constactSupport(
+    contactSupport(
       subject: "#{@props.component.get('name')} #{@props.component.get('type')}
         configuration assistance request"
       type: "project"
