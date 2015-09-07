@@ -5,7 +5,10 @@
   ],
   "globals": {
     "console": true,
-    "setTimeout": true
+    "setTimeout": true,
+    "require": true,
+    "module": true,
+    "process": true
   },
   "ecmaFeatures": {
     "jsx": true
