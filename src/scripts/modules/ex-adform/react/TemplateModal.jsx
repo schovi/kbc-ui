@@ -34,7 +34,7 @@ export default React.createClass({
         <Modal.Footer>
           <ConfirmButtons
             isSaving={false}
-            saveLabel="Overwrite current configuration"
+            saveLabel="Preset from template"
             saveStyle="warning"
             isDisabled={!this.isValid()}
             onSave={this.handleSave}
