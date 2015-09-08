@@ -80,17 +80,30 @@ export function changeTemplate(configId, newTemplateId) {
     store.getLocalState(COMPONENT_ID, configId).set('template', newTemplateId));
 }
 
-export function initFromTemplate(configId) {
+export function initFromWizard(configId) {
   const
     localState = store.getLocalState(COMPONENT_ID, configId),
+    credentials = localState.get('credentials'),
     newTemplateId = localState.get('template'),
     foundTemplate = jobsTemplates.find((tmpl) => tmpl.get('id') === newTemplateId),
     config = template(store.getConfig(COMPONENT_ID, configId).get('name'),
-      store.getConfigData(COMPONENT_ID, configId))
-      .setIn(['parameters', 'config', 'jobs'], foundTemplate.get('template'));
+      store
+      .getConfigData(COMPONENT_ID, configId)
+      .setIn(['parameters', 'config', 'jobs'], foundTemplate.get('template'))
+      .setIn(['parameters', 'config', 'username'], credentials.get('username'))
+      .setIn(['parameters', 'config', 'password'], credentials.get('password'))
+    );
 
   return actions.saveComponentConfigData(COMPONENT_ID, configId, config)
     .then(() => {
 
     });
+}
+
+export function changeWizardStep(configId, newStep) {
+  const localState = store.getLocalState(COMPONENT_ID, configId);
+
+  actions.updateLocalState(COMPONENT_ID, configId,
+    localState.set('wizardStep', newStep)
+  );
 }

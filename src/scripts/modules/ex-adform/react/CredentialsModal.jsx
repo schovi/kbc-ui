@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Modal, Input} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../react/common/ConfirmButtons';
+import CredentialsForm from './CredentialsForm';
 
 export default React.createClass({
   propTypes: {
@@ -19,24 +20,10 @@ export default React.createClass({
           <Modal.Title>Credentials</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Please fill your Adform credentials</p>
-          <div className="form-horizontal">
-            <Input
-              type="text"
-              label="Username"
-              value={this.props.credentials.get('username')}
-              onChange={this.handleChange.bind(this, 'username')}
-              labelClassName='col-xs-4' wrapperClassName='col-xs-6'
-              autoFocus={true}
-              />
-            <Input
-              type="password"
-              label="Password"
-              value={this.props.credentials.get('password')}
-              onChange={this.handleChange.bind(this, 'password')}
-              labelClassName='col-xs-4' wrapperClassName='col-xs-6'
-              />
-          </div>
+          <CredentialsForm
+            credentials={this.props.credentials}
+            onChange={this.props.onChange}
+            />
         </Modal.Body>
         <Modal.Footer>
           <ConfirmButtons
@@ -53,10 +40,6 @@ export default React.createClass({
   isValid() {
     return this.props.credentials.get('username').trim().length > 0 &&
       this.props.credentials.get('password').trim().length > 0;
-  },
-
-  handleChange(field, e) {
-    this.props.onChange(this.props.credentials.set(field, e.target.value));
   },
 
   handleSave() {

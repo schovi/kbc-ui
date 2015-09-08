@@ -7,7 +7,6 @@ import InstalledComponentStore from '../../components/stores/InstalledComponents
 import ComponentStore from '../../components/stores/ComponentsStore';
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 
-import EmptyState from '../../components/react/components/ComponentEmptyState';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../components/react/components/RunComponentButton';
@@ -24,15 +23,15 @@ import {saveCredentials,
   jobsEditCancel,
   jobsEditSubmit,
   changeTemplate,
-  initFromTemplate,
-  prefillFromTemplate
+  initFromWizard,
+  prefillFromTemplate,
+  changeWizardStep
   } from '../actions';
 
-import classnames from 'classnames';
 import templates from '../jobsTemplates';
-import Select from 'react-select';
 import {Button} from 'react-bootstrap';
-import {Loader} from 'kbc-react-components';
+import Wizard from './Wizard';
+import {Steps} from '../constants';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
@@ -40,17 +39,20 @@ export default React.createClass({
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = 'ex-adform',
-      localState = InstalledComponentStore.getLocalState(componentId, configId);
+      localState = InstalledComponentStore.getLocalState(componentId, configId),
+      parameters = InstalledComponentStore.getConfigData(componentId, configId).get('parameters', Map());
 
     return {
       component: ComponentStore.getComponent(componentId),
       componentId: componentId,
-      parameters: InstalledComponentStore.getConfigData(componentId, configId).get('parameters', Map()),
+      parameters: parameters,
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
       isSaving: InstalledComponentStore.isSavingConfigData(componentId, configId),
       localState: localState,
-      isEditingJobs: localState.has('jobsString')
+      isEditingJobs: localState.has('jobsString'),
+      isInitialized: parameters.getIn(['config', 'username']) && parameters.getIn(['config', 'password'])
+        && parameters.hasIn(['config', 'jobs'])
     };
   },
 
@@ -61,8 +63,36 @@ export default React.createClass({
     };
   },
 
-
   render() {
+    if (this.state.isInitialized) {
+      return this.renderMain();
+    } else {
+      return (
+        <div className="container-fluid">
+          <div className="col-md-12 kbc-main-content">
+            <Wizard
+              credentials={this.state.localState.get('credentials', Map({
+                username: this.state.parameters.getIn(['config', 'username'], ''),
+                password: this.state.parameters.getIn(['config', 'password'], '')
+              }))}
+              onCredentialsChange={this.updateCredentials}
+              step={this.state.localState.get('wizardStep', Steps.STEP_CREDENTIALS)}
+              onStepChange={this.changeWizardStep}
+              template={this.state.localState.get('template')}
+              templates={this.templatesOptions()}
+              onTemplateChange={this.onTemplateChange}
+              onSave={this.onInit}
+              isSaving={this.state.isSaving}
+              componentId={this.state.componentId}
+              configurationId={this.state.config.get('id')}
+              />
+          </div>
+        </div>
+      );
+    }
+  },
+
+  renderMain() {
     return (
       <div className="container-fluid">
         <div className="col-md-9 kbc-main-content">
@@ -73,28 +103,42 @@ export default React.createClass({
               />
           </div>
           <div className="row">
-            <div classNmae="col-xs-4">
-              {this.renderMainContent()}
-            </div>
+            {this.renderHelp()}
+            <Configuration
+              data={this.getJobsData()}
+              isEditing={this.state.isEditingJobs}
+              isSaving={this.state.isSaving}
+              onEditStart={this.onJobsEditStart}
+              onEditCancel={this.onJobsEditCancel}
+              onEditChange={this.onJobsEditChange}
+              onEditSubmit={this.onJobsEditSubmit}
+              isValid={this.isValidJobsData()}
+              headerText="Resources"
+              help={this.renderPrefillFromTemplate()}
+              />
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
           <div classNmae="kbc-buttons kbc-text-light">
-            {this.renderAuthorizedSidebarRow()}
+            <span>Authorized for <strong>{this.state.parameters.getIn(['config', 'username'])}</strong></span>
             <ComponentMetadata
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
               />
           </div>
           <ul className="nav nav-stacked">
-            {this.renderCredentialsLink()}
-            <li className={classnames({disabled: !this.isRunEnabled()})}>
+            <li>
+              <a onClick={this.openCredentialsModal}>
+                <i className="fa fa-fw fa-user"/>
+                Credentials
+              </a>
+            </li>
+            <li>
               <RunComponentButton
                 title="Run"
                 component={this.state.componentId}
                 mode="link"
                 runParams={this.runParams()}
-                disabled={!this.isRunEnabled()}
                 disabledReason="Component is not configured yet"
                 >
                 You are about to run component.
@@ -122,58 +166,6 @@ export default React.createClass({
         </div>
       </div>
     );
-  },
-
-  renderCredentialsLink() {
-    if (this.isAuthorized()) {
-      return (
-        <li>
-          <a onClick={this.openCredentialsModal}>
-            <i className="fa fa-fw fa-user"/>
-            Credentials
-          </a>
-        </li>
-      );
-    } else {
-      return null;
-    }
-  },
-
-  renderMainContent() {
-    if (!this.isAuthorized()) {
-      return (
-        <EmptyState>
-          <p>Please setup credentials for this extractor.</p>
-          <button className="btn btn-success" onClick={this.openCredentialsModal}>
-            Setup Credentials
-          </button>
-        </EmptyState>
-      );
-    } else if (!this.state.parameters.hasIn(['config', 'jobs'])) {
-      return (
-        <div>
-          {this.renderInitFromTemplate()}
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          {this.renderHelp()}
-          <Configuration
-            data={this.getJobsData()}
-            isEditing={this.state.isEditingJobs}
-            isSaving={this.state.isSaving}
-            onEditStart={this.onJobsEditStart}
-            onEditCancel={this.onJobsEditCancel}
-            onEditChange={this.onJobsEditChange}
-            onEditSubmit={this.onJobsEditSubmit}
-            isValid={this.isValidJobsData()}
-            headerText="Resources"
-            help={this.renderPrefillFromTemplate()}
-            />
-        </div>
-      );
-    }
   },
 
   renderHelp() {
@@ -204,45 +196,6 @@ export default React.createClass({
     } catch (e) {
       return false;
     }
-  },
-
-  isAuthorized() {
-    return this.state.parameters.getIn(['config', 'username'])
-      && this.state.parameters.getIn(['config', 'password']);
-  },
-
-  isRunEnabled() {
-    return this.isAuthorized() && this.state.parameters.hasIn(['config', 'jobs']);
-  },
-
-  renderInitFromTemplate() {
-    return (
-      <div>
-        <h3 style={{marginTop: 0}}>Configuration</h3>
-        <p>Please select from predefined templates to initialize the Adform configuration:</p>
-        <p>
-          <Select
-            name="jobTemplates"
-            value={this.state.localState.get('template')}
-            options={this.templatesOptions()}
-            onChange={this.onTemplateChange}
-            placeholder="Select template"
-            />
-        </p>
-        <p className="help-block">
-          You can change it or extend it to fetch more or other data later.
-        </p>
-        <p>
-          <Button
-            bsStyle="success"
-            disabled={this.state.isSaving || !this.state.localState.get('template')}
-            onClick={this.onInitFromTemplate}
-            >
-            Create
-          </Button> {this.isSaving ? <Loader/> : null}
-        </p>
-      </div>
-    );
   },
 
   renderPrefillFromTemplate() {
@@ -279,14 +232,6 @@ export default React.createClass({
         value: template.get('id')
       });
     }).toJS();
-  },
-
-  renderAuthorizedSidebarRow() {
-    if (this.isAuthorized()) {
-      return (
-        <span>Authorized for <strong>{this.state.parameters.getIn(['config', 'username'])}</strong></span>
-      );
-    }
   },
 
   updateCredentials(newCredentials) {
@@ -352,12 +297,16 @@ export default React.createClass({
     changeTemplate(this.state.config.get('id'), templateId);
   },
 
-  onInitFromTemplate() {
-    initFromTemplate(this.state.config.get('id'));
+  onInit() {
+    initFromWizard(this.state.config.get('id'));
   },
 
   onPrefillFromTemplate() {
     prefillFromTemplate(this.state.config.get('id'));
+  },
+
+  changeWizardStep(newStep) {
+    changeWizardStep(this.state.config.get('id'), newStep);
   }
 
 });
