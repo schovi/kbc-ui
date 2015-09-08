@@ -3,7 +3,7 @@ import {fromJS} from 'immutable';
 export default fromJS([
   {
     id: 'AdvertisersAndCampaigns',
-    name: 'Advertisers and Campaigns',
+    name: 'Basic - Fetch Advertisers and Campaigns',
     template: [
       {
         'endpoint': 'Advertiser/Advertisers',
@@ -48,7 +48,7 @@ export default fromJS([
   },
   {
     id: 'All',
-    name: 'Full - Advertisers, Campaigns, Campaign Stats, Users',
+    name: 'Full - Fetch Advertisers, Campaigns, Campaign Stats and Users',
     template: [
       {
         'endpoint': 'Advertiser/Advertisers',
@@ -131,7 +131,7 @@ export default fromJS([
   },
   {
     id: 'Empty',
-    name: 'Empty template',
+    name: 'Empty - You\'ll configure what you want to fetch',
     template: []
   }
 ]);

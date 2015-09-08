@@ -17,12 +17,14 @@ module.exports = React.createClass
     isDisabled: React.PropTypes.bool
     cancelLabel: React.PropTypes.string
     saveLabel: React.PropTypes.string
+    saveStyle: React.PropTypes.string
     onCancel: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
     placement: React.PropTypes.oneOf ['left', 'right']
 
   getDefaultProps: ->
     saveLabel: 'Save'
+    saveStyle: 'success'
     cancelLabel: 'Cancel'
     placement: 'right'
     isDisabled: false
@@ -45,7 +47,7 @@ module.exports = React.createClass
 
   _saveButton: ->
     React.createElement Button,
-      bsStyle: 'success'
+      bsStyle: @props.saveStyle
       disabled: @props.isSaving || @props.isDisabled
       onClick: @props.onSave
     ,

@@ -33,8 +33,7 @@ export default function (configName, baseConfig) {
             }
           },
           'tokenKey': 'Ticket'
-        },
-        'jobs': []
+        }
       }
     }
   });

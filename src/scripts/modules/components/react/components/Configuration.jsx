@@ -15,12 +15,14 @@ export default React.createClass({
     onEditChange: PropTypes.func.isRequired,
     onEditSubmit: PropTypes.func.isRequired,
     isValid: PropTypes.bool.isRequired,
-    headerText: PropTypes.string
+    headerText: PropTypes.string,
+    help: PropTypes.node
   },
 
   getDefaultProps() {
     return {
-      headerText: 'Configuration Data'
+      headerText: 'Configuration Data',
+      help: null
     };
   },
 
@@ -28,6 +30,7 @@ export default React.createClass({
     return (
       <div>
         <h2>{this.props.headerText}</h2>
+        {this.props.help}
         {this.scripts()}
       </div>
     );

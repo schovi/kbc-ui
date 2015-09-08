@@ -65,11 +65,32 @@ export function updateLocalState(configId, newState) {
   actions.updateLocalState(COMPONENT_ID, configId, newState);
 }
 
-export function changeTemplate(configId, newTemplateId) {
-  const foundTemplate = jobsTemplates.find((tmpl) => tmpl.get('id') === newTemplateId),
-    localState = store.getLocalState(COMPONENT_ID, configId);
+export function prefillFromTemplate(configId) {
+  const
+    localState = store.getLocalState(COMPONENT_ID, configId),
+    newTemplateId = localState.get('template'),
+    foundTemplate = jobsTemplates.find((tmpl) => tmpl.get('id') === newTemplateId);
 
   actions.updateLocalState(COMPONENT_ID, configId,
     localState.set('jobsString', JSONtoString(foundTemplate.get('template'))));
+}
 
+export function changeTemplate(configId, newTemplateId) {
+  actions.updateLocalState(COMPONENT_ID, configId,
+    store.getLocalState(COMPONENT_ID, configId).set('template', newTemplateId));
+}
+
+export function initFromTemplate(configId) {
+  const
+    localState = store.getLocalState(COMPONENT_ID, configId),
+    newTemplateId = localState.get('template'),
+    foundTemplate = jobsTemplates.find((tmpl) => tmpl.get('id') === newTemplateId),
+    config = template(store.getConfig(COMPONENT_ID, configId).get('name'),
+      store.getConfigData(COMPONENT_ID, configId))
+      .setIn(['parameters', 'config', 'jobs'], foundTemplate);
+
+  return actions.saveComponentConfigData(COMPONENT_ID, configId, config)
+    .then(() => {
+
+    });
 }

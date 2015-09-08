@@ -14,6 +14,7 @@ import RunComponentButton from '../../components/react/components/RunComponentBu
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import LatestJobs from '../../components/react/components/SidebarJobs';
 import CredentialsModal from './CredentialsModal';
+import TemplateModal from './TemplateModal';
 import Configuration from '../../components/react/components/Configuration';
 import {saveCredentials,
   cancelCredentialsEdit,
@@ -22,11 +23,15 @@ import {saveCredentials,
   jobsEditChange,
   jobsEditCancel,
   jobsEditSubmit,
-  changeTemplate
+  changeTemplate,
+  initFromTemplate,
+  prefillFromTemplate
   } from '../actions';
 
 import templates from '../jobsTemplates';
 import Select from 'react-select';
+import {Button} from 'react-bootstrap';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
@@ -50,7 +55,8 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      showCredentialsModal: false
+      showCredentialsModal: false,
+      showTemplateModal: false
     };
   },
 
@@ -130,15 +136,16 @@ export default React.createClass({
           </button>
         </EmptyState>
       );
+    } else if (!this.state.parameters.hasIn(['config', 'jobs'])) {
+      return (
+        <div>
+          {this.renderInitFromTemplate()}
+        </div>
+      );
     } else {
       return (
         <div>
-          <p className="help-block">
-            Adform resources to fetch has to be configured manually.
-            The resource configuration bellow expect <strong>jobs</strong> array configured according to
-            <a href="https://github.com/keboola/generic-extractor#jobs" target="_blank"> documentation</a>.
-          </p>
-          {this.renderTemplatesSelect()}
+          {this.renderHelp()}
           <Configuration
             data={this.getJobsData()}
             isEditing={this.state.isEditingJobs}
@@ -149,10 +156,21 @@ export default React.createClass({
             onEditSubmit={this.onJobsEditSubmit}
             isValid={this.isValidJobsData()}
             headerText="Resources"
+            help={this.renderPrefillFromTemplate()}
             />
         </div>
       );
     }
+  },
+
+  renderHelp() {
+    return (
+      <p className="help-block">
+        Adform resources to fetch has to be configured manually.
+        The resource configuration bellow expect <strong>jobs</strong> array configured according to
+        <a href="https://github.com/keboola/generic-extractor#jobs" target="_blank"> documentation</a>.
+      </p>
+    );
   },
 
   getJobsData() {
@@ -177,17 +195,52 @@ export default React.createClass({
       && this.state.parameters.getIn(['config', 'password']);
   },
 
-  renderTemplatesSelect() {
-    if (this.state.isEditingJobs) {
-      return (
-        <div>
-          <p>You can select from predefined templates:</p>
+  renderInitFromTemplate() {
+    return (
+      <div>
+        <p>Please select from predefined templates:</p>
+        <p>
           <Select
             name="jobTemplates"
+            value={this.state.localState.get('template')}
             options={this.templatesOptions()}
             onChange={this.onTemplateChange}
             placeholder="Select template"
             />
+        </p>
+        <p>
+          <Button
+            bsStyle="success"
+            disabled={this.state.isSaving || !this.state.localState.get('template')}
+            onClick={this.onInitFromTemplate}
+            >
+            Create
+          </Button> {this.isSaving ? <Loader/> : null}
+        </p>
+      </div>
+    );
+  },
+
+  renderPrefillFromTemplate() {
+    if (this.state.isEditingJobs) {
+      return (
+        <div>
+          <p>
+            <Button
+              bsStyle="link"
+              onClick={this.openTemplateModal}
+              >
+              <span className="fa fa-folder-open"/> Configure from template
+            </Button>
+            <TemplateModal
+              show={this.state.showTemplateModal}
+              template={this.state.localState.get('template', '')}
+              templates={this.templatesOptions()}
+              onChange={this.onTemplateChange}
+              onSubmit={this.onPrefillFromTemplate}
+              onHide={this.closeTemplateModal}
+              />
+          </p>
         </div>
       );
     } else {
@@ -229,6 +282,19 @@ export default React.createClass({
     cancelCredentialsEdit(this.state.config.get('id'));
   },
 
+  openTemplateModal() {
+    this.setState({
+      showTemplateModal: true
+    });
+  },
+
+  closeTemplateModal() {
+    this.setState({
+      showTemplateModal: false
+    });
+  },
+
+
   saveCredentials() {
     return saveCredentials(this.state.config.get('id'));
   },
@@ -260,5 +326,14 @@ export default React.createClass({
 
   onTemplateChange(templateId) {
     changeTemplate(this.state.config.get('id'), templateId);
+  },
+
+  onInitFromTemplate() {
+    initFromTemplate(this.state.config.get('id'));
+  },
+
+  onPrefillFromTemplate() {
+    prefillFromTemplate(this.state.config.get('id'));
   }
+
 });
