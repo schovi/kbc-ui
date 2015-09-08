@@ -112,7 +112,7 @@ module.exports = React.createClass
               config: @state.configId
           ,
            "You are about to run export of all configured tables to TDE"
-        li className: classnames(disabled: not @_hasFilesExported()),
+        li null,
           @_renderSetupDestinationLink()
         li null,
           React.createElement DeleteConfigurationButton,
@@ -124,23 +124,14 @@ module.exports = React.createClass
 
 
   _renderSetupDestinationLink: ->
-    if not @_hasFilesExported()
-      React.createElement OverlayTrigger,
-        overlay: React.createElement(Tooltip, null, 'No TDE files exported')
-        placement: 'top'
-      ,
-        a className: 'text-muted',
-          i className: 'fa fa-fw fa-gear'
-          ' Setup Upload Destinations'
-    else
-      Link
-        to: 'tde-exporter-destination'
-        className: 'btn btn-link '
-        params:
-          config: @state.configId
-      ,
-        i className: 'fa fa-fw fa-gear'
-        ' Setup Upload Destinations'
+    Link
+      to: 'tde-exporter-destination'
+      className: 'btn btn-link '
+      params:
+        config: @state.configId
+    ,
+      i className: 'fa fa-fw fa-gear'
+      ' Setup Upload Destinations'
 
 
   _renderTableRow: (table, isDeleted = false) ->
@@ -213,13 +204,6 @@ module.exports = React.createClass
         strong null, 'Last TDE File'
       span className: 'th',
         strong null, ''
-
-  _hasFilesExported: ->
-    hasUnexportedTable = @state.typedefs.reduce( (memo, value, tableId) =>
-      not !!@_getLastTdeFile(tableId) or memo
-    , false)
-    not @_disabledToRun() and  not hasUnexportedTable
-
 
   _getLastTdeFile: (tableId) ->
     idReplaced = tableId.replace(/-/g,"_")
