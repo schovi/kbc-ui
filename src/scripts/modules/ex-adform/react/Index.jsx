@@ -180,7 +180,11 @@ export default React.createClass({
     return (
       <p className="help-block">
         The resource configuration bellow expect <strong>jobs</strong> array configured according to
-        <a href="https://github.com/keboola/generic-extractor#jobs" target="_blank"> documentation</a>.
+        <a href="https://github.com/keboola/generic-extractor#jobs" target="_blank"> Generic extractor documentation</a>.
+
+        Details about Adform API are available in <a href="https://api.adform.com/Services/Documentation/Index.htm" target="_blank">
+          Adform API documentation
+        </a>.
       </p>
     );
   },
