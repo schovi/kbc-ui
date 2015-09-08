@@ -24,7 +24,7 @@ export default React.createClass({
     return (
       <div className="kbc-configuration-edit">
         <div>
-          <div className="edit form-group kbc-configuration-editor">
+          <div className="edit kbc-configuration-editor">
             <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-60} stickyStyle={{}}>
               <ConfirmButtons
                 isSaving={this.props.isSaving}

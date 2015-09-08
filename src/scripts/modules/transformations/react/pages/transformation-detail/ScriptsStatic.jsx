@@ -12,8 +12,11 @@ export default React.createClass({
 
   script() {
     return (
-      <div>
-        <div>
+      <div className="kbc-queries-edit">
+        <div className="edit form-group kbc-queries-editor">
+          <div className="kbc-sticky-buttons">
+            {this.startEditButton()}
+          </div>
           <CodeMirror
             theme="solarized"
             lineNumbers={true}
@@ -22,9 +25,6 @@ export default React.createClass({
             mode="text/x-rsrc"
             lineWrapping={true}
             />
-        </div>
-        <div>
-          {this.startEditButton()}
         </div>
       </div>
     );
