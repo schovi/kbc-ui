@@ -24,50 +24,56 @@ module.exports = React.createClass
   render: ->
     div {className: 'row'},
       @props.renderComponent()
-      div className: 'col-md-5',
+      div className: 'col-md-4',
         @_renderAuthorization()
       div className: 'col-md-3',
+        if !@_isAuthorized()
+          div null,
+            @_renderAuthorizeButton()
         @props.orchestrationModal
+        if @_isAuthorized()
+          div null,
+            @_renderPicker()
+        if @_isAuthorized()
+          div null,
+            React.createElement Confirm,
+              title: 'Reset Authorization'
+              text: "Do you really want to reset authorization for #{@props.account.get('email')}"
+              buttonLabel: 'Reset'
+              onConfirm: =>
+                @props.setConfigDataFn(['parameters', 'gdrive'], null)
+            ,
+              Button
+                bsStyle: 'link'
+              ,
+                span className: 'kbc-icon-cup fa-fw'
+                ' Reset Authorization'
 
   _renderAuthorization: ->
     if @_isAuthorized()
-      div className: 'well well-sm text-center',
-        @_renderAuthorizedInfo()
-    else
-      div className: 'well well-sm text-center',
-        div null, 'Not Authorized.'
-        @_renderAuthorizeButton()
-
-
-  _renderAuthorizedInfo: ->
-    span null,
-      'Authorized for '
-      strong null,
-        @props.account.get 'email'
       div null,
-        @_renderPicker()
-        React.createElement Confirm,
-          title: 'Reset Authorization'
-          text: "Do you really want to reset authorization for #{@props.account.get('email')}"
-          buttonLabel: 'Reset'
-          onConfirm: =>
-            @props.setConfigDataFn(['parameters', 'gdrive'], null)
-        ,
-          Button
-            bsSize: 'small'
-          ,
-            'reset'
+        div null,
+          'Authorized for '
+          strong null,
+            @props.account.get 'email'
+        div null,
+          'Folder '
+          strong null,
+            @props.account.get('targetFolderName') || '/'
+    else
+      span null,
+        'Not Authorized.'
+
 
   _renderAuthorizeButton: ->
     div null,
       Button
-        #bsSize: 'small'
-        className: 'btn btn-primary'
+        bsStyle: 'link'
         onClick: =>
           @props.updateLocalStateFn(['gdrivemodal', 'show'], true)
       ,
         i className: 'fa fa-fw fa-google'
-        'Authorize Google Drive Account'
+        ' Authorize'
       GdriveModal
         configId: @props.configId
         localState: @props.localState.get('gdrivemodal', Map())
@@ -82,7 +88,9 @@ module.exports = React.createClass
     Picker
       email: @props.account.get 'email'
       dialogTitle: 'Select a folder'
-      buttonLabel: folderName or '/'
+      buttonLabel: span null,
+        span className: 'fa fa-fw fa-folder-o'
+        ' Select a folder'
       onPickedFn: (data) =>
         data = _.filter data, (file) ->
           file.type == 'folder'
@@ -92,8 +100,7 @@ module.exports = React.createClass
         data[0].title = folderName
         @props.saveTargetFolderFn(folderId, folderName)
       buttonProps:
-        bsStyle: 'default'
-        bsSize: 'small'
+        bsStyle: 'link'
       views: [
         ViewTemplates.rootFolder
         ViewTemplates.flatFolders

@@ -2,7 +2,7 @@ React = require 'react'
 
 _ = require 'underscore'
 {ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
-{button, strong, div, h2, span, h4, section, p} = React.DOM
+{button, strong, div, h2, span, h4, section, p, div} = React.DOM
 ApplicationStore = require '../../../../../stores/ApplicationStore'
 {Map} = require 'immutable'
 
@@ -33,16 +33,15 @@ module.exports = React.createClass
     isAuthorized: React.PropTypes.bool
 
   render: ->
-    span null,
+    return null if !@props.isAuthorized
+    div null,
       Button
-        disabled: not @props.isAuthorized
-        className: 'btn btn-default'
+        bsStyle: 'link'
         onClick: =>
           @props.updateLocalStateFn('show', true)
       ,
-        i className: 'kbc-icon-orchestrations'
-        ' '
-        'Setup Orchestration Tasks'
+        i className: 'kbc-icon-orchestrations fa-fw'
+        ' Setup Orchestration Tasks'
       @_renderModal()
 
   _renderModal: ->

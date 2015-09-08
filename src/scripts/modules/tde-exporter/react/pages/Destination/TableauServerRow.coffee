@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 #DropboxModal = React.createFactory require './DropboxModal'
-{button, strong, div, h2, span, h4, section, p} = React.DOM
+{button, strong, div, h2, span, h4, section, p, ul, li} = React.DOM
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
@@ -23,27 +23,49 @@ module.exports = React.createClass
     div {className: 'row'},
       @props.renderComponent()
       div className: 'col-md-4',
-        @_renderAuthorization()
+        @_renderAuthorized()
       div className: 'col-md-3',
+        if !@_isAuthorized()
+          div null,
+            @_renderAuthorizeButton('Setup credentials to Tableau Server')
         @props.orchestrationModal
+        if @_isAuthorized()
+          div null,
+            @_renderAuthorizeButton('Edit Credentials')
+        if @_isAuthorized()
+          div null,
+            React.createElement Confirm,
+              title: 'Delete Credentials'
+              text: "Do you really want to delete credentials for #{@props.account.get('server_url')}"
+              buttonLabel: 'Delete'
+              onConfirm: =>
+                @props.setConfigDataFn(['parameters', 'tableauServer'], null)
+            ,
+              Button
+                bsStyle: 'link'
+              ,
+                span className: 'kbc-icon-cup fa-fw'
+                ' Disconnect Destination'
 
-  _renderAuthorization: ->
+
+  _renderAuthorized: ->
     if @_isAuthorized()
-      div className: 'well well-sm text-center',
-        @_renderAuthorizedInfo()
+      span null,
+        'Authorized for '
+        strong null,
+          "#{@props.account.get('username')}@#{@props.account.get('server_url')}"
     else
-      div className: 'well well-sm text-center',
-        div null, 'No Credentials.'
-        @_renderAuthorizeButton('Setup credentials to Tableau Server')
+      span null,
+        'No Credentials.'
 
-  _renderAuthorizeButton: (caption, className = 'btn btn-primary') ->
-    span null,
-      Button
-        className: className
-        onClick: =>
-          @props.updateLocalStateFn(['tableauServerModal', 'show'], true)
-      ,
-        caption
+  _renderAuthorizeButton: (caption) ->
+    Button
+      bsStyle: 'link'
+      onClick: =>
+        @props.updateLocalStateFn(['tableauServerModal', 'show'], true)
+    ,
+      span className: 'fa fa-fw fa-user'
+      ' ' + caption
       TableauServerCredentialsModal
         configId: @props.configId
         localState: @props.localState.get('tableauServerModal', Map())
@@ -53,25 +75,6 @@ module.exports = React.createClass
         saveCredentialsFn: (credentials) =>
           path = ['parameters', 'tableauServer']
           @props.setConfigDataFn(path, credentials)
-
-
-  _renderAuthorizedInfo: ->
-    span null,
-      strong null,
-        "#{@props.account.get('username')}@#{@props.account.get('server_url')}"
-      div null,
-        React.createElement Confirm,
-          title: 'Delete Credentials'
-          text: "Do you really want to delete credentials for #{@props.account.get('server_url')}"
-          buttonLabel: 'Delete'
-          onConfirm: =>
-            @props.setConfigDataFn(['parameters', 'tableauServer'], null)
-        ,
-          Button
-            bsSize: 'small'
-          ,
-            'Delete'
-        @_renderAuthorizeButton('Edit', 'btn btn-sm btn-default')
 
   _isAuthorized: ->
     @props.account and

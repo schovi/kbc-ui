@@ -46,7 +46,7 @@ module.exports = React.createClass
         table className: 'table table-striped kbc-table-layout-fixed kbc-table-editor',
           thead null,
             tr null,
-              th style: {width: '35%'}, 'KB Storage Column'
+              th style: {width: '35%'}, 'Column'
               th style: {width: '50%'}, 'TDE Data Type'
               th style: {width: '15%'}, 'Preview'
           tbody null,

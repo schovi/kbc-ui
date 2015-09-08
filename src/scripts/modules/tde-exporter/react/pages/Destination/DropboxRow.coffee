@@ -26,17 +26,36 @@ module.exports = React.createClass
       div className: 'col-md-4',
         @_renderAuthorization()
       div className: 'col-md-3',
+        if !@_isAuthorized()
+          div null,
+            @_renderAuthorizeButton()
         @props.orchestrationModal
+        if @_isAuthorized()
+          div null,
+            React.createElement Confirm,
+              title: 'Reset Authorization'
+              text: "Do you really want to reset authorization for #{@props.account.get('description')}"
+              buttonLabel: 'Reset'
+              onConfirm: =>
+                @props.setConfigDataFn(['parameters', 'dropbox'], null)
+                oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
+            ,
+              Button
+                bsStyle: 'link'
+              ,
+                span className: 'kbc-icon-cup fa-fw'
+                ' Reset Authorization'
 
 
   _renderAuthorization: ->
     if @_isAuthorized()
-      div className: 'well well-sm text-center',
-        @_renderAuthorizedInfo()
+      span null,
+        'Authorized for '
+        strong null,
+          @props.account.get 'description'
     else
-      div className: 'well well-sm text-center',
-        div null, 'Not Authorized.'
-        @_renderAuthorizeButton()
+      span null,
+        'Not Authorized.'
 
   _renderAuthorizeButton: ->
     ModalTrigger
@@ -45,30 +64,11 @@ module.exports = React.createClass
         redirectRouterPath: 'tde-exporter-dropbox-redirect'
         credentialsId: "tde-exporter-#{@props.configId}"
     ,
-      span className: 'btn btn-primary',
-        i className: 'fa fa-fw fa-dropbox'
-        'Authorize Dropbox Account'
-
-
-  _renderAuthorizedInfo: ->
-    span null,
-      'Authorized for '
-      strong null,
-        @props.account.get 'description'
-      div null,
-        React.createElement Confirm,
-          title: 'Reset Authorization'
-          text: "Do you really want to reset authorization for #{@props.account.get('description')}"
-          buttonLabel: 'Reset'
-          onConfirm: =>
-            @props.setConfigDataFn(['parameters', 'dropbox'], null)
-            oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
-        ,
-          Button
-            bsSize: 'small'
-          ,
-            'reset'
-
+      Button
+        bsStyle: 'link'
+      ,
+        span className: 'fa fa-fw fa-dropbox'
+        ' Authorize'
 
   _isAuthorized: ->
     @props.account and

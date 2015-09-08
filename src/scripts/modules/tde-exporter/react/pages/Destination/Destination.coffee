@@ -110,7 +110,6 @@ module.exports = React.createClass
         @_renderComponentCol('wr-tableau-server')
 
   _renderOrchestrationModal: (uploadComponentId, description, account, isAuthorized) ->
-
     pathId = "#{uploadComponentId}orchModal"
     return React.createElement OrchestrationModal,
       description: description or uploadComponentId

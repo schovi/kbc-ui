@@ -30,7 +30,6 @@ module.exports = React.createClass
   componentDidMount: ->
     @refs.description.getInputDOMNode().focus()
 
-
   render: ->
     Modal
       title: 'Authorize Dropbox Account'
@@ -72,8 +71,8 @@ module.exports = React.createClass
                 disabled: _.isEmpty(@state.description)
               ,
                 span null,
-                  'Authorize '
                   i className: 'fa fa-fw fa-dropbox'
+                  ' Authorize'
 
   _createHiddenInput: (name, value) ->
     input
