@@ -87,7 +87,7 @@ export function initFromTemplate(configId) {
     foundTemplate = jobsTemplates.find((tmpl) => tmpl.get('id') === newTemplateId),
     config = template(store.getConfig(COMPONENT_ID, configId).get('name'),
       store.getConfigData(COMPONENT_ID, configId))
-      .setIn(['parameters', 'config', 'jobs'], foundTemplate);
+      .setIn(['parameters', 'config', 'jobs'], foundTemplate.get('template'));
 
   return actions.saveComponentConfigData(COMPONENT_ID, configId, config)
     .then(() => {
