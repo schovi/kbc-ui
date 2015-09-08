@@ -94,8 +94,8 @@ module.exports = React.createClass
           wrapperClassName: 'col-xs-offset-2 col-xs-10'
         Input
           type: 'radio'
-          label: 'Development'
-          help: 'max 2GB of data, expires in 2 months'
+          label: 'Demo'
+          help: 'max 1GB of data, expires in 1 month'
           name: 'tokenType'
           value: GoodDataWriterTokenTypes.DEVELOPER
           checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.DEVELOPER
@@ -159,4 +159,3 @@ module.exports = React.createClass
     e.preventDefault()
     if @props.isValid
       @props.onSave()
-
