@@ -28,6 +28,7 @@ import {saveCredentials,
   prefillFromTemplate
   } from '../actions';
 
+import classnames from 'classnames';
 import templates from '../jobsTemplates';
 import Select from 'react-select';
 import {Button} from 'react-bootstrap';
@@ -86,29 +87,15 @@ export default React.createClass({
               />
           </div>
           <ul className="nav nav-stacked">
-            <li>
-              <a onClick={this.openCredentialsModal}>
-                <i className="fa fa-fw fa-user"/>
-                Credentials
-              </a>
-              <CredentialsModal
-                show={this.state.showCredentialsModal}
-                onHide={this.closeCredentialsModal}
-                credentials={this.state.localState.get('credentials', Map({
-                  username: this.state.parameters.getIn(['config', 'username'], ''),
-                  password: this.state.parameters.getIn(['config', 'password'], '')
-                }))}
-                isSaving={this.state.isSaving}
-                onChange={this.updateCredentials}
-                onSave={this.saveCredentials}
-                />
-            </li>
-            <li>
+            {this.renderCredentialsLink()}
+            <li className={classnames({disabled: !this.isRunEnabled()})}>
               <RunComponentButton
                 title="Run"
                 component={this.state.componentId}
                 mode="link"
                 runParams={this.runParams()}
+                disabled={!this.isRunEnabled()}
+                disabledReason="Component is not configured yet"
                 >
                 You are about to run component.
               </RunComponentButton>
@@ -121,9 +108,35 @@ export default React.createClass({
             </li>
           </ul>
           <LatestJobs jobs={this.state.latestJobs} />
+          <CredentialsModal
+            show={this.state.showCredentialsModal}
+            onHide={this.closeCredentialsModal}
+            credentials={this.state.localState.get('credentials', Map({
+                  username: this.state.parameters.getIn(['config', 'username'], ''),
+                  password: this.state.parameters.getIn(['config', 'password'], '')
+                }))}
+            isSaving={this.state.isSaving}
+            onChange={this.updateCredentials}
+            onSave={this.saveCredentials}
+            />
         </div>
       </div>
     );
+  },
+
+  renderCredentialsLink() {
+    if (this.isAuthorized()) {
+      return (
+        <li>
+          <a onClick={this.openCredentialsModal}>
+            <i className="fa fa-fw fa-user"/>
+            Credentials
+          </a>
+        </li>
+      );
+    } else {
+      return null;
+    }
   },
 
   renderMainContent() {
@@ -166,7 +179,6 @@ export default React.createClass({
   renderHelp() {
     return (
       <p className="help-block">
-        Adform resources to fetch has to be configured manually.
         The resource configuration bellow expect <strong>jobs</strong> array configured according to
         <a href="https://github.com/keboola/generic-extractor#jobs" target="_blank"> documentation</a>.
       </p>
@@ -195,10 +207,15 @@ export default React.createClass({
       && this.state.parameters.getIn(['config', 'password']);
   },
 
+  isRunEnabled() {
+    return this.isAuthorized() && this.state.parameters.hasIn(['config', 'jobs']);
+  },
+
   renderInitFromTemplate() {
     return (
       <div>
-        <p>Please select from predefined templates:</p>
+        <h3 style={{marginTop: 0}}>Configuration</h3>
+        <p>Please select from predefined templates to initialize the AdForm configuration:</p>
         <p>
           <Select
             name="jobTemplates"
@@ -207,6 +224,9 @@ export default React.createClass({
             onChange={this.onTemplateChange}
             placeholder="Select template"
             />
+        </p>
+        <p className="help-block">
+          You can change it or extend it to fetch more or other data later.
         </p>
         <p>
           <Button

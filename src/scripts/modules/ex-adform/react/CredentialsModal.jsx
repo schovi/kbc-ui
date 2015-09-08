@@ -27,6 +27,7 @@ export default React.createClass({
               value={this.props.credentials.get('username')}
               onChange={this.handleChange.bind(this, 'username')}
               labelClassName='col-xs-4' wrapperClassName='col-xs-6'
+              autoFocus={true}
               />
             <Input
               type="password"
