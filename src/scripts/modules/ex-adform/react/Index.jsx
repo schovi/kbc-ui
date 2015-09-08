@@ -215,7 +215,7 @@ export default React.createClass({
     return (
       <div>
         <h3 style={{marginTop: 0}}>Configuration</h3>
-        <p>Please select from predefined templates to initialize the AdForm configuration:</p>
+        <p>Please select from predefined templates to initialize the Adform configuration:</p>
         <p>
           <Select
             name="jobTemplates"
