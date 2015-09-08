@@ -86,7 +86,7 @@ getUploadTaskParameters = (uploadComponentId, account, configId) ->
             email: gdrive.email
             accessToken: gdrive.accessToken
             refreshToken: gdrive.refreshToken
-          query: "+tags:tde +tags:table-export +tags:config-#{configId}"
+          query: "+tags:tde +tags:table-export"
           filterByRunId: true
           targetFolder: gdrive.targetFolder
   return result
