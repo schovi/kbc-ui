@@ -2,6 +2,7 @@ React = require 'react'
 {Map} = require 'immutable'
 {table, tr, th, tbody, thead, div, td} = React.DOM
 ColumnRow = require './ColumnRow'
+ComponentEmptyState = require '../../../../components/react/components/ComponentEmptyState'
 
 module.exports = React.createClass
   displayName: 'ColumnsEditor'
@@ -51,4 +52,5 @@ module.exports = React.createClass
           tbody null,
             rows
     else
-      div className: 'well text-center', 'No Columns.'
+      React.createElement ComponentEmptyState, null,
+        'No Columns.'
