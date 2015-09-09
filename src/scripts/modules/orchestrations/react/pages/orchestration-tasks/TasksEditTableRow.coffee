@@ -7,6 +7,8 @@ DragDropMixin = require('react-dnd').DragDropMixin
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
+Phase = React.createFactory(require('./Phase'))
+
 TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
@@ -69,6 +71,10 @@ TasksEditTableRow = React.createClass
             onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
         ,
           Tree data: @props.task.get('actionParameters')
+      td null,
+        Phase
+          onPhaseUpdate: @props.onTaskUpdate
+          task: @props.task
       td null,
         input
           type: 'checkbox'

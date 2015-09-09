@@ -34,6 +34,11 @@ module.exports = React.createClass
       td null,
         React.createElement Tree, data: @props.task.get('actionParameters')
       td null,
+        span
+          className: 'label label-default'
+        ,
+          @props.task.get('phase')
+      td null,
         React.createElement Check, isChecked: @props.task.get('active')
       td null,
         React.createElement Check, isChecked: @props.task.get('continueOnFailure')

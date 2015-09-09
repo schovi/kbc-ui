@@ -24,6 +24,7 @@ TasksTable = React.createClass
           th null, 'Component'
           th style: {width: '10%'}, 'Action'
           th style: {width: '32%'}, 'Parameters'
+          th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '12%'}, 'Continue on Failure'
           th style: {width: '8%'}, ''
@@ -40,7 +41,7 @@ TasksTable = React.createClass
         else
           tr null,
             td
-              colSpan: 6
+              colSpan: 7
               className: 'text-muted'
             ,
               'There are no tasks assigned yet.'
