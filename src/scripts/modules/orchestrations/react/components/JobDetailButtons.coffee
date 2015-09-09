@@ -18,11 +18,13 @@ module.exports = React.createClass
   getStateFromStores: ->
     jobId = @_getJobId()
     job: JobsStore.getJob jobId
+    isSaving: JobsStore.getIsJobRetrying jobId
 
   render: ->
     span null,
       JobRetryButton
         job: @state.job
         notify: true
+        isSaving: @state.isSaving
       JobTerminateButton
         job: @state.job

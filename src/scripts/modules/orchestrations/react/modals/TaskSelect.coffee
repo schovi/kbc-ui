@@ -55,12 +55,11 @@ module.exports = React.createClass
               isDisabled: false
               saveLabel: 'Run'
               onCancel: @props.onRequestHide
-#              onSave: @props.onRun
               onSave: @_handleRun
 
   _handleRun: (e) ->
-    @state.isSaving = true
-    @props.onRun().then @props.onRequestHide()
+    @props.onRun()
+    @props.onRequestHide()
 
   _handleTaskUpdate: (updatedTask) ->
     @props.onChange(updatedTask)

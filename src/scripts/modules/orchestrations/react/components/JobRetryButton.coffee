@@ -16,7 +16,7 @@ ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 
 {ComponentIcon, ComponentName} = require '../../../../react/common/common'
 {Tree, Check} = require 'kbc-react-components'
-#Loader = React.createFactory(require('kbc-react-components').Loader)
+Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {table, thead, tbody, th, td, tr, input, button, span} = React.DOM
 
@@ -25,6 +25,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(JobsStore)]
   propTypes:
     job: React.PropTypes.object.isRequired
+    isSaving: React.PropTypes.bool.isRequired
     notify: React.PropTypes.bool
 
   getDefaultProps: ->
@@ -72,10 +73,11 @@ module.exports = React.createClass
           onClick: @_handleRetrySelectStart
           className: 'btn btn-link'
         ,
-#          if @state.isSaving
-#            Loader()
-          span
-            className: 'fa fa-fw fa-play'
+          if @props.isSaving
+            Loader()
+          else
+            span
+              className: 'fa fa-fw fa-play'
           ' Job retry'
     else
       null

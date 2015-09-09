@@ -11,6 +11,7 @@ _store = Map(
   loadingOrchestrationJobs: List()
   loadingJobs: List()
   terminatingJobs: List()
+  retryingJobs: List()
 )
 
 addToLoadingOrchestrations = (store, orchestrationId) ->
@@ -72,6 +73,9 @@ OrchestrationJobsStore = StoreUtils.createStore
 
   getIsJobTerminating: (id) ->
     _store.get('terminatingJobs').contains id
+
+  getIsJobRetrying: (id) ->
+    _store.get('retryingJobs').contains id
 
   ###
     Test if job is currently being loaded
@@ -148,6 +152,16 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_EDIT_UPDATE
       _store = _store.setIn ['editing', action.jobId, 'tasks'], action.tasks
+      OrchestrationJobsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_START
+      _store = _store.update 'retryingJobs', (jobs) ->
+        jobs.push action.jobId
+      OrchestrationJobsStore.emitChange()
+
+    when Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_SUCCESS, Constants.ActionTypes.ORCHESTRATION_JOB_RETRY_ERROR
+      _store = _store.update 'retryingJobs', (jobs) ->
+        jobs.remove(jobs.indexOf(action.jobId))
       OrchestrationJobsStore.emitChange()
 
 module.exports = OrchestrationJobsStore
