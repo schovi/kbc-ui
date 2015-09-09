@@ -31,6 +31,7 @@ module.exports = React.createClass
 
     React.createElement Modal,
       title: "Retry job"
+      bsSize: "large"
       keyboard: false
       onRequestHide: @props.onRequestHide
     ,
@@ -41,9 +42,10 @@ module.exports = React.createClass
           header: 'Choose orchestration tasks to run'
           collapsible: true
         ,
+          div className: 'row',
             React.createElement TaskSelectTable,
-            tasks: tasks
-            onTaskUpdate: @_handleTaskUpdate
+              tasks: tasks
+              onTaskUpdate: @_handleTaskUpdate
       div className: 'modal-footer',
         div null,
           div className: 'col-sm-6'
