@@ -1,12 +1,17 @@
 React = require 'react'
+Link = require('react-router').Link
+
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
 uploadUtils = require '../../../uploadUtils'
 
+
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+ApplicationActionCreators = require '../../../../../actions/ApplicationActionCreators'
 
 OrchestrationModal = require './OrchestrationModal'
 
@@ -39,8 +44,6 @@ module.exports = React.createClass
     #loadingOrchestrations
     isLoadingOrchestrations = OrchestrationsStore.getIsLoading()
 
-    console.log 'ORCHESTRAIONS', orchestrations?.toJS()
-
     #state
     isLoadingOrchestrations: isLoadingOrchestrations
     orchestrations: orchestrations
@@ -52,7 +55,6 @@ module.exports = React.createClass
     OrchestrationsActions.loadOrchestrations()
 
   render: ->
-    console.log "DESTINATION config", @state.configData?.toJS()
     div {className: 'container-fluid kbc-main-content'},
       @_renderTableauServer()
       @_renderDropbox()
@@ -133,13 +135,31 @@ module.exports = React.createClass
   _appendToOrchestration: (uploadComponentId, account) ->
     orchId = @state.localState.get 'orchSelect'
     @_updateLocalState(['isAppending'], true)
-    uploadUtils.appendToOrchestration(orchId, @state.configId, uploadComponentId, account).then =>
+    uploadUtils.appendToOrchestration(orchId, @state.configId, uploadComponentId, account).then (result) =>
       @_updateLocalState(['isAppending'], false)
       @_updateLocalState(["#{uploadComponentId}orchModal", 'show'], false)
+      console.log "RESULT ORCH", result
+      @_sendNotification(result.id, result.name)
 
     .catch (err) =>
       @_updateLocalState(['isAppending'], false)
       throw err
+
+  _sendNotification: (orchId, orchName) ->
+    msg = React.createClass
+      render: ->
+        span null,
+          'Orchestrtaion '
+          React.createElement Link,
+                to: 'orchestrationTasks'
+                params:
+                  orchestrationId: orchId
+              ,
+                orchName
+          ' has been updated'
+
+    ApplicationActionCreators.sendNotification
+      message: msg
 
   _saveConfigData: (path, data) ->
     newData = @state.configData.setIn path, data

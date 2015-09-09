@@ -146,9 +146,14 @@ module.exports =
     orchId = parseInt orchId
     OrchestrationsActions.loadOrchestration(orchId).then ->
       tasks = OrchestrationsStore.getOrchestrationTasks(orchId)
+      orch = OrchestrationsStore.get(orchId)
+      orchName = orch.get('name')
       tasks = appendExportTask(tasks, configId)
       tasks = appendUploadTask(tasks, uploadComponentId, account, configId)
-      console.log "TASKS TO PUT", tasks?.toJS()
       OrchestrationsActions.startOrchestrationTasksEdit(orchId)
       OrchestrationsActions.updateOrchestrationsTasksEdit(orchId, tasks)
-      OrchestrationsActions.saveOrchestrationTasks(orchId)
+      OrchestrationsActions.saveOrchestrationTasks(orchId).then ->
+        result =
+          id: orchId
+          name: orchName
+        return result
