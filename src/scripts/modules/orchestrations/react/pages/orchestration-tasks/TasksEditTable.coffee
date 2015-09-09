@@ -22,7 +22,6 @@ TasksEditTable = React.createClass
           th style: {width: '26%'}, 'Component'
           th style: {width: '10%'}, 'Action'
           th style: {width: '28%'}, 'Parameters'
-          th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '10%'}, 'Continue on Failure'
           th style: {width: '5%'}
