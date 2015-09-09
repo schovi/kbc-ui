@@ -16,6 +16,7 @@ module.exports = React.createClass
     orchestration: React.PropTypes.object.isRequired
     tasks: React.PropTypes.object
     onRequestRun: React.PropTypes.func.isRequired
+    onRequestCancel: React.PropTypes.func
 
   render: ->
     Modal title: "Run orchestration #{@props.orchestration.get('name')}", onRequestHide: @props.onRequestHide,
@@ -36,12 +37,25 @@ module.exports = React.createClass
         React.createElement ConfirmButtons,
           isDisabled: false
           saveLabel: 'Run'
-          onCancel: @props.onRequestHide
+          onCancel: @_handleCancel
           onSave: @_handleRun
 
   _handleRun: ->
     @props.onRequestHide()
     @props.onRequestRun()
 
-  _handleTaskUpdate: ->
-    console.log('update')
+  _handleCancel: ->
+    if @props.onRequestCancel
+      @props.onRequestHide()
+      @props.onRequestCancel()
+    else
+      @props.onRequestHide()
+
+  _handleTaskUpdate: (updatedTask) ->
+    tasks = @props.tasks
+    index = tasks.findIndex((task) -> task.get('id') == updatedTask.get('id'))
+
+    OrchestrationActionCreators.updateOrchestrationRunTasksEdit(
+      @props.orchestration.get('id')
+      tasks.set(index, tasks.get(index).set('active', updatedTask.get('active')))
+    )

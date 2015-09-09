@@ -14,7 +14,7 @@ export default React.createClass({
       return (
           <OverlayTrigger overlay={<Tooltip>Change Task Phase</Tooltip>} placement="top">
             <ModalTrigger modal={this.modal()}>
-          <span className="label label-default kbc-cursor-pointer">
+          <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
             <span>{this.props.task.get('phase')} </span>
             <span className="kbc-icon-pencil"/>
           </span>
@@ -25,7 +25,7 @@ export default React.createClass({
       return (
           <OverlayTrigger overlay={<Tooltip>Change Task Phase</Tooltip>} placement="top">
             <ModalTrigger modal={this.modal()}>
-          <span className="label label-default kbc-cursor-pointer">
+          <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
             <span>Set </span>
             <span className="kbc-icon-pencil"/>
           </span>

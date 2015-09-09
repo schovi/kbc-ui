@@ -34,6 +34,7 @@ OrchestrationDetailButtons = React.createClass
         tooltipPlacement: 'bottom'
       OrchestrationRunButton
         orchestration: @state.orchestration
+        tasks: OrchestrationsStore.getTasksToRun @_getOrchestrationId()
         tooltipPlacement: 'bottom'
 
 

@@ -329,6 +329,28 @@ module.exports =
     )
 
   ###
+    Editing tasks on manulal run
+  ###
+  startOrchestrationRunTasksEdit: (orchestrationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_START
+      orchestrationId: orchestrationId
+    )
+
+  cancelOrchestrationRunTasksEdit: (orchestrationId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_CANCEL
+      orchestrationId: orchestrationId
+    )
+
+  updateOrchestrationRunTasksEdit: (orchestrationId, tasks) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_UPDATE
+      orchestrationId: orchestrationId
+      tasks: tasks
+    )
+
+  ###
     Editing notifications
   ###
   startOrchestrationNotificationsEdit: (id) ->
@@ -384,6 +406,11 @@ module.exports =
         orchestrationId: newJob.orchestrationId
         job: newJob
       )
+      if tasks
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_SUCCESS
+          orchestrationId: newJob.orchestrationId
+        )
       if notify
         ApplicationActionCreators.sendNotification
           message: React.createClass
