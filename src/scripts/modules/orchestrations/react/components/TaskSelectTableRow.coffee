@@ -26,8 +26,7 @@ module.exports = React.createClass
         span className: 'kbc-component-icon',
           if @props.component
             React.createElement ComponentIcon, component: @props.component
-          else
-            ' '
+          ' '
           if @props.component
             React.createElement ComponentName, component: @props.component
           else
