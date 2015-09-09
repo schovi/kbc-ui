@@ -3,6 +3,7 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
+ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 
@@ -24,6 +25,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
+    configId: config
     writer: goodDataWriterStore.getWriter(config)
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucketFiltered(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
@@ -62,6 +64,10 @@ module.exports = React.createClass
           @_renderNotFound()
 
       div className: 'col-md-3 kbc-main-sidebar',
+        div className: 'kbc-buttons kbc-text-light',
+          React.createElement ComponentMetadata,
+            componentId: 'gooddata-writer'
+            configId: @state.configId
         ul className: 'nav nav-stacked',
           li null,
             React.createElement Link,
