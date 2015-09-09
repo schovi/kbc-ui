@@ -19,7 +19,11 @@ module.exports = React.createClass
     onRequestCancel: React.PropTypes.func
 
   render: ->
-    Modal title: "Run orchestration #{@props.orchestration.get('name')}", onRequestHide: @props.onRequestHide,
+    Modal
+      title: "Run orchestration #{@props.orchestration.get('name')}"
+      bsSize: 'large'
+      onRequestHide: @props.onRequestHide
+    ,
       div className: 'modal-body',
         p null,
           'You are about to run the orchestration ',
@@ -30,9 +34,10 @@ module.exports = React.createClass
             header: 'Choose orchestration tasks to run'
             collapsible: true
           ,
-            React.createElement TaskSelectTable,
-              tasks: @props.tasks
-              onTaskUpdate: @_handleTaskUpdate
+            div className: 'row',
+              React.createElement TaskSelectTable,
+                tasks: @props.tasks
+                onTaskUpdate: @_handleTaskUpdate
       div className: 'modal-footer',
         React.createElement ConfirmButtons,
           isDisabled: false
