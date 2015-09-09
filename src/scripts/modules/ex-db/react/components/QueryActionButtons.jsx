@@ -24,6 +24,10 @@ export default React.createClass({
     };
   },
 
+  componentWillReceiveProps() {
+    this.setState(this.getStateFromStores());
+  },
+
   render() {
     return (
       <div>
