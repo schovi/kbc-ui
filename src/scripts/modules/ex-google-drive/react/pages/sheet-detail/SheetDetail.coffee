@@ -5,6 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
+SapiTableLinkEx = require '../../../../components/react/components/StorageApiTableLinkEx'
 
 {div, span, form } = React.DOM
 module.exports = React.createClass
@@ -52,6 +53,11 @@ module.exports = React.createClass
               config
             'text'
             'table'
+            true
+            => #readStaticFn
+              tableId = @_parsedConfig()?.db?.table
+              React.createElement SapiTableLinkEx,
+                tableId: tableId
 
           )
           @_createConfigInput(
@@ -91,7 +97,7 @@ module.exports = React.createClass
       return {}
 
 
-  _createConfigInput: (caption, readFn, setFn, type, validationProperty,  stringify = true) ->
+  _createConfigInput: (caption, readFn, setFn, type, validationProperty,  stringify = true, readStaticFn) ->
     if @state.isEditing
       Input
         label: caption
@@ -114,7 +120,12 @@ module.exports = React.createClass
         label: caption
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
-      , readFn()
+      ,
+      if readStaticFn
+        readStaticFn()
+      else
+        readFn()
+
 
 
 
