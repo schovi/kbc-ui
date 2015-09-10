@@ -33,7 +33,6 @@ module.exports = React.createClass
     table = null
     if tables
       table = tables.get @props.tableId
-      console.log table.toJS()
 
     #state
     isTablesLoading: isTablesLoading
@@ -43,12 +42,15 @@ module.exports = React.createClass
     storageActionCreators.loadTables()
 
   render: ->
-    if not @state.table
-      span null, @props.tableId
+    if not @props.tableId
+      span null, 'n/a'
     else
-      span null,
-        @_renderTableWithTooltipInfo()
-        #@_renderTableWithPopoverInfo()
+      if not @state.table
+        span null, @props.tableId
+      else
+        span null,
+          @_renderTableWithTooltipInfo()
+          #@_renderTableWithPopoverInfo()
 
   _renderTableWithPopoverInfo: ->
     span null,
@@ -91,7 +93,12 @@ module.exports = React.createClass
       @_renderTableUrl()
 
   _renderTableUrl: ->
-    a href: @_tableUrl(),
+    a
+      href: @_tableUrl()
+      onClick: (e) ->
+        #e.preventDefault()
+        e.stopPropagation()
+    ,
       @props.children or @props.tableId
 
   _renderTooltip: ->
