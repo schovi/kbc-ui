@@ -5,7 +5,7 @@ import {FormControls} from 'react-bootstrap';
 
 const StaticText = FormControls.Static;
 //import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
-import params, {getInTable, updateLocalState} from '../actions';
+import {params, getInTable, updateLocalState} from '../actions';
 
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';

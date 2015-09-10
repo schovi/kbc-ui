@@ -12,9 +12,7 @@ const PRIMARYKEY = 'id_column';
 const ANALYSIS = 'analysis_types';
 const DATACOLUMN = 'data_column';
 
-const params = { BETA, LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN};
-console.log(params);
-export default params;
+export const params = { BETA, LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN};
 
 export function updateLocalState(configId, path, data){
   const newState = InstalledComponentStore.getLocalState(componentId, configId).setIn(path, data);
