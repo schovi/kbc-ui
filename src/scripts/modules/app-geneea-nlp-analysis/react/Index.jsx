@@ -1,8 +1,11 @@
 import React from 'react';
-import {Map} from 'immutable';
+//import {Map} from 'immutable';
 import {FormControls} from 'react-bootstrap';
+
+
 const StaticText = FormControls.Static;
-import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
+//import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
+import params, {getInTable, updateLocalState} from '../actions';
 
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';
@@ -20,13 +23,6 @@ import ComponentDescription from '../../components/react/components/ComponentDes
 const componentId = 'geneea-nlp-analysis';
 
 
-const BETA = 'use_beta';
-const LANGUAGE = 'language';
-const OUTPUT = 'output';
-const PRIMARYKEY = 'id_column';
-const ANALYSIS = 'anayslisi_types';
-const DATACOLUMN = 'data_column';
-
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
 
@@ -34,7 +30,8 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config');
     const localState = InstalledComponentStore.getLocalState(componentId, configId);
     const configData = InstalledComponentStore.getConfigData(componentId, configId);
-    const intable = configData.getIn(['storage', 'input', 'tables', 0], Map()).get('source');
+
+    const intable = getInTable(configId);
     const parameters = configData.get('parameters');
 
     //console.log('CONFIG DATA', configData);
@@ -43,7 +40,8 @@ export default React.createClass({
       localState: localState,
       configData: configData,
       intable: intable,
-      parameters: parameters
+      parameters: parameters,
+      editing: localState.get('editing')
 
     };
   },
@@ -64,7 +62,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <form className="form-horizontal">
-              {this.renderStatic()}
+              { this.editing ? this.renderEditing() : this.renderStatic()}
             </form>
           </div>
         </div>
@@ -72,16 +70,24 @@ export default React.createClass({
     );
   },
 
+  renderEditing(){
+    return (
+      <span>
+        Editing
+      </span>
+    );
+  },
+
   renderStatic(){
     return (
       <div className="row">
         {this.RenderStaticInput('Input table', this.state.intable)}
-        {this.RenderStaticInput('Data column', this.parameter(DATACOLUMN))}
-        {this.RenderStaticInput('Primary Key', this.parameter(PRIMARYKEY))}
-        {this.RenderStaticInput('Output table prefix', this.parameter(OUTPUT))}
-        {this.RenderStaticInput('Language', this.parameter(LANGUAGE))}
-        {this.RenderStaticInput('Use beta', this.parameter(BETA))}
-        {this.RenderStaticInput('Analysis taks', this.parameter(ANALYSIS, []).join(','))}
+        {this.RenderStaticInput('Data column', this.parameter(params.DATACOLUMN))}
+        {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY))}
+        {this.RenderStaticInput('Output table prefix', this.parameter(params.OUTPUT))}
+        {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
+        {this.RenderStaticInput('Use beta', this.parameter(params.BETA))}
+        {this.RenderStaticInput('Analysis taks', this.parameter(params.ANALYSIS, []).join(','))}
       </div>
     );
   },
@@ -98,8 +104,7 @@ export default React.createClass({
   },
 
   updateLocalState(path, data){
-    const newState = this.state.localState.setIn(path, data);
-    installedComponentsActions.updateLocalState(componentId, this.state.configId, newState);
+    updateLocalState(this.state.configId, path, data);
   }
 
 });
