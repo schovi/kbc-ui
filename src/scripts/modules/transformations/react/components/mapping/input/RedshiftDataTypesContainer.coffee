@@ -45,7 +45,7 @@ module.exports = React.createClass
     if @state.size
       datatypeString += " (#{@state.size})"
     if @state.compression
-      datatypeString += " #{@state.compression}"
+      datatypeString += " ENCODE #{@state.compression}"
     value = @props.value.set(@state.column, datatypeString)
     @props.onChange(value)
     @setState
