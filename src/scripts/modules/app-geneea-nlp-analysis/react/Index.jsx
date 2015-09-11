@@ -152,6 +152,7 @@ export default React.createClass({
           <Select
             key="language"
             name="language"
+            clearable={false}
             value={this.getEditingValue(params.LANGUAGE)}
             onChange= {(newValue) => this.updateEditingValue(params.LANGUAGE, newValue)}
             options= {languageOptions}/>)
@@ -172,7 +173,6 @@ export default React.createClass({
         const newSelected = isChecked ? selectedTypes.push(key) : selectedTypes.remove(key);
         this.updateEditingValue(params.ANALYSIS, newSelected);
       };
-      console.log(value, key, analysisTypes[value]);
       const info = analysisTypes[value];
       return (
         <div className="checkbox">

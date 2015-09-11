@@ -72,6 +72,15 @@ export function startEditing(configId){
   setEditingData(configId, fromJS(editingData));
 }
 
+const mandatoryParams = [PRIMARYKEY, DATACOLUMN, ANALYSIS, OUTPUT, 'intable'];
+export function isValid(configId){
+  const isMissing = mandatoryParams.reduce((memo, param) => {
+    return memo || _.isEmpty(getEditingValue(configId, param));
+  }, false);
+  return !isMissing;
+  //const missing = getLocalState(configId, ['missing']) || Map();
+  //return !missing.reduce( (memo, value) => memo || value, false);
+}
 
 export function save(configId){
 
