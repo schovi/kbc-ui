@@ -14,6 +14,7 @@ import {params,
   getInTable,
   updateLocalState,
   updateEditingValue,
+  startEditing,
   getEditingValue} from '../actions';
 
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
@@ -103,6 +104,18 @@ export default React.createClass({
       latestJobs: LatestJobsStore.getJobs(componentId, configId)
 
     };
+  },
+
+  componentDidMount(){
+    let data = this.state.configData;
+    if (data) {
+      data = data.toJS();
+    }
+
+    if (_.isEmpty(data)){
+      startEditing(this.state.configId);
+    }
+
   },
 
   parameter(key, defaultValue){
