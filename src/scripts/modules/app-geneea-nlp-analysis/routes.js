@@ -1,6 +1,7 @@
 import Index from './react/Index';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import HeaderButtons from './react/HeaderButtons';
+import storageActions from '../components/StorageActionCreators';
 
 const componentId = 'geneea-nlp-analysis';
 
@@ -11,7 +12,8 @@ export default {
   defaultRouteHandler: Index,
   headerButtonsHandler: HeaderButtons,
   requireData: [
-    (params) => installedComponentsActions.loadComponentConfigData(componentId, params.config)
+    (params) => installedComponentsActions.loadComponentConfigData(componentId, params.config),
+    () => storageActions.loadTables()
   ]
 
 };
