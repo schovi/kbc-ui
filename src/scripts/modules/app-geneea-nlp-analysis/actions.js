@@ -64,6 +64,12 @@ export function startEditing(configId){
              if (key === LANGUAGE){
                defaultVal = 'en';
              }
+             if (key === OUTPUT){
+               defaultVal = 'out.c-nlp.';
+             }
+             if (key === BETA){
+               defaultVal = false;
+             }
              const value = configData.getIn(['parameters', key], defaultVal);
              memo[key] = value;
              return memo;
@@ -82,10 +88,34 @@ export function isValid(configId){
   //return !missing.reduce( (memo, value) => memo || value, false);
 }
 
-export function save(configId){
-
-}
-
 export function cancel(configId){
   setEditingData(configId, null);
+}
+
+export function save(configId){
+  const data = getLocalState(configId, ['editing']).toJS();
+  const storage = {
+    input: {
+      tables: [
+        {
+          source: data.intable,
+          columns: [data[params.DATACOLUMN], data[params.PRIMARYKEY]]
+        }
+      ]
+    }
+  };
+  const parameters = _.reduce(_.values(params), (memo, key) => {
+    memo[key] = data[key];
+    return memo;
+  }, {});
+
+  const config = {
+    storage: storage,
+    parameters: parameters
+  };
+  console.log('config to save', config);
+  const saveFn = installedComponentsActions.saveComponentConfigData;
+  saveFn(componentId, configId, fromJS(config)).then( () => {
+    return cancel(configId);
+  });
 }

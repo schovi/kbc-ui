@@ -1,5 +1,5 @@
 import React from 'react';
-//import {Map} from 'immutable';
+import {Map} from 'immutable';
 import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
 import Select from 'react-select';
@@ -87,9 +87,9 @@ export default React.createClass({
     const configData = InstalledComponentStore.getConfigData(componentId, configId);
 
     const intable = getInTable(configId);
-    const parameters = configData.get('parameters');
+    const parameters = configData.get('parameters', Map());
 
-    console.log('CONFIG DATA', localState.toJS());
+    console.log('CONFIG DATA', localState.toJS(), configData.toJS());
     return {
       configId: configId,
       localState: localState,
@@ -135,6 +135,7 @@ export default React.createClass({
       <div className="row">
         {this.renderEditFormElement('Input Table',
            <SapiTableSelector
+            placeholder="Select..."
             value={this.getEditingValue('intable')}
             onSelectTableFn= {intableChange}
             excludeTableFn= { () => false}/>)
@@ -163,14 +164,13 @@ export default React.createClass({
     );
   },
 
-
   renderAnalysisTypesSelect(){
     const selectedTypes = this.getEditingValue(params.ANALYSIS);
-    const options = _.map( _.keys(analysisTypes), (value, key) => {
-      const checked = (selectedTypes.indexOf(key) > -1);
+    const options = _.map( _.keys(analysisTypes), (value) => {
+      const checked = (selectedTypes.indexOf(value) > -1);
       const onChange = (e) => {
         const isChecked = e.target.checked;
-        const newSelected = isChecked ? selectedTypes.push(key) : selectedTypes.remove(key);
+        const newSelected = isChecked ? selectedTypes.push(value) : selectedTypes.remove(value);
         this.updateEditingValue(params.ANALYSIS, newSelected);
       };
       const info = analysisTypes[value];
@@ -178,6 +178,7 @@ export default React.createClass({
         <div className="checkbox">
           <label>
             <input
+
              type="checkbox"
              value={checked}
              onChange={onChange}/>
@@ -229,6 +230,7 @@ export default React.createClass({
   renderColumnSelect(label, column){
     const result = this.renderEditFormElement(label,
       <Select
+        clearable={false}
         key={column}
         name={column}
         value={this.getEditingValue(column)}
