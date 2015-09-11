@@ -4,6 +4,7 @@ import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
 import Select from 'react-select';
 import {Check} from 'kbc-react-components';
+import classnames from 'classnames';
 
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
@@ -23,10 +24,10 @@ import storageTablesStore from '../../components/stores/StorageTablesStore';
 
 //import EmptyState from '../../components/react/components/ComponentEmptyState';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
-//import ComponentMetadata from '../../components/react/components/ComponentMetadata';
-//import RunComponentButton from '../../components/react/components/RunComponentButton';
-//import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
-//import LatestJobs from '../../components/react/components/SidebarJobs';
+import ComponentMetadata from '../../components/react/components/ComponentMetadata';
+import RunComponentButton from '../../components/react/components/RunComponentButton';
+import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
+import LatestJobs from '../../components/react/components/SidebarJobs';
 
 const componentId = 'geneea-nlp-analysis';
 
@@ -98,7 +99,8 @@ export default React.createClass({
       configData: configData,
       intable: intable,
       parameters: parameters,
-      editing: !!localState.get('editing')
+      editing: !!localState.get('editing'),
+      latestJobs: LatestJobsStore.getJobs(componentId, configId)
 
     };
   },
@@ -122,6 +124,35 @@ export default React.createClass({
               { this.state.editing ? this.renderEditing() : this.renderStatic()}
             </form>
           </div>
+        </div>
+        <div className="col-md-3 kbc-main-sidebar">
+          <div classNmae="kbc-buttons kbc-text-light">
+            <ComponentMetadata
+              componentId={componentId}
+              configId={this.state.configId}
+              />
+          </div>
+          <ul className="nav nav-stacked">
+            <li className={classnames({disabled: this.state.editing})}>
+              <RunComponentButton
+                title="Run"
+                component={componentId}
+                mode="link"
+                runParams={ {config: this.state.configId} }
+                disabledReason="Configuration is not saved."
+                disabled={this.state.editing}
+                >
+                You are about to run the analysis job.
+              </RunComponentButton>
+            </li>
+            <li>
+              <DeleteConfigurationButton
+                componentId={componentId}
+                configId={this.state.configId}
+                />
+            </li>
+          </ul>
+          <LatestJobs jobs={this.state.latestJobs} />
         </div>
       </div>
     );
