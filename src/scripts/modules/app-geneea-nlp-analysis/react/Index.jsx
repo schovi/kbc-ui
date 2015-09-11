@@ -1,8 +1,10 @@
 import React from 'react';
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
 import Select from 'react-select';
+import {Check} from 'kbc-react-components';
+
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
 const StaticText = FormControls.Static;
@@ -243,6 +245,8 @@ export default React.createClass({
   },
 
   renderStatic(){
+    const tasks = this.parameter(params.ANALYSIS, List()).map( (value) => analysisTypes[value].name);
+
     return (
       <div className="row">
         {this.RenderStaticInput('Input Table', this.state.intable)}
@@ -250,19 +254,20 @@ export default React.createClass({
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT))}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
-        {this.RenderStaticInput('Analysis taks', this.parameter(params.ANALYSIS, []).join(','))}
-        {this.RenderStaticInput('Use beta', this.parameter(params.BETA))}
+        {this.RenderStaticInput('Analysis taks', tasks.join(', '))}
+        {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
   },
 
-  RenderStaticInput(label, value){
+  RenderStaticInput(label, value, isBetaCheckobx = false){
     return (
       <StaticText
         label={label}
         labelClassName="col-sm-3"
         wrapperClassName="col-sm-9">
-        {value || 'n/a'}
+        {isBetaCheckobx ? <Check
+         isChecked={value}/> : value || 'n/a'}
       </StaticText>
     );
   },
