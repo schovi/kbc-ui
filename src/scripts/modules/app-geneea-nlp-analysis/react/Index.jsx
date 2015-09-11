@@ -200,10 +200,10 @@ export default React.createClass({
   renderAnalysisTypesSelect(){
     const selectedTypes = this.getEditingValue(params.ANALYSIS);
     const options = _.map( _.keys(analysisTypes), (value) => {
-      const checked = (selectedTypes.indexOf(value) > -1);
+      const checked = (selectedTypes.contains(value));
       const onChange = (e) => {
         const isChecked = e.target.checked;
-        const newSelected = isChecked ? selectedTypes.push(value) : selectedTypes.remove(value);
+        const newSelected = isChecked ? selectedTypes.push(value) : selectedTypes.filter( (t) => t !== value);
         this.updateEditingValue(params.ANALYSIS, newSelected);
       };
       const info = analysisTypes[value];
@@ -211,9 +211,8 @@ export default React.createClass({
         <div className="checkbox">
           <label>
             <input
-
              type="checkbox"
-             value={checked}
+             checked={checked}
              onChange={onChange}/>
             <span>
               {info.name}
