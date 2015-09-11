@@ -35,6 +35,7 @@ module.exports = React.createClass
 
     Select
       name: 'source'
+      clearable: false
       value: @props.value
       placeholder: @props.placeholder
       onChange: @props.onSelectTableFn
