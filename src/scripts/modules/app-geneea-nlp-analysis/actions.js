@@ -114,13 +114,14 @@ export function save(configId){
     return memo;
   }, {});
 
-  const config = {
+  let config = fromJS({
     storage: storage,
     parameters: parameters
-  };
+  });
+  config = config.setIn(['parameters', 'user_key'], '9cf1a9a51553e32fda1ecf101fc630d5');
   console.log('config to save', config);
   const saveFn = installedComponentsActions.saveComponentConfigData;
-  saveFn(componentId, configId, fromJS(config)).then( () => {
+  saveFn(componentId, configId, config).then( () => {
     return cancel(configId);
   });
 }

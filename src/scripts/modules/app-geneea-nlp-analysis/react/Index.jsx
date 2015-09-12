@@ -151,7 +151,7 @@ export default React.createClass({
                 title="Run"
                 component={componentId}
                 mode="link"
-                runParams={ {config: this.state.configId} }
+                runParams={ () => ({config: this.state.configId}) }
                 disabledReason="Configuration is not saved."
                 disabled={this.state.editing}
                 >
