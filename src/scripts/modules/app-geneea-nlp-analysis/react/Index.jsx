@@ -33,6 +33,9 @@ import LatestJobs from '../../components/react/components/SidebarJobs';
 
 const componentId = 'geneea-nlp-analysis';
 
+
+
+
 const analysisTypes = {
   language: {
     name: 'Language',
@@ -187,14 +190,15 @@ export default React.createClass({
             onSelectTableFn= {intableChange}
             excludeTableFn= { () => false}/>)
         }
-        {this.renderColumnSelect('Data Column', params.DATACOLUMN)}
-        {this.renderColumnSelect('Primary Key', params.PRIMARYKEY)}
+        {this.renderColumnSelect('Data Column', params.DATACOLUMN, 'Column of the input table containing text to analyze.')}
+        {this.renderColumnSelect('Primary Key', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row of the table.')}
         {this.renderFormElement('Output Table Prefix',
           <input
             className="form-control"
             value={this.getEditingValue(params.OUTPUT)}
             onChange= {(event) => this.updateEditingValue(params.OUTPUT, event.target.value)}
-            placeholder="e.g. out.c-main.result"/>)
+          placeholder="e.g. out.c-main.result"/>,
+         'Prefix of the output table id, if is only a bucket id then it must end with dot \'.\'')
         }
         {this.renderFormElement('Language',
           <Select
@@ -203,7 +207,7 @@ export default React.createClass({
             clearable={false}
             value={this.getEditingValue(params.LANGUAGE)}
             onChange= {(newValue) => this.updateEditingValue(params.LANGUAGE, newValue)}
-            options= {languageOptions}/>)
+            options= {languageOptions}/>, 'Language of the text of the data column.')
         }
         {this.renderAnalysisTypesSelect()}
         {this.renderUseBetaEdit()}
@@ -260,7 +264,8 @@ export default React.createClass({
 
 
 
-  renderFormElement(label, element){
+  renderFormElement(label, element, description = ''){
+
     return (
       <div className="form-group">
         <label className="control-label col-sm-3">
@@ -268,12 +273,13 @@ export default React.createClass({
         </label>
         <div className="col-sm-9">
           {element}
+          <span className="help-block">{description}</span>
         </div>
       </div>
     );
   },
 
-  renderColumnSelect(label, column){
+  renderColumnSelect(label, column, description){
     const result = this.renderFormElement(label,
       <Select
         clearable={false}
@@ -283,7 +289,7 @@ export default React.createClass({
         onChange= {(newValue) => this.updateEditingValue(column, newValue)}
         options= {this.getColumns()}
       />
-    );
+    , description);
     return result;
 
   },
@@ -294,9 +300,9 @@ export default React.createClass({
       <div className="row">
         {this.renderIntableStatic()}
 
-        {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN))}
-        {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY))}
-        {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT))}
+        {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN) )}
+        {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
+        {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
         {this.RenderStaticInput('Analysis taks', tasks.join(', '))}
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
