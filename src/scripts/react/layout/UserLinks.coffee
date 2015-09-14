@@ -10,9 +10,10 @@ module.exports = React.createClass
   mixins: [ImmutableRendererMixin]
 
   _openSupportModal: (e) ->
-    contactSupport(type: 'project')
     e.preventDefault()
     e.stopPropagation()
+    contactSupport(type: 'project')
+    false
 
   render: ->
     div className: 'kbc-user-links',
