@@ -86,11 +86,12 @@ export default React.createClass({
     return () => ({config: this.state.config.get('id')});
   },
 
-  contactSupport() {
+  contactSupport(e) {
     contactSupport({
       type: 'project',
       subject: 'Configuration assistance request'
     });
+    e.preventDefault();
   }
 
 });
