@@ -6,6 +6,7 @@ import Select from 'react-select';
 import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
 
+import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
 const StaticText = FormControls.Static;
@@ -179,7 +180,7 @@ export default React.createClass({
     };
     return (
       <div className="row">
-        {this.renderEditFormElement('Input Table',
+        {this.renderFormElement('Input Table',
            <SapiTableSelector
             placeholder="Select..."
             value={this.getEditingValue('intable')}
@@ -188,14 +189,14 @@ export default React.createClass({
         }
         {this.renderColumnSelect('Data Column', params.DATACOLUMN)}
         {this.renderColumnSelect('Primary Key', params.PRIMARYKEY)}
-        {this.renderEditFormElement('Output Table Prefix',
+        {this.renderFormElement('Output Table Prefix',
           <input
             className="form-control"
             value={this.getEditingValue(params.OUTPUT)}
             onChange= {(event) => this.updateEditingValue(params.OUTPUT, event.target.value)}
             placeholder="e.g. out.c-main.result"/>)
         }
-        {this.renderEditFormElement('Language',
+        {this.renderFormElement('Language',
           <Select
             key="language"
             name="language"
@@ -236,7 +237,7 @@ export default React.createClass({
     }
     );
 
-    return this.renderEditFormElement('Analysis types', options);
+    return this.renderFormElement('Analysis types', options);
 
   },
 
@@ -259,7 +260,7 @@ export default React.createClass({
 
 
 
-  renderEditFormElement(label, element){
+  renderFormElement(label, element){
     return (
       <div className="form-group">
         <label className="control-label col-sm-3">
@@ -273,7 +274,7 @@ export default React.createClass({
   },
 
   renderColumnSelect(label, column){
-    const result = this.renderEditFormElement(label,
+    const result = this.renderFormElement(label,
       <Select
         clearable={false}
         key={column}
@@ -289,10 +290,10 @@ export default React.createClass({
 
   renderStatic(){
     const tasks = this.parameter(params.ANALYSIS, List()).map( (value) => analysisTypes[value].name);
-
     return (
       <div className="row">
-        {this.RenderStaticInput('Input Table', this.state.intable)}
+        {this.renderIntableStatic()}
+
         {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN))}
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT))}
@@ -301,6 +302,18 @@ export default React.createClass({
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
+  },
+
+  renderIntableStatic(){
+    const tableId = this.state.intable;
+    const link = (<p
+        label="Input Table"
+        className="form-control-static">
+        <SapiTableLinkEx
+          tableId={tableId}/></p>
+    );
+    return this.renderFormElement((<span>Input Table</span>), link);
+
   },
 
   RenderStaticInput(label, value, isBetaCheckobx = false){
