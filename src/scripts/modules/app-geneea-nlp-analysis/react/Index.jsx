@@ -14,6 +14,7 @@ const StaticText = FormControls.Static;
 import {params,
   getInTable,
   updateLocalState,
+  isOutputValid,
   updateEditingValue,
   startEditing,
   getEditingValue} from '../actions';
@@ -181,6 +182,7 @@ export default React.createClass({
       this.updateEditingValue(params.DATACOLUMN, '');
       this.updateEditingValue(params.PRIMARYKEY, '');
     };
+    const outputValid = isOutputValid(this.getEditingValue(params.OUTPUT));
     return (
       <div className="row">
         {this.renderFormElement('Input Table',
@@ -198,7 +200,7 @@ export default React.createClass({
             value={this.getEditingValue(params.OUTPUT)}
             onChange= {(event) => this.updateEditingValue(params.OUTPUT, event.target.value)}
           placeholder="e.g. out.c-main.result"/>,
-         'Prefix of the output table id, if is only a bucket id then it must end with dot \'.\'')
+         'Prefix of the output table id, if is only a bucket id then it must end with dot \'.\'', !outputValid)
         }
         {this.renderFormElement('Language',
           <Select
@@ -264,10 +266,14 @@ export default React.createClass({
 
 
 
-  renderFormElement(label, element, description = ''){
+  renderFormElement(label, element, description = '', hasError){
+    let errorClass = 'form-group';
+    if (hasError){
+      errorClass = 'form-group has-error';
+    }
 
     return (
-      <div className="form-group">
+      <div className={errorClass}>
         <label className="control-label col-sm-3">
           {label}
         </label>

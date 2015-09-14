@@ -78,6 +78,12 @@ export function startEditing(configId){
   setEditingData(configId, fromJS(editingData));
 }
 
+export function isOutputValid(output){
+  const result = output.match(/(out|in)\..+\..*/);
+  //console.log(output, result);
+  return result;
+}
+
 const mandatoryParams = [PRIMARYKEY, DATACOLUMN, ANALYSIS, OUTPUT, 'intable'];
 export function isValid(configId){
   const isMissing = mandatoryParams.reduce((memo, param) => {
@@ -87,8 +93,9 @@ export function isValid(configId){
     }
     return memo || _.isEmpty(editingValue);
   }, false);
+  const output = getEditingValue(configId, OUTPUT);
 
-  return !isMissing;
+  return (!isMissing) && isOutputValid(output);
   //const missing = getLocalState(configId, ['missing']) || Map();
   //return !missing.reduce( (memo, value) => memo || value, false);
 }
