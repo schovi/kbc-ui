@@ -40,37 +40,45 @@ const componentId = 'geneea-nlp-analysis';
 const analysisTypes = {
   language: {
     name: 'Language',
-    tooltip: 'Detect Language'
+    tooltip: 'Detect Language',
+    helpText: 'Detect language of the analyzed text.'
+
 
   },
   lemmatize: {
     name: 'Lemmatization',
-    tooltip: 'Lemmatization'
+    tooltip: 'Lemmatization',
+    helpText: 'Analyze text to return the base or dictionary form of a word, which is known as the lemma.'
 
   },
   correction: {
     name: 'Correction',
-    tooltip: 'Correction'
+    tooltip: 'Correction',
+    helpText: 'Spell correction of the analyzed text.'
 
   },
   topic: {
     name: 'Topic Detection',
-    tooltip: 'Topic Detection'
+    tooltip: 'Topic Detection',
+    helpText: 'Analyze text to return its topic, e.g., science, culture, sport etc..'
   },
 
   sentiment: {
     name: 'Sentiment Analysis',
-    tooltip: 'Sentiment Analysis'
+    tooltip: 'Sentiment Analysis',
+    helpText: 'Return sentiment described by a decimal number of how much positive or negative the analyzed text is'
 
   },
   entities: {
     name: 'Entities Detection',
-    tooltip: 'Entities Detection'
+    tooltip: 'Entities Detection',
+    helpText: 'Locate and classify elements in analyzed text into pre-defined categories such as the names of persons, organizations, location etc..'
 
   },
   hashtags: {
     name: 'Hashtags',
-    tooltip: 'Hashtags'
+    tooltip: 'Hashtags',
+    helpText: 'Analyze text and detect hash tags #'
   }
 
 };
@@ -237,6 +245,7 @@ export default React.createClass({
             <span>
               {info.name}
             </span>
+            <p className="help-block">{info.helpText}</p>
           </label>
         </div>
       );
@@ -310,7 +319,7 @@ export default React.createClass({
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
-        {this.RenderStaticInput('Analysis taks', tasks.join(', '))}
+        {this.RenderStaticInput('Analysis tasks', tasks.join(', '))}
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
