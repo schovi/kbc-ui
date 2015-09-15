@@ -64,7 +64,8 @@ export default React.createClass({
           st[pos++] = {style: compare, text: substr, state: this.stringify(state)};
         }
         // Give up when line is ridiculously long
-        if (stream.pos > 5000) {
+        if (stream.pos > 20000) {
+          console.log('SQL line too long');
           st[pos++] = {style: null, text: this.text.slice(stream.pos)};
           break;
         }
@@ -89,6 +90,7 @@ export default React.createClass({
           </pre>
         </div>
       </div>
+
     );
   },
 

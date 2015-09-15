@@ -9,7 +9,7 @@ export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
     queries: PropTypes.object.isRequired,
-    backend: PropTypes.object.isRequired,
+    backend: PropTypes.string.isRequired,
     onEditStart: PropTypes.func.isRequired
   },
 
