@@ -161,14 +161,14 @@ export default React.createClass({
           <ul className="nav nav-stacked">
             <li className={classnames({disabled: this.state.editing})}>
               <RunComponentButton
-                title="Run"
+                title="Run Analysis"
                 component={componentId}
                 mode="link"
                 runParams={ () => ({config: this.state.configId}) }
                 disabledReason="Configuration is not saved."
                 disabled={this.state.editing}
                 >
-                You are about to run the analysis job.
+                You are about to run the analysis job of selected task(s).
               </RunComponentButton>
             </li>
             <li>
