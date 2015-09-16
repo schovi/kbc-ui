@@ -34,9 +34,12 @@ module.exports = React.createClass
     type: React.PropTypes.string.isRequired
 
   getStateFromStores: ->
+    components = ComponentsStore.getFilteredForType(@props.type).filter( (component) ->
+      not component.get('flags').includes('excludeFromNewList'))
+
     installedComponents: InstalledComponentsStore.getAllForType(@props.type)
     deletingConfigurations: InstalledComponentsStore.getDeletingConfigurations()
-    components: ComponentsStore.getFilteredForType(@props.type)
+    components: components
     filter: ComponentsStore.getFilter(@props.type)
 
   render: ->
