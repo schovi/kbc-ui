@@ -4,7 +4,6 @@ _ = require('underscore')
 Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
 Select = React.createFactory(require('react-select'))
-fuzzy = require 'fuzzy'
 AutosuggestWrapper = require '../../../../transformations/react/components/mapping/AutoSuggestWrapper.jsx'
 
 createGetSuggestions = (getOptions) ->
