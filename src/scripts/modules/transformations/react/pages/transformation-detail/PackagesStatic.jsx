@@ -30,7 +30,7 @@ export default React.createClass({
   emptyState() {
     return (
       <div className="help-block">
-        <small>No packages will installed.</small> {this.startEditButton()}
+        <small>No packages will be installed.</small> {this.startEditButton()}
       </div>
     );
   },
