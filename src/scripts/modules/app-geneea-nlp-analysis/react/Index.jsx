@@ -274,18 +274,25 @@ export default React.createClass({
 
   renderStaticTasks(){
     const tasks = this.parameter(params.ANALYSIS, List());
-    let renderedTasks = tasks.map((task, idx) => {
-      const comma = idx === 0 ? '' : ', ';
+    const outParam = this.parameter(params.OUTPUT, '');
+    let renderedTasks = tasks.map((task) => {
+      //const comma = idx === 0 ? '' : ', ';
       const info = analysisTypes[task];
+      const outTableId = outParam ? `${outParam}${task}` : '';
       return (
-        <span>
-        <Tooltip tooltip={info.description} placement="top">
-          <span>{comma}{info.name}</span>
-        </Tooltip>
-        </span>
+        <li>
+          <span>
+            <Tooltip tooltip={info.description} placement="top">
+              <strong>
+                {info.name}
+              </strong>
+            </Tooltip> - <SapiTableLinkEx tableId={outTableId}/>
+          </span>
+
+        </li>
       );
     }).toArray();
-    return renderedTasks;
+    return (<ul>{renderedTasks}</ul>);
   },
 
   renderIntableStatic(){
