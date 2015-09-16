@@ -2,10 +2,12 @@ import React from 'react';
 import {List, Map} from 'immutable';
 import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
+
 import Select from 'react-select';
 import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
 
+import Tooltip from '../../../react/common/Tooltip';
 import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
@@ -197,7 +199,7 @@ export default React.createClass({
     }
     );
 
-    return this.renderFormElement('Analysis types', options);
+    return this.renderFormElement('Analysis tasks', options);
 
   },
 
@@ -255,19 +257,35 @@ export default React.createClass({
   },
 
   renderStatic(){
-    const tasks = this.parameter(params.ANALYSIS, List()).map( (value) => analysisTypes[value].name);
+    // {this.renderStaticTasks()}
     return (
       <div className="row">
         {this.renderIntableStatic()}
-
         {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN) )}
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
-        {this.RenderStaticInput('Analysis tasks', tasks.join(', '))}
+
+        {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
+  },
+
+  renderStaticTasks(){
+    const tasks = this.parameter(params.ANALYSIS, List());
+    let renderedTasks = tasks.map((task, idx) => {
+      const comma = idx === 0 ? '' : ', ';
+      const info = analysisTypes[task];
+      return (
+        <span>
+        <Tooltip tooltip={info.description} placement="top">
+          <span>{comma}{info.name}</span>
+        </Tooltip>
+        </span>
+      );
+    }).toArray();
+    return renderedTasks;
   },
 
   renderIntableStatic(){
