@@ -281,18 +281,22 @@ export default React.createClass({
       const outTableId = outParam ? `${outParam}${task}` : '';
       return (
         <li>
-          <span>
+          <span className="col-sm-12" style={{ paddingLeft: 0}}>
             <Tooltip tooltip={info.description} placement="top">
-              <strong>
-                {info.name}
-              </strong>
-            </Tooltip> - <SapiTableLinkEx tableId={outTableId}/>
+              <span className="col-sm-4" style={{ paddingLeft: 0}}>
+                <strong className="text-left">
+                  {info.name}
+                </strong>
+              </span>
+            </Tooltip> <i style={{ paddingLeft: 0}}
+                          className="kbc-icon-arrow-right col-sm-1"></i>
+            <SapiTableLinkEx className="col-sm-4" tableId={outTableId}/>
           </span>
 
         </li>
       );
     }).toArray();
-    return (<ul>{renderedTasks}</ul>);
+    return (<ul className="nav nav-stacked">{renderedTasks}</ul>);
   },
 
   renderIntableStatic(){
