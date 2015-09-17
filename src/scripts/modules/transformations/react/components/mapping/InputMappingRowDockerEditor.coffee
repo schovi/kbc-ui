@@ -34,7 +34,7 @@ module.exports = React.createClass
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
-      mapping = mapping.set("destination", value)
+      mapping = mapping.set("destination", value + ".csv")
       mapping = mapping.set("whereColumn", "")
       mapping = mapping.set("whereValues", Immutable.List())
       mapping = mapping.set("whereOperator", "eq")
