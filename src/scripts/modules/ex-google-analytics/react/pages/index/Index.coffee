@@ -82,6 +82,8 @@ module.exports = React.createClass
               ,
                 i className: 'fa fa-fw fa-user'
                 ' Authorize Google Account'
+  _showReauthorize: ->
+    ((not @_isExtLinkOnly()) and  @_isCurrentAuthorized())
 
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
@@ -94,7 +96,7 @@ module.exports = React.createClass
           componentId: 'ex-google-analytics'
           configId: @state.configId
       ul className: 'nav nav-stacked',
-        if @_showAuthorize()
+        if @_showAuthorize() or @_showReauthorize()
           li null,
             Link
               to: 'ex-google-analytics-authorize'
@@ -102,7 +104,10 @@ module.exports = React.createClass
                 config: @state.configId
             ,
               i className: 'fa fa-fw fa-user'
-              'Authorize'
+              if @_showAuthorize()
+                'Authorize'
+              else
+                'Reauthorize'
         if @_isExtLinkOnly()
           li null,
             Link
