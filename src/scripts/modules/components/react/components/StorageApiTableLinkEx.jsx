@@ -6,6 +6,7 @@ import {Modal, Button} from 'react-bootstrap';
 import {TabbedArea, TabPane} from 'react-bootstrap';
 import Tooltip from '../../../../react/common/Tooltip';
 import {Loader} from 'kbc-react-components';
+import SapiTableLink from './StorageApiTableLink';
 import date from '../../../../utils/date';
 import filesize from 'filesize';
 
@@ -190,7 +191,15 @@ export default React.createClass({
           onHide={this.onHide}
           >
           <Modal.Header closeButton>
-            <Modal.Title>{this.props.tableId}</Modal.Title>
+            <Modal.Title>
+              {this.props.tableId}
+              <SapiTableLink
+                 tableId={this.props.tableId}>
+                  <small className="btn btn-link">
+                    Explore in Console
+                  </small>
+              </SapiTableLink>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {modalBody}
