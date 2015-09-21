@@ -68,7 +68,7 @@ export function startEditing(configId){
                defaultVal = 'out.c-nlp.';
              }
              if (key === BETA){
-               defaultVal = false;
+               defaultVal = true;
              }
              const value = configData.getIn(['parameters', key], defaultVal);
              memo[key] = value;

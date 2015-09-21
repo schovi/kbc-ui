@@ -211,7 +211,7 @@ export default React.createClass({
           <label>
             <input
               type="checkbox"
-              value={this.getEditingValue(params.BETA)}
+              checked={this.getEditingValue(params.BETA)}
               onChange= {(event) => this.updateEditingValue(params.BETA, event.target.checked)}/>
           Use BETA Version
           </label>
