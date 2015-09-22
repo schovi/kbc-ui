@@ -34,7 +34,7 @@ module.exports = React.createClass
               React.DOM.span {className: 'label label-default'},
                 index.toArray().join(', ')
                 React.DOM.span
-                  className: "kbc-icon-cup"
+                  className: "kbc-icon-cup kbc-cursor-pointer"
                   onClick: ->
                     component.props.handleRemoveIndex(key)
               ' '

@@ -76,7 +76,7 @@ module.exports = React.createClass
                     " "
                     React.DOM.span {}, datatype
                     React.DOM.i
-                      className: "kbc-icon-cup pull-right"
+                      className: "kbc-icon-cup kbc-cursor-pointer pull-right"
                       onClick: ->
                         component.props.handleRemoveDataType(key)
             , @).toArray()
