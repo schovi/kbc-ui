@@ -1,5 +1,5 @@
 import React from 'react';
-import Immutable from 'immutable';
+import Immutable, {Map} from 'immutable';
 import _ from 'underscore';
 import Promise from 'bluebird';
 
@@ -9,8 +9,9 @@ import filesize from 'filesize';
 import {RefreshIcon} from 'kbc-react-components';
 
 import Tooltip from '../../../../react/common/Tooltip';
-import {Loader} from 'kbc-react-components';
+//import {Loader} from 'kbc-react-components';
 import SapiTableLink from './StorageApiTableLink';
+import EmptyState from '../../../components/react/components/ComponentEmptyState';
 import date from '../../../../utils/date';
 
 
@@ -33,10 +34,9 @@ export default React.createClass({
 
   getStateFromStores(){
     const isLoading = tablesStore.getIsLoading();
-    let table = null;
-    if(!isLoading){
-      table = tablesStore.getAll().get(this.props.tableId);
-    }
+    const tables = tablesStore.getAll() || Map();
+    const table = tables.get(this.props.tableId, Map());
+
     return {
       table: table,
       isLoading: isLoading
@@ -171,15 +171,15 @@ export default React.createClass({
   },
 
   renderDataSample(){
-    if (this.state.loadingPreview){
+    const data = this.state.dataPreview;
+    if (data.count() === 0){
       return (
-        <div className="row">
-          <Loader/>
-        </div>
+        <EmptyState>
+          No Data.
+        </EmptyState>
       );
     }
 
-    const data = Immutable.fromJS(this.state.dataPreview);
     const header = data.first().map( (c) => {
       return (
         <th>
@@ -215,16 +215,24 @@ export default React.createClass({
   },
 
   renderColumnsInfo(){
-    if (this.state.loadingPreview){
+    /* if (this.state.loadingPreview){
+       return (
+       <div className="row">
+       <Loader/>
+       </div>
+       );
+       } */
+
+    if (!this.tableExists() || !this.isDataPreview()){
       return (
-        <div className="row">
-          <Loader/>
-        </div>
+        <EmptyState>
+          No Data.
+        </EmptyState>
       );
     }
-
     const {table} = this.state;
-    const columns = table.get('columns').map((c) => {
+    const columns = table.get('columns');
+    const columnsRows = columns.map((c) => {
       const values = this.getColumnValues(c);
       let result = values.filter((val) => val !== '').join(' ,');
       return this.renderTableRow(c, result);
@@ -244,7 +252,7 @@ export default React.createClass({
             </tr>
           </thead>
           <tbody>
-            {columns}
+            {columnsRows}
           </tbody>
         </Table>
       </div>
@@ -291,14 +299,7 @@ export default React.createClass({
   },
 
   renderModal(){
-    let modalBody = null;
-    if (this.state.isLoading){
-      modalBody = (<Loader />);
-    }
-    else{
-      modalBody = this.renderModalBody();
-    }
-
+    const modalBody = this.renderModalBody();
     return (
       <div className="static-modal">
         <Modal
@@ -316,7 +317,7 @@ export default React.createClass({
                 </small>
               </SapiTableLink>
               <RefreshIcon
-                 isLoading={this.state.isReloading}
+                 isLoading={this.isLoading()}
                  onClick={this.reload}
               />
             </Modal.Title>
@@ -329,6 +330,10 @@ export default React.createClass({
     );
   },
 
+  isLoading(){
+    return this.state.isLoading || this.state.loadingPreview || this.state.eventService.getIsLoading();
+
+  },
 
   renderTooltip(){
     if (this.state.isLoading){
@@ -336,6 +341,10 @@ export default React.createClass({
     }
 
     const table = this.state.table;
+    if (!this.tableExists()){
+      return (<span> Does not exist yet. </span>);
+    }
+
     return (
       <span>
         <div>
@@ -357,12 +366,11 @@ export default React.createClass({
   },
 
   reload(){
-    this.setState({isReloading: true});
     Promise.props( {
       'loadAllTablesFore': storageActions.loadTablesForce(),
       'exportData': this.exportDataSample(),
       'loadEvents': this.state.eventService.load()
-    }).then( () => this.setState({isReloading: false}));
+    });
   },
 
   onShow(){
@@ -373,7 +381,7 @@ export default React.createClass({
 
 
   getColumnValues(columnName){
-    const data = Immutable.fromJS(this.state.dataPreview);
+    const data = this.state.dataPreview;
     const columnIndex = data.first().indexOf(columnName);
 
     const result = data
@@ -409,12 +417,19 @@ export default React.createClass({
     .then( (csv) => {
       component.setState({
         loadingPreview: false,
-        dataPreview: csv
+        dataPreview: Immutable.fromJS(csv)
       });
     });
 
   },
 
+  tableExists(){
+    return !_.isEmpty(this.state.table.toJS());
+  },
+
+  isDataPreview(){
+    return !_.isEmpty(this.state.dataPreview.toJS());
+  },
 
   eventsTemplates: {
     'storage.tableImportStarted': {
