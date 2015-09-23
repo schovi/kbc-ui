@@ -30,7 +30,8 @@ export default React.createClass({
 
   propTypes: {
     tableId: React.PropTypes.string.isRequired,
-    linkLabel: React.PropTypes.string
+    linkLabel: React.PropTypes.string,
+    children: React.PropTypes.any
   },
 
   getStateFromStores(){
@@ -91,7 +92,7 @@ export default React.createClass({
       <Button key="buttonlink"
               bsStyle="link"
               onClick={this.onShow}>
-        {this.props.linkLabel || this.props.tableId}
+        {this.children || this.props.linkLabel || this.props.tableId}
       </Button>
     );
 
