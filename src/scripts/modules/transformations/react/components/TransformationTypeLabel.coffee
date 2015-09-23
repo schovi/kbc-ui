@@ -23,6 +23,9 @@ TransformationTypeLabel = React.createClass
     else if @props.backend == 'docker' && @props.type == 'r'
       span {className: 'label label-info'},
         'R'
+    else if @props.backend == 'snowflake'
+      span {className: 'label label-info'},
+        'snowflake'
     else
       null
 
