@@ -9,7 +9,6 @@ import filesize from 'filesize';
 import {RefreshIcon} from 'kbc-react-components';
 
 import Tooltip from '../../../../react/common/Tooltip';
-//import {Loader} from 'kbc-react-components';
 import SapiTableLink from './StorageApiTableLink';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 import date from '../../../../utils/date';
@@ -52,6 +51,9 @@ export default React.createClass({
     this.stopEventService();
   },
 
+  /* shouldComponentUpdate(nextProps, nextState){
+     return (nextState.show === true || this.state.show === true || nextState.isLoading === false) && nextState !== this.state;
+     }, */
 
 
   getInitialState(){
@@ -65,26 +67,26 @@ export default React.createClass({
       events: Immutable.List(),
       show: false,
       dataPreview: Immutable.List(),
-      loadingPreview: true
+      loadingPreview: false
     });
   },
 
   render(){
     return (
-      <span>
-        <Tooltip
+      <span key="mainspan">
+        <Tooltip key="tooltip"
           tooltip={this.renderTooltip()}
           placement="top">
           {this.renderLink()}
         </Tooltip>
-        {this.renderModal()}
+        {this.state.show ? this.renderModal() : (<span></span>)}
       </span>
     );
   },
 
   renderLink(){
     return (
-      <Button
+      <Button key="buttonlink"
         bsStyle="link"
         onClick={this.onShow}>
         {this.props.linkLabel || this.props.tableId}
@@ -94,17 +96,17 @@ export default React.createClass({
 
   renderModalBody(){
     return (
-      <TabbedArea animation={false}>
-        <TabPane eventKey="general" tab="General Info">
+      <TabbedArea key="tabbedarea" animation={false}>
+        <TabPane key="general" eventKey="general" tab="General Info">
           {this.renderGeneralInfo()}
         </TabPane>
-        <TabPane eventKey="columns" tab="Columns">
+        <TabPane key="columns" eventKey="columns" tab="Columns">
           {this.renderColumnsInfo()}
         </TabPane>
-        <TabPane eventKey="datasample" tab="Data Sample">
+        <TabPane key="datasample" eventKey="datasample" tab="Data Sample">
           {this.renderDataSample()}
         </TabPane>
-        <TabPane eventKey="events" tab="Export/Import Events">
+        <TabPane key="events" eventKey="events" tab="Export/Import Events">
           {this.renderEvents()}
         </TabPane>
       </TabbedArea>
@@ -113,14 +115,13 @@ export default React.createClass({
   },
 
   renderEvents(){
-    /* if (this.state.eventService.getIsLoading()){
-       return (
-       <div className="row">
-       <Loader/>
-       </div>
-       );
-       } */
-
+    if (!this.tableExists()){
+      return (
+        <EmptyState>
+        No Data.
+       </EmptyState>
+      );
+    }
     //console.log(this.state.events.toJS(), this.state.events.count());
     const events = this.state.events;
     const rows = events.map( (e) => {
@@ -215,14 +216,6 @@ export default React.createClass({
   },
 
   renderColumnsInfo(){
-    /* if (this.state.loadingPreview){
-       return (
-       <div className="row">
-       <Loader/>
-       </div>
-       );
-       } */
-
     if (!this.tableExists() || !this.isDataPreview()){
       return (
         <EmptyState>
@@ -260,6 +253,19 @@ export default React.createClass({
   },
 
   renderGeneralInfo(){
+    if (!this.tableExists())
+    {
+      let msg = 'Table does not exist yet.';
+      if (this.state.isLoading){
+        msg = 'Loading...';
+      }
+      return (
+        <EmptyState key="emptytable">
+          {msg}
+        </EmptyState>
+      );
+
+    }
     const table = this.state.table;
     const primaryKey = table.get('primaryKey').toJS();
     const indexes = table.get('indexedColumns').toJS();
@@ -311,6 +317,7 @@ export default React.createClass({
             <Modal.Title>
               {this.props.tableId}
               <SapiTableLink
+                 disabled={true}
                  tableId={this.props.tableId}>
                 <small className="btn btn-link">
                   Explore in Console
@@ -337,16 +344,16 @@ export default React.createClass({
 
   renderTooltip(){
     if (this.state.isLoading){
-      return (<span> Loading... </span>);
+      return 'Loading';
     }
 
     const table = this.state.table;
     if (!this.tableExists()){
-      return (<span> Does not exist yet. </span>);
+      return 'Table does not exist yet.';
     }
 
     return (
-      <span>
+      <span key="tooltipinfo">
         <div>
           {date.format(table.get('lastChangeDate'))}
         </div>
@@ -408,6 +415,11 @@ export default React.createClass({
   },
 
   exportDataSample(){
+    if (!this.tableExists())
+    {
+      return false;
+    }
+
     this.setState({
       loadingPreview: true
     });
