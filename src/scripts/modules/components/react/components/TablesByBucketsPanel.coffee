@@ -1,6 +1,6 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
-{fromJS} = require 'immutable'
+{fromJS, List} = require 'immutable'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 ActiveCountBadge = require './ActiveCountBadge'
 storageTablesStore = require '../../stores/StorageTablesStore'
@@ -28,11 +28,8 @@ module.exports = React.createClass
     renderDeletedTableRowFn: React.PropTypes.func
 
   getStateFromStores: ->
-    isTablesLoading = storageTablesStore.getIsLoading()
     tables = storageTablesStore.getAll()
-
     #state
-    isTablesLoading: isTablesLoading
     tables: tables
 
   componentDidMount: ->
@@ -54,39 +51,34 @@ module.exports = React.createClass
 
 
   render: ->
-    isTablesLoading = @state.isTablesLoading
     deletedTables = @_getDeletedTables()
     buckets = @_getFilteredBuckets()
-    if isTablesLoading
-      div className: 'well',
-        'Loading Tables...'
-    else
-      if buckets.count()
-        div null,
-          div
-            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-          ,
-            buckets.map (bucket, bucketId) ->
-              @_renderBucketPanel bucketId, bucket.get('tables')
-            , @
-            .toArray()
-          if deletedTables.count() > 0
-            div null,
-              div
-                className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-                @_renderBucketPanel 'Nonexisting tables', deletedTables, @props.renderDeletedTableRowFn
+    if buckets.count()
+      div null,
+        div
+          className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+        ,
+          buckets.map (bucket, bucketId) ->
+            @_renderBucketPanel bucketId, bucket.get('tables')
+          , @
+          .toArray()
+        if deletedTables.count() > 0
+          div null,
+            div
+              className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
+              @_renderBucketPanel 'Nonexisting tables', deletedTables, @props.renderDeletedTableRowFn
 
-          if @props.toggleShowAllFn
-            button
-              onClick: =>
-                @props.toggleShowAllFn()
-              className: 'btn btn-link',
-              if @props.showAllTables
-                'Only Configured Tables'
-              else
-                'All tables'
-      else
-        @_renderNotFound()
+        if @props.toggleShowAllFn
+          button
+            onClick: =>
+              @props.toggleShowAllFn()
+            className: 'btn btn-link',
+            if @props.showAllTables
+              'Only Configured Tables'
+            else
+              'All tables'
+    else
+      @_renderNotFound()
 
 
   _renderBucketPanel: (bucketId, tables, renderRowFn = @props.renderTableRowFn) ->
@@ -171,7 +163,7 @@ module.exports = React.createClass
   #load buckets and tables from storage store and filter them
   _getFilteredBuckets: (tables) ->
     if not tables
-      tables = @state.tables
+      tables = @state.tables or List()
     buckets = @_getTablesByBucketsList(tables)
     if @props.filterFn
       filteredBuckets = @props.filterFn(buckets)

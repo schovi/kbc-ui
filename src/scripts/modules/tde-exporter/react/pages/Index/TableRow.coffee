@@ -28,8 +28,7 @@ module.exports = React.createClass
       span className: 'td',
         React.createElement SapiTableLinkEx,
           tableId: @props.table.get 'id'
-        ,
-          @props.table.get 'name'
+          linkLabel: @props.table.get 'name'
 
       if @props.tdeFile
         span className: 'td',
