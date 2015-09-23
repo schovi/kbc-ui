@@ -5,7 +5,7 @@ import Promise from 'bluebird';
 import moment from 'moment';
 import string from 'underscore.string';
 
-import {Input, Table, Modal, Button} from 'react-bootstrap';
+import {Input, Table, Modal} from 'react-bootstrap';
 import {TabbedArea, TabPane} from 'react-bootstrap';
 import filesize from 'filesize';
 import {RefreshIcon} from 'kbc-react-components';
@@ -89,11 +89,10 @@ export default React.createClass({
 
   renderLink(){
     return (
-      <Button key="buttonlink"
-              bsStyle="link"
-              onClick={this.onShow}>
+      <a key="buttonlink"
+         onClick={this.onShow}>
         {this.children || this.props.linkLabel || this.props.tableId}
-      </Button>
+      </a>
     );
 
   },
