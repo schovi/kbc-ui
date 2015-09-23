@@ -2,8 +2,10 @@ import React from 'react';
 import Immutable, {Map} from 'immutable';
 import _ from 'underscore';
 import Promise from 'bluebird';
+import moment from 'moment';
+import string from 'underscore.string';
 
-import {Table, Modal, Button} from 'react-bootstrap';
+import {Input, Table, Modal, Button} from 'react-bootstrap';
 import {TabbedArea, TabPane} from 'react-bootstrap';
 import filesize from 'filesize';
 import {RefreshIcon} from 'kbc-react-components';
@@ -58,16 +60,16 @@ export default React.createClass({
 
   getInitialState(){
     const es = EventsService.factory({limit: 10});
-    let typesQuery = _.map(_.keys(this.eventsTemplates), (t) => 'event:' + t).join(' OR ');
-    typesQuery = `(${typesQuery}) AND objectId:${this.props.tableId}`;
-    es.setQuery(typesQuery);
+    const eventQuery = this.prepareEventQuery(true);
+    es.setQuery(eventQuery);
 
     return ({
       eventService: es,
       events: Immutable.List(),
       show: false,
       dataPreview: Immutable.List(),
-      loadingPreview: false
+      loadingPreview: false,
+      ommitFetches: true
     });
   },
 
@@ -75,8 +77,8 @@ export default React.createClass({
     return (
       <span key="mainspan">
         <Tooltip key="tooltip"
-          tooltip={this.renderTooltip()}
-          placement="top">
+                 tooltip={this.renderTooltip()}
+                 placement="top">
           {this.renderLink()}
         </Tooltip>
         {this.state.show ? this.renderModal() : (<span></span>)}
@@ -87,10 +89,11 @@ export default React.createClass({
   renderLink(){
     return (
       <Button key="buttonlink"
-        bsStyle="link"
-        onClick={this.onShow}>
+              bsStyle="link"
+              onClick={this.onShow}>
         {this.props.linkLabel || this.props.tableId}
-      </Button>);
+      </Button>
+    );
 
   },
 
@@ -106,7 +109,7 @@ export default React.createClass({
         <TabPane key="datasample" eventKey="datasample" tab="Data Sample">
           {this.renderDataSample()}
         </TabPane>
-        <TabPane key="events" eventKey="events" tab="Export/Import Events">
+        <TabPane key="events" eventKey="events" tab="Events">
           {this.renderEvents()}
         </TabPane>
       </TabbedArea>
@@ -118,26 +121,41 @@ export default React.createClass({
     if (!this.tableExists()){
       return (
         <EmptyState>
-        No Data.
-       </EmptyState>
+          No Data.
+        </EmptyState>
       );
     }
     //console.log(this.state.events.toJS(), this.state.events.count());
     const events = this.state.events;
     const rows = events.map( (e) => {
-      const info = this.eventsTemplates[e.get('event')];
+      const event = e.get('event');
+      let info = this.eventsTemplates[event];
+      if (!info){
+        info = {
+          className: '',
+          message: e.get('message')
+        };
+      }
       const cl = `tr ${info.className}`;
-
+      const agoTime = moment(e.get('created')).fromNow();
+      const incElement = (<small><strong>incremental</strong></small>);
+      info.message = string.replaceAll(info.message, this.props.tableId, '');
+      const incremental = e.getIn(['params', 'incremental']) ? incElement : (<span></span>);
       return (
         <tr className={cl}>
           <td className="td">
+            {e.get('id')}
+          </td>
+          <td className="td">
             {date.format(e.get('created'))}
+            <small> {agoTime} </small>
           </td>
           <td className="td">
             {e.get('component')}
           </td>
           <td className="td">
             {info.message}
+            {incremental}
           </td>
           <td className="td">
             {e.getIn(['token', 'name'])}
@@ -147,29 +165,60 @@ export default React.createClass({
     }
     );
     return (
-      <table className="table table-striped">
-        <thead className="thead">
-          <tr className="tr">
-            <th className="th">
-              Created
-            </th>
-            <th className="th">
-              Component
-            </th>
-            <th className="th">
-              Event
-            </th>
-            <th className="th">
-              Creator
-            </th>
+      <span>
+        <Input type="checkbox"
+               onClick={this.onOmmitFetches}
+               label="Ommit table fetches"
+               checked={this.state.ommitFetches} />
+        <table className="table table-striped">
+          <thead className="thead">
+            <tr className="tr">
+              <th className="th">
+                Id
+              </th>
+              <th className="th">
+                Created
+              </th>
+              <th className="th">
+                Component
+              </th>
+              <th className="th">
+                Event
+              </th>
+              <th className="th">
+                Creator
+              </th>
 
-          </tr>
-        </thead>
-        <tbody className="tbody">
-          {rows}
-        </tbody>
-      </table>);
+            </tr>
+          </thead>
+          <tbody className="tbody">
+            {rows}
+          </tbody>
+        </table>
+      </span>);
   },
+
+  onOmmitFetches(e){
+    const checked = e.target.checked;
+    this.setState({ommitFetches: checked});
+    const q = this.prepareEventQuery(checked);
+    this.state.eventService.setQuery(q);
+    this.state.eventService.load();
+  },
+
+  prepareEventQuery(ommitFetches)
+  {
+
+    /*     _.map(_.keys(this.eventsTemplates), (t) => 'event:' + t).join(' OR '); */
+    let typesQuery = `objectId:${this.props.tableId}`;
+    if (ommitFetches)
+    {
+      typesQuery = `(NOT event:storage.tableDetail) AND objectId:${this.props.tableId}`;
+    }
+    return typesQuery;
+
+  },
+
 
   renderDataSample(){
     const data = this.state.dataPreview;
