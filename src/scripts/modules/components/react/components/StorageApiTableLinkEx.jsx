@@ -70,7 +70,7 @@ export default React.createClass({
       show: false,
       dataPreview: Immutable.List(),
       loadingPreview: false,
-      ommitFetches: true
+      omitFetches: true
     });
   },
 
@@ -167,9 +167,9 @@ export default React.createClass({
     return (
       <span>
         <Input type="checkbox"
-               onClick={this.onOmmitFetches}
-               label="Ommit table fetches"
-               checked={this.state.ommitFetches} />
+               onClick={this.onOmitFetches}
+               label="Omit table fetches"
+               checked={this.state.omitFetches} />
         <table className="table table-striped">
           <thead className="thead">
             <tr className="tr">
@@ -198,20 +198,20 @@ export default React.createClass({
       </span>);
   },
 
-  onOmmitFetches(e){
+  onOmitFetches(e){
     const checked = e.target.checked;
-    this.setState({ommitFetches: checked});
+    this.setState({omitFetches: checked});
     const q = this.prepareEventQuery(checked);
     this.state.eventService.setQuery(q);
     this.state.eventService.load();
   },
 
-  prepareEventQuery(ommitFetches)
+  prepareEventQuery(omitFetches)
   {
 
     /*     _.map(_.keys(this.eventsTemplates), (t) => 'event:' + t).join(' OR '); */
     let typesQuery = `objectId:${this.props.tableId}`;
-    if (ommitFetches)
+    if (omitFetches)
     {
       typesQuery = `(NOT event:storage.tableDetail) AND objectId:${this.props.tableId}`;
     }
@@ -250,7 +250,7 @@ export default React.createClass({
 
     return (
       <div>
-        <Table responsive className="table table-stripped">
+        <Table responsive className="table table-striped">
           <thead>
             <tr>
               {header}
@@ -276,13 +276,13 @@ export default React.createClass({
     const columns = table.get('columns');
     const columnsRows = columns.map((c) => {
       const values = this.getColumnValues(c);
-      let result = values.filter((val) => val !== '').join(' ,');
+      let result = values.filter((val) => val !== '').join(', ');
       return this.renderTableRow(c, result);
     });
 
     return (
       <div>
-        <Table responsive className="table table-stripped">
+        <Table responsive className="table table-striped">
           <thead>
             <tr>
               <th>
@@ -320,19 +320,22 @@ export default React.createClass({
     const indexes = table.get('indexedColumns').toJS();
     return (
       <div>
-        <table className="table table-stripped">
-          <tbody>
+        <table className="table">
+          <thead>
             {this.renderTableRow('ID', table.get('id'))}
+          </thead>
+          <tbody>
+            {this.renderTableRow('Storage', table.get('bucket').get('backend'))}
             {this.renderTableRow('Created', date.format(table.get('created')))}
-            {this.renderTableRow('Primary Key', _.isEmpty(primaryKey) ? 'N/A' : primaryKey.join(','))}
+            {this.renderTableRow('Primary Key', _.isEmpty(primaryKey) ? 'N/A' : primaryKey.join(', '))}
             {this.renderTableRow('Last Import', date.format(table.get('lastImportDate')))}
             {this.renderTableRow('Last Change', date.format(table.get('lastChangeDate')))}
 
             {this.renderTableRow('Rows Count', table.get('rowsCount') + ' rows')}
             {this.renderTableRow('Data Size', filesize(table.get('dataSizeBytes')))}
-            {this.renderTableRow('Columns Count', table.get('columns').count() + ' columns')}
+            {this.renderTableRow('Columns', table.get('columns').count() + ' columns: ' + table.get('columns').join(', '))}
 
-            {this.renderTableRow('Indexed Column(s)', _.isEmpty(indexes) ? 'N/A' : indexes.join(' ,'))}
+            {this.renderTableRow('Indexed Column(s)', _.isEmpty(indexes) ? 'N/A' : indexes.join(', '))}
           </tbody>
         </table>
       </div>
