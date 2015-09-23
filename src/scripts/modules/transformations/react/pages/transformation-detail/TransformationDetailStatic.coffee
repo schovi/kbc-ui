@@ -111,7 +111,6 @@ module.exports = React.createClass
             div {className: "help-block"}, small {},
               "No transformations are dependent on the current transformation."
 
-
       div {},
         h2 {},
           'Input Mapping'
@@ -256,9 +255,7 @@ module.exports = React.createClass
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'tags')
 
-
       @_renderCodeEditor()
-
 
   _renderCodeEditor: ->
     if  @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'

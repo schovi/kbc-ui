@@ -62,9 +62,15 @@ module.exports = React.createClass
     TransformationsActionCreators.changeTransformationProperty(@state.bucketId,
       @state.transformationId, 'disabled', !newValue)
 
+  _handleSnowflakeCredentialsChange: (credentials) ->
+    TransformationsActionCreators.changeTransformationProperty(@state.bucketId,
+      @state.transformationId, 'snowflake', !newValue)
+
+
   _showDetails: ->
     @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
+    @state.transformation.get('backend') == 'snowflake' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
   render: ->
@@ -149,7 +155,6 @@ module.exports = React.createClass
                 a {},
                   span className: 'fa fa-sitemap fa-fw'
                   ' SQLDep'
-
           li {},
             a {},
               React.createElement Confirm,
