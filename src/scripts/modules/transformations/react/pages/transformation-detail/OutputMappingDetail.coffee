@@ -11,7 +11,7 @@ numeral = require 'numeral'
 ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
-
+TableLinkEx = React.createFactory(require '../../../../components/react/components/StorageApiTableLinkEx')
 
 OutputMappingDetail = React.createClass(
   displayName: 'InputMappingDetail'
@@ -33,27 +33,13 @@ OutputMappingDetail = React.createClass(
 
   render: ->
     ListGroupItems = [
-      ListGroupItem {key: 'dataSizeBytes'},
-        strong {className: "col-md-4"},
-          'Destination table size'
-        span {className: "col-md-6"},
-          FileSize
-            size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
 
-      ListGroupItem {key: 'rowsCount'},
+      ListGroupItem {key: 'destination'},
         strong {className: "col-md-4"},
-          'Destination table rows'
+          'Destination table'
         span {className: "col-md-6"},
-          if @props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']
-            numeral(@props.tables.getIn [@props.outputMapping.get('destination'), 'rowsCount']).format('0,0')
-          else
-            'N/A'
-
-      ListGroupItem {key: 'backend'},
-        strong {className: "col-md-4"},
-          'Storage type'
-        span {className: "col-md-6"},
-          @_getTableBackend @props.outputMapping.get('destination')
+          TableLinkEx
+            tableId: @props.outputMapping.get('destination')
 
       ListGroupItem {key: 'primaryKey'},
         strong {className: "col-md-4"},

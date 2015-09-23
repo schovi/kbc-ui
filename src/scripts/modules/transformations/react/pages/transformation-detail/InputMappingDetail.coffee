@@ -9,6 +9,7 @@ Check = React.createFactory(require('kbc-react-components').Check)
 ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
+TableLinkEx = React.createFactory(require '../../../../components/react/components/StorageApiTableLinkEx')
 
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
@@ -27,27 +28,13 @@ InputMappingDetail = React.createClass(
 
   render: ->
     ListGroupItems = [
-      ListGroupItem {key: 'dataSizeBytes'},
-        strong {className: "col-md-4"},
-          'Source table size'
-        span {className: "col-md-6"},
-          FileSize
-            size: @props.tables.getIn [@props.inputMapping.get('source'), 'dataSizeBytes']
 
-      ListGroupItem {key: 'rowsCount'},
+      ListGroupItem {key: 'source'},
         strong {className: "col-md-4"},
-          'Source table rows'
+          'Source table'
         span {className: "col-md-6"},
-          if @props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']
-            numeral(@props.tables.getIn [@props.inputMapping.get('source'), 'rowsCount']).format('0,0')
-          else
-            'N/A'
-
-      ListGroupItem {key: 'backend'},
-        strong {className: "col-md-4"},
-          'Storage type'
-        span {className: "col-md-6"},
-          @props.tables.getIn [@props.inputMapping.get('source'), 'bucket', 'backend']
+          TableLinkEx
+            tableId: @props.inputMapping.get('source')
 
       if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
         ListGroupItem {key: 'optional'},
