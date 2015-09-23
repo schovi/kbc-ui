@@ -1,11 +1,24 @@
 dispatcher = require('../../Dispatcher')
+moment = require('moment')
 JobsStore = require('./stores/JobsStore')
 Promise = require('bluebird')
 constants = require('./Constants')
 jobsApi = require('./JobsApi')
 RoutesStore = require '../../stores/RoutesStore'
+storageActions = require '../components/StorageActionCreators'
 
 module.exports =
+
+  reloadSapiTablesTrigger: (jobs) ->
+    tresholdTrigger = 20 #seconds of end time from now to reload all tables
+    for job in jobs
+      if job.endTime
+        endTime = moment(job.endTime)
+        now = moment()
+        diff = moment.duration(now.diff(endTime))
+        if (diff < moment.duration(tresholdTrigger, 'seconds'))
+          return storageActions.loadTablesForce()
+
   loadJobs: ->
     return Promise.resolve() if JobsStore.getIsLoaded()
     @loadJobsForce(JobsStore.getOffset(), false, true)
@@ -24,7 +37,8 @@ module.exports =
     dispatcher.handleViewAction type: constants.ActionTypes.JOBS_LOAD
     jobsApi
     .getJobsParametrized(query, limit, offset)
-    .then (jobs) ->
+    .then (jobs) =>
+      @reloadSapiTablesTrigger(jobs)
       if preserveCurrentOffset
         offset = JobsStore.getOffset()
       actions.recieveJobs(jobs, offset, resetJobs)
@@ -51,10 +65,12 @@ module.exports =
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOB_LOAD
       jobId: jobId
-    jobsApi.getJobDetail(jobId).then (jobDetail) ->
+    jobsApi.getJobDetail(jobId).then (jobDetail) =>
+      @reloadSapiTablesTrigger([jobDetail])
       actions.recieveJobDetail(jobDetail)
 
   recieveJobs: (jobs, newOffset, resetJobs) ->
+    console.log jobs.length
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
       jobs: jobs
@@ -86,7 +102,6 @@ module.exports =
       throw e
 
   loadComponentConfigurationLatestJobs: (componentId, configurationId) ->
-
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LATEST_LOAD_START
       componentId: componentId
@@ -95,7 +110,9 @@ module.exports =
     query = "(component:#{componentId} OR params.component:#{componentId}) AND params.config:#{configurationId}"
     jobsApi
     .getJobsParametrized(query, 10, 0)
-    .then (jobs) ->
+    .then (jobs) =>
+      @reloadSapiTablesTrigger(jobs)
+
       dispatcher.handleViewAction
         type: constants.ActionTypes.JOBS_LATEST_LOAD_SUCCESS
         componentId: componentId
@@ -108,6 +125,7 @@ module.exports =
         configurationId: configurationId
         error: e
       throw e
+
 
   jobErrorNoteUpdated: (jobId, errorNote) ->
     dispatcher.handleViewAction
