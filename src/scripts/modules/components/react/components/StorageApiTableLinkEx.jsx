@@ -138,7 +138,7 @@ export default React.createClass({
       }
       const cl = `tr ${info.className}`;
       const agoTime = moment(e.get('created')).fromNow();
-      const incElement = (<small><strong>incremental</strong></small>);
+      const incElement = (<p><small><strong>incremental</strong></small></p>);
       info.message = string.replaceAll(info.message, this.props.tableId, '');
       const incremental = e.getIn(['params', 'incremental']) ? incElement : (<span></span>);
       return (
@@ -355,6 +355,19 @@ export default React.createClass({
 
   renderModal(){
     const modalBody = this.renderModalBody();
+    let tableLink = (<small className="disabled btn btn-link"> Explore in Console</small>);
+    if (this.tableExists()){
+      tableLink =
+      (
+        <SapiTableLink
+          tableId={this.props.tableId}>
+          <small className="btn btn-link">
+            Explore in Console
+          </small>
+        </SapiTableLink>);
+
+
+    }
     return (
       <div className="static-modal">
         <Modal
@@ -365,13 +378,7 @@ export default React.createClass({
           <Modal.Header closeButton>
             <Modal.Title>
               {this.props.tableId}
-              <SapiTableLink
-                 disabled={true}
-                 tableId={this.props.tableId}>
-                <small className="btn btn-link">
-                  Explore in Console
-                </small>
-              </SapiTableLink>
+              {tableLink}
               <RefreshIcon
                  isLoading={this.isLoading()}
                  onClick={this.reload}
