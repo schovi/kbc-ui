@@ -11,6 +11,8 @@ RowEditor = require './RowEditor'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+
 
 tooltips =
   file: 'uploads selected table as csv a file'
@@ -51,7 +53,8 @@ module.exports = React.createClass
   _renderStaticFile: ->
     div className: 'tr',
       span className: 'td',
-        @props.table.get 'name'
+        SapiTableLinkEx tableId: @props.table.get('id'),
+          @props.table.get 'name'
       span className: 'td',
         i className: 'kbc-icon-arrow-right'
       span className: 'td',
@@ -120,7 +123,9 @@ module.exports = React.createClass
       operation: 'update'
       type: 'sheet'
     div className: 'tr',
-      span className: 'td', @props.table.get 'name'
+      span className: 'td',
+        SapiTableLinkEx tableId: @props.table.get('id'),
+          @props.table.get 'name'
       span className: 'td', ''
       span className: 'td', ''
       span className: 'td', ''

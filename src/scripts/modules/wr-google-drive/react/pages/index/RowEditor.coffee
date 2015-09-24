@@ -11,6 +11,7 @@ ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 Input = React.createFactory(require('react-bootstrap').Input)
 Modal = require('react-bootstrap').Modal
 Loader = React.createFactory(require('kbc-react-components').Loader)
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 
 tooltips =
   file: 'uploads selected table as csv a file'
@@ -50,7 +51,8 @@ module.exports = React.createClass
 
     div className: 'tr',
       span className: 'td',
-        @props.table?.get 'name'
+        SapiTableLinkEx tableId: @props.table.get('id'),
+          @props.table.get 'name'
       span className: 'td',
         i className: 'kbc-icon-arrow-right'
       span className: 'td',
