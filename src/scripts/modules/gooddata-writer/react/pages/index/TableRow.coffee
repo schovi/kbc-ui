@@ -4,6 +4,7 @@ Link = React.createFactory(require('react-router').Link)
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 
 actionCreators = require '../../../actionCreators'
 
@@ -25,7 +26,8 @@ module.exports = React.createClass
         table: @props.table.get 'id'
     ,
       span className: 'td',
-        @props.table.getIn ['data', 'sapiName']
+        SapiTableLinkEx tableId: @props.table.get 'id',
+          @props.table.getIn ['data', 'sapiName']
       span className: 'td',
         @props.table.getIn ['data', 'title']
       span className: 'td text-right',
