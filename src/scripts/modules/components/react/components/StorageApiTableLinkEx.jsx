@@ -172,26 +172,26 @@ export default React.createClass({
     return (
       <span>
         <Input>
-          <div className="col-xs-3">
-            <div className="checkbox">
-              <label>
-                <input
+        <div className="col-xs-3">
+          <div className="checkbox">
+            <label>
+              <input
                 checked={this.state.omitFetches}
                 onClick={this.onOmitFetches}
                 type="checkbox"/> Ignore table fetches
-              </label>
-            </div>
+            </label>
           </div>
-          <div className="col-xs-3">
-            <div className="checkbox">
-              <label>
-                <input
+        </div>
+        <div className="col-xs-3">
+          <div className="checkbox">
+            <label>
+              <input
                  checked={this.state.omitExports}
                  onClick={this.onOmitExports}
                  type="checkbox"/> Ignore table exports
-              </label>
-            </div>
+            </label>
           </div>
+        </div>
         </Input>
 
         <table className="table table-striped">
@@ -296,6 +296,23 @@ export default React.createClass({
     );
   },
 
+  renderColumnHeader(column){
+    const {table} = this.state,
+    indexed = table.get('indexedColumns'),
+    primary = table.get('primaryKey');
+    return (
+      <span>
+        {column}
+        <div>
+          {indexed.indexOf(column) > -1 ? ( <small><span className="label label-info">index</span></small>) : '' }
+          {primary.indexOf(column) > -1 ? ( <small><span className="label label-info">PK</span></small>) : '' }
+        </div>
+      </span>
+    );
+
+
+  },
+
   renderColumnsInfo(){
     if (!this.tableExists() || !this.isDataPreview()){
       return (
@@ -306,10 +323,11 @@ export default React.createClass({
     }
     const {table} = this.state;
     const columns = table.get('columns');
+
     const columnsRows = columns.map((c) => {
       const values = this.getColumnValues(c);
       let result = values.filter((val) => val !== '').join(', ');
-      return this.renderTableRow(c, result);
+      return this.renderTableRow(this.renderColumnHeader(c), result);
     });
 
     return (
