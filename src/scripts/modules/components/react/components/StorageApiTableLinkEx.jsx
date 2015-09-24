@@ -91,10 +91,10 @@ export default React.createClass({
 
   renderLink(){
     return (
-      <a key="buttonlink"
+      <span key="buttonlink" className="kbc-sapi-table-link"
          onClick={this.onShow}>
         {this.children || this.props.linkLabel || this.props.tableId}
-      </a>
+      </span>
     );
 
   },
@@ -370,24 +370,30 @@ export default React.createClass({
     const indexes = table.get('indexedColumns').toJS();
     return (
       <div>
-        <table className="table">
+        <Table responsive className="table">
           <thead>
-            {this.renderTableRow('ID', table.get('id'))}
+            <tr>
+              <td style={{width: '20%'}}>
+                ID
+              </td>
+              <td>
+                {table.get('id')}
+              </td>
+            </tr>
           </thead>
           <tbody>
             {this.renderTableRow('Storage', table.get('bucket').get('backend'))}
-            {this.renderTableRow('Created', date.format(table.get('created')))}
+            {this.renderTableRow('Created', this.renderTimefromNow(table.get('created')))}
             {this.renderTableRow('Primary Key', _.isEmpty(primaryKey) ? 'N/A' : primaryKey.join(', '))}
-            {this.renderTableRow('Last Import', date.format(table.get('lastImportDate')))}
-            {this.renderTableRow('Last Change', date.format(table.get('lastChangeDate')))}
+            {this.renderTableRow('Last Import', this.renderTimefromNow(table.get('lastImportDate')))}
+            {this.renderTableRow('Last Change', this.renderTimefromNow(table.get('lastChangeDate')))}
 
             {this.renderTableRow('Rows Count', table.get('rowsCount') + ' rows')}
             {this.renderTableRow('Data Size', filesize(table.get('dataSizeBytes')))}
-            {this.renderTableRow('Columns', table.get('columns').count() + ' columns: ' + table.get('columns').join(', '))}
-
             {this.renderTableRow('Indexed Column(s)', _.isEmpty(indexes) ? 'N/A' : indexes.join(', '))}
+            {this.renderTableRow('Columns', table.get('columns').count() + ' columns: ' + table.get('columns').join(', '))}
           </tbody>
-        </table>
+        </Table>
       </div>
     );
   },
@@ -489,10 +495,12 @@ export default React.createClass({
     });
   },
 
-  onShow(){
+  onShow(e){
     this.exportDataSample();
     this.startEventService();
     this.setState({show: true});
+    e.stopPropagation();
+    e.preventDefault();
   },
 
 
@@ -573,7 +581,17 @@ export default React.createClass({
       'className': 'info'
     }
 
-  }
+  },
 
+  renderTimefromNow(value){
+
+    const fromNow = moment(value).fromNow();
+    return (
+      <span> {date.format(value)}
+        <small> {fromNow} </small>
+      </span>
+    );
+
+  }
 
 });
