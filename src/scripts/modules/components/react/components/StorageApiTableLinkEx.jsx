@@ -79,11 +79,7 @@ export default React.createClass({
   render(){
     return (
       <span key="mainspan">
-        <Tooltip key="tooltip"
-                 tooltip={this.renderTooltip()}
-                 placement="top">
-          {this.renderLink()}
-        </Tooltip>
+        {this.renderLink()}
         {this.state.show ? this.renderModal() : (<span></span>)}
       </span>
     );
@@ -91,10 +87,14 @@ export default React.createClass({
 
   renderLink(){
     return (
-      <span key="buttonlink" className="kbc-sapi-table-link"
-         onClick={this.onShow}>
-        {this.children || this.props.linkLabel || this.props.tableId}
-      </span>
+      <Tooltip key="tooltip"
+                 tooltip={this.renderTooltip()}
+                 placement="top">
+           <span key="buttonlink" className="kbc-sapi-table-link"
+                 onClick={this.onShow}>
+                 {this.props.children || this.props.linkLabel || this.props.tableId}
+           </span>
+       </Tooltip>
     );
 
   },
