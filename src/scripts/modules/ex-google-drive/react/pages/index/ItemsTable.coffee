@@ -4,6 +4,8 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+
 {Loader} = require 'kbc-react-components'
 
 {i, span, div, a, strong} = React.DOM
@@ -36,7 +38,7 @@ module.exports = React.createClass
           if @_isSheetSaving(row)
             React.createElement Loader
           else
-            @_rawConfig(row)?.db?.table or "n/a"
+            SapiTableLinkEx tableId: @_rawConfig(row)?.db?.table
         div className: 'td text-right kbc-no-wrap',
           if @_isSheetDeleting(row.get('fileId'), row.get('sheetId'))
             React.createElement Loader,

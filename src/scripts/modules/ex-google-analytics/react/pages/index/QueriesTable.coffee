@@ -8,6 +8,7 @@ _ = require 'underscore'
 RunDatePicker = React.createFactory require('../../components/DatePicker')
 moment = require 'moment'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 
 module.exports = React.createClass
   displayName: 'QueriesTable'
@@ -39,7 +40,8 @@ module.exports = React.createClass
         div className: 'td kbc-break-all', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
-        div className: 'td kbc-break-all', @props.config.get('outputBucket') + '.' + queryName
+        div className: 'td kbc-break-all',
+          SapiTableLinkEx tableId: (@props.config.get('outputBucket') + '.' + queryName)
         div className: 'td text-right kbc-no-wrap',
           if @_isQueryDeleting(queryName)
             Loader()
