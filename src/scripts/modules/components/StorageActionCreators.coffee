@@ -66,7 +66,7 @@ module.exports =
     )
 
   loadTables: ->
-    return Promise.resolve() if StorageTablesStore.getIsLoaded()
+    return Promise.resolve() if StorageTablesStore.getIsLoaded() or StorageTablesStore.getIsLoading()
     @loadTablesForce()
 
   loadTokensForce: ->
