@@ -5,6 +5,7 @@ Link = React.createFactory(require('react-router').Link)
 Check = React.createFactory(require('kbc-react-components').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
+SapiTableLinkEx = require '../../../../components/react/components/StorageApiTableLinkEx'
 ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
 
 actionCreators = require '../../../exDbActionCreators'
@@ -38,7 +39,8 @@ module.exports = React.createClass
           span className: 'text-muted',
             'Untitled'
       span className: 'td kbc-break-all',
-        @props.query.get 'outputTable'
+        React.createElement SapiTableLinkEx,
+          tableId: @props.query.get 'outputTable'
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
       span className: 'td',
