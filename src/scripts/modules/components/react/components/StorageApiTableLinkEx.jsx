@@ -60,8 +60,9 @@ export default React.createClass({
 
 
   getInitialState(){
+    const omitFetches = true, omitExports = false;
     const es = EventsService.factory({limit: 10});
-    const eventQuery = this.prepareEventQuery(true);
+    const eventQuery = this.prepareEventQuery(omitFetches, omitExports);
     es.setQuery(eventQuery);
 
     return ({
@@ -70,7 +71,8 @@ export default React.createClass({
       show: false,
       dataPreview: Immutable.List(),
       loadingPreview: false,
-      omitFetches: true
+      omitFetches: omitFetches,
+      omitExports: omitExports
     });
   },
 
@@ -164,12 +166,34 @@ export default React.createClass({
       );
     }
     );
+
+
+
     return (
       <span>
-        <Input type="checkbox"
-               onClick={this.onOmitFetches}
-               label="Omit table fetches"
-               checked={this.state.omitFetches} />
+        <Input>
+          <div className="col-xs-3">
+            <div className="checkbox">
+              <label>
+                <input
+                checked={this.state.omitFetches}
+                onClick={this.onOmitFetches}
+                type="checkbox"/> Ignore table fetches
+              </label>
+            </div>
+          </div>
+          <div className="col-xs-3">
+            <div className="checkbox">
+              <label>
+                <input
+                 checked={this.state.omitExports}
+                 onClick={this.onOmitExports}
+                 type="checkbox"/> Ignore table exports
+              </label>
+            </div>
+          </div>
+        </Input>
+
         <table className="table table-striped">
           <thead className="thead">
             <tr className="tr">
@@ -197,25 +221,33 @@ export default React.createClass({
         </table>
       </span>);
   },
+  onOmitExports(e){
+    const checked = e.target.checked;
+    this.setState({omitExports: checked});
+    const q = this.prepareEventQuery(this.state.omitFetches, checked);
+    this.state.eventService.setQuery(q);
+    this.state.eventService.load();
+
+  },
 
   onOmitFetches(e){
     const checked = e.target.checked;
     this.setState({omitFetches: checked});
-    const q = this.prepareEventQuery(checked);
+    const q = this.prepareEventQuery(checked, this.state.omitExports);
     this.state.eventService.setQuery(q);
     this.state.eventService.load();
+
   },
 
-  prepareEventQuery(omitFetches)
+  prepareEventQuery(omitFetches, omitExports)
   {
-
-    /*     _.map(_.keys(this.eventsTemplates), (t) => 'event:' + t).join(' OR '); */
-    let typesQuery = `objectId:${this.props.tableId}`;
-    if (omitFetches)
-    {
-      typesQuery = `(NOT event:storage.tableDetail) AND objectId:${this.props.tableId}`;
-    }
-    return typesQuery;
+    const defs = [omitFetches, omitExports];
+    const omitsQuery = _.filter(['tableDetail', 'tableExported'], (val, idx) => defs[idx]
+    ).map((ev) => `NOT event:storage.${ev}`);
+    const objectIdQuery = `objectId:${this.props.tableId}`;
+    const query = _.isEmpty(omitsQuery) ? objectIdQuery : `(${omitsQuery.join(' OR ')} AND ${objectIdQuery})`;
+    console.log(query);
+    return query;
 
   },
 
