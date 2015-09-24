@@ -3,7 +3,7 @@ React = require 'react'
 {span, button, strong, div} = React.DOM
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 
 module.exports = React.createClass
   displayName: 'DropboxTableRow'
@@ -18,7 +18,8 @@ module.exports = React.createClass
   render: ->
     div {className: 'tr', key: @props.table.get('id')},
       span className: 'td',
-        @props.table.get 'name'
+        SapiTableLinkEx tableId: @props.table.get('id'),
+          @props.table.get 'name'
       span {className: 'td text-right'},
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Select table to upload'
