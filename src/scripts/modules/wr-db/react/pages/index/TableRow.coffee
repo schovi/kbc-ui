@@ -6,6 +6,7 @@ Link = React.createFactory(require('react-router').Link)
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 
 
 module.exports = React.createClass
@@ -31,7 +32,8 @@ module.exports = React.createClass
         tableId: @props.table.get('id')
     ,
       span className: 'td',
-        @props.table.get 'name'
+        SapiTableLinkEx tableId: @props.table.get('id'),
+          @props.table.get 'name'
       span className: 'td',
         @props.tableDbName
       span {className: 'td text-right'},
