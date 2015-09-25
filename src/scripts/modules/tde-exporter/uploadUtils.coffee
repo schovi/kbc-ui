@@ -121,8 +121,9 @@ module.exports =
     account and
       not _.isEmpty(account.get('server_url')) and
       not _.isEmpty(account.get('username')) and
-      not _.isEmpty(account.get('password')) and
-      not _.isEmpty(account.get('project_id'))
+      # not _.isEmpty(account.get('project_id')) and
+      not _.isEmpty(account.get('password'))
+
 
   isDropboxAuthorized: (parameters) ->
     account = parameters.get('dropbox')
