@@ -43,7 +43,8 @@ module.exports =
     return Promise.resolve() if StorageBucketsStore.getIsLoaded()
     @loadBucketsForce()
 
-  loadTablesForce: ->
+  loadTablesForce: (weakForce) ->
+    return Promise.resolve() if weakForce and StorageBucketsStore.getIsLoading()
     dispatcher.handleViewAction(
       type: constants.ActionTypes.STORAGE_TABLES_LOAD
     )

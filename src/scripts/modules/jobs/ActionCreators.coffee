@@ -17,7 +17,7 @@ module.exports =
         now = moment()
         diff = moment.duration(now.diff(endTime))
         if (diff < moment.duration(tresholdTrigger, 'seconds'))
-          return storageActions.loadTablesForce()
+          return storageActions.loadTablesForce(true) #ignore force if already isLoading
 
   loadJobs: ->
     return Promise.resolve() if JobsStore.getIsLoaded()
