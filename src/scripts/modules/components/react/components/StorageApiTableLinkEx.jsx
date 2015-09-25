@@ -470,7 +470,7 @@ export default React.createClass({
     return (
       <span key="tooltipinfo">
         <div>
-          {date.format(table.get('lastChangeDate'))}
+          {moment(table.get('lastChangeDate')).fromNow()}
         </div>
         <div>
           {filesize(table.get('dataSizeBytes'))}
