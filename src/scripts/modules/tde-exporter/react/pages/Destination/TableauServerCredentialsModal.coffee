@@ -65,7 +65,7 @@ module.exports = React.createClass
     @state.credentials and
       not _.isEmpty(@state.credentials.get('server_url')) and
       not _.isEmpty(@state.credentials.get('username')) and
-      #not _.isEmpty(@state.credentials.get('project_id')) and
+      not _.isEmpty(@state.credentials.get('project_id')) and
       not _.isEmpty(@state.credentials.get('password'))
 
 

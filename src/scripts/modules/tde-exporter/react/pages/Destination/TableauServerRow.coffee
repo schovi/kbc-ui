@@ -80,5 +80,5 @@ module.exports = React.createClass
     @props.account and
       not _.isEmpty(@props.account.get('server_url')) and
       not _.isEmpty(@props.account.get('username')) and
-      #not _.isEmpty(@props.account.get('project_id')) and
+      not _.isEmpty(@props.account.get('project_id')) and
       not _.isEmpty(@props.account.get('password'))
