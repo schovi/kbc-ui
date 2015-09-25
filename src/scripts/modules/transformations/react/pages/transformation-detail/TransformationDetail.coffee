@@ -119,7 +119,8 @@ module.exports = React.createClass
               onChange: @_handleActiveChange
 
           if @state.transformation.get('backend') == 'redshift' or
-          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple' or
+          @state.transformation.get('backend') == 'snowflake'
             li {},
               RunComponentButton(
                 icon: 'fa-wrench'
