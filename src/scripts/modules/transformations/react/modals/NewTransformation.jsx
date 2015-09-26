@@ -18,6 +18,9 @@ function prepareDataForCreate(data) {
     case 'redshift':
       newData = newData.set('backend', 'redshift').set('type', 'simple');
       break;
+    case 'snowflake':
+      newData = newData.set('backend', 'snowflake').set('type', 'simple');
+      break;
     case 'r':
       newData = newData.set('backend', 'docker').set('type', 'r');
       break;
@@ -94,18 +97,32 @@ export default React.createClass({
           value={this.state.data.get('backend')}
           onChange={this.handleChange.bind(this, 'backend')}
           labelClassName="col-sm-4"
-          wrapperClassName="col-sm-6">
+          wrapperClassName="col-sm-6"
+          help={this.snowflakeWarning()}>
           {this.backendOptions()}
         </Input>
       </form>
     );
   },
 
+  snowflakeWarning() {
+    if (this.state.data.get('backend') === 'snowflake') {
+      return (
+        <span>
+          Snowflake support is experimental. Contact <a href="mailto:support@keboola.com">support@keboola.com</a> for more details.
+        </span>
+      );
+    } else {
+      return (<span></span>);
+    }
+  },
+
   backendOptions() {
     return [
       {value: 'mysql', label: 'MySQL'},
       {value: 'redshift', label: 'Redshift'},
-      {value: 'r', label: 'R'}
+      {value: 'r', label: 'R'},
+      {value: 'snowflake', label: 'Snowflake'}
     ].map(function(option) {
         return (
           <option value={option.value} key={option.value}>{option.label}</option>

@@ -75,8 +75,11 @@ export default React.createClass({
     switch (this.props.backend) {
       case 'redshift':
         return 'text/x-sql';
+      case 'snowflake':
+        return 'text/x-sql';
       case 'mysql':
         return 'text/x-mysql';
+
     }
   },
 

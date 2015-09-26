@@ -12,7 +12,7 @@ TableBackendLabel = React.createClass
       span {className: 'label label-default'},
         'mysql'
     else if (@props.backend == 'redshift')
-      span {className: 'label label-info'},
+      span {className: 'label label-success'},
         'redshift'
     else
       span {}

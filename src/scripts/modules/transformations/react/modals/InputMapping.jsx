@@ -4,6 +4,7 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import InputMappingRowMySqlEditor from '../components/mapping/InputMappingRowMySqlEditor';
 import InputMappingRowDockerEditor from '../components/mapping/InputMappingRowDockerEditor';
 import InputMappingRowRedshiftEditor from '../components/mapping/InputMappingRowRedshiftEditor';
+import InputMappingRowSnowflakeEditor from '../components/mapping/InputMappingRowSnowflakeEditor';
 import resolveInputShowDetails from './resolveInputShowDetails';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
@@ -61,6 +62,8 @@ export default React.createClass({
       return React.createElement(InputMappingRowMySqlEditor, props);
     } else if (this.props.backend === 'redshift' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowRedshiftEditor, props);
+    } else if (this.props.backend === 'snowflake' && this.props.type === 'simple') {
+      return React.createElement(InputMappingRowSnowflakeEditor, props);
     } else if (this.props.backend === 'docker' && this.props.type === 'r') {
       return React.createElement(InputMappingRowDockerEditor, props);
     }

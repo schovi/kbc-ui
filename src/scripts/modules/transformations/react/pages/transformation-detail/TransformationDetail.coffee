@@ -1,6 +1,7 @@
 React = require('react')
 Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
+Immutable = require 'immutable'
 
 TransformationDetailStatic = React.createFactory(require './TransformationDetailStatic')
 
@@ -17,7 +18,7 @@ ActivateDeactivateButton = React.createFactory(require '../../../../../react/com
 ConfigureTransformationSandboxMode = React.createFactory(require '../../components/ConfigureTransformationSandboxMode')
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
-
+ConfigureSnowflakeConnection = React.createFactory(require './ConfigureSnowflakeConnection')
 
 {div, span, ul, li, a, em} = React.DOM
 
@@ -65,9 +66,11 @@ module.exports = React.createClass
   _showDetails: ->
     @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
+    @state.transformation.get('backend') == 'snowflake' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
   render: ->
+    console.log "snowflake", @state.editingFields.get("snowflake")
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
           TransformationDetailStatic
@@ -93,6 +96,11 @@ module.exports = React.createClass
               span className: 'fa fa-search fa-fw'
               ' Overview'
           li {},
+            ConfigureSnowflakeConnection
+              bucket: @state.bucket
+              transformation: @state.transformation
+              connection: @state.editingFields.get('snowflake', Immutable.Map())
+          li {},
             RunComponentButton(
               title: "Run transformation"
               component: 'transformation'
@@ -113,7 +121,8 @@ module.exports = React.createClass
               onChange: @_handleActiveChange
 
           if @state.transformation.get('backend') == 'redshift' or
-          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'
+          @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple' or
+          @state.transformation.get('backend') == 'snowflake'
             li {},
               RunComponentButton(
                 icon: 'fa-wrench'
@@ -149,7 +158,6 @@ module.exports = React.createClass
                 a {},
                   span className: 'fa fa-sitemap fa-fw'
                   ' SQLDep'
-
           li {},
             a {},
               React.createElement Confirm,
