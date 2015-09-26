@@ -95,11 +95,12 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-search fa-fw'
               ' Overview'
-          li {},
-            ConfigureSnowflakeConnection
-              bucket: @state.bucket
-              transformation: @state.transformation
-              connection: @state.editingFields.get('snowflake', Immutable.Map())
+          if @state.transformation.get('backend') == 'snowflake'
+            li {},
+              ConfigureSnowflakeConnection
+                bucket: @state.bucket
+                transformation: @state.transformation
+                connection: @state.editingFields.get('snowflake', Immutable.Map())
           li {},
             RunComponentButton(
               title: "Run transformation"
