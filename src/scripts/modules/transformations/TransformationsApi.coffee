@@ -6,6 +6,7 @@ ComponentsStore = require '../components/stores/ComponentsStore'
 
 createUrl = (path) ->
   baseUrl = ComponentsStore.getComponent('transformation').get('uri')
+  baseUrl = 'http://ondra-transformation.kbc-devel-03.keboola.com/app_dev.php/transformation'
   "#{baseUrl}/#{path}"
 
 createRequest = (method, path) ->
