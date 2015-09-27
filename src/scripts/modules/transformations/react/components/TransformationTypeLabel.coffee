@@ -21,7 +21,7 @@ TransformationTypeLabel = React.createClass
       span {className: 'label label-danger'},
         'remote'
     else if @props.backend == 'docker' && @props.type == 'r'
-      span {className: 'label label-info'},
+      span {className: 'label label-danger'},
         'R'
     else if @props.backend == 'snowflake'
       span {className: 'label label-info'},
