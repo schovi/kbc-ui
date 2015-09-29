@@ -25,6 +25,7 @@ module.exports = React.createClass
           @_createArraySelect('Metrics', 'metrics')
           @_createArraySelect('Dimensions', 'dimensions')
           @_createInput 'Filters', 'filters'
+          @_createInput 'Segment', 'segment'
           @_profilesSelect()
 
   _parseUrlInput: ->

@@ -37,6 +37,7 @@ module.exports = React.createClass
         div className: 'td', row.get('metrics').join(', ')
         div className: 'td', row.get('dimensions').join(', ')
         div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
+        div className: 'td', row.get('segment') or 'n/a'
         div className: 'td kbc-break-all', @_getProfileName(row.get('profile'))
         div className: 'td',
           i className: 'kbc-icon-arrow-right'
@@ -68,7 +69,6 @@ module.exports = React.createClass
               onChangeUntil: (date) =>
                 @setState
                   until: date
-
       ).toArray()
 
     div className: 'table table-striped table-hover',
@@ -80,6 +80,8 @@ module.exports = React.createClass
             strong null, 'Dimensions'
           span className: 'th',
             strong null, 'Filters'
+          span className: 'th',
+            strong null, 'Segment'
           span className: 'th',
             strong null, 'Profile'
           span className: 'th',""# -> arrow

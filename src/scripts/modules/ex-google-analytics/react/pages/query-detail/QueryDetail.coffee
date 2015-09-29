@@ -46,6 +46,7 @@ module.exports = React.createClass
               @_createStaticInput('Metrics', 'metrics', true)
               @_createStaticInput('Dimensions', 'dimensions', true)
               @_createStaticInput('Filters', 'filters')
+              @_createStaticInput('Segment', 'segment')
               @_createStaticInput('Profile', 'profile')
 
   _createStaticInput: (caption, propName, isArray = false) ->
@@ -58,6 +59,9 @@ module.exports = React.createClass
       pvalue = @state.name
     if propName == 'profile'
       pvalue = if pvalue then @_assmbleProfileName(pvalue) else '--all--'
+    if propName == 'segment'
+      pvalue = pvalue or 'n/a'
+
     div className: 'form-group',
       label className: 'control-label col-xs-4',
         caption,
