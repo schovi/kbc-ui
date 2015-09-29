@@ -62,6 +62,7 @@ Assets should be loaded by `require` or `import` function.
 ### Add New Component (extractor, writer or application)
   
   * Component has to be first registered in Keboola Connection
+    * Ask someone from Keboola to register the component (there will be API one day)
     * Registered component is available in components list https://connection.keboola.com/v2/storage
     * During development component should have flag `excludeFromNewList`. The component will not be listed on New Extractor page.
     * Working backend is not required, we can register empty component
