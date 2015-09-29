@@ -2,6 +2,7 @@ _ = require 'underscore'
 
 sheets = ->
   view = new google.picker.DocsView(google.picker.ViewId.SPREADSHEETS)
+  view.setMimeTypes('application/vnd.google-apps.spreadsheet')
   view.setIncludeFolders(true)
   view.setOwnedByMe(false)
   #view.setSelectFolderEnabled(true)
