@@ -70,7 +70,6 @@ module.exports = React.createClass
     @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
 
   render: ->
-    console.log "snowflake", @state.editingFields.get("snowflake")
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
           TransformationDetailStatic

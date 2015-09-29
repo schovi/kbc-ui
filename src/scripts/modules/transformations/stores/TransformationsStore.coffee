@@ -253,7 +253,7 @@ Dispatcher.register (payload) ->
         action.bucketId
         action.transformationId
         action.fieldId
-      ])
+      ], Immutable.Map())
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_UPDATE_EDITING_FIELD

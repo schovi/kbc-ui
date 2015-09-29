@@ -55,7 +55,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Hostname"
-              value={this.props.value.get('host')}
+              value={this.props.value.get('host', '')}
               placeholder="Snowflake DB hostname, eg. keboola.snowflakecomputing.com"
               onChange={this.handleChangeHost}
               disabled={this.state.isSaving}
@@ -68,7 +68,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Port"
-              value={this.props.value.get('port')}
+              value={this.props.value.get('port', '')}
               placeholder="Snowflake DB port, eg. 443"
               onChange={this.handleChangePort}
               disabled={this.state.isSaving}
@@ -81,7 +81,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Account name"
-              value={this.props.value.get('account')}
+              value={this.props.value.get('account', '')}
               placeholder="Snowflake account name"
               onChange={this.handleChangeAccount}
               disabled={this.state.isSaving}
@@ -94,7 +94,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Username"
-              value={this.props.value.get('user')}
+              value={this.props.value.get('user', '')}
               placeholder="Snowflake login username"
               onChange={this.handleChangeUser}
               disabled={this.state.isSaving}
@@ -107,7 +107,7 @@ export default React.createClass({
               bsSize="small"
               type="password"
               label="Password"
-              value={this.props.value.get('password')}
+              value={this.props.value.get('password', '')}
               placeholder="Snowflake login password"
               onChange={this.handleChangePassword}
               disabled={this.state.isSaving}
@@ -120,7 +120,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Database"
-              value={this.props.value.get('database')}
+              value={this.props.value.get('database', '')}
               placeholder="Snowflake database "
               onChange={this.handleChangeDatabase}
               disabled={this.state.isSaving}
@@ -133,7 +133,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Schema"
-              value={this.props.value.get('schema')}
+              value={this.props.value.get('schema', '')}
               placeholder="Snowflake schema name"
               onChange={this.handleChangeSchema}
               disabled={this.state.isSaving}
@@ -146,7 +146,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="Warehouse"
-              value={this.props.value.get('warehouse')}
+              value={this.props.value.get('warehouse', '')}
               placeholder="Snowflake warehouse"
               onChange={this.handleChangeWarehouse}
               disabled={this.state.isSaving}
@@ -159,7 +159,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="AWS S3 bucket"
-              value={this.props.value.get('s3Bucket')}
+              value={this.props.value.get('s3Bucket', '')}
               placeholder="AWS S3 bucket name"
               onChange={this.handleChangeS3Bucket}
               disabled={this.state.isSaving}
@@ -172,7 +172,7 @@ export default React.createClass({
               bsSize="small"
               type="text"
               label="AWS Key ID"
-              value={this.props.value.get('awsKeyId')}
+              value={this.props.value.get('awsKeyId', '')}
               placeholder="AWS Key Id"
               onChange={this.handleChangeAwsKeyId}
               disabled={this.state.isSaving}
@@ -185,7 +185,7 @@ export default React.createClass({
               bsSize="small"
               type="password"
               label="AWS Secret Key"
-              value={this.props.value.get('awsSecretKey')}
+              value={this.props.value.get('awsSecretKey', '')}
               placeholder="AWS Secret Key"
               onChange={this.handleChangeAwsSecretKey}
               disabled={this.state.isSaving}
