@@ -96,7 +96,6 @@ module.exports = React.createClass
 
   _getProfileName: (profileId) ->
     profiles = @props.profiles
-    console.log 'profiles', profiles
     if not profileId
       return '--all--'
 

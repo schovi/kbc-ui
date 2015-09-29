@@ -39,7 +39,6 @@ module.exports = React.createClass
     selectedProfilesCount: ExGanalStore.getSelectedProfiles(configId)?.count() || 0
 
   render: ->
-    console.log 'rendering', @state.config.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
