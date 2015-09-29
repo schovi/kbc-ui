@@ -141,4 +141,5 @@ module.exports = React.createClass
     newQuery =  newQuery.set('metrics', Immutable.fromJS(metrics)) if parsed.metrics
     newQuery = newQuery.set('dimensions', Immutable.fromJS(dimensions)) if parsed. dimensions
     newQuery = newQuery.set('filters', parsed.filters) if parsed.filters
+    newQuery = newQuery.set('segment', parsed.segment) if parsed.segment
     @props.onChange newQuery
