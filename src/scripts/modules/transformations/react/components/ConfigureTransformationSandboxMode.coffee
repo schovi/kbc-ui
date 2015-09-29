@@ -64,23 +64,24 @@ ConfigureTransformationSandboxMode = React.createClass
             checked: @state.redirect
             onChange: @_setRedirect
             label: 'Show job detail'
-      div className: 'clearfix',
-        h3 {},
-          "Credentials"
-        div className: 'col-sm-offset-1 col-sm-10',
-          if @props.backend == 'redshift'
-            RedshiftCredentialsContainer {isAutoLoad: true}
-          else
-            span {},
-              div {className: 'row'},
-                div {className: 'col-md-9'},
-                  MySqlCredentialsContainer {isAutoLoad: true}
-                div {className: 'col-md-3'},
-                  if @state.mysqlCredentials.get("id")
-                    ConnectToMySqlSandbox {credentials: @state.mysqlCredentials},
-                      button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
-                        span {className: 'fa fa-fw fa-database'}
-                        " Connect"
+      if @props.backend == 'redshift' or @props.backend == 'mysql'
+        div className: 'clearfix',
+          h3 {},
+            "Credentials"
+          div className: 'col-sm-offset-1 col-sm-10',
+            if @props.backend == 'redshift'
+              RedshiftCredentialsContainer {isAutoLoad: true}
+            else if @props.backend == 'mysql'
+              span {},
+                div {className: 'row'},
+                  div {className: 'col-md-9'},
+                    MySqlCredentialsContainer {isAutoLoad: true}
+                  div {className: 'col-md-3'},
+                    if @state.mysqlCredentials.get("id")
+                      ConnectToMySqlSandbox {credentials: @state.mysqlCredentials},
+                        button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+                          span {className: 'fa fa-fw fa-database'}
+                          " Connect"
 
 
   _setRedirect: (e) ->
