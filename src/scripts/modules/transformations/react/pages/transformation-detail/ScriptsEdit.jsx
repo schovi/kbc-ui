@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
-import Sticky from 'react-sticky';
 
 /* global require */
 require('./queries.less');
@@ -30,15 +29,15 @@ export default React.createClass({
             <code>/data/out/tables</code> (relative path <code>out/tables</code>).
           </div>
           <div className="edit form-group kbc-queries-editor">
-            <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-60} stickyStyle={{}}>
+            <div className="text-right">
               <ConfirmButtons
                 isSaving={this.props.isSaving}
                 onSave={this.props.onSave}
                 onCancel={this.props.onCancel}
                 placement="right"
-                saveLabel="Save Scripts"
+                saveLabel="Save Script"
                 />
-            </Sticky>
+            </div>
             <CodeMirror
               value={this.props.script}
               theme="solarized"
