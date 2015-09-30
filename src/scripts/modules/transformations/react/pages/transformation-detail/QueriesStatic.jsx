@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react/addons';
 import Highlight from './Highlight';
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 /*global require */
 require('codemirror/mode/sql/sql');
@@ -14,17 +13,16 @@ export default React.createClass({
   },
 
   render() {
-    console.log('render static');
     return this.props.queries.count() ? this.queriesList() : this.emptyState();
   },
 
   queriesList() {
     return (
       <div>
+        <div className="text-right">{this.startEditButton()}</div>
         <div>
           {this.props.queries.map(this.queryRow, this)}
         </div>
-        <div>{this.startEditButton()}</div>
       </div>
     );
   },
@@ -43,11 +41,6 @@ export default React.createClass({
       <div className={rowClassName} key={index}>
         <div className="col-md-1 vertical-center query-number noselect">
           <span data-query-number={index + 1} className="query-number-value"/>
-          <OverlayTrigger overlay={<Tooltip>Edit Query</Tooltip>}>
-            <span className="btn btn-link query-edit" onClick={this.startEdit.bind(this, index)}>
-              <span className="kbc-icon-pencil"/>
-            </span>
-          </OverlayTrigger>
         </div>
         <div className="col-md-11 vertical-center">
           <span className="static">
