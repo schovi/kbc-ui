@@ -99,25 +99,7 @@ export default React.createClass({
 
   },
 
-  renderModalBody(){
-    return (
-      <TabbedArea key="tabbedarea" animation={false}>
-        <TabPane key="general" eventKey="general" tab="General Info">
-          {this.renderGeneralInfo()}
-        </TabPane>
-        <TabPane key="columns" eventKey="columns" tab="Columns">
-          {this.renderColumnsInfo()}
-        </TabPane>
-        <TabPane key="datasample" eventKey="datasample" tab="Data Sample">
-          {this.renderDataSample()}
-        </TabPane>
-        <TabPane key="events" eventKey="events" tab="Events">
-          {this.renderEvents()}
-        </TabPane>
-      </TabbedArea>
-    );
 
-  },
 
   renderEvents(){
     if (!this.tableExists()){
@@ -246,7 +228,6 @@ export default React.createClass({
     ).map((ev) => `NOT event:storage.${ev}`);
     const objectIdQuery = `objectId:${this.props.tableId}`;
     const query = _.isEmpty(omitsQuery) ? objectIdQuery : `(${omitsQuery.join(' OR ')} AND ${objectIdQuery})`;
-    console.log(query);
     return query;
 
   },
@@ -413,43 +394,6 @@ export default React.createClass({
   },
 
   renderModal(){
-    const modalBody = this.renderModalBody();
-    let tableLink = (<small className="disabled btn btn-link"> Explore in Console</small>);
-    if (this.tableExists()){
-      tableLink =
-      (
-        <SapiTableLink
-          tableId={this.props.tableId}>
-          <small className="btn btn-link">
-            Explore in Console
-          </small>
-        </SapiTableLink>);
-
-
-    }
-    return (
-      <div className="static-modal">
-        <Modal
-          bsSize="large"
-          show={this.state.show}
-          onHide={this.onHide}
-          >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              {this.props.tableId}
-              {tableLink}
-              <RefreshIcon
-                 isLoading={this.isLoading()}
-                 onClick={this.reload}
-              />
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {modalBody}
-          </Modal.Body>
-        </Modal>
-      </div>
-    );
   },
 
   isLoading(){
