@@ -21,6 +21,7 @@ import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
+import Api from '../utils/api';
 
 
 const componentId = 'ex-dropbox';
@@ -53,6 +54,19 @@ export default React.createClass({
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
     };
+  },
+
+  componentDidMount() {
+    if (this.state.hasCredentials) {
+      let data = this.state.credentials.get('data');
+      let token = JSON.parse(data).access_token;
+
+      Api.getCsvFilesFromDropbox(token)
+        .then((test) => {
+          console.log(test);
+        });
+    }
+
   },
 
   render() {
