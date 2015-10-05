@@ -25,6 +25,12 @@ module.exports =
       @dispatchApiError(['extLinksGenerating', configId], err)
       throw err
 
+  cleanStore: (configId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.EX_GDRIVE_CLEAN_STORE
+      configurationId: configId
+
+
   searchQueryChange: (configId, newValue) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_SEARCH_QUERY_CHANGE

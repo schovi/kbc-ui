@@ -2,6 +2,7 @@ React = require 'react'
 classnames = require 'classnames'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGdriveStore = require '../../../exGdriveStore'
+ExGdriveActions = require '../../../exGdriveActionCreators'
 ApplicationStore = require '../../../../../stores/ApplicationStore.coffee'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
@@ -152,9 +153,13 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'ex-google-drive'
             configId: @state.configuration.get 'id'
+            postDeleteFn: @_cleanStore
 
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+
+  _cleanStore: ->
+    ExGdriveActions.cleanStore(@state.configuration.get('id'))
 
   _showAuthorize: ->
     (not @state.owner) && @state.email
@@ -169,6 +174,7 @@ module.exports = React.createClass
   _showSelectSheets: ->
     authorized = @state.currentUser in [@state.owner, @state.email]
     authorized and not (@state.configuration.get('external') == '1')
+
 
   # _isCurrentAuthorized: ->
   #   email = @state.configuration.get 'email'
