@@ -1,14 +1,13 @@
 import React, {PropTypes} from 'react';
-import _ from 'underscore';
 
 import EventsTab from './EventsTab';
 import GeneralInfoTab from './GeneralInfoTab';
 import DataSampleTab from './DataSampleTab';
+import ColumnsInfoTab from './ColumnsInfoTab';
 
 import SapiTableLink from '../StorageApiTableLink';
-import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 
-import {TabbedArea, TabPane, Table, Modal} from 'react-bootstrap';
+import {TabbedArea, TabPane, Modal} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
 
 export default React.createClass({
@@ -114,100 +113,24 @@ export default React.createClass({
     );
 
   },
+
   renderDataSample(){
-    return ( <DataSampleTab
-               dataPreview={this.props.dataPreview}
-             />
+    return (
+      <DataSampleTab
+        dataPreview={this.props.dataPreview}
+      />
     );
 
   },
+
   renderColumnsInfo(){
-    if (!this.props.tableExists || !this.isDataPreview()){
-      return (
-        <EmptyState>
-          No Data.
-        </EmptyState>
-      );
-    }
-    const {table} = this.props;
-    const columns = table.get('columns');
-
-    const columnsRows = columns.map((c) => {
-      const values = this.getColumnValues(c);
-      let result = values.filter((val) => val !== '').join(', ');
-      return this.renderTableRow(this.renderColumnHeader(c), result);
-    });
-
     return (
-      <div>
-        <Table responsive className="table table-striped">
-          <thead>
-            <tr>
-              <th>
-                Column
-              </th>
-              <th>
-                Sample Values
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {columnsRows}
-          </tbody>
-        </Table>
-      </div>
+      <ColumnsInfoTab
+        tableExists={this.props.tableExists}
+        table={this.props.table}
+        dataPreview={this.props.dataPreview}
+      />
     );
-  },
-
-
-  renderTableRow(name, value){
-    return (
-      <tr>
-        <td>
-          {name}
-        </td>
-        <td>
-          {value}
-        </td>
-      </tr>
-    );
-
-  },
-
-
-
-
-  renderColumnHeader(column){
-    const {table} = this.props,
-      indexed = table.get('indexedColumns'),
-      primary = table.get('primaryKey');
-    return (
-      <span>
-        {column}
-        <div>
-          {indexed.indexOf(column) > -1 ? ( <small><span className="label label-info">index</span></small>) : '' }
-          {primary.indexOf(column) > -1 ? ( <small><span className="label label-info">PK</span></small>) : '' }
-        </div>
-      </span>
-    );
-
-  },
-
-  getColumnValues(columnName){
-    const data = this.props.dataPreview;
-    const columnIndex = data.first().indexOf(columnName);
-
-    const result = data
-    .shift()
-    .map( (row) => {
-      return row.get(columnIndex);
-    });
-    return result;
-  },
-
-
-  isDataPreview(){
-    return !_.isEmpty(this.props.dataPreview.toJS());
   }
 
 });
