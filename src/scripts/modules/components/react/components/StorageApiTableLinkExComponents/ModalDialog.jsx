@@ -1,19 +1,14 @@
 import React, {PropTypes} from 'react';
-import filesize from 'filesize';
 import _ from 'underscore';
 
-import moment from 'moment';
-
 import EventsTab from './EventsTab';
+import GeneralInfoTab from './GeneralInfoTab';
 
 import SapiTableLink from '../StorageApiTableLink';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
-import date from '../../../../../utils/date';
 
 import {TabbedArea, TabPane, Table, Modal} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
-
-
 
 export default React.createClass({
 
@@ -31,8 +26,6 @@ export default React.createClass({
     onOmitFetchesFn: PropTypes.func,
     onOmitExportsFn: PropTypes.func,
     onHideFn: PropTypes.func
-
-
   },
 
   render(){
@@ -47,8 +40,6 @@ export default React.createClass({
             Explore in Console
           </small>
         </SapiTableLink>);
-
-
     }
     return (
       <div className="static-modal">
@@ -96,6 +87,17 @@ export default React.createClass({
 
   },
 
+  renderGeneralInfo(){
+    return (
+      <GeneralInfoTab
+        isLoading={this.props.isLoading}
+        table={this.props.table}
+        tableExists={this.props.tableExists}
+      />
+    );
+
+  },
+
   renderEvents(){
     return (
       <EventsTab
@@ -108,57 +110,10 @@ export default React.createClass({
         onOmitExportsFn={this.props.onOmitExportsFn}
       />
 
-
     );
 
   },
 
-  renderGeneralInfo(){
-    if (!this.props.tableExists)
-    {
-      let msg = 'Table does not exist yet.';
-      if (this.props.isLoading){
-        msg = 'Loading...';
-      }
-      return (
-        <EmptyState key="emptytable">
-          {msg}
-        </EmptyState>
-      );
-
-    }
-    const table = this.props.table;
-    const primaryKey = table.get('primaryKey').toJS();
-    const indexes = table.get('indexedColumns').toJS();
-    return (
-      <div>
-        <Table responsive className="table">
-          <thead>
-            <tr>
-              <td style={{width: '20%'}}>
-                ID
-              </td>
-              <td>
-                {table.get('id')}
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderTableRow('Storage', table.get('bucket').get('backend'))}
-            {this.renderTableRow('Created', this.renderTimefromNow(table.get('created')))}
-            {this.renderTableRow('Primary Key', _.isEmpty(primaryKey) ? 'N/A' : primaryKey.join(', '))}
-            {this.renderTableRow('Last Import', this.renderTimefromNow(table.get('lastImportDate')))}
-            {this.renderTableRow('Last Change', this.renderTimefromNow(table.get('lastChangeDate')))}
-
-            {this.renderTableRow('Rows Count', table.get('rowsCount') + ' rows')}
-            {this.renderTableRow('Data Size', filesize(table.get('dataSizeBytes')))}
-            {this.renderTableRow('Indexed Column(s)', _.isEmpty(indexes) ? 'N/A' : indexes.join(', '))}
-            {this.renderTableRow('Columns', table.get('columns').count() + ' columns: ' + table.get('columns').join(', '))}
-          </tbody>
-        </Table>
-      </div>
-    );
-  },
 
   renderColumnsInfo(){
     if (!this.props.tableExists || !this.isDataPreview()){
@@ -276,15 +231,6 @@ export default React.createClass({
 
   },
 
-  renderTimefromNow(value){
-    const fromNow = moment(value).fromNow();
-    return (
-      <span> {date.format(value)}
-        <small> {fromNow} </small>
-      </span>
-    );
-
-  },
 
   getColumnValues(columnName){
     const data = this.props.dataPreview;
