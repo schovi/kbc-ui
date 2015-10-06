@@ -4,6 +4,7 @@ import date from '../../../../../utils/date';
 import moment from 'moment';
 import _ from 'underscore';
 import {Table} from 'react-bootstrap';
+import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import filesize from 'filesize';
 
@@ -14,6 +15,8 @@ export default React.createClass({
     table: PropTypes.object,
     tableExists: PropTypes.bool.isRequired
   },
+
+  mixins: [immutableMixin],
 
   render(){
     if (!this.props.tableExists)

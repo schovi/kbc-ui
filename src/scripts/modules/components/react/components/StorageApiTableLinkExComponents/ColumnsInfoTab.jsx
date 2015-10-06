@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import _ from 'underscore';
 
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
+import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
+
 import {Table} from 'react-bootstrap';
 
 export default React.createClass({
@@ -10,6 +12,8 @@ export default React.createClass({
     table: PropTypes.object,
     dataPreview: PropTypes.object
   },
+
+  mixins: [immutableMixin],
 
   render(){
     if (!this.props.tableExists || !this.isDataPreview()){
@@ -96,7 +100,6 @@ export default React.createClass({
   isDataPreview(){
     return !_.isEmpty(this.props.dataPreview.toJS());
   }
-
 
 
 });
