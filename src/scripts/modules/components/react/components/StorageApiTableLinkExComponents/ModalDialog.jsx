@@ -3,6 +3,7 @@ import _ from 'underscore';
 
 import EventsTab from './EventsTab';
 import GeneralInfoTab from './GeneralInfoTab';
+import DataSampleTab from './DataSampleTab';
 
 import SapiTableLink from '../StorageApiTableLink';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
@@ -113,8 +114,13 @@ export default React.createClass({
     );
 
   },
+  renderDataSample(){
+    return ( <DataSampleTab
+               dataPreview={this.props.dataPreview}
+             />
+    );
 
-
+  },
   renderColumnsInfo(){
     if (!this.props.tableExists || !this.isDataPreview()){
       return (
@@ -169,55 +175,12 @@ export default React.createClass({
   },
 
 
-  renderDataSample(){
-    const data = this.props.dataPreview;
-    if (data.count() === 0){
-      return (
-        <EmptyState>
-          No Data.
-        </EmptyState>
-      );
-    }
-
-    const header = data.first().map( (c) => {
-      return (
-        <th>
-          {c}
-        </th>
-      );
-    }).toArray();
-    const rows = data.rest().map( (row) => {
-      const cols = row.map( (c) => {
-        return (<td> {c} </td>);
-      });
-
-      return (
-        <tr>
-          {cols}
-        </tr>);
-    });
-
-    return (
-      <div>
-        <Table responsive className="table table-striped">
-          <thead>
-            <tr>
-              {header}
-            </tr>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-        </Table>
-      </div>
-    );
-  },
 
 
   renderColumnHeader(column){
     const {table} = this.props,
-    indexed = table.get('indexedColumns'),
-    primary = table.get('primaryKey');
+      indexed = table.get('indexedColumns'),
+      primary = table.get('primaryKey');
     return (
       <span>
         {column}
@@ -228,9 +191,7 @@ export default React.createClass({
       </span>
     );
 
-
   },
-
 
   getColumnValues(columnName){
     const data = this.props.dataPreview;
