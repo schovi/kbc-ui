@@ -6,9 +6,11 @@ import DataSampleTab from './DataSampleTab';
 import ColumnsInfoTab from './ColumnsInfoTab';
 
 import SapiTableLink from '../StorageApiTableLink';
+import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 
 import {TabbedArea, TabPane, Modal} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
+
 
 export default React.createClass({
 
@@ -27,6 +29,8 @@ export default React.createClass({
     onOmitExportsFn: PropTypes.func,
     onHideFn: PropTypes.func
   },
+
+  mixins: [immutableMixin],
 
   render(){
     const modalBody = this.renderModalBody();

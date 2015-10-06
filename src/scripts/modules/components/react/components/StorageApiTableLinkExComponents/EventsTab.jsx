@@ -4,6 +4,7 @@ import date from '../../../../../utils/date';
 import string from 'underscore.string';
 import {Input} from 'react-bootstrap';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
+import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 
 export default React.createClass({
 
@@ -17,6 +18,8 @@ export default React.createClass({
     onOmitExportsFn: PropTypes.func
 
   },
+
+  mixins: [immutableMixin],
 
   render(){
     if (!this.props.tableExists){
