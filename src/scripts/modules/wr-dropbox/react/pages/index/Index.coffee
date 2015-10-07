@@ -187,7 +187,7 @@ module.exports = React.createClass
           DeleteConfigurationButton
             componentId: 'wr-dropbox'
             configId: @state.configId
-            customDeleteFn: @_deleteCredentials
+            preDeleteFn: @_deleteCredentials
       React.createElement LatestJobs,
         jobs: @state.latestJobs
 

@@ -24,7 +24,7 @@ routes =
           if params.jobId
             # job detail
             Promise.resolve()
-          else if query.q != currentQuery
+          else if query.q != undefined && query.q != currentQuery
             JobsActionCreators.setQuery(query.q || "")
             JobsActionCreators.loadJobsForce(0, true, false)
           else
