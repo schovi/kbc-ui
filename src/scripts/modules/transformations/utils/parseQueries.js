@@ -16,7 +16,7 @@ function splitSqlQueries(queries) {
 }
 
 export default function(transformation, queries) {
-  if (['redshift', 'mysql'].indexOf(transformation.get('backend')) >= 0) {
+  if (['redshift', 'mysql', 'snowflake'].indexOf(transformation.get('backend')) >= 0) {
     return splitSqlQueries(queries);
   } else {
     return List([queries]);
