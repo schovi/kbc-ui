@@ -99,6 +99,7 @@ export default React.createClass({
     if (!this.tableExists()){
       return 'Table does not exist yet.';
     }
+    console.log(table.toJS(), table.getIn(['bucket', 'backend']), this.isRedshift());
 
     return (
       <span key="tooltipinfo">
@@ -232,6 +233,10 @@ export default React.createClass({
 
   tableExists(){
     return !_.isEmpty(this.state.table.toJS());
+  },
+
+  isRedshift(){
+    return this.tableExists() && this.state.table.getIn(['bucket', 'backend']) === 'redshift';
   }
 
 
