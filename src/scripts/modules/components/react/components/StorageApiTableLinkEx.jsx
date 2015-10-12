@@ -4,6 +4,7 @@ import _ from 'underscore';
 import Promise from 'bluebird';
 import moment from 'moment';
 import filesize from 'filesize';
+import string from '../../../../utils/string';
 
 import storageActions from '../../StorageActionCreators';
 import storageApi from '../../StorageApi';
@@ -14,6 +15,10 @@ import Tooltip from '../../../../react/common/Tooltip';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import EventsService from '../../../sapi-events/EventService';
+
+import jobsApi from '../../../jobs/JobsApi';
+
+const dataProfilerBucketPrefix = 'in.c-lg-rcp-data-profiler_';
 
 export default React.createClass({
 
@@ -36,13 +41,32 @@ export default React.createClass({
     };
   },
 
-
   componentDidMount(){
     storageActions.loadTables();//.then(() => this.exportDataSample());
   },
 
   componentWilUnmount(){
     this.stopEventService();
+  },
+
+  findEnhancedJob(){
+    //do the enhanced analysis only for redshift tables
+    if (!this.isRedshift()){
+      return;
+    }
+
+    const tableId = this.props.tableId;
+    const profilerConfigId = string.webalize(tableId);
+    console.log('webalized configId', profilerConfigId);
+    const jobQuery = `config:${profilerConfigId} AND recipeId:rcp-data-profiler`;
+
+    jobsApi.getJobsParametrized(jobQuery, 1, 0).then((result) =>{
+      const resultsTableId = `${dataProfilerBucketPrefix}${profilerConfigId}.VAI__1`;
+
+      console.log('PROFILER JOB', result);
+    });
+
+
   },
 
   /* shouldComponentUpdate(nextProps, nextState){
@@ -188,7 +212,9 @@ export default React.createClass({
   onShow(e){
     this.exportDataSample();
     this.startEventService();
+    this.findEnhancedJob();
     this.setState({show: true});
+
     e.stopPropagation();
     e.preventDefault();
   },
