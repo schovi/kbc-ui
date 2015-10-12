@@ -4,21 +4,19 @@ import _ from 'underscore';
 import Promise from 'bluebird';
 import moment from 'moment';
 import filesize from 'filesize';
-import string from '../../../../utils/string';
 
 import storageActions from '../../StorageActionCreators';
 import storageApi from '../../StorageApi';
 import tablesStore from '../../stores/StorageTablesStore';
 
 import TableLinkModalDialog from './StorageApiTableLinkExComponents/ModalDialog';
+import fetchProfilerData from './StorageApiTableLinkExComponents/DataProfilerUtils';
 import Tooltip from '../../../../react/common/Tooltip';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import EventsService from '../../../sapi-events/EventService';
 
-import jobsApi from '../../../jobs/JobsApi';
 
-const dataProfilerBucketPrefix = 'in.c-lg-rcp-data-profiler_';
 
 export default React.createClass({
 
@@ -41,6 +39,25 @@ export default React.createClass({
     };
   },
 
+  getInitialState(){
+    const omitFetches = true, omitExports = false;
+    const es = EventsService.factory({limit: 10});
+    const eventQuery = this.prepareEventQuery(omitFetches, omitExports);
+    es.setQuery(eventQuery);
+
+    return ({
+      eventService: es,
+      events: Immutable.List(),
+      show: false,
+      dataPreview: Immutable.List(),
+      loadingPreview: false,
+      loadingProfilerData: false,
+      omitFetches: omitFetches,
+      omitExports: omitExports,
+      profilerData: Map()
+    });
+  },
+
   componentDidMount(){
     storageActions.loadTables();//.then(() => this.exportDataSample());
   },
@@ -54,18 +71,16 @@ export default React.createClass({
     if (!this.isRedshift()){
       return;
     }
-
+    this.setState({loadingProfilerData: true});
     const tableId = this.props.tableId;
-    const profilerConfigId = string.webalize(tableId);
-    console.log('webalized configId', profilerConfigId);
-    const jobQuery = `config:${profilerConfigId} AND recipeId:rcp-data-profiler`;
-
-    jobsApi.getJobsParametrized(jobQuery, 1, 0).then((result) =>{
-      const resultsTableId = `${dataProfilerBucketPrefix}${profilerConfigId}.VAI__1`;
-
-      console.log('PROFILER JOB', result);
+    const component = this;
+    fetchProfilerData(tableId).then( (result) =>{
+      component.setState({
+        profilerData: Immutable.fromJS(result),
+        loadingProfilerData: false
+      });
+      console.log('data analysis result', result);
     });
-
 
   },
 
@@ -74,22 +89,6 @@ export default React.createClass({
      }, */
 
 
-  getInitialState(){
-    const omitFetches = true, omitExports = false;
-    const es = EventsService.factory({limit: 10});
-    const eventQuery = this.prepareEventQuery(omitFetches, omitExports);
-    es.setQuery(eventQuery);
-
-    return ({
-      eventService: es,
-      events: Immutable.List(),
-      show: false,
-      dataPreview: Immutable.List(),
-      loadingPreview: false,
-      omitFetches: omitFetches,
-      omitExports: omitExports
-    });
-  },
 
   render(){
     return (
@@ -123,8 +122,6 @@ export default React.createClass({
     if (!this.tableExists()){
       return 'Table does not exist yet.';
     }
-    console.log(table.toJS(), table.getIn(['bucket', 'backend']), this.isRedshift());
-
     return (
       <span key="tooltipinfo">
         <div>
@@ -177,7 +174,6 @@ export default React.createClass({
     const q = this.prepareEventQuery(checked, this.state.omitExports);
     this.state.eventService.setQuery(q);
     this.state.eventService.load();
-
   },
 
   prepareEventQuery(omitFetches, omitExports)
