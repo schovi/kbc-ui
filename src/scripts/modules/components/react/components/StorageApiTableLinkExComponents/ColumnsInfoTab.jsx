@@ -4,38 +4,46 @@ import _ from 'underscore';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 
+import Tooltip from '../../../../../react/common/Tooltip';
 import {Table} from 'react-bootstrap';
 
 const enhancedColumnsDescription = {
   'data_type': {
     name: 'Data Type',
-    desc: 'desc',
     formatFn: (value, rowValues) => {
       const format = _.find(rowValues, r => r.name === 'format').value;
       const ists = _.find(rowValues, r => r.name === 'is_ts').value;
       const result = format ? `${value} (${format})` : `${value}`;
       const tsRender = (<small><span className="label label-info">Timeseries</span></small>);
       return ists === '1' ? (<span><div>{result}</div>{tsRender}</span>) : result;
-    }
+    },
+    desc: `The type of data present in the column.  Possible values are:
+String - alphanumeric characters
+Integer - whole numbers without decimals
+float - numbers with decimals
+and date or datetime`
 
   },
 
-  'format': { // merged to data_type
+  // merged to data_type
+  'format': {
     name: 'Format',
     skip: true
 
 
   },
 
-  'is_ts': { //merged to data_type
+  //merged to data_type
+  'is_ts': {
     name: 'Is ts',
     skip: true
 
   },
 
   'val_ratio': {
-    name: 'Value Ratio',
-    desc: '',
+    name: 'Uniqueness of values(%)',
+    desc: `If every value in the column is distinct, the value will be 100%.
+Columns that have few distinct values repeatedly (such as categories) will have lower values. If every row contains the same value, the value will be 0%.`,
     formatFn: (value) => {
       return ((parseFloat(value)) * 100).toFixed(2);
     }
@@ -43,20 +51,24 @@ const enhancedColumnsDescription = {
   },
 
   'is_identity': {
-    name: 'Is Identity',
-    desc: ''
+    name: 'Identifying Column',
+    desc: `Can the values of this column be used as an identifier for each row?`
 
   },
 
   'mode': {
     name: 'Mode',
-    desc: ''
+    desc: `Continuous - Highly distinctive values (Time series are continuous)
+
+Categories - Many rows contain the same values and there are finite possibilities.
+
+Useless - Almost all rows contain fewer than 2 distinct values`
 
   },
 
   'monotonic': {
-    name: 'Monotonic',
-    desc: ''
+    name: 'Unchanging',
+    desc: 'The values do not increase or decrease'
 
   }
 };
@@ -139,7 +151,16 @@ export default React.createClass({
 
     const enhancedHeader = this.getEnahncedHeader().filter(h => !h.skip).map( (header) =>
       {
-        return (<th>{header.label}</th>);
+        return (
+          <th>
+            {header.label}
+            <Tooltip
+               tooltip={header.desc}
+               placement="top">
+              <i className="fa fa-fw fa-question-circle"></i>
+            </Tooltip>
+          </th>
+        );
       }
     );
 
@@ -173,13 +194,6 @@ export default React.createClass({
     }
     );
     return header;
-    /* const header = this.props.enhancedAnalysis.get('data').first().map((h, idx) =>{
-       return {
-       name: h,
-       idx: idx
-       };
-       }); */
-
   },
 
 
@@ -203,7 +217,11 @@ export default React.createClass({
         if (h.formatFn){
           cellValue = h.formatFn(cellValue, rowValuesMap);
         }
-        return (<td>{cellValue}</td>);
+        return (
+          <td>
+            {cellValue}
+          </td>
+        );
       });
 
     }
