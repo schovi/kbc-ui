@@ -153,6 +153,7 @@ export default React.createClass({
          onOmitExportsFn={this.onOmitExports}
          onOmitFetchesFn={this.onOmitFetches}
          events={this.state.events}
+         enhancedAnalysis={this.state.profilerData}
       />
 
     );
