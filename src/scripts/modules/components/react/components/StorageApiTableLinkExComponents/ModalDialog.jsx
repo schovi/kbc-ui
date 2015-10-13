@@ -25,6 +25,7 @@ export default React.createClass({
     isLoading: PropTypes.bool,
     table: PropTypes.object,
     dataPreview: PropTypes.object,
+    enhancedAnalysis: PropTypes.object,
     onOmitFetchesFn: PropTypes.func,
     onOmitExportsFn: PropTypes.func,
     onHideFn: PropTypes.func
@@ -133,6 +134,7 @@ export default React.createClass({
         tableExists={this.props.tableExists}
         table={this.props.table}
         dataPreview={this.props.dataPreview}
+        enhancedAnalysis={this.props.enhancedAnalysis}
       />
     );
   }

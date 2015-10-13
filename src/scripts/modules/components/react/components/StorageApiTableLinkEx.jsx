@@ -10,10 +10,13 @@ import storageApi from '../../StorageApi';
 import tablesStore from '../../stores/StorageTablesStore';
 
 import TableLinkModalDialog from './StorageApiTableLinkExComponents/ModalDialog';
+import fetchProfilerData from './StorageApiTableLinkExComponents/DataProfilerUtils';
 import Tooltip from '../../../../react/common/Tooltip';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import EventsService from '../../../sapi-events/EventService';
+
+
 
 export default React.createClass({
 
@@ -36,20 +39,6 @@ export default React.createClass({
     };
   },
 
-
-  componentDidMount(){
-    storageActions.loadTables();//.then(() => this.exportDataSample());
-  },
-
-  componentWilUnmount(){
-    this.stopEventService();
-  },
-
-  /* shouldComponentUpdate(nextProps, nextState){
-     return (nextState.show === true || this.state.show === true || nextState.isLoading === false) && nextState !== this.state;
-     }, */
-
-
   getInitialState(){
     const omitFetches = true, omitExports = false;
     const es = EventsService.factory({limit: 10});
@@ -62,10 +51,44 @@ export default React.createClass({
       show: false,
       dataPreview: Immutable.List(),
       loadingPreview: false,
+      loadingProfilerData: false,
       omitFetches: omitFetches,
-      omitExports: omitExports
+      omitExports: omitExports,
+      profilerData: Map()
     });
   },
+
+  componentDidMount(){
+    storageActions.loadTables();//.then(() => this.exportDataSample());
+  },
+
+  componentWilUnmount(){
+    this.stopEventService();
+  },
+
+  findEnhancedJob(){
+    //do the enhanced analysis only for redshift tables
+    if (!this.isRedshift()){
+      return;
+    }
+    this.setState({loadingProfilerData: true});
+    const tableId = this.props.tableId;
+    const component = this;
+    fetchProfilerData(tableId).then( (result) =>{
+      component.setState({
+        profilerData: Immutable.fromJS(result),
+        loadingProfilerData: false
+      });
+      console.log('data analysis result', result);
+    });
+
+  },
+
+  /* shouldComponentUpdate(nextProps, nextState){
+     return (nextState.show === true || this.state.show === true || nextState.isLoading === false) && nextState !== this.state;
+     }, */
+
+
 
   render(){
     return (
@@ -99,7 +122,6 @@ export default React.createClass({
     if (!this.tableExists()){
       return 'Table does not exist yet.';
     }
-
     return (
       <span key="tooltipinfo">
         <div>
@@ -131,6 +153,7 @@ export default React.createClass({
          onOmitExportsFn={this.onOmitExports}
          onOmitFetchesFn={this.onOmitFetches}
          events={this.state.events}
+         enhancedAnalysis={this.state.profilerData}
       />
 
     );
@@ -152,7 +175,6 @@ export default React.createClass({
     const q = this.prepareEventQuery(checked, this.state.omitExports);
     this.state.eventService.setQuery(q);
     this.state.eventService.load();
-
   },
 
   prepareEventQuery(omitFetches, omitExports)
@@ -187,7 +209,9 @@ export default React.createClass({
   onShow(e){
     this.exportDataSample();
     this.startEventService();
+    this.findEnhancedJob();
     this.setState({show: true});
+
     e.stopPropagation();
     e.preventDefault();
   },
@@ -232,6 +256,10 @@ export default React.createClass({
 
   tableExists(){
     return !_.isEmpty(this.state.table.toJS());
+  },
+
+  isRedshift(){
+    return this.tableExists() && this.state.table.getIn(['bucket', 'backend']) === 'redshift';
   }
 
 
