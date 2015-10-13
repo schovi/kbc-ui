@@ -62,7 +62,7 @@ getUploadTaskParameters = (uploadComponentId, account, configId) ->
   storage =
     input:
       files: [
-        filterByRunId: true
+        'filter_by_run_id': true
         tags: ['tde']
       ]
   switch uploadComponentId
