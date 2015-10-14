@@ -28,7 +28,8 @@ export default React.createClass({
     enhancedAnalysis: PropTypes.object,
     onOmitFetchesFn: PropTypes.func,
     onOmitExportsFn: PropTypes.func,
-    onHideFn: PropTypes.func
+    onHideFn: PropTypes.func,
+    isRedshift: PropTypes.bool
   },
 
   mixins: [immutableMixin],
@@ -134,6 +135,7 @@ export default React.createClass({
         tableExists={this.props.tableExists}
         table={this.props.table}
         dataPreview={this.props.dataPreview}
+        isRedshift={this.props.isRedshift}
         enhancedAnalysis={this.props.enhancedAnalysis}
       />
     );

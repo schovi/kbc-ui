@@ -152,6 +152,7 @@ export default React.createClass({
          onOmitFetchesFn={this.onOmitFetches}
          events={this.state.events}
          enhancedAnalysis={this.state.profilerData}
+         isRedshift={this.isRedshift()}
       />
 
     );

@@ -6,6 +6,7 @@ import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 
 import Tooltip from '../../../../../react/common/Tooltip';
 import enhancedColumnsTemplate from './EnhancedComlumnsTemplate';
+import EnhancedAnalysisRunControl from './EnhancedAnalysisRunControl';
 import {Table} from 'react-bootstrap';
 
 
@@ -14,7 +15,8 @@ export default React.createClass({
     tableExists: PropTypes.bool.isRequired,
     table: PropTypes.object,
     dataPreview: PropTypes.object,
-    enhancedAnalysis: PropTypes.object
+    enhancedAnalysis: PropTypes.object,
+    isRedshift: PropTypes.bool
   },
 
   mixins: [immutableMixin],
@@ -81,7 +83,7 @@ export default React.createClass({
       </thead>
     );
 
-    if (!this.hasEnhancedAnalysis()){
+    if (!this.props.isRedshift){
       return simpleHeader;
     }
 
@@ -106,7 +108,11 @@ export default React.createClass({
           <th></th>
           <th></th>
           <th colSpan="4">
-            Enhanced Analysis:
+            <EnhancedAnalysisRunControl
+                enhancedAnalysis={this.props.enhancedAnalysis}
+                table={this.props.table}
+                onRunAnalysis={ () => 'TODO'} />
+
           </th>
         </tr>
         <tr>
@@ -124,14 +130,18 @@ export default React.createClass({
   },
 
   getEnahncedHeader(){
-    const dataHeader = this.props.enhancedAnalysis.get('data').first();
+    let dataHeader = null;
+    if (this.hasEnhancedData()){
+      dataHeader = this.props.enhancedAnalysis.get('data').first();
+
+    }
     const header = _.map(_.keys(enhancedColumnsTemplate), (key) => {
       const h = enhancedColumnsTemplate[key];
       return {
         name: key,
         label: h.name,
         desc: h.desc,
-        idx: dataHeader.indexOf(key),
+        idx: dataHeader ? dataHeader.indexOf(key) : 0,
         formatFn: h.formatFn,
         skip: h.skip
       };
@@ -144,30 +154,43 @@ export default React.createClass({
 
   renderBodyRow(columnName, columnNameCell, value){
     let enhancedCells = [];
-    if ( this.hasEnhancedAnalysis()){
-      const varNameIndex = this.props.enhancedAnalysis.get('data').first().indexOf('var_name');
-      const header = this.getEnahncedHeader();
-      const rows = this.props.enhancedAnalysis.get('data').rest();
-      const rowToRender = rows.find((row) => {
-        return row.get(varNameIndex) === columnName;
-      });
+    if (this.props.isRedshift){
+      if(this.hasEnhancedData()){
+        const varNameIndex = this.props.enhancedAnalysis.get('data').first().indexOf('var_name');
+        const header = this.getEnahncedHeader();
+        const rows = this.props.enhancedAnalysis.get('data').rest();
+        const rowToRender = rows.find((row) => {
+          return row.get(varNameIndex) === columnName;
+        });
 
-      const rowValuesMap = header.map(h => {
-        h.value = rowToRender.get(h.idx);
-        return h;
-      });
+        const rowValuesMap = header.map(h => {
+          h.value = rowToRender.get(h.idx);
+          return h;
+        });
 
-      enhancedCells = header.filter(h => !h.skip).map(h => {
-        let cellValue = h.value;
-        if (h.formatFn){
-          cellValue = h.formatFn(cellValue, rowValuesMap);
-        }
-        return (
-          <td>
-            {cellValue}
-          </td>
-        );
-      });
+        enhancedCells = header.filter(h => !h.skip).map(h => {
+          let cellValue = h.value;
+          if (h.formatFn){
+            cellValue = h.formatFn(cellValue, rowValuesMap);
+          }
+          return (
+            <td>
+              {cellValue}
+            </td>
+          );
+        });
+      }else{
+        const header = this.getEnahncedHeader();
+        enhancedCells = header.filter(h => !h.skip).map(() => {
+          return (
+            <td>
+              -
+            </td>
+          );
+        });
+
+      }
+
 
     }
 
@@ -182,9 +205,6 @@ export default React.createClass({
         {enhancedCells}
       </tr>
     );
-
-
-
 
   },
 
@@ -208,6 +228,11 @@ export default React.createClass({
   hasEnhancedAnalysis(){
     return this.props.enhancedAnalysis &&
     !_.isEmpty(this.props.enhancedAnalysis.toJS());
+  },
+
+  hasEnhancedData(){
+    return this.hasEnhancedAnalysis() && !_.isEmpty(this.props.enhancedAnalysis.get('data').toJS());
+
   }
 
 
