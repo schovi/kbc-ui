@@ -18,6 +18,7 @@ Dispatcher.register((payload) => {
 
   switch(action.type) {
     case 'update_list_of_csv_files':
+
       dropboxStore = dropboxStore.set('fileNames', action.data);
       return ExDropboxStore.emitChange();
   }

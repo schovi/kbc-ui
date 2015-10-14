@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import Select from 'react-select';
 
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import AuthorizeModal from './DropboxAuthorizeModal';
@@ -8,8 +9,6 @@ import DeleteConfigurationButton from '../../components/react/components/DeleteC
 
 
 import { ModalTrigger } from 'react-bootstrap';
-
-import SearchRow from '../../../react/common/SearchRow';
 
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
 import ExDropboxStore from '../stores/ExDropboxStore';
@@ -37,9 +36,10 @@ export default React.createClass({
     let configId = RoutesStore.getCurrentRouteParam('config');
     let configData = InstalledComponentsStore.getConfigData(componentId, configId);
     let localState = InstalledComponentsStore.getLocalState(componentId, configId);
-    let toggles = localState.get('bucketToggles', Map());
     let savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId);
     let dropboxFiles = ExDropboxStore.getCsvFiles();
+    let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
+    let toggles = localState.get('bucketToggles', Map());
     let credentials = OAuthStore.getCredentials(componentId, configId);
     let hasCredentials = OAuthStore.hasCredentials(componentId, configId);
     let isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId);
@@ -52,6 +52,7 @@ export default React.createClass({
       bucketToggles: toggles,
       savingData: savingData || Map(),
       dropboxFiles: dropboxFiles,
+      selectedDropboxFiles: selectedDropboxFiles,
       credentials: credentials,
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
@@ -86,7 +87,9 @@ export default React.createClass({
             configId={this.state.configId}
           />
         </div>
-        {this.renderInlineForm()}
+        {this.renderCSVPicker()}
+        {this.renderBucketSelector()}
+        {this.renderConfigSummary()}
         {this.renderTablesByBucketsPanel()}
       </div>
     );
@@ -139,52 +142,86 @@ export default React.createClass({
     );
   },
 
-  renderInlineForm() {
+  renderCSVPicker() {
     if (this.state.hasCredentials) {
-      var items = this.state.dropboxFiles.get('fileNames').map((file) => {
-        return (<option value={file}>{file}</option>);
-      });
-
       return (
-        <div className="well">
-          <form className="form-horizontal" role="form">
+        <div className="section well">
+          <h3 className="section-heading">1. Please specify CSV files you want to upload to Keboola.</h3>
 
-            <div className="form-group">
-              <label className="col-sm-4 control-label">Select a CSV file for upload</label>
-              <div className="col-sm-8">
-                <select className="form-control">
-                  {items}
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="col-sm-offset-4 col-sm-10">
-                <button type="submit" className="btn btn-default">Add file to configuration</button>
-              </div>
-            </div>
-          </form>
+          <Select
+            multi
+            value={this.state.selectedDropboxFiles.get('selectedDropboxFiles')}
+            placeholder="Select CSV files from Dropbox"
+            options={this.state.dropboxFiles.get('fileNames')}
+            onChange={this.handleCsvSelectChange}
+          />
         </div>
       );
     }
   },
 
-  renderSearchRow() {
+  renderBucketSelector() {
     if (this.state.hasCredentials) {
+      var tmp = ['in.c-main.ExDropbox'];
+
       return (
-        <SearchRow
-          className="row kbc-search-row"
-          onChange={this.handleSearchQueryChange}
-          query={this.state.localState.get('searchQuery')}
-        />
+        <div className="section well">
+          <h3 className="section-heading">2. Please select a Keboola Storage Bucket where the files will be uploaded.</h3>
+
+          <Select
+            ref="stateSelect"
+            options={this.state.dropboxFiles.get('fileNames')}
+            placeholder="Select a Bucket from the Keboola Storage"
+            disabled={this.state.disabled}
+            value={tmp}
+            onChange={this.updateValue}
+            searchable={true} />
+        </div>
       );
     }
+  },
+
+  renderConfigSummary() {
+    if (this.state.hasCredentials) {
+      return (
+        <div className="section">
+          <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Destination</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>/file2.csv</td>
+              <td>in.c-main.ExDropbox.file2</td>
+              <td className="text-right">
+                <button className="btn btn-link">
+                    <i className="fa kbc-icon-cup"></i>
+                </button>
+                <button className="btn btn-link">
+                    <span className="fa fa-upload fa-fw"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      );
+    }
+  },
+
+  handleCsvSelectChange(value, values) {
+    let selectedObjects = this.state.selectedDropboxFiles.set('selectedDropboxFiles', values);
+    this.updateLocalState(['selectedDropboxFiles'], selectedObjects);
   },
 
   renderTablesByBucketsPanel() {
     if (this.state.hasCredentials) {
       return (
-        <p>Authorized!</p>
+        <p></p>
       );
     }
     else {
@@ -324,7 +361,6 @@ export default React.createClass({
 
   updateLocalState(path, data) {
     let newLocalState = this.state.localState.setIn(path, data);
-    console.log(newLocalState);
     InstalledComponentsActions.updateLocalState(componentId, this.state.configId, newLocalState);
   }
 

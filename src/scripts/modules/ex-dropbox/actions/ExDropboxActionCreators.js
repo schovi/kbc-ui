@@ -12,7 +12,7 @@ export default {
         var files = [];
 
         _.map(response, (file) => {
-          files.push(file.path);
+          files.push({ 'label': file.path, value: file.path });
         });
 
         return Dispatcher.handleViewAction({
