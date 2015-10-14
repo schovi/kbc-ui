@@ -7,6 +7,11 @@ import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 import Tooltip from '../../../../../react/common/Tooltip';
 import {Table} from 'react-bootstrap';
 
+function renderLabel(caption){
+  return (<span className="label label-info">{caption}</span>);
+
+}
+
 const enhancedColumnsDescription = {
   'data_type': {
     name: 'Data Type',
@@ -14,14 +19,21 @@ const enhancedColumnsDescription = {
       const format = _.find(rowValues, r => r.name === 'format').value;
       const ists = _.find(rowValues, r => r.name === 'is_ts').value;
       const result = format ? `${value} (${format})` : `${value}`;
-      const tsRender = (<small><span className="label label-info">Timeseries</span></small>);
-      return ists === '1' ? (<span><div>{result}</div>{tsRender}</span>) : result;
+      const tsTooltip = 'Can be interpreted as a time series.';
+      const tsRender = (<small>{renderLabel('Timeseries')}</small>);
+
+      if (ists === '1'){
+        return (<span><div>{result}</div><Tooltip tooltip={tsTooltip} placement='top'>
+        {tsRender}</Tooltip></span>);
+      }else{
+        return result;
+      }
     },
-    desc: `The type of data present in the column.  Possible values are:
-String - alphanumeric characters
-Integer - whole numbers without decimals
-float - numbers with decimals
-and date or datetime`
+    desc: (<span>The type of data present in the column.  Possible values are:
+      <div>String - alphanumeric characters</div>
+      <div>Integer - whole numbers without decimals</div>
+      <div>float - numbers with decimals</div>
+      <div>and date or datetime</div></span>)
 
   },
 
@@ -41,28 +53,46 @@ and date or datetime`
   },
 
   'val_ratio': {
-    name: 'Uniqueness of values(%)',
-    desc: `If every value in the column is distinct, the value will be 100%.
-Columns that have few distinct values repeatedly (such as categories) will have lower values. If every row contains the same value, the value will be 0%.`,
-    formatFn: (value) => {
-      return ((parseFloat(value)) * 100).toFixed(2);
+    name: 'Uniqueness(%)',
+    desc: `If every value in the column is distinct, the uniqueness will be 100%.
+Columns that have few distinct values repeatedly (such as categories) will have lower uniqueness value. If every row contains the same value, the uniqueness will be 0%.`,
+    formatFn: (value, rowValues) => {
+      const isid = _.find(rowValues, r => r.name === 'is_identity').value;
+      const val = ((parseFloat(value)) * 100).toFixed(2);
+      if (isid === 'no'){
+        return val;
+      }
+      else{
+        const idLabel = isid === 'yes' ? 'id' : 'id?';
+        const tooltip = isid === 'yes' ? 'Identifying the row' : 'Probably identifying the row';
+        return (
+          <span>
+            <div>{val}</div>
+            <Tooltip tooltip={tooltip} placement="top">
+              {renderLabel(idLabel)}
+            </Tooltip>
+          </span>
+        );
+      }
+
+
     }
 
   },
 
   'is_identity': {
     name: 'Identifying Column',
-    desc: `Can the values of this column be used as an identifier for each row?`
+    desc: `Can the values of this column be used as an identifier for each row?`,
+    skip: true
 
   },
 
   'mode': {
     name: 'Mode',
-    desc: `Continuous - Highly distinctive values (Time series are continuous)
-
-Categories - Many rows contain the same values and there are finite possibilities.
-
-Useless - Almost all rows contain fewer than 2 distinct values`
+    desc: (<span>
+            <div>Continuous - Highly distinctive values (Time series are continuous)</div>
+            <div>Categories - Many rows contain the same values and there are finite possibilities.</div>
+            <div>Useless - Almost all rows contain fewer than 2 distinct values</div></span>)
 
   },
 
