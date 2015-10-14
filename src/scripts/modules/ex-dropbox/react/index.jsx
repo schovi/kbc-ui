@@ -12,8 +12,10 @@ import { ModalTrigger } from 'react-bootstrap';
 import SearchRow from '../../../react/common/SearchRow';
 
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
+import ExDropboxStore from '../stores/ExDropboxStore';
 import OAuthStore from '../../components/stores/OAuthStore';
 import InstalledComponentsActions from '../../components/InstalledComponentsActionCreators';
+import ExDropboxActions from '../actions/ExDropboxActionCreators';
 import OAuthActions from '../../components/OAuthActionCreators';
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';
@@ -21,8 +23,6 @@ import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
-import Api from '../utils/api';
-
 
 const componentId = 'ex-dropbox';
 
@@ -31,7 +31,7 @@ export default React.createClass({
 
   displayName: 'exDropboxIndex',
 
-  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore)],
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore)],
 
   getStateFromStores() {
     let configId = RoutesStore.getCurrentRouteParam('config');
@@ -39,6 +39,7 @@ export default React.createClass({
     let localState = InstalledComponentsStore.getLocalState(componentId, configId);
     let toggles = localState.get('bucketToggles', Map());
     let savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId);
+    let dropboxFiles = ExDropboxStore.getCsvFiles();
     let credentials = OAuthStore.getCredentials(componentId, configId);
     let hasCredentials = OAuthStore.hasCredentials(componentId, configId);
     let isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId);
@@ -50,6 +51,7 @@ export default React.createClass({
       localState: localState,
       bucketToggles: toggles,
       savingData: savingData || Map(),
+      dropboxFiles: dropboxFiles,
       credentials: credentials,
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
@@ -61,10 +63,7 @@ export default React.createClass({
       let data = this.state.credentials.get('data');
       let token = JSON.parse(data).access_token;
 
-      Api.getCsvFilesFromDropbox(token)
-        .then((test) => {
-          console.log(test);
-        });
+      ExDropboxActions.getListOfCsvFiles(token);
     }
 
   },
@@ -87,7 +86,7 @@ export default React.createClass({
             configId={this.state.configId}
           />
         </div>
-        {this.renderSearchRow()}
+        {this.renderInlineForm()}
         {this.renderTablesByBucketsPanel()}
       </div>
     );
@@ -138,6 +137,36 @@ export default React.createClass({
         </ul>
       </div>
     );
+  },
+
+  renderInlineForm() {
+    if (this.state.hasCredentials) {
+      var items = this.state.dropboxFiles.get('fileNames').map((file) => {
+        return (<option value={file}>{file}</option>);
+      });
+
+      return (
+        <div className="well">
+          <form className="form-horizontal" role="form">
+
+            <div className="form-group">
+              <label className="col-sm-4 control-label">Select a CSV file for upload</label>
+              <div className="col-sm-8">
+                <select className="form-control">
+                  {items}
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <div className="col-sm-offset-4 col-sm-10">
+                <button type="submit" className="btn btn-default">Add file to configuration</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      );
+    }
   },
 
   renderSearchRow() {
