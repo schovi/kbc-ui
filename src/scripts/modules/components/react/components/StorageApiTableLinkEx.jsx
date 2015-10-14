@@ -16,8 +16,6 @@ import Tooltip from '../../../../react/common/Tooltip';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import EventsService from '../../../sapi-events/EventService';
 
-
-
 export default React.createClass({
 
   mixins: [createStoreMixin(tablesStore)],

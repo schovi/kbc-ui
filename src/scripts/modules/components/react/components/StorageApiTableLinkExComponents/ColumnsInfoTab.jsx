@@ -42,9 +42,7 @@ export default React.createClass({
     return (
       <div>
         <Table responsive className="table table-striped">
-          <thead>
             {headerRow}
-          </thead>
           <tbody>
             {columnsRows}
           </tbody>
@@ -71,14 +69,16 @@ export default React.createClass({
 
   renderHeaderRow(){
     const simpleHeader = (
-      <tr>
-        <th>
-          Column
-        </th>
-        <th>
-          Sample Values
-        </th>
-      </tr>
+      <thead>
+        <tr>
+          <th>
+            Column
+          </th>
+          <th>
+            Sample Values
+          </th>
+        </tr>
+      </thead>
     );
 
     if (!this.hasEnhancedAnalysis()){
@@ -101,15 +101,24 @@ export default React.createClass({
     );
 
     return (
-      <tr>
-        <th>
-          Column
-        </th>
-        <th>
-          Sample Values
-        </th>
-        {enhancedHeader}
-      </tr>
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th colSpan="4">
+            Enhanced Analysis:
+          </th>
+        </tr>
+        <tr>
+          <th>
+            Column
+          </th>
+          <th>
+            Sample Values
+          </th>
+          {enhancedHeader}
+        </tr>
+      </thead>
     );
 
   },
