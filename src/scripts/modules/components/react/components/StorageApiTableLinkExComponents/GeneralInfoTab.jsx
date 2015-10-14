@@ -35,6 +35,7 @@ export default React.createClass({
     const table = this.props.table;
     const primaryKey = table.get('primaryKey').toJS();
     const indexes = table.get('indexedColumns').toJS();
+    const backend = table.getIn(['bucket', 'backend']);
     return (
       <div>
         <Table responsive className="table">
@@ -49,7 +50,7 @@ export default React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.renderTableRow('Storage', table.get('bucket').get('backend'))}
+            {this.renderTableRow('Storage', (<span className="label label-info">{backend}</span>))}
             {this.renderTableRow('Created', this.renderTimefromNow(table.get('created')))}
             {this.renderTableRow('Primary Key', _.isEmpty(primaryKey) ? 'N/A' : primaryKey.join(', '))}
             {this.renderTableRow('Last Import', this.renderTimefromNow(table.get('lastImportDate')))}
