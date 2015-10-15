@@ -18,7 +18,8 @@ export default React.createClass({
     enhancedAnalysis: PropTypes.object,
     isRedshift: PropTypes.bool,
     onRunAnalysis: PropTypes.func,
-    isCallingRunAnalysis: PropTypes.bool
+    isCallingRunAnalysis: PropTypes.bool,
+    loadingProfilerData: PropTypes.bool
 
   },
 
@@ -116,6 +117,7 @@ export default React.createClass({
                 table={this.props.table}
                 onRunAnalysis={this.props.onRunAnalysis}
                 isCallingRunAnalysis={this.props.isCallingRunAnalysis}
+                loadingProfilerData={this.props.loadingProfilerData}
             />
 
           </td>

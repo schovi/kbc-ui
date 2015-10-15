@@ -9,27 +9,33 @@ export default React.createClass({
     table: PropTypes.object,
     enhancedAnalysis: PropTypes.object,
     onRunAnalysis: PropTypes.func,
-    isCallingRunAnalysis: PropTypes.bool
+    isCallingRunAnalysis: PropTypes.bool,
+    loadingProfilerData: PropTypes.bool
 
   },
 
   mixins: [immutableMixin],
 
   render(){
+    let profilerInfo = (<span><Loader /></span>);
+    if (!this.props.loadingProfilerData){
+      profilerInfo = [
+        (<span style={{'padding': 0}} className="col-xs-3">
+            { this.renderResultsStatus()}
+        </span>)
+        ,
+         (<span style={{'padding': 0}} className="col-xs-4">
+        {this.renderRunStatus()}
+         </span>)
+      ];
+    }
     return (
       <span className="col-xs-12" style={{'padding': 0}}>
         <span style={{'padding': 0}}
               className="col-xs-5">
           Enhanced Analysis:
         </span>
-        <span style={{'padding': 0}}
-              className="col-xs-3">
-          { this.renderResultsStatus()}
-        </span>
-        <span style={{'padding': 0}}
-              className="col-xs-4">
-          {this.renderRunStatus()}
-          </span>
+        {profilerInfo}
       </span>
     );
   },
@@ -64,7 +70,7 @@ export default React.createClass({
         }else{
           return (
             <Button style={{padding: 0}}
-                className="btn btn-link"
+                    className="btn btn-link"
                     onClick={this.props.onRunAnalysis}>
               Run Analysis
             </Button>

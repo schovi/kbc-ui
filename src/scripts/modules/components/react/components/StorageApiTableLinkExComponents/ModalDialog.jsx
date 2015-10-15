@@ -23,6 +23,7 @@ export default React.createClass({
     events: PropTypes.object.isRequired,
     omitExports: PropTypes.bool,
     isLoading: PropTypes.bool,
+    loadingProfilerData: PropTypes.bool,
     table: PropTypes.object,
     dataPreview: PropTypes.object,
     enhancedAnalysis: PropTypes.object,
@@ -141,6 +142,7 @@ export default React.createClass({
         isRedshift={this.props.isRedshift}
         isCallingRunAnalysis={this.props.isCallingRunAnalysis}
         onRunAnalysis={this.props.onRunAnalysis}
+        loadingProfilerData={this.props.loadingProfilerData}
         enhancedAnalysis={this.props.enhancedAnalysis}
       />
     );

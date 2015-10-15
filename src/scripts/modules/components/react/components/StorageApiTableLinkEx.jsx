@@ -185,6 +185,7 @@ export default React.createClass({
          enhancedAnalysis={this.state.profilerData}
          onRunAnalysis={this.onRunEnhancedAnalysis}
          isCallingRunAnalysis={this.state.isCallingRunAnalysis}
+         loadingProfilerData={this.state.loadingProfilerData}
          isRedshift={this.isRedshift()}
       />
 
