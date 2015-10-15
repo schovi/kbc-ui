@@ -28,7 +28,8 @@ export default {
       <div>String - alphanumeric characters</div>
       <div>Integer - whole numbers without decimals</div>
       <div>float - numbers with decimals</div>
-      <div>and date or datetime</div></span>)
+      <div>bool - logical (true/false, 0/1)</div>
+      <div>date or datetime</div></span>)
 
   },
 
@@ -92,8 +93,8 @@ Columns that have few distinct values repeatedly (such as categories) will have 
   },
 
   'monotonic': {
-    name: 'Unchanging',
-    desc: 'The values do not increase or decrease'
+    name: 'Change Direction',
+    desc: 'Possible values: increasing, decreasing, variable.  For numeric values and dates, if the values are neither increasing or decreasing, they will be variable.  String columns will be blank.'
 
   }
 };
