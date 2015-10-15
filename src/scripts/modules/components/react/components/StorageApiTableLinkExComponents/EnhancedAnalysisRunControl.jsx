@@ -19,15 +19,15 @@ export default React.createClass({
     return (
       <span className="col-xs-12" style={{'padding': 0}}>
         <span style={{'padding': 0}}
-              className="col-xs-4">
+              className="col-xs-5">
           Enhanced Analysis:
         </span>
         <span style={{'padding': 0}}
-              className="col-xs-2">
+              className="col-xs-3">
           { this.renderResultsStatus()}
         </span>
         <span style={{'padding': 0}}
-              className="col-xs-6">
+              className="col-xs-4">
           {this.renderRunStatus()}
           </span>
       </span>
@@ -35,7 +35,7 @@ export default React.createClass({
   },
 
   renderResultsStatus(){
-    let status = 'No results yet';
+    let status = 'No results';
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const okJob = enhancedAnalysis ? enhancedAnalysis.get('okJob') : null;
     if(okJob){
@@ -55,7 +55,7 @@ export default React.createClass({
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const runningJob = enhancedAnalysis ? enhancedAnalysis.get('runningJob') : null;
     if (runningJob){
-      return (<span><Loader />Preparing results...</span>);
+      return (<span> <Loader /> Analyzing...</span>);
     }
     else{
       if (this.isShowRunButton()){
@@ -63,7 +63,8 @@ export default React.createClass({
           return (<Loader />);
         }else{
           return (
-            <Button className="btn btn-link"
+            <Button style={{padding: 0}}
+                className="btn btn-link"
                     onClick={this.props.onRunAnalysis}>
               Run Analysis
             </Button>

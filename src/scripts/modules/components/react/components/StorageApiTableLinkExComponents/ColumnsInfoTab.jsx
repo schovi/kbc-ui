@@ -165,7 +165,7 @@ export default React.createClass({
         const header = this.getEnahncedHeader();
         const rows = this.props.enhancedAnalysis.get('data').rest();
         const rowToRender = rows.find((row) => {
-          return row.get(varNameIndex) === columnName;
+          return row.get(varNameIndex).toUpperCase() === columnName.toUpperCase();
         });
 
         const rowValuesMap = header.map(h => {
@@ -236,7 +236,7 @@ export default React.createClass({
   },
 
   hasEnhancedData(){
-    return this.hasEnhancedAnalysis() && !_.isEmpty(this.props.enhancedAnalysis.get('data').toJS());
+    return this.hasEnhancedAnalysis() && !_.isEmpty(this.props.enhancedAnalysis.toJS().data);
 
   }
 

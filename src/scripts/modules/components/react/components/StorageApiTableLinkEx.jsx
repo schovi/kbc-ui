@@ -4,13 +4,14 @@ import _ from 'underscore';
 import Promise from 'bluebird';
 import moment from 'moment';
 import filesize from 'filesize';
+import later from 'later';
 
 import storageActions from '../../StorageActionCreators';
 import storageApi from '../../StorageApi';
 import tablesStore from '../../stores/StorageTablesStore';
 
 import TableLinkModalDialog from './StorageApiTableLinkExComponents/ModalDialog';
-import {startDataProfilerJob, fetchProfilerData} from './StorageApiTableLinkExComponents/DataProfilerUtils';
+import {startDataProfilerJob, getDataProfilerJob, fetchProfilerData} from './StorageApiTableLinkExComponents/DataProfilerUtils';
 
 import Tooltip from '../../../../react/common/Tooltip';
 
@@ -64,6 +65,32 @@ export default React.createClass({
 
   componentWilUnmount(){
     this.stopEventService();
+    this.stopPollingDataProfilerJob();
+  },
+
+  pollDataProfilerJob(){
+    const schedule = later.parse.recur().every(5).second();
+    this.stopPollingDataProfilerJob();
+    this.timeout = later.setInterval(this.getDataProfilerJobResult, schedule);
+
+  },
+
+  getDataProfilerJobResult(){
+    const jobId = this.state.profilerData.getIn(['runningJob', 'id']);
+    getDataProfilerJob(jobId).then( (runningJob) => {
+      if(runningJob.isFinished){
+        this.stopPollingDataProfilerJob();
+        this.findEnhancedJob();
+      }
+    });
+
+  },
+
+  stopPollingDataProfilerJob(){
+    if (this.timeout){
+      this.timeout.clear();
+    }
+
   },
 
   findEnhancedJob(){
@@ -79,7 +106,9 @@ export default React.createClass({
         profilerData: Immutable.fromJS(result),
         loadingProfilerData: false
       });
-      console.log('data analysis result', result);
+      if (result && result.runningJob){
+        this.pollDataProfilerJob();
+      }
     });
 
   },
@@ -166,7 +195,9 @@ export default React.createClass({
   onRunEnhancedAnalysis(){
     this.setState({isCallingRunAnalysis: true});
     startDataProfilerJob(this.props.tableId)
-      .then( () => this.setState({isCallingRunAnalysis: false}))
+      .then( () => {
+        this.findEnhancedJob().then(() => this.setState({isCallingRunAnalysis: false}));
+      })
       .catch(() => this.setState({isCallingRunAnalysis: false}));
   },
 
@@ -205,6 +236,7 @@ export default React.createClass({
 
   onHide(){
     this.setState({show: false});
+    this.stopPollingDataProfilerJob();
     this.stopEventService();
   },
 
@@ -219,8 +251,8 @@ export default React.createClass({
   onShow(e){
     this.exportDataSample();
     this.startEventService();
-    this.findEnhancedJob();
     this.setState({show: true});
+    this.findEnhancedJob();
 
     e.stopPropagation();
     e.preventDefault();
