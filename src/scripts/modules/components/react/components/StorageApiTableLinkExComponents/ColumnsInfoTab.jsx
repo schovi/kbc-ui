@@ -16,7 +16,10 @@ export default React.createClass({
     table: PropTypes.object,
     dataPreview: PropTypes.object,
     enhancedAnalysis: PropTypes.object,
-    isRedshift: PropTypes.bool
+    isRedshift: PropTypes.bool,
+    onRunAnalysis: PropTypes.func,
+    isCallingRunAnalysis: PropTypes.bool
+
   },
 
   mixins: [immutableMixin],
@@ -107,13 +110,15 @@ export default React.createClass({
         <tr>
           <th></th>
           <th></th>
-          <th colSpan="4">
+          <td colSpan="4">
             <EnhancedAnalysisRunControl
                 enhancedAnalysis={this.props.enhancedAnalysis}
                 table={this.props.table}
-                onRunAnalysis={ () => 'TODO'} />
+                onRunAnalysis={this.props.onRunAnalysis}
+                isCallingRunAnalysis={this.props.isCallingRunAnalysis}
+            />
 
-          </th>
+          </td>
         </tr>
         <tr>
           <th>

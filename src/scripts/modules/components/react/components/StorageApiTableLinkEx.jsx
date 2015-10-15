@@ -10,7 +10,8 @@ import storageApi from '../../StorageApi';
 import tablesStore from '../../stores/StorageTablesStore';
 
 import TableLinkModalDialog from './StorageApiTableLinkExComponents/ModalDialog';
-import fetchProfilerData from './StorageApiTableLinkExComponents/DataProfilerUtils';
+import {startDataProfilerJob, fetchProfilerData} from './StorageApiTableLinkExComponents/DataProfilerUtils';
+
 import Tooltip from '../../../../react/common/Tooltip';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
@@ -52,6 +53,7 @@ export default React.createClass({
       loadingProfilerData: false,
       omitFetches: omitFetches,
       omitExports: omitExports,
+      isCallingRunAnalysis: false,
       profilerData: Map()
     });
   },
@@ -152,11 +154,20 @@ export default React.createClass({
          onOmitFetchesFn={this.onOmitFetches}
          events={this.state.events}
          enhancedAnalysis={this.state.profilerData}
+         onRunAnalysis={this.onRunEnhancedAnalysis}
+         isCallingRunAnalysis={this.state.isCallingRunAnalysis}
          isRedshift={this.isRedshift()}
       />
 
     );
 
+  },
+
+  onRunEnhancedAnalysis(){
+    this.setState({isCallingRunAnalysis: true});
+    startDataProfilerJob(this.props.tableId)
+      .then( () => this.setState({isCallingRunAnalysis: false}))
+      .catch(() => this.setState({isCallingRunAnalysis: false}));
   },
 
   onOmitExports(e){

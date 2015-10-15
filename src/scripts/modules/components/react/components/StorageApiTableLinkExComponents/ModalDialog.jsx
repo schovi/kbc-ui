@@ -29,7 +29,10 @@ export default React.createClass({
     onOmitFetchesFn: PropTypes.func,
     onOmitExportsFn: PropTypes.func,
     onHideFn: PropTypes.func,
-    isRedshift: PropTypes.bool
+    isRedshift: PropTypes.bool,
+    onRunAnalysis: PropTypes.func,
+    isCallingRunAnalysis: PropTypes.bool
+
   },
 
   mixins: [immutableMixin],
@@ -136,6 +139,8 @@ export default React.createClass({
         table={this.props.table}
         dataPreview={this.props.dataPreview}
         isRedshift={this.props.isRedshift}
+        isCallingRunAnalysis={this.props.isCallingRunAnalysis}
+        onRunAnalysis={this.props.onRunAnalysis}
         enhancedAnalysis={this.props.enhancedAnalysis}
       />
     );
