@@ -51,7 +51,7 @@ module.exports = React.createClass
     isSaving: isSaving
 
   render: ->
-    console.log @state.configData.toJS()
+    #console.log @state.configData.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
