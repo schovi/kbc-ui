@@ -7,7 +7,6 @@ import AuthorizeModal from './DropboxAuthorizeModal';
 import RunButtonModal from '../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 
-
 import { ModalTrigger } from 'react-bootstrap';
 
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
@@ -18,6 +17,8 @@ import ExDropboxActions from '../actions/ExDropboxActionCreators';
 import OAuthActions from '../../components/OAuthActionCreators';
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';
+import StorageActionCreators from '../../components/StorageActionCreators';
+import StorageBucketsStore from '../../components/stores/StorageBucketsStore';
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
 import { fromJS, Map, List } from 'immutable';
@@ -30,7 +31,9 @@ export default React.createClass({
 
   displayName: 'exDropboxIndex',
 
-  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore)],
+  defaultInputBucket: 'in.c-main.ExDropbox',
+
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore, StorageBucketsStore)],
 
   getStateFromStores() {
     let configId = RoutesStore.getCurrentRouteParam('config');
@@ -38,7 +41,9 @@ export default React.createClass({
     let localState = InstalledComponentsStore.getLocalState(componentId, configId);
     let savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId);
     let dropboxFiles = ExDropboxStore.getCsvFiles();
+    let keboolaBuckets = StorageBucketsStore.getAll();
     let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
+    let selectedInputBucket = localState.get('selectedInputBucket', Map());
     let toggles = localState.get('bucketToggles', Map());
     let credentials = OAuthStore.getCredentials(componentId, configId);
     let hasCredentials = OAuthStore.hasCredentials(componentId, configId);
@@ -52,7 +57,9 @@ export default React.createClass({
       bucketToggles: toggles,
       savingData: savingData || Map(),
       dropboxFiles: dropboxFiles,
+      keboolaBuckets: keboolaBuckets,
       selectedDropboxFiles: selectedDropboxFiles,
+      selectedInputBucket: selectedInputBucket,
       credentials: credentials,
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
@@ -65,6 +72,7 @@ export default React.createClass({
       let token = JSON.parse(data).access_token;
 
       ExDropboxActions.getListOfCsvFiles(token);
+      StorageActionCreators.loadBucketsForce();
     }
 
   },
@@ -162,7 +170,7 @@ export default React.createClass({
 
   renderBucketSelector() {
     if (this.state.hasCredentials) {
-      var tmp = ['in.c-main.ExDropbox'];
+      var inputBuckets = this.getBucketsForSelection(this.extendBucketList(this.defaultInputBucket, this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets))));
 
       return (
         <div className="section well">
@@ -170,11 +178,11 @@ export default React.createClass({
 
           <Select
             ref="stateSelect"
-            options={this.state.dropboxFiles.get('fileNames')}
+            options={inputBuckets}
             placeholder="Select a Bucket from the Keboola Storage"
-            disabled={this.state.disabled}
-            value={tmp}
-            onChange={this.updateValue}
+            disabled={false}
+            value={this.state.selectedInputBucket.get('selectedInputBucket')}
+            onChange={this.handleInputBucketChange}
             searchable={true} />
         </div>
       );
@@ -193,21 +201,21 @@ export default React.createClass({
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>/file2.csv</td>
-              <td>in.c-main.ExDropbox.file2</td>
-              <td className="text-right">
-                <button className="btn btn-link">
+            <tbody>
+              <tr>
+                <td>/file2.csv</td>
+                <td>in.c-main.ExDropbox.file2</td>
+                <td className="text-right">
+                  <button className="btn btn-link">
                     <i className="fa kbc-icon-cup"></i>
-                </button>
-                <button className="btn btn-link">
+                  </button>
+                  <button className="btn btn-link">
                     <span className="fa fa-upload fa-fw"></span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       );
     }
@@ -216,6 +224,41 @@ export default React.createClass({
   handleCsvSelectChange(value, values) {
     let selectedObjects = this.state.selectedDropboxFiles.set('selectedDropboxFiles', values);
     this.updateLocalState(['selectedDropboxFiles'], selectedObjects);
+  },
+
+  handleInputBucketChange(value) {
+    let selectedObject = this.state.selectedInputBucket.set('selectedInputBucket', value);
+    this.updateLocalState(['selectedInputBucket'], selectedObject);
+  },
+
+  filterBuckets(buckets) {
+    let inputBuckets = buckets.filter((bucket) => {
+      return bucket.get('stage') === 'in';
+    });
+
+    return inputBuckets;
+  },
+
+  listBucketNames(buckets) {
+    var bucketNameList = [];
+
+    buckets.map((bucketObject, bucketId) => {
+      bucketNameList.push(bucketId);
+    });
+
+    return bucketNameList;
+  },
+
+  extendBucketList(element, buckets) {
+    buckets.unshift(element);
+
+    return buckets;
+  },
+
+  getBucketsForSelection(buckets) {
+    return buckets.map((bucketName) => {
+      return { value: bucketName, label: bucketName };
+    });
   },
 
   renderTablesByBucketsPanel() {
@@ -325,14 +368,6 @@ export default React.createClass({
     return !!intables.find((table) => {
       return table.get('source') === tableId;
     });
-  },
-
-  filterBuckets(buckets) {
-    let bucketsList = buckets.filter((bucket) => {
-      return bucket.get('stage') === 'out';
-    });
-
-    return bucketsList;
   },
 
   isBucketToggled(bucketId) {
