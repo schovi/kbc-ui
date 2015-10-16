@@ -5,14 +5,13 @@ import _ from 'underscore';
 
 const componentId = 'geneea-nlp-analysis';
 
-const BETA = 'use_beta';
 const LANGUAGE = 'language';
 const OUTPUT = 'output';
 const PRIMARYKEY = 'id_column';
 const ANALYSIS = 'analysis_types';
 const DATACOLUMN = 'data_column';
 
-export const params = { BETA, LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN};
+export const params = {LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN};
 
 
 function getLocalState(configId, path){
@@ -66,9 +65,6 @@ export function startEditing(configId){
              }
              if (key === OUTPUT){
                defaultVal = 'out.c-nlp.';
-             }
-             if (key === BETA){
-               defaultVal = false;
              }
              const value = configData.getIn(['parameters', key], defaultVal);
              memo[key] = value;

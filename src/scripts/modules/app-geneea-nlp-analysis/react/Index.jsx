@@ -4,7 +4,6 @@ import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
 
 import Select from 'react-select';
-import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
 
 import Tooltip from '../../../react/common/Tooltip';
@@ -37,9 +36,6 @@ import LatestJobs from '../../components/react/components/SidebarJobs';
 import {analysisTypes, languageOptions} from './templates.coffee';
 
 const componentId = 'geneea-nlp-analysis';
-
-
-
 
 
 export default React.createClass({
@@ -167,7 +163,6 @@ export default React.createClass({
             options= {languageOptions}/>, 'Language of the text of the data column.')
         }
         {this.renderAnalysisTypesSelect()}
-        {this.renderUseBetaEdit()}
       </div>
     );
   },
@@ -202,24 +197,6 @@ export default React.createClass({
     return this.renderFormElement('Analysis tasks', options);
 
   },
-
-
-  renderUseBetaEdit(){
-    return (
-      <div className="form-group">
-        <div className="checkbox col-sm-3">
-          <label>
-            <input
-              type="checkbox"
-              checked={this.getEditingValue(params.BETA)}
-              onChange= {(event) => this.updateEditingValue(params.BETA, event.target.checked)}/>
-          Use BETA Version
-          </label>
-        </div>
-      </div>
-      );
-  },
-
 
 
   renderFormElement(label, element, description = '', hasError){
@@ -267,7 +244,6 @@ export default React.createClass({
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
-        {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
   },
@@ -311,14 +287,13 @@ export default React.createClass({
 
   },
 
-  RenderStaticInput(label, value, isBetaCheckobx = false){
+  RenderStaticInput(label, value){
     return (
       <StaticText
         label={label}
         labelClassName="col-sm-3"
         wrapperClassName="col-sm-9">
-        {isBetaCheckobx ? <Check
-         isChecked={value}/> : value || 'n/a'}
+        {value || 'n/a'}
       </StaticText>
     );
   },
