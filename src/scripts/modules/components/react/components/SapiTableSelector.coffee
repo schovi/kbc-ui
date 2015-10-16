@@ -27,6 +27,8 @@ module.exports = React.createClass
   componentDidMount: ->
     storageActionCreators.loadTables()
 
+  shouldComponentUpdate: (nextProps) ->
+    nextProps.value != @props.value
 
   render: ->
     isTablesLoading = @state.isTablesLoading
