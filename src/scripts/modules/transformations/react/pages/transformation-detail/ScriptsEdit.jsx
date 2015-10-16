@@ -19,7 +19,7 @@ export default React.createClass({
       <div className="kbc-queries-edit">
         <div>
           <div className="well">
-            Read on <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/devel-space/transformations/backends/docker/r-limitations-and-best-practices">
+            Read on <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/user-space/transformations/-r">
               R limitations and best practices
             </a>.
           </div>
