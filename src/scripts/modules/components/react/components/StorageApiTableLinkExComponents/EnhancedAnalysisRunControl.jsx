@@ -3,6 +3,7 @@ import React, {PropTypes} from 'react';
 import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 import {Loader} from 'kbc-react-components';
 import {Button} from 'react-bootstrap';
+import {Link} from 'react-router';
 
 export default React.createClass({
   propTypes: {
@@ -61,7 +62,14 @@ export default React.createClass({
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const runningJob = enhancedAnalysis ? enhancedAnalysis.get('runningJob') : null;
     if (runningJob){
-      return (<span> <Loader /> Analyzing...</span>);
+      return (
+        <span> <Loader />{' '}
+          <Link to="jobDetail"
+                params={{jobId: runningJob.get('id')}}>
+            Analyzing...
+          </Link>
+        </span>
+      );
     }
     else{
       if (this.isShowRunButton()){
