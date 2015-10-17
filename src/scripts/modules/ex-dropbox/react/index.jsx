@@ -45,6 +45,7 @@ export default React.createClass({
     let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
     let selectedInputBucket = localState.get('selectedInputBucket', Map());
     let toggles = localState.get('bucketToggles', Map());
+    let isDefaultBucketSelected = localState.get('isDefaultBucketSelected', true);
     let credentials = OAuthStore.getCredentials(componentId, configId);
     let hasCredentials = OAuthStore.hasCredentials(componentId, configId);
     let isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId);
@@ -61,6 +62,7 @@ export default React.createClass({
       selectedDropboxFiles: selectedDropboxFiles,
       selectedInputBucket: selectedInputBucket,
       credentials: credentials,
+      isDefaultBucketSelected: isDefaultBucketSelected,
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
     };
@@ -68,13 +70,32 @@ export default React.createClass({
 
   componentDidMount() {
     if (this.state.hasCredentials) {
+      this.handleSelectionOfDefaultBucket(true);
+
       let data = this.state.credentials.get('data');
       let token = JSON.parse(data).access_token;
 
       ExDropboxActions.getListOfCsvFiles(token);
       StorageActionCreators.loadBucketsForce();
+
+      console.log('InputTables: ', this.getInputTables());
+      console.log('configId: ', this.state.configId);
     }
 
+  },
+
+  getInputTables() {
+    return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
+  },
+
+  updateAndSaveConfigData(path, data) {
+    let newData = this.state.configData.setIn(path, data);
+    let saveFunction = InstalledComponentsActions.saveComponentConfigData;
+    saveFunction(componentId, this.state.configId, newData);
+  },
+
+  updateParameters(newParameters) {
+    this.updateAndSaveConfigData(['parameters'], newParameters);
   },
 
   render() {
@@ -170,17 +191,24 @@ export default React.createClass({
 
   renderBucketSelector() {
     if (this.state.hasCredentials) {
-      var inputBuckets = this.getBucketsForSelection(this.extendBucketList(this.defaultInputBucket, this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets))));
+      var inputBuckets = this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
 
       return (
         <div className="section well">
-          <h3 className="section-heading">2. Please select a Keboola Storage Bucket where the files will be uploaded.</h3>
+          <h3 className="section-heading">2. Please specify a Keboola Storage Bucket where the files will be uploaded.</h3>
+
+          <label className="checkbox" style={{'marginLeft': '20px'}}>
+            <input type="checkbox" className="checkbox-control" checked={this.state.localState.get('isDefaultBucketSelected')} onChange={this.handleToggleOfSelectionOfDefaultBucket} />
+            <span className="checkbox-label">Use bucket: {this.defaultInputBucket} (default option)</span>
+          </label>
+
+          <p className="hint">The component for Bucket Selection below is disabled. Uncheck the option for usage of <strong>{this.defaultInputBucket}</strong> if you want to enable it.</p>
 
           <Select
             ref="stateSelect"
             options={inputBuckets}
-            placeholder="Select a Bucket from the Keboola Storage"
-            disabled={false}
+            placeholder="Select a different Bucket from the Keboola Storage"
+            disabled={this.state.localState.get('isDefaultBucketSelected')}
             value={this.state.selectedInputBucket.get('selectedInputBucket')}
             onChange={this.handleInputBucketChange}
             searchable={true} />
@@ -189,13 +217,27 @@ export default React.createClass({
     }
   },
 
+  hasSelectedDropboxFiles() {
+    var selectedFiles = this.state.selectedDropboxFiles.get('selectedDropboxFiles');
+
+    if (typeof (selectedFiles) !== 'undefined') {
+      if (selectedFiles.length > 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  },
+
   renderConfigSummary() {
-    if (this.state.hasCredentials) {
+    if (this.state.hasCredentials && this.hasSelectedDropboxFiles()) {
       return (
         <div className="section">
           <table className="table table-striped">
           <thead>
             <tr>
+              <th>#</th>
               <th>Source</th>
               <th>Destination</th>
               <th></th>
@@ -203,6 +245,7 @@ export default React.createClass({
           </thead>
             <tbody>
               <tr>
+                <td>1. </td>
                 <td>/file2.csv</td>
                 <td>in.c-main.ExDropbox.file2</td>
                 <td className="text-right">
@@ -231,6 +274,21 @@ export default React.createClass({
     this.updateLocalState(['selectedInputBucket'], selectedObject);
   },
 
+  handleToggleOfSelectionOfDefaultBucket() {
+    let isChecked = this.state.localState.get('isDefaultBucketSelected');
+
+    if (isChecked) {
+      this.handleSelectionOfDefaultBucket(!isChecked);
+    }
+    else {
+      this.handleSelectionOfDefaultBucket(!isChecked);
+    }
+  },
+
+  handleSelectionOfDefaultBucket(newValue) {
+    this.updateLocalState(['isDefaultBucketSelected'], newValue);
+  },
+
   filterBuckets(buckets) {
     let inputBuckets = buckets.filter((bucket) => {
       return bucket.get('stage') === 'in';
@@ -247,12 +305,6 @@ export default React.createClass({
     });
 
     return bucketNameList;
-  },
-
-  extendBucketList(element, buckets) {
-    buckets.unshift(element);
-
-    return buckets;
   },
 
   getBucketsForSelection(buckets) {
@@ -319,10 +371,6 @@ export default React.createClass({
     OAuthActions.deleteCredentials(componentId, this.state.configId);
   },
 
-  updateParameters(newParameters) {
-    this.updateAndSaveConfigData(['parameters'], newParameters);
-  },
-
   handleExportChange(tableId) {
     let handleExport = (newExportStatus) => {
       if (newExportStatus) {
@@ -382,16 +430,6 @@ export default React.createClass({
 
   handleSearchQueryChange(newQuery) {
     this.updateLocalState(['searchQuery'], newQuery);
-  },
-
-  getInputTables() {
-    return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
-  },
-
-  updateAndSaveConfigData(path, data) {
-    let newData = this.state.configData.setIn(path, data);
-    let saveFn = InstalledComponentsActions.saveComponentConfigData;
-    saveFn(componentId, this.state.configId, newData);
   },
 
   updateLocalState(path, data) {
