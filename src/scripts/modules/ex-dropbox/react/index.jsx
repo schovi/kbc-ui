@@ -20,6 +20,7 @@ import RoutesStore from '../../../stores/RoutesStore';
 import StorageActionCreators from '../../components/StorageActionCreators';
 import StorageBucketsStore from '../../components/stores/StorageBucketsStore';
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
+import LatestJobs from '../../components/react/components/SidebarJobs';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
@@ -42,7 +43,6 @@ export default React.createClass({
     let savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId);
     let dropboxFiles = ExDropboxStore.getCsvFiles();
     let keboolaBuckets = StorageBucketsStore.getAll();
-    let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
     let selectedInputBucket = localState.get('selectedInputBucket', Map());
     let toggles = localState.get('bucketToggles', Map());
     let isDefaultBucketSelected = localState.get('isDefaultBucketSelected', true);
@@ -59,7 +59,6 @@ export default React.createClass({
       savingData: savingData || Map(),
       dropboxFiles: dropboxFiles,
       keboolaBuckets: keboolaBuckets,
-      selectedDropboxFiles: selectedDropboxFiles,
       selectedInputBucket: selectedInputBucket,
       credentials: credentials,
       isDefaultBucketSelected: isDefaultBucketSelected,
@@ -77,25 +76,28 @@ export default React.createClass({
 
       ExDropboxActions.getListOfCsvFiles(token);
       StorageActionCreators.loadBucketsForce();
-
-      console.log('InputTables: ', this.getInputTables());
-      console.log('configId: ', this.state.configId);
     }
 
   },
 
-  getInputTables() {
-    return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
-  },
 
-  updateAndSaveConfigData(path, data) {
-    let newData = this.state.configData.setIn(path, data);
-    let saveFunction = InstalledComponentsActions.saveComponentConfigData;
-    saveFunction(componentId, this.state.configId, newData);
-  },
 
-  updateParameters(newParameters) {
-    this.updateAndSaveConfigData(['parameters'], newParameters);
+  renderCSVPicker() {
+    if (this.state.hasCredentials) {
+      return (
+        <div className="section well">
+          <h3 className="section-heading">1. Please specify CSV files you want to upload to Keboola.</h3>
+
+          <Select
+            multi
+            value={this.getSelectedCsvFiles()}
+            placeholder="Select CSV files from Dropbox"
+            options={this.state.dropboxFiles.get('fileNames')}
+            onChange={this.handleCsvSelectChange}
+          />
+        </div>
+      );
+    }
   },
 
   render() {
@@ -157,6 +159,9 @@ export default React.createClass({
             />
           </li>
           <li>
+            {this.renderResetAuthorization()}
+          </li>
+          <li>
             <DeleteConfigurationButton
               componentId={componentId}
               configId={this.state.configId}
@@ -164,30 +169,14 @@ export default React.createClass({
             />
           </li>
           <li>
-            {this.renderResetAuthorization()}
+            <LatestJobs jobs={this.state.latestJobs} />
           </li>
         </ul>
       </div>
     );
   },
 
-  renderCSVPicker() {
-    if (this.state.hasCredentials) {
-      return (
-        <div className="section well">
-          <h3 className="section-heading">1. Please specify CSV files you want to upload to Keboola.</h3>
 
-          <Select
-            multi
-            value={this.state.selectedDropboxFiles.get('selectedDropboxFiles')}
-            placeholder="Select CSV files from Dropbox"
-            options={this.state.dropboxFiles.get('fileNames')}
-            onChange={this.handleCsvSelectChange}
-          />
-        </div>
-      );
-    }
-  },
 
   renderBucketSelector() {
     if (this.state.hasCredentials) {
@@ -231,7 +220,8 @@ export default React.createClass({
   },
 
   renderConfigSummary() {
-    if (this.state.hasCredentials && this.hasSelectedDropboxFiles()) {
+    if (this.state.hasCredentials && this.getInputTables().size > 0) {
+
       return (
         <div className="section">
           <table className="table table-striped">
@@ -244,19 +234,25 @@ export default React.createClass({
             </tr>
           </thead>
             <tbody>
-              <tr>
-                <td>1. </td>
-                <td>/file2.csv</td>
-                <td>in.c-main.ExDropbox.file2</td>
-                <td className="text-right">
-                  <button className="btn btn-link">
-                    <i className="fa kbc-icon-cup"></i>
-                  </button>
-                  <button className="btn btn-link">
-                    <span className="fa fa-upload fa-fw"></span>
-                  </button>
-                </td>
-              </tr>
+            {
+              this.getInputTables().map((table, index) => {
+                return (
+                  <tr>
+                      <td>{index + 1}.</td>
+                      <td>{table.get('source')}</td>
+                      <td>{table.get('destination')}</td>
+                      <td className="text-right">
+                      <button className="btn btn-link" onClick={this.handleDeletingSingleElement}>
+                        <i className="fa kbc-icon-cup"></i>
+                      </button>
+                      <button className="btn btn-link">
+                        <span className="fa fa-upload fa-fw"></span>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            }
             </tbody>
           </table>
         </div>
@@ -264,9 +260,58 @@ export default React.createClass({
     }
   },
 
-  handleCsvSelectChange(value, values) {
-    let selectedObjects = this.state.selectedDropboxFiles.set('selectedDropboxFiles', values);
-    this.updateLocalState(['selectedDropboxFiles'], selectedObjects);
+  handleDeletingSingleElement() {
+    console.log('test');
+  },
+
+  getInputTables() {
+    return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
+  },
+
+  updateAndSaveConfigData(path, data) {
+    let newData = this.state.configData.setIn(path, data);
+    let saveFunction = InstalledComponentsActions.saveComponentConfigData;
+    saveFunction(componentId, this.state.configId, newData);
+  },
+
+  updateParameters(newParameters) {
+    this.updateAndSaveConfigData(['parameters'], newParameters);
+  },
+
+  handleCsvSelectChange(value) {
+    var inTables = List();
+    var fileNames = value.split(',');
+
+    fileNames.map((file) => {
+      var jsTable = {
+        source: file,
+        destination: this.getDestinationName(file)
+      };
+
+      var tableObject = fromJS(jsTable);
+      inTables = inTables.push(tableObject);
+    });
+
+    this.updateAndSaveConfigData(['storage', 'input', 'tables'], inTables);
+  },
+
+  getDestinationName(fileName) {
+    let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
+    let defaultBucket = this.defaultInputBucket;
+
+    return `${defaultBucket}.${destinationFile}`;
+  },
+
+  getSelectedCsvFiles() {
+    var inTables = this.getInputTables();
+
+    var selectedDropboxFiles = [];
+
+    inTables.map((table) => {
+      selectedDropboxFiles.push({label: table.get('source'), value: table.get('source')});
+    });
+
+    return selectedDropboxFiles;
   },
 
   handleInputBucketChange(value) {
