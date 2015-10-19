@@ -4,12 +4,14 @@ Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input} = React.DOM
+editorMode = require '../../../editorMode'
 
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
   propTypes:
     query: React.PropTypes.object.isRequired
+    mode: React.PropTypes.string.isrequired
 
   render: ->
     div className: 'row',
@@ -55,6 +57,7 @@ module.exports = React.createClass
                 readOnly: 'nocursor'
                 lineNumbers: false
                 value: @props.query.get 'query'
+                mode: editorMode(@props.driver)
             else
               div className: 'row kbc-header',
                 p className: 'text-muted',
