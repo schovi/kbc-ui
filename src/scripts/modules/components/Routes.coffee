@@ -26,6 +26,7 @@ googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require '../ex-adform/routes'
 geneeaGeneralRoutes = require '../app-geneea-nlp-analysis/routes.js'
+customScienceRoutes = require '../custom-science/Routes'
 
 extractor = injectProps(type: 'extractor')
 writer = injectProps(type: 'writer')
@@ -75,6 +76,8 @@ routes =
       appGeneeaRoutes.entityRecognition
     ,
       geneeaGeneralRoutes
+    ,
+      customScienceRoutes
     ,
       createGenericDetailRoute 'application'
     ]
