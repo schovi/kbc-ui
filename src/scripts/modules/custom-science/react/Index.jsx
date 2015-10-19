@@ -12,7 +12,7 @@ import ComponentDescription from '../../components/react/components/ComponentDes
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
-import LatestJobs from '../../components/react/components/SidebarJobs';
+//import LatestJobs from '../../components/react/components/SidebarJobs';
 import InlineEditText from '../../../react/common/InlineEditTextInput';
 
 import InstalledComponentsActions from '../../components/InstalledComponentsActionCreators';
@@ -171,7 +171,7 @@ export default React.createClass({
             />
           </li>
         </ul>
-        <LatestJobs jobs={this.state.latestJobs} />
+        {/* <LatestJobs jobs={this.state.latestJobs} /> */}
       </div>
     );
 
