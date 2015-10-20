@@ -243,17 +243,26 @@ export default React.createClass({
 
   reload(){
     Promise.props( {
-      'loadAllTablesFore': storageActions.loadTablesForce(),
+      'loadAllTablesFore': storageActions.loadTablesForce().then(() => this.findEnhancedJob()),
       'exportData': this.exportDataSample(),
       'loadEvents': this.state.eventService.load()
     });
   },
 
+  loadAll(){
+      this.exportDataSample();
+      this.startEventService();
+      this.setState({show: true});
+      this.findEnhancedJob();
+    },
+
+
   onShow(e){
-    this.exportDataSample();
-    this.startEventService();
-    this.setState({show: true});
-    this.findEnhancedJob();
+    if (this.state.isLoading){
+      storageApi.getTables().then(() => this.loadAll());
+    }else{
+      this.loadAll();
+    }
 
     e.stopPropagation();
     e.preventDefault();
