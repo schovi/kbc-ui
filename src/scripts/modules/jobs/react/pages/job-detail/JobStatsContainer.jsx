@@ -27,7 +27,7 @@ export default React.createClass({
     if (!nextProps.autoRefresh) {
       /*jslint browser:true*/
       setTimeout(this.stopPolling, 2000); // events can be delayed
-      this.collectStats();
+      this.collectStats(nextProps.runId);
     }
 
     if (nextProps.runId !== this.props.runId) {
@@ -45,7 +45,7 @@ export default React.createClass({
   startPolling() {
     const schedule = later.parse.recur().every(5).second();
     this.stopPolling();
-    this.timeout = later.setInterval(this.collectStats, schedule);
+    this.timeout = later.setInterval(() => this.collectStats(this.props.runId), schedule);
   },
 
   stopPolling() {
