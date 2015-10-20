@@ -29,6 +29,13 @@ export default React.createClass({
       setTimeout(this.stopPolling, 2000); // events can be delayed
       this.collectStats();
     }
+
+    if (nextProps.runId !== this.props.runId) {
+      this.setState({
+        stats: null
+      });
+      this.collectStats();
+    }
   },
 
   componentWillUnmount() {

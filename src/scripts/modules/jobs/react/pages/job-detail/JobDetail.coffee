@@ -76,6 +76,9 @@ module.exports = React.createClass
       when 'error', 'cancelled', 'canceled', 'terminated'
         SoundNotifications.crash()
 
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
+
   _handleChangeActiveAccordion: (activeKey) ->
     @setState
       activeAccordion: if activeKey == @state.activeAccordion then '' else activeKey
