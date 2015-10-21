@@ -34,6 +34,7 @@ ExDbStore = StoreUtils.createStore
     .filter (query) ->
       fuzzy.match(filter, query.get('name')) ||
       fuzzy.match(filter, query.get('outputTable'))
+    .sortBy (query) -> query.get('name').toLowerCase()
 
 
   getQueriesFilter: (configId) ->
