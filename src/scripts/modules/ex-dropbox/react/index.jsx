@@ -4,6 +4,7 @@ import Select from 'react-select';
 
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import AuthorizeModal from './DropboxAuthorizeModal';
+import FileSelectorModal from './DropboxFileSelectorModal';
 import RunButtonModal from '../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 
@@ -22,7 +23,7 @@ import StorageBucketsStore from '../../components/stores/StorageBucketsStore';
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import LatestJobs from '../../components/react/components/SidebarJobs';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
-import { fromJS, Map, List } from 'immutable';
+import { Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
 
 const componentId = 'ex-dropbox';
@@ -37,14 +38,15 @@ export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore, StorageBucketsStore)],
 
   getStateFromStores() {
+
     let configId = RoutesStore.getCurrentRouteParam('config');
     let configData = InstalledComponentsStore.getConfigData(componentId, configId);
     let localState = InstalledComponentsStore.getLocalState(componentId, configId);
-    let savingData = InstalledComponentsStore.getSavingConfigData(componentId, configId);
+    let parameters = configData.get('parameters', Map());
     let dropboxFiles = ExDropboxStore.getCsvFiles();
     let keboolaBuckets = StorageBucketsStore.getAll();
     let selectedInputBucket = localState.get('selectedInputBucket', Map());
-    let toggles = localState.get('bucketToggles', Map());
+    let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
     let isDefaultBucketSelected = localState.get('isDefaultBucketSelected', true);
     let credentials = OAuthStore.getCredentials(componentId, configId);
     let hasCredentials = OAuthStore.hasCredentials(componentId, configId);
@@ -54,12 +56,12 @@ export default React.createClass({
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
       configId: configId,
       configData: configData,
+      parameters: parameters,
       localState: localState,
-      bucketToggles: toggles,
-      savingData: savingData || Map(),
       dropboxFiles: dropboxFiles,
       keboolaBuckets: keboolaBuckets,
       selectedInputBucket: selectedInputBucket,
+      selectedDropboxFiles: selectedDropboxFiles,
       credentials: credentials,
       isDefaultBucketSelected: isDefaultBucketSelected,
       hasCredentials: hasCredentials,
@@ -80,8 +82,6 @@ export default React.createClass({
 
   },
 
-
-
   renderCSVPicker() {
     if (this.state.hasCredentials) {
       return (
@@ -98,6 +98,119 @@ export default React.createClass({
         </div>
       );
     }
+  },
+
+  renderFileSelectorModal() {
+    return (
+      <div className="row component-empty-state text-right">
+        <div>
+          <ModalTrigger modal={
+              <FileSelectorModal
+                dropboxFiles={this.state.dropboxFiles.get('fileNames')}
+                keboolaBuckets={this.getInputBuckets()}
+                configId={this.state.configId}
+                selectedCsvFiles={this.getSelectedCsvFiles}
+                selectedInputBucket={this.getSelectedBucket}
+                handleCsvSelectChange={this.handleCsvSelectChange}
+                handleBucketChange={this.handleInputBucketChange}
+                canSaveConfig={this.canSaveConfig}
+                saveConfig={this.saveConfig}
+              />
+            }>
+            <span className="btn btn-success">Configure Input Files</span>
+          </ModalTrigger>
+        </div>
+      </div>
+    );
+  },
+
+  getInputBuckets() {
+    return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
+  },
+
+  getSelectedCsvFiles() {
+    var selectedDropboxFiles = [];
+    var inputConfigTables = this.getInputTables();
+
+    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
+    if (!this.state.localState.get('selectedDropboxFiles')) {
+      // Check the config and store it to localState
+      inputConfigTables.map((table) => {
+        selectedDropboxFiles.push({label: table.get('source'), value: table.get('source')});
+      });
+
+      return selectedDropboxFiles;
+    }
+    else {
+      return this.state.localState.get('selectedDropboxFiles');
+    }
+  },
+
+  canRunUpload() {
+    return (this.getInputTables().count() > 0) && this.state.hasCredentials;
+  },
+
+  canSaveConfig() {
+    var parameters = this.state.configData.get('parameters');
+    var selectedDropboxFiles = this.state.localState.get('selectedDropboxFiles');
+    var selectedLocalBucket = this.state.localState.get('selectedInputBucket');
+    var selectedConfigBucket = parameters ? parameters.get('bucket') : null;
+
+    // We can save new config whether user changed files selection.
+    // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
+    if (typeof selectedDropboxFiles !== 'undefined' && ( selectedLocalBucket || selectedConfigBucket )) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+
+  saveConfig() {
+    // MAKE SURE TO DEFINE CLEANING OF THE LOCAL STATES FOR TABLES AND BUCKETS
+
+    console.log('SAVING CONFIGURATION!');
+  },
+
+  cancelConfig() {
+
+
+  },
+
+  getSelectedBucket() {
+    var selectedInputBucket = [];
+    var inputConfigBucket = this.state.configData.get('parameters');
+
+    // Checking whether the local state is not defined
+    if (!this.state.localState.get('selectedInputBucket')) {
+      // Check whether the config is set, if not, just return an empty array.
+
+      if (!inputConfigBucket) {
+        return selectedInputBucket;
+      }
+
+      if (!inputConfigBucket.get('bucket')) {
+        return selectedInputBucket;
+      }
+
+      selectedInputBucket.push({label: inputConfigBucket.get('bucket'), value: inputConfigBucket.get('bucket')});
+      return selectedInputBucket;
+    }
+    else {
+      return this.state.localState.get('selectedInputBucket');
+    }
+  },
+
+
+  handleInputBucketChange(value) {
+    //let selectedObject = this.state.localState.set('selectedInputBucket', value);
+    this.updateLocalState(['selectedInputBucket'], value);
+  },
+
+
+  handleCsvSelectChange(value, values) {
+    //let selectedObjects = this.state.localState.set('selectedDropboxFiles', values);
+    this.updateLocalState(['selectedDropboxFiles'], values);
   },
 
   render() {
@@ -118,8 +231,7 @@ export default React.createClass({
             configId={this.state.configId}
           />
         </div>
-        {this.renderCSVPicker()}
-        {this.renderBucketSelector()}
+        {this.renderFileSelectorModal()}
         {this.renderConfigSummary()}
         {this.renderTablesByBucketsPanel()}
       </div>
@@ -270,29 +382,11 @@ export default React.createClass({
 
   updateAndSaveConfigData(path, data) {
     let newData = this.state.configData.setIn(path, data);
-    let saveFunction = InstalledComponentsActions.saveComponentConfigData;
-    saveFunction(componentId, this.state.configId, newData);
+    return InstalledComponentsActions.saveComponentConfigData(componentId, this.state.configId, newData);
   },
 
   updateParameters(newParameters) {
     this.updateAndSaveConfigData(['parameters'], newParameters);
-  },
-
-  handleCsvSelectChange(value) {
-    var inTables = List();
-    var fileNames = value.split(',');
-
-    fileNames.map((file) => {
-      var jsTable = {
-        source: file,
-        destination: this.getDestinationName(file)
-      };
-
-      var tableObject = fromJS(jsTable);
-      inTables = inTables.push(tableObject);
-    });
-
-    this.updateAndSaveConfigData(['storage', 'input', 'tables'], inTables);
   },
 
   getDestinationName(fileName) {
@@ -302,22 +396,7 @@ export default React.createClass({
     return `${defaultBucket}.${destinationFile}`;
   },
 
-  getSelectedCsvFiles() {
-    var inTables = this.getInputTables();
 
-    var selectedDropboxFiles = [];
-
-    inTables.map((table) => {
-      selectedDropboxFiles.push({label: table.get('source'), value: table.get('source')});
-    });
-
-    return selectedDropboxFiles;
-  },
-
-  handleInputBucketChange(value) {
-    let selectedObject = this.state.selectedInputBucket.set('selectedInputBucket', value);
-    this.updateLocalState(['selectedInputBucket'], selectedObject);
-  },
 
   handleToggleOfSelectionOfDefaultBucket() {
     let isChecked = this.state.localState.get('isDefaultBucketSelected');
@@ -408,73 +487,9 @@ export default React.createClass({
     }
   },
 
-  canRunUpload() {
-    return (this.getInputTables().count() > 0) && this.state.hasCredentials;
-  },
 
   deleteCredentials() {
     OAuthActions.deleteCredentials(componentId, this.state.configId);
-  },
-
-  handleExportChange(tableId) {
-    let handleExport = (newExportStatus) => {
-      if (newExportStatus) {
-        this.addTableExport(tableId);
-      }
-      else {
-        this.removeTableExport(tableId);
-      }
-    };
-
-    return handleExport;
-  },
-
-  addTableExport(tableId) {
-    let intables = this.getInputTables();
-    let jstable = {
-      source: tableId,
-      destination: `${tableId}.csv`
-    };
-
-    let localTable = intables.find((table) => {
-      return table.get('source') === tableId;
-    });
-
-    if (!localTable) {
-      localTable = fromJS(jstable);
-      intables = intables.push(localTable);
-      this.updateAndSaveConfigData(['storage', 'input', 'tables'], intables);
-    }
-  },
-
-  removeTableExport(tableId) {
-    let intables = this.getInputTables();
-    intables = intables.filter((table) => {
-      return table.get('source') !== tableId;
-    });
-
-    this.updateAndSaveConfigData(['storage', 'input', 'tables'], intables);
-  },
-
-  isTableExported(tableId) {
-    let intables = this.getInputTables();
-    return !!intables.find((table) => {
-      return table.get('source') === tableId;
-    });
-  },
-
-  isBucketToggled(bucketId) {
-    return !!this.state.bucketToggles.get(bucketId);
-  },
-
-  handleToggleBucket(bucketId) {
-    let newValue = !this.isBucketToggled(bucketId);
-    let newToggles = this.state.bucketToggles.set(bucketId, newValue);
-    this.updateLocalState(['bucketToggles'], newToggles);
-  },
-
-  handleSearchQueryChange(newQuery) {
-    this.updateLocalState(['searchQuery'], newQuery);
   },
 
   updateLocalState(path, data) {
