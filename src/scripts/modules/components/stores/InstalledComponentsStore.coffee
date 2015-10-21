@@ -35,6 +35,9 @@ InstalledComponentsStore = StoreUtils.createStore
   getAll: ->
     _store
     .get 'components'
+    .map (component) ->
+      component.set 'configurations', component.get('configurations').sortBy (configuration) ->
+        configuration.get('name').toLowerCase()
     .sortBy (component) -> component.get 'name'
 
   getAllForType: (type) ->
