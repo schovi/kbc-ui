@@ -103,6 +103,9 @@ export default React.createClass({
   },
 
   checkJobStatus() {
+    if (!this.state.jobId) {
+      return;
+    }
     jobsApi
       .getJobDetail(this.state.jobId)
       .then(this.handleJobReceive)
