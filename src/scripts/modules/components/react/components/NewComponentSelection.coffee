@@ -61,7 +61,7 @@ module.exports = React.createClass
   _renderComponents: ->
     @props.components
     .toIndexedSeq()
-    .sortBy((component) -> component.get('name'))
+    .sortBy((component) -> component.get('name').toLowerCase())
     .groupBy((component, i) -> Math.floor(i / 3))
     .map(@_renderComponentsRow, @)
     .toArray()
