@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import moment from 'moment';
 import date from '../../../../../utils/date';
 import string from 'underscore.string';
-import {Input} from 'react-bootstrap';
+import {Table, Input} from 'react-bootstrap';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 
@@ -71,29 +71,30 @@ export default React.createClass({
     return (
       <span>
         <Input>
-        <div className="col-xs-3">
-          <div className="checkbox">
-            <label>
-              <input
-                checked={this.props.omitFetches}
-                onClick={this.props.onOmitFetchesFn}
-                type="checkbox"/> Ignore table fetches
-            </label>
+          <div className="row">
+            <div className="col-xs-3">
+              <div className="checkbox">
+                <label>
+                  <input
+                      checked={this.props.omitFetches}
+                      onClick={this.props.onOmitFetchesFn}
+                      type="checkbox"/> Ignore table fetches
+                </label>
+              </div>
+            </div>
+            <div className="col-xs-3">
+              <div className="checkbox">
+                <label>
+                  <input
+                      checked={this.props.omitExports}
+                      onClick={this.props.onOmitExportsFn}
+                      type="checkbox"/> Ignore table exports
+                </label>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="col-xs-3">
-          <div className="checkbox">
-            <label>
-              <input
-                 checked={this.props.omitExports}
-                 onClick={this.props.onOmitExportsFn}
-                 type="checkbox"/> Ignore table exports
-            </label>
-          </div>
-        </div>
         </Input>
-
-        <table className="table table-striped">
+        <Table responsive className="table">
           <thead className="thead">
             <tr className="tr">
               <th className="th">
@@ -117,7 +118,7 @@ export default React.createClass({
           <tbody className="tbody">
             {rows}
           </tbody>
-        </table>
+        </Table>
       </span>);
   },
 
