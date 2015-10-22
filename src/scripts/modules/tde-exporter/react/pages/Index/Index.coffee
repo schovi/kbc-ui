@@ -196,9 +196,11 @@ module.exports = React.createClass
 
   _getLastTdeFile: (tableId) ->
     idReplaced = tableId.replace(/-/g,"_")
-    filename = "#{idReplaced}.tde"
+    filename = "#{idReplaced}.tde".toLowerCase()
+
     files = @state.files.filter (file) ->
-      file.get('name') == filename
+      fname = file.get('name').toLowerCase()
+      fname == filename
     latestFile = files.max (a, b) ->
       adate = moment(a.get('created'))
       bdate = moment(b.get('created'))
