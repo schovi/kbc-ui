@@ -68,7 +68,8 @@ module.exports = React.createClass
               ' Select Sheets'
       if items.count()
         ItemsTable
-          items: items
+          items: items.sortBy((item) ->
+            item.get('title').toLowerCase())
           configurationId: @state.configuration.get 'id'
           deletingSheets: @state.deletingSheets
           savingSheets: @state.savingSheets
