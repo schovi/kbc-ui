@@ -19,7 +19,8 @@ export default React.createClass({
             theme="solarized"
             lineNumbers={true}
             defaultValue={this.props.script}
-            readOnly="nocursor"
+            readOnly={true}
+            cursorHeight={0}
             mode="text/x-rsrc"
             lineWrapping={true}
             />

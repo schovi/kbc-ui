@@ -21,7 +21,8 @@ export default React.createClass({
             theme="solarized"
             lineNumbers={true}
             defaultValue={this.props.data}
-            readOnly="nocursor"
+            readOnly={true}
+            cursorHeight={0}
             mode="application/json"
             lineWrapping={true}
             />

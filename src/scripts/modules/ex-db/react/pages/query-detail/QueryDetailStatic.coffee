@@ -54,7 +54,7 @@ module.exports = React.createClass
           div className: 'col-md-12',
             if @props.query.get('query').length
               CodeEditor
-                readOnly: 'nocursor'
+                readOnly: true
                 lineNumbers: false
                 value: @props.query.get 'query'
                 mode: editorMode(@props.driver)
