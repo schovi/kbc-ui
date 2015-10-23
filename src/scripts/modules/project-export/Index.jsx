@@ -50,7 +50,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <p>
-              You can export whole your Keboola Connection project into <a href="http://aws.amazon.com/s3/">AWS S3</a>.
+              You can export your full Keboola Connection project to <a href="http://aws.amazon.com/s3/">AWS S3 storage</a>.
             </p>
             <p>
               <strong>
@@ -58,9 +58,9 @@ export default React.createClass({
               </strong>
             </p>
             <ul>
-              <li>All buckets and tables metadata</li>
-              <li>Data exported to gzipped CSV files for all tables</li>
-              <li>All components configurations</li>
+              <li>All bucket and table metadata</li>
+              <li>All table data exported to gzipped CSV files</li>
+              <li>All component configurationss</li>
             </ul>
           </div>
           <div className="row">

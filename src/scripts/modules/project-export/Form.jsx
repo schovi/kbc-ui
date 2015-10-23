@@ -25,8 +25,8 @@ export default React.createClass({
         {this.input('S3 path', 's3path', 'Optional path in S3')}
         <Input type="checkbox"
            wrapperClassName="col-xs-offset-4 col-xs-8"
-           label="Export only project structure"
-           help="All buckets and tables metadata and all configurations will be exported."
+           label="Export project structure only"
+           help="Only bucket and table metadata and component configurations will be exported."
            checked={this.props.parameters.get('onlyStructure')}
            onChange={this.handleOnlyStructureChange}
         />
