@@ -50,7 +50,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <p>
-              You can export your full Keboola Connection project to <a href="http://aws.amazon.com/s3/">AWS S3 storage</a>.
+              Export this project to <a href="http://aws.amazon.com/s3/" target="_blank">AWS Simple Storage Service (S3)</a>.
             </p>
             <p>
               <strong>
