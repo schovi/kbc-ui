@@ -60,7 +60,7 @@ export default React.createClass({
             <ul>
               <li>All bucket and table metadata</li>
               <li>All table data exported to gzipped CSV files</li>
-              <li>All component configurationss</li>
+              <li>All component configurations</li>
             </ul>
           </div>
           <div className="row">
