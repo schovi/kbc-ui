@@ -27,6 +27,7 @@ export default React.createClass({
     progress: PropTypes.string.isRequired,
     progressStatus: PropTypes.string.isRequired,
     isRunning: PropTypes.bool,
+    isCreated: PropTypes.bool,
     jobId: PropTypes.string.isRequired,
     mysqlCredentials: PropTypes.object.isRequired,
     onModeChange: PropTypes.func.isRequired,
@@ -35,7 +36,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal show={this.props.show} onHide={this.props.onHide}>
+      <Modal show={this.props.show} bsSize="large" onHide={this.props.onHide}>
         <Modal.Header closeButton>
           <Modal.Title>Create Sandbox</Modal.Title>
         </Modal.Header>
@@ -62,7 +63,7 @@ export default React.createClass({
           <ConfirmButtons
             onCancel={this.props.onHide}
             onSave={this.props.onCreateStart}
-            saveLabel="Create"
+            saveLabel={this.props.isCreated ? 'Create Again' : 'Create'}
             isSaving={this.props.isRunning}
             />
         </Modal.Footer>

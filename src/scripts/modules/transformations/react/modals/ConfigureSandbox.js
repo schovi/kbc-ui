@@ -28,7 +28,8 @@ export default React.createClass({
       isRunning: false,
       jobId: null,
       progress: null,
-      progressStatus: null
+      progressStatus: null,
+      isCreated: false
     };
   },
 
@@ -43,6 +44,7 @@ export default React.createClass({
       progress: this.state.progress,
       progressStatus: this.state.progressStatus,
       isRunning: this.state.isRunning,
+      isCreated: this.state.isCreated,
       onModeChange: this.handleModeChange,
       onCreateStart: this.handleSandboxCreate
     });
@@ -83,14 +85,16 @@ export default React.createClass({
           isRunning: false,
           progress: 'Sandbox is successfully loaded. You can start using it now!',
           progressStatus: 'success',
-          jobId: null
+          jobId: null,
+          isCreated: true
         });
       } else {
         this.setState({
           isRunning: false,
           progress: 'Load finished with error.',
           progressStatus: 'danger',
-          jobId: job.id
+          jobId: job.id,
+          isCreated: true
         });
       }
     } else {
