@@ -19,16 +19,11 @@ deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 
 storeEncodedConfig = (componentId, configId, dataToSave) ->
   component = InstalledComponentsStore.getComponent(componentId)
+  dataToSave = {configuration: JSON.stringify(dataToSave)}
   if component.get('flags').includes('encrypt')
-    encoded  = installedComponentsApi
-    .encryptData(component.get('uri'), dataToSave)
-    encoded.then((result) ->
-      dataToSave = {configuration: JSON.stringify(result)}
-      installedComponentsApi
-      .updateComponentConfiguration(componentId, configId, dataToSave)
-    )
+    installedComponentsApi
+    .updateComponentConfigurationEncrypted(component.get('uri'), configId, dataToSave)
   else
-    dataToSave = {configuration: JSON.stringify(dataToSave)}
     installedComponentsApi
     .updateComponentConfiguration(componentId, configId, dataToSave)
 
@@ -351,21 +346,10 @@ module.exports =
 
     params = _.extend {}, defaultParams, params
 
-    component = ComponentsStore.getComponent(params.component)
-    if component.get('flags').includes('encrypt')
-      promise  = installedComponentsApi
-        .encryptData(component.get('uri'), params.data)
-        .then (dataEncrypted) ->
-          _.extend {}, params,
-            data: dataEncrypted
-    else
-      promise = Promise.resolve(params)
-
-    promise.then (params) ->
-      componentRunner.run
-        component: params.component
-        data: params.data
-        method: params.method
+    componentRunner.run
+      component: params.component
+      data: params.data
+      method: params.method
     .then (job) ->
       JobsActionCreators.recieveJobDetail(job)
       if params.notify

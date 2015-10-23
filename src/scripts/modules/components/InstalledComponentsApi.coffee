@@ -35,6 +35,14 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
+  updateComponentConfigurationEncrypted: (componentUrl, configurationId, data) ->
+    request('PUT', "#{componentUrl}/configs/#{configurationId}")
+    .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
+    .type 'form'
+    .send data
+    .promise()
+    .then (response) ->
+      response.body
 
   createConfiguration: (componentId, data) ->
     createRequest 'POST', "components/#{componentId}/configs"
@@ -46,15 +54,6 @@ installedComponentsApi =
 
   deleteConfiguration: (componentId, configurationId) ->
     createRequest 'DELETE', "components/#{componentId}/configs/#{configurationId}"
-    .promise()
-    .then (response) ->
-      response.body
-
-  encryptData: (componentUrl, data) ->
-    request('POST', componentUrl + "/encrypt")
-    .set('X-StorageApi-Token', ApplicationStore.getSapiTokenString())
-    .set('Content-Type', 'application/json')
-    .send data
     .promise()
     .then (response) ->
       response.body
