@@ -167,32 +167,45 @@ export default React.createClass({
     return selectedDropboxFiles;
   },
 
-  handleCsvSelectChange(value, values) {
-    this.updateLocalState(['selectedDropboxFiles'], values);
-  },
-
   getSelectedBucket() {
     var selectedInputBucket = [];
-    var inputConfigBucket = this.state.configData.get('parameters');
 
-    // Checking whether the local state is not defined
-    if (!this.state.localState.get('selectedInputBucket')) {
-      // Check whether the config is set, if not, just return an empty array.
+    var configDataBucket = this.state.configData.getIn(['parameters', 'config', 'bucket']);
+    var hasConfigDataBucket = this.state.configData.hasIn(['parameters', 'config', 'bucket']);
+    var localConfigDataBucket = this.state.localState.get('selectedInputBucket');
+    var hasLocalConfigDataBucket = this.state.localState.has('selectedInputBucket');
 
-      if (!inputConfigBucket) {
-        return selectedInputBucket;
+    // Initial situation where no bucket is stored in configuration.
+    if (!hasConfigDataBucket) {
+      // If some change in selection.
+      // Return the local change.
+      if (hasLocalConfigDataBucket) {
+        console.log('LocalConfigDataBucket: ', localConfigDataBucket);
+        selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
       }
-
-      if (!inputConfigBucket.get('bucket')) {
-        return selectedInputBucket;
-      }
-
-      selectedInputBucket.push({label: inputConfigBucket.get('bucket'), value: inputConfigBucket.get('bucket')});
-      return selectedInputBucket;
     }
+    // Else handle a situation where some information about bucket is stored in configuration.
     else {
-      return this.state.localState.get('selectedInputBucket');
+      // If no selection is made.
+      // Return the configData information.
+      if (!hasLocalConfigDataBucket) {
+        console.log('configDataBucket: ', configDataBucket);
+        selectedInputBucket.push({label: configDataBucket, value: configDataBucket});
+      }
+      // The last condition handle the situation where a update of bucket selection is made.
+      // Return the local change.
+      else {
+        console.log('LocalConfigDataBucket: ', localConfigDataBucket);
+        selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
+      }
     }
+
+    return selectedInputBucket;
+  },
+
+
+  handleCsvSelectChange(value, values) {
+    this.updateLocalState(['selectedDropboxFiles'], values);
   },
 
   handleInputBucketChange(value) {
@@ -445,8 +458,6 @@ export default React.createClass({
 
     return `${defaultBucket}.${destinationFile}`;
   },
-
-
 
   handleToggleOfSelectionOfDefaultBucket() {
     let isChecked = this.state.localState.get('isDefaultBucketSelected');
