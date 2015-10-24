@@ -76,15 +76,128 @@ export default React.createClass({
 
       this.handleSelectionOfDefaultBucket(true);
 
+
       let data = this.state.credentials.get('data');
       let token = JSON.parse(data).access_token;
 
       ExDropboxActions.getListOfCsvFiles(token);
       StorageActionCreators.loadBucketsForce();
+      this.updateLocalState(['dropboxToken'], token);
     }
-
   },
 
+  canSaveConfig() {
+    var hasLocalConfigDataFiles = this.state.localState.has('selectedDropboxFiles');
+    var hasLocalConfigDataBucket = this.state.localState.has('selectedInputBucket');
+    var hasConfigDataFiles = this.state.configData.hasIn(['parameters', 'config', 'files']);
+    var hasConfigDataBucket = this.state.configData.hasIn(['parameters', 'config', 'bucket']);
+
+
+    // We can save new config whether user changed files selection.
+    // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
+    if ((hasLocalConfigDataFiles || hasConfigDataFiles) && (hasLocalConfigDataBucket || hasConfigDataBucket)) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  },
+
+  updateParameters(newParameters) {
+    this.updateAndSaveConfigData(['parameters'], newParameters);
+  },
+
+  updateAndSaveConfigData(path, data) {
+    let newData = this.state.configData.setIn(path, data);
+    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
+  },
+
+
+  saveConfig() {
+    var bucketData = this.state.localState.has('selectedInputBucket') ? this.state.localState.get('selectedInputBucket') : this.state.configData.getIn(['parameters', 'config', 'bucket']);
+    var filesData = this.state.localState.has('selectedDropboxFiles') ? List(fromJS(this.extractValues(this.state.localState.get('selectedDropboxFiles')))) : this.state.configData.getIn(['parameters', 'config', 'files']);
+
+    var newData = Map()
+      .setIn(['parameters', 'config', 'bucket'], bucketData)
+      .setIn(['parameters', 'config', 'files'], filesData)
+      .setIn(['parameters', 'config', 'credentials'], this.state.localState.get('dropboxToken'));
+
+    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
+  },
+
+  canRunUpload() {
+    return (this.state.configData.hasIn(['parameters', 'config', 'files']) && this.state.configData.getIn(['parameters', 'config', 'files']).count() > 0 && this.state.hasCredentials);
+  },
+
+  getSelectedCsvFiles() {
+    var selectedDropboxFiles = [];
+
+    var configDataFiles = this.state.configData.getIn(['parameters', 'config', 'files'], List());
+    var localConfigDataFiles = this.state.localState.get('selectedDropboxFiles');
+    var hasLocalConfigDataFiles = this.state.localState.has('selectedDropboxFiles');
+
+    // Initial situation where no table is stored in configuration.
+    if (configDataFiles.count() === 0) {
+      // No file is selected and stored in localState.
+      // Return an empty array.
+      if (!hasLocalConfigDataFiles) {
+        return selectedDropboxFiles;
+      }
+      // Situation where files are selected, but the main config is still empty.
+      // Return the selected files.
+      else {
+        localConfigDataFiles.map((fileName) => {
+          selectedDropboxFiles.push(fileName);
+        });
+
+        return selectedDropboxFiles;
+      }
+    }
+    // Else handle the situation where at least 1 file had been stored in configuration.
+    else {
+      // File selection wasn't updated.
+      // Return the information from the config.
+      if (!hasLocalConfigDataFiles) {
+        configDataFiles.map((fileName) => {
+          selectedDropboxFiles.push({label: fileName, value: fileName});
+        });
+
+        return selectedDropboxFiles;
+      }
+      // File selection was updated.
+      // Return the information from the selection.
+      else {
+        localConfigDataFiles.map((fileName) => {
+          selectedDropboxFiles.push(fileName);
+        });
+
+        return selectedDropboxFiles;
+      }
+    }
+
+
+
+
+
+    /*
+    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
+    if (!this.state.localState.get('selectedDropboxFiles')) {
+      // Check the config and store it to localState
+
+
+      return selectedDropboxFiles;
+    }
+    else {
+      return this.state.localState.get('selectedDropboxFiles');
+    }
+    */
+
+    return selectedDropboxFiles;
+  },
+
+  handleCsvSelectChange(value, values) {
+    this.updateLocalState(['selectedDropboxFiles'], values);
+  },
 
   getSelectedBucket() {
     var selectedInputBucket = [];
@@ -110,22 +223,8 @@ export default React.createClass({
     }
   },
 
-  getSelectedCsvFiles() {
-    var selectedDropboxFiles = [];
-    var inputConfigTables = this.state.configData.getIn(['parameters', 'config', 'files']);
-
-    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
-    if (!this.state.localState.get('selectedDropboxFiles')) {
-      // Check the config and store it to localState
-      inputConfigTables.map((fileName) => {
-        selectedDropboxFiles.push({label: fileName, value: fileName});
-      });
-
-      return selectedDropboxFiles;
-    }
-    else {
-      return this.state.localState.get('selectedDropboxFiles');
-    }
+  handleInputBucketChange(value) {
+    this.updateLocalState(['selectedInputBucket'], value);
   },
 
   renderCSVPicker() {
@@ -175,44 +274,7 @@ export default React.createClass({
     return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
   },
 
-  canRunUpload() {
-    return (this.getInputTables().count() > 0) && this.state.hasCredentials;
-  },
 
-  canSaveConfig() {
-    var isLocalBucketSet = this.state.localState.has('selectedInputBucket');
-    //var isLocalDropboxSet = this.state.localState.get('selectedDropboxFiles'); // MAKE SURE THERE WON'T BE A SITUATION WHERE EMPTY LIST APPEAR
-    var selectedDropboxFiles = this.state.configData.getIn(['parameters', 'config', 'files'], List());
-    var hasSelectedConfigBucket = this.state.configData.hasIn(['parameters', 'config', 'bucket']);
-
-    // We can save new config whether user changed files selection.
-    // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
-    if (selectedDropboxFiles.count() > 0 && ( isLocalBucketSet || hasSelectedConfigBucket )) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  },
-
-  saveConfig() {
-    // MAKE SURE TO DEFINE CLEANING OF THE LOCAL STATES FOR TABLES AND BUCKETS
-
-    let newData = this.state.configData
-      .setIn(['parameters', 'config', 'bucket'], this.state.localState.get('selectedInputBucket'))
-      .setIn(['parameters', 'config', 'files'], List(fromJS(this.extractValues(this.state.localState.get('selectedDropboxFiles')))));
-
-    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
-
-
-    // let bucketToSave = Map({bucket: this.state.localState.get('selectedInputBucket')});
-    // this.updateParameters(bucketToSave);
-
-    //let tablesToSave = Map(List(fromJS(['/file.csv'])));
-    //this.updateParameters(tablesToSave);
-
-    //console.log('GET INPUT TABLES: ', this.getInputTables());
-  },
 
   extractValues(inputArray) {
     var returnArray = [];
@@ -224,24 +286,8 @@ export default React.createClass({
     return returnArray;
   },
 
-  updateParameters(newParameters) {
-    this.updateAndSaveConfigData(['parameters'], newParameters);
-  },
-
   cancelConfig() {
     console.log('CANCELING CONFIGURATION!');
-  },
-
-
-
-
-  handleInputBucketChange(value) {
-    this.updateLocalState(['selectedInputBucket'], value);
-  },
-
-
-  handleCsvSelectChange(value, values) {
-    this.updateLocalState(['selectedDropboxFiles'], values);
   },
 
   render() {
@@ -420,10 +466,6 @@ export default React.createClass({
     return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
   },
 
-  updateAndSaveConfigData(path, data) {
-    let newData = this.state.configData.setIn(path, data);
-    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
-  },
 
   getDestinationName(fileName) {
     let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
