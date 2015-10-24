@@ -351,10 +351,6 @@ export default React.createClass({
     );
   },
 
-  handleManagingConfigParameters(config) {
-    return config;
-  },
-
   renderBucketSelector() {
     if (this.state.hasCredentials) {
       var inputBuckets = this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
@@ -424,9 +420,16 @@ export default React.createClass({
                       <button className="btn btn-link" onClick={handleDeletingSingleElement}>
                         <i className="fa kbc-icon-cup"></i>
                       </button>
-                      <button className="btn btn-link" onClick={handleUploadingSingleElement}>
-                        <span className="fa fa-upload fa-fw"></span>
-                      </button>
+                      <RunButtonModal
+                        title='Upload'
+                        icon='fa fa-upload fa-fw'
+                        mode='button'
+                        component='ex-dropbox'
+                        runParams={handleUploadingSingleElement}
+                        >
+                        You are about to run upload of <strong>1 csv file</strong> from your Dropbox.
+                        The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
+                      </RunButtonModal>
                     </td>
                   </tr>
                 );
@@ -439,6 +442,12 @@ export default React.createClass({
     }
   },
 
+  handleManagingConfigParameters(config) {
+    return {
+      configData: config
+    };
+  },
+
   handleDeletingSingleElement(element) {
     if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
       let newConfig = this.state.configData.getIn(['parameters', 'config', 'files']).delete(element);
@@ -447,7 +456,19 @@ export default React.createClass({
   },
 
   handleUploadingSingleElement(element) {
-    console.log('uploading: ', element);
+    if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
+      return {
+        parameters: {
+          config: {
+            files: [
+              this.state.configData.getIn(['parameters', 'config', 'files']).get(element).toJS()
+            ],
+            bucket: this.state.configData.getIn(['parameters', 'config', 'bucket']),
+            dropboxToken: this.state.configData.getIn(['parameters', 'config', 'dropboxToken'])
+          }
+        }
+      };
+    }
   },
 
   getDestinationName(fileName) {
