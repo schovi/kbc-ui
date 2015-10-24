@@ -327,7 +327,11 @@ export default React.createClass({
               component='ex-dropbox'
               disabled={!this.canRunUpload()}
               disabledReason='A Dropbox account must be authorized and some table selected.'
-            />
+              runParams={this.handleManagingConfigParameters.bind(this.state.configId)}
+              >
+            You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files']).count()} csv files</strong> from your Dropbox.
+            The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
+            </RunButtonModal>
           </li>
           <li>
             {this.renderResetAuthorization()}
@@ -347,7 +351,9 @@ export default React.createClass({
     );
   },
 
-
+  handleManagingConfigParameters(config) {
+    return config;
+  },
 
   renderBucketSelector() {
     if (this.state.hasCredentials) {
