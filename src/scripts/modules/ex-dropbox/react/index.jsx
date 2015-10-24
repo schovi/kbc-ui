@@ -180,7 +180,6 @@ export default React.createClass({
       // If some change in selection.
       // Return the local change.
       if (hasLocalConfigDataBucket) {
-        console.log('LocalConfigDataBucket: ', localConfigDataBucket);
         selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
       }
     }
@@ -189,13 +188,11 @@ export default React.createClass({
       // If no selection is made.
       // Return the configData information.
       if (!hasLocalConfigDataBucket) {
-        console.log('configDataBucket: ', configDataBucket);
         selectedInputBucket.push({label: configDataBucket, value: configDataBucket});
       }
       // The last condition handle the situation where a update of bucket selection is made.
       // Return the local change.
       else {
-        console.log('LocalConfigDataBucket: ', localConfigDataBucket);
         selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
       }
     }
@@ -439,18 +436,13 @@ export default React.createClass({
   handleDeletingSingleElement(element) {
     if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
       let newConfig = this.state.configData.getIn(['parameters', 'config', 'files']).delete(element);
-      this.updateParameters(newConfig);
+      this.updateAndSaveConfigData(['parameters', 'config', 'files'], newConfig);
     }
   },
 
   handleUploadingSingleElement(element) {
     console.log('uploading: ', element);
   },
-
-  getInputTables() {
-    return this.state.configData.getIn(['storage', 'input', 'tables']) || List();
-  },
-
 
   getDestinationName(fileName) {
     let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
