@@ -138,19 +138,12 @@ export default React.createClass({
 
     // Initial situation where no table is stored in configuration.
     if (configDataFiles.count() === 0) {
-      // No file is selected and stored in localState.
-      // Return an empty array.
-      if (!hasLocalConfigDataFiles) {
-        return selectedDropboxFiles;
-      }
       // Situation where files are selected, but the main config is still empty.
       // Return the selected files.
-      else {
+      if (hasLocalConfigDataFiles) {
         localConfigDataFiles.map((fileName) => {
           selectedDropboxFiles.push(fileName);
         });
-
-        return selectedDropboxFiles;
       }
     }
     // Else handle the situation where at least 1 file had been stored in configuration.
@@ -161,8 +154,6 @@ export default React.createClass({
         configDataFiles.map((fileName) => {
           selectedDropboxFiles.push({label: fileName, value: fileName});
         });
-
-        return selectedDropboxFiles;
       }
       // File selection was updated.
       // Return the information from the selection.
@@ -170,27 +161,8 @@ export default React.createClass({
         localConfigDataFiles.map((fileName) => {
           selectedDropboxFiles.push(fileName);
         });
-
-        return selectedDropboxFiles;
       }
     }
-
-
-
-
-
-    /*
-    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
-    if (!this.state.localState.get('selectedDropboxFiles')) {
-      // Check the config and store it to localState
-
-
-      return selectedDropboxFiles;
-    }
-    else {
-      return this.state.localState.get('selectedDropboxFiles');
-    }
-    */
 
     return selectedDropboxFiles;
   },
