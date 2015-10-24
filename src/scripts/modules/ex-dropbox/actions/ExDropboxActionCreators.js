@@ -1,11 +1,9 @@
 import _ from 'underscore';
-//import React from 'react';
 import DropboxApi from '../utils/api';
 import Dispatcher from '../../../Dispatcher';
-
+import { ActionTypes } from '../constants';
 
 export default {
-
   getListOfCsvFiles(token) {
     DropboxApi.getCsvFilesFromDropbox(token)
       .then((response) => {
@@ -16,7 +14,7 @@ export default {
         });
 
         return Dispatcher.handleViewAction({
-          type: 'update_list_of_csv_files',
+          type: ActionTypes.UPDATE_LIST_OF_CSV_FILES,
           data: files
         });
       });
