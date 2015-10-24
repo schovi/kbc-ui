@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import Select from 'react-select';
 
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import AuthorizeModal from './DropboxAuthorizeModal';
@@ -11,7 +10,6 @@ import DeleteConfigurationButton from '../../components/react/components/DeleteC
 import { ModalTrigger } from 'react-bootstrap';
 
 import actions from '../../components/InstalledComponentsActionCreators';
-
 
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
 import ExDropboxStore from '../stores/ExDropboxStore';
@@ -28,14 +26,10 @@ import ComponentsMetadata from '../../components/react/components/ComponentMetad
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
 
+
 const componentId = 'ex-dropbox';
 
-
 export default React.createClass({
-
-  displayName: 'exDropboxIndex',
-
-  defaultInputBucket: 'in.c-main.ExDropbox',
 
   mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore, StorageBucketsStore)],
 
@@ -73,10 +67,6 @@ export default React.createClass({
 
   componentDidMount() {
     if (this.state.hasCredentials) {
-
-      this.handleSelectionOfDefaultBucket(true);
-
-
       let data = this.state.credentials.get('data');
       let token = JSON.parse(data).access_token;
 
@@ -85,6 +75,211 @@ export default React.createClass({
       this.updateLocalState(['dropboxToken'], token);
     }
   },
+
+  render() {
+    return (
+      <div className="container-fluid">
+        {this.renderMainContent()}
+        {this.renderSideBar()}
+      </div>
+    );
+  },
+
+  renderMainContent() {
+    return (
+      <div className="col-md-9 kbc-main-content">
+        <div className="row">
+          <ComponentDescription
+            componentId={componentId}
+            configId={this.state.configId}
+          />
+        </div>
+        {this.renderFileSelectorModal()}
+        {this.renderConfigSummary()}
+        {this.renderDropboxLoginInformation()}
+      </div>
+    );
+  },
+
+  renderFileSelectorModal() {
+    if (this.state.hasCredentials) {
+      return (
+        <div className="row component-empty-state text-right">
+          <div>
+            <ModalTrigger modal={
+                <FileSelectorModal
+                  dropboxFiles={this.state.configData.getIn(['parameters', 'config', 'files']).toArray()}
+                  keboolaBuckets={this.getInputBuckets()}
+                  configId={this.state.configId}
+                  selectedCsvFiles={this.getSelectedCsvFiles}
+                  selectedInputBucket={this.getSelectedBucket}
+                  handleCsvSelectChange={this.handleCsvSelectChange}
+                  handleBucketChange={this.handleInputBucketChange}
+                  canSaveConfig={this.canSaveConfig}
+                  saveConfig={this.saveConfig}
+                  cancelConfig={this.cancelConfig}
+                />
+              }>
+              <span className="btn btn-success">Configure Input Files</span>
+            </ModalTrigger>
+          </div>
+        </div>
+      );
+    }
+  },
+
+  renderConfigSummary() {
+    if (this.state.hasCredentials && this.state.configData.getIn(['parameters', 'config', 'files'], List()).count() > 0) {
+      return (
+        <div className="section">
+          <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Source</th>
+              <th>Destination</th>
+              <th></th>
+            </tr>
+          </thead>
+            <tbody>
+            {
+              this.state.configData.getIn(['parameters', 'config', 'files'], List()).map((table, index) => {
+                var handleDeletingSingleElement = this.handleDeletingSingleElement.bind(this, index);
+                var handleUploadingSingleElement = this.handleUploadingSingleElement.bind(this, index);
+                var destinationFile = this.state.configData.getIn(['parameters', 'config', 'bucket']);
+                return (
+                  <tr key={index}>
+                      <td>{index + 1}.</td>
+                      <td>{table}</td>
+                      <td>{destinationFile}</td>
+                      <td className="text-right">
+                      <button className="btn btn-link" onClick={handleDeletingSingleElement}>
+                        <i className="fa kbc-icon-cup"></i>
+                      </button>
+                      <RunButtonModal
+                        title='Upload'
+                        icon='fa fa-upload fa-fw'
+                        mode='button'
+                        component='ex-dropbox'
+                        runParams={handleUploadingSingleElement}
+                        >
+                        You are about to run upload of <strong>1 csv file</strong> from your Dropbox.
+                        The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
+                      </RunButtonModal>
+                    </td>
+                  </tr>
+                );
+              })
+            }
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+  },
+
+  renderDropboxLoginInformation() {
+    if (!this.state.hasCredentials) {
+      return (
+        <div className="row component-empty-state text-center">
+          <div>
+            <p>No Dropbox account authorized!</p>
+            <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
+              <span className="btn btn-success"><i className="fa fa-fw fa-dropbox"></i>Authorize Dropbox Account</span>
+            </ModalTrigger>
+          </div>
+        </div>
+      );
+    }
+  },
+
+  getAuthorizationInformation() {
+    if (this.state.hasCredentials) {
+      return (
+        <strong>{this.state.credentials.get('description')}</strong>
+      );
+    }
+    else {
+      return (
+        <strong>not authorized</strong>
+      );
+    }
+  },
+
+  renderSideBar() {
+    var config = this.handleManagingConfigParameters.bind(this, this.state.configId);
+
+    return (
+      <div className='col-md-3 kbc-main-sidebar'>
+        <div className='kbc-buttons kbc-text-light'>
+          <p><span>Authorized for {this.getAuthorizationInformation()}</span></p>
+
+          <ComponentsMetadata componentId={componentId} configId={this.state.configId} />
+        </div>
+        <ul className='nav nav-stacked'>
+          <li className={classnames({disabled: !this.canRunUpload()})}>
+            <RunButtonModal
+              title='Upload selected tables'
+              icon='fa fa-fw fa-upload'
+              mode='link'
+              component='ex-dropbox'
+              disabled={!this.canRunUpload()}
+              disabledReason='A Dropbox account must be authorized and some table selected.'
+              runParams={config}
+              >
+            You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files']).count()} csv files</strong> from your Dropbox.
+            The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
+            </RunButtonModal>
+          </li>
+          <li>
+            {this.renderResetAuthorization()}
+          </li>
+          <li>
+            <DeleteConfigurationButton
+              componentId={componentId}
+              configId={this.state.configId}
+              customDeleteFn={this.deleteCredentials}
+            />
+          </li>
+          <li>
+            <LatestJobs jobs={this.state.latestJobs} />
+          </li>
+        </ul>
+      </div>
+    );
+  },
+
+  renderResetAuthorization() {
+    if (this.state.hasCredentials) {
+      let description = this.state.credentials.get('description');
+      return (
+        <ActivateDeactivateButton
+          mode='link'
+          activateTooltip=''
+          deactivateTooltip='Reset Authorization'
+          isActive={true}
+          isPending={this.state.isDeletingCredentials}
+          onChange={this.deleteCredentials}
+        >
+        <Confirm
+          text={`Do you really want to reset the authorization of ${description}? Tables configured to upload will not be reset.`}
+          title={`Reset Authorization ${description}`}
+          buttonLabel='Reset'
+          onConfirm={this.deleteCredentials}
+        />
+        </ActivateDeactivateButton>
+      );
+    }
+    else {
+      return (
+        <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
+          <span className="btn btn-link"><i className="fa fa-fw fa-user"></i>Authorize Dropbox Account</span>
+        </ModalTrigger>
+      );
+    }
+  },
+
+
 
   canSaveConfig() {
     var hasLocalConfigDataFiles = this.state.localState.has('selectedDropboxFiles');
@@ -200,248 +395,6 @@ export default React.createClass({
     return selectedInputBucket;
   },
 
-
-  handleCsvSelectChange(value, values) {
-    this.updateLocalState(['selectedDropboxFiles'], values);
-  },
-
-  handleInputBucketChange(value) {
-    this.updateLocalState(['selectedInputBucket'], value);
-  },
-
-  renderCSVPicker() {
-    if (this.state.hasCredentials) {
-      return (
-        <div className="section well">
-          <h3 className="section-heading">1. Please specify CSV files you want to upload to Keboola.</h3>
-
-          <Select
-            multi
-            value={this.getSelectedCsvFiles()}
-            placeholder="Select CSV files from Dropbox"
-            options={this.state.dropboxFiles.get('fileNames')}
-            onChange={this.handleCsvSelectChange}
-          />
-        </div>
-      );
-    }
-  },
-
-  renderFileSelectorModal() {
-    return (
-      <div className="row component-empty-state text-right">
-        <div>
-          <ModalTrigger modal={
-              <FileSelectorModal
-                dropboxFiles={this.state.dropboxFiles.get('fileNames')}
-                keboolaBuckets={this.getInputBuckets()}
-                configId={this.state.configId}
-                selectedCsvFiles={this.getSelectedCsvFiles}
-                selectedInputBucket={this.getSelectedBucket}
-                handleCsvSelectChange={this.handleCsvSelectChange}
-                handleBucketChange={this.handleInputBucketChange}
-                canSaveConfig={this.canSaveConfig}
-                saveConfig={this.saveConfig}
-                cancelConfig={this.cancelConfig}
-              />
-            }>
-            <span className="btn btn-success">Configure Input Files</span>
-          </ModalTrigger>
-        </div>
-      </div>
-    );
-  },
-
-  getInputBuckets() {
-    return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
-  },
-
-
-
-  extractValues(inputArray) {
-    var returnArray = [];
-
-    inputArray.map((value) => {
-      returnArray.push(value.label);
-    });
-
-    return returnArray;
-  },
-
-  cancelConfig() {
-    console.log('CANCELING CONFIGURATION!');
-  },
-
-  render() {
-    return (
-      <div className="container-fluid">
-        {this.renderMainContent()}
-        {this.renderSideBar()}
-      </div>
-    );
-  },
-
-  renderMainContent() {
-    return (
-      <div className="col-md-9 kbc-main-content">
-        <div className="row">
-          <ComponentDescription
-            componentId={componentId}
-            configId={this.state.configId}
-          />
-        </div>
-        {this.renderFileSelectorModal()}
-        {this.renderConfigSummary()}
-        {this.renderTablesByBucketsPanel()}
-      </div>
-    );
-  },
-
-  getAuthorizationInformation() {
-    if (this.state.hasCredentials) {
-      return (
-        <strong>{this.state.credentials.get('description')}</strong>
-      );
-    }
-    else {
-      return (
-        <strong>not authorized</strong>
-      );
-    }
-  },
-
-  renderSideBar() {
-    return (
-      <div className='col-md-3 kbc-main-sidebar'>
-        <div className='kbc-buttons kbc-text-light'>
-          <p><span>Authorized for {this.getAuthorizationInformation()}</span></p>
-
-          <ComponentsMetadata componentId={componentId} configId={this.state.configId} />
-        </div>
-        <ul className='nav nav-stacked'>
-          <li className={classnames({disabled: !this.canRunUpload()})}>
-            <RunButtonModal
-              title='Upload selected tables'
-              icon='fa fa-fw fa-upload'
-              mode='link'
-              component='ex-dropbox'
-              disabled={!this.canRunUpload()}
-              disabledReason='A Dropbox account must be authorized and some table selected.'
-              runParams={this.handleManagingConfigParameters.bind(this.state.configId)}
-              >
-            You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files']).count()} csv files</strong> from your Dropbox.
-            The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
-            </RunButtonModal>
-          </li>
-          <li>
-            {this.renderResetAuthorization()}
-          </li>
-          <li>
-            <DeleteConfigurationButton
-              componentId={componentId}
-              configId={this.state.configId}
-              customDeleteFn={this.deleteCredentials}
-            />
-          </li>
-          <li>
-            <LatestJobs jobs={this.state.latestJobs} />
-          </li>
-        </ul>
-      </div>
-    );
-  },
-
-  renderBucketSelector() {
-    if (this.state.hasCredentials) {
-      var inputBuckets = this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
-
-      return (
-        <div className="section well">
-          <h3 className="section-heading">2. Please specify a Keboola Storage Bucket where the files will be uploaded.</h3>
-
-          <label className="checkbox" style={{'marginLeft': '20px'}}>
-            <input type="checkbox" className="checkbox-control" checked={this.state.localState.get('isDefaultBucketSelected')} onChange={this.handleToggleOfSelectionOfDefaultBucket} />
-            <span className="checkbox-label">Use bucket: {this.defaultInputBucket} (default option)</span>
-          </label>
-
-          <p className="hint">The component for Bucket Selection below is disabled. Uncheck the option for usage of <strong>{this.defaultInputBucket}</strong> if you want to enable it.</p>
-
-          <Select
-            ref="stateSelect"
-            options={inputBuckets}
-            placeholder="Select a different Bucket from the Keboola Storage"
-            disabled={this.state.localState.get('isDefaultBucketSelected')}
-            value={this.state.selectedInputBucket.get('selectedInputBucket')}
-            onChange={this.handleInputBucketChange}
-            searchable={true} />
-        </div>
-      );
-    }
-  },
-
-  hasSelectedDropboxFiles() {
-    var selectedFiles = this.state.selectedDropboxFiles.get('selectedDropboxFiles');
-
-    if (typeof (selectedFiles) !== 'undefined') {
-      if (selectedFiles.length > 0) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-  },
-
-  renderConfigSummary() {
-    if (this.state.hasCredentials && this.state.configData.getIn(['parameters', 'config', 'files'], List()).count() > 0) {
-      return (
-        <div className="section">
-          <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Source</th>
-              <th>Destination</th>
-              <th></th>
-            </tr>
-          </thead>
-            <tbody>
-            {
-              this.state.configData.getIn(['parameters', 'config', 'files'], List()).map((table, index) => {
-                var handleDeletingSingleElement = this.handleDeletingSingleElement.bind(this, index);
-                var handleUploadingSingleElement = this.handleUploadingSingleElement.bind(this, index);
-                var destinationFile = this.state.configData.getIn(['parameters', 'config', 'bucket']);
-                return (
-                  <tr>
-                      <td>{index + 1}.</td>
-                      <td>{table}</td>
-                      <td>{destinationFile}</td>
-                      <td className="text-right">
-                      <button className="btn btn-link" onClick={handleDeletingSingleElement}>
-                        <i className="fa kbc-icon-cup"></i>
-                      </button>
-                      <RunButtonModal
-                        title='Upload'
-                        icon='fa fa-upload fa-fw'
-                        mode='button'
-                        component='ex-dropbox'
-                        runParams={handleUploadingSingleElement}
-                        >
-                        You are about to run upload of <strong>1 csv file</strong> from your Dropbox.
-                        The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
-                      </RunButtonModal>
-                    </td>
-                  </tr>
-                );
-              })
-            }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-  },
-
   handleManagingConfigParameters(config) {
     return {
       configData: config
@@ -471,26 +424,10 @@ export default React.createClass({
     }
   },
 
-  getDestinationName(fileName) {
-    let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
-    let defaultBucket = this.defaultInputBucket;
-
-    return `${defaultBucket}.${destinationFile}`;
-  },
-
-  handleToggleOfSelectionOfDefaultBucket() {
-    let isChecked = this.state.localState.get('isDefaultBucketSelected');
-
-    if (isChecked) {
-      this.handleSelectionOfDefaultBucket(!isChecked);
-    }
-    else {
-      this.handleSelectionOfDefaultBucket(!isChecked);
-    }
-  },
-
-  handleSelectionOfDefaultBucket(newValue) {
-    this.updateLocalState(['isDefaultBucketSelected'], newValue);
+  getBucketsForSelection(buckets) {
+    return buckets.map((bucketName) => {
+      return { value: bucketName, label: bucketName };
+    });
   },
 
   filterBuckets(buckets) {
@@ -511,62 +448,38 @@ export default React.createClass({
     return bucketNameList;
   },
 
-  getBucketsForSelection(buckets) {
-    return buckets.map((bucketName) => {
-      return { value: bucketName, label: bucketName };
+  getDestinationName(fileName) {
+    let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
+    let defaultBucket = this.defaultInputBucket;
+
+    return `${defaultBucket}.${destinationFile}`;
+  },
+
+  getInputBuckets() {
+    return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
+  },
+
+  extractValues(inputArray) {
+    var returnArray = [];
+
+    inputArray.map((value) => {
+      returnArray.push(value.label);
     });
+
+    return returnArray;
   },
 
-  renderTablesByBucketsPanel() {
-    if (this.state.hasCredentials) {
-      return (
-        <p></p>
-      );
-    }
-    else {
-      return (
-        <div className="row component-empty-state text-center">
-          <div>
-            <p>No Dropbox account authorized!</p>
-            <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
-              <span className="btn btn-success"><i className="fa fa-fw fa-dropbox"></i>Authorize Dropbox Account</span>
-            </ModalTrigger>
-          </div>
-        </div>
-      );
-    }
+  cancelConfig() {
+    console.log('CANCELING CONFIGURATION!');
   },
 
-  renderResetAuthorization() {
-    if (this.state.hasCredentials) {
-      let description = this.state.credentials.get('description');
-      return (
-        <ActivateDeactivateButton
-          mode='link'
-          activateTooltip=''
-          deactivateTooltip='Reset Authorization'
-          isActive='true'
-          isPending={this.state.isDeletingCredentials}
-          onChange={this.deleteCredentials}
-        >
-        <Confirm
-          text={`Do you really want to reset the authorization of ${description}? Tables configured to upload will not be reset.`}
-          title={`Reset Authorization ${description}`}
-          buttonLabel='Reset'
-          onConfirm={this.deleteCredentials}
-        />
-        </ActivateDeactivateButton>
-      );
-    }
-    else {
-      return (
-        <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
-          <span className="btn btn-link"><i className="fa fa-fw fa-user"></i>Authorize Dropbox Account</span>
-        </ModalTrigger>
-      );
-    }
+  handleCsvSelectChange(value, values) {
+    this.updateLocalState(['selectedDropboxFiles'], values);
   },
 
+  handleInputBucketChange(value) {
+    this.updateLocalState(['selectedInputBucket'], value);
+  },
 
   deleteCredentials() {
     OAuthActions.deleteCredentials(componentId, this.state.configId);
