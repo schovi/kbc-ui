@@ -9,11 +9,22 @@ export default React.createClass({
     onHide: React.PropTypes.func,
     canSaveConfig: React.PropTypes.func,
     saveConfig: React.PropTypes.func,
+    cancelConfig: React.PropTypes.func,
     selectedCsvFiles: React.PropTypes.func,
     selectedInputBucket: React.PropTypes.func,
     handleCsvSelectChange: React.PropTypes.func,
     handleBucketChange: React.PropTypes.func,
     keboolaBuckets: React.PropTypes.array
+  },
+
+  handleCancelFunction() {
+    this.props.cancelConfig();
+    this.props.onHide();
+  },
+
+  handleSaveFunction() {
+    this.props.saveConfig();
+    this.props.onHide();
   },
 
   render() {
@@ -50,14 +61,14 @@ export default React.createClass({
           <ButtonToolbar>
             <Button
               bgStyle='link'
-              onClick={this.props.onHide}>
+              onClick={this.handleCancelFunction}>
               Cancel
             </Button>
             <Button
               className="btn btn-success"
               bgStyle='success'
               disabled={this.props.canSaveConfig()}
-              onClick={this.props.saveConfig}>
+              onClick={this.handleSaveFunction}>
               Save
             </Button>
           </ButtonToolbar>

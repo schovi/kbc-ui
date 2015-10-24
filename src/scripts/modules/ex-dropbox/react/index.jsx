@@ -10,10 +10,12 @@ import DeleteConfigurationButton from '../../components/react/components/DeleteC
 
 import { ModalTrigger } from 'react-bootstrap';
 
+import actions from '../../components/InstalledComponentsActionCreators';
+
+
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
 import ExDropboxStore from '../stores/ExDropboxStore';
 import OAuthStore from '../../components/stores/OAuthStore';
-import InstalledComponentsActions from '../../components/InstalledComponentsActionCreators';
 import ExDropboxActions from '../actions/ExDropboxActionCreators';
 import OAuthActions from '../../components/OAuthActionCreators';
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
@@ -23,7 +25,7 @@ import StorageBucketsStore from '../../components/stores/StorageBucketsStore';
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import LatestJobs from '../../components/react/components/SidebarJobs';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
-import { Map, List } from 'immutable';
+import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
 
 const componentId = 'ex-dropbox';
@@ -71,6 +73,7 @@ export default React.createClass({
 
   componentDidMount() {
     if (this.state.hasCredentials) {
+
       this.handleSelectionOfDefaultBucket(true);
 
       let data = this.state.credentials.get('data');
@@ -80,6 +83,49 @@ export default React.createClass({
       StorageActionCreators.loadBucketsForce();
     }
 
+  },
+
+
+  getSelectedBucket() {
+    var selectedInputBucket = [];
+    var inputConfigBucket = this.state.configData.get('parameters');
+
+    // Checking whether the local state is not defined
+    if (!this.state.localState.get('selectedInputBucket')) {
+      // Check whether the config is set, if not, just return an empty array.
+
+      if (!inputConfigBucket) {
+        return selectedInputBucket;
+      }
+
+      if (!inputConfigBucket.get('bucket')) {
+        return selectedInputBucket;
+      }
+
+      selectedInputBucket.push({label: inputConfigBucket.get('bucket'), value: inputConfigBucket.get('bucket')});
+      return selectedInputBucket;
+    }
+    else {
+      return this.state.localState.get('selectedInputBucket');
+    }
+  },
+
+  getSelectedCsvFiles() {
+    var selectedDropboxFiles = [];
+    var inputConfigTables = this.state.configData.getIn(['parameters', 'config', 'files']);
+
+    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
+    if (!this.state.localState.get('selectedDropboxFiles')) {
+      // Check the config and store it to localState
+      inputConfigTables.map((fileName) => {
+        selectedDropboxFiles.push({label: fileName, value: fileName});
+      });
+
+      return selectedDropboxFiles;
+    }
+    else {
+      return this.state.localState.get('selectedDropboxFiles');
+    }
   },
 
   renderCSVPicker() {
@@ -115,6 +161,7 @@ export default React.createClass({
                 handleBucketChange={this.handleInputBucketChange}
                 canSaveConfig={this.canSaveConfig}
                 saveConfig={this.saveConfig}
+                cancelConfig={this.cancelConfig}
               />
             }>
             <span className="btn btn-success">Configure Input Files</span>
@@ -128,88 +175,72 @@ export default React.createClass({
     return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
   },
 
-  getSelectedCsvFiles() {
-    var selectedDropboxFiles = [];
-    var inputConfigTables = this.getInputTables();
-
-    // Check whether the local state for selected dropbox files contain any data. We might populate it with actual config.
-    if (!this.state.localState.get('selectedDropboxFiles')) {
-      // Check the config and store it to localState
-      inputConfigTables.map((table) => {
-        selectedDropboxFiles.push({label: table.get('source'), value: table.get('source')});
-      });
-
-      return selectedDropboxFiles;
-    }
-    else {
-      return this.state.localState.get('selectedDropboxFiles');
-    }
-  },
-
   canRunUpload() {
     return (this.getInputTables().count() > 0) && this.state.hasCredentials;
   },
 
   canSaveConfig() {
-    var parameters = this.state.configData.get('parameters');
-    var selectedDropboxFiles = this.state.localState.get('selectedDropboxFiles');
-    var selectedLocalBucket = this.state.localState.get('selectedInputBucket');
-    var selectedConfigBucket = parameters ? parameters.get('bucket') : null;
+    var isLocalBucketSet = this.state.localState.has('selectedInputBucket');
+    //var isLocalDropboxSet = this.state.localState.get('selectedDropboxFiles'); // MAKE SURE THERE WON'T BE A SITUATION WHERE EMPTY LIST APPEAR
+    var selectedDropboxFiles = this.state.configData.getIn(['parameters', 'config', 'files'], List());
+    var hasSelectedConfigBucket = this.state.configData.hasIn(['parameters', 'config', 'bucket']);
 
     // We can save new config whether user changed files selection.
     // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
-    if (typeof selectedDropboxFiles !== 'undefined' && ( selectedLocalBucket || selectedConfigBucket )) {
-      return true;
+    if (selectedDropboxFiles.count() > 0 && ( isLocalBucketSet || hasSelectedConfigBucket )) {
+      return false;
     }
     else {
-      return false;
+      return true;
     }
   },
 
   saveConfig() {
     // MAKE SURE TO DEFINE CLEANING OF THE LOCAL STATES FOR TABLES AND BUCKETS
 
-    console.log('SAVING CONFIGURATION!');
+    let newData = this.state.configData
+      .setIn(['parameters', 'config', 'bucket'], this.state.localState.get('selectedInputBucket'))
+      .setIn(['parameters', 'config', 'files'], List(fromJS(this.extractValues(this.state.localState.get('selectedDropboxFiles')))));
+
+    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
+
+
+    // let bucketToSave = Map({bucket: this.state.localState.get('selectedInputBucket')});
+    // this.updateParameters(bucketToSave);
+
+    //let tablesToSave = Map(List(fromJS(['/file.csv'])));
+    //this.updateParameters(tablesToSave);
+
+    //console.log('GET INPUT TABLES: ', this.getInputTables());
+  },
+
+  extractValues(inputArray) {
+    var returnArray = [];
+
+    inputArray.map((value) => {
+      returnArray.push(value.label);
+    });
+
+    return returnArray;
+  },
+
+  updateParameters(newParameters) {
+    this.updateAndSaveConfigData(['parameters'], newParameters);
   },
 
   cancelConfig() {
-
-
+    console.log('CANCELING CONFIGURATION!');
   },
 
-  getSelectedBucket() {
-    var selectedInputBucket = [];
-    var inputConfigBucket = this.state.configData.get('parameters');
 
-    // Checking whether the local state is not defined
-    if (!this.state.localState.get('selectedInputBucket')) {
-      // Check whether the config is set, if not, just return an empty array.
-
-      if (!inputConfigBucket) {
-        return selectedInputBucket;
-      }
-
-      if (!inputConfigBucket.get('bucket')) {
-        return selectedInputBucket;
-      }
-
-      selectedInputBucket.push({label: inputConfigBucket.get('bucket'), value: inputConfigBucket.get('bucket')});
-      return selectedInputBucket;
-    }
-    else {
-      return this.state.localState.get('selectedInputBucket');
-    }
-  },
 
 
   handleInputBucketChange(value) {
-    //let selectedObject = this.state.localState.set('selectedInputBucket', value);
     this.updateLocalState(['selectedInputBucket'], value);
   },
 
 
   handleCsvSelectChange(value, values) {
-    //let selectedObjects = this.state.localState.set('selectedDropboxFiles', values);
     this.updateLocalState(['selectedDropboxFiles'], values);
   },
 
@@ -332,8 +363,7 @@ export default React.createClass({
   },
 
   renderConfigSummary() {
-    if (this.state.hasCredentials && this.getInputTables().size > 0) {
-
+    if (this.state.hasCredentials && this.state.configData.getIn(['parameters', 'config', 'files'], List()).count() > 0) {
       return (
         <div className="section">
           <table className="table table-striped">
@@ -347,17 +377,20 @@ export default React.createClass({
           </thead>
             <tbody>
             {
-              this.getInputTables().map((table, index) => {
+              this.state.configData.getIn(['parameters', 'config', 'files'], List()).map((table, index) => {
+                var handleDeletingSingleElement = this.handleDeletingSingleElement.bind(this, index);
+                var handleUploadingSingleElement = this.handleUploadingSingleElement.bind(this, index);
+                var destinationFile = this.state.configData.getIn(['parameters', 'config', 'bucket']);
                 return (
                   <tr>
                       <td>{index + 1}.</td>
-                      <td>{table.get('source')}</td>
-                      <td>{table.get('destination')}</td>
+                      <td>{table}</td>
+                      <td>{destinationFile}</td>
                       <td className="text-right">
-                      <button className="btn btn-link" onClick={this.handleDeletingSingleElement}>
+                      <button className="btn btn-link" onClick={handleDeletingSingleElement}>
                         <i className="fa kbc-icon-cup"></i>
                       </button>
-                      <button className="btn btn-link">
+                      <button className="btn btn-link" onClick={handleUploadingSingleElement}>
                         <span className="fa fa-upload fa-fw"></span>
                       </button>
                     </td>
@@ -372,8 +405,15 @@ export default React.createClass({
     }
   },
 
-  handleDeletingSingleElement() {
-    console.log('test');
+  handleDeletingSingleElement(element) {
+    if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
+      let newConfig = this.state.configData.getIn(['parameters', 'config', 'files']).delete(element);
+      this.updateParameters(newConfig);
+    }
+  },
+
+  handleUploadingSingleElement(element) {
+    console.log('uploading: ', element);
   },
 
   getInputTables() {
@@ -382,11 +422,7 @@ export default React.createClass({
 
   updateAndSaveConfigData(path, data) {
     let newData = this.state.configData.setIn(path, data);
-    return InstalledComponentsActions.saveComponentConfigData(componentId, this.state.configId, newData);
-  },
-
-  updateParameters(newParameters) {
-    this.updateAndSaveConfigData(['parameters'], newParameters);
+    return actions.saveComponentConfigData(componentId, this.state.configId, newData);
   },
 
   getDestinationName(fileName) {
@@ -494,7 +530,7 @@ export default React.createClass({
 
   updateLocalState(path, data) {
     let newLocalState = this.state.localState.setIn(path, data);
-    InstalledComponentsActions.updateLocalState(componentId, this.state.configId, newLocalState);
+    actions.updateLocalState(componentId, this.state.configId, newLocalState);
   }
 
 });
