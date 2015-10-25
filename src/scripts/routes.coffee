@@ -12,7 +12,7 @@ applications = require './modules/applications/Routes'
 
 StorageActionCreators = require './modules/components/StorageActionCreators'
 
-ProjectExport = require './modules/project-export/Index'
+DataTakeout = require './modules/data-takeout/Index'
 
 
 # Custom routing configuration object
@@ -37,9 +37,9 @@ routes =
     ,
       transformationsRoutes
     ,
-      name: 'project-export'
-      title: 'Project Export'
-      defaultRouteHandler: ProjectExport
+      name: 'data-takeout'
+      title: 'Data Takeout'
+      defaultRouteHandler: DataTakeout
 
   ]
 
