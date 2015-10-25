@@ -5,8 +5,9 @@ import { Button, ButtonToolbar, Modal} from 'react-bootstrap';
 export default React.createClass({
 
   propTypes: {
+    onHide: React.PropTypes.func.isRequired,
+    show: React.PropTypes.bool.isRequired,
     dropboxFiles: React.PropTypes.array,
-    onHide: React.PropTypes.func,
     canSaveConfig: React.PropTypes.func,
     saveConfig: React.PropTypes.func,
     cancelConfig: React.PropTypes.func,
@@ -29,8 +30,8 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal>
-        <Modal.Header>
+      <Modal show={this.props.show} onHide={this.props.onHide}>
+        <Modal.Header closeButton>
           <Modal.Title>Dropbox file selector</Modal.Title>
         </Modal.Header>
         <Modal.Body>

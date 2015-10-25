@@ -1,12 +1,12 @@
 import React from 'react';
-import classnames from 'classnames';
 
-import ComponentDescription from '../../components/react/components/ComponentDescription';
-import AuthorizeModal from './DropboxAuthorizeModal';
+import AuthorizationModal from './DropboxAuthorizationModal';
 import FileSelectorModal from './DropboxFileSelectorModal';
 import RunButtonModal from '../../components/react/components/RunComponentButton';
-import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 
+import classnames from 'classnames';
+import ComponentDescription from '../../components/react/components/ComponentDescription';
+import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import { ModalTrigger } from 'react-bootstrap';
 
 import actions from '../../components/InstalledComponentsActionCreators';
@@ -65,6 +65,37 @@ export default React.createClass({
     };
   },
 
+  getInitialState() {
+    return {
+      showAuthorizationModal: false,
+      showFileSelectorModal: false
+    };
+  },
+
+  openAuthorizationModal() {
+    this.setState({
+      showAuthorizationModal: true
+    });
+  },
+
+  closeAuthorizationModal() {
+    this.setState({
+      showAuthorizationModal: false
+    });
+  },
+
+  openFileSelectorModal() {
+    this.setState({
+      showFileSelectorModal: true
+    });
+  },
+
+  closeFileSelectorModal() {
+    this.setState({
+      showFileSelectorModal: false
+    });
+  },
+
   componentDidMount() {
     if (this.state.hasCredentials) {
       let data = this.state.credentials.get('data');
@@ -106,22 +137,23 @@ export default React.createClass({
       return (
         <div className="row component-empty-state text-right">
           <div>
-            <ModalTrigger modal={
-                <FileSelectorModal
-                  dropboxFiles={this.state.configData.getIn(['parameters', 'config', 'files']).toArray()}
-                  keboolaBuckets={this.getInputBuckets()}
-                  configId={this.state.configId}
-                  selectedCsvFiles={this.getSelectedCsvFiles}
-                  selectedInputBucket={this.getSelectedBucket}
-                  handleCsvSelectChange={this.handleCsvSelectChange}
-                  handleBucketChange={this.handleInputBucketChange}
-                  canSaveConfig={this.canSaveConfig}
-                  saveConfig={this.saveConfig}
-                  cancelConfig={this.cancelConfig}
-                />
-              }>
+            <a onClick={this.openFileSelectorModal}>
               <span className="btn btn-success">Configure Input Files</span>
-            </ModalTrigger>
+            </a>
+            <FileSelectorModal
+              show={this.state.showFileSelectorModal}
+              onHide={this.closeFileSelectorModal}
+              dropboxFiles={this.state.configData.getIn(['parameters', 'config', 'files']).toArray()}
+              keboolaBuckets={this.getInputBuckets()}
+              configId={this.state.configId}
+              selectedCsvFiles={this.getSelectedCsvFiles}
+              selectedInputBucket={this.getSelectedBucket}
+              handleCsvSelectChange={this.handleCsvSelectChange}
+              handleBucketChange={this.handleInputBucketChange}
+              canSaveConfig={this.canSaveConfig}
+              saveConfig={this.saveConfig}
+              cancelConfig={this.cancelConfig}
+            />
           </div>
         </div>
       );
@@ -184,7 +216,7 @@ export default React.createClass({
         <div className="row component-empty-state text-center">
           <div>
             <p>No Dropbox account authorized!</p>
-            <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
+            <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
               <span className="btn btn-success"><i className="fa fa-fw fa-dropbox"></i>Authorize Dropbox Account</span>
             </ModalTrigger>
           </div>
@@ -272,7 +304,7 @@ export default React.createClass({
     }
     else {
       return (
-        <ModalTrigger modal={<AuthorizeModal configId={this.state.configId} />}>
+        <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
           <span className="btn btn-link"><i className="fa fa-fw fa-user"></i>Authorize Dropbox Account</span>
         </ModalTrigger>
       );
