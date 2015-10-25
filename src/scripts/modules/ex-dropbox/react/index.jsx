@@ -26,6 +26,14 @@ import ComponentsMetadata from '../../components/react/components/ComponentMetad
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
 
+import {
+  getBucketsForSelection,
+  getDestinationName,
+  listBucketNames,
+  filterBuckets,
+  extractValues
+} from '../actions/ApplicationActions';
+
 
 const componentId = 'ex-dropbox';
 
@@ -183,7 +191,7 @@ export default React.createClass({
                   <tr key={index}>
                       <td>{index + 1}.</td>
                       <td>{table}</td>
-                      <td>{destinationFile}</td>
+                      <td>{destinationFile}.{getDestinationName(table)}</td>
                       <td className="text-right">
                       <button className="btn btn-link" onClick={handleDeletingSingleElement}>
                         <i className="fa kbc-icon-cup"></i>
@@ -239,8 +247,6 @@ export default React.createClass({
   },
 
   renderSideBar() {
-    var config = this.handleManagingConfigParameters.bind(this, this.state.configId);
-
     return (
       <div className='col-md-3 kbc-main-sidebar'>
         <div className='kbc-buttons kbc-text-light'>
@@ -257,7 +263,7 @@ export default React.createClass({
               component='ex-dropbox'
               disabled={!this.canRunUpload()}
               disabledReason='A Dropbox account must be authorized and some table selected.'
-              runParams={config}
+              runParams={() => ({config: this.state.configId})}
               >
             You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files']).count()} csv files</strong> from your Dropbox.
             The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
@@ -342,7 +348,7 @@ export default React.createClass({
 
   saveConfig() {
     var bucketData = this.state.localState.has('selectedInputBucket') ? this.state.localState.get('selectedInputBucket') : this.state.configData.getIn(['parameters', 'config', 'bucket']);
-    var filesData = this.state.localState.has('selectedDropboxFiles') ? List(fromJS(this.extractValues(this.state.localState.get('selectedDropboxFiles')))) : this.state.configData.getIn(['parameters', 'config', 'files']);
+    var filesData = this.state.localState.has('selectedDropboxFiles') ? List(fromJS(extractValues(this.state.localState.get('selectedDropboxFiles')))) : this.state.configData.getIn(['parameters', 'config', 'files']);
 
     var newData = Map()
       .setIn(['parameters', 'config', 'bucket'], bucketData)
@@ -427,12 +433,6 @@ export default React.createClass({
     return selectedInputBucket;
   },
 
-  handleManagingConfigParameters(config) {
-    return {
-      configData: config
-    };
-  },
-
   handleDeletingSingleElement(element) {
     if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
       let newConfig = this.state.configData.getIn(['parameters', 'config', 'files']).delete(element);
@@ -446,63 +446,18 @@ export default React.createClass({
         parameters: {
           config: {
             files: [
-              this.state.configData.getIn(['parameters', 'config', 'files']).get(element).toJS()
+              this.state.configData.getIn(['parameters', 'config', 'files']).get(element)
             ],
             bucket: this.state.configData.getIn(['parameters', 'config', 'bucket']),
-            dropboxToken: this.state.configData.getIn(['parameters', 'config', 'dropboxToken'])
+            credentials: this.state.configData.getIn(['parameters', 'config', 'credentials'])
           }
         }
       };
     }
   },
 
-  getBucketsForSelection(buckets) {
-    return buckets.map((bucketName) => {
-      return { value: bucketName, label: bucketName };
-    });
-  },
-
-  filterBuckets(buckets) {
-    let inputBuckets = buckets.filter((bucket) => {
-      return bucket.get('stage') === 'in';
-    });
-
-    return inputBuckets;
-  },
-
-  listBucketNames(buckets) {
-    var bucketNameList = [];
-
-    buckets.map((bucketObject, bucketId) => {
-      bucketNameList.push(bucketId);
-    });
-
-    return bucketNameList;
-  },
-
-  getDestinationName(fileName) {
-    let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
-    let defaultBucket = this.defaultInputBucket;
-
-    return `${defaultBucket}.${destinationFile}`;
-  },
-
   getInputBuckets() {
-    return this.getBucketsForSelection(this.listBucketNames(this.filterBuckets(this.state.keboolaBuckets)));
-  },
-
-  extractValues(inputArray) {
-    var returnArray = [];
-
-    inputArray.map((value) => {
-      returnArray.push(value.label);
-    });
-
-    return returnArray;
-  },
-
-  cancelConfig() {
-    console.log('CANCELING CONFIGURATION!');
+    return getBucketsForSelection(listBucketNames(filterBuckets(this.state.keboolaBuckets)));
   },
 
   handleCsvSelectChange(value, values) {
@@ -520,6 +475,9 @@ export default React.createClass({
   updateLocalState(path, data) {
     let newLocalState = this.state.localState.setIn(path, data);
     actions.updateLocalState(componentId, this.state.configId, newLocalState);
-  }
+  },
 
+  cancelConfig() {
+    console.log('CANCELING CONFIGURATION!');
+  }
 });
