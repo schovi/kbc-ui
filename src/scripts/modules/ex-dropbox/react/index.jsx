@@ -143,7 +143,7 @@ export default React.createClass({
             <FileSelectorModal
               show={this.state.showFileSelectorModal}
               onHide={this.closeFileSelectorModal}
-              dropboxFiles={this.state.configData.getIn(['parameters', 'config', 'files']).toArray()}
+              dropboxFiles={this.state.dropboxFiles.get('fileNames')}
               keboolaBuckets={this.getInputBuckets()}
               configId={this.state.configId}
               selectedCsvFiles={this.getSelectedCsvFiles}
