@@ -8,7 +8,7 @@ import createStoreMixin from '../../react/mixins/createStoreMixin';
 import InstalledComponentsStore from '../components/stores/InstalledComponentsStore';
 
 
-const COMPONENT_ID = 'kbc-project-backup',
+const COMPONENT_ID = 'kbc-project-takeout',
   CONFIG_ID = '.new-tmp-config';
 
 export default React.createClass({
