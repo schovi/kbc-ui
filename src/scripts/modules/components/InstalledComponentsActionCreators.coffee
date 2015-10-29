@@ -265,18 +265,22 @@ module.exports =
       field: field
 
   saveConfigurationEdit: (componentId, configurationId, field) ->
-    newValue = InstalledComponentsStore.getEditingConfig(componentId, configurationId, field)
-
     dispatcher.handleViewAction
       type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_START
       componentId: componentId
       configurationId: configurationId
       field: field
 
-    data = {}
-    data[field] = newValue
+    newValue = InstalledComponentsStore.getEditingConfig(componentId, configurationId, field)
+    if (field == 'configuration')
+      data = newValue
+      calledFunction = storeEncodedConfig
+    else
+      data = {}
+      data[field] = newValue
+      calledFunction = installedComponentsApi.updateComponentConfiguration
 
-    storeEncodedConfig componentId, configurationId, data
+    calledFunction(componentId, configurationId, data)
     .then (response) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_SUCCESS
