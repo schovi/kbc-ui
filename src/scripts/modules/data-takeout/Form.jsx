@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Input, Button} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
-import {Map} from 'immutable';
+import {OrderedMap} from 'immutable';
 
 export default React.createClass({
   propTypes: {
@@ -85,7 +85,7 @@ export default React.createClass({
   },
 
   regionOptions() {
-    const regions = Map({
+    const regions = OrderedMap({
       'us-east-1': 'US Standard (N. Virginia)',
       'us-west-2': 'US West (Oregon)',
       'us-west-1': 'US West (N. California)',
@@ -97,7 +97,7 @@ export default React.createClass({
       'sa-east-1': 'South America (Sao Paulo)'
     });
     return regions.map((regionName, regionValue) => {
-      return <option value={regionValue}>{regionName}</option>;
+      return <option value={regionValue} key={regionValue}>{regionName}</option>;
     });
   },
 
