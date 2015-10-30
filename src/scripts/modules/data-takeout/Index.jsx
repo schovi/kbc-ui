@@ -19,6 +19,7 @@ export default React.createClass({
     const defaultParameters = Map({
       awsAccessKeyId: '',
       '#awsSecretAccessKey': '',
+      s3region: 'us-east-1',
       s3bucket: '',
       s3path: '',
       onlyStructure: false
@@ -62,6 +63,11 @@ export default React.createClass({
               <li>All table data exported to gzipped CSV files</li>
               <li>All component configurations</li>
             </ul>
+            <p>
+              <a href="http://wiki.keboola.com/home/keboola-connection/user-space/kbc-generic/how-to-backup-project" target="_blank">
+                Read more in Data Takeout documentation
+              </a>
+            </p>
           </div>
           <div className="row">
             <Form
