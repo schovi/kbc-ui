@@ -15,11 +15,10 @@ module.exports =
     )
 
   getWriter: (configurationId) ->
-    createRequest('GET', "writers")
-    .query config: configurationId
+    createRequest('GET', "v2/" + configurationId + "?include=project,project.ssoLink")
     .promise()
     .then((response) ->
-      response.body.writer
+      response.body
     )
 
   getWriterModel: (configurationId) ->
@@ -157,3 +156,18 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+
+  enableProjectAccess: (configurationId, pid) ->
+    createRequest('POST', "v2/" + configurationId + "/projects/" + pid + "/access")
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  disableProjectAccess: (configurationId, pid) ->
+    createRequest('DELETE', "v2/" + configurationId + "/projects/" + pid + "/access")
+    .promise()
+    .then((response) ->
+      response.body
+    )

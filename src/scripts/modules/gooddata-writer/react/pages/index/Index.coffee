@@ -85,14 +85,6 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-tasks fa-fw'
               ' Jobs Queue'
-          if writer.getIn(['gd', 'pid']) && !writer.get('toDelete')
-            li null,
-              a
-                href: "https://secure.gooddata.com/#s=/gdc/projects/#{writer.getIn(['gd', 'pid'])}|dataPage|"
-                target: '_blank'
-              ,
-                span className: 'fa fa-bar-chart-o fa-fw'
-                ' GoodData Project'
           li null,
             React.createElement Confirm,
               text: 'Upload project'
@@ -115,19 +107,33 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
+
+        ul className: 'nav nav-stacked',
+          if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+            li null,
+              a
+                href: writer.getIn(['project', 'ssoLink'])
+                target: '_blank'
+              ,
+                span className: 'fa fa-bar-chart-o fa-fw'
+                ' GoodData Project'
           li null,
-            React.createElement Confirm,
-              title: 'Delete Writer'
-              text: "Are you sure you want to delete writer with its GoodData project?"
-              buttonLabel: 'Delete'
-              onConfirm: @_handleProjectDelete
-            ,
-              a null,
-                if @state.writer.get 'isDeleting'
-                  React.createElement Loader, className: 'fa-fw'
-                else
-                  span className: 'kbc-icon-cup fa-fw'
-                ' Delete Writer'
+            if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+              React.createElement Loader, className: 'fa-fw kbc-loader'
+            if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+              a
+                onClick: @_handleProjectAccessDisable
+              ,
+                span className: 'fa fa-unlink fa-fw'
+                ' Disable Access to Project'
+            if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+              a
+                onClick: @_handleProjectAccessEnable
+              ,
+                span className: 'fa fa-link fa-fw'
+                ' Enable Access to Project'
+
+        ul className: 'nav nav-stacked',
           li null,
             if @state.writer.get 'isOptimizingSLI'
               span null,
@@ -166,6 +172,19 @@ module.exports = React.createClass
                 ,
                   a null,
                     'Reset Project'
+          li null,
+            React.createElement Confirm,
+              title: 'Delete Writer'
+              text: "Are you sure you want to delete writer with its GoodData project?"
+              buttonLabel: 'Delete'
+              onConfirm: @_handleProjectDelete
+            ,
+              a null,
+                if @state.writer.get 'isDeleting'
+                  React.createElement Loader, className: 'fa-fw'
+                else
+                  span className: 'kbc-icon-cup fa-fw'
+                ' Delete Writer'
 
   _handleBucketSelect: (bucketId, e) ->
     e.preventDefault()
@@ -184,6 +203,14 @@ module.exports = React.createClass
 
   _handleProjectReset: ->
     actionCreators.resetProject(@state.writer.getIn ['config', 'id'])
+
+  _handleProjectAccessEnable: ->
+    actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']),
+      @state.writer.getIn(['config', 'project', 'id']))
+
+  _handleProjectAccessDisable: ->
+    actionCreators.disableProjectAccess(@state.writer.getIn(['config', 'id']),
+      @state.writer.getIn(['config', 'project', 'id']))
 
   _renderNotFound: ->
     div {className: 'table table-striped'},
