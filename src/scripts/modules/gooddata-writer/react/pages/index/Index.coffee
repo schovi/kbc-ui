@@ -118,19 +118,23 @@ module.exports = React.createClass
                 span className: 'fa fa-bar-chart-o fa-fw'
                 ' GoodData Project'
           li null,
-            if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-              React.createElement Loader, className: 'fa-fw kbc-loader'
             if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
               a
                 onClick: @_handleProjectAccessDisable
               ,
-                span className: 'fa fa-unlink fa-fw'
+                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                  React.createElement Loader, className: 'fa-fw kbc-loader'
+                else
+                  span className: 'fa fa-unlink fa-fw'
                 ' Disable Access to Project'
             if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
               a
                 onClick: @_handleProjectAccessEnable
               ,
-                span className: 'fa fa-link fa-fw'
+                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                  React.createElement Loader, className: 'fa-fw kbc-loader'
+                else
+                  span className: 'fa fa-link fa-fw'
                 ' Enable Access to Project'
 
         ul className: 'nav nav-stacked',
