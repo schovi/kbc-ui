@@ -6,6 +6,7 @@ branches:
   - master
 install:
 - time npm install
+- npm list
 - git --version
 - git describe --tags
 - export KBC_REVISION=`git describe --tags`
