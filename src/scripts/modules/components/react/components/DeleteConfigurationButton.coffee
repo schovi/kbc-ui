@@ -4,7 +4,7 @@ InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-Confirm = require '../../../../react/common/Confirm'
+Confirm = require('../../../../react/common/Confirm').default
 {Loader} = require 'kbc-react-components'
 
 module.exports = React.createClass

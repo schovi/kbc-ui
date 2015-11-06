@@ -2,7 +2,7 @@ React = require 'react'
 CodeEditor  = React.createFactory(require('../../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input} = React.DOM
 editorMode = require '../../../editorMode'
 

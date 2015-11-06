@@ -7,7 +7,7 @@ immutableMixin = require '../../react/mixins/ImmutableRendererMixin'
 
 Link = React.createFactory(require('react-router').Link)
 RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator')
-ComponentIcon = React.createFactory(require '../common/ComponentIcon')
+ComponentIcon = React.createFactory(require('../common/ComponentIcon').default)
 ComponentNameEdit = React.createFactory(require '../../modules/components/react/components/ComponentName')
 
 {div, nav, span, a, h1} = React.DOM

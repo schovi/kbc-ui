@@ -18,7 +18,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 LatestJobs = React.createFactory(require '../../../../components/react/components/SidebarJobs')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 actionCreators = require '../../../exDbActionCreators'
 
 

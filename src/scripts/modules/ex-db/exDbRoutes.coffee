@@ -8,9 +8,9 @@ ExDbNewCredentialsPage = require('../ex-db/react/pages/credentials/NewCredential
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail'
 ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'
-ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryActionButtons'
+ExDbQueryHeaderButtons = require('../ex-db/react/components/QueryActionButtons').default
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
-ExDbNewCredentialsHeaderButtons = require '../ex-db/react/components/NewCredentialsHeaderButtons'
+ExDbNewCredentialsHeaderButtons = require('../ex-db/react/components/NewCredentialsHeaderButtons').default
 ExDbQueryName = require './react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'

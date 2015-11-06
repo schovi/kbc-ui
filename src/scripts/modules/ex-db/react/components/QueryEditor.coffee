@@ -5,7 +5,7 @@ CodeEditor  = React.createFactory(require('../../../../react/common/common').Cod
 Check = React.createFactory(require('../../../../react/common/common').Check)
 
 Autosuggest = React.createFactory(require 'react-autosuggest')
-editorMode = require '../../editorMode'
+editorMode = require('../../editorMode').default
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label} = React.DOM
 

@@ -5,8 +5,8 @@ Link = React.createFactory(require('react-router').Link)
 Check = React.createFactory(require('kbc-react-components').Check)
 QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-SapiTableLinkEx = require '../../../../components/react/components/StorageApiTableLinkEx'
-ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+SapiTableLinkEx = require('../../../../components/react/components/StorageApiTableLinkEx').default
+ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 
 actionCreators = require '../../../exDbActionCreators'
 

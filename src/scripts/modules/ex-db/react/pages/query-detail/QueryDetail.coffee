@@ -10,7 +10,7 @@ ExDbActionCreators = require '../../../exDbActionCreators'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
-QueryNav = require './QueryNav'
+QueryNav = require('./QueryNav').default
 EditButtons = require '../../../../../react/common/EditButtons'
 
 
