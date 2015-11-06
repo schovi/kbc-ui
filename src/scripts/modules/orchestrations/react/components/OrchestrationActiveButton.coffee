@@ -1,7 +1,7 @@
 React = require 'react'
 OrchestrationActionCreators = require '../../ActionCreators'
 
-ActivateDeactivateButton = require '../../../../react/common/ActivateDeactivateButton'
+ActivateDeactivateButton = require('../../../../react/common/ActivateDeactivateButton').default
 
 {button, span, i} = React.DOM
 

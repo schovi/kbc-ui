@@ -1,7 +1,7 @@
 React = require 'react'
 {ComponentIcon, ComponentName} = require '../../../../../react/common/common'
 
-OrchestrationTaskRunButton = React.createFactory(require '../../components/OrchestrationTaskRunButton')
+OrchestrationTaskRunButton = React.createFactory(require('../../components/OrchestrationTaskRunButton').default)
 
 {Tree, Check} = require 'kbc-react-components'
 

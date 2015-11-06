@@ -11,7 +11,7 @@ numeral = require 'numeral'
 ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
-TableLinkEx = React.createFactory(require '../../../../components/react/components/StorageApiTableLinkEx')
+TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 OutputMappingDetail = React.createClass(
   displayName: 'InputMappingDetail'

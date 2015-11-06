@@ -4,7 +4,7 @@ ApplicationStore = require '../../stores/ApplicationStore'
 
 Header = React.createFactory(require '././Header')
 SidebarNavigation = React.createFactory(require '././SidebarNavigation')
-FloatingNotifications = require './FloatingNotifications'
+FloatingNotifications = require('./FloatingNotifications').default
 ErrorPage = React.createFactory(require './../pages/ErrorPage')
 LoadingPage = React.createFactory(require './../pages/LoadingPage')
 ProjectSelect = React.createFactory(require './project-select/ProjectSelect')

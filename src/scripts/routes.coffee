@@ -2,7 +2,7 @@ React = require 'react'
 Router = require 'react-router'
 App = require './react/layout/App'
 ErrorPage = require './react/pages/ErrorPage'
-Home = require './modules/home/react/Index'
+Home = require('./modules/home/react/Index').default
 
 componentsRoutes = require './modules/components/Routes'
 orchestrationsRoutes = require './modules/orchestrations/Routes'

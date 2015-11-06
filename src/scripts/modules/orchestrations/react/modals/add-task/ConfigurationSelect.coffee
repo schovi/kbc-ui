@@ -1,6 +1,6 @@
 React = require 'react'
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
-ComponentName = React.createFactory(require('../../../../../react/common/ComponentName'))
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
+ComponentName = React.createFactory(require('../../../../../react/common/ComponentName').default)
 
 {div, h2, a, ul, li, i, span} = React.DOM
 

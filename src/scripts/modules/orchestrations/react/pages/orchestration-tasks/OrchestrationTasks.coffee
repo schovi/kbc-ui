@@ -10,7 +10,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 # React components
 OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav')
-SearchRow = React.createFactory(require '../../../../../react/common/SearchRow')
+SearchRow = React.createFactory(require('../../../../../react/common/SearchRow').default)
 TasksTable = React.createFactory(require './TasksTable')
 TasksEditor = React.createFactory(require './TasksEditor')
 

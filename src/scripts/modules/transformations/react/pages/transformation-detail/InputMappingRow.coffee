@@ -6,7 +6,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
-InputMappingModal = require '../../modals/InputMapping'
+InputMappingModal = require('../../modals/InputMapping').default
 actionCreators = require '../../../ActionCreators'
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM

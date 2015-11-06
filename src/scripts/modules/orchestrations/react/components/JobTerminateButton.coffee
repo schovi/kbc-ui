@@ -3,7 +3,7 @@ createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 JobsStore = require('../../stores/OrchestrationJobsStore')
 ActionCreators = require('../../ActionCreators')
 RoutesStore = require('../../../../stores/RoutesStore')
-TerminateButton = require '../../../../react/common/JobTerminateButton'
+TerminateButton = require('../../../../react/common/JobTerminateButton').default
 
 {button, span} = React.DOM
 

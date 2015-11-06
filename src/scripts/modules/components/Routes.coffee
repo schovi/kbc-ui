@@ -1,8 +1,8 @@
 React = require 'react'
 
-injectProps = require './react/injectProps'
-ComponentsIndex = require './react/pages/ComponentsIndex'
-NewComponent = require './react/pages/NewComponent'
+injectProps = require('./react/injectProps').default
+ComponentsIndex = require('./react/pages/ComponentsIndex')
+NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
 
 
@@ -33,7 +33,8 @@ writer = injectProps(type: 'writer')
 application = injectProps(type: 'application')
 
 
-
+appIndex = application(ComponentsIndex)
+console.log 'app index', appIndex, ComponentsIndex
 routes =
 
   applications:
@@ -41,7 +42,7 @@ routes =
     title: 'Applications'
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
-    defaultRouteHandler: application(ComponentsIndex)
+    defaultRouteHandler: appIndex
     headerButtonsHandler: injectProps(
       text: 'New Application'
       to: 'new-application'

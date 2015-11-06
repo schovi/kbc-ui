@@ -1,7 +1,7 @@
 React = require 'react'
 ComponentsActionCreators = require '../../ComponentsActionCreators'
-ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
-SearchRow = React.createFactory(require '../../../../react/common/SearchRow')
+ComponentIcon = React.createFactory(require('../../../../react/common/ComponentIcon').default)
+SearchRow = React.createFactory(require('../../../../react/common/SearchRow').default)
 Link = React.createFactory(require('react-router').Link)
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM

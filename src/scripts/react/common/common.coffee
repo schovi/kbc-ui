@@ -1,17 +1,17 @@
 
 
 module.exports =
-  ComponentIcon: require './ComponentIcon'
-  ComponentName: require './ComponentName'
-  Confirm: require './Confirm'
+  ComponentIcon: require('./ComponentIcon').default
+  ComponentName: require('./ComponentName').default
+  Confirm: require('./Confirm').default
   Duration: require './Duration'
   DurationWithIcon: require './DurationWithIcon'
   FinishedWithIcon: require './FinishedWithIcon'
   JobStatusCircle: require './JobStatusCircle'
-  JobStatusLabel: require './JobStatusLabel'
-  SearchRow: require './SearchRow'
-  CodeEditor: require './CodeEditor'
-  Tooltip: require './Tooltip'
-  ActivateDeactivateButton: require './ActivateDeactivateButton'
-  FileSize: require './FileSize'
+  JobStatusLabel: require('./JobStatusLabel').default
+  SearchRow: require('./SearchRow').default
+  CodeEditor: require('./CodeEditor').default
+  Tooltip: require('./Tooltip').default
+  ActivateDeactivateButton: require('./ActivateDeactivateButton').default
+  FileSize: require('./FileSize').default
   GraphCanvas: require './GraphCanvas'

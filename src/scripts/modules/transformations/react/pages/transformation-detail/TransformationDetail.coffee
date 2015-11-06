@@ -13,12 +13,12 @@ StorageBucketsStore  = require('../../../../components/stores/StorageBucketsStor
 RoutesStore = require '../../../../../stores/RoutesStore'
 TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-CreateSandboxModal = require '../../modals/ConfigureSandbox'
+CreateSandboxModal = require('../../modals/ConfigureSandbox').default
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
-ConfigureSnowflakeConnection = React.createFactory(require './ConfigureSnowflakeConnection')
+ConfigureSnowflakeConnection = React.createFactory(require('./ConfigureSnowflakeConnection').default)
 
 {div, span, ul, li, a, em} = React.DOM
 

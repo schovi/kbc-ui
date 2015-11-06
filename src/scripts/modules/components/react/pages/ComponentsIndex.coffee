@@ -7,10 +7,7 @@ InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 ComponentsStore = require '../../stores/ComponentsStore'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 
-Link = React.createFactory require('react-router').Link
-ComponentConfigurationLink = React.createFactory require('../components/ComponentConfigurationLink')
-ComponentIcon = React.createFactory(require '../../../../react/common/ComponentIcon')
-ComponentRow = require './ComponentRow'
+ComponentRow = require('./ComponentRow').default
 
 NewComponentSelection = require '../components/NewComponentSelection'
 
@@ -43,6 +40,7 @@ module.exports = React.createClass
     filter: ComponentsStore.getFilter(@props.type)
 
   render: ->
+    console.log 'render comp'
     if @state.installedComponents.count()
       rows =  @state.installedComponents.map((component) ->
         React.createElement ComponentRow,

@@ -4,7 +4,7 @@ Router = require 'react-router'
 
 Link = React.createFactory(Router.Link)
 Duration = React.createFactory(require '../../../../../react/common/Duration')
-JobStatusLabel = React.createFactory(require '../../../../../react/common/JobStatusLabel')
+JobStatusLabel = React.createFactory(require('../../../../../react/common/JobStatusLabel').default)
 date = require '../../../../../utils/date'
 
 ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'

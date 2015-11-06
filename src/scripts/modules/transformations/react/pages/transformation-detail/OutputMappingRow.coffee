@@ -5,7 +5,7 @@ TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 {OverlayTrigger, Tooltip} = require 'react-bootstrap'
 DeleteButton = require '../../../../../react/common/DeleteButton'
-OutputMappingModal = require '../../modals/OutputMapping'
+OutputMappingModal = require('../../modals/OutputMapping').default
 actionCreators = require '../../../ActionCreators'
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM

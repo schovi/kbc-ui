@@ -4,7 +4,7 @@ OrchestrationsStore = require '../../stores/OrchestrationsStore'
 RoutesStore = require '../../../../stores/RoutesStore'
 OrchestrationActiveButton = React.createFactory(require './OrchestrationActiveButton')
 OrchestrationDeleteButton = React.createFactory(require './OrchestrationDeleteButton')
-OrchestrationRunButton = React.createFactory(require './OrchestrationRunButton')
+OrchestrationRunButton = React.createFactory(require('./OrchestrationRunButton').default)
 
 {button, span} = React.DOM
 
