@@ -36,7 +36,7 @@ export default React.createClass({
       isCopied: true
     });
     this.refs.overlay.show();
-    /*global setTimeout*/
+    /* global setTimeout */
     setTimeout(this.hideOverlay, 300);
   },
 

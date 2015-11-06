@@ -3,9 +3,9 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 export default React.createClass({
   propTypes: {
-      tooltip: PropTypes.string.isRequired,
-      children: PropTypes.any,
-      placement: PropTypes.string
+    tooltip: PropTypes.string.isRequired,
+    children: PropTypes.any,
+    placement: PropTypes.string
   },
 
   getDefaultProps() {

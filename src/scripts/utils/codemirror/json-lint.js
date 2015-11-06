@@ -3,7 +3,8 @@
 
 // Depends on jsonlint.js from https://github.com/zaach/jsonlint
 
-/*eslint no-empty:0 */
+/* eslint no-empty:0 */
+/* eslint new-cap:0 */
 
 import CodeMirror from 'codemirror';
 import parser from './parser';
@@ -18,7 +19,7 @@ CodeMirror.registerHelper('lint', 'json', function(text) {
   };
   try {
     parser.parse(text);
-  } catch(e) {
+  } catch (e) {
     // Do nothing
   }
   return found;

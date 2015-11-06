@@ -61,6 +61,7 @@ module.exports = function (options) {
         };
     }
 
+    console.log(path.resolve(__dirname, '../.eslintrc'));
 
     return {
         devtool: isDevelopment ? 'eval' : 'source-map',
@@ -89,7 +90,6 @@ module.exports = function (options) {
                     loader: "coffee-lint-loader",
                     exclude: /node_modules/
                 }
-
             ],
             loaders: [
                 {

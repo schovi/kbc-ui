@@ -32,7 +32,7 @@ export default React.createClass({
         lineWrapping={false}
         onChange={this.handleChange}
         readOnly={this.props.readOnly}
-        cursorHeight={parseInt(this.props.readOnly)}
+        cursorHeight={parseInt(this.props.readOnly, 10)}
         style={this.style()}
         />
     );
