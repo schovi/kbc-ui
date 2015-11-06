@@ -106,7 +106,6 @@ export default React.createClass({
   },
 
   handleChange(field, event) {
-    console.log('change', event, event.target.value);
     this.props.onChange(this.props.parameters.set(field, event.target.value));
   },
 

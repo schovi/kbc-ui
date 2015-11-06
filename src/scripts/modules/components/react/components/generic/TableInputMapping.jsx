@@ -78,7 +78,7 @@ export default React.createClass({
             expanded: component.props.openMappings.get('table-input-' + key, false),
             header: React.createElement('div',
               {
-                onClick: function () {
+                onClick: function() {
                   component.toggleMapping(key);
                 }
               }, React.createElement(Header,

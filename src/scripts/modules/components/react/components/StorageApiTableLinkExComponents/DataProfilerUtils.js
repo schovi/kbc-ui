@@ -12,7 +12,6 @@ const dataProfilerBucketPrefix = 'in.c-lg-rcp-data-profiler_';
 const unwantedJobs = ['terminating', 'canceled', 'terminated', 'cancelled', 'error'];
 
 export function getDataProfilerJob(jobId) {
-  console.log('JOBBB ID', jobId);
   return jobsApi.getJobDetail(jobId);
 }
 
@@ -39,12 +38,11 @@ export function fetchProfilerData(tableId) {
 
   return jobsApi.getJobsParametrized(jobQuery, 10, 0).then((jobs) =>{
     const resultsTableId = `${dataProfilerBucketPrefix}${profilerConfigId}.VAI__1`;
-    console.log('enhanced JOBS', jobs);
+
     // if table has analysis job than load its results
     if (!_.isEmpty(jobs)) {
       const okJob = _.find(jobs, j => j.status === 'success');
       const runningJob = _.find(jobs, j => j.status !== 'success');
-      console.log('PARSED JOBS', okJob, runningJob);
 
       return storageApi.exportTable(resultsTableId).then((data) =>{
         const analysis = {

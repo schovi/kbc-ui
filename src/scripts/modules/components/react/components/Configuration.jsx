@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
 
-/*global require */
+/* global require */
 require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({

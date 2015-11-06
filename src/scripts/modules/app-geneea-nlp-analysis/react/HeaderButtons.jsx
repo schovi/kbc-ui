@@ -13,10 +13,9 @@ const componentId = 'geneea-nlp-analysis';
 export default React.createClass({
 
   mixins: [createStoreMixin(InstalledComponentStore)],
-  getStateFromStores(){
+  getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
     const localState = InstalledComponentStore.getLocalState(componentId, configId);
-    //const configData = InstalledComponentStore.getConfigData(componentId, configId);
 
     return {
       localState: localState,
@@ -26,7 +25,7 @@ export default React.createClass({
     };
   },
 
-  render(){
+  render() {
     return (
       <EditButtons
          editLabel="Setup"
@@ -38,16 +37,5 @@ export default React.createClass({
          onEditStart={ () => actions.startEditing(this.state.configId)}/>
       );
   }
-
-
-
-
-  /* updateEditing(data){
-     this.updateLocalState(['editing'], data);
-     },
-
-     updateLocalState(path, data){
-     actions.updateLocalState(this.state.configId, path, data);
-     } */
 
 });

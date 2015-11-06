@@ -13,7 +13,8 @@ export default React.createClass({
     buckets: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onRequestHide: PropTypes.func.isRequired
   },
 
   isValid() {

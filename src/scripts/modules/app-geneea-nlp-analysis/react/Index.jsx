@@ -11,7 +11,6 @@ import SapiTableLinkEx from '../../components/react/components/StorageApiTableLi
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
 const StaticText = FormControls.Static;
-//import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
 import {params,
   getInTable,
   updateLocalState,
@@ -26,7 +25,6 @@ import InstalledComponentStore from '../../components/stores/InstalledComponents
 import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 import storageTablesStore from '../../components/stores/StorageTablesStore';
 
-//import EmptyState from '../../components/react/components/ComponentEmptyState';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../components/react/components/RunComponentButton';
@@ -41,7 +39,7 @@ const componentId = 'geneea-nlp-analysis';
 export default React.createClass({
   mixins: [createStoreMixin(storageTablesStore, InstalledComponentStore, LatestJobsStore)],
 
-  getStateFromStores(){
+  getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
     const localState = InstalledComponentStore.getLocalState(componentId, configId);
     const configData = InstalledComponentStore.getConfigData(componentId, configId);
@@ -49,7 +47,6 @@ export default React.createClass({
     const intable = getInTable(configId);
     const parameters = configData.get('parameters', Map());
 
-    console.log('CONFIG DATA', localState.toJS(), configData.toJS());
     return {
       configId: configId,
       localState: localState,
@@ -62,23 +59,22 @@ export default React.createClass({
     };
   },
 
-  componentDidMount(){
+  componentDidMount() {
     let data = this.state.configData;
     if (data) {
       data = data.toJS();
     }
 
-    if (_.isEmpty(data)){
+    if (_.isEmpty(data)) {
       startEditing(this.state.configId);
     }
-
   },
 
-  parameter(key, defaultValue){
+  parameter(key, defaultValue) {
     return this.state.parameters.get(key, defaultValue);
   },
 
-  render(){
+  render() {
     return (
       <div className="container-fluid">
         <div className="col-md-9 kbc-main-content">
@@ -127,7 +123,7 @@ export default React.createClass({
     );
   },
 
-  renderEditing(){
+  renderEditing() {
     const intableChange = (value) => {
       this.updateEditingValue('intable', value);
       this.updateEditingValue(params.DATACOLUMN, '');
@@ -167,7 +163,7 @@ export default React.createClass({
     );
   },
 
-  renderAnalysisTypesSelect(){
+  renderAnalysisTypesSelect() {
     const selectedTypes = this.getEditingValue(params.ANALYSIS);
     const options = _.map( _.keys(analysisTypes), (value) => {
       const checked = (selectedTypes.contains(value));
@@ -195,13 +191,11 @@ export default React.createClass({
     );
 
     return this.renderFormElement('Analysis tasks', options);
-
   },
 
-
-  renderFormElement(label, element, description = '', hasError){
+  renderFormElement(label, element, description = '', hasError = false) {
     let errorClass = 'form-group';
-    if (hasError){
+    if (hasError) {
       errorClass = 'form-group has-error';
     }
 
@@ -218,7 +212,7 @@ export default React.createClass({
     );
   },
 
-  renderColumnSelect(label, column, description){
+  renderColumnSelect(label, column, description) {
     const result = this.renderFormElement(label,
       <Select
         clearable={false}
@@ -230,11 +224,9 @@ export default React.createClass({
       />
     , description);
     return result;
-
   },
 
-  renderStatic(){
-    // {this.renderStaticTasks()}
+  renderStatic() {
     return (
       <div className="row">
         {this.renderIntableStatic()}
@@ -248,11 +240,10 @@ export default React.createClass({
     );
   },
 
-  renderStaticTasks(){
+  renderStaticTasks() {
     const tasks = this.parameter(params.ANALYSIS, List());
     const outParam = this.parameter(params.OUTPUT, '');
     let renderedTasks = tasks.map((task) => {
-      //const comma = idx === 0 ? '' : ', ';
       const info = analysisTypes[task];
       const outTableId = outParam ? `${outParam}${task}` : '';
       return (
@@ -275,7 +266,7 @@ export default React.createClass({
     return (<ul className="nav nav-stacked">{renderedTasks}</ul>);
   },
 
-  renderIntableStatic(){
+  renderIntableStatic() {
     const tableId = this.state.intable;
     const link = (<p
         label="Input Table"
@@ -284,10 +275,9 @@ export default React.createClass({
           tableId={tableId}/></p>
     );
     return this.renderFormElement((<span>Input Table</span>), link);
-
   },
 
-  RenderStaticInput(label, value){
+  RenderStaticInput(label, value) {
     return (
       <StaticText
         label={label}
@@ -298,11 +288,11 @@ export default React.createClass({
     );
   },
 
-  getColumns(){
+  getColumns() {
     const tableId = this.getEditingValue('intable');
     const tables = storageTablesStore.getAll();
 
-    if (!tableId || !tables){
+    if (!tableId || !tables) {
       return [];
     }
 
@@ -310,30 +300,26 @@ export default React.createClass({
       return ptable.get('id') === tableId;
     });
 
-    if (!table){
+    if (!table) {
       return [];
     }
-    const result = table.get('columns').map( (column) =>
-      {
-        return {
-          'label': column,
-          'value': column
-        };
-      }
-    ).toList().toJS();
-
-    return result;
+    return table.get('columns').map( (column) => {
+      return {
+        'label': column,
+        'value': column
+      };
+    }).toList().toJS();
   },
 
-  updateEditingValue(prop, value){
+  updateEditingValue(prop, value) {
     updateEditingValue(this.state.configId, prop, value);
   },
 
-  getEditingValue(prop){
+  getEditingValue(prop) {
     return getEditingValue(this.state.configId, prop);
   },
 
-  updateLocalState(path, data){
+  updateLocalState(path, data) {
     updateLocalState(this.state.configId, path, data);
   }
 

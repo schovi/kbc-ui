@@ -28,7 +28,7 @@ export default React.createClass({
     children: React.PropTypes.any
   },
 
-  getStateFromStores(){
+  getStateFromStores() {
     const isLoading = tablesStore.getIsLoading();
     const tables = tablesStore.getAll() || Map();
     const table = tables.get(this.props.tableId, Map());
@@ -39,7 +39,7 @@ export default React.createClass({
     };
   },
 
-  getInitialState(){
+  getInitialState() {
     const omitFetches = true, omitExports = false;
     const es = EventsService.factory({limit: 10});
     const eventQuery = this.prepareEventQuery(omitFetches, omitExports);
@@ -59,43 +59,40 @@ export default React.createClass({
     });
   },
 
-  componentDidMount(){
-    storageActions.loadTables();//.then(() => this.exportDataSample());
+  componentDidMount() {
+    storageActions.loadTables();
   },
 
-  componentWilUnmount(){
+  componentWilUnmount() {
     this.stopEventService();
     this.stopPollingDataProfilerJob();
   },
 
-  pollDataProfilerJob(){
+  pollDataProfilerJob() {
     const schedule = later.parse.recur().every(5).second();
     this.stopPollingDataProfilerJob();
     this.timeout = later.setInterval(this.getDataProfilerJobResult, schedule);
-
   },
 
-  getDataProfilerJobResult(){
+  getDataProfilerJobResult() {
     const jobId = this.state.profilerData.getIn(['runningJob', 'id']);
     getDataProfilerJob(jobId).then( (runningJob) => {
-      if(runningJob.isFinished){
+      if (runningJob.isFinished) {
         this.stopPollingDataProfilerJob();
         this.findEnhancedJob();
       }
     });
-
   },
 
-  stopPollingDataProfilerJob(){
-    if (this.timeout){
+  stopPollingDataProfilerJob() {
+    if (this.timeout) {
       this.timeout.clear();
     }
-
   },
 
-  findEnhancedJob(){
-    //do the enhanced analysis only for redshift tables
-    if (!this.isRedshift()){
+  findEnhancedJob() {
+    // do the enhanced analysis only for redshift tables
+    if (!this.isRedshift()) {
       return;
     }
     this.setState({loadingProfilerData: true});
@@ -106,20 +103,13 @@ export default React.createClass({
         profilerData: Immutable.fromJS(result),
         loadingProfilerData: false
       });
-      if (result && result.runningJob){
+      if (result && result.runningJob) {
         this.pollDataProfilerJob();
       }
     });
-
   },
 
-  /* shouldComponentUpdate(nextProps, nextState){
-     return (nextState.show === true || this.state.show === true || nextState.isLoading === false) && nextState !== this.state;
-     }, */
-
-
-
-  render(){
+  render() {
     return (
       <span key="mainspan">
         {this.renderLink()}
@@ -128,7 +118,7 @@ export default React.createClass({
     );
   },
 
-  renderLink(){
+  renderLink() {
     return (
       <Tooltip key="tooltip"
                  tooltip={this.renderTooltip()}
@@ -139,16 +129,15 @@ export default React.createClass({
            </span>
        </Tooltip>
     );
-
   },
 
-  renderTooltip(){
-    if (this.state.isLoading){
+  renderTooltip() {
+    if (this.state.isLoading) {
       return 'Loading';
     }
 
     const table = this.state.table;
-    if (!this.tableExists()){
+    if (!this.tableExists()) {
       return 'Table does not exist yet.';
     }
     return (
@@ -166,7 +155,7 @@ export default React.createClass({
     );
   },
 
-  renderModal(){
+  renderModal() {
     return (
       <TableLinkModalDialog
          show={this.state.show}
@@ -188,12 +177,10 @@ export default React.createClass({
          loadingProfilerData={this.state.loadingProfilerData}
          isRedshift={this.isRedshift()}
       />
-
     );
-
   },
 
-  onRunEnhancedAnalysis(){
+  onRunEnhancedAnalysis() {
     this.setState({isCallingRunAnalysis: true});
     startDataProfilerJob(this.props.tableId)
       .then( () => {
@@ -202,16 +189,15 @@ export default React.createClass({
       .catch(() => this.setState({isCallingRunAnalysis: false}));
   },
 
-  onOmitExports(e){
+  onOmitExports(e) {
     const checked = e.target.checked;
     this.setState({omitExports: checked});
     const q = this.prepareEventQuery(this.state.omitFetches, checked);
     this.state.eventService.setQuery(q);
     this.state.eventService.load();
-
   },
 
-  onOmitFetches(e){
+  onOmitFetches(e) {
     const checked = e.target.checked;
     this.setState({omitFetches: checked});
     const q = this.prepareEventQuery(checked, this.state.omitExports);
@@ -219,29 +205,25 @@ export default React.createClass({
     this.state.eventService.load();
   },
 
-  prepareEventQuery(omitFetches, omitExports)
-  {
+  prepareEventQuery(omitFetches, omitExports) {
     const defs = [omitFetches, omitExports];
     const omitsQuery = _.filter(['tableDetail', 'tableExported'], (val, idx) => defs[idx]
     ).map((ev) => `NOT event:storage.${ev}`);
     const objectIdQuery = `objectId:${this.props.tableId}`;
-    const query = _.isEmpty(omitsQuery) ? objectIdQuery : `(${omitsQuery.join(' OR ')} AND ${objectIdQuery})`;
-    return query;
-
+    return _.isEmpty(omitsQuery) ? objectIdQuery : `(${omitsQuery.join(' OR ')} AND ${objectIdQuery})`;
   },
 
-  isLoading(){
+  isLoading() {
     return this.state.isLoading || this.state.loadingPreview || this.state.eventService.getIsLoading();
-
   },
 
-  onHide(){
+  onHide() {
     this.setState({show: false});
     this.stopPollingDataProfilerJob();
     this.stopEventService();
   },
 
-  reload(){
+  reload() {
     Promise.props( {
       'loadAllTablesFore': storageActions.loadTablesForce().then(() => this.findEnhancedJob()),
       'exportData': this.exportDataSample(),
@@ -249,18 +231,17 @@ export default React.createClass({
     });
   },
 
-  loadAll(){
-      this.exportDataSample();
-      this.startEventService();
-      this.setState({show: true});
-      this.findEnhancedJob();
-    },
+  loadAll() {
+    this.exportDataSample();
+    this.startEventService();
+    this.setState({show: true});
+    this.findEnhancedJob();
+  },
 
-
-  onShow(e){
-    if (this.state.isLoading){
+  onShow(e) {
+    if (this.state.isLoading) {
       storageApi.getTables().then(() => this.loadAll());
-    }else{
+    } else {
       this.loadAll();
     }
 
@@ -268,26 +249,23 @@ export default React.createClass({
     e.preventDefault();
   },
 
-
-
-  startEventService(){
+  startEventService() {
     this.state.eventService.addChangeListener(this.handleEventsChange);
     this.state.eventService.load();
   },
 
-  stopEventService(){
+  stopEventService() {
     this.state.eventService.stopAutoReload();
     this.state.eventService.removeChangeListener(this.handleEventsChange);
   },
 
-  handleEventsChange(){
+  handleEventsChange() {
     const events = this.state.eventService.getEvents();
     this.setState({events: events});
   },
 
-  exportDataSample(){
-    if (!this.tableExists())
-    {
+  exportDataSample() {
+    if (!this.tableExists()) {
       return false;
     }
 
@@ -303,16 +281,14 @@ export default React.createClass({
         dataPreview: Immutable.fromJS(csv)
       });
     });
-
   },
 
-  tableExists(){
+  tableExists() {
     return !_.isEmpty(this.state.table.toJS());
   },
 
-  isRedshift(){
+  isRedshift() {
     return this.tableExists() && this.state.table.getIn(['bucket', 'backend']) === 'redshift';
   }
-
 
 });

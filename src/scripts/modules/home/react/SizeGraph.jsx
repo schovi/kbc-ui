@@ -17,7 +17,6 @@ export default React.createClass({
   },
 
   onKeenReady() {
-    console.log('props', this.props);
     /* eslint camelcase: [0] */
     var query = new Keen.Query('average', {
       eventCollection: 'sapi-project-snapshots',
