@@ -26,7 +26,7 @@ export default React.createClass({
             multi="true"
             disabled={this.props.isSaving}
             allowCreate="true"
-            delimiter=','
+            delimiter=","
             onChange={this.handleValueChange}
             placeholder="Add packages..."
             />

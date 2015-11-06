@@ -2,9 +2,8 @@ import React from 'react';
 import Tooltip from '../../../../../react/common/Tooltip';
 import _ from 'underscore';
 
-function renderLabel(caption){
+function renderLabel(caption) {
   return (<span className="label label-info">{caption}</span>);
-
 }
 
 export default {
@@ -17,10 +16,10 @@ export default {
       const tsTooltip = 'Can be interpreted as a time series.';
       const tsRender = (<small>{renderLabel('Timeseries')}</small>);
 
-      if (ists === '1'){
-        return (<span><div>{result}</div><Tooltip tooltip={tsTooltip} placement='top'>
+      if (ists === '1') {
+        return (<span><div>{result}</div><Tooltip tooltip={tsTooltip} placement="top">
         {tsRender}</Tooltip></span>);
-      }else{
+      } else {
         return result;
       }
     },
@@ -30,22 +29,18 @@ export default {
       <div>float - numbers with decimals</div>
       <div>bool - logical (true/false, 0/1)</div>
       <div>date or datetime</div></span>)
-
   },
 
   // merged to data_type
   'format': {
     name: 'Format',
     skip: true
-
-
   },
 
-  //merged to data_type
+  // merged to data_type
   'is_ts': {
     name: 'Is ts',
     skip: true
-
   },
 
   'val_ratio': {
@@ -55,10 +50,9 @@ Columns that have few distinct values repeatedly (such as categories) will have 
     formatFn: (value, rowValues) => {
       const isid = _.find(rowValues, r => r.name === 'is_identity').value;
       const val = ((parseFloat(value)) * 100).toFixed(4);
-      if (isid === 'no'){
+      if (isid === 'no') {
         return val;
-      }
-      else{
+      } else {
         const idLabel = isid === 'yes' ? 'id' : 'id?';
         const tooltip = isid === 'yes' ? 'Identifying the table row' : 'Probably identifying the table row';
         return (
@@ -70,17 +64,13 @@ Columns that have few distinct values repeatedly (such as categories) will have 
           </span>
         );
       }
-
-
     }
-
   },
 
   'is_identity': {
     name: 'Identifying Column',
     desc: `Can the values of this column be used as an identifier for each row?`,
     skip: true
-
   },
 
   'mode': {
@@ -89,12 +79,11 @@ Columns that have few distinct values repeatedly (such as categories) will have 
             <div>Continuous - Highly distinctive values (Time series are continuous)</div>
             <div>Categories - Many rows contain the same values and there are finite possibilities.</div>
             <div>Useless - Almost all rows contain fewer than 2 distinct values</div></span>)
-
   },
 
   'monotonic': {
     name: 'Change Direction',
     desc: 'Possible values: increasing, decreasing, variable.  For numeric values and dates, if the values are neither increasing or decreasing, they will be variable.  String columns will be blank.'
-
   }
+
 };

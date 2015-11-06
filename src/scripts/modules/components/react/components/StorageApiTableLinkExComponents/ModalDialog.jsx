@@ -38,10 +38,10 @@ export default React.createClass({
 
   mixins: [immutableMixin],
 
-  render(){
+  render() {
     const modalBody = this.renderModalBody();
     let tableLink = (<small className="disabled btn btn-link"> Explore in Console</small>);
-    if (this.props.tableExists){
+    if (this.props.tableExists) {
       tableLink =
       (
         <SapiTableLink
@@ -74,10 +74,9 @@ export default React.createClass({
         </Modal>
       </div>
     );
-
   },
 
-  renderModalBody(){
+  renderModalBody() {
     return (
       <TabbedArea key="tabbedarea" animation={false}>
         <TabPane key="general" eventKey="general" tab="General Info">
@@ -94,10 +93,9 @@ export default React.createClass({
         </TabPane>
       </TabbedArea>
     );
-
   },
 
-  renderGeneralInfo(){
+  renderGeneralInfo() {
     return (
       <GeneralInfoTab
         isLoading={this.props.isLoading}
@@ -105,10 +103,9 @@ export default React.createClass({
         tableExists={this.props.tableExists}
       />
     );
-
   },
 
-  renderEvents(){
+  renderEvents() {
     return (
       <EventsTab
         tableExists={this.props.tableExists}
@@ -121,19 +118,17 @@ export default React.createClass({
       />
 
     );
-
   },
 
-  renderDataSample(){
+  renderDataSample() {
     return (
       <DataSampleTab
         dataPreview={this.props.dataPreview}
       />
     );
-
   },
 
-  renderColumnsInfo(){
+  renderColumnsInfo() {
     return (
       <ColumnsInfoTab
         tableExists={this.props.tableExists}

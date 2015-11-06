@@ -15,7 +15,5 @@ export default {
     () => storageActions.loadTables()
 
   ]
-  //headerButtonsHandler: HeaderButtons,
-
 
 };

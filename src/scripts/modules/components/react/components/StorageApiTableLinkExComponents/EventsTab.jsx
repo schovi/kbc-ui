@@ -21,8 +21,8 @@ export default React.createClass({
 
   mixins: [immutableMixin],
 
-  render(){
-    if (!this.props.tableExists){
+  render() {
+    if (!this.props.tableExists) {
       return (
         <EmptyState>
           No Data.
@@ -33,7 +33,7 @@ export default React.createClass({
     const rows = events.map( (e) => {
       const event = e.get('event');
       let info = this.eventsTemplates[event];
-      if (!info){
+      if (!info) {
         info = {
           className: '',
           message: e.get('message')
@@ -144,7 +144,5 @@ export default React.createClass({
     }
 
   }
-
-
 
 });

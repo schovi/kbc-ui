@@ -4,7 +4,7 @@ import Edit from './QueriesEdit';
 import Clipboard from '../../../../../react/common/Clipboard';
 import string from 'underscore.string';
 
-/*global require */
+/* global require */
 require('codemirror/mode/sql/sql');
 
 function getQueryPosition(queries, queryNumber) {

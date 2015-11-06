@@ -6,32 +6,16 @@ import {createTransformation} from '../../ActionCreators';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
 function prepareDataForCreate(data) {
-  let newData = Map({
+  return Map({
     name: data.get('name'),
     description: data.get('description')
   });
-
-  switch (data.get('backend')) {
-    case 'mysql':
-      newData = newData.set('backend', 'mysql').set('type', 'simple');
-      break;
-    case 'redshift':
-      newData = newData.set('backend', 'redshift').set('type', 'simple');
-      break;
-    case 'snowflake':
-      newData = newData.set('backend', 'snowflake').set('type', 'simple');
-      break;
-    case 'r':
-      newData = newData.set('backend', 'docker').set('type', 'r');
-      break;
-  }
-
-  return newData;
 }
 
 export default React.createClass({
   propTypes: {
-    bucket: React.PropTypes.object.isRequired
+    bucket: React.PropTypes.object.isRequired,
+    onRequestHide: React.PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -124,10 +108,10 @@ export default React.createClass({
       {value: 'r', label: 'R'},
       {value: 'snowflake', label: 'Snowflake'}
     ].map(function(option) {
-        return (
-          <option value={option.value} key={option.value}>{option.label}</option>
-        );
-      });
+      return (
+        <option value={option.value} key={option.value}>{option.label}</option>
+      );
+    });
   },
 
 

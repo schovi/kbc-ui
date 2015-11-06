@@ -5,8 +5,6 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import TransformationBucketsStore from '../../stores/TransformationBucketsStore';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
-
-
 export default React.createClass({
   mixins: [createStoreMixin(TransformationBucketsStore)],
 

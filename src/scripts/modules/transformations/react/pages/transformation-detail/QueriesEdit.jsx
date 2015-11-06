@@ -20,7 +20,7 @@ export default React.createClass({
   componentDidMount() {
     if (this.props.cursorPos) {
       this.refs.CodeMirror.editor.setCursor(this.props.cursorPos);
-      /*global window */
+      /* global window */
       window.scrollTo(this.refs.CodeMirror.editor.cursorCoords().left,
         this.refs.CodeMirror.editor.cursorCoords().top - 100);
     }
@@ -68,7 +68,7 @@ export default React.createClass({
     switch (this.props.backend) {
       case 'redshift':
         return 'Redshift does not support functions or stored procedures.';
-      case 'mysql':
+      default:
         return 'Keboola Connection does not officially support MySQL functions or stored procedures. Use at your own risk.';
     }
   },
@@ -79,7 +79,7 @@ export default React.createClass({
         return 'text/x-sql';
       case 'snowflake':
         return 'text/x-sql';
-      case 'mysql':
+      default:
         return 'text/x-mysql';
 
     }

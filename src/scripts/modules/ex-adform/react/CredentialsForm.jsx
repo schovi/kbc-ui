@@ -15,7 +15,7 @@ export default React.createClass({
           label="Username"
           value={this.props.credentials.get('username')}
           onChange={this.handleChange.bind(this, 'username')}
-          labelClassName='col-sm-4' wrapperClassName='col-sm-6'
+          labelClassName="col-sm-4" wrapperClassName="col-sm-6"
           autoFocus={true}
           />
         <Input
@@ -23,7 +23,7 @@ export default React.createClass({
           label="Password"
           value={this.props.credentials.get('#password')}
           onChange={this.handleChange.bind(this, '#password')}
-          labelClassName='col-sm-4' wrapperClassName='col-sm-6'
+          labelClassName="col-sm-4" wrapperClassName="col-sm-6"
           />
       </div>
     );

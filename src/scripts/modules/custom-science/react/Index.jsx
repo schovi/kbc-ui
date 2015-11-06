@@ -12,7 +12,6 @@ import ComponentDescription from '../../components/react/components/ComponentDes
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
-//import LatestJobs from '../../components/react/components/SidebarJobs';
 import InlineEditText from '../../../react/common/InlineEditTextInput';
 
 import InstalledComponentsActions from '../../components/InstalledComponentsActionCreators';
@@ -24,7 +23,7 @@ export default React.createClass({
 
   mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, StorageTablesStore)],
 
-  getStateFromStores(){
+  getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
     const configData = InstalledComponentsStore.getConfigData(componentId, configId);
     const localState = InstalledComponentsStore.getLocalState(componentId, configId);
@@ -44,7 +43,7 @@ export default React.createClass({
     };
   },
 
-  render(){
+  render() {
     return (
       <div className="container-fluid">
         {this.renderMainContent()}
@@ -54,7 +53,7 @@ export default React.createClass({
     );
   },
 
-  renderMainContent(){
+  renderMainContent() {
     return (
       <div className="col-md-9 kbc-main-content">
         <div className="row kbc-header">
@@ -94,10 +93,9 @@ export default React.createClass({
         </div>
       </div>
     );
-
   },
 
-  renderInlineEdit(param, placeholder, tooltip){
+  renderInlineEdit(param, placeholder, tooltip) {
     const value = this.state.configData.getIn(['parameters', param], '');
     const editingValue = this.state.localState.getIn(['editing', param], '');
     const isEditing = this.state.localState.hasIn(['editing', param]);
@@ -119,18 +117,16 @@ export default React.createClass({
           isValid={isValid}
       />
     );
-
   },
 
-  onEditCancel(param){
+  onEditCancel(param) {
     return () => {
       const editing = this.state.localState.get('editing').remove(param);
       this.updateLocalState(['editing'], editing);
     };
   },
 
-
-  onSubmit(param){
+  onSubmit(param) {
     return () => {
       const value = this.state.localState.getIn(['editing', param]);
       const newData = this.state.configData.setIn(['parameters', param], value);
@@ -143,8 +139,7 @@ export default React.createClass({
     };
   },
 
-
-  renderSidebar(){
+  renderSidebar() {
     return (
       <div className="col-md-3 kbc-main-sidebar">
         <div classNmae="kbc-buttons kbc-text-light">
@@ -174,22 +169,19 @@ export default React.createClass({
         {/* <LatestJobs jobs={this.state.latestJobs} /> */}
       </div>
     );
-
   },
 
-  onEditSet(param, value){
+  onEditSet(param, value) {
     return () => this.updateLocalState(['editing'].concat(param), value);
   },
 
-  onEditChange(param){
+  onEditChange(param) {
     return (value) => this.updateLocalState(['editing'].concat(param), value);
   },
 
-
-  updateLocalState(path, data){
+  updateLocalState(path, data) {
     const newLocalState = this.state.localState.setIn(path, data);
     InstalledComponentsActions.updateLocalState(componentId, this.state.configId, newLocalState);
   }
-
 
 });

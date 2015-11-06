@@ -8,7 +8,7 @@ import ConnectToMySqlSandbox from '../components/ConnectToMySqlSandbox';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
 function renderStatusIcon(status) {
-  switch(status) {
+  switch (status) {
     case 'success':
       return <span className="fa fa-check"/>;
     case 'danger':
@@ -37,7 +37,7 @@ export default React.createClass({
   render() {
     return (
       <Modal show={this.props.show} bsSize="large" onHide={this.props.onHide}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={true}>
           <Modal.Title>Create Sandbox</Modal.Title>
         </Modal.Header>
         <Modal.Body>

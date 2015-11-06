@@ -1,7 +1,7 @@
 import {fromJS} from 'immutable';
 import {webalize} from '../../utils/string';
 
-export default function (configName, baseConfig) {
+export default function(configName, baseConfig) {
   const template = fromJS({
     'parameters': {
       'api': {

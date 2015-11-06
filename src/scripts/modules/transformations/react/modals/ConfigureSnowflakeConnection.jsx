@@ -10,7 +10,8 @@ export default React.createClass({
     bucket: React.PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onRequestHide: PropTypes.func.isRequired
   },
 
   componentDidMount() {
@@ -36,7 +37,7 @@ export default React.createClass({
         </div>
         <div className="modal-footer">
           <ConfirmButtons
-            saveLabel='Save'
+            saveLabel="Save"
             isSaving={this.state.isSaving}
             onCancel={this.handleCancel}
             onSave={this.handleSave}

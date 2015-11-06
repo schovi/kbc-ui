@@ -25,9 +25,8 @@ export default React.createClass({
 
   mixins: [immutableMixin],
 
-
-  render(){
-    if (!this.props.tableExists || !this.isDataPreview()){
+  render() {
+    if (!this.props.tableExists || !this.isDataPreview()) {
       return (
         <EmptyState>
           No Data.
@@ -57,10 +56,10 @@ export default React.createClass({
     );
   },
 
-  renderNameColumnCell(column){
+  renderNameColumnCell(column) {
     const {table} = this.props,
-    indexed = table.get('indexedColumns'),
-    primary = table.get('primaryKey');
+      indexed = table.get('indexedColumns'),
+      primary = table.get('primaryKey');
     return (
       <span>
         {column}
@@ -70,10 +69,9 @@ export default React.createClass({
         </div>
       </span>
     );
-
   },
 
-  renderHeaderRow(){
+  renderHeaderRow() {
     const simpleHeader = (
       <thead>
         <tr>
@@ -87,24 +85,22 @@ export default React.createClass({
       </thead>
     );
 
-    if (!this.props.isRedshift){
+    if (!this.props.isRedshift) {
       return simpleHeader;
     }
 
-    const enhancedHeader = this.getEnahncedHeader().filter(h => !h.skip).map( (header) =>
-      {
-        return (
-          <th>
-            {header.label}
-            <Tooltip
-               tooltip={header.desc}
-               placement="top">
-              <i className="fa fa-fw fa-question-circle"></i>
-            </Tooltip>
-          </th>
-        );
-      }
-    );
+    const enhancedHeader = this.getEnahncedHeader().filter(h => !h.skip).map((header) => {
+      return (
+        <th>
+          {header.label}
+          <Tooltip
+             tooltip={header.desc}
+             placement="top">
+            <i className="fa fa-fw fa-question-circle"></i>
+          </Tooltip>
+        </th>
+      );
+    });
 
     return (
       <thead>
@@ -133,16 +129,14 @@ export default React.createClass({
         </tr>
       </thead>
     );
-
   },
 
-  getEnahncedHeader(){
+  getEnahncedHeader() {
     let dataHeader = null;
-    if (this.hasEnhancedData()){
+    if (this.hasEnhancedData()) {
       dataHeader = this.props.enhancedAnalysis.get('data').first();
-
     }
-    const header = _.map(_.keys(enhancedColumnsTemplate), (key) => {
+    return _.map(_.keys(enhancedColumnsTemplate), (key) => {
       const h = enhancedColumnsTemplate[key];
       return {
         name: key,
@@ -152,17 +146,14 @@ export default React.createClass({
         formatFn: h.formatFn,
         skip: h.skip
       };
-
-    }
-    );
-    return header;
+    });
   },
 
 
-  renderBodyRow(columnName, columnNameCell, value){
+  renderBodyRow(columnName, columnNameCell, value) {
     let enhancedCells = [];
-    if (this.props.isRedshift){
-      if(this.hasEnhancedData()){
+    if (this.props.isRedshift) {
+      if (this.hasEnhancedData()) {
         const varNameIndex = this.props.enhancedAnalysis.get('data').first().indexOf('var_name');
         const header = this.getEnahncedHeader();
         const rows = this.props.enhancedAnalysis.get('data').rest();
@@ -177,7 +168,7 @@ export default React.createClass({
 
         enhancedCells = header.filter(h => !h.skip).map(h => {
           let cellValue = h.value;
-          if (h.formatFn){
+          if (h.formatFn) {
             cellValue = h.formatFn(cellValue, rowValuesMap);
           }
           return (
@@ -186,7 +177,7 @@ export default React.createClass({
             </td>
           );
         });
-      }else{
+      } else {
         const header = this.getEnahncedHeader();
         enhancedCells = header.filter(h => !h.skip).map(() => {
           return (
@@ -195,10 +186,7 @@ export default React.createClass({
             </td>
           );
         });
-
       }
-
-
     }
 
     return (
@@ -212,14 +200,12 @@ export default React.createClass({
         {enhancedCells}
       </tr>
     );
-
   },
 
-  getColumnValues(columnName){
+  getColumnValues(columnName) {
     const data = this.props.dataPreview;
     const columnIndex = data.first().indexOf(columnName);
     const result = data
-
     .shift()
     .map( (row) => {
       return row.get(columnIndex);
@@ -227,20 +213,17 @@ export default React.createClass({
     return result;
   },
 
-
-  isDataPreview(){
+  isDataPreview() {
     return !_.isEmpty(this.props.dataPreview.toJS());
   },
 
-  hasEnhancedAnalysis(){
+  hasEnhancedAnalysis() {
     return this.props.enhancedAnalysis &&
     !_.isEmpty(this.props.enhancedAnalysis.toJS());
   },
 
-  hasEnhancedData(){
+  hasEnhancedData() {
     return this.hasEnhancedAnalysis() && !_.isEmpty(this.props.enhancedAnalysis.toJS().data);
-
   }
-
 
 });

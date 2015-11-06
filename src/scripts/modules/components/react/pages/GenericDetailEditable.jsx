@@ -109,7 +109,7 @@ export default React.createClass({
   },
 
   getConfigData() {
-    if(this.state.isEditing) {
+    if (this.state.isEditing) {
       return this.state.editingConfigData;
     } else {
       return JSON.stringify(this.state.configData.toJSON(), null, '  ');

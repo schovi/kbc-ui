@@ -7,7 +7,8 @@ export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
     transformation: PropTypes.object.isRequired,
-    bucketId: PropTypes.string.isRequired
+    bucketId: PropTypes.string.isRequired,
+    onRequestHide: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -34,7 +35,7 @@ export default React.createClass({
                   Phase # <input
                     type="number"
                     className="form-control"
-                    value={parseInt(this.state.phase)}
+                    value={parseInt(this.state.phase, 10)}
                     onChange={this.handlePhaseChange}
                     disabled={this.state.isSaving}
                     style={{width: '50px', display: 'inline-block'}}

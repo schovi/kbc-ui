@@ -11,9 +11,9 @@ export default React.createClass({
 
   mixins: [immutableMixin],
 
-  render(){
+  render() {
     const data = this.props.dataPreview;
-    if (data.count() === 0){
+    if (data.count() === 0) {
       return (
         <EmptyState>
           No Data.

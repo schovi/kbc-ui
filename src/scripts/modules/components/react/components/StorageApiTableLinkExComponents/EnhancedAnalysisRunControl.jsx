@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-//import _ from 'underscore';
 import immutableMixin from '../../../../../react/mixins/ImmutableRendererMixin';
 import {Loader} from 'kbc-react-components';
 import {Button} from 'react-bootstrap';
@@ -12,20 +11,19 @@ export default React.createClass({
     onRunAnalysis: PropTypes.func,
     isCallingRunAnalysis: PropTypes.bool,
     loadingProfilerData: PropTypes.bool
-
   },
 
   mixins: [immutableMixin],
 
-  render(){
+  render() {
     let profilerInfo = (<span><Loader /></span>);
-    if (!this.props.loadingProfilerData){
+    if (!this.props.loadingProfilerData) {
       profilerInfo = [
         (<span style={{'padding': 0}} className="col-xs-3">
             { this.renderResultsStatus()}
         </span>)
         ,
-         (<span style={{'padding': 0}} className="col-xs-4">
+        (<span style={{'padding': 0}} className="col-xs-4">
         {this.renderRunStatus()}
          </span>)
       ];
@@ -41,27 +39,26 @@ export default React.createClass({
     );
   },
 
-  renderResultsStatus(){
+  renderResultsStatus() {
     let status = 'No results';
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const okJob = enhancedAnalysis ? enhancedAnalysis.get('okJob') : null;
-    if(okJob){
+    if (okJob) {
       const finished = okJob.get('endTime');
       const tableChange = this.props.table.get('lastChangeDate');
-      if (finished < tableChange){
+      if (finished < tableChange) {
         status = (<span className="label label-warning">Outdated</span>);
-      }else{
+      } else {
         status = (<span className="label label-success">Up-to-date</span>);
       }
-
     }
     return (<span>{status}</span>);
   },
 
-  renderRunStatus(){
+  renderRunStatus() {
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const runningJob = enhancedAnalysis ? enhancedAnalysis.get('runningJob') : null;
-    if (runningJob){
+    if (runningJob) {
       return (
         <span> <Loader />{' '}
           <Link to="jobDetail"
@@ -70,12 +67,11 @@ export default React.createClass({
           </Link>
         </span>
       );
-    }
-    else{
-      if (this.isShowRunButton()){
-        if (this.props.isCallingRunAnalysis){
+    } else {
+      if (this.isShowRunButton()) {
+        if (this.props.isCallingRunAnalysis) {
           return (<Loader />);
-        }else{
+        } else {
           return (
             <Button style={{padding: 0}}
                     className="btn btn-link"
@@ -85,27 +81,23 @@ export default React.createClass({
           );
         }
       }
-
     }
   },
 
-  //show if there are no results yet or analysis is outdated
-  isShowRunButton(){
+  // Show if there are no results yet or analysis is outdated
+  isShowRunButton() {
     const enhancedAnalysis = this.props.enhancedAnalysis;
     const okJob = enhancedAnalysis ? enhancedAnalysis.get('okJob') : null;
-    if (!okJob){
+    if (!okJob) {
       return true;
     }
     const finished = okJob.get('endTime');
     const tableChange = this.props.table.get('lastChangeDate');
-    if (finished < tableChange){
+    if (finished < tableChange) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
-
-
-
 
 });

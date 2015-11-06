@@ -18,11 +18,10 @@ export default React.createClass({
 
   mixins: [immutableMixin],
 
-  render(){
-    if (!this.props.tableExists)
-    {
+  render() {
+    if (!this.props.tableExists) {
       let msg = 'Table does not exist yet.';
-      if (this.props.isLoading){
+      if (this.props.isLoading) {
         msg = 'Loading...';
       }
       return (
@@ -30,7 +29,6 @@ export default React.createClass({
           {msg}
         </EmptyState>
       );
-
     }
     const table = this.props.table;
     const primaryKey = table.get('primaryKey').toJS();
@@ -66,17 +64,16 @@ export default React.createClass({
     );
   },
 
-  renderTimefromNow(value){
+  renderTimefromNow(value) {
     const fromNow = moment(value).fromNow();
     return (
       <span> {date.format(value)}
         <small> {fromNow} </small>
       </span>
     );
-
   },
 
-  renderTableRow(name, value){
+  renderTableRow(name, value) {
     return (
       <tr>
         <td>
@@ -87,8 +84,6 @@ export default React.createClass({
         </td>
       </tr>
     );
-
   }
-
 
 });

@@ -6,7 +6,8 @@ export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
     task: PropTypes.object.isRequired,
-    onPhaseUpdate: React.PropTypes.func.isRequired
+    onPhaseUpdate: React.PropTypes.func.isRequired,
+    onRequestHide: React.PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -32,7 +33,7 @@ export default React.createClass({
                   Phase # <input
                     type="number"
                     className="form-control"
-                    value={parseInt(this.state.phase)}
+                    value={parseInt(this.state.phase, 10)}
                     onChange={this.handlePhaseChange}
                     style={{width: '50px', display: 'inline-block'}}
                     />
@@ -43,7 +44,7 @@ export default React.createClass({
         </div>
         <div className="modal-footer">
           <ConfirmButtons
-            saveLabel='Ok'
+            saveLabel="Ok"
             onCancel={this.props.onRequestHide}
             onSave={this.handleSave}
             />

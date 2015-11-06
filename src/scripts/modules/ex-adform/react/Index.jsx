@@ -164,9 +164,9 @@ export default React.createClass({
             show={this.state.showCredentialsModal}
             onHide={this.closeCredentialsModal}
             credentials={this.state.localState.get('credentials', Map({
-                  username: this.state.parameters.getIn(['config', 'username'], ''),
-                  '#password': this.state.parameters.getIn(['config', '#password'], '')
-                }))}
+              username: this.state.parameters.getIn(['config', 'username'], ''),
+              '#password': this.state.parameters.getIn(['config', '#password'], '')
+            }))}
             isSaving={this.state.isSaving}
             onChange={this.updateCredentials}
             onSave={this.saveCredentials}
@@ -190,7 +190,7 @@ export default React.createClass({
   },
 
   getJobsData() {
-    if(this.state.isEditingJobs) {
+    if (this.state.isEditingJobs) {
       return this.state.localState.get('jobsString');
     } else {
       return JSON.stringify(this.state.parameters.getIn(['config', 'jobs'], List()).toJSON(), null, '  ');

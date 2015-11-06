@@ -16,7 +16,7 @@ export default React.createClass({
   render() {
     return (
       <Modal show={this.props.show} onHide={this.props.onHide}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={true}>
           <Modal.Title>Template</Modal.Title>
         </Modal.Header>
         <Modal.Body>

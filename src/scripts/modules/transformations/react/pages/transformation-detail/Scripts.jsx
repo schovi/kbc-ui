@@ -3,7 +3,7 @@ import Static from './ScriptsStatic';
 import Edit from './ScriptsEdit';
 import Clipboard from '../../../../../react/common/Clipboard';
 
-/*global require */
+/* global require */
 require('codemirror/mode/r/r');
 
 export default React.createClass({

@@ -3,7 +3,8 @@ import CodeMirror from 'react-code-mirror';
 
 export default React.createClass({
   propTypes: {
-    script: PropTypes.string.isRequired
+    script: PropTypes.string.isRequired,
+    onEditStart: PropTypes.func.isRequired
   },
 
   render() {

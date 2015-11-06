@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import Promise from 'bluebird';
 
-
 import InstalledComponentsActionCreators from '../../../InstalledComponentsActionCreators';
 
 import storageApi from '../../../StorageApi';
@@ -12,12 +11,12 @@ const dataProfilerBucketPrefix = 'in.c-lg-rcp-data-profiler_';
 
 const unwantedJobs = ['terminating', 'canceled', 'terminated', 'cancelled', 'error'];
 
-export function getDataProfilerJob(jobId){
+export function getDataProfilerJob(jobId) {
   console.log('JOBBB ID', jobId);
   return jobsApi.getJobDetail(jobId);
 }
 
-export function startDataProfilerJob(tableId){
+export function startDataProfilerJob(tableId) {
   const profilerConfigId = string.webalize(tableId);
   const params = {
     component: 'rcp-data-profiler',
@@ -33,7 +32,7 @@ export function startDataProfilerJob(tableId){
   return InstalledComponentsActionCreators.runComponent(params);
 }
 
-export function fetchProfilerData(tableId){
+export function fetchProfilerData(tableId) {
   const profilerConfigId = string.webalize(tableId);
   const unwantedJobsQuery = unwantedJobs.map(j => `status:${j}`).join(' OR ');
   const jobQuery = `config:${profilerConfigId} AND recipeId:rcp-data-profiler AND NOT(${unwantedJobsQuery})`;
@@ -42,7 +41,7 @@ export function fetchProfilerData(tableId){
     const resultsTableId = `${dataProfilerBucketPrefix}${profilerConfigId}.VAI__1`;
     console.log('enhanced JOBS', jobs);
     // if table has analysis job than load its results
-    if (!_.isEmpty(jobs)){
+    if (!_.isEmpty(jobs)) {
       const okJob = _.find(jobs, j => j.status === 'success');
       const runningJob = _.find(jobs, j => j.status !== 'success');
       console.log('PARSED JOBS', okJob, runningJob);
@@ -61,8 +60,7 @@ export function fetchProfilerData(tableId){
           data: null
         };
       });
-    }
-    else{
+    } else {
       return Promise.resolve();
     }
   });

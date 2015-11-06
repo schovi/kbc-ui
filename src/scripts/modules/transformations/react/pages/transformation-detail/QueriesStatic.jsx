@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react/addons';
 import Highlight from './Highlight';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
-/*global require */
+/* global require */
 require('codemirror/mode/sql/sql');
 
 export default React.createClass({
@@ -71,7 +71,7 @@ export default React.createClass({
         return 'text/x-sql';
       case 'snowflake':
         return 'text/x-sql';
-      case 'mysql':
+      default:
         return 'text/x-mysql';
     }
   },

@@ -1,9 +1,10 @@
 import {List} from 'immutable';
 
 /**
- * taken and modified from
+ * Taken and modified from
  * http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
- * @param queries
+ * @param {string} queries SQL queries
+ * @return {Object} List of queries
  */
 function splitSqlQueries(queries) {
   const regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|' +
