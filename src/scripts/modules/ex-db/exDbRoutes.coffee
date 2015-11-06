@@ -3,8 +3,8 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 
 ExDbActionCreators = require '../ex-db/exDbActionCreators'
 ExDbIndex = require '../ex-db/react/pages/index/Index'
-ExDbCredentialsPage = require '../ex-db/react/pages/credentials/CredentialsPage'
-ExDbNewCredentialsPage = require '../ex-db/react/pages/credentials/NewCredentialsPage'
+ExDbCredentialsPage = require('../ex-db/react/pages/credentials/CredentialsPage').default
+ExDbNewCredentialsPage = require('../ex-db/react/pages/credentials/NewCredentialsPage').default
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail'
 ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'

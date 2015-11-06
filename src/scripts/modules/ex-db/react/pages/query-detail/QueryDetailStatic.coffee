@@ -11,7 +11,7 @@ module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
   propTypes:
     query: React.PropTypes.object.isRequired
-    mode: React.PropTypes.string.isrequired
+    mode: React.PropTypes.string.isRequired
 
   render: ->
     div className: 'row',

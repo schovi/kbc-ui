@@ -12,7 +12,7 @@ applications = require './modules/applications/Routes'
 
 StorageActionCreators = require './modules/components/StorageActionCreators'
 
-DataTakeout = require './modules/data-takeout/Index'
+DataTakeout = require('./modules/data-takeout/Index').default
 
 
 # Custom routing configuration object

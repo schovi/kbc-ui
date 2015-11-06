@@ -10,7 +10,7 @@ ImmutableRendererMixin = require '../../../../../react/mixins/ImmutableRendererM
 
 { a, span, div, strong, em} = React.DOM
 
-OrchestrationRow = React.createFactory React.createClass
+OrchestrationRow = React.createClass
   displayName: 'OrchestrationRow'
   propTypes:
     orchestration: React.PropTypes.object

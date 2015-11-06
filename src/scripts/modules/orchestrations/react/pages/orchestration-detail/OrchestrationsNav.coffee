@@ -17,7 +17,7 @@ OrchestrationsNav = React.createClass
     filtered = @props.orchestrations
     if filtered.size
       childs = filtered.map((orchestration) ->
-        OrchestrationsNavRow
+        React.createElement OrchestrationsNavRow,
           orchestration: orchestration
           key: orchestration.get('id')
           isActive: @props.activeOrchestrationId == orchestration.get('id')
