@@ -63,8 +63,10 @@ export default React.createClass({
           <ConfirmButtons
             onCancel={this.props.onHide}
             onSave={this.props.onCreateStart}
-            saveLabel={this.props.isCreated ? 'Create Again' : 'Create'}
+            saveLabel={'Create'}
+            cancelLabel={'Close'}
             isSaving={this.props.isRunning}
+            showSave={!this.props.isCreated}
             />
         </Modal.Footer>
       </Modal>

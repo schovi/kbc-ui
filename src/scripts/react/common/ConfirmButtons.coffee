@@ -21,6 +21,7 @@ module.exports = React.createClass
     onCancel: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
     placement: React.PropTypes.oneOf ['left', 'right']
+    showSave: React.PropTypes.bool
 
   getDefaultProps: ->
     saveLabel: 'Save'
@@ -28,6 +29,7 @@ module.exports = React.createClass
     cancelLabel: 'Cancel'
     placement: 'right'
     isDisabled: false
+    showSave: true
 
   render: ->
     if @props.placement == 'left'
@@ -46,12 +48,13 @@ module.exports = React.createClass
       React.createElement Loader
 
   _saveButton: ->
-    React.createElement Button,
-      bsStyle: @props.saveStyle
-      disabled: @props.isSaving || @props.isDisabled
-      onClick: @props.onSave
-    ,
-      @props.saveLabel
+    if @props.showSave
+      React.createElement Button,
+        bsStyle: @props.saveStyle
+        disabled: @props.isSaving || @props.isDisabled
+        onClick: @props.onSave
+      ,
+        @props.saveLabel
 
   _cancelButton: ->
     React.createElement Button,
