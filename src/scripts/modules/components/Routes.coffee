@@ -24,17 +24,15 @@ createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
-adformRoutes = require '../ex-adform/routes'
-geneeaGeneralRoutes = require '../app-geneea-nlp-analysis/routes.js'
-customScienceRoutes = require '../custom-science/Routes'
+adformRoutes = require('../ex-adform/routes').default
+geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
+customScienceRoutes = require('../custom-science/Routes').default
 
 extractor = injectProps(type: 'extractor')
 writer = injectProps(type: 'writer')
 application = injectProps(type: 'application')
 
 
-appIndex = application(ComponentsIndex)
-console.log 'app index', appIndex, ComponentsIndex
 routes =
 
   applications:
@@ -42,7 +40,7 @@ routes =
     title: 'Applications'
     requireData: ->
       InstalledComponentsActionsCreators.loadComponents()
-    defaultRouteHandler: appIndex
+    defaultRouteHandler: application(ComponentsIndex)
     headerButtonsHandler: injectProps(
       text: 'New Application'
       to: 'new-application'
@@ -104,8 +102,7 @@ routes =
         handler: NewComponentFormPage
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
-      ]
-    ,
+      ],
       exDbRoutes
     ,
       exGdriveGoogleRoutes
