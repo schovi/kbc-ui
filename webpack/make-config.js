@@ -61,8 +61,6 @@ module.exports = function (options) {
         };
     }
 
-    console.log(path.resolve(__dirname, '../.eslintrc'));
-
     return {
         devtool: isDevelopment ? 'eval' : 'source-map',
         entry: entry,
