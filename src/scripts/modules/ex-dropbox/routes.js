@@ -32,30 +32,29 @@ export default {
       requiredData: [
         (params) => installedComponentsActions.loadComponentConfigData('ex-dropbox', params.config).then(() => {
           let configuration = installedComponentsStore.getConfigData('ex-dropbox', params.config).toJS();
-          oauthActions.loadCredentials('ex-dropbox', params.config).then(() => {
+          return oauthActions.loadCredentials('ex-dropbox', params.config).then(() => {
             let credentials = oauthStore.getCredentials('ex-dropbox', params.config).toJS();
             let parameters = configuration ? configuration.parameters : {};
             parameters.credentials = params.config;
             configuration.parameters = parameters;
             let description = credentials ? credentials.description : '';
             let saveFn = installedComponentsActions.saveComponentConfigData;
-            saveFn('ex-dropbox', params.config, Immutable.fromJS(configuration)).then(() => {
+            return saveFn('ex-dropbox', params.config, Immutable.fromJS(configuration)).then(() => {
               let router = RouterStore.getRouter();
               let notification = `Dropbox account ${description} successfully authorized.`;
               ApplicationActionCreators.sendNotification({
                 message: notification
               });
-              router.transitionTo('ex-dropbox', {config: params.config});
+              return router.transitionTo('ex-dropbox', {config: params.config});
             });
           }, (error) => {
             let router = RouterStore.getRouter();
-            let notification = 'Failed to authorize the Dropbox account, please contact us on support@keboola.com';
-            console.log(error);
+            let notification = `Failed to authorize the Dropbox account, error: ${error}, please contact us on support@keboola.com`;
             ApplicationActionCreators.sendNotification({
               message: notification,
               type: 'error'
             });
-            router.transitionTo('ex-dropbox', {config: params.config});
+            return router.transitionTo('ex-dropbox', {config: params.config});
           });
         })
       ]
