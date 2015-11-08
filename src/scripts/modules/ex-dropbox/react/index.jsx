@@ -265,8 +265,8 @@ export default React.createClass({
               disabledReason='A Dropbox account must be authorized and some table selected.'
               runParams={() => ({config: this.state.configId})}
               >
-            You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files']).count()} csv files</strong> from your Dropbox.
-            The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
+              You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files'], List()).count()} csv files</strong> from your Dropbox.
+              The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
             </RunButtonModal>
           </li>
           <li>
@@ -443,13 +443,15 @@ export default React.createClass({
   handleUploadingSingleElement(element) {
     if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
       return {
-        parameters: {
-          config: {
-            files: [
-              this.state.configData.getIn(['parameters', 'config', 'files']).get(element)
-            ],
-            bucket: this.state.configData.getIn(['parameters', 'config', 'bucket']),
-            credentials: this.state.configData.getIn(['parameters', 'config', 'credentials'])
+          configData: {
+            parameters: {
+            config: {
+              files: [
+                this.state.configData.getIn(['parameters', 'config', 'files']).get(element)
+              ],
+              bucket: this.state.configData.getIn(['parameters', 'config', 'bucket']),
+              credentials: this.state.configData.getIn(['parameters', 'config', 'credentials'])
+            }
           }
         }
       };
