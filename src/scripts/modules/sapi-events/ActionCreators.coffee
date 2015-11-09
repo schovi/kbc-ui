@@ -7,7 +7,6 @@ OrchestrationStore = require './stores/OrchestrationsStore'
 OrchestrationJobsStore = require './stores/OrchestrationJobsStore'
 Promise = require 'bluebird'
 
-
 module.exports =
 
   loadEventsForce: (params) ->
