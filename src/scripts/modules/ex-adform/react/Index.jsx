@@ -5,7 +5,7 @@ import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';
 import InstalledComponentStore from '../../components/stores/InstalledComponentsStore';
 import ComponentStore from '../../components/stores/ComponentsStore';
-import LatestJobsStore from '../../jobs/stores/LatestJobsStore';;
+import LatestJobsStore from '../../jobs/stores/LatestJobsStore';
 
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
