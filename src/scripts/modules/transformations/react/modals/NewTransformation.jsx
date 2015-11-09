@@ -24,6 +24,8 @@ function prepareDataForCreate(data) {
     case 'r':
       newData = newData.set('backend', 'docker').set('type', 'r');
       break;
+    default:
+      throw new Error("Unknown backend " + data.get('backend'));
   }
 
   return newData;
