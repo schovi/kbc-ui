@@ -11,7 +11,7 @@ ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 Input = React.createFactory(require('react-bootstrap').Input)
 Modal = require('react-bootstrap').Modal
 Loader = React.createFactory(require('kbc-react-components').Loader)
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 tooltips =
   file: 'uploads selected table as csv a file'

@@ -4,7 +4,7 @@ Link = require('react-router').Link
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 uploadUtils = require '../../../uploadUtils'
 
 

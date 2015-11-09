@@ -8,7 +8,7 @@ LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 OAuthStore = require('../../../../components/stores/OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'

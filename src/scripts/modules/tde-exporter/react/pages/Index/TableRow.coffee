@@ -7,7 +7,7 @@ Link = React.createFactory(require('react-router').Link)
 {Confirm} = require '../../../../../react/common/common'
 date = require '../../../../../utils/date'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-SapiTableLinkEx = require '../../../../components/react/components/StorageApiTableLinkEx'
+SapiTableLinkEx = require('../../../../components/react/components/StorageApiTableLinkEx').default
 UploadButton = React.createFactory require './UploadButton'
 
 module.exports = React.createClass

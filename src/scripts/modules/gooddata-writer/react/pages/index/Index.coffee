@@ -9,7 +9,7 @@ ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 TablesList = require './BucketTablesList'
 ActiveCountBadge = require './ActiveCountBadge'
 {Link} = require('react-router')

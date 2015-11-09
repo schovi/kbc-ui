@@ -8,7 +8,6 @@ componentsRoutes = require './modules/components/Routes'
 orchestrationsRoutes = require './modules/orchestrations/Routes'
 jobsRoutes = require './modules/jobs/Routes'
 transformationsRoutes = require './modules/transformations/Routes'
-applications = require './modules/applications/Routes'
 
 StorageActionCreators = require './modules/components/StorageActionCreators'
 

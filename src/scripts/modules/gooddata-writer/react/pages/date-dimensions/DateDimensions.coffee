@@ -7,8 +7,8 @@ dateDimensionsStore = require '../../../dateDimensionsStore'
 actionCreators = require '../../../actionCreators'
 
 
-DateDimensionsTable = require './DateDimensionsTable'
-NewDimensionForm = require './../../components/NewDimensionForm'
+DateDimensionsTable = require('./DateDimensionsTable').default
+NewDimensionForm = require('./../../components/NewDimensionForm').default
 
 {strong, br, ul, li, div, span, i} = React.DOM
 
