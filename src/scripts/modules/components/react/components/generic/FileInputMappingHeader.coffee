@@ -4,7 +4,7 @@ Link = React.createFactory(require('react-router').Link)
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 DeleteButton = require '../../../../../react/common/DeleteButton'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-Modal = require './FileInputMappingModal'
+Modal = require('./FileInputMappingModal').default
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
