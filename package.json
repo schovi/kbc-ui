@@ -31,6 +31,7 @@
     "react": "~0.13.3",
     "react-autosuggest": "git+https://github.com/keboola/react-autosuggest",
     "react-bootstrap": "~0.23.7",
+    "react-clipboard.js": "^0.1.5",
     "react-code-mirror": "~3.0.4",
     "react-datepicker": "~0.6.2",
     "react-dnd": "~0.9.8",
@@ -41,7 +42,6 @@
     "react-select": "~0.5.1",
     "react-sticky": "~2.5.2",
     "react-textarea-autosize": "^2.3.1",
-    "react-zeroclipboard": "~0.4.0",
     "superagent": "~0.21.0",
     "underscore": "~1.7.0",
     "underscore.string": "~3.0.3"
