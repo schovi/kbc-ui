@@ -1,7 +1,7 @@
 React = require 'react'
 FormHeader = React.createFactory(require './FormHeader')
 Button = React.createFactory(require('react-bootstrap').Button)
-contactSupport = require '../../../../../utils/contactSupport'
+contactSupport = require('../../../../../utils/contactSupport').default
 
 {div, form, p} = React.DOM
 

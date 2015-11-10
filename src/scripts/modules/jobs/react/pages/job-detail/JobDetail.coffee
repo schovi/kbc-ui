@@ -23,7 +23,7 @@ ActionCreators = require '../../../ActionCreators'
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 ErrorNote = require('./ErrorNote').default
 
-contactSupport = require '../../../../../utils/contactSupport'
+contactSupport = require('../../../../../utils/contactSupport').default
 
 date = require '../../../../../utils/date'
 {Tree} = require 'kbc-react-components'
