@@ -5,7 +5,7 @@ _ = require 'underscore'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
-Confirm = require '../../../../../react/common/Confirm'
+Confirm = require('../../../../../react/common/Confirm').default
 TableauServerCredentialsModal = React.createFactory require './TableauServerCredentialsModal'
 
 module.exports = React.createClass

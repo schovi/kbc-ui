@@ -8,7 +8,7 @@ DropboxModal = React.createFactory require '../../../../components/react/compone
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
-Confirm = require '../../../../../react/common/Confirm'
+Confirm = require('../../../../../react/common/Confirm').default
 
 module.exports = React.createClass
   displayName: 'DropboxRow'
