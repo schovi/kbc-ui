@@ -56,9 +56,13 @@ module.exports = React.createClass
               onClick: =>
                 @setState
                   isSaving: true
-                @props.saveCredentialsFn(@state.credentials).then =>
+                creds = @state.credentials
+                safeCreds = creds.set('#password', creds.get('password'))
+                safeCreds = safeCreds.remove('password')
+                @props.saveCredentialsFn(safeCreds).then =>
                   @setState
                     isSaving: false
+                    credentials: safeCreds
                   @props.updateLocalState(Map())
             ,
               span null,
