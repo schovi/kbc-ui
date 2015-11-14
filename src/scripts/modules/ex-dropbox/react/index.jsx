@@ -111,7 +111,7 @@ export default React.createClass({
 
       ExDropboxActions.getListOfCsvFiles(token);
       StorageActionCreators.loadBucketsForce();
-      this.updateLocalState(['dropboxToken'], token);
+      this.updateLocalState(['#dropboxToken'], token);
     }
   },
 
@@ -246,6 +246,10 @@ export default React.createClass({
     }
   },
 
+  runParams() {
+    return () => ({config: this.state.configId});
+  },
+
   renderSideBar() {
     return (
       <div className='col-md-3 kbc-main-sidebar'>
@@ -263,7 +267,7 @@ export default React.createClass({
               component='ex-dropbox'
               disabled={!this.canRunUpload()}
               disabledReason='A Dropbox account must be authorized and some table selected.'
-              runParams={() => ({config: this.state.configId})}
+              runParams={this.runParams()}
               >
               You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files'], List()).count()} csv files</strong> from your Dropbox.
               The result will be stored into <strong>{this.state.configData.getIn(['parameters', 'config', 'bucket'])}</strong> bucket.
@@ -353,7 +357,7 @@ export default React.createClass({
     var newData = Map()
       .setIn(['parameters', 'config', 'bucket'], bucketData)
       .setIn(['parameters', 'config', 'files'], filesData)
-      .setIn(['parameters', 'config', 'credentials'], this.state.localState.get('dropboxToken'));
+      .setIn(['parameters', 'config', '#credentials'], this.state.localState.get('#dropboxToken'));
 
     return actions.saveComponentConfigData(componentId, this.state.configId, newData);
   },
@@ -450,7 +454,7 @@ export default React.createClass({
                 this.state.configData.getIn(['parameters', 'config', 'files']).get(element)
               ],
               bucket: this.state.configData.getIn(['parameters', 'config', 'bucket']),
-              credentials: this.state.configData.getIn(['parameters', 'config', 'credentials'])
+              '#credentials': this.state.configData.getIn(['parameters', 'config', '#credentials'])
             }
           }
         }
