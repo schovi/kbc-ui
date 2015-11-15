@@ -23,7 +23,7 @@ export function listBucketNames(buckets) {
 }
 
 export function getDestinationName(fileName) {
-  let destinationFile = fileName.toString().replace(/\//g, '_').toLowerCase().slice(1, -4);
+  let destinationFile = fileName.toString().replace(/\/| /g, '_').toLowerCase().slice(1, -4);
 
   return `${destinationFile}`;
 }

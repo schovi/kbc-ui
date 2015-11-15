@@ -17,6 +17,9 @@ export default {
           type: ActionTypes.UPDATE_LIST_OF_CSV_FILES,
           data: files
         });
+      })
+      .catch((error) => {
+        throw error;
       });
   }
 };
