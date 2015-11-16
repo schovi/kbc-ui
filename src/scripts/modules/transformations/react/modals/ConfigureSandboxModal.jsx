@@ -49,6 +49,9 @@ export default React.createClass({
                 <Input type="radio" label="Prepare transformation" help="Load input tables AND perform required transformations" wrapperClassName="col-sm-offset-1 col-sm-8" value="prepare" />
                 <Input type="radio" label="Execute transformation without writing to Storage API" wrapperClassName="col-sm-offset-1 col-sm-8" value="dry-run" />
               </div>
+              <div className="help-block">
+                Note: Disabled transformations will NOT be executed in any of these modes.
+              </div>
             </RadioGroup>
           </div>
           {this.renderCredentials()}
