@@ -4,7 +4,6 @@
   "description": "Keboola Connection UI",
   "main": "src/scripts/app",
   "dependencies": {
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.1.20",
     "bluebird": "~2.3.11",
     "canvg": "git+https://git@github.com/keboola/canvg.git#f3e9fa2992d9a25fe4a46db3a59a208b5a8b86cb",
     "classnames": "~2.1.0",
