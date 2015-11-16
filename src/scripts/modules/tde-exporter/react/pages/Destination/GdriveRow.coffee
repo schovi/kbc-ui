@@ -9,7 +9,7 @@ Picker = React.createFactory(require '../../../../google-utils/react/GooglePicke
 ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
-Confirm = require '../../../../../react/common/Confirm'
+Confirm = require('../../../../../react/common/Confirm').default
 
 module.exports = React.createClass
   displayName: 'GdriveRow'

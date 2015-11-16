@@ -34,16 +34,22 @@ module.exports = React.createClass
         @_createInput 'SSL Client Certificate (client-cert.pem)', 'cert'
         @_createInput 'SSL Client Key (client-key.pem)', 'key'
         @_createInput 'SSL CA Certificate (ca-cert.pem)', 'ca'
+        @_createInput 'SSL Cipher',
+          'cipher',
+          'You can optionally provide a list of permissible ciphers to use for SSL encryption.'
         React.createElement TestCredentials,
           credentials: @props.credentials
           hasOffset: false
 
 
-  _createInput: (labelValue, propName) ->
+  _createInput: (labelValue, propName, help = null) ->
     if @props.enabled
       div className: 'form-group',
         label className: 'control-label',
           labelValue
+        if help
+          p className: 'help-block',
+            help
         React.createElement Textarea,
           label: labelValue
           type: 'textarea'

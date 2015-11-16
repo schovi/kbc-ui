@@ -12,7 +12,7 @@ TablesByBucketsPanel = React.createFactory require('../../../../components/react
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'

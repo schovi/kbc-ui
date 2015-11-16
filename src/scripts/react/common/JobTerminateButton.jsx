@@ -24,9 +24,8 @@ export default React.createClass({
           </button>
         </Confirm>
       );
-    } else {
-      return null;
     }
+    return null;
   },
 
   canBeTerminated() {

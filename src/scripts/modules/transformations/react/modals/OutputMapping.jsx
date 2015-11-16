@@ -39,7 +39,7 @@ export default React.createClass({
         bsSize="large"
         animation={false}
         >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={true}>
           <Modal.Title>Output Mapping</Modal.Title>
         </Modal.Header>
         <Modal.Body>

@@ -18,7 +18,8 @@ export default React.createClass({
     type: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onRequestHide: PropTypes.func.isRequired
   },
 
   isValid() {

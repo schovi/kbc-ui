@@ -6,7 +6,7 @@ RunComponentButton = React.createFactory(require '../../../../components/react/c
 DeleteButton = React.createFactory(require '../../../../../react/common/DeleteButton')
 TransformationActionCreators = require '../../../ActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
-NewTransformationModal = require '../../modals/NewTransformation'
+NewTransformationModal = require('../../modals/NewTransformation').default
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 
 {span, div, a, button, i, h4, small, em} = React.DOM

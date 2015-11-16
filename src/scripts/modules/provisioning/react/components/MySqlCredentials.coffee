@@ -1,7 +1,7 @@
 React = require 'react'
 
 Protected = React.createFactory(require('kbc-react-components').Protected)
-Clipboard = React.createFactory(require '../../../../react/common/Clipboard')
+Clipboard = React.createFactory(require('../../../../react/common/Clipboard').default)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {span, div, strong} = React.DOM

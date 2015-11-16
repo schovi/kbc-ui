@@ -17,7 +17,7 @@ export default React.createClass({
   mixins: [addons.PureRenderMixin],
 
   componentDidMount() {
-    this.collectStats();
+    this.collectStats(this.props.runId);
     if (this.props.autoRefresh) {
       this.startPolling();
     }
@@ -25,9 +25,16 @@ export default React.createClass({
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.autoRefresh) {
-      /*jslint browser:true*/
+      /* jslint browser:true */
       setTimeout(this.stopPolling, 2000); // events can be delayed
-      this.collectStats();
+      this.collectStats(nextProps.runId);
+    }
+
+    if (nextProps.runId !== this.props.runId) {
+      this.setState({
+        stats: null
+      });
+      this.collectStats(nextProps.runId);
     }
   },
 
@@ -38,7 +45,7 @@ export default React.createClass({
   startPolling() {
     const schedule = later.parse.recur().every(5).second();
     this.stopPolling();
-    this.timeout = later.setInterval(this.collectStats, schedule);
+    this.timeout = later.setInterval(() => this.collectStats(this.props.runId), schedule);
   },
 
   stopPolling() {
@@ -47,11 +54,11 @@ export default React.createClass({
     }
   },
 
-  collectStats() {
+  collectStats(runId) {
     this.setState({
       isLoading: true
     });
-    getRunIdStats(this.props.runId)
+    getRunIdStats(runId)
       .then(this.receiveStats);
   },
 

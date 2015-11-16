@@ -33,6 +33,11 @@ import {Button} from 'react-bootstrap';
 import Wizard from './Wizard';
 import {Steps} from '../constants';
 
+function parameterPasswordCompatibility(parameters) {
+  const password = parameters.getIn(['config', '#password'], parameters.getIn(['config', 'password'], ''));
+  return parameters.setIn(['config', '#password'], password);
+}
+
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
 
@@ -40,7 +45,10 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = 'ex-adform',
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      parameters = InstalledComponentStore.getConfigData(componentId, configId).get('parameters', Map());
+      parameters = parameterPasswordCompatibility(InstalledComponentStore
+          .getConfigData(componentId, configId)
+          .get('parameters', Map())
+      );
 
     return {
       component: ComponentStore.getComponent(componentId),
@@ -51,7 +59,7 @@ export default React.createClass({
       isSaving: InstalledComponentStore.isSavingConfigData(componentId, configId),
       localState: localState,
       isEditingJobs: localState.has('jobsString'),
-      isInitialized: parameters.getIn(['config', 'username']) && parameters.getIn(['config', 'password'])
+      isInitialized: parameters.getIn(['config', 'username']) && parameters.getIn(['config', '#password'])
         && parameters.hasIn(['config', 'jobs'])
     };
   },
@@ -73,7 +81,7 @@ export default React.createClass({
             <Wizard
               credentials={this.state.localState.get('credentials', Map({
                 username: this.state.parameters.getIn(['config', 'username'], ''),
-                password: this.state.parameters.getIn(['config', 'password'], '')
+                '#password': this.state.parameters.getIn(['config', '#password'], '')
               }))}
               onCredentialsChange={this.updateCredentials}
               step={this.state.localState.get('wizardStep', Steps.STEP_CREDENTIALS)}
@@ -156,9 +164,9 @@ export default React.createClass({
             show={this.state.showCredentialsModal}
             onHide={this.closeCredentialsModal}
             credentials={this.state.localState.get('credentials', Map({
-                  username: this.state.parameters.getIn(['config', 'username'], ''),
-                  password: this.state.parameters.getIn(['config', 'password'], '')
-                }))}
+              username: this.state.parameters.getIn(['config', 'username'], ''),
+              '#password': this.state.parameters.getIn(['config', '#password'], '')
+            }))}
             isSaving={this.state.isSaving}
             onChange={this.updateCredentials}
             onSave={this.saveCredentials}
@@ -182,7 +190,7 @@ export default React.createClass({
   },
 
   getJobsData() {
-    if(this.state.isEditingJobs) {
+    if (this.state.isEditingJobs) {
       return this.state.localState.get('jobsString');
     } else {
       return JSON.stringify(this.state.parameters.getIn(['config', 'jobs'], List()).toJSON(), null, '  ');

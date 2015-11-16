@@ -16,7 +16,7 @@ export default React.createClass({
   render() {
     return (
       <Modal show={this.props.show} onHide={this.props.onHide}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={true}>
           <Modal.Title>Credentials</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -39,7 +39,7 @@ export default React.createClass({
 
   isValid() {
     return this.props.credentials.get('username').trim().length > 0 &&
-      this.props.credentials.get('password').trim().length > 0;
+      this.props.credentials.get('#password').trim().length > 0;
   },
 
   handleSave() {

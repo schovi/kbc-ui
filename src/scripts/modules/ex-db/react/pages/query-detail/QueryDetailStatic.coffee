@@ -2,14 +2,16 @@ React = require 'react'
 CodeEditor  = React.createFactory(require('../../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input} = React.DOM
+editorMode = require('../../../editorMode').default
 
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
   propTypes:
     query: React.PropTypes.object.isRequired
+    mode: React.PropTypes.string.isRequired
 
   render: ->
     div className: 'row',
@@ -52,9 +54,10 @@ module.exports = React.createClass
           div className: 'col-md-12',
             if @props.query.get('query').length
               CodeEditor
-                readOnly: 'nocursor'
+                readOnly: true
                 lineNumbers: false
                 value: @props.query.get 'query'
+                mode: editorMode(@props.driver)
             else
               div className: 'row kbc-header',
                 p className: 'text-muted',

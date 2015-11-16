@@ -174,6 +174,8 @@ module.exports = React.createClass
       bucketObject.set('tables', @_filterBucketTables(bucketObject))
     filteredBuckets = filteredBuckets.filter (bucket) ->
       bucket.get('tables').count() > 0
+    filteredBuckets = filteredBuckets.sortBy (bucket) ->
+      bucket.get('id').toLowerCase()
     return filteredBuckets
 
   _filterBucketTables: (bucket) ->
@@ -191,7 +193,8 @@ module.exports = React.createClass
         isExported = @props.isTableExportedFn(tableId)
         return isExported
       )
-
+    newTables = newTables.sortBy (table) ->
+      table.get('id').toLowerCase()
     return newTables
 
   #return tables that no longer exists but are still in the configuration

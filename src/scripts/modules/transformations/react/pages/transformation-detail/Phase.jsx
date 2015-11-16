@@ -10,7 +10,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log('render phase');
     return (
       <OverlayTrigger overlay={<Tooltip>Change Transformation Phase</Tooltip>} placement="top">
         <ModalTrigger modal={this.modal()}>

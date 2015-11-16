@@ -22,7 +22,21 @@ _store = Map(
   extLinksGenerating: Map() #configId
 )
 
-
+allStoreKeys = [
+  'configs'
+  'editingSheets'
+  'savingSheets'
+  'deletingSheets'
+  'documents'
+  'loadingFiles'
+  'selectedSheets'
+  'nextPageToken'
+  'loadingMore'
+  'searchQuery'
+  'savingNewSheets'
+  'extLinks'
+  'extLinksGenerating'
+]
 
 GdriveStore = StoreUtils.createStore
   hasConfig: (configId) ->
@@ -88,6 +102,12 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.EX_GDRIVE_CLEAN_STORE
+      configId = action.configurationId
+      for key in allStoreKeys
+        _store = _store.deleteIn [key, configId]
+      GdriveStore.emitChange()
+
     when Constants.ActionTypes.EX_GDRIVE_ADD_MORE_FILES
       files = action.files
       configId = action.configurationId

@@ -4,7 +4,7 @@ Link = React.createFactory(require('react-router').Link)
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 actionCreators = require '../../../actionCreators'
 

@@ -13,12 +13,12 @@ StorageBucketsStore  = require('../../../../components/stores/StorageBucketsStor
 RoutesStore = require '../../../../../stores/RoutesStore'
 TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-ActivateDeactivateButton = React.createFactory(require '../../../../../react/common/ActivateDeactivateButton')
+ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-ConfigureTransformationSandboxMode = React.createFactory(require '../../components/ConfigureTransformationSandboxMode')
+CreateSandboxModal = require('../../modals/ConfigureSandbox').default
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
-ConfigureSnowflakeConnection = React.createFactory(require './ConfigureSnowflakeConnection')
+ConfigureSnowflakeConnection = React.createFactory(require('./ConfigureSnowflakeConnection').default)
 
 {div, span, ul, li, a, em} = React.DOM
 
@@ -49,8 +49,7 @@ module.exports = React.createClass
     transformations: TransformationsStore.getTransformations(bucketId)
 
   getInitialState: ->
-    sandboxMode: 'prepare'
-    sandboxRedirect: true
+    sandboxModalOpen: false
 
   _deleteTransformation: ->
     transformationId = @state.transformation.get('id')
@@ -124,28 +123,19 @@ module.exports = React.createClass
           @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple' or
           @state.transformation.get('backend') == 'snowflake'
             li {},
-              RunComponentButton(
-                icon: 'fa-wrench'
-                title: "Create sandbox"
-                component: 'transformation'
-                method: 'run'
-                mode: 'link'
-                redirect: @state.sandboxRedirect
-                runParams: =>
+              a
+                onClick: => @setState sandboxModalOpen: true
+              ,
+                React.DOM.i className: "fa fa-fw fa-wrench"
+                ' Create sandbox'
+              React.createElement CreateSandboxModal,
+                show: @state.sandboxModalOpen
+                onHide: => @setState sandboxModalOpen: false
+                defaultMode: 'prepare'
+                backend: @state.transformation.get("backend")
+                runParams: Immutable.Map
                   configBucketId: @state.bucketId
                   transformations: [@state.transformationId]
-                  mode: @state.sandboxMode
-              ,
-
-                ConfigureTransformationSandboxMode
-                  backend: @state.transformation.get("backend")
-                  mode: @state.sandboxMode
-                  redirect: @state.sandboxRedirect
-                  onChange: (values) =>
-                    @setState
-                      sandboxMode: values.mode
-                      sandboxRedirect: values.redirect
-              )
 
           if @state.transformation.get('backend') == 'redshift' or
               @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple'

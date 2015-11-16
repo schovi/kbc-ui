@@ -4,14 +4,15 @@ InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 
-Confirm = require '../../../../react/common/Confirm'
+Confirm = require('../../../../react/common/Confirm').default
 {Loader} = require 'kbc-react-components'
 
 module.exports = React.createClass
   displayName: 'DeleteConfigurationButton'
   mixins: [createStoreMixin(InstalledComponentsStore)]
   propTypes:
-    customDeleteFn: React.PropTypes.func
+    preDeleteFn: React.PropTypes.func
+    postDeleteFn: React.PropTypes.func
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
 
@@ -20,10 +21,12 @@ module.exports = React.createClass
     isDeleting: InstalledComponentsStore.isDeletingConfig @props.componentId, @props.configId, @props.fieldName
 
   _handleDelete: ->
-    if @props.customDeleteFn
-      @props.customDeleteFn()
-    InstalledComponentsActionCreators.deleteConfiguration @props.componentId,
-        @props.configId
+    if @props.preDeleteFn
+      @props.preDeleteFn()
+    InstalledComponentsActionCreators.deleteConfiguration(@props.componentId, @props.configId).then =>
+      if @props.postDeleteFn
+        @props.postDeleteFn()
+
 
 
   render: ->

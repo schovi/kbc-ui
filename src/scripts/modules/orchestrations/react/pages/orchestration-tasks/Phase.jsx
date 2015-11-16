@@ -10,7 +10,7 @@ export default React.createClass({
   },
 
   render() {
-    if (parseInt(this.props.task.get('phase')) > 0) {
+    if (parseInt(this.props.task.get('phase'), 10) > 0) {
       return (
           <OverlayTrigger overlay={<Tooltip>Change Task Phase</Tooltip>} placement="top">
             <ModalTrigger modal={this.modal()}>

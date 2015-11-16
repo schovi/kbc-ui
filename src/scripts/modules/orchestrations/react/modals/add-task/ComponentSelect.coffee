@@ -1,5 +1,5 @@
 React = require 'react'
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 
 {div, h2, a, table, tbody, tr, td, span} = React.DOM
 

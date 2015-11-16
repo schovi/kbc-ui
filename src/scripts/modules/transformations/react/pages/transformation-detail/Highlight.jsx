@@ -51,7 +51,7 @@ export default React.createClass({
           var compare = mode.token(stream, state);
         }
         if (j === 10) {
-          throw 'Failed to advance the stream.' + stream.string + ' ' + stream.pos;
+          throw new Error('Failed to advance the stream.' + stream.string + ' ' + stream.pos);
         }
         var substr = stream.current();
         if (compare && compare.indexOf(' ') > -1) {
@@ -65,7 +65,6 @@ export default React.createClass({
         }
         // Give up when line is ridiculously long
         if (stream.pos > 20000) {
-          console.log('SQL line too long');
           st[pos++] = {style: null, text: this.text.slice(stream.pos)};
           break;
         }

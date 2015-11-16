@@ -3,14 +3,14 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 
 ExDbActionCreators = require '../ex-db/exDbActionCreators'
 ExDbIndex = require '../ex-db/react/pages/index/Index'
-ExDbCredentialsPage = require '../ex-db/react/pages/credentials/CredentialsPage'
-ExDbNewCredentialsPage = require '../ex-db/react/pages/credentials/NewCredentialsPage'
+ExDbCredentialsPage = require('../ex-db/react/pages/credentials/CredentialsPage').default
+ExDbNewCredentialsPage = require('../ex-db/react/pages/credentials/NewCredentialsPage').default
 ExDbQueryDetail = require '../ex-db/react/pages/query-detail/QueryDetail'
 ExDbNewQuery = require '../ex-db/react/pages/new-query/NewQuery'
 ExDbNewQueryHeaderButtons = require '../ex-db/react/components/NewQueryHeaderButtons'
-ExDbQueryHeaderButtons = require '../ex-db/react/components/QueryActionButtons'
+ExDbQueryHeaderButtons = require('../ex-db/react/components/QueryActionButtons').default
 ExDbCredentialsHeaderButtons = require '../ex-db/react/components/CredentialsHeaderButtons'
-ExDbNewCredentialsHeaderButtons = require '../ex-db/react/components/NewCredentialsHeaderButtons'
+ExDbNewCredentialsHeaderButtons = require('../ex-db/react/components/NewCredentialsHeaderButtons').default
 ExDbQueryName = require './react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'

@@ -8,7 +8,7 @@ _ = require 'underscore'
 RunDatePicker = React.createFactory require('../../components/DatePicker')
 moment = require 'moment'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 module.exports = React.createClass
   displayName: 'QueriesTable'

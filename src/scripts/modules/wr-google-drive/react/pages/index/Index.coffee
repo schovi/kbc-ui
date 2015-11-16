@@ -9,7 +9,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 Link = React.createFactory(require('react-router').Link)
 RowEditor = require './RowEditor'
 
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 GdriveStore = require '../../../wrGdriveStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'

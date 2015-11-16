@@ -3,7 +3,8 @@ import CodeMirror from 'react-code-mirror';
 
 export default React.createClass({
   propTypes: {
-    data: PropTypes.string.isRequired
+    data: PropTypes.string.isRequired,
+    onEditStart: PropTypes.func.isRequired
   },
 
   render() {
@@ -21,7 +22,8 @@ export default React.createClass({
             theme="solarized"
             lineNumbers={true}
             defaultValue={this.props.data}
-            readOnly="nocursor"
+            readOnly={true}
+            cursorHeight={0}
             mode="application/json"
             lineWrapping={true}
             />

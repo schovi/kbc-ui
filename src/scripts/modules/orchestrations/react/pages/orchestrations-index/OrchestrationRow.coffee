@@ -5,7 +5,7 @@ JobStatusCircle = React.createFactory(require '../../../../../react/common/JobSt
 Link = React.createFactory(require('react-router').Link)
 OrchestrationActiveButton = React.createFactory(require '../../components/OrchestrationActiveButton')
 OrchestrationDeleteButton = React.createFactory(require '../../components/OrchestrationDeleteButton')
-OrchestrationRunButton = React.createFactory(require '../../components/OrchestrationRunButton')
+OrchestrationRunButton = React.createFactory(require('../../components/OrchestrationRunButton').default)
 CronRecord = React.createFactory(require './../../components/CronRecord')
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 

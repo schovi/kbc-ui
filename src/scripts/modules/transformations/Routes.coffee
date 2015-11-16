@@ -11,7 +11,7 @@ ProvisioningActionCreators = require('../provisioning/ActionCreators')
 StorageActionCreators = require('../components/StorageActionCreators')
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
 TransformationBucketButtons = require './react/components/TransformationBucketButtons'
-TransformationListButtons = require './react/components/TransformationsListButtons'
+TransformationListButtons = require('./react/components/TransformationsListButtons').default
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
 

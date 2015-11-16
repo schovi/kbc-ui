@@ -24,6 +24,8 @@ function prepareDataForCreate(data) {
     case 'r':
       newData = newData.set('backend', 'docker').set('type', 'r');
       break;
+    default:
+      throw new Error('Unknown backend ' + data.get('backend'));
   }
 
   return newData;
@@ -31,7 +33,8 @@ function prepareDataForCreate(data) {
 
 export default React.createClass({
   propTypes: {
-    bucket: React.PropTypes.object.isRequired
+    bucket: React.PropTypes.object.isRequired,
+    onRequestHide: React.PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -124,10 +127,10 @@ export default React.createClass({
       {value: 'r', label: 'R'},
       {value: 'snowflake', label: 'Snowflake'}
     ].map(function(option) {
-        return (
-          <option value={option.value} key={option.value}>{option.label}</option>
-        );
-      });
+      return (
+        <option value={option.value} key={option.value}>{option.label}</option>
+      );
+    });
   },
 
 

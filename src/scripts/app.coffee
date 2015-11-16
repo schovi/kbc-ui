@@ -112,6 +112,7 @@ startApp = (appOptions) ->
     pendingPromise = Promise.all(promises)
     .cancellable()
     .then(->
+      console.log('handler', Handler)
       RouterActionCreators.routeChangeSuccess(state)
       React.render(React.createElement(Handler), appOptions.rootNode)
 

@@ -62,7 +62,7 @@ getUploadTaskParameters = (uploadComponentId, account, configId) ->
   storage =
     input:
       files: [
-        filterByRunId: true
+        'filter_by_run_id': true
         tags: ['tde']
       ]
   switch uploadComponentId
@@ -117,22 +117,22 @@ appendUploadTask = (tasks, uploadComponentId, account, configId) ->
 module.exports =
 
   isTableauServerAuthorized: (parameters) ->
-    account = parameters.get('tableauServer')
+    account = if parameters then parameters.get('tableauServer') else null
     account and
       not _.isEmpty(account.get('server_url')) and
       not _.isEmpty(account.get('username')) and
-      not _.isEmpty(account.get('project_id')) and
-      not _.isEmpty(account.get('password'))
+      not _.isEmpty(account.get('project_name')) and
+      not (_.isEmpty(account.get('password')) and _.isEmpty(account.get('#password')))
 
 
   isDropboxAuthorized: (parameters) ->
-    account = parameters.get('dropbox')
+    account = if parameters then parameters.get('dropbox') else null
     account and
       account.has('description') and
       account.has('id')
 
   isGdriveAuthorized: (parameters) ->
-    account = parameters.get('gdrive')
+    account = if parameters then parameters.get('gdrive') else null
     account and
       not _.isEmpty(account.get('accessToken')) and
       not _.isEmpty(account.get('refreshToken')) and

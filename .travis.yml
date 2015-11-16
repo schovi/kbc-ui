@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.10'
+  - "5"
 branches:
   only:
   - master
@@ -9,7 +9,9 @@ install:
 - git --version
 - git describe --tags
 - export KBC_REVISION=`git describe --tags`
-script: npm run build
+script:
+ - npm run lint
+ - npm run build
 sudo: false
 cache:
   bundler: true

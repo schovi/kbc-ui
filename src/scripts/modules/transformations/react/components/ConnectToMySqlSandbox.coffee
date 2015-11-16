@@ -12,7 +12,7 @@ ConnectToMySqlSandbox = React.createClass
   displayName: 'ConnectToMySqlSandbox'
 
   render: ->
-    form {method: 'post', action: 'https://adminer.keboola.com'},
+    form {method: 'post', action: 'https://adminer.keboola.com', target: '_blank'},
       input {type: 'hidden', name: 'auth[driver]', value: 'server'}
       input {type: 'hidden', name: 'auth[server]', value: @props.credentials.get "hostname"}
       input {type: 'hidden', name: 'auth[username]', value: @props.credentials.get "user"}

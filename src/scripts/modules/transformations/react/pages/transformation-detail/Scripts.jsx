@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import Static from './ScriptsStatic';
 import Edit from './ScriptsEdit';
+import Clipboard from '../../../../../react/common/Clipboard';
 
-/*global require */
+/* global require */
 require('codemirror/mode/r/r');
 
 export default React.createClass({
@@ -21,7 +22,9 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <h2>Scripts</h2>
+        <h2>
+          Scripts <small><Clipboard text={this.props.scripts}/></small>
+        </h2>
         {this.scripts()}
       </div>
     );

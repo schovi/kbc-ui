@@ -1,7 +1,7 @@
 /**
  * Mysql advanced columns
- * @param mapping
- * @returns {boolean}
+ * @param {Object} mapping Map mapping
+ * @return {boolean} Show details
  */
 function mysql(mapping) {
   if (mapping.has('columns') && mapping.get('columns').count() > 0) {
@@ -40,7 +40,8 @@ function mysql(mapping) {
 
 /**
  * Redshift advanced columns
- * @returns {boolean}
+ * @param {Object} mapping Map mapping
+ * @return {boolean} Show details
  */
 function redshift(mapping) {
   if (mapping.has('columns') && mapping.get('columns').count() > 0) {
@@ -87,7 +88,8 @@ function redshift(mapping) {
 
 /**
  * Docker advanced columns
- * @returns {boolean}
+ * @param {Object} mapping Map mapping
+ * @return {boolean} Show details
  */
 function docker(mapping) {
   return mysql(mapping);

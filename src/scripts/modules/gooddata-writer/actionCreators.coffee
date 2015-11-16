@@ -512,3 +512,30 @@ module.exports =
       type: constants.ActionTypes.GOOD_DATA_WRITER_TABLES_FILTER_CHANGE
       filter: query
       configurationId: configurationId
+
+  enableProjectAccess: (configurationId, projectId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_LOADING
+      configurationId: configurationId
+      projectId: projectId
+    goodDataWriterApi
+    .enableProjectAccess configurationId, projectId
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_ENABLE
+        configurationId: configurationId
+        projectId: projectId
+        ssoLink: result.link
+
+  disableProjectAccess: (configurationId, projectId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_LOADING
+      configurationId: configurationId
+      projectId: projectId
+    goodDataWriterApi
+    .disableProjectAccess configurationId, projectId
+    .then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_DISABLE
+        configurationId: configurationId
+        projectId: projectId

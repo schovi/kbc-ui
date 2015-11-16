@@ -1,5 +1,5 @@
 React = require 'react'
-FileSize = React.createFactory(require '../../../../react/common/FileSize')
+FileSize = React.createFactory(require('../../../../react/common/FileSize').default)
 
 {span} = React.DOM
 

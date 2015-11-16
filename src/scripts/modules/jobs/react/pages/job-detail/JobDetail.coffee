@@ -9,21 +9,21 @@ InstalledComponentsStore = require '../../../../components/stores/InstalledCompo
 PureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 Events = React.createFactory(require '../../../../sapi-events/react/Events')
-ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
-ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon'))
+ComponentName = React.createFactory(require('../../../../../react/common/ComponentName').default)
+ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
-JobStats = require './JobStatsContainer'
-GoodDataStatsContainer = require './GoodDataStatsContainer'
+JobStats = require('./JobStatsContainer').default
+GoodDataStatsContainer = require('./GoodDataStatsContainer')
 {PanelGroup, Panel} = require 'react-bootstrap'
 {Link} = require 'react-router'
-getComponentId = require '../../../getJobComponentId'
+getComponentId = require('../../../getJobComponentId').default
 JobStatusLabel = React.createFactory(require('../../../../../react/common/common').JobStatusLabel)
 ActionCreators = require '../../../ActionCreators'
 
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
-ErrorNote = require './ErrorNote'
+ErrorNote = require('./ErrorNote').default
 
-contactSupport = require '../../../../../utils/contactSupport'
+contactSupport = require('../../../../../utils/contactSupport').default
 
 date = require '../../../../../utils/date'
 {Tree} = require 'kbc-react-components'
@@ -75,6 +75,9 @@ module.exports = React.createClass
         SoundNotifications.success()
       when 'error', 'cancelled', 'canceled', 'terminated'
         SoundNotifications.crash()
+
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
 
   _handleChangeActiveAccordion: (activeKey) ->
     @setState

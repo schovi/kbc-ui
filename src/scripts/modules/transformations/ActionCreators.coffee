@@ -7,7 +7,7 @@ InstalledComponentsActionCreators = require '../components/InstalledComponentsAc
 RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
-parseQueries = require './utils/parseQueries'
+parseQueries = require('./utils/parseQueries').default
 
 
 module.exports =

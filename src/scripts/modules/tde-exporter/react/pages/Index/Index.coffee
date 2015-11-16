@@ -13,11 +13,11 @@ StorageFilesStore = require '../../../../components/stores/StorageFilesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableRow = require './TableRow'
-SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
+
 {Tooltip, OverlayTrigger, ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
 
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
+
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
@@ -25,6 +25,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 
+AddNewTableModal = require './AddNewTableModal'
 
 componentId = 'tde-exporter'
 {a, p, ul, li, span, button, strong, div, i} = React.DOM
@@ -51,7 +52,7 @@ module.exports = React.createClass
     isSaving: isSaving
 
   render: ->
-    console.log @state.configData.toJS()
+    #console.log @state.configData.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -158,35 +159,23 @@ module.exports = React.createClass
 
   _renderAddNewTable: ->
     show = !!@state.localState?.getIn(['newTable','show'])
-    React.createElement Modal,
+    return React.createElement AddNewTableModal,
       show: show
-      onHide: =>
+      selectedTableId: @state.localState?.getIn(['newTable', 'id'])
+      configuredTables: @state.configData.getIn(['parameters', 'typedefs'])
+      configId: @state.configId
+      onHideFn: =>
         @_updateLocalState(['newTable'], Map())
-      React.createElement ModalHeader, {closeButton: true},
-        React.createElement  ModalTitle, null, 'Add Table'
-      React.createElement ModalBody, null,
-        React.createElement SapiTableSelector,
-          value: @state.localState?.getIn(['newTable', 'id'])
-          onSelectTableFn: (value) =>
-            @_updateLocalState(['newTable', 'id'], value)
-          excludeTableFn: (tableId) =>
-            hasIn = !! @state.configData.getIn ['parameters', 'typedefs', tableId]
-            #@state.configData.hasIn ['parameters', 'typedefs', tableId]
-            hasIn
-      React.createElement ModalFooter, null,
-        React.createElement ConfirmButtons,
-          isSaving: false
-          isDisabled: not !! @state.localState?.getIn(['newTable', 'id'])
-          cancelLabel: 'Cancel'
-          saveLabel: 'Select'
-          onCancel: =>
-            @_updateLocalState(['newTable'], Map())
-          onSave: =>
-            RoutesStore.getRouter().transitionTo("tde-exporter-table",
-              config: @state.configId
-              tableId: @state.localState?.getIn(['newTable', 'id'])
-            )
-            @_updateLocalState(['newTable'], Map())
+      onSetTableIdFn: (value) =>
+        @_updateLocalState(['newTable', 'id'], value)
+      onSaveFn: (selectedTableId) =>
+        RoutesStore.getRouter().transitionTo("tde-exporter-table",
+          config: @state.configId
+          tableId: selectedTableId
+        )
+
+
+
 
   _addNewTableButton: ->
     button
@@ -207,9 +196,11 @@ module.exports = React.createClass
 
   _getLastTdeFile: (tableId) ->
     idReplaced = tableId.replace(/-/g,"_")
-    filename = "#{idReplaced}.tde"
+    filename = "#{idReplaced}.tde".toLowerCase()
+
     files = @state.files.filter (file) ->
-      file.get('name') == filename
+      fname = file.get('name').toLowerCase()
+      fname == filename
     latestFile = files.max (a, b) ->
       adate = moment(a.get('created'))
       bdate = moment(b.get('created'))

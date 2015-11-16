@@ -93,7 +93,6 @@ module.exports = React.createClass
 
   _generateDestinationOptions: (parameters) ->
     result = []
-    console.log parameters?.toJS()
     initValue = ''
     if uploadUtils.isDropboxAuthorized(parameters)
       initValue = 'wr-dropbox'

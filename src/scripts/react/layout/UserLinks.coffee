@@ -1,7 +1,7 @@
 React = require 'react'
 ImmutableRendererMixin = require '../../react/mixins/ImmutableRendererMixin'
 ApplicationStore = require '../../stores/ApplicationStore'
-contactSupport = require '../../utils/contactSupport'
+contactSupport = require('../../utils/contactSupport').default
 
 {div, ul, li, a, span} = React.DOM
 

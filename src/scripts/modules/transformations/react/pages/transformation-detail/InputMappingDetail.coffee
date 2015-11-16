@@ -4,12 +4,12 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 TableSizeLabel = React.createFactory(require '../../components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../components/TableBackendLabel')
 TransformationTableTypeLabel = React.createFactory(require '../../components/TransformationTableTypeLabel')
-FileSize = React.createFactory(require '../../../../../react/common/FileSize')
+FileSize = React.createFactory(require('../../../../../react/common/FileSize').default)
 Check = React.createFactory(require('kbc-react-components').Check)
 ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
-TableLinkEx = React.createFactory(require '../../../../components/react/components/StorageApiTableLinkEx')
+TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'

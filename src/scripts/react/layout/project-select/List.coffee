@@ -1,7 +1,7 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
 {List, Map} = require 'immutable'
-Tooltip = require '../../common/Tooltip'
+Tooltip = require('../../common/Tooltip').default
 _ = require 'underscore'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)

@@ -4,7 +4,7 @@ ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
 Check = React.createFactory(require('kbc-react-components').Check)
-NewDimensionForm = React.createFactory(require './../../components/NewDimensionForm')
+NewDimensionForm = React.createFactory(require('./../../components/NewDimensionForm').default)
 
 {TabbedArea, TabPane} = require 'react-bootstrap'
 actionCreators = require '../../../actionCreators'

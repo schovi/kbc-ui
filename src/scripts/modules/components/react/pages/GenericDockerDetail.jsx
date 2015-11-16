@@ -204,7 +204,7 @@ export default React.createClass({
   },
 
   getConfigDataParameters() {
-    if(this.state.isParametersEditing) {
+    if (this.state.isParametersEditing) {
       return this.state.editingConfigDataParameters;
     } else {
       return JSON.stringify(this.state.configDataParameters.toJSON(), null, '  ');

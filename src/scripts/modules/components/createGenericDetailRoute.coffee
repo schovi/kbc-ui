@@ -3,8 +3,8 @@ React = require 'react'
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
 InstalledComponentsActions = require './InstalledComponentsActionCreators'
 StorageActions = require './StorageActionCreators'
-GenericDetail = require './react/pages/GenericDetail'
-GenericDockerDetail = require './react/pages/GenericDockerDetail'
+GenericDetail = require('./react/pages/GenericDetail').default
+GenericDockerDetail = require('./react/pages/GenericDockerDetail').default
 ComponentNameEdit = require './react/components/ComponentName'
 
 ComponentsStore = require './stores/ComponentsStore'

@@ -27,6 +27,8 @@ module.exports = React.createClass
   componentDidMount: ->
     storageActionCreators.loadTables()
 
+  shouldComponentUpdate: (nextProps) ->
+    nextProps.value != @props.value
 
   render: ->
     isTablesLoading = @state.isTablesLoading
@@ -46,6 +48,8 @@ module.exports = React.createClass
     tables = tables.filter (table) =>
       stage = table.get('bucket').get('stage')
       stage in ['in','out'] and not @props.excludeTableFn(table.get('id'))
+    tables = tables.sort (a, b) ->
+      a.get('id').localeCompare(b.get('id'))
     tables = tables.map (table) ->
       tableId = table.get 'id'
       {

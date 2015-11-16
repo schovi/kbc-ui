@@ -567,4 +567,53 @@ dispatcher.register (payload) ->
 
       GoodDataWriterStore.emitChange()
 
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_LOADING
+      _store = _store.updateIn [
+        'writers'
+        action.configurationId
+        'pendingActions'
+      ], List(), (actions) ->
+        actions.push 'projectAccess'
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_ENABLE
+      _store = _store.updateIn [
+        'writers'
+        action.configurationId
+        'pendingActions'
+      ], List(), (actions) ->
+        actions.delete(actions.indexOf('projectAccess'))
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'config'
+        'project'
+        'ssoAccess'
+      ], true
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'config'
+        'project'
+        'ssoLink'
+      ], action.ssoLink
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_DISABLE
+      _store = _store.updateIn [
+        'writers'
+        action.configurationId
+        'pendingActions'
+      ], List(), (actions) ->
+        actions.delete(actions.indexOf('projectAccess'))
+      _store = _store.setIn [
+        'writers'
+        action.configurationId
+        'config'
+        'project'
+        'ssoAccess'
+      ], false
+      GoodDataWriterStore.emitChange()
+
 module.exports = GoodDataWriterStore

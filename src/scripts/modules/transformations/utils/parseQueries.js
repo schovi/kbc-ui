@@ -1,9 +1,10 @@
 import {List} from 'immutable';
 
 /**
- * taken and modified from
+ * Taken and modified from
  * http://stackoverflow.com/questions/4747808/split-mysql-queries-in-array-each-queries-separated-by/5610067#5610067
- * @param queries
+ * @param {string} queries SQL queries
+ * @return {Object} List of queries
  */
 function splitSqlQueries(queries) {
   const regex = '\s*((?:\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|' +
@@ -16,7 +17,7 @@ function splitSqlQueries(queries) {
 }
 
 export default function(transformation, queries) {
-  if (['redshift', 'mysql'].indexOf(transformation.get('backend')) >= 0) {
+  if (['redshift', 'mysql', 'snowflake'].indexOf(transformation.get('backend')) >= 0) {
     return splitSqlQueries(queries);
   } else {
     return List([queries]);

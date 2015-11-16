@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react/addons';
 import Highlight from './Highlight';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
-/*global require */
+/* global require */
 require('codemirror/mode/sql/sql');
 
 export default React.createClass({
@@ -14,17 +14,16 @@ export default React.createClass({
   },
 
   render() {
-    console.log('render static');
     return this.props.queries.count() ? this.queriesList() : this.emptyState();
   },
 
   queriesList() {
     return (
       <div>
+        <div className="text-right">{this.startEditButton()}</div>
         <div>
           {this.props.queries.map(this.queryRow, this)}
         </div>
-        <div>{this.startEditButton()}</div>
       </div>
     );
   },
@@ -72,7 +71,7 @@ export default React.createClass({
         return 'text/x-sql';
       case 'snowflake':
         return 'text/x-sql';
-      case 'mysql':
+      default:
         return 'text/x-mysql';
     }
   },

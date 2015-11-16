@@ -10,13 +10,13 @@ import FilesPie from './FilesPie';
 import IntlMessageFormat from 'intl-messageformat';
 
 const MESSAGES = {
-    TOTAL_IMPORTS: '{totalCount, plural, ' +
+  TOTAL_IMPORTS: '{totalCount, plural, ' +
     '=1 {one import total}' +
     'other {# imports total}}',
-    TOTAL_EXPORTS: '{totalCount, plural, ' +
+  TOTAL_EXPORTS: '{totalCount, plural, ' +
     '=1 {one export total}' +
     'other {# exports total}}',
-    TOTAL_FILES: '{totalCount, plural, ' +
+  TOTAL_FILES: '{totalCount, plural, ' +
     '=1 {one files total}' +
     'other {# files total}}'
 };
@@ -114,7 +114,5 @@ export default React.createClass({
     const total = this.props.stats.getIn(['tables', 'export', 'totalCount']);
     return total > 0 ? <small>{message('TOTAL_EXPORTS', {totalCount: total})}</small> : null;
   }
-
-
 
 });

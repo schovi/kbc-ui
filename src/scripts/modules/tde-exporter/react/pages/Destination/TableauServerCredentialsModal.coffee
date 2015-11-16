@@ -37,7 +37,9 @@ module.exports = React.createClass
           @_createInput('Server URL', 'server_url')
           @_createInput('Username', 'username')
           @_createInput('Password', 'password', 'password')
-          @_createInput('Project Id', 'project_id')
+          @_createInput('Project Name', 'project_name')
+          @_createInput('Site', 'site')
+
         div className: 'modal-footer',
           ButtonToolbar null,
             if @state.isSaving
@@ -54,9 +56,13 @@ module.exports = React.createClass
               onClick: =>
                 @setState
                   isSaving: true
-                @props.saveCredentialsFn(@state.credentials).then =>
+                creds = @state.credentials
+                safeCreds = creds.set('#password', creds.get('password'))
+                safeCreds = safeCreds.remove('password')
+                @props.saveCredentialsFn(safeCreds).then =>
                   @setState
                     isSaving: false
+                    credentials: safeCreds
                   @props.updateLocalState(Map())
             ,
               span null,
@@ -65,13 +71,15 @@ module.exports = React.createClass
     @state.credentials and
       not _.isEmpty(@state.credentials.get('server_url')) and
       not _.isEmpty(@state.credentials.get('username')) and
-      not _.isEmpty(@state.credentials.get('project_id')) and
+      not _.isEmpty(@state.credentials.get('project_name')) and
       not _.isEmpty(@state.credentials.get('password'))
 
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
+    sitePlaceholder = 'default if empty'
     Input
       label: labelValue
+      placeholder: sitePlaceholder if propName == 'site'
       type: type
       value: @state.credentials.get propName
       labelClassName: 'col-xs-4'

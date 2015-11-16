@@ -1,5 +1,5 @@
 React = require 'react'
-Clipboard = React.createFactory(require '../../../../../react/common/Clipboard')
+Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 fieldsTemplates = require '../../../templates/credentialsFields'
 
 _ = require 'underscore'

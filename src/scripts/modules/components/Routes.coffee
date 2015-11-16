@@ -1,8 +1,8 @@
 #React = require 'react'
 
-injectProps = require './react/injectProps'
-ComponentsIndex = require './react/pages/ComponentsIndex'
-NewComponent = require './react/pages/NewComponent'
+injectProps = require('./react/injectProps').default
+ComponentsIndex = require('./react/pages/ComponentsIndex')
+NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
 
 
@@ -25,13 +25,13 @@ createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
-adformRoutes = require '../ex-adform/routes'
-geneeaGeneralRoutes = require '../app-geneea-nlp-analysis/routes.js'
+adformRoutes = require('../ex-adform/routes').default
+geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
+customScienceRoutes = require('../custom-science/Routes').default
 
 extractor = injectProps(type: 'extractor')
 writer = injectProps(type: 'writer')
 application = injectProps(type: 'application')
-
 
 
 routes =
@@ -77,6 +77,8 @@ routes =
     ,
       geneeaGeneralRoutes
     ,
+      customScienceRoutes
+    ,
       createGenericDetailRoute 'application'
     ]
 
@@ -101,8 +103,7 @@ routes =
         handler: NewComponentFormPage
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
-      ]
-    ,
+      ],
       exDbRoutes
     ,
       exGdriveGoogleRoutes

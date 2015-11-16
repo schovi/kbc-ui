@@ -61,7 +61,6 @@ module.exports = function (options) {
         };
     }
 
-
     return {
         devtool: isDevelopment ? 'eval' : 'source-map',
         entry: entry,
@@ -80,7 +79,7 @@ module.exports = function (options) {
             configFile: 'coffeelint.json'
         },
         eslint: {
-            configFile: '.eslintrc'
+            configFile: path.resolve(__dirname, '../.eslintrc')
         },
         module: {
             preLoaders: [
@@ -88,12 +87,6 @@ module.exports = function (options) {
                     test: /\.coffee$/,
                     loader: "coffee-lint-loader",
                     exclude: /node_modules/
-                },
-                {
-                    test: /\.jsx?$/,
-                    loader: "eslint-loader",
-                    include:  path.resolve(__dirname, "../src/scripts"),
-                    exclude: [/node_modules/, path.resolve(__dirname, "../src/scripts/utils/codemirror/parser.js")]
                 }
             ],
             loaders: [

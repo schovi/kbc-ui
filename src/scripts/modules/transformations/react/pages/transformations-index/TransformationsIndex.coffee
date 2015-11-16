@@ -12,7 +12,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TransformationBucketsStore = require('../../../stores/TransformationBucketsStore')
 TransformationsStore = require('../../../stores/TransformationsStore')
 InstalledComponentsStore = require('../../../../components/stores/InstalledComponentsStore')
-SearchRow = require '../../../../../react/common/SearchRow'
+SearchRow = require('../../../../../react/common/SearchRow').default
 
 {Panel, PanelGroup} = require('react-bootstrap')
 

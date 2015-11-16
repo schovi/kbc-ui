@@ -16,7 +16,8 @@ export default React.createClass({
     value: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired
+    placeholder: PropTypes.string.isRequired,
+    suggestions: PropTypes.object.isRequired
   },
 
   getInitialState() {

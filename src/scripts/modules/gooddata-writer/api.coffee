@@ -1,9 +1,19 @@
 
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 createRequest = (method, path) ->
   SyrupApi.createRequest('gooddata-writer', method, path)
+
+getWriterOld = (configurationId) ->
+  createRequest('GET', "writers")
+  .query config: configurationId
+  .promise()
+  .then((response) ->
+    response.body.writer
+  )
+
 
 module.exports =
 
@@ -15,12 +25,15 @@ module.exports =
     )
 
   getWriter: (configurationId) ->
-    createRequest('GET', "writers")
-    .query config: configurationId
-    .promise()
-    .then((response) ->
-      response.body.writer
-    )
+    if ApplicationStore.hasCurrentAdminFeature('gd-writer-sso')
+      createRequest('GET', "v2/" + configurationId + "?include=project,project.ssoLink")
+      .promise()
+      .then((response) ->
+        response.body
+      )
+    else
+      getWriterOld(configurationId)
+
 
   getWriterModel: (configurationId) ->
     createRequest('GET', 'model')
@@ -157,3 +170,18 @@ module.exports =
     .promise()
     .then (response) ->
       response.body
+
+
+  enableProjectAccess: (configurationId, pid) ->
+    createRequest('POST', "v2/" + configurationId + "/projects/" + pid + "/access")
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  disableProjectAccess: (configurationId, pid) ->
+    createRequest('DELETE', "v2/" + configurationId + "/projects/" + pid + "/access")
+    .promise()
+    .then((response) ->
+      response.body
+    )

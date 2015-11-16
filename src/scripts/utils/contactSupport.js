@@ -1,5 +1,5 @@
 
 export default function() {
-  /*global zE*/
+  /* global zE */
   zE.activate({hideOnClose: true});
 }

@@ -3,7 +3,7 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
 import Sticky from 'react-sticky';
 
-/*global require */
+/* global require */
 require('codemirror/addon/lint/lint');
 require('../../../../utils/codemirror/json-lint');
 

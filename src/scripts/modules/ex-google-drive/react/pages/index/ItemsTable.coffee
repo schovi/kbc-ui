@@ -4,7 +4,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 Link = React.createFactory(require('react-router').Link)
 DeleteSheetButton = React.createFactory(require '../../components/DeleteSheetButton')
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
-SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx'))
+SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
 {Loader} = require 'kbc-react-components'
 

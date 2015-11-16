@@ -3,7 +3,8 @@ import CodeMirror from 'react-code-mirror';
 
 export default React.createClass({
   propTypes: {
-    script: PropTypes.string.isRequired
+    script: PropTypes.string.isRequired,
+    onEditStart: PropTypes.func.isRequired
   },
 
   render() {
@@ -13,15 +14,14 @@ export default React.createClass({
   script() {
     return (
       <div className="kbc-queries-edit">
+        <div className="text-right">{this.startEditButton()}</div>
         <div className="edit form-group kbc-queries-editor">
-          <div className="kbc-sticky-buttons">
-            {this.startEditButton()}
-          </div>
           <CodeMirror
             theme="solarized"
             lineNumbers={true}
             defaultValue={this.props.script}
-            readOnly="nocursor"
+            readOnly={true}
+            cursorHeight={0}
             mode="text/x-rsrc"
             lineWrapping={true}
             />

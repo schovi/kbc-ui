@@ -10,7 +10,8 @@ export default React.createClass({
     bucket: React.PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onRequestHide: PropTypes.func.isRequired
   },
 
   componentDidMount() {
@@ -36,7 +37,7 @@ export default React.createClass({
         </div>
         <div className="modal-footer">
           <ConfirmButtons
-            saveLabel='Save'
+            saveLabel="Save"
             isSaving={this.state.isSaving}
             onCancel={this.handleCancel}
             onSave={this.handleSave}
@@ -154,45 +155,6 @@ export default React.createClass({
               wrapperClassName="col-xs-9"
               />
           </div>
-          <div className="row col-md-12">
-            <Input
-              bsSize="small"
-              type="text"
-              label="AWS S3 bucket"
-              value={this.props.value.get('s3Bucket', '')}
-              placeholder="AWS S3 bucket name"
-              onChange={this.handleChangeS3Bucket}
-              disabled={this.state.isSaving}
-              labelClassName="col-xs-3"
-              wrapperClassName="col-xs-9"
-              />
-          </div>
-          <div className="row col-md-12">
-            <Input
-              bsSize="small"
-              type="text"
-              label="AWS Key ID"
-              value={this.props.value.get('awsKeyId', '')}
-              placeholder="AWS Key Id"
-              onChange={this.handleChangeAwsKeyId}
-              disabled={this.state.isSaving}
-              labelClassName="col-xs-3"
-              wrapperClassName="col-xs-9"
-              />
-          </div>
-          <div className="row col-md-12">
-            <Input
-              bsSize="small"
-              type="password"
-              label="AWS Secret Key"
-              value={this.props.value.get('awsSecretKey', '')}
-              placeholder="AWS Secret Key"
-              onChange={this.handleChangeAwsSecretKey}
-              disabled={this.state.isSaving}
-              labelClassName="col-xs-3"
-              wrapperClassName="col-xs-9"
-              />
-          </div>
         </div>
       </span>
     );
@@ -243,24 +205,6 @@ export default React.createClass({
   handleChangeWarehouse(e) {
     var value;
     value = this.props.value.set('warehouse', e.target.value);
-    this.props.onChange(value);
-  },
-
-  handleChangeS3Bucket(e) {
-    var value;
-    value = this.props.value.set('s3Bucket', e.target.value);
-    this.props.onChange(value);
-  },
-
-  handleChangeAwsKeyId(e) {
-    var value;
-    value = this.props.value.set('awsKeyId', e.target.value);
-    this.props.onChange(value);
-  },
-
-  handleChangeAwsSecretKey(e) {
-    var value;
-    value = this.props.value.set('awsSecretKey', e.target.value);
     this.props.onChange(value);
   },
 

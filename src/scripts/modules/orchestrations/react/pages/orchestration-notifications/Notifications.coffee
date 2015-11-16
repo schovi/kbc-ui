@@ -85,7 +85,7 @@ module.exports = React.createClass
       onChange: @_onToleranceChange
       className: 'form-control'
       style:
-        width: '50px'
+        width: '80px'
         display: 'inline-block'
 
   _renderNotificationsEditor: (channelName, emails) ->

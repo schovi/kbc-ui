@@ -5,7 +5,7 @@ InstalledComponentsActionCreators = require '../../../components/InstalledCompon
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 TransformationTypeLabel = React.createFactory(require './TransformationTypeLabel')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
-ActivateDeactivateButton = React.createFactory(require '../../../../react/common/ActivateDeactivateButton')
+ActivateDeactivateButton = React.createFactory(require('../../../../react/common/ActivateDeactivateButton').default)
 
 TransformationsActionCreators = require '../../ActionCreators'
 

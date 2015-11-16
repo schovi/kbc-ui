@@ -5,7 +5,7 @@ _ = require 'underscore'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
-Confirm = require '../../../../../react/common/Confirm'
+Confirm = require('../../../../../react/common/Confirm').default
 TableauServerCredentialsModal = React.createFactory require './TableauServerCredentialsModal'
 
 module.exports = React.createClass
@@ -77,8 +77,13 @@ module.exports = React.createClass
           @props.setConfigDataFn(path, credentials)
 
   _isAuthorized: ->
+    passwordEmpty = true
+    if @props.account
+      password = @props.account.get('password')
+      hashPassword = @props.account.get('#password')
+      passwordEmpty =  _.isEmpty(password) && _.isEmpty(hashPassword)
     @props.account and
       not _.isEmpty(@props.account.get('server_url')) and
       not _.isEmpty(@props.account.get('username')) and
-      not _.isEmpty(@props.account.get('project_id')) and
-      not _.isEmpty(@props.account.get('password'))
+      not _.isEmpty(@props.account.get('project_name')) and
+      not passwordEmpty

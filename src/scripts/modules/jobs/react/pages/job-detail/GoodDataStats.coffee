@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 moment = require 'moment'
-StatusLabel = React.createFactory require '../../../../../react/common/JobStatusLabel'
+StatusLabel = React.createFactory require('../../../../../react/common/JobStatusLabel').default
 Immutable = require 'immutable'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'

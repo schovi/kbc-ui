@@ -10,7 +10,7 @@ ExDbActionCreators = require '../../../exDbActionCreators'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
-QueryNav = require './QueryNav'
+QueryNav = require('./QueryNav').default
 EditButtons = require '../../../../../react/common/EditButtons'
 
 
@@ -30,6 +30,7 @@ module.exports = React.createClass
     isEditing = ExDbStore.isEditingQuery configId, queryId
 
     configId: configId
+    driver: ExDbStore.getConfig(configId).getIn(['credentials', 'driver'])
     query: ExDbStore.getConfigQuery configId, queryId
     editingQuery: ExDbStore.getEditingQuery configId, queryId
     isEditing: isEditing
@@ -75,6 +76,8 @@ module.exports = React.createClass
             tables: @state.tables
             onChange: @_handleQueryChange
             configId: @state.configId
+            driver: @state.driver
         else
           QueryDetailStatic
             query: @state.query
+            driver: @state.driver
