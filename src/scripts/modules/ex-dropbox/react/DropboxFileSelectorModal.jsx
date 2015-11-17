@@ -61,13 +61,13 @@ export default React.createClass({
         <Modal.Footer>
           <ButtonToolbar>
             <Button
-              bgStyle='link'
+              bgStyle="link"
               onClick={this.handleCancelFunction}>
               Cancel
             </Button>
             <Button
               className="btn btn-success"
-              bgStyle='success'
+              bgStyle="success"
               disabled={this.props.canSaveConfig()}
               onClick={this.handleSaveFunction}>
               Save

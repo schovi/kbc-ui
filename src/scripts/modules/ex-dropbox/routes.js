@@ -4,7 +4,6 @@ import installedComponentsStore from '../components/stores/InstalledComponentsSt
 import jobsActionCreators from '../jobs/ActionCreators';
 import oauthStore from '../components/stores/OAuthStore';
 import oauthActions from '../components/OAuthActionCreators';
-
 import Immutable from 'immutable';
 import RouterStore from '../../stores/RoutesStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';

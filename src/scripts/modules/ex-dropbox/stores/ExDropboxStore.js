@@ -7,7 +7,6 @@ var dropboxStore = Map({
   fileNames: Map()
 });
 
-
 let ExDropboxStore = StoreUtils.createStore({
   getCsvFiles() {
     return dropboxStore;
@@ -17,12 +16,12 @@ let ExDropboxStore = StoreUtils.createStore({
 Dispatcher.register((payload) => {
   let action = payload.action;
 
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.UPDATE_LIST_OF_CSV_FILES:
       dropboxStore = dropboxStore.set('fileNames', action.data);
       return ExDropboxStore.emitChange();
+    default:
   }
-
 });
 
 export default ExDropboxStore;

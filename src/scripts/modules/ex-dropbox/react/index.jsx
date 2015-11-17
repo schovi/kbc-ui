@@ -42,7 +42,6 @@ export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, ExDropboxStore, StorageBucketsStore)],
 
   getStateFromStores() {
-
     let configId = RoutesStore.getCurrentRouteParam('config');
     let configData = InstalledComponentsStore.getConfigData(componentId, configId);
     let localState = InstalledComponentsStore.getLocalState(componentId, configId);
@@ -197,10 +196,10 @@ export default React.createClass({
                         <i className="fa kbc-icon-cup"></i>
                       </button>
                       <RunButtonModal
-                        title='Upload'
-                        icon='fa fa-upload fa-fw'
-                        mode='button'
-                        component='ex-dropbox'
+                        title="Upload"
+                        icon="fa fa-upload fa-fw"
+                        mode="button"
+                        component="ex-dropbox"
                         runParams={handleUploadingSingleElement}
                         >
                         You are about to run upload of <strong>1 csv file</strong> from your Dropbox.
@@ -238,8 +237,7 @@ export default React.createClass({
       return (
         <strong>{this.state.credentials.get('description')}</strong>
       );
-    }
-    else {
+    } else {
       return (
         <strong>not authorized</strong>
       );
@@ -252,21 +250,21 @@ export default React.createClass({
 
   renderSideBar() {
     return (
-      <div className='col-md-3 kbc-main-sidebar'>
-        <div className='kbc-buttons kbc-text-light'>
+      <div className="col-md-3 kbc-main-sidebar">
+        <div className="kbc-buttons kbc-text-light">
           <p><span>Authorized for {this.getAuthorizationInformation()}</span></p>
 
           <ComponentsMetadata componentId={componentId} configId={this.state.configId} />
         </div>
-        <ul className='nav nav-stacked'>
+        <ul className="nav nav-stacked">
           <li className={classnames({disabled: !this.canRunUpload()})}>
             <RunButtonModal
-              title='Upload selected tables'
-              icon='fa fa-fw fa-upload'
-              mode='link'
-              component='ex-dropbox'
+              title="Upload selected tables"
+              icon="fa fa-fw fa-upload"
+              mode="link"
+              component="ex-dropbox"
               disabled={!this.canRunUpload()}
-              disabledReason='A Dropbox account must be authorized and some table selected.'
+              disabledReason="A Dropbox account must be authorized and some table selected."
               runParams={this.runParams()}
               >
               You are about to run upload of <strong>{this.state.configData.getIn(['parameters', 'config', 'files'], List()).count()} csv files</strong> from your Dropbox.
@@ -296,9 +294,9 @@ export default React.createClass({
       let description = this.state.credentials.get('description');
       return (
         <ActivateDeactivateButton
-          mode='link'
-          activateTooltip=''
-          deactivateTooltip='Reset Authorization'
+          mode="link"
+          activateTooltip=""
+          deactivateTooltip="Reset Authorization"
           isActive={true}
           isPending={this.state.isDeletingCredentials}
           onChange={this.deleteCredentials}
@@ -306,13 +304,12 @@ export default React.createClass({
         <Confirm
           text={`Do you really want to reset the authorization of ${description}? Tables configured to upload will not be reset.`}
           title={`Reset Authorization ${description}`}
-          buttonLabel='Reset'
+          buttonLabel="Reset"
           onConfirm={this.deleteCredentials}
         />
         </ActivateDeactivateButton>
       );
-    }
-    else {
+    } else {
       return (
         <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
           <span className="btn btn-link"><i className="fa fa-fw fa-user"></i>Authorize Dropbox Account</span>
@@ -320,8 +317,6 @@ export default React.createClass({
       );
     }
   },
-
-
 
   canSaveConfig() {
     var hasLocalConfigDataFiles = this.state.localState.has('selectedDropboxFiles');
@@ -334,8 +329,7 @@ export default React.createClass({
     // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
     if ((hasLocalConfigDataFiles || hasConfigDataFiles) && (hasLocalConfigDataBucket || hasConfigDataBucket)) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   },
@@ -382,19 +376,17 @@ export default React.createClass({
           selectedDropboxFiles.push(fileName);
         });
       }
-    }
-    // Else handle the situation where at least 1 file had been stored in configuration.
-    else {
+    } else {
+      // Else handle the situation where at least 1 file had been stored in configuration.
       // File selection wasn't updated.
       // Return the information from the config.
       if (!hasLocalConfigDataFiles) {
         configDataFiles.map((fileName) => {
           selectedDropboxFiles.push({label: fileName, value: fileName});
         });
-      }
+      } else {
       // File selection was updated.
       // Return the information from the selection.
-      else {
         localConfigDataFiles.map((fileName) => {
           selectedDropboxFiles.push(fileName);
         });
@@ -419,17 +411,15 @@ export default React.createClass({
       if (hasLocalConfigDataBucket) {
         selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
       }
-    }
-    // Else handle a situation where some information about bucket is stored in configuration.
-    else {
+    } else {
+      // Else handle a situation where some information about bucket is stored in configuration.
       // If no selection is made.
       // Return the configData information.
       if (!hasLocalConfigDataBucket) {
         selectedInputBucket.push({label: configDataBucket, value: configDataBucket});
-      }
-      // The last condition handle the situation where a update of bucket selection is made.
-      // Return the local change.
-      else {
+      } else {
+        // The last condition handle the situation where a update of bucket selection is made.
+        // Return the local change.
         selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
       }
     }
@@ -447,8 +437,8 @@ export default React.createClass({
   handleUploadingSingleElement(element) {
     if (this.state.configData.hasIn(['parameters', 'config', 'files'])) {
       return {
-          configData: {
-            parameters: {
+        configData: {
+          parameters: {
             config: {
               files: [
                 this.state.configData.getIn(['parameters', 'config', 'files']).get(element)
