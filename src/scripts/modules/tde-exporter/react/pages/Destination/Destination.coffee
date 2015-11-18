@@ -209,6 +209,9 @@ module.exports = React.createClass
     @_saveConfigData(['parameters', 'uploadTasks'], newTasks)
 
   _renderEnableUploadCol: (componentKey, isAuthorized) ->
+    if not isAuthorized
+      return div(null)
+
     isActive = @_hasUploadTask(componentKey) # gdrive, dropbox, # tableauServer
     isSaving = false
     if @state.isSaving
@@ -219,18 +222,23 @@ module.exports = React.createClass
       else
         isSaving = hasTask
 
+    helpText = 'Upload all TDE files immediately after export'
+    if not isActive
+      helpText = 'Don\'t upload all TDE files immediately after export'
 
     div className: "col-md-3",
-      if isAuthorized
-        ActivateDeactivateButton
-          mode: 'link'
-          key: 'active'
-          activateTooltip: 'Enable immediate upload'
-          deactivateTooltip: 'Disable immediate upload'
-          isActive: isActive
-          isPending: isSaving
-          onChange: =>
-            @_toggleImmediateUpload(componentKey, isActive)
+      p className: 'help-block', helpText
+      ActivateDeactivateButton
+        mode: 'link'
+        key: 'active'
+        activateTooltip: 'Enable immediate upload'
+        deactivateTooltip: 'Disable immediate upload'
+        isActive: isActive
+        isPending: isSaving
+        onChange: =>
+          @_toggleImmediateUpload(componentKey, isActive)
+
+
 
 
   _resetUploadTask: (taskName) ->
