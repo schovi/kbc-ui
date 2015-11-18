@@ -19,6 +19,7 @@ module.exports = React.createClass
     account: React.PropTypes.object
     setConfigDataFn: React.PropTypes.func
     renderEnableUpload: React.PropTypes.func
+    resetUploadTask: React.PropTypes.func
     orchestrationModal: React.PropTypes.object
 
   render: ->
@@ -40,7 +41,7 @@ module.exports = React.createClass
               text: "Do you really want to delete credentials for #{@props.account.get('server_url')}"
               buttonLabel: 'Delete'
               onConfirm: =>
-                @props.setConfigDataFn(['parameters', 'tableauServer'], null)
+                @props.resetUploadTask()
             ,
               Button
                 bsStyle: 'link'

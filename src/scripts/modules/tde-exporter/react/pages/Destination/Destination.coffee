@@ -86,6 +86,9 @@ module.exports = React.createClass
         @_renderComponentCol('wr-google-drive')
       renderEnableUpload: =>
         @_renderEnableUploadCol('gdrive', isAuthorized)
+      resetUploadTask: =>
+        @_resetUploadTask('gdrive')
+
 
   _renderDropbox: ->
     parameters = @state.configData.get 'parameters'
@@ -103,6 +106,8 @@ module.exports = React.createClass
         @_renderComponentCol('wr-dropbox')
       renderEnableUpload: =>
         @_renderEnableUploadCol('dropbox', isAuthorized)
+      resetUploadTask: =>
+        @_resetUploadTask('dropbox')
 
 
   _renderTableauServer: ->
@@ -121,6 +126,8 @@ module.exports = React.createClass
         @_renderComponentCol('wr-tableau-server')
       renderEnableUpload: =>
         @_renderEnableUploadCol('tableauServer', isAuthorized)
+      resetUploadTask: =>
+        @_resetUploadTask('tableauServer')
 
   _renderOrchestrationModal: (uploadComponentId, description, account, isAuthorized) ->
     pathId = "#{uploadComponentId}orchModal"
@@ -214,12 +221,21 @@ module.exports = React.createClass
 
 
     div className: "col-md-3",
-      ActivateDeactivateButton
-        mode: 'link'
-        key: 'active'
-        activateTooltip: 'Enable immediate upload'
-        deactivateTooltip: 'Disable immediate upload'
-        isActive: isActive
-        isPending: isSaving
-        onChange: =>
-          @_toggleImmediateUpload(componentKey, isActive)
+      if isAuthorized
+        ActivateDeactivateButton
+          mode: 'link'
+          key: 'active'
+          activateTooltip: 'Enable immediate upload'
+          deactivateTooltip: 'Disable immediate upload'
+          isActive: isActive
+          isPending: isSaving
+          onChange: =>
+            @_toggleImmediateUpload(componentKey, isActive)
+
+
+  _resetUploadTask: (taskName) ->
+    params = @state.configData.getIn(['parameters'], Map())
+    params = params.set(taskName, null)
+    uploadTasks = params.get('uploadTasks', List()).filter((t) -> t != taskName)
+    params = params.set('uploadTasks', uploadTasks)
+    @_saveConfigData(['parameters'], params)
