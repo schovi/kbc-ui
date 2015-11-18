@@ -7,6 +7,8 @@ ComponentName = React.createFactory(require '../../../../../react/common/Compone
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 uploadUtils = require '../../../uploadUtils'
 
+ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
+
 
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
@@ -16,7 +18,7 @@ ApplicationActionCreators = require '../../../../../actions/ApplicationActionCre
 OrchestrationModal = require './OrchestrationModal'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
-{Map, fromJS} = require 'immutable'
+{List, Map, fromJS} = require 'immutable'
 {OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 
 DropboxRow = React.createFactory require './DropboxRow'
@@ -50,6 +52,8 @@ module.exports = React.createClass
     configId: configId
     configData: configData
     localState: localState
+    isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId)
+    savingData: InstalledComponentsStore.getSavingConfigData(componentId, configId)
 
   componentDidMount: ->
     OrchestrationsActions.loadOrchestrations()
@@ -80,6 +84,8 @@ module.exports = React.createClass
         @_saveConfigData(path, gdrive)
       renderComponent: =>
         @_renderComponentCol('wr-google-drive')
+      renderEnableUpload: =>
+        @_renderEnableUploadCol('gdrive', isAuthorized)
 
   _renderDropbox: ->
     parameters = @state.configData.get 'parameters'
@@ -95,6 +101,9 @@ module.exports = React.createClass
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-dropbox')
+      renderEnableUpload: =>
+        @_renderEnableUploadCol('dropbox', isAuthorized)
+
 
   _renderTableauServer: ->
     parameters = @state.configData.get 'parameters'
@@ -110,6 +119,8 @@ module.exports = React.createClass
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
+      renderEnableUpload: =>
+        @_renderEnableUploadCol('tableauServer', isAuthorized)
 
   _renderOrchestrationModal: (uploadComponentId, description, account, isAuthorized) ->
     pathId = "#{uploadComponentId}orchModal"
@@ -179,3 +190,36 @@ module.exports = React.createClass
         ' '
         span null,
           component.get('name')
+  _hasUploadTask: (taskName) ->
+    tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())
+    return tasks.find( (t) -> t == taskName)
+
+  _toggleImmediateUpload: (taskName, isActive) ->
+    tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())
+    newTasks = tasks.push(taskName)
+    if isActive
+      newTasks = tasks.filter( (val) -> val != taskName)
+    @_saveConfigData(['parameters', 'uploadTasks'], newTasks)
+
+  _renderEnableUploadCol: (componentKey, isAuthorized) ->
+    isActive = @_hasUploadTask(componentKey) # gdrive, dropbox, # tableauServer
+    isSaving = false
+    if @state.isSaving
+      savingTasks = @state.savingData.getIn(['parameters', 'uploadTasks'], List())
+      hasTask = savingTasks.find((t) -> t == componentKey)
+      if isActive
+        isSaving = !hasTask
+      else
+        isSaving = hasTask
+
+
+    div className: "col-md-3",
+      ActivateDeactivateButton
+        mode: 'link'
+        key: 'active'
+        activateTooltip: 'Enable immediate upload'
+        deactivateTooltip: 'Disable immediate upload'
+        isActive: isActive
+        isPending: isSaving
+        onChange: =>
+          @_toggleImmediateUpload(componentKey, isActive)

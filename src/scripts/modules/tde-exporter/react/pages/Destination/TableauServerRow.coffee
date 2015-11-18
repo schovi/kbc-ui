@@ -1,12 +1,13 @@
 React = require 'react'
 _ = require 'underscore'
 #DropboxModal = React.createFactory require './DropboxModal'
-{button, strong, div, h2, span, h4, section, p, ul, li} = React.DOM
-{OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
+{label, input, button, strong, div, h2, span, h4, section, p, ul, li} = React.DOM
+{Input, OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
 Confirm = require('../../../../../react/common/Confirm').default
 TableauServerCredentialsModal = React.createFactory require './TableauServerCredentialsModal'
+
 
 module.exports = React.createClass
   displayName: 'TableauServerRow'
@@ -17,18 +18,18 @@ module.exports = React.createClass
     configId: React.PropTypes.string
     account: React.PropTypes.object
     setConfigDataFn: React.PropTypes.func
+    renderEnableUpload: React.PropTypes.func
     orchestrationModal: React.PropTypes.object
 
   render: ->
     div {className: 'row'},
       @props.renderComponent()
-      div className: 'col-md-4',
+      div className: 'col-md-3',
         @_renderAuthorized()
       div className: 'col-md-3',
         if !@_isAuthorized()
           div null,
             @_renderAuthorizeButton('Setup credentials to Tableau Server')
-        @props.orchestrationModal
         if @_isAuthorized()
           div null,
             @_renderAuthorizeButton('Edit Credentials')
@@ -46,7 +47,7 @@ module.exports = React.createClass
               ,
                 span className: 'kbc-icon-cup fa-fw'
                 ' Disconnect Destination'
-
+      @props.renderEnableUpload()
 
   _renderAuthorized: ->
     if @_isAuthorized()

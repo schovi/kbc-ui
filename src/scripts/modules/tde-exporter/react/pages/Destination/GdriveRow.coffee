@@ -21,16 +21,17 @@ module.exports = React.createClass
     account: React.PropTypes.object
     saveTargetFolderFn: React.PropTypes.func
     orchestrationModal: React.PropTypes.object
+    renderEnableUpload: React.PropTypes.func
+
   render: ->
     div {className: 'row'},
       @props.renderComponent()
-      div className: 'col-md-4',
+      div className: 'col-md-3',
         @_renderAuthorization()
       div className: 'col-md-3',
         if !@_isAuthorized()
           div null,
             @_renderAuthorizeButton()
-        @props.orchestrationModal
         if @_isAuthorized()
           div null,
             @_renderPicker()
@@ -48,6 +49,7 @@ module.exports = React.createClass
               ,
                 span className: 'kbc-icon-cup fa-fw'
                 ' Reset Authorization'
+      @props.renderEnableUpload()
 
   _renderAuthorization: ->
     if @_isAuthorized()
