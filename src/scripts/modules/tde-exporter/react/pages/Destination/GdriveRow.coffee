@@ -20,7 +20,6 @@ module.exports = React.createClass
     configId: React.PropTypes.string
     account: React.PropTypes.object
     saveTargetFolderFn: React.PropTypes.func
-    orchestrationModal: React.PropTypes.object
     renderEnableUpload: React.PropTypes.func
 
   render: ->

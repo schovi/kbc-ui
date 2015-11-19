@@ -20,7 +20,6 @@ module.exports = React.createClass
     setConfigDataFn: React.PropTypes.func
     renderEnableUpload: React.PropTypes.func
     resetUploadTask: React.PropTypes.func
-    orchestrationModal: React.PropTypes.object
 
   render: ->
     div {className: 'row'},

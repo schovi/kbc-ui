@@ -18,7 +18,6 @@ module.exports = React.createClass
     localState: React.PropTypes.object
     configId: React.PropTypes.string
     account: React.PropTypes.object
-    orchestrationModal: React.PropTypes.object
     renderEnableUpload: React.PropTypes.func
 
   render: ->

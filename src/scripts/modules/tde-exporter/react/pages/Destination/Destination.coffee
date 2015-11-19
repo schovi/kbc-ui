@@ -9,13 +9,10 @@ uploadUtils = require '../../../uploadUtils'
 
 ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 
-
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 ApplicationActionCreators = require '../../../../../actions/ApplicationActionCreators'
-
-OrchestrationModal = require './OrchestrationModal'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
 {List, Map, fromJS} = require 'immutable'
@@ -25,38 +22,26 @@ DropboxRow = React.createFactory require './DropboxRow'
 GdriveRow = React.createFactory require './GdriveRow'
 TableauServerRow = React.createFactory require './TableauServerRow'
 
-OrchestrationsStore = require '../../../../../modules/orchestrations/stores/OrchestrationsStore'
-OrchestrationsActions = require '../../../../../modules/orchestrations/ActionCreators'
-
 {button, strong, div, h2, span, h4, section, p} = React.DOM
 
 componentId = 'tde-exporter'
 module.exports = React.createClass
   displayName: 'TDEDestination'
 
-  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationsStore)]
-
+  mixins: [createStoreMixin(InstalledComponentsStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
 
     configData = InstalledComponentsStore.getConfigData(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
-    orchestrations = OrchestrationsStore.getAll()
-    #loadingOrchestrations
-    isLoadingOrchestrations = OrchestrationsStore.getIsLoading()
 
     #state
-    isLoadingOrchestrations: isLoadingOrchestrations
-    orchestrations: orchestrations
     configId: configId
     configData: configData
     localState: localState
     isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId)
     savingData: InstalledComponentsStore.getSavingConfigData(componentId, configId)
-
-  componentDidMount: ->
-    OrchestrationsActions.loadOrchestrations()
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -70,7 +55,6 @@ module.exports = React.createClass
     description = account?.get 'email'
     isAuthorized = uploadUtils.isGdriveAuthorized(parameters)
     GdriveRow
-      orchestrationModal: @_renderOrchestrationModal('wr-google-drive', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -96,7 +80,6 @@ module.exports = React.createClass
     description = account?.get 'description'
     isAuthorized = uploadUtils.isDropboxAuthorized(parameters)
     DropboxRow
-      orchestrationModal: @_renderOrchestrationModal('wr-dropbox', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -116,7 +99,6 @@ module.exports = React.createClass
     description = account?.get 'server_url'
     isAuthorized = uploadUtils.isTableauServerAuthorized(parameters)
     TableauServerRow
-      orchestrationModal: @_renderOrchestrationModal('wr-tableau-server', description, account, isAuthorized)
       configId: @state.configId
       localState: @state.localState
       updateLocalStateFn: @_updateLocalState
@@ -129,55 +111,6 @@ module.exports = React.createClass
       resetUploadTask: =>
         @_resetUploadTask('tableauServer')
 
-  _renderOrchestrationModal: (uploadComponentId, description, account, isAuthorized) ->
-    pathId = "#{uploadComponentId}orchModal"
-    return React.createElement OrchestrationModal,
-      description: description or uploadComponentId
-      uploadComponentId: uploadComponentId
-      updateLocalStateFn: (path, data) =>
-        path = [pathId].concat path
-        @_updateLocalState(path, data)
-      localState: @state.localState.get(pathId, Map())
-      orchestrationsList: @state.orchestrations
-      isLoadingOrchestrations: @state.isLoadingOrchestrations
-      selectOrchestrationFn: (orchId) =>
-        path = ['orchSelect']
-        @_updateLocalState(path, orchId)
-      selectedOrchestration: @state.localState.get('orchSelect')
-      onAppendClick: =>
-        @_appendToOrchestration(uploadComponentId, account)
-      isAppending: @state.localState.get('isAppending')
-      isAuthorized: isAuthorized
-
-
-  _appendToOrchestration: (uploadComponentId, account) ->
-    orchId = @state.localState.get 'orchSelect'
-    @_updateLocalState(['isAppending'], true)
-    uploadUtils.appendToOrchestration(orchId, @state.configId, uploadComponentId, account).then (result) =>
-      @_updateLocalState(['isAppending'], false)
-      @_updateLocalState(["#{uploadComponentId}orchModal", 'show'], false)
-      console.log "RESULT ORCH", result
-      @_sendNotification(result.id, result.name)
-
-    .catch (err) =>
-      @_updateLocalState(['isAppending'], false)
-      throw err
-
-  _sendNotification: (orchId, orchName) ->
-    msg = React.createClass
-      render: ->
-        span null,
-          'Orchestrtaion '
-          React.createElement Link,
-                to: 'orchestrationTasks'
-                params:
-                  orchestrationId: orchId
-              ,
-                orchName
-          ' has been updated'
-
-    ApplicationActionCreators.sendNotification
-      message: msg
 
   _saveConfigData: (path, data) ->
     newData = @state.configData.setIn path, data
@@ -197,6 +130,7 @@ module.exports = React.createClass
         ' '
         span null,
           component.get('name')
+
   _hasUploadTask: (taskName) ->
     tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())
     return tasks.find( (t) -> t == taskName)
@@ -237,9 +171,6 @@ module.exports = React.createClass
         isPending: isSaving
         onChange: =>
           @_toggleImmediateUpload(componentKey, isActive)
-
-
-
 
   _resetUploadTask: (taskName) ->
     params = @state.configData.getIn(['parameters'], Map())
