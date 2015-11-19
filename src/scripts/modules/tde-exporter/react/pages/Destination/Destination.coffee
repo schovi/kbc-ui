@@ -7,6 +7,8 @@ ComponentName = React.createFactory(require '../../../../../react/common/Compone
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 uploadUtils = require '../../../uploadUtils'
 
+SelectWriterModal = require('./WritersModal').default
+
 ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -45,9 +47,13 @@ module.exports = React.createClass
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
+      React.createElement SelectWriterModal,
+        localState: @state.localState.get('writersModal', Map())
+        setLocalState: (key, value ) =>
+          @_updateLocalState(['writersModal'].concat(key), value)
       @_renderTableauServer()
-      @_renderDropbox()
-      @_renderGoogleDrive()
+      #@_renderDropbox()
+      #@_renderGoogleDrive()
 
   _renderGoogleDrive: ->
     parameters = @state.configData.get 'parameters'
@@ -124,12 +130,21 @@ module.exports = React.createClass
 
   _renderComponentCol: (pcomponentId) ->
     component = ComponentsStore.getComponent(pcomponentId)
-    div {className: 'col-md-3'},
-      span {className: ''},
-        ComponentIcon {component: component, size: '32'}
-        ' '
-        span null,
-          component.get('name')
+    return span {className: ''},
+      ComponentIcon {component: component, size: '32'}
+      ' '
+      span null,
+        component.get('name')
+      ' '
+      button
+        type: 'button'
+        className: 'btn btn-success'
+        onClick: @_showWritersModal
+        'Change'
+
+  _showWritersModal: ->
+    @_updateLocalState(['writersModal', 'show'], true)
+
 
   _hasUploadTask: (taskName) ->
     tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())
@@ -158,9 +173,8 @@ module.exports = React.createClass
 
     helpText = "All TDE files will be uploaded to #{accountName} immediately after export."
     if not isActive
-      helpText = '' #'No instant upload of TDE files after export.'
-
-    return div className: "col-md-3",
+      helpText = 'No instant upload of TDE files after export.'
+    span null,
       p className: 'help-block', helpText
       ActivateDeactivateButton
         mode: 'link'
