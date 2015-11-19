@@ -48,14 +48,20 @@ module.exports = React.createClass
               ,
                 span className: 'kbc-icon-cup fa-fw'
                 ' Disconnect Destination'
-      @props.renderEnableUpload()
+      @props.renderEnableUpload(@_accountName())
+
+  _accountName: ->
+    if @props.account
+      return "#{@props.account.get('username')}@#{@props.account.get('server_url')}"
+    else
+      return ''
 
   _renderAuthorized: ->
     if @_isAuthorized()
       span null,
         'Authorized for '
         strong null,
-          "#{@props.account.get('username')}@#{@props.account.get('server_url')}"
+          @_accountName()
     else
       span null,
         'No Credentials.'

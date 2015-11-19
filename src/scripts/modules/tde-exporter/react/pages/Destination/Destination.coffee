@@ -84,8 +84,8 @@ module.exports = React.createClass
         @_saveConfigData(path, gdrive)
       renderComponent: =>
         @_renderComponentCol('wr-google-drive')
-      renderEnableUpload: =>
-        @_renderEnableUploadCol('gdrive', isAuthorized)
+      renderEnableUpload: (name) =>
+        @_renderEnableUploadCol('gdrive', isAuthorized, name)
       resetUploadTask: =>
         @_resetUploadTask('gdrive')
 
@@ -104,8 +104,8 @@ module.exports = React.createClass
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-dropbox')
-      renderEnableUpload: =>
-        @_renderEnableUploadCol('dropbox', isAuthorized)
+      renderEnableUpload: (name) =>
+        @_renderEnableUploadCol('dropbox', isAuthorized, name)
       resetUploadTask: =>
         @_resetUploadTask('dropbox')
 
@@ -124,8 +124,8 @@ module.exports = React.createClass
       setConfigDataFn: @_saveConfigData
       renderComponent: =>
         @_renderComponentCol('wr-tableau-server')
-      renderEnableUpload: =>
-        @_renderEnableUploadCol('tableauServer', isAuthorized)
+      renderEnableUpload: (name) =>
+        @_renderEnableUploadCol('tableauServer', isAuthorized, name)
       resetUploadTask: =>
         @_resetUploadTask('tableauServer')
 
@@ -208,7 +208,7 @@ module.exports = React.createClass
       newTasks = tasks.filter( (val) -> val != taskName)
     @_saveConfigData(['parameters', 'uploadTasks'], newTasks)
 
-  _renderEnableUploadCol: (componentKey, isAuthorized) ->
+  _renderEnableUploadCol: (componentKey, isAuthorized, accountName) ->
     if not isAuthorized
       return div(null)
 
@@ -222,17 +222,17 @@ module.exports = React.createClass
       else
         isSaving = hasTask
 
-    helpText = 'Upload all TDE files immediately after export'
+    helpText = "All TDE files will be uploaded to #{accountName} immediately after export."
     if not isActive
-      helpText = 'Don\'t upload all TDE files immediately after export'
+      helpText = '' #'No instant upload of TDE files after export.'
 
-    div className: "col-md-3",
+    return div className: "col-md-3",
       p className: 'help-block', helpText
       ActivateDeactivateButton
         mode: 'link'
         key: 'active'
-        activateTooltip: 'Enable immediate upload'
-        deactivateTooltip: 'Disable immediate upload'
+        activateTooltip: 'Enable instant upload'
+        deactivateTooltip: 'Disable instant upload'
         isActive: isActive
         isPending: isSaving
         onChange: =>

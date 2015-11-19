@@ -45,8 +45,10 @@ module.exports = React.createClass
               ,
                 span className: 'kbc-icon-cup fa-fw'
                 ' Reset Authorization'
-      @props.renderEnableUpload()
+      @props.renderEnableUpload(@_accountName())
 
+  _accountName: ->
+    @props.account?.get 'description'
 
 
   _renderAuthorization: ->
@@ -54,7 +56,7 @@ module.exports = React.createClass
       span null,
         'Authorized for '
         strong null,
-          @props.account.get 'description'
+          @_accountName()
     else
       span null,
         'Not Authorized.'
