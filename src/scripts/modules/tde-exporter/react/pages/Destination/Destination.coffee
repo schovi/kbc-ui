@@ -51,9 +51,9 @@ module.exports = React.createClass
         localState: @state.localState.get('writersModal', Map())
         setLocalState: (key, value ) =>
           @_updateLocalState(['writersModal'].concat(key), value)
-      @_renderTableauServer()
+      #@_renderTableauServer()
       #@_renderDropbox()
-      #@_renderGoogleDrive()
+      @_renderGoogleDrive()
 
   _renderGoogleDrive: ->
     parameters = @state.configData.get 'parameters'
@@ -144,7 +144,6 @@ module.exports = React.createClass
 
   _showWritersModal: ->
     @_updateLocalState(['writersModal', 'show'], true)
-
 
   _hasUploadTask: (taskName) ->
     tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())

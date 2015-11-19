@@ -1,8 +1,8 @@
 React = require 'react'
 _ = require 'underscore'
 GdriveModal = React.createFactory require './AuthorizeGdriveModal'
-{i, button, strong, div, h2, span, h4, section, p} = React.DOM
-{OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
+{i, form, button, strong, div, h2, span, h4, section, p} = React.DOM
+{OverlayTrigger, FormControls, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
 Picker = React.createFactory(require '../../../../google-utils/react/GooglePicker')
@@ -24,31 +24,46 @@ module.exports = React.createClass
 
   render: ->
     div {className: 'row'},
-      @props.renderComponent()
-      div className: 'col-md-3',
-        @_renderAuthorization()
-      div className: 'col-md-3',
-        if !@_isAuthorized()
-          div null,
-            @_renderAuthorizeButton()
+      form {className: 'form form-horizontal'},
+        @_renderFormElement('Destination', @props.renderComponent())
+        @_renderFormElement(null , @_renderAuthorizedInfo())
         if @_isAuthorized()
-          div null,
-            @_renderPicker()
-        if @_isAuthorized()
-          div null,
-            React.createElement Confirm,
-              title: 'Reset Authorization'
-              text: "Do you really want to reset authorization for #{@props.account.get('email')}"
-              buttonLabel: 'Reset'
-              onConfirm: =>
-                @props.setConfigDataFn(['parameters', 'gdrive'], null)
+          @_renderFormElement(null, @props.renderEnableUpload(@_accountName()))
+
+  _renderFormElement: (label, content) ->
+    cl = 'col-xs-10'
+    if not label
+      cl = 'col-xs-offset-2 col-xs-10'
+    React.createElement FormControls.Static,
+      labelClassName: if label then 'col-xs-2'
+      wrapperClassName: cl
+      label: label
+    ,
+      content
+
+  _renderAuthorizedInfo: ->
+    return div null,
+      @_renderAuthorization()
+      if !@_isAuthorized()
+        div null,
+          @_renderAuthorizeButton()
+      if @_isAuthorized()
+        div null,
+          @_renderPicker()
+      if @_isAuthorized()
+        div null,
+          React.createElement Confirm,
+            title: 'Reset Authorization'
+            text: "Do you really want to reset authorization for #{@props.account.get('email')}"
+            buttonLabel: 'Reset'
+            onConfirm: =>
+              @props.setConfigDataFn(['parameters', 'gdrive'], null)
+          ,
+            Button
+              bsStyle: 'link'
             ,
-              Button
-                bsStyle: 'link'
-              ,
-                span className: 'kbc-icon-cup fa-fw'
-                ' Reset Authorization'
-      @props.renderEnableUpload(@_accountName())
+              span className: 'kbc-icon-cup fa-fw'
+              ' Reset Authorization'
 
   _accountName: ->
     @props.account?.get 'email'

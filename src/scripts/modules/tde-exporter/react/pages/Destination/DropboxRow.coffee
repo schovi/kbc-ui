@@ -4,8 +4,8 @@ oauthActions = require '../../../../components/OAuthActionCreators'
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 DropboxModal = React.createFactory require '../../../../components/react/components/DropboxAuthorizeModal'
-{i, button, strong, div, h2, span, h4, section, p} = React.DOM
-{OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
+{i, button, strong, div, h2, span, form, h4, section, p} = React.DOM
+{FormControls, OverlayTrigger, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
 Confirm = require('../../../../../react/common/Confirm').default
@@ -22,29 +22,45 @@ module.exports = React.createClass
 
   render: ->
     div {className: 'row'},
-      @props.renderComponent()
-      div className: 'col-md-3',
-        @_renderAuthorization()
-      div className: 'col-md-3',
-        if !@_isAuthorized()
-          div null,
-            @_renderAuthorizeButton()
+      form {className: 'form form-horizontal'},
+        @_renderFormElement('Destination', @props.renderComponent())
+        @_renderFormElement(null , @_renderAuthorizedInfo())
         if @_isAuthorized()
-          div null,
-            React.createElement Confirm,
-              title: 'Reset Authorization'
-              text: "Do you really want to reset authorization for #{@props.account.get('description')}"
-              buttonLabel: 'Reset'
-              onConfirm: =>
-                @props.setConfigDataFn(['parameters', 'dropbox'], null)
-                oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
+          @_renderFormElement(null, @props.renderEnableUpload(@_accountName()))
+
+  _renderFormElement: (label, content) ->
+    cl = 'col-xs-10'
+    if not label
+      cl = 'col-xs-offset-2 col-xs-10'
+    React.createElement FormControls.Static,
+      labelClassName: if label then 'col-xs-2'
+      wrapperClassName: cl
+      label: label
+    ,
+      content
+
+  _renderAuthorizedInfo: ->
+    div null,
+      @_renderAuthorization()
+      if !@_isAuthorized()
+        div null,
+          @_renderAuthorizeButton()
+      if @_isAuthorized()
+        div null,
+          React.createElement Confirm,
+            title: 'Reset Authorization'
+            text: "Do you really want to reset authorization for #{@props.account.get('description')}"
+            buttonLabel: 'Reset'
+            onConfirm: =>
+              @props.setConfigDataFn(['parameters', 'dropbox'], null)
+              oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
+          ,
+            Button
+              bsStyle: 'link'
             ,
-              Button
-                bsStyle: 'link'
-              ,
-                span className: 'kbc-icon-cup fa-fw'
-                ' Reset Authorization'
-      @props.renderEnableUpload(@_accountName())
+              span className: 'kbc-icon-cup fa-fw'
+              ' Reset Authorization'
+
 
   _accountName: ->
     @props.account?.get 'description'
@@ -68,6 +84,7 @@ module.exports = React.createClass
         credentialsId: "tde-exporter-#{@props.configId}"
     ,
       Button
+        style: {'padding-left': 0}
         bsStyle: 'link'
       ,
         span className: 'fa fa-fw fa-dropbox'
