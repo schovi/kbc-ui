@@ -132,7 +132,7 @@ module.exports = React.createClass
         config: @state.configId
     ,
       i className: 'fa fa-fw fa-gear'
-      ' Setup Upload Destinations'
+      ' Setup Upload'
 
 
   _renderTableRow: (table, isDeleted = false) ->

@@ -63,7 +63,7 @@ module.exports =
     #     gdriveActions.loadGoogleInfo(params.configId, googleId)
     # ]
     title: (routerState) ->
-      return 'Setup Upload Destinations'
+      return 'Setup Upload'
   ,
     name: 'tde-exporter-gdrive-redirect'
     path: 'oauth/gdrive'
