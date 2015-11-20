@@ -35,7 +35,7 @@ after_deploy:
 - echo $KBC_REVISION
 - export BODY="{\"manifestUrl\":\"https://kbc-uis.s3.amazonaws.com/kbc/$KBC_REVISION/manifest.json\",\"activate\":true}"
 - curl -H X-Token:$X-KBC-ManageApiToken
-  -d '$BODY' https://martin-connection-devel.keboola.com/manage/ui-apps/register/register
+  -d '$BODY' https://martin-connection-devel.keboola.com/manage/ui-apps
 - curl -F manifestUrl=https://kbc-uis.s3.amazonaws.com/kbc/$KBC_REVISION/manifest.json -F activate=1
   -H X-Token:$KBC_ADMIN_TOKEN_PROD https://connection.keboola.com/admin/manage-apps-api/register
 notifications:
