@@ -7,6 +7,7 @@ import RunButtonModal from '../../components/react/components/RunComponentButton
 import classnames from 'classnames';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
+
 import { ModalTrigger } from 'react-bootstrap';
 
 import actions from '../../components/InstalledComponentsActionCreators';
