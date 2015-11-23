@@ -1,4 +1,4 @@
-React = require 'react'
+#React = require 'react'
 
 injectProps = require('./react/injectProps').default
 ComponentsIndex = require('./react/pages/ComponentsIndex')
@@ -19,6 +19,7 @@ exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
+dropoxExtractorRoutes = require('../ex-dropbox/routes').default
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
@@ -110,6 +111,8 @@ routes =
       exGanalRoutes
     ,
       adformRoutes
+    ,
+      dropoxExtractorRoutes
     ,
       createGenericDetailRoute 'extractor'
     ]
