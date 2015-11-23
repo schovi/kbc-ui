@@ -10,7 +10,7 @@ module.exports = React.createClass
     div className: 'form-group',
       label className: 'control-label col-xs-2', 'License'
       div className: 'col-xs-10',
-        table null,
+        table {className: "kbcLicenseTable"},
           tr null,
             td null,
               em {className: "fa fa-cloud fa-fw kbcLicenseIcon"}
