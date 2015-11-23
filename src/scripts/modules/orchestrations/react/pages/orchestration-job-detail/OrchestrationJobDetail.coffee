@@ -62,7 +62,7 @@ OrchestrationJobDetail = React.createClass
                     orchestrationId: @state.orchestrationId
                     jobId: @state.job.get('id')
                 params:
-                  runId: @state.job.get('id')
+                  runId: @state.job.get('runId')
                 autoReload: @state.job.get('status') == 'waiting' ||  @state.job.get('status') == 'processing'
 
 
