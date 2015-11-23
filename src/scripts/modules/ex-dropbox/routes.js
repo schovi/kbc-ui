@@ -28,7 +28,7 @@ export default {
       name: 'ex-dropbox-oauth-redirect',
       path: 'oauth-redirect',
       title: '',
-      requiredData: [
+      requireData: [
         (params) => installedComponentsActions.loadComponentConfigData('ex-dropbox', params.config).then(() => {
           let configuration = installedComponentsStore.getConfigData('ex-dropbox', params.config).toJS();
           return oauthActions.loadCredentials('ex-dropbox', params.config).then(() => {
