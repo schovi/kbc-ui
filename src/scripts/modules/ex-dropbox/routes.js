@@ -29,7 +29,7 @@ export default {
       requireData: [
         (params) => installedComponentsActions.loadComponentConfigData('ex-dropbox', params.config).then(() => {
           return oauthActions.loadCredentials('ex-dropbox', params.config).then(() => {
-            let credentials = oauthStore.getCredentials('wr-dropbox', params.config);
+            let credentials = oauthStore.getCredentials('ex-dropbox', params.config);
             let notification = `Dropbox account ${credentials.get('description')} successfully authorized.`;
             let router = RouterStore.getRouter();
             ApplicationActionCreators.sendNotification({
