@@ -49,6 +49,7 @@ export default React.createClass({
     let parameters = configData.get('parameters', Map());
     let dropboxFiles = ExDropboxStore.getCsvFiles();
     let keboolaBuckets = StorageBucketsStore.getAll();
+    let isSaving = InstalledComponentsStore.isSavingConfigData(componentId, configId);
     let selectedInputBucket = localState.get('selectedInputBucket', Map());
     let selectedDropboxFiles = localState.get('selectedDropboxFiles', Map());
     let isDefaultBucketSelected = localState.get('isDefaultBucketSelected', true);
@@ -68,6 +69,7 @@ export default React.createClass({
       selectedDropboxFiles: selectedDropboxFiles,
       credentials: credentials,
       isDefaultBucketSelected: isDefaultBucketSelected,
+      isSaving: isSaving,
       hasCredentials: hasCredentials,
       isDeletingCredentials: isDeletingCredentials
     };
@@ -100,7 +102,7 @@ export default React.createClass({
 
   closeFileSelectorModal() {
     this.setState({
-      showFileSelectorModal: false
+      showFileSelectorModal: this.state.isSaving
     });
   },
 
@@ -160,6 +162,7 @@ export default React.createClass({
               handleBucketChange={this.handleInputBucketChange}
               canSaveConfig={this.canSaveConfig}
               saveConfig={this.saveConfig}
+              isSaving={this.state.isSaving}
               cancelConfig={this.cancelConfig}
             />
           </div>
@@ -177,7 +180,7 @@ export default React.createClass({
             <tr>
               <th>#</th>
               <th>Source</th>
-              <th>Destination</th>
+              <th>Destination Bucket</th>
               <th></th>
             </tr>
           </thead>
@@ -475,6 +478,6 @@ export default React.createClass({
   },
 
   cancelConfig() {
-    console.log('CANCELING CONFIGURATION!');
+    console.log('');
   }
 });

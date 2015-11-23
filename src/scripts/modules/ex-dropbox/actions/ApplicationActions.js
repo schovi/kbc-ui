@@ -23,9 +23,10 @@ export function listBucketNames(buckets) {
 }
 
 export function getDestinationName(fileName) {
-  let destinationFile = fileName.toString().replace(/\/| /g, '_').toLowerCase().slice(1, -4);
+  let destinationFile = fileName.toString().split('/');
+  let file = destinationFile[destinationFile.length - 1].slice(0, -4);
 
-  return `${destinationFile}`;
+  return `${file}`;
 }
 
 export function extractValues(inputArray) {

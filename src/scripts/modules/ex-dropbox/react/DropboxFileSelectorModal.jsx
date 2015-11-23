@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import { Button, ButtonToolbar, Modal} from 'react-bootstrap';
+import { Loader } from 'kbc-react-components';
 
 export default React.createClass({
 
@@ -11,6 +12,7 @@ export default React.createClass({
     canSaveConfig: React.PropTypes.func,
     saveConfig: React.PropTypes.func,
     cancelConfig: React.PropTypes.func,
+    isSaving: React.PropTypes.bool,
     selectedCsvFiles: React.PropTypes.func,
     selectedInputBucket: React.PropTypes.func,
     handleCsvSelectChange: React.PropTypes.func,
@@ -24,8 +26,7 @@ export default React.createClass({
   },
 
   handleSaveFunction() {
-    this.props.saveConfig();
-    this.props.onHide();
+    this.props.saveConfig().then(() => this.props.onHide());
   },
 
   render() {
@@ -60,6 +61,7 @@ export default React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <ButtonToolbar>
+            {this.props.isSaving ? <Loader /> : null}
             <Button
               bgStyle="link"
               onClick={this.handleCancelFunction}>
