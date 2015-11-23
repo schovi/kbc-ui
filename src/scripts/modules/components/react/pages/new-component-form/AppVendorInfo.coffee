@@ -2,7 +2,7 @@ React = require 'react'
 Input = React.createFactory(require('react-bootstrap').Input)
 List = require('immutable').List
 
-{div, label, ul, li, p, span, strong, address, a, br } = React.DOM
+{div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
 module.exports = React.createClass
   displayName: 'appVendorInfo'
   propTypes:
@@ -11,12 +11,8 @@ module.exports = React.createClass
 
   render: ->
     div className: 'form-group',
-      label className: 'control-label col-xs-2', 'License'
+      label className: 'control-label col-xs-2', 'Vendor'
       div className: 'col-xs-10',
-        span null, 'This is a 3rd party application with the following terms and conditions:'
-        ul null,
-          li null, 'An extra fee may be charged.'
-          li null, 'Data may be sent out of Keboola Connection.'
         div null,
           "Application developed by"
           @_renderAddress()

@@ -3,6 +3,7 @@ React = require 'react'
 FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
 AppVendorInfo = React.createFactory(require './AppVendorInfo')
+AppUsageInfo = React.createFactory(require './AppUsageInfo')
 {div, form} = React.DOM
 
 
@@ -54,6 +55,7 @@ module.exports = React.createClass
             wrapperClassName: 'col-xs-10'
             onChange: @_handleChange.bind @, 'description'
             disabled: @props.isSaving
+          @_renderAppUsageInfo() if @_is3rdPartyApp()
           @_renderAppVendorInfo() if @_is3rdPartyApp()
 
   vendorInfoPath: ['data','vendor']
@@ -65,8 +67,14 @@ module.exports = React.createClass
       licenseAgreed: @_isLicenseAgreed()
       handleAgreedLicense: @_setAgreedLicense
 
+  _renderAppUsageInfo: ->
+    licenseUrl = @props.component.getIn(@vendorInfoPath).get("licenseUrl")
+    AppUsageInfo
+      licenseUrl: licenseUrl
+
+
   _is3rdPartyApp: ->
-    @props.component.hasIn(@vendorInfoPath)
+    @props.component.hasIn(@vendorInfoPath) || @props.component.get('flags').contains('3rdParty')
 
   _isLicenseAgreed: ->
     # if is not 3rdparty app then license is always agreed by default

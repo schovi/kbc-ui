@@ -31,6 +31,35 @@ export default React.createClass({
     };
   },
 
+  is3rdParty() {
+    var component = this.props.component;
+    if (!component) {
+      return false;
+    }
+    return !!this.props.component.get('flags').contains('3rdParty');
+  },
+
+  get3rdPartyIcon() {
+    if (this.is3rdParty()) {
+      if (this.props.size === 32) {
+        return (
+          <a href="https://github.com/keboola/docker-bundle/blob/master/3RDPARTY.md">
+            <i className="fa fa-cloud kbcComponentIcon-3rdParty-32px" title="3rd party application"></i>
+          </a>
+        );
+      }
+      if (this.props.size === 64) {
+        return (
+          <a href="https://github.com/keboola/docker-bundle/blob/master/3RDPARTY.md">
+            <i className="fa fa-cloud kbcComponentIcon-3rdParty-64px" title="3rd party application"></i>
+          </a>
+        );
+      }
+    } else {
+      return null;
+    }
+  },
+
   render() {
     const component = this.props.component;
     if (!component) {
@@ -51,6 +80,7 @@ export default React.createClass({
     return (
       <span className={classNames('kb-sapi-component-icon', this.props.className)}>
         <img src={ url } />
+        { this.get3rdPartyIcon() }
       </span>
     );
   }
