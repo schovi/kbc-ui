@@ -37,8 +37,6 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
-    hasProject = !ApplicationStore.hasCurrentAdminFeature('gd-writer-sso') &&
-      writer.getIn(['gd', 'pid']) && !writer.get('toDelete')
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
@@ -89,14 +87,6 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-tasks fa-fw'
               ' Jobs Queue'
-          if hasProject
-            li null,
-              a
-                href: "https://secure.gooddata.com/#s=/gdc/projects/#{writer.getIn(['gd', 'pid'])}|dataPage|"
-                target: '_blank'
-              ,
-                span className: 'fa fa-bar-chart-o fa-fw'
-                ' GoodData Project'
           li null,
             React.createElement Confirm,
               text: 'Upload project'
@@ -120,35 +110,35 @@ module.exports = React.createClass
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
 
-        if ApplicationStore.hasCurrentAdminFeature('gd-writer-sso')
-          ul className: 'nav nav-stacked',
-            if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-              li null,
-                a
-                  href: writer.getIn(['project', 'ssoLink'])
-                  target: '_blank'
-                ,
-                  span className: 'fa fa-bar-chart-o fa-fw'
-                  ' GoodData Project'
+
+        ul className: 'nav nav-stacked',
+          if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
             li null,
-              if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-                a
-                  onClick: @_handleProjectAccessDisable
-                ,
-                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                    React.createElement Loader, className: 'fa-fw kbc-loader'
-                  else
-                    span className: 'fa fa-unlink fa-fw'
-                  ' Disable Access to Project'
-              if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-                a
-                  onClick: @_handleProjectAccessEnable
-                ,
-                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                    React.createElement Loader, className: 'fa-fw kbc-loader'
-                  else
-                    span className: 'fa fa-link fa-fw'
-                  ' Enable Access to Project'
+              a
+                href: writer.getIn(['project', 'ssoLink'])
+                target: '_blank'
+              ,
+                span className: 'fa fa-bar-chart-o fa-fw'
+                ' GoodData Project'
+          li null,
+            if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+              a
+                onClick: @_handleProjectAccessDisable
+              ,
+                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                  React.createElement Loader, className: 'fa-fw kbc-loader'
+                else
+                  span className: 'fa fa-unlink fa-fw'
+                ' Disable Access to Project'
+            if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+              a
+                onClick: @_handleProjectAccessEnable
+              ,
+                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                  React.createElement Loader, className: 'fa-fw kbc-loader'
+                else
+                  span className: 'fa fa-link fa-fw'
+                ' Enable Access to Project'
 
         ul className: 'nav nav-stacked',
           li null,
