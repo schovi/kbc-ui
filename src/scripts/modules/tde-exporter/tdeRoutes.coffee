@@ -1,4 +1,5 @@
 _ = require 'underscore'
+{List} = require 'immutable'
 index = require './react/pages/Index/Index'
 tableDetail = require './react/pages/Table/Table'
 destinationPage = require './react/pages/Destination/Destination'
@@ -16,6 +17,20 @@ RouterStore = require('../../stores/RoutesStore')
 componentId = 'tde-exporter'
 {fromJS} = require 'immutable'
 
+#migrate tasks that have and uploadTasks set but no stageTask
+# possibly might include some config if uploadTasks is empty
+migrateUploadTasks = (configData, configId) ->
+  console.log('migrating upload tasks', configData?.toJS())
+  uploadTasks = configData.getIn(['parameters', 'uploadTasks'], List())
+  stageTask = configData.getIn(['parameters', 'stageUploadTask'])
+  if (not stageTask) and (uploadTasks.count() > 0)
+    stageTask = uploadTasks.first()
+    newConfig = configData.setIn ['parameters', 'stageUploadTask'], stageTask
+    saveFn = installedComponentsActions.saveComponentConfigData
+    saveFn(componentId, configId, newConfig)
+
+
+
 module.exports =
   name: componentId
   path: "#{componentId}/:config"
@@ -28,7 +43,9 @@ module.exports =
 
   requireData: [
     (params) ->
-      installedComponentsActions.loadComponentConfigData componentId, params.config
+      installedComponentsActions.loadComponentConfigData(componentId, params.config).then ->
+        configData = InstalledComponentsStore.getConfigData(componentId, params.config)
+        migrateUploadTasks(configData, params.config)
     ,
       ->
         storageActionCreators.loadTables()
