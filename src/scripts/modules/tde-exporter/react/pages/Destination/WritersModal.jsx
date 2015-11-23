@@ -2,13 +2,16 @@ import React, {PropTypes} from 'react';
 import {Button, Modal, Input} from 'react-bootstrap';
 import ComponentsStore from '../../../../components/stores/ComponentsStore';
 
-console.log('AAAAAAAAAAAAAAAAAAA');
-
 export default React.createClass({
 
   propTypes: {
     localState: PropTypes.object.isRequired,
-    setLocalState: PropTypes.func
+    setLocalState: PropTypes.func,
+    onChangeWriterFn: PropTypes.func
+  },
+
+  getInitialState() {
+    return {task: 'tableauServer'};
   },
 
   render() {
@@ -21,7 +24,8 @@ export default React.createClass({
           {this.renderBody()}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.close}>Close</Button>
+          <Button bsStyle="link" onClick={this.close}>Close</Button>
+          <Button bsStyle= "primary" onClick={() => this.props.onChangeWriterFn(this.state.task)}>Change</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -34,8 +38,11 @@ export default React.createClass({
         <Input
             type="select"
             wrapperClassName="col-sm-10"
-            value={this.props.localState.get('task')}
-            onChange={(e) => this.props.setLocalState('task', e.target.value)} >
+            value={this.state.task}
+            onChange={(e) => {
+              this.setState({task: e.target.value});
+            }
+            } >
           {this.generateOption('wr-tableau-server', 'tableauServer')}
           {this.generateOption('wr-dropbox', 'dropbox')}
           {this.generateOption('wr-google-drive', 'gdrive')}

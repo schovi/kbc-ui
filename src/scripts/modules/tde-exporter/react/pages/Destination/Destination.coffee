@@ -5,6 +5,8 @@ ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ComponentName = React.createFactory(require '../../../../../react/common/ComponentName')
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
+
 uploadUtils = require '../../../uploadUtils'
 
 SelectWriterModal = require('./WritersModal').default
@@ -46,14 +48,31 @@ module.exports = React.createClass
     savingData: InstalledComponentsStore.getSavingConfigData(componentId, configId)
 
   render: ->
+    destinationRow =
+      React.createElement ComponentEmptyState, null,
+        p null, 'No Upload Destination Choosed'
+        button
+          type: 'button'
+          className: 'btn btn-success'
+          onClick: @_showWritersModal
+          'Choose Destination'
+
+    task = @state.configData.getIn ['parameters', 'stageUploadTask']
+    switch task
+      when "tableauServer" then destinationRow = @_renderTableauServer()
+      when "gdrive" then destinationRow = @_renderGoogleDrive()
+      when "dropbox" then destinationRow = @_renderDropbox()
+
     div {className: 'container-fluid kbc-main-content'},
       React.createElement SelectWriterModal,
         localState: @state.localState.get('writersModal', Map())
         setLocalState: (key, value ) =>
           @_updateLocalState(['writersModal'].concat(key), value)
-      #@_renderTableauServer()
-      #@_renderDropbox()
-      @_renderGoogleDrive()
+        onChangeWriterFn: (newTask) =>
+          @_saveConfigData(['parameters', 'stageUploadTask'], newTask)
+          @_updateLocalState(['writersModal', 'show'], false)
+      destinationRow
+
 
   _renderGoogleDrive: ->
     parameters = @state.configData.get 'parameters'
@@ -151,9 +170,9 @@ module.exports = React.createClass
 
   _toggleImmediateUpload: (taskName, isActive) ->
     tasks = @state.configData.getIn(['parameters', 'uploadTasks'], List())
-    newTasks = tasks.push(taskName)
+    newTasks = List([taskName])
     if isActive
-      newTasks = tasks.filter( (val) -> val != taskName)
+      newTasks = List()
     @_saveConfigData(['parameters', 'uploadTasks'], newTasks)
 
   _renderEnableUploadCol: (componentKey, isAuthorized, accountName) ->
@@ -185,9 +204,13 @@ module.exports = React.createClass
         onChange: =>
           @_toggleImmediateUpload(componentKey, isActive)
 
-  _resetUploadTask: (taskName) ->
-    params = @state.configData.getIn(['parameters'], Map())
-    params = params.set(taskName, null)
-    uploadTasks = params.get('uploadTasks', List()).filter((t) -> t != taskName)
-    params = params.set('uploadTasks', uploadTasks)
-    @_saveConfigData(['parameters'], params)
+
+
+
+
+  # _resetUploadTask: (taskName) ->
+  #   params = @state.configData.getIn(['parameters'], Map())
+  #   params = params.set(taskName, null)
+  #   uploadTasks = params.get('uploadTasks', List()).filter((t) -> t != taskName)
+  #   params = params.set('uploadTasks', uploadTasks)
+  #   @_saveConfigData(['parameters'], params)

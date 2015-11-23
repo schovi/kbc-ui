@@ -150,8 +150,6 @@ module.exports = React.createClass
       uploadComponentIdSetFn: (uploadComponentId) =>
         @_updateLocalState(['uploadComponentId'], uploadComponentId)
 
-
-
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
       bucket.get('stage') == 'out' or bucket.get('stage') == 'in'

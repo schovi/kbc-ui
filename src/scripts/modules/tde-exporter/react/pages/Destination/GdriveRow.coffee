@@ -88,11 +88,12 @@ module.exports = React.createClass
     div null,
       Button
         bsStyle: 'link'
+        style: {'padding-left': 0}
         onClick: =>
           @props.updateLocalStateFn(['gdrivemodal', 'show'], true)
       ,
         i className: 'fa fa-fw fa-google'
-        ' Authorize'
+        'Authorize'
       GdriveModal
         configId: @props.configId
         localState: @props.localState.get('gdrivemodal', Map())
