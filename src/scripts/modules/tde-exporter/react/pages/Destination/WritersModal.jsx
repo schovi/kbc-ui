@@ -1,13 +1,15 @@
 import React, {PropTypes} from 'react';
 import {Button, Modal, Input} from 'react-bootstrap';
 import ComponentsStore from '../../../../components/stores/ComponentsStore';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
 
   propTypes: {
     localState: PropTypes.object.isRequired,
     setLocalState: PropTypes.func,
-    onChangeWriterFn: PropTypes.func
+    onChangeWriterFn: PropTypes.func,
+    isSaving: PropTypes.bool
   },
 
   getInitialState() {
@@ -24,8 +26,11 @@ export default React.createClass({
           {this.renderBody()}
         </Modal.Body>
         <Modal.Footer>
+          {this.props.isSaving ? <Loader/> : null}
           <Button bsStyle="link" onClick={this.close}>Close</Button>
-          <Button bsStyle= "primary" onClick={() => this.props.onChangeWriterFn(this.state.task)}>Change</Button>
+          <Button bsStyle="primary"
+                  disabled={this.props.isSaving}
+                  onClick={() => this.props.onChangeWriterFn(this.state.task)}>Change</Button>
         </Modal.Footer>
       </Modal>
     );

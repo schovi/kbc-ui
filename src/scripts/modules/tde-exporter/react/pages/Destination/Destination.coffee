@@ -65,12 +65,14 @@ module.exports = React.createClass
 
     div {className: 'container-fluid kbc-main-content'},
       React.createElement SelectWriterModal,
+        isSaving: @state.isSaving
         localState: @state.localState.get('writersModal', Map())
         setLocalState: (key, value ) =>
           @_updateLocalState(['writersModal'].concat(key), value)
         onChangeWriterFn: (newTask) =>
-          @_saveConfigData(['parameters', 'stageUploadTask'], newTask)
-          @_updateLocalState(['writersModal', 'show'], false)
+          @_saveConfigData(['parameters', 'stageUploadTask'], newTask).then( =>
+            @_updateLocalState(['writersModal', 'show'], false)
+          )
       destinationRow
 
 
