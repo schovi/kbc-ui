@@ -17,18 +17,38 @@ RouterStore = require('../../stores/RoutesStore')
 componentId = 'tde-exporter'
 {fromJS} = require 'immutable'
 
+# return first non empty(aka authorized) writer account
+findNonEmptyAccount = (configData) ->
+  for account in ['tableauServer', 'dropbox', 'gdrive']
+    data = configData.getIn(['parameters', account])
+    if not _.isEmpty(data?.toJS())
+      return account
+  return null
+
 #migrate tasks that have and uploadTasks set but no stageTask
-# possibly might include some config if uploadTasks is empty
+# setup first non empty authorized account if uploadTasks is empty
 migrateUploadTasks = (configData, configId) ->
-  console.log('migrating upload tasks', configData?.toJS())
+
   uploadTasks = configData.getIn(['parameters', 'uploadTasks'], List())
   stageTask = configData.getIn(['parameters', 'stageUploadTask'])
-  if (not stageTask) and (uploadTasks.count() > 0)
-    stageTask = uploadTasks.first()
-    newConfig = configData.setIn ['parameters', 'stageUploadTask'], stageTask
-    saveFn = installedComponentsActions.saveComponentConfigData
-    saveFn(componentId, configId, newConfig)
-
+  #migrate only if stageTask is not set
+  if not stageTask
+    newConfig = configData
+    if uploadTasks.count() > 0
+      console.log('migrating from uploadTasks')
+      stageTask = uploadTasks.first()
+      newConfig = configData.setIn ['parameters', 'stageUploadTask'], stageTask
+      newConfig = configData
+    else
+      newTask = findNonEmptyAccount(configData)
+      if newTask
+        console.log('migrating from', newTask)
+        newConfig = configData.setIn ['parameters', 'stageUploadTask'], newTask
+    # if data has changed then update
+    if newConfig != configData
+      console.log('migrating upload tasks', configData?.toJS(), newConfig?.toJS())
+      saveFn = installedComponentsActions.saveComponentConfigData
+      saveFn(componentId, configId, newConfig)
 
 
 module.exports =
