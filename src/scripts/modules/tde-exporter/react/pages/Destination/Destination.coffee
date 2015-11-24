@@ -70,7 +70,10 @@ module.exports = React.createClass
         setLocalState: (key, value ) =>
           @_updateLocalState(['writersModal'].concat(key), value)
         onChangeWriterFn: (newTask) =>
-          @_saveConfigData(['parameters', 'stageUploadTask'], newTask).then( =>
+          params = @state.configData.get('parameters')
+          params = params.set('stageUploadTask', newTask)
+          params = params.set('uploadTasks', List())
+          @_saveConfigData(['parameters'], params).then( =>
             @_updateLocalState(['writersModal', 'show'], false)
           )
       destinationRow
