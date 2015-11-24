@@ -19,7 +19,7 @@ import FileOutputMapping from '../components/generic/FileOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
-import {List} from 'immutable';
+import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
 
 export default React.createClass({
@@ -27,7 +27,9 @@ export default React.createClass({
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
-      componentId = RoutesStore.getCurrentRouteParam('component');
+      componentId = RoutesStore.getCurrentRouteParam('component'),
+      localState = InstalledComponentStore.getLocalState(componentId, configId),
+      isValidEditingConfigDataDefinition = this.isStringValidJson(localState.getIn(['definition', 'editing']));
 
     return {
       componentId: componentId,
@@ -40,11 +42,13 @@ export default React.createClass({
       isParametersSaving: InstalledComponentStore.isSavingConfigDataParameters(componentId, configId),
       editingConfigDataParameters: InstalledComponentStore.getEditingRawConfigDataParameters(componentId, configId, '{}'),
       isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId),
+      isValidEditingConfigDataDefinition: isValidEditingConfigDataDefinition,
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll(),
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
       openMappings: InstalledComponentStore.getOpenMappings(componentId, configId),
-      component: ComponentStore.getComponent(componentId)
+      component: ComponentStore.getComponent(componentId),
+      localState: localState
     };
   },
 
@@ -54,6 +58,29 @@ export default React.createClass({
         <span>
           See the <a href={this.state.component.get('documentationUrl')}>documentation</a> for more details.
         </span>
+      );
+    } else {
+      return null;
+    }
+  },
+
+  // handle configuration->definition runtime object
+  definitionConfiguration() {
+    if (this.state.component.get('flags').includes('genericDockerUI-definition')) {
+      return (
+        <div>
+          <Configuration
+            data={this.getConfigDataDefinition()}
+            isEditing={this.state.localState.getIn(['definition', 'isEditing'])}
+            isSaving={this.state.localState.getIn(['definition', 'saving'])}
+            onEditStart={this.onEditDefinitionStart}
+            onEditCancel={this.onEditDefinitionCancel}
+            onEditChange={this.onEditDefinitionChange}
+            headerText="Runtime definition"
+            onEditSubmit={this.onEditDefinitionSubmit}
+            isValid={this.state.isValidEditingConfigDataDefinition}
+          />
+        </div>
       );
     } else {
       return null;
@@ -158,7 +185,9 @@ export default React.createClass({
                 onEditSubmit={this.onEditParametersSubmit}
                 isValid={this.state.isValidEditingConfigDataParameters}
                 />
+              {this.definitionConfiguration()}
             </div>
+
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
@@ -203,6 +232,43 @@ export default React.createClass({
     });
   },
 
+  getConfigDataDefinition() {
+    if (this.state.localState.getIn(['definition', 'isEditing'])) {
+      return this.state.localState.getIn(['definition', 'editing']);
+    } else {
+      return JSON.stringify(this.state.configData.get('definition', Map()).toJSON(), null, '  ');
+    }
+  },
+
+  onEditDefinitionStart() {
+    const data = JSON.stringify(this.state.configData.get('definition', Map()).toJSON(), null, '  ');
+    let definition = this.state.localState.get('definition', Map());
+    definition = definition.set('editing', data);
+    definition = definition.set('isEditing', true);
+    this.updateLocalState(['definition'], definition);
+  },
+
+  onEditDefinitionCancel() {
+    this.updateLocalState(['definition'], Map());
+  },
+
+  onEditDefinitionChange(newValue) {
+    this.updateLocalState(['definition', 'editing'], newValue);
+  },
+
+  onEditDefinitionSubmit() {
+    const newDefinition = JSON.parse(this.state.localState.getIn(['definition', 'editing']));
+    const newConfigData = this.state.configData.set('definition', newDefinition);
+    const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
+    const componentId = this.state.componentId;
+    const configId = this.state.config.get('id');
+    this.updateLocalState(['definition', 'saving'], true);
+    saveFn(componentId, configId, newConfigData).then( () => {
+      this.updateLocalState(['definition', 'saving'], false);
+      return this.onEditDefinitionCancel();
+    });
+  },
+
   getConfigDataParameters() {
     if (this.state.isParametersEditing) {
       return this.state.editingConfigDataParameters;
@@ -225,5 +291,24 @@ export default React.createClass({
 
   onEditParametersSubmit() {
     InstalledComponentsActionCreators.saveComponentRawConfigDataParameters(this.state.componentId, this.state.config.get('id'));
+  },
+
+
+  isStringValidJson(stringObject) {
+    try {
+      JSON.parse(stringObject);
+      return true;
+    } catch (e) {
+      return false;
+    }
+    return false;
+  },
+
+  updateLocalState(path, data) {
+    const configId = this.state.config.get('id');
+    const componentId = this.state.componentId;
+    const newState = this.state.localState.setIn(path, data);
+    InstalledComponentsActionCreators.updateLocalState(componentId, configId, newState);
   }
+
 });
