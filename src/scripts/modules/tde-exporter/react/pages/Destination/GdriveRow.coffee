@@ -21,6 +21,7 @@ module.exports = React.createClass
     account: React.PropTypes.object
     saveTargetFolderFn: React.PropTypes.func
     renderEnableUpload: React.PropTypes.func
+    resetUploadTask: React.PropTypes.func
 
   render: ->
     div {className: 'row'},
@@ -57,7 +58,8 @@ module.exports = React.createClass
             text: "Do you really want to reset authorization for #{@props.account.get('email')}"
             buttonLabel: 'Reset'
             onConfirm: =>
-              @props.setConfigDataFn(['parameters', 'gdrive'], null)
+              @props.resetUploadTask()
+              #@props.setConfigDataFn(['parameters', 'gdrive'], null)
           ,
             Button
               bsStyle: 'link'

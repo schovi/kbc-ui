@@ -157,7 +157,7 @@ module.exports = React.createClass
       ' '
       button
         type: 'button'
-        className: 'btn btn-success'
+        className: 'btn btn-success btn-sm'
         onClick: @_showWritersModal
         'Change'
 
@@ -193,7 +193,7 @@ module.exports = React.createClass
     if not isActive
       helpText = 'No instant upload of TDE files after export.'
     span null,
-      p className: 'help-block', helpText
+      span className: 'help-block', helpText
       ActivateDeactivateButton
         mode: 'link'
         key: 'active'
@@ -205,12 +205,9 @@ module.exports = React.createClass
           @_toggleImmediateUpload(componentKey, isActive)
 
 
-
-
-
-  # _resetUploadTask: (taskName) ->
-  #   params = @state.configData.getIn(['parameters'], Map())
-  #   params = params.set(taskName, null)
-  #   uploadTasks = params.get('uploadTasks', List()).filter((t) -> t != taskName)
-  #   params = params.set('uploadTasks', uploadTasks)
-  #   @_saveConfigData(['parameters'], params)
+  _resetUploadTask: (taskName) ->
+    params = @state.configData.getIn(['parameters'], Map())
+    params = params.set(taskName, null)
+    params = params.set('uploadTasks', List())
+    params = params.set('stageUploadTask', null)
+    @_saveConfigData(['parameters'], params)

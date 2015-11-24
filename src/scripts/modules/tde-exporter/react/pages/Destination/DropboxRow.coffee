@@ -19,6 +19,7 @@ module.exports = React.createClass
     configId: React.PropTypes.string
     account: React.PropTypes.object
     renderEnableUpload: React.PropTypes.func
+    resetUploadTask: React.PropTypes.func
 
   render: ->
     div {className: 'row'},
@@ -52,7 +53,8 @@ module.exports = React.createClass
             text: "Do you really want to reset authorization for #{@props.account.get('description')}"
             buttonLabel: 'Reset'
             onConfirm: =>
-              @props.setConfigDataFn(['parameters', 'dropbox'], null)
+              @props.resetUploadTask()
+              #@props.setConfigDataFn(['parameters', 'dropbox'], null)
               oauthActions.deleteCredentials('wr-dropbox', @props.account.get('id'))
           ,
             Button
