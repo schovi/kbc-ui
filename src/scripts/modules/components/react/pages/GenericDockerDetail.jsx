@@ -29,7 +29,7 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      isValidEditingConfigDataDefinition = this.isStringValidJson(localState.getIn(['definition', 'editing']));
+      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing']));
 
     return {
       componentId: componentId,
@@ -42,7 +42,7 @@ export default React.createClass({
       isParametersSaving: InstalledComponentStore.isSavingConfigDataParameters(componentId, configId),
       editingConfigDataParameters: InstalledComponentStore.getEditingRawConfigDataParameters(componentId, configId, '{}'),
       isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId),
-      isValidEditingConfigDataDefinition: isValidEditingConfigDataDefinition,
+      isValidEditingConfigDataRuntime: isValidEditingConfigDataRuntime,
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll(),
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
@@ -64,21 +64,21 @@ export default React.createClass({
     }
   },
 
-  // handle configuration->definition runtime object
-  definitionConfiguration() {
-    if (this.state.component.get('flags').includes('genericDockerUI-definition')) {
+  // handle configuration->Runtime runtime object
+  runtimeConfiguration() {
+    if (this.state.component.get('flags').includes('genericDockerUI-runtime')) {
       return (
         <div>
           <Configuration
-            data={this.getConfigDataDefinition()}
-            isEditing={this.state.localState.getIn(['definition', 'isEditing'])}
-            isSaving={this.state.localState.getIn(['definition', 'saving'])}
-            onEditStart={this.onEditDefinitionStart}
-            onEditCancel={this.onEditDefinitionCancel}
-            onEditChange={this.onEditDefinitionChange}
-            headerText="Runtime definition"
-            onEditSubmit={this.onEditDefinitionSubmit}
-            isValid={this.state.isValidEditingConfigDataDefinition}
+            data={this.getConfigDataRuntime()}
+            isEditing={this.state.localState.getIn(['runtime', 'isEditing'])}
+            isSaving={this.state.localState.getIn(['runtime', 'saving'])}
+            onEditStart={this.onEditRuntimeStart}
+            onEditCancel={this.onEditRuntimeCancel}
+            onEditChange={this.onEditRuntimeChange}
+            headerText="Runtime"
+            onEditSubmit={this.onEditRuntimeSubmit}
+            isValid={this.state.isValidEditingConfigDataRuntime}
           />
         </div>
       );
@@ -185,7 +185,7 @@ export default React.createClass({
                 onEditSubmit={this.onEditParametersSubmit}
                 isValid={this.state.isValidEditingConfigDataParameters}
                 />
-              {this.definitionConfiguration()}
+              {this.runtimeConfiguration()}
             </div>
 
           </div>
@@ -232,40 +232,40 @@ export default React.createClass({
     });
   },
 
-  getConfigDataDefinition() {
-    if (this.state.localState.getIn(['definition', 'isEditing'])) {
-      return this.state.localState.getIn(['definition', 'editing']);
+  getConfigDataRuntime() {
+    if (this.state.localState.getIn(['runtime', 'isEditing'])) {
+      return this.state.localState.getIn(['runtime', 'editing']);
     } else {
-      return JSON.stringify(this.state.configData.get('definition', Map()).toJSON(), null, '  ');
+      return JSON.stringify(this.state.configData.get('runtime', Map()).toJSON(), null, '  ');
     }
   },
 
-  onEditDefinitionStart() {
-    const data = JSON.stringify(this.state.configData.get('definition', Map()).toJSON(), null, '  ');
-    let definition = this.state.localState.get('definition', Map());
-    definition = definition.set('editing', data);
-    definition = definition.set('isEditing', true);
-    this.updateLocalState(['definition'], definition);
+  onEditRuntimeStart() {
+    const data = JSON.stringify(this.state.configData.get('runtime', Map()).toJSON(), null, '  ');
+    let runtime = this.state.localState.get('runtime', Map());
+    runtime = runtime.set('editing', data);
+    runtime = runtime.set('isEditing', true);
+    this.updateLocalState(['runtime'], runtime);
   },
 
-  onEditDefinitionCancel() {
-    this.updateLocalState(['definition'], Map());
+  onEditRuntimeCancel() {
+    this.updateLocalState(['runtime'], Map());
   },
 
-  onEditDefinitionChange(newValue) {
-    this.updateLocalState(['definition', 'editing'], newValue);
+  onEditRuntimeChange(newValue) {
+    this.updateLocalState(['runtime', 'editing'], newValue);
   },
 
-  onEditDefinitionSubmit() {
-    const newDefinition = JSON.parse(this.state.localState.getIn(['definition', 'editing']));
-    const newConfigData = this.state.configData.set('definition', newDefinition);
+  onEditRuntimeSubmit() {
+    const newRuntime = JSON.parse(this.state.localState.getIn(['runtime', 'editing']));
+    const newConfigData = this.state.configData.set('runtime', newRuntime);
     const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
     const componentId = this.state.componentId;
     const configId = this.state.config.get('id');
-    this.updateLocalState(['definition', 'saving'], true);
+    this.updateLocalState(['runtime', 'saving'], true);
     saveFn(componentId, configId, newConfigData).then( () => {
-      this.updateLocalState(['definition', 'saving'], false);
-      return this.onEditDefinitionCancel();
+      this.updateLocalState(['runtime', 'saving'], false);
+      return this.onEditRuntimeCancel();
     });
   },
 
