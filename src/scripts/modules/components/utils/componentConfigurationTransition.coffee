@@ -1,6 +1,6 @@
 RoutesStore = require '../../../stores/RoutesStore'
 ComponentsStore = require '../stores/ComponentsStore'
-{GENERIC_DETAIL_PREFIX} = require('../Constants').Routes.GENERIC_DETAIL_PREFIX
+{GENERIC_DETAIL_PREFIX} = require('../Constants').Routes
 
 module.exports = (componentId, configurationId) ->
   components = ComponentsStore.getAll()
