@@ -1,5 +1,6 @@
 RoutesStore = require '../../../stores/RoutesStore'
 ComponentsStore = require '../stores/ComponentsStore'
+{GENERIC_DETAIL_PREFIX} = require('../Constants').Routes.GENERIC_DETAIL_PREFIX
 
 module.exports = (componentId, configurationId) ->
   components = ComponentsStore.getAll()
@@ -11,7 +12,7 @@ module.exports = (componentId, configurationId) ->
     window.location = ComponentsStore.getComponentDetailLegacyUrl(componentId, configurationId)
   else if components.getIn([componentId, 'flags']).includes('genericUI') or
       components.getIn([componentId, 'flags']).includes('genericDockerUI')
-    RoutesStore.getRouter().transitionTo "generic-detail-" + components.getIn([componentId, 'type']),
+    RoutesStore.getRouter().transitionTo GENERIC_DETAIL_PREFIX + components.getIn([componentId, 'type']),
       component: componentId
       config: configurationId
   else

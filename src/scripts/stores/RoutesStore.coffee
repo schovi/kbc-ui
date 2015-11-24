@@ -117,8 +117,8 @@ RoutesStore = StoreUtils.createStore
   getRouterState: ->
     _store.get 'routerState'
 
-  getCurrentRouteParam: (paramName) ->
-    @getRouterState().getIn ['params', paramName]
+  getCurrentRouteParam: (paramName, defaultValue = null) ->
+    @getRouterState().getIn ['params', paramName], defaultValue
 
   getCurrentRouteIntParam: (paramName) ->
     parseInt(@getCurrentRouteParam paramName)
@@ -143,7 +143,8 @@ RoutesStore = StoreUtils.createStore
       return false if !routeConfig
       routeConfig.get 'isComponent', false
 
-    return foundRoute.get('name') if foundRoute
+    # generic-detail route has component param, otherwise componentId is route name
+    return @getCurrentRouteParam('component', foundRoute.get('name')) if foundRoute
 
 
   ###

@@ -96,3 +96,6 @@ module.exports =
     PRODUCTION: null
     DEVELOPER: null
     CUSTOM: null
+
+  Routes:
+    GENERIC_DETAIL_PREFIX: 'generic-detail-'

@@ -1,6 +1,7 @@
 React = require 'react'
 RoutesStore = require '../../../../stores/RoutesStore'
 ComponentsStore = require '../../stores/ComponentsStore'
+{GENERIC_DETAIL_PREFIX} = require('../../Constants').Routes
 
 Link = React.createFactory require('react-router').Link
 {a, span} = React.DOM
@@ -45,7 +46,7 @@ module.exports = React.createClass
     else
       Link
         className: @props.className
-        to: 'generic-detail-' + @getComponentType()
+        to: GENERIC_DETAIL_PREFIX + @getComponentType()
         params:
           config: @props.configId
           component: @props.componentId

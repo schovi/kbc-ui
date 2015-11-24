@@ -6,12 +6,13 @@ StorageActions = require './StorageActionCreators'
 GenericDetail = require('./react/pages/GenericDetail').default
 GenericDockerDetail = require('./react/pages/GenericDockerDetail').default
 ComponentNameEdit = require './react/components/ComponentName'
+{GENERIC_DETAIL_PREFIX} = require('./Constants').Routes
 
 ComponentsStore = require './stores/ComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports = (componentType) ->
-  name: 'generic-detail-' + componentType
+  name: GENERIC_DETAIL_PREFIX + componentType
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     component = routerState.getIn ['params', 'component']
