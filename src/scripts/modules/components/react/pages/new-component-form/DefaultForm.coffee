@@ -4,9 +4,8 @@ FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
 AppVendorInfo = React.createFactory(require './AppVendorInfo')
 AppUsageInfo = React.createFactory(require './AppUsageInfo')
-{div, form} = React.DOM
-
-
+{div, form, label} = React.DOM
+Immutable = require('immutable')
 
 module.exports = React.createClass
   displayName: 'NewComponentDefaultForm'
@@ -58,23 +57,22 @@ module.exports = React.createClass
           @_renderAppUsageInfo() if @_is3rdPartyApp()
           @_renderAppVendorInfo() if @_is3rdPartyApp()
 
-  vendorInfoPath: ['data','vendor']
-
   _renderAppVendorInfo: ->
-    vendorData = @props.component.getIn(@vendorInfoPath)
     AppVendorInfo
-      vendorData: vendorData
+      component: @props.component
       licenseAgreed: @_isLicenseAgreed()
       handleAgreedLicense: @_setAgreedLicense
 
   _renderAppUsageInfo: ->
-    licenseUrl = @props.component.getIn(@vendorInfoPath).get("licenseUrl")
-    AppUsageInfo
-      licenseUrl: licenseUrl
+    div className: 'form-group',
+      label className: 'control-label col-xs-2', 'License'
+      div className: 'col-xs-10',
+        AppUsageInfo
+          component: @props.component
 
 
   _is3rdPartyApp: ->
-    @props.component.hasIn(@vendorInfoPath) || @props.component.get('flags').contains('3rdParty')
+    @props.component.hasIn(['data','vendor']) || @props.component.get('flags').contains('3rdParty')
 
   _isLicenseAgreed: ->
     # if is not 3rdparty app then license is always agreed by default

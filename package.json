@@ -36,6 +36,7 @@
     "react-dnd": "~0.9.8",
     "react-document-title": "~1.0.2",
     "react-immutable-render-mixin": "~0.7.0",
+    "react-markdown": "^1.1.0",
     "react-radio-group": "~1.1.0",
     "react-router": "~0.13.3",
     "react-select": "~0.5.1",

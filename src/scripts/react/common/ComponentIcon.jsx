@@ -6,6 +6,7 @@ import ApplicationStore from '../../stores/ApplicationStore';
 import extractor from '../../../images/extractor-32-1.png';
 import writer from '../../../images/writer-32-1.png';
 import other from '../../../images/other-32-1.png';
+import ComponentDetailLink from './ComponentDetailLink.coffee';
 
 const DEFAULT_ICON_IMAGES = {
   extractor: extractor,
@@ -41,18 +42,18 @@ export default React.createClass({
 
   get3rdPartyIcon() {
     if (this.is3rdParty()) {
-      if (this.props.size === 32) {
+      if (this.props.size === '32') {
         return (
-          <a href="https://github.com/keboola/docker-bundle/blob/master/3RDPARTY.md">
+          <ComponentDetailLink type={ this.props.component.get('type') } componentId={ this.props.component.get('id') }>
             <i className="fa fa-cloud kbcComponentIcon-3rdParty-32px" title="3rd party application"></i>
-          </a>
+          </ComponentDetailLink>
         );
       }
-      if (this.props.size === 64) {
+      if (this.props.size === '64') {
         return (
-          <a href="https://github.com/keboola/docker-bundle/blob/master/3RDPARTY.md">
+          <ComponentDetailLink type={ this.props.component.get('type') } componentId={ this.props.component.get('id') }>
             <i className="fa fa-cloud kbcComponentIcon-3rdParty-64px" title="3rd party application"></i>
-          </a>
+          </ComponentDetailLink>
         );
       }
     } else {

@@ -7,6 +7,7 @@ NewComponentButton = require './react/components/NewComponentButton'
 
 
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
+ComponentDetail = require './react/pages/component-detail/ComponentDetail'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 ComponentsStore = require './stores/ComponentsStore'
@@ -63,6 +64,15 @@ routes =
           ComponentsActionCreators.loadComponent params.componentId
       ]
     ,
+      name: 'application-detail'
+      title: (routerState) ->
+        componentId = routerState.getIn ['params', 'componentId']
+        ComponentsStore.getComponent(componentId).get 'name'
+      path: ':componentId'
+      handler: ComponentDetail
+      requireData: (params) ->
+        ComponentsActionCreators.loadComponent params.componentId
+    ,
       appGeneeaRoutes.sentimentAnalysis
     ,
       appGeneeaRoutes.topicDetection
@@ -103,7 +113,17 @@ routes =
         handler: NewComponentFormPage
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
-      ],
+      ]
+    ,
+      name: 'extractor-detail'
+      title: (routerState) ->
+        componentId = routerState.getIn ['params', 'componentId']
+        ComponentsStore.getComponent(componentId).get 'name'
+      path: ':componentId'
+      handler: ComponentDetail
+      requireData: (params) ->
+        ComponentsActionCreators.loadComponent params.componentId
+    ,
       exDbRoutes
     ,
       exGdriveGoogleRoutes
@@ -139,6 +159,15 @@ routes =
         requireData: (params) ->
           ComponentsActionCreators.loadComponent params.componentId
       ]
+    ,
+      name: 'writer-detail'
+      title: (routerState) ->
+        componentId = routerState.getIn ['params', 'componentId']
+        ComponentsStore.getComponent(componentId).get 'name'
+      path: ':componentId'
+      handler: ComponentDetail
+      requireData: (params) ->
+        ComponentsActionCreators.loadComponent params.componentId
     ,
       goodDataWriterRoutes
     ,
