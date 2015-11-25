@@ -20,9 +20,10 @@ export default React.createClass({
   },
 
   render() {
-    if (this.state.component.get('flags').includes('genericDockerUI')) {
+    const flags = this.state.component.get('flags');
+    if (flags.includes('genericDockerUI')) {
       return (<GenericDockerDetail />);
-    } else if (this.state.component.get('flags').includes('genericUI')) {
+    } else if (flags.includes('genericUI') || flags.includes('genericShinyUI')) {
       return (<GenericDetailEditable />);
     } else {
       return (<GenericDetailStatic />);

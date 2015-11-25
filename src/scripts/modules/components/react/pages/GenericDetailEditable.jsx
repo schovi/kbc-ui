@@ -6,6 +6,7 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 
+import Tooltip from '../../../../react/common/Tooltip';
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
@@ -97,11 +98,35 @@ export default React.createClass({
                 configId={this.state.config.get('id')}
                 />
             </li>
+            {this.renderShinyAppLink()}
           </ul>
           <LatestJobs jobs={this.state.latestJobs} />
         </div>
       </div>
     );
+  },
+
+  renderShinyAppLink() {
+    const isShiny = this.state.component.get('flags').includes('genericShinyUI');
+
+    if (isShiny) {
+      const url = this.state.configData.get('url');
+      const disabledClassName = url ? '' : 'disabled';
+      const tooltip = url ? 'Visit shiny app' : 'No url specified';
+      const label = (<span><i className="fa fa-fw fa-bar-chart"></i> Shiny App</span>);
+      return (
+        <li className={disabledClassName}>
+          <Tooltip tooltip={tooltip} placement="top">
+            <a href={url}
+               target="_blank">
+              {label}
+            </a>
+          </Tooltip>
+        </li>
+      );
+    } else {
+      return false;
+    }
   },
 
   runParams() {
