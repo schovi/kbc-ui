@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react/addons';
 import ConfigurationRow from './ConfigurationRow';
 import ComponentIcon from '../../../../react/common/ComponentIcon';
-
+import ComponentDetailLink from '../../../../react/common/ComponentDetailLink';
 
 export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
@@ -17,7 +17,9 @@ export default React.createClass({
           <div className="kbc-title">
             <h2>
               <ComponentIcon component={this.props.component} size="32" />
-              {this.props.component.get('name')}
+              <ComponentDetailLink type={ this.props.component.get('type') } componentId={ this.props.component.get('id') }>
+                {this.props.component.get('name')}
+              </ComponentDetailLink>
             </h2>
           </div>
         </div>
