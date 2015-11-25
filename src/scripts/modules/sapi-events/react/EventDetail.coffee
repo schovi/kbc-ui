@@ -4,9 +4,14 @@ filesize = require('../../../utils/utils').filesize
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 {Link} = require 'react-router'
 
-sapiEventsUtils = require '../utils'
 Tree = React.createFactory(require('kbc-react-components').Tree)
 {div, span, a, h2, h3, p, ul, li} = React.DOM
+
+classmap =
+  error: 'alert alert-danger',
+  warn: 'alert alert-warning',
+  success: 'alert alert-success'
+  info: 'well'
 
 
 module.exports = React.createClass
@@ -22,7 +27,7 @@ module.exports = React.createClass
         ' Back'
       h2 null,
         "Event #{@props.event.get('id')}"
-      div className: "well message #{@_eventClass()}",
+      div className: "#{@_eventClass()}",
         @props.event.get('message')
       p className: 'well', @props.event.get('description') if @props.event.get('description')
       div className: 'row',
@@ -80,4 +85,4 @@ module.exports = React.createClass
 
 
   _eventClass: ->
-    sapiEventsUtils.classForEventType(@props.event.get('type'))
+    classmap[@props.event.get('type')]

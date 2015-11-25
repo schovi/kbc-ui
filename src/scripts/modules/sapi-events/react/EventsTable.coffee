@@ -1,5 +1,5 @@
 React = require 'react'
-TableRow = React.createFactory(require './EventsTableRow')
+TableRow = React.createFactory(require('./EventsTableRow').default)
 {Loader} = require('kbc-react-components')
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 
