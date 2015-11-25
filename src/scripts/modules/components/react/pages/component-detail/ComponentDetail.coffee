@@ -3,21 +3,35 @@ React = require 'react'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentsStore = require '../../../stores/ComponentsStore'
+InstalledComponentsStore = require '../../../stores/InstalledComponentsStore.coffee'
 FormHeader = React.createFactory(require '../new-component-form/FormHeader')
 AppUsageInfo = React.createFactory(require '../new-component-form/AppUsageInfo.coffee')
 VendorInfo = React.createFactory(require './VendorInfo.coffee')
 ComponentDescription = React.createFactory(require './ComponentDescription.coffee')
+ConfigurationRow = require('../ConfigurationRow.jsx').default
+Immutable = require 'immutable'
 
-{div, label} = React.DOM
-
+{div, label, h3} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ComponentDetail'
-  mixins: [createStoreMixin(ComponentsStore)]
+  mixins: [createStoreMixin(ComponentsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
     componentId = RoutesStore.getCurrentRouteParam('componentId')
-    component: ComponentsStore.getComponent(componentId)
+    component = ComponentsStore.getComponent(componentId)
+
+    if (InstalledComponentsStore.getDeletingConfigurations())
+      deletingConfigurations = InstalledComponentsStore.getDeletingConfigurations()
+    else
+      deletingConfigurations = Immutable.Map()
+
+    state =
+      component: component
+      configurations: InstalledComponentsStore.getComponent(component.get('id'), Immutable.Map())
+        .get("configurations", Immutable.Map())
+      deletingConfigurations: deletingConfigurations.get(component.get('id'), Immutable.Map())
+    state
 
   render: ->
     div className: 'container-fluid kbc-main-content',
@@ -28,9 +42,7 @@ module.exports = React.createClass
         @_renderVendorInfo() if @_is3rdPartyApp()
         @_renderAppUsageInfo() if @_is3rdPartyApp()
         @_renderDescription() if @state.component.get('longDescription')
-
-  _renderContactInfo: ->
-
+        @_renderConfigurations()
 
   _renderDescription: ->
     ComponentDescription
@@ -46,4 +58,19 @@ module.exports = React.createClass
 
   _is3rdPartyApp: ->
     @state.component.get('flags').contains('3rdParty')
+
+  _renderConfigurations: ->
+    state = @state
+    div className: "table table-hover",
+      div clasName: "thead",
+        h3, "Configurations"
+      div className: "tbody",
+        @state.configurations.map((configuration) ->
+          React.createElement(ConfigurationRow,
+            config: configuration,
+            componentId: state.component.get('id'),
+            isDeleting: state.deletingConfigurations.has(configuration.get('id')),
+            key: configuration.get('id')
+          )
+        )
 
