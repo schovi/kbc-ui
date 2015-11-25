@@ -69,6 +69,7 @@ export default React.createClass({
                 onEditChange={this.onEditChange}
                 onEditSubmit={this.onEditSubmit}
                 isValid={this.state.isValidEditingConfigData}
+                supportsEncryption={this.state.component.get('flags').contains('encrypt')}
                 />
 
             </div>

@@ -15,6 +15,7 @@ export default React.createClass({
     onEditChange: PropTypes.func.isRequired,
     onEditSubmit: PropTypes.func.isRequired,
     isValid: PropTypes.bool.isRequired,
+    supportsEncryption: PropTypes.bool.isRequired,
     headerText: PropTypes.string,
     help: PropTypes.node
   },
@@ -40,7 +41,11 @@ export default React.createClass({
     if (this.props.isEditing) {
       return (
         <span>
-          <p className="help-block small">Keys prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
+          {
+            this.props.supportsEncryption ?
+              <p className="help-block small">Keys prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
+              : null
+          }
           <Edit
             data={this.props.data}
             isSaving={this.props.isSaving}
