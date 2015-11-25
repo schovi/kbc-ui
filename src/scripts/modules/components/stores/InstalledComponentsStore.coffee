@@ -247,7 +247,7 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_SUCCESS
-      configDataObject = Immutable.fromJS(action.configData)
+      configDataObject = Immutable.fromJS(action.configData).get 'parameters'
       path = ['configData', action.componentId, action.configId, 'parameters']
       _store = _store.setIn path, configDataObject
       _store = _store.deleteIn ['configDataParametersSaving', action.componentId, action.configId]
