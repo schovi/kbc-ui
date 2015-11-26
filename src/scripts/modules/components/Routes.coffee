@@ -4,6 +4,7 @@ injectProps = require('./react/injectProps').default
 ComponentsIndex = require('./react/pages/ComponentsIndex')
 NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
+AddComponentConfigurationButton = require './react/components/AddComponentConfigurationButton'
 
 
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
@@ -65,6 +66,7 @@ routes =
       ]
     ,
       name: 'application-detail'
+      headerButtonsHandler: AddComponentConfigurationButton
       title: (routerState) ->
         componentId = routerState.getIn ['params', 'componentId']
         ComponentsStore.getComponent(componentId).get 'name'
@@ -116,6 +118,7 @@ routes =
       ]
     ,
       name: 'extractor-detail'
+      headerButtonsHandler: AddComponentConfigurationButton
       title: (routerState) ->
         componentId = routerState.getIn ['params', 'componentId']
         ComponentsStore.getComponent(componentId).get 'name'
@@ -161,6 +164,7 @@ routes =
       ]
     ,
       name: 'writer-detail'
+      headerButtonsHandler: AddComponentConfigurationButton
       title: (routerState) ->
         componentId = routerState.getIn ['params', 'componentId']
         ComponentsStore.getComponent(componentId).get 'name'
