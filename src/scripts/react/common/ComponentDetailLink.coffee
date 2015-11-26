@@ -9,16 +9,16 @@ module.exports = React.createClass
 
   render: ->
     if @props.type == 'extractor'
-      routeName = 'extractor-detail'
+      routeName = 'generic-detail-extractor'
     else if @props.type == 'writer'
-      routeName = 'writer-detail'
+      routeName = 'generic-detail-writer'
     else
-      routeName = 'application-detail'
+      routeName = 'generic-detail-application'
 
     Link
       to: routeName
       params:
-        componentId: @props.componentId
+        component: @props.componentId
     ,
       @props.children
 

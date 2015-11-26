@@ -1,6 +1,7 @@
 React = require 'react'
 ComponentsActionCreators = require '../../ComponentsActionCreators'
 ComponentIcon = React.createFactory(require('../../../../react/common/ComponentIcon').default)
+ComponentDetailLink = React.createFactory(require('../../../../react/common/ComponentDetailLink'))
 SearchRow = React.createFactory(require('../../../../react/common/SearchRow').default)
 Link = React.createFactory(require('react-router').Link)
 
@@ -20,13 +21,18 @@ ComponentBox = React.createClass
       ComponentIcon
         component: component
         size: '64'
-      h2 null, component.get('name')
+      h2 null,
+        ComponentDetailLink
+          componentId: component.get('id')
+          type: component.get('type')
+        ,
+          component.get('name')
       p null, component.get('description')
       Link
         className: 'btn btn-success btn-lg'
-        to: "new-#{component.get('type')}-form"
+        to: "generic-detail-#{component.get('type')}-new"
         params:
-          componentId: component.get 'id'
+          component: component.get 'id'
       ,
         span className: 'kbc-icon-plus'
         ' Add'

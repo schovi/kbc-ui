@@ -54,26 +54,8 @@ routes =
       name: 'new-application'
       title: 'New Application'
       defaultRouteHandler: application(NewComponent)
-      childRoutes: [
-        name: 'new-application-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ]
     ,
-      name: 'application-detail'
-      headerButtonsHandler: AddComponentConfigurationButton
-      title: (routerState) ->
-        componentId = routerState.getIn ['params', 'componentId']
-        ComponentsStore.getComponent(componentId).get 'name'
-      path: ':componentId'
-      handler: ComponentDetail
-      requireData: (params) ->
-        ComponentsActionCreators.loadComponent params.componentId
+      createGenericDetailRoute 'application'
     ,
       appGeneeaRoutes.sentimentAnalysis
     ,
@@ -90,8 +72,6 @@ routes =
       geneeaGeneralRoutes
     ,
       customScienceRoutes
-    ,
-      createGenericDetailRoute 'application'
     ]
 
   extractors:
@@ -106,26 +86,8 @@ routes =
       name: 'new-extractor'
       title: 'New Extractor'
       defaultRouteHandler: extractor(NewComponent)
-      childRoutes: [
-        name: 'new-extractor-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ]
     ,
-      name: 'extractor-detail'
-      headerButtonsHandler: AddComponentConfigurationButton
-      title: (routerState) ->
-        componentId = routerState.getIn ['params', 'componentId']
-        ComponentsStore.getComponent(componentId).get 'name'
-      path: ':componentId'
-      handler: ComponentDetail
-      requireData: (params) ->
-        ComponentsActionCreators.loadComponent params.componentId
+      createGenericDetailRoute 'extractor'
     ,
       exDbRoutes
     ,
@@ -152,26 +114,8 @@ routes =
       name: 'new-writer'
       title: 'New Writer'
       defaultRouteHandler: writer(NewComponent)
-      childRoutes: [
-        name: 'new-writer-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ]
     ,
-      name: 'writer-detail'
-      headerButtonsHandler: AddComponentConfigurationButton
-      title: (routerState) ->
-        componentId = routerState.getIn ['params', 'componentId']
-        ComponentsStore.getComponent(componentId).get 'name'
-      path: ':componentId'
-      handler: ComponentDetail
-      requireData: (params) ->
-        ComponentsActionCreators.loadComponent params.componentId
+      createGenericDetailRoute 'writer'
     ,
       goodDataWriterRoutes
     ,
@@ -190,10 +134,8 @@ routes =
       createDbWriterRoutes('wr-db-redshift', 'redshift', true)
     ,
       createDbWriterRoutes('wr-tableau', 'mysql', true)
-    ,
-      createGenericDetailRoute 'writer'
-
     ]
 
+console.log("routes", routes)
 
 module.exports = routes

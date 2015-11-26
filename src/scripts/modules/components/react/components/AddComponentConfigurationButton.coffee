@@ -14,7 +14,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(ComponentsStore)]
 
   getStateFromStores: ->
-    componentId = RoutesStore.getCurrentRouteParam('componentId')
+    componentId = RoutesStore.getCurrentRouteParam('component')
     component = ComponentsStore.getComponent(componentId)
 
     response =
@@ -23,16 +23,16 @@ module.exports = React.createClass
     response
 
   render: ->
-    route = 'new-application-form'
+    route = 'generic-detail-application-new'
     if this.state.component.get('type') == 'extractor'
-      route = 'new-extractor-form'
+      route = 'generic-detail-extractor-new'
     if this.state.component.get('type') == 'writer'
-      route = 'new-writer-form'
+      route = 'generic-detail-writer-new'
 
     Link
       to: route
       params:
-        componentId: this.state.component.get('id')
+        component: this.state.component.get('id')
       className: 'btn btn-success'
       activeClassName: ''
     ,

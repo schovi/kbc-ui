@@ -18,7 +18,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(ComponentsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
-    componentId = RoutesStore.getCurrentRouteParam('componentId')
+    componentId = RoutesStore.getCurrentRouteParam('component')
     component = ComponentsStore.getComponent(componentId)
 
     if (InstalledComponentsStore.getDeletingConfigurations())

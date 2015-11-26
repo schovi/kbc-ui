@@ -46,7 +46,7 @@ module.exports = React.createClass
     else
       Link
         className: @props.className
-        to: GENERIC_DETAIL_PREFIX + @getComponentType()
+        to: GENERIC_DETAIL_PREFIX + @getComponentType() + '-config'
         params:
           config: @props.configId
           component: @props.componentId

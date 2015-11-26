@@ -21,7 +21,7 @@ module.exports = React.createClass
   mixins: [createStoreMixin(NewConfigurationsStore)]
 
   getStateFromStores: ->
-    componentId = RoutesStore.getCurrentRouteParam('componentId')
+    componentId = RoutesStore.getCurrentRouteParam('component')
     component: ComponentsStore.getComponent(componentId)
     configuration: NewConfigurationsStore.getConfiguration(componentId)
     isValid: NewConfigurationsStore.isValidConfiguration(componentId)
