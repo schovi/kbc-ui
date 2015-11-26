@@ -5,6 +5,7 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
+import ApplicationStore from '../../../../stores/ApplicationStore';
 
 import Tooltip from '../../../../react/common/Tooltip';
 import ComponentDescription from '../components/ComponentDescription';
@@ -20,7 +21,8 @@ export default React.createClass({
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
-      componentId = RoutesStore.getCurrentRouteParam('component');
+      componentId = RoutesStore.getCurrentRouteParam('component'),
+      token = ApplicationStore.getSapiTokenString();
 
     return {
       component: ComponentStore.getComponent(componentId),
@@ -31,7 +33,8 @@ export default React.createClass({
       isEditing: InstalledComponentStore.isEditingRawConfigData(componentId, configId),
       isSaving: InstalledComponentStore.isSavingConfigData(componentId, configId),
       editingConfigData: InstalledComponentStore.getEditingRawConfigData(componentId, configId, '{}'),
-      isValidEditingConfigData: InstalledComponentStore.isValidEditingConfigData(componentId, configId)
+      isValidEditingConfigData: InstalledComponentStore.isValidEditingConfigData(componentId, configId),
+      token: token
     };
   },
 
@@ -118,10 +121,12 @@ export default React.createClass({
       return (
         <li className={disabledClassName}>
           <Tooltip tooltip={tooltip} placement="top">
-            <a href={url}
-               target="_blank">
-              {label}
-            </a>
+            <form action={url} method="POST">
+              <input type="hidden" name="token" value={this.state.token}/>
+              <button disabled={!url} className="btn btn-link" type="submit">
+                {label}
+              </button>
+            </form>
           </Tooltip>
         </li>
       );
