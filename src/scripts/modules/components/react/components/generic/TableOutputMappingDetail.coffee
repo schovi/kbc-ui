@@ -53,7 +53,7 @@ TableInputMappingDetail = React.createClass(
 
       ListGroupItem {key: 'delete_where_column'},
         strong {className: "col-md-4"},
-          'Delete'
+          'Delete rows'
         span {className: "col-md-6"},
           if @props.value.get('delete_where_column')
             span {},

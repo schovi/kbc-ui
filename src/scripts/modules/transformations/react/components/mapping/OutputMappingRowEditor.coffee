@@ -201,6 +201,7 @@ module.exports = React.createClass
                   value: @props.value.get("deleteWhereOperator")
                   disabled: @props.disabled
                   onChange: @_handleChangeDeleteWhereOperator
+                  groupClassName: "no-bottom-margin"
                 ,
                   React.DOM.option {value: "eq"}, "= (IN)"
                   React.DOM.option {value: "ne"}, "!= (NOT IN)"
@@ -213,3 +214,7 @@ module.exports = React.createClass
                   disabled: @props.disabled
                   onChange: @_handleChangeDeleteWhereValues
                   placeholder: "Comma separated values"
+                  groupClassName: "no-bottom-margin"
+              React.DOM.div className: 'col-xs-10 col-xs-offset-2 small help-block bottom-margin',
+                "Delete matching rows in the destination table before importing the result"
+

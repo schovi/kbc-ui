@@ -59,7 +59,7 @@ OutputMappingDetail = React.createClass(
 
       ListGroupItem {key: 'deleteWhere'},
         strong {className: "col-md-4"},
-          'Delete'
+          'Delete rows'
         span {className: "col-md-6"},
           if @props.outputMapping.get('deleteWhereColumn')
             span {},
