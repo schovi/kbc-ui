@@ -25,11 +25,13 @@ dropoxExtractorRoutes = require('../ex-dropbox/routes').default
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
 createGenericDetailRoute = require './createGenericDetailRoute'
+createGenericNewRoute = require './createGenericNewRoute'
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
 geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
 customScienceRoutes = require('../custom-science/Routes').default
+NewComponentFormPage = require '../components/react/pages/new-component-form/NewComponentForm'
 
 extractor = injectProps(type: 'extractor')
 writer = injectProps(type: 'writer')
@@ -55,8 +57,6 @@ routes =
       title: 'New Application'
       defaultRouteHandler: application(NewComponent)
     ,
-      createGenericDetailRoute 'application'
-    ,
       appGeneeaRoutes.sentimentAnalysis
     ,
       appGeneeaRoutes.topicDetection
@@ -69,9 +69,15 @@ routes =
     ,
       appGeneeaRoutes.entityRecognition
     ,
+      createGenericNewRoute 'geneea-nlp-analysis'
+    ,
       geneeaGeneralRoutes
     ,
+      createGenericNewRoute 'custom-science'
+    ,
       customScienceRoutes
+    ,
+      createGenericDetailRoute 'application'
     ]
 
   extractors:
@@ -87,19 +93,26 @@ routes =
       title: 'New Extractor'
       defaultRouteHandler: extractor(NewComponent)
     ,
-      createGenericDetailRoute 'extractor'
+      createGenericNewRoute 'ex-db'
     ,
       exDbRoutes
     ,
+      createGenericNewRoute 'ex-google-drive'
+    ,
       exGdriveGoogleRoutes
     ,
+      createGenericNewRoute 'ex-google-analytics'
+    ,
       exGanalRoutes
+    ,
+      createGenericNewRoute 'ex-adform'
     ,
       adformRoutes
     ,
       dropoxExtractorRoutes
     ,
       createGenericDetailRoute 'extractor'
+
     ]
 
   writers:
@@ -115,27 +128,44 @@ routes =
       title: 'New Writer'
       defaultRouteHandler: writer(NewComponent)
     ,
-      createGenericDetailRoute 'writer'
+      createGenericNewRoute 'gooddata-writer'
     ,
       goodDataWriterRoutes
     ,
+      createGenericNewRoute 'wr-dropbox'
+    ,
       dropoxWriterRoutes
+    ,
+      createGenericNewRoute 'tde-exporter'
     ,
       tdeRoutes
     ,
+      createGenericNewRoute 'wr-google-drive'
+    ,
       googleDriveWriterRoutes
+    ,
+      createGenericNewRoute 'wr-db'
     ,
       createDbWriterRoutes('wr-db', 'mysql', true)
     ,
+      createGenericNewRoute 'wr-db-mysql'
+    ,
       createDbWriterRoutes('wr-db-mysql', 'mysql', true)
+    ,
+      createGenericNewRoute 'wr-db-oracle'
     ,
       createDbWriterRoutes('wr-db-oracle', 'oracle', false)
     ,
+      createGenericNewRoute 'wr-db-redshift'
+    ,
       createDbWriterRoutes('wr-db-redshift', 'redshift', true)
     ,
+      createGenericNewRoute 'wr-tableau'
+    ,
       createDbWriterRoutes('wr-tableau', 'mysql', true)
-    ]
+    ,
+      createGenericDetailRoute 'writer'
 
-console.log("routes", routes)
+    ]
 
 module.exports = routes

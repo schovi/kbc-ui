@@ -20,8 +20,13 @@ module.exports = React.createClass
   displayName: 'NewComponentForm'
   mixins: [createStoreMixin(NewConfigurationsStore)]
 
+  propTypes:
+    component: React.PropTypes.string
+
   getStateFromStores: ->
     componentId = RoutesStore.getCurrentRouteParam('component')
+    if (!componentId && @props.component)
+      componentId = @props.component
     component: ComponentsStore.getComponent(componentId)
     configuration: NewConfigurationsStore.getConfiguration(componentId)
     isValid: NewConfigurationsStore.isValidConfiguration(componentId)
