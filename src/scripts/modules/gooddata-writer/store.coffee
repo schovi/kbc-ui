@@ -616,4 +616,14 @@ dispatcher.register (payload) ->
       ], false
       GoodDataWriterStore.emitChange()
 
+    when constants.ActionTypes.GOOD_DATA_WRITER_PROJECT_ACCESS_ERROR
+      _store = _store.updateIn [
+        'writers'
+        action.configurationId
+        'pendingActions'
+      ], List(), (actions) ->
+        actions.delete(actions.indexOf('projectAccess'))
+      GoodDataWriterStore.emitChange()
+
+
 module.exports = GoodDataWriterStore
