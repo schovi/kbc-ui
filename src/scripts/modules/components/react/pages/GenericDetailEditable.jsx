@@ -121,7 +121,7 @@ export default React.createClass({
       return (
         <li className={disabledClassName}>
           <Tooltip tooltip={tooltip} placement="top">
-            <form action={url} method="POST">
+            <form action={url} method="POST" target="_blank" >
               <input type="hidden" name="token" value={this.state.token}/>
               <button disabled={!url} className="btn btn-link" type="submit">
                 {label}
