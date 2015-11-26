@@ -25,6 +25,7 @@ OrchestrationNameEdit = require './react/components/OrchestrationNameEdit'
 OrchestrationsStore = require './stores/OrchestrationsStore'
 
 OrchestrationsActionCreators = require './ActionCreators'
+InstalledComponentsActionsCreators = require '../components/InstalledComponentsActionCreators'
 
 routes =
   name: 'orchestrations'
@@ -36,8 +37,11 @@ routes =
     interval: 10
     action: ->
       OrchestrationsActionCreators.loadOrchestrationsForce()
-  requireData: ->
-    OrchestrationsActionCreators.loadOrchestrations()
+  requireData: [
+      -> OrchestrationsActionCreators.loadOrchestrations()
+    ,
+      -> InstalledComponentsActionsCreators.loadComponents()
+    ]
   childRoutes: [
     name: 'orchestration'
     nameEdit: (params) ->

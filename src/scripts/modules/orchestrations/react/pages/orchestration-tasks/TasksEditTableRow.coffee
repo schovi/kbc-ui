@@ -6,6 +6,7 @@ _ = require 'underscore'
 DragDropMixin = require('react-dnd').DragDropMixin
 
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
 
 TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
@@ -57,6 +58,15 @@ TasksEditTableRow = React.createClass
           ComponentName component: @props.component
         else
           @props.task.get('componentUrl')
+      td null,
+        if @props.task.has 'config'
+          React.createElement ComponentConfigurationLink,
+            componentId: @props.task.get 'component'
+            configId: @props.task.getIn ['config', 'id']
+          ,
+            @props.task.getIn ['config', 'name']
+        else
+          'N/A'
       td null,
         input
           className: 'form-control'

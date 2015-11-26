@@ -6,7 +6,10 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 OrchestrationsActionCreators = require '../../../ActionCreators'
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 ComponentsStore = require '../../../../components/stores/ComponentsStore'
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+
+mergeTasksWithConfigurations = require('../../../mergeTasksWithConfigruations').default
 
 # React components
 OrchestrationsNav = React.createFactory(require './../orchestration-detail/OrchestrationsNav')
@@ -18,7 +21,7 @@ TasksEditor = React.createFactory(require './TasksEditor')
 
 OrchestrationTasks = React.createClass
   displayName: 'OrchestrationTasks'
-  mixins: [createStoreMixin(OrchestrationStore, ComponentsStore)]
+  mixins: [createStoreMixin(OrchestrationStore, ComponentsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
@@ -29,7 +32,7 @@ OrchestrationTasks = React.createClass
       tasks = OrchestrationStore.getOrchestrationTasks(orchestrationId)
     return {
       orchestration: OrchestrationStore.get orchestrationId
-      tasks: tasks
+      tasks: mergeTasksWithConfigurations(tasks, InstalledComponentsStore.getAll())
       components: ComponentsStore.getAll()
       filter: OrchestrationStore.getFilter()
       isEditing: isEditing
@@ -65,6 +68,7 @@ OrchestrationTasks = React.createClass
     OrchestrationsActionCreators.runOrchestration(@state.orchestration.get('id'), tasks, true)
 
   render: ->
+    console.log 'render', @state.tasks.toJS()
     div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},

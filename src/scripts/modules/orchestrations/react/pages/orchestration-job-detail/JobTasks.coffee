@@ -5,6 +5,7 @@ ComponentsStore = require '../../../../components/stores/ComponentsStore'
 {Panel, PanelGroup} = require('react-bootstrap')
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
+ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
 kbCommon = require '../../../../../react/common/common'
 ComponentIcon = React.createFactory(kbCommon.ComponentIcon)
@@ -41,13 +42,16 @@ JobTasks = React.createClass
         span className: 'tbody',
           span className: 'tr',
             span className: 'td col-xs-7',
-            if component
-              span {},
-                ComponentIcon size: '32', component: component
-                ' '
-                ComponentName component: component
-            else
-              task.get 'componentUrl'
+              if component
+                span {},
+                  ComponentIcon size: '32', component: component
+                  ' '
+                  ComponentName component: component
+              else
+                task.get 'componentUrl'
+              ' '
+              if task.has 'config'
+                ' - ' + task.getIn ['config', 'name']
             span className: 'td col-xs-1 text-right',
               span className: 'label kbc-label-rounded label-default',
                 task.get('phase')
@@ -62,6 +66,14 @@ JobTasks = React.createClass
       eventKey: task.get('id')
     ,
       div(className: 'pull-right', date.format(task.get('startTime'))) if task.get('startTime')
+      if task.has 'config'
+        div null,
+          strong null, 'Configuration '
+          React.createElement ComponentConfigurationLink,
+            componentId: task.get('component')
+            configId: task.getIn ['config', 'id']
+          ,
+            task.getIn ['config', 'name']
       div(null, strong(null, 'POST'), ' ', task.get('runUrl')) if task.get('runUrl')
       if task.get('runParameters')?.size
         div null,
