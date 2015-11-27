@@ -1,4 +1,3 @@
-
 actionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 GoodDataWriterStore = require './store'
@@ -10,7 +9,7 @@ TablePageHeaderButtons = require './react/components/TableHeaderButtons'
 TablePageHeaderExportStatus = require './react/components/TableHeaderExportStatus'
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
 ModelPage = require './react/pages/model/Model'
-
+storageActionCreators = require '../components/StorageActionCreators'
 
 module.exports =
   name: 'gooddata-writer'
@@ -19,6 +18,10 @@ module.exports =
   requireData: [
     (params) ->
       actionCreators.loadConfiguration params.config
+    ,
+      ->
+        storageActionCreators.loadTables()
+
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
