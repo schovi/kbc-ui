@@ -11,6 +11,9 @@ ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 SearchRow = require('../../../../../react/common/SearchRow').default
 TablesList = require './BucketTablesList'
+TableRow = require './TableRow'
+TablesByBucketsPanel = require '../../../../components/react/components/TablesByBucketsPanel'
+
 ActiveCountBadge = require './ActiveCountBadge'
 {Link} = require('react-router')
 {Tooltip, Confirm} = require '../../../../../react/common/common'
@@ -55,15 +58,11 @@ module.exports = React.createClass
           onChange: @_handleFilterChange
           query: @state.filter
         if @state.tablesByBucket.count()
-          div
-            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-          ,
-            @state.tablesByBucket.map (tables, bucketId) ->
-              @_renderBucketPanel bucketId, tables
-            , @
-            .toArray()
+          @_renderTablesByBucketsPanel()
         else
           @_renderNotFound()
+
+
 
       div className: 'col-md-3 kbc-main-sidebar',
         div className: 'kbc-buttons kbc-text-light',
@@ -194,9 +193,6 @@ module.exports = React.createClass
                 ' Delete Writer'
 
   _handleBucketSelect: (bucketId, e) ->
-    e.preventDefault()
-    e.stopPropagation()
-    console.log 'selected', e.selected
     actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId
 
   _handleProjectUpload: ->
@@ -250,3 +246,54 @@ module.exports = React.createClass
       React.createElement TablesList,
         configId: @state.writer.getIn ['config', 'id']
         tables: tables
+
+  ###
+  Tomas
+  ###
+
+  _renderTableRow: (table) ->
+    bucketId = table.getIn ['bucket', 'id']
+    writerTable = @state.tablesByBucket.getIn [bucketId, table.get('id')]
+    React.createElement TableRow,
+      table: writerTable
+      configId: @state.configId
+
+  _renderHeaderRow: ->
+    div className: 'tr',
+      span className: 'th',
+        strong null, 'Table name'
+      span className: 'th',
+        strong null, 'GoodData title'
+      span className: 'th'
+
+  _renderTablesByBucketsPanel: ->
+    React.createElement TablesByBucketsPanel,
+      renderTableRowFn: @_renderTableRow
+      renderHeaderRowFn: @_renderHeaderRow
+      filterFn: @_filterBuckets
+      searchQuery: @state.filter
+      isTableExportedFn: @_isTableExported
+      onToggleBucketFn: @_handleBucketSelect
+      isBucketToggledFn: (bucketId) =>
+        @state.writer.getIn(['bucketToggles', bucketId])
+      showAllTables: false
+
+  _filterBuckets: (buckets) ->
+    buckets = buckets.filter (bucket) ->
+      bucket.get('stage') == 'out'
+    return buckets
+
+  _isTableExported: (tableId) ->
+    @state.tablesByBucket.find (tables, bucketId) ->
+      tables.find((table) -> table.get('id') == tableId and table.getIn(['data', 'export']))
+
+
+
+  _oldTablesList: ->
+    div
+      className: 'kbc-accordion kbc-panel-heading-with-table el-heading-with-table'
+    ,
+      @state.tablesByBucket.map (tables, bucketId) ->
+        @_renderBucketPanel bucketId, tables
+      , @
+      .toArray()
