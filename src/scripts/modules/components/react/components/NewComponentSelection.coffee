@@ -30,7 +30,7 @@ ComponentBox = React.createClass
       p null, component.get('description')
       Link
         className: 'btn btn-success btn-lg'
-        to: "generic-detail-#{component.get('type')}-new"
+        to: "new-#{component.get('type')}-add"
         params:
           component: component.get 'id'
       ,

@@ -56,6 +56,16 @@ routes =
       name: 'new-application'
       title: 'New Application'
       defaultRouteHandler: application(NewComponent)
+      childRoutes: [
+        name: 'new-application-add'
+        title: (routerState) ->
+          component = routerState.getIn ['params', 'component']
+          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
+        path: ':component'
+        defaultRouteHandler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.component
+      ]
     ,
       appGeneeaRoutes.sentimentAnalysis
     ,
@@ -92,6 +102,17 @@ routes =
       name: 'new-extractor'
       title: 'New Extractor'
       defaultRouteHandler: extractor(NewComponent)
+      childRoutes: [
+        name: 'new-extractor-add'
+        title: (routerState) ->
+          component = routerState.getIn ['params', 'component']
+          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
+        path: ':component'
+        defaultRouteHandler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.component
+      ]
+
     ,
       createGenericNewRoute 'ex-db'
     ,
@@ -127,6 +148,16 @@ routes =
       name: 'new-writer'
       title: 'New Writer'
       defaultRouteHandler: writer(NewComponent)
+      childRoutes: [
+        name: 'new-writer-add'
+        title: (routerState) ->
+          component = routerState.getIn ['params', 'component']
+          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
+        path: ':component'
+        defaultRouteHandler: NewComponentFormPage
+        requireData: (params) ->
+          ComponentsActionCreators.loadComponent params.component
+      ]
     ,
       createGenericNewRoute 'gooddata-writer'
     ,
