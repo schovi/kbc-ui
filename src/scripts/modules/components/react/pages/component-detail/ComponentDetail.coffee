@@ -10,8 +10,9 @@ VendorInfo = React.createFactory(require './VendorInfo.coffee')
 ComponentDescription = React.createFactory(require './ComponentDescription.coffee')
 ConfigurationRow = require('../ConfigurationRow.jsx').default
 Immutable = require 'immutable'
+ComponentEmptyState = require('../../components/ComponentEmptyState').default
 
-{div, label, h3} = React.DOM
+{div, label, h3, h2} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ComponentDetail'
@@ -46,7 +47,7 @@ module.exports = React.createClass
         @_renderVendorInfo() if @_is3rdPartyApp()
         @_renderAppUsageInfo() if @_is3rdPartyApp()
         @_renderDescription() if @state.component.get('longDescription')
-        @_renderConfigurations()
+      @_renderConfigurations()
 
   _renderDescription: ->
     ComponentDescription
@@ -66,18 +67,20 @@ module.exports = React.createClass
   _renderConfigurations: ->
     state = @state
     if @state.configurations.count()
-      div className: "table table-hover",
-        div clasName: "thead",
-          h3, "Configurations"
-        div className: "tbody",
-          @state.configurations.map((configuration) ->
-            React.createElement(ConfigurationRow,
-              config: configuration,
-              componentId: state.component.get('id'),
-              isDeleting: state.deletingConfigurations.has(configuration.get('id')),
-              key: configuration.get('id')
+      div null,
+        div className: "kbc-header",
+          div className: "kbc-title",
+            h2 null, "Configurations"
+        div className: "table table-hover",
+          div className: "tbody",
+            @state.configurations.map((configuration) ->
+              React.createElement(ConfigurationRow,
+                config: configuration,
+                componentId: state.component.get('id'),
+                isDeleting: state.deletingConfigurations.has(configuration.get('id')),
+                key: configuration.get('id')
+              )
             )
-          )
     else
-      div className: "tbody",
+      React.createElement ComponentEmptyState, null,
         "No configurations"
