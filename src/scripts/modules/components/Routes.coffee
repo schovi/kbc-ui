@@ -120,7 +120,7 @@ routes =
     ,
       createComponentRoute 'ex-adform', [adformRoutes]
     ,
-      dropoxExtractorRoutes
+      createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
     ,
       createGenericDetailRoute 'extractor'
 
