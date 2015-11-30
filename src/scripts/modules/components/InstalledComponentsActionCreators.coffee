@@ -298,19 +298,23 @@ module.exports =
       throw e
 
 
-  deleteConfiguration: (componentId, configurationId) ->
+  deleteConfiguration: (componentId, configurationId, transition) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_START
       componentId: componentId
       configurationId: configurationId
+      transition: transition
 
     component = ComponentsStore.getComponent componentId
     configuration = InstalledComponentsStore.getConfig componentId, configurationId
-    transitionTo = "#{component.get('type')}s"
 
     notification = "Configuration #{configuration.get('name')} was deleted."
 
-    RoutesStore.getRouter().transitionTo transitionTo
+    if (transition)
+      transitionTo = "generic-detail-#{component.get('type')}"
+      transitionParams =
+        component: component.get('id')
+      RoutesStore.getRouter().transitionTo transitionTo, transitionParams
 
     deleteComponentConfiguration componentId, configurationId
     .then (response) ->
@@ -319,6 +323,7 @@ module.exports =
         type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_SUCCESS
         componentId: componentId
         configurationId: configurationId
+        transition: transition
 
       ApplicationActionCreators.sendNotification
         message: notification
@@ -328,6 +333,7 @@ module.exports =
         type: constants.ActionTypes.INSTALLED_COMPONENTS_DELETE_CONFIGURATION_ERROR
         componentId: componentId
         configurationId: configurationId
+        transition: transition
         error: e
 
       throw e
