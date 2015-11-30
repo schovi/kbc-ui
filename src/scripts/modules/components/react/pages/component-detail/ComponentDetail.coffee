@@ -17,9 +17,11 @@ ComponentEmptyState = require('../../components/ComponentEmptyState').default
 module.exports = React.createClass
   displayName: 'ComponentDetail'
   mixins: [createStoreMixin(ComponentsStore, InstalledComponentsStore)]
+  propTypes:
+    component: React.PropTypes.string
 
   getStateFromStores: ->
-    componentId = RoutesStore.getCurrentRouteParam('component')
+    componentId = if @props.component then @props.component else RoutesStore.getCurrentRouteParam('component')
     component = ComponentsStore.getComponent(componentId)
 
     if (InstalledComponentsStore.getDeletingConfigurations())

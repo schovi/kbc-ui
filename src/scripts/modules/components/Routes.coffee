@@ -24,8 +24,10 @@ goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxExtractorRoutes = require('../ex-dropbox/routes').default
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
+
 createGenericDetailRoute = require './createGenericDetailRoute'
-createGenericNewRoute = require './createGenericNewRoute'
+createComponentRoute = require('./createComponentRoute').default
+
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
@@ -79,13 +81,9 @@ routes =
     ,
       appGeneeaRoutes.entityRecognition
     ,
-      createGenericNewRoute 'geneea-nlp-analysis'
+      createComponentRoute 'geneea-nlp-analysis', [geneeaGeneralRoutes]
     ,
-      geneeaGeneralRoutes
-    ,
-      createGenericNewRoute 'custom-science'
-    ,
-      customScienceRoutes
+      createComponentRoute 'custom-science', [customScienceRoutes]
     ,
       createGenericDetailRoute 'application'
     ]
@@ -114,21 +112,13 @@ routes =
       ]
 
     ,
-      createGenericNewRoute 'ex-db'
+      createComponentRoute 'ex-db', [exDbRoutes]
     ,
-      exDbRoutes
+      createComponentRoute 'ex-google-drive', [exGdriveGoogleRoutes]
     ,
-      createGenericNewRoute 'ex-google-drive'
+      createComponentRoute 'ex-google-analytics', [exGanalRoutes]
     ,
-      exGdriveGoogleRoutes
-    ,
-      createGenericNewRoute 'ex-google-analytics'
-    ,
-      exGanalRoutes
-    ,
-      createGenericNewRoute 'ex-adform'
-    ,
-      adformRoutes
+      createComponentRoute 'ex-adform', [adformRoutes]
     ,
       dropoxExtractorRoutes
     ,
@@ -159,41 +149,23 @@ routes =
           ComponentsActionCreators.loadComponent params.component
       ]
     ,
-      createGenericNewRoute 'gooddata-writer'
+      createComponentRoute 'gooddata-writer', [goodDataWriterRoutes]
     ,
-      goodDataWriterRoutes
+      createComponentRoute 'wr-dropbox', [dropoxWriterRoutes]
     ,
-      createGenericNewRoute 'wr-dropbox'
+      createComponentRoute 'tde-exporter', [tdeRoutes]
     ,
-      dropoxWriterRoutes
+      createComponentRoute 'wr-google-drive', [googleDriveWriterRoutes]
     ,
-      createGenericNewRoute 'tde-exporter'
+      createComponentRoute 'wr-db', [createDbWriterRoutes('wr-db', 'mysql', true)]
     ,
-      tdeRoutes
+      createComponentRoute 'wr-db-mysql', [createDbWriterRoutes('wr-db-mysql', 'mysql', true)]
     ,
-      createGenericNewRoute 'wr-google-drive'
+      createComponentRoute 'wr-db-oracle', [createDbWriterRoutes('wr-db-oracle', 'oracle', false)]
     ,
-      googleDriveWriterRoutes
+      createComponentRoute 'wr-db-redshift', [createDbWriterRoutes('wr-db-redshift', 'redshift', true)]
     ,
-      createGenericNewRoute 'wr-db'
-    ,
-      createDbWriterRoutes('wr-db', 'mysql', true)
-    ,
-      createGenericNewRoute 'wr-db-mysql'
-    ,
-      createDbWriterRoutes('wr-db-mysql', 'mysql', true)
-    ,
-      createGenericNewRoute 'wr-db-oracle'
-    ,
-      createDbWriterRoutes('wr-db-oracle', 'oracle', false)
-    ,
-      createGenericNewRoute 'wr-db-redshift'
-    ,
-      createDbWriterRoutes('wr-db-redshift', 'redshift', true)
-    ,
-      createGenericNewRoute 'wr-tableau'
-    ,
-      createDbWriterRoutes('wr-tableau', 'mysql', true)
+      createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
       createGenericDetailRoute 'writer'
 
