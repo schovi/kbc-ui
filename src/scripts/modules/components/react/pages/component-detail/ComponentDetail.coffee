@@ -26,10 +26,14 @@ module.exports = React.createClass
     else
       deletingConfigurations = Immutable.Map()
 
+    componentWithConfigurations = InstalledComponentsStore.getComponent(component.get('id'))
+    configurations = Immutable.Map()
+    if componentWithConfigurations
+      configurations = componentWithConfigurations.get("configurations", Immutable.Map())
+
     state =
       component: component
-      configurations: InstalledComponentsStore.getComponent(component.get('id'), Immutable.Map())
-        .get("configurations", Immutable.Map())
+      configurations: configurations
       deletingConfigurations: deletingConfigurations.get(component.get('id'), Immutable.Map())
     state
 
@@ -61,16 +65,19 @@ module.exports = React.createClass
 
   _renderConfigurations: ->
     state = @state
-    div className: "table table-hover",
-      div clasName: "thead",
-        h3, "Configurations"
-      div className: "tbody",
-        @state.configurations.map((configuration) ->
-          React.createElement(ConfigurationRow,
-            config: configuration,
-            componentId: state.component.get('id'),
-            isDeleting: state.deletingConfigurations.has(configuration.get('id')),
-            key: configuration.get('id')
+    if @state.configurations.count()
+      div className: "table table-hover",
+        div clasName: "thead",
+          h3, "Configurations"
+        div className: "tbody",
+          @state.configurations.map((configuration) ->
+            React.createElement(ConfigurationRow,
+              config: configuration,
+              componentId: state.component.get('id'),
+              isDeleting: state.deletingConfigurations.has(configuration.get('id')),
+              key: configuration.get('id')
+            )
           )
-        )
-
+    else
+      div className: "tbody",
+        "No configurations"
