@@ -1,4 +1,3 @@
-
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
 ApplicationStore = require '../../stores/ApplicationStore'
@@ -30,11 +29,11 @@ module.exports =
       response.body
 
   getWriterTables: (configurationId) ->
-    createRequest('GET', "tables")
-    .query config: configurationId
+    createRequest('GET', "v2/" + configurationId + "/tables")
+    #.query config: configurationId
     .promise()
     .then((response) ->
-      response.body.tables
+      response.body
     )
 
   getTableDetail: (configurationId, tableId) ->

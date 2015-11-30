@@ -32,7 +32,7 @@ module.exports = React.createClass
     config =  RoutesStore.getCurrentRouteParam('config')
     configId: config
     writer: goodDataWriterStore.getWriter(config)
-    tablesByBucket: goodDataWriterStore.getWriterTablesByBucketFiltered(config)
+    tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
 
   _handleFilterChange: (query) ->
@@ -252,8 +252,8 @@ module.exports = React.createClass
   ###
 
   _renderTableRow: (table) ->
-    bucketId = table.getIn ['bucket', 'id']
-    writerTable = @state.tablesByBucket.getIn [bucketId, table.get('id')]
+    #bucketId = table.getIn ['bucket', 'id']
+    writerTable = @state.tablesByBucket.get table.get('id')
     React.createElement TableRow,
       table: writerTable
       configId: @state.configId
@@ -284,8 +284,8 @@ module.exports = React.createClass
     return buckets
 
   _isTableExported: (tableId) ->
-    @state.tablesByBucket.find (tables, bucketId) ->
-      tables.find((table) -> table.get('id') == tableId and table.getIn(['data', 'export']))
+    @state.tablesByBucket.find (table) ->
+      table.get('id') == tableId and table.getIn(['data', 'export'])
 
 
 

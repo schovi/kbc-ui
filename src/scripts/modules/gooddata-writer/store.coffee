@@ -123,6 +123,9 @@ referencesForColumns = (columns) ->
     )
 
 extendTable = (table) ->
+  if not table.has('id')
+    table = table.set('id', table.get('tableId')) #ui fallback to id
+
   table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
   if !table.get('name')?.length
     table = table.set('name', table.get('id')) # fallback to table id if name not set
@@ -157,8 +160,8 @@ GoodDataWriterStore = StoreUtils.createStore
     _store
     .getIn(['tables', configurationId])
     .toSeq()
-    .groupBy (table) ->
-      table.getIn ['data', 'bucket']
+    #.groupBy (table) ->
+    #  table.getIn ['data', 'bucket']
 
   getWriterTablesByBucketFiltered: (configurationId) ->
     filter = @getWriterTablesFilter configurationId
@@ -219,19 +222,19 @@ dispatcher.register (payload) ->
       .map (table) ->
         Map
           isLoading: false
-          id: table.get 'id'
+          id: table.get('id') or table.get('tableId')
           editingFields: Map()
           savingFields: List()
           pendingActions: List()
           data: extendTable(table)
       .mapKeys (key, table) ->
-        table.get 'id'
+        table.get('id')
 
       # open bucket it there is only one
       bucketToggles = Map()
-      buckets = tablesById.groupBy (table) -> table.getIn ['data', 'bucket']
-      if buckets.count() == 1
-        bucketToggles = bucketToggles.set(buckets.keySeq().first(), true)
+      #buckets = tablesById.groupBy (table) -> table.getIn ['data', 'bucket']
+      #if buckets.count() == 1
+      #  bucketToggles = bucketToggles.set(buckets.keySeq().first(), true)
 
       _store = _store.withMutations (store) ->
         store
