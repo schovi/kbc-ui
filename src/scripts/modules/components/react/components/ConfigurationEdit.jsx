@@ -17,7 +17,14 @@ export default React.createClass({
     isValid: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    saveLabel: PropTypes.string
+  },
+
+  getDefaultProps() {
+    return {
+      saveLabel: 'Save configuration'
+    };
   },
 
   render() {
@@ -31,7 +38,7 @@ export default React.createClass({
                 onSave={this.props.onSave}
                 onCancel={this.props.onCancel}
                 placement="right"
-                saveLabel="Save configuration"
+                saveLabel={this.props.saveLabel}
                 isDisabled={!this.props.isValid}
                 />
             </Sticky>

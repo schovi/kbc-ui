@@ -4,7 +4,14 @@ import CodeMirror from 'react-code-mirror';
 export default React.createClass({
   propTypes: {
     data: PropTypes.string.isRequired,
-    onEditStart: PropTypes.func.isRequired
+    onEditStart: PropTypes.func.isRequired,
+    editLabel: PropTypes.string
+  },
+
+  getDefaultProps() {
+    return {
+      editLabel: 'Edit configuration'
+    };
   },
 
   render() {
@@ -43,7 +50,7 @@ export default React.createClass({
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
-        <span className="kbc-icon-pencil"></span> Edit configuration
+        <span className="kbc-icon-pencil"></span> {this.props.editLabel}
       </button>
     );
   }

@@ -185,6 +185,8 @@ export default React.createClass({
                 onEditSubmit={this.onEditParametersSubmit}
                 isValid={this.state.isValidEditingConfigDataParameters}
                 headerText="Parameters"
+                editLabel="Edit parameters"
+                saveLabel="Save parameters"
                 />
               {this.runtimeConfiguration()}
             </div>
