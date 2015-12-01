@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
+import JSONEdit from './ConfigurationJSONEdit';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -17,13 +18,15 @@ export default React.createClass({
     isValid: PropTypes.bool.isRequired,
     supportsEncryption: PropTypes.bool.isRequired,
     headerText: PropTypes.string,
-    help: PropTypes.node
+    help: PropTypes.node,
+    useJsonSchema: PropTypes.bool
   },
 
   getDefaultProps() {
     return {
       headerText: 'Configuration Data',
-      help: null
+      help: null,
+      useJsonSchema: true
     };
   },
 
@@ -43,17 +46,10 @@ export default React.createClass({
         <span>
           {
             this.props.supportsEncryption ?
-              <p className="help-block small">Keys prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
+              <p className="help-block small">Properties prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
               : null
           }
-          <Edit
-            data={this.props.data}
-            isSaving={this.props.isSaving}
-            onSave={this.props.onEditSubmit}
-            onChange={this.props.onEditChange}
-            onCancel={this.props.onEditCancel}
-            isValid={this.props.isValid}
-            />
+          { this.renderEditor() }
         </span>
       );
     } else {
@@ -64,6 +60,31 @@ export default React.createClass({
           />
       );
     }
-  }
+  },
 
+  renderEditor() {
+    if (this.props.useJsonSchema) {
+      return (
+        <JSONEdit
+          data={this.props.data}
+          isSaving={this.props.isSaving}
+          onSave={this.props.onEditSubmit}
+          onChange={this.props.onEditChange}
+          onCancel={this.props.onEditCancel}
+          isValid={this.props.isValid}
+          />
+      );
+    } else {
+      return (
+        <Edit
+          data={this.props.data}
+          isSaving={this.props.isSaving}
+          onSave={this.props.onEditSubmit}
+          onChange={this.props.onEditChange}
+          onCancel={this.props.onEditCancel}
+          isValid={this.props.isValid}
+          />
+      );
+    }
+  }
 });
