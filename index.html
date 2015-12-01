@@ -10,16 +10,12 @@
 <section id="react"></section>
 <script src="/scripts/bundle.js"></script>
 <script>
-    console.log('start');
     // New zendesk widget global mock
     var zE = function() {};
     zE.activate = function(options) { console.log('activate', options); alert('This will open Zendesk Widget on production');};
     zE.hide = function() {console.log('hide')};
 
-    console.log('neco');
     (function(kbcApp) {
-        console.log('start', kbcApp);
-
         var organizations = [
             {
                 "name": "Keboola Demo",
