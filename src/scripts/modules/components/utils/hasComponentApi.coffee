@@ -6,7 +6,7 @@ COMPONENTS_WITHOUT_API = ['wr-dropbox', 'tde-exporter', 'geneea-topic-detection'
 'geneea-text-correction', 'geneea-entity-recognition', 'ex-adform', 'geneea-nlp-analysis',
 'rcp-anomaly', 'rcp-basket', 'rcp-correlations', 'rcp-data-type-assistant',
 'rcp-distribution-groups', 'rcp-linear-dependency', 'rcp-linear-regression',
-'rcp-next-event', 'rcp-next-order-simple', 'rcp-segmentation', 'rcp-var-characteristics', 'ex-sklik']
+'rcp-next-event', 'rcp-next-order-simple', 'rcp-segmentation', 'rcp-var-characteristics', 'ex-sklik', 'ex-dropbox']
 
 
 module.exports = (componentId) ->
