@@ -17,6 +17,8 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
     sapiTable: React.PropTypes.object.isRequired #SAPI representation of table
+    deleteTableFn: React.PropTypes.func
+    isDeleting: React.PropTypes.bool
 
   render: ->
     Link
@@ -40,6 +42,20 @@ module.exports = React.createClass
           isActive: @props.table.getIn ['data', 'export']
           isPending: @props.table.get('savingFields').contains 'export'
           onChange: @_handleExportChange
+        if @props.isDeleting
+          React.createElement Loader
+        else
+          React.createElement Confirm,
+            key: @props.table.get 'id'
+            title: "Remove #{@props.table.get('id')}"
+            text: 'You are about to remove table from the configuration.'
+            buttonLabel: 'Remove'
+            onConfirm: =>
+              @props.deleteTableFn(@props.table.get('id'))
+          ,
+            button className: 'btn btn-link',
+              i className: 'kbc-icon-cup'
+
         if @props.table.get('pendingActions').contains 'uploadTable'
           React.DOM.span className: 'btn btn-link',
             React.createElement Loader, className: 'fa-fw'

@@ -136,6 +136,8 @@ referencesForColumns = (columns) ->
 #   table
 
 GoodDataWriterStore = StoreUtils.createStore
+  getDeletingTables: (configurationId) ->
+    _store.getIn ['pending', 'deletingTables', configurationId], Map()
 
   isAddingNewTable: (configurationId) ->
     _store.hasIn ['pending', 'adding', configurationId]
@@ -205,6 +207,25 @@ dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_START
+      configId = action.configurationId
+      tableId = action.tableId
+      _store = _store.setIn ['pending', 'deletingTables', configId, tableId], true
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_SUCCESS
+      configId = action.configurationId
+      tableId = action.tableId
+      _store = _store.deleteIn ['pending', 'deletingTables', configId, tableId]
+      _store = _store.deleteIn ['tables', configId, tableId]
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_ERROR
+      configId = action.configurationId
+      tableId = action.tableId
+      _store = _store.deleteIn ['pending', 'deletingTables', configId, tableId]
+      GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_START
       configId = action.configurationId

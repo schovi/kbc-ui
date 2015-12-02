@@ -36,6 +36,12 @@ module.exports =
       response.body
     )
 
+  deleteWriterTable: (configurationId, tableId) ->
+    createRequest('DELETE', "v2/" + configurationId + "/tables/" + tableId)
+    .promise()
+    .then (response) ->
+      response.body
+
   addWriterTable: (configurationId, tableId, data) ->
     createRequest('POST', "v2/" + configurationId + "/tables/" + tableId)
     .send data.toJS()

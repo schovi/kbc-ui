@@ -30,10 +30,12 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
+
     configId: config
     writer: goodDataWriterStore.getWriter(config)
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
+    deletingTables: goodDataWriterStore.getDeletingTables(config)
 
   _handleFilterChange: (query) ->
     actionCreators.setWriterTablesFilter(@state.writer.getIn(['config', 'id']), query)
@@ -258,6 +260,8 @@ module.exports = React.createClass
       table: writerTable
       configId: @state.configId
       sapiTable: table
+      deleteTableFn: @_deleteTable
+      isDeleting: @state.deletingTables.get(table.get('id'))
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -292,6 +296,9 @@ module.exports = React.createClass
   _isTableShown: (tableId) ->
     @state.tablesByBucket.find (table) ->
       table.get('id') == tableId
+
+  _deleteTable: (tableId) ->
+    actionCreators.deleteTable(@state.configId, tableId)
 
   _oldTablesList: ->
     div

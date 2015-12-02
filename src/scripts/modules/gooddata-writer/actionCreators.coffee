@@ -14,6 +14,22 @@ Link = require('react-router').Link
 dimensionsStore = require './dateDimensionsStore'
 
 module.exports =
+  deleteTable: (configurationId, tableId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_START
+      configurationId: configurationId
+      tableId: tableId
+    goodDataWriterApi.deleteWriterTable(configurationId, tableId).then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+      throw error
 
   addNewTable: (configurationId, tableId, data) ->
     dispatcher.handleViewAction
