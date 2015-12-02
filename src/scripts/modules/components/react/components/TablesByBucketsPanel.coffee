@@ -23,7 +23,6 @@ module.exports = React.createClass
     onToggleBucketFn: React.PropTypes.func
     isBucketToggledFn: React.PropTypes.func
     showAllTables: React.PropTypes.bool
-    toggleShowAllFn: React.PropTypes.func
     configuredTables: React.PropTypes.array
     renderDeletedTableRowFn: React.PropTypes.func
 
@@ -67,16 +66,6 @@ module.exports = React.createClass
             div
               className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
               @_renderBucketPanel 'Nonexisting tables', deletedTables, @props.renderDeletedTableRowFn
-
-        if @props.toggleShowAllFn
-          button
-            onClick: =>
-              @props.toggleShowAllFn()
-            className: 'btn btn-link',
-            if @props.showAllTables
-              'Only Configured Tables'
-            else
-              'All tables'
     else
       @_renderNotFound()
 
