@@ -36,6 +36,13 @@ module.exports =
       response.body
     )
 
+  addWriterTable: (configurationId, tableId, data) ->
+    createRequest('POST', "v2/" + configurationId + "/tables/" + tableId)
+    .send data.toJS()
+    .promise()
+    .then (response) ->
+      response.body
+
   getTableDetail: (configurationId, tableId) ->
     createRequest('GET', 'tables')
     .query config: configurationId

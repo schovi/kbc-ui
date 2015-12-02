@@ -1,4 +1,3 @@
-
 Promise = require 'bluebird'
 React = require 'react'
 dispatcher = require '../../Dispatcher'
@@ -15,6 +14,27 @@ Link = require('react-router').Link
 dimensionsStore = require './dateDimensionsStore'
 
 module.exports =
+
+  addNewTable: (configurationId, tableId, data) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_START
+      configurationId: configurationId
+      tableId: tableId
+      data: data
+    goodDataWriterApi.addWriterTable(configurationId, tableId, data).then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        data: data
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
+        configurationId: configurationId
+        tableId: tableId
+        data: data
+      throw error
+
 
   loadConfigurationForce: (configurationId) ->
     dispatcher.handleViewAction

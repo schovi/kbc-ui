@@ -5,7 +5,7 @@ constants = require './constants'
 fuzzy = require 'fuzzy'
 
 {ColumnTypes, DataTypes} = constants
-{Map, List} = Immutable
+{fromJS, Map, List} = Immutable
 
 
 _store = Map
@@ -14,6 +14,7 @@ _store = Map
   tableColumns: Map()
   filters: Map() # by [writer_id][tables] = value
   referenceableTables: Map()
+  pending: Map()
 
 
 modifyColumns =  (columns, newColumn, currentColumn) ->
@@ -122,20 +123,22 @@ referencesForColumns = (columns) ->
       sortColumns: sortColumns
     )
 
-extendTable = (table) ->
-  if not table.has('id')
-    table = table.set('id', table.get('tableId')) #ui fallback to id
+# extendTable = (table) ->
+#   if not table.has('id')
+#     table = table.set('id', table.get('tableId')) #ui fallback to id
 
-  table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
-  if !table.get('name')?.length
-    table = table.set('name', table.get('id')) # fallback to table id if name not set
+#   table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
+#   if !table.get('name')?.length
+#     table = table.set('name', table.get('id')) # fallback to table id if name not set
 
-  if !table.get('title')?.length
-    table = table.set('title', table.get('id'))
-  table
+#   if !table.get('title')?.length
+#     table = table.set('title', table.get('id'))
+#   table
 
 GoodDataWriterStore = StoreUtils.createStore
 
+  isAddingNewTable: (configurationId) ->
+    _store.hasIn ['pending', 'adding', configurationId]
 
   hasWriter: (configurationId) ->
     _store.hasIn ['writers', configurationId, 'config']
@@ -203,6 +206,35 @@ dispatcher.register (payload) ->
 
   switch action.type
 
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_START
+      configId = action.configurationId
+      tableId = action.tableId
+      _store = _store.setIn ['pending', 'adding', configId], true
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
+      configId = action.configurationId
+      tableId = action.tableId
+      data = action.data or {}
+      _store = _store.deleteIn ['pending', 'adding', configId]
+      tables = _store.getIn ['tables', configId, tableId]
+      data['id'] = tableId
+      newTable = fromJS
+        isLoading: false
+        id: tableId
+        editingFields: Map()
+        savingFields: List()
+        pendingActions: List()
+        data: fromJS(data)
+      tables = tables.setIn tableId, newTable
+      _store = _store.setIn('tables', tables)
+      GoodDataWriterStore.emitChange()
+
+    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
+      tableId = action.tableId
+      _store = _store.deleteIn ['pending', 'adding', configId]
+      GoodDataWriterStore.emitChange()
+
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLES_FILTER_CHANGE
       _store = _store.setIn ['filters', action.configurationId, 'tables'], action.filter
       GoodDataWriterStore.emitChange()
@@ -226,7 +258,7 @@ dispatcher.register (payload) ->
           editingFields: Map()
           savingFields: List()
           pendingActions: List()
-          data: extendTable(table)
+          data: table
       .mapKeys (key, table) ->
         table.get('id')
 
@@ -303,7 +335,7 @@ dispatcher.register (payload) ->
 
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, table.get('id'), 'data'], extendTable(table.remove('columns'))
+        .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
         .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
