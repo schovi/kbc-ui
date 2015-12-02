@@ -1,31 +1,33 @@
 import React from 'react';
-import {Map} from 'immutable';
+import {Map, fromJS} from 'immutable';
 
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../../components/stores/InstalledComponentsStore';
+import writerStore from '../../store';
 import {Loader} from 'kbc-react-components';
 import SapiTableSelector from  '../../../components/react/components/SapiTableSelector';
-//import ConfirmButtons from '../../../../react/common/ConfirmButtons';
-import {Button, Modal, Input} from 'react-bootstrap';
+import {Button, Modal} from 'react-bootstrap';
 
 import installedComponentsActions from '../../../components/InstalledComponentsActionCreators';
+import writerActions from '../../actionCreators';
 
 const componentId = 'gooddata-writer';
 
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, writerStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
-          localState = InstalledComponentStore.getLocalState(componentId, configId);
+      localState = InstalledComponentStore.getLocalState(componentId, configId);
 
     return {
       configId: configId,
       localState: localState.get('newTable', Map()),
-      componentLocalState: localState
+      componentLocalState: localState,
+      isSaving: writerStore.isAddingNewTable(configId)
     };
   },
 
@@ -49,12 +51,12 @@ export default React.createClass({
           {this.renderBody()}
         </Modal.Body>
         <Modal.Footer>
-          {false ? <Loader/> : null}
+          {this.state.isSaving ? <Loader/> : null}
           <Button bsStyle="link" onClick={this.close}>Close</Button>
-          <Button bsStyle="primary"
-                  disabled={false}
-                  onClick={() => this.onAddNewTable()}>
-            Change
+          <Button bsStyle="success"
+                  disabled={this.state.isSaving}
+                  onClick={() => this.saveNewTable()}>
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
@@ -72,9 +74,14 @@ export default React.createClass({
   },
 
   renderBody() {
+    const data = this.state.localState;
     const sapiSelector = (
       <SapiTableSelector
-          onSelectTableFn={(e) => this.updateLocalState(['value'], e)}
+          onSelectTableFn={(e) => {
+            this.updateLocalState(['value'], e);
+            this.updateLocalState(['title'], e);
+          }
+          }
           value={this.state.localState.get('value')}
           allowedBuckets={['out']}
           placeholder="out.c-main.data" />
@@ -82,6 +89,17 @@ export default React.createClass({
     return (
       <div className="form form-horizontal">
         {this.renderFormElement('Storage Table', sapiSelector)}
+        {this.renderFormElement('Title',
+                                (<input
+                                     className="form-control"
+                                     value={data.get('title')}
+                                     onChange={this.valueSetter('title')}/>))}
+        {this.renderFormElement('Identifier',
+                                (<input
+                                     placeholder="optional"
+                                     className="form-control"
+                                     value={data.get('identifier')}
+                                     onChange={this.valueSetter('identifier')}/>))}
       </div>
     );
   },
@@ -105,9 +123,24 @@ export default React.createClass({
     );
   },
 
-
+  valueSetter(key) {
+    return (event) => {
+      this.updateLocalState([key], event.target.value);
+    };
+  },
   onAddNewTableButtonClick() {
     this.updateLocalState(['show'], true);
+  },
+
+  saveNewTable() {
+    const tableId = this.state.localState.get('value');
+    const data = fromJS({
+      title: this.state.localState.get('title'),
+      identifier: this.state.localState.get('identifier')
+    });
+    writerActions.addNewTable(this.state.configId, tableId, data).then( () =>
+      this.close()
+    );
   },
 
   close() {

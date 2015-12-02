@@ -16,6 +16,7 @@ module.exports = React.createClass
   propTypes:
     table: React.PropTypes.object.isRequired
     configId: React.PropTypes.string.isRequired
+    sapiTable: React.PropTypes.object.isRequired #SAPI representation of table
 
   render: ->
     Link
@@ -26,8 +27,10 @@ module.exports = React.createClass
         table: @props.table.get 'id'
     ,
       span className: 'td',
-        SapiTableLinkEx tableId: @props.table.get 'id',
-          @props.table.getIn ['data', 'sapiName']
+        SapiTableLinkEx
+          tableId: @props.table.get 'id'
+          linkLabel: @props.sapiTable.get('name')
+
       span className: 'td',
         @props.table.getIn ['data', 'title']
       span className: 'td text-right',

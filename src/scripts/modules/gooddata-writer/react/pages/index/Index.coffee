@@ -257,6 +257,7 @@ module.exports = React.createClass
     React.createElement TableRow,
       table: writerTable
       configId: @state.configId
+      sapiTable: table
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -277,6 +278,7 @@ module.exports = React.createClass
       isBucketToggledFn: (bucketId) =>
         @state.writer.getIn(['bucketToggles', bucketId])
       showAllTables: false
+      isTableShownFn: @_isTableShown
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
@@ -285,9 +287,11 @@ module.exports = React.createClass
 
   _isTableExported: (tableId) ->
     @state.tablesByBucket.find (table) ->
-      table.get('id') == tableId and table.getIn(['data', 'export'])
+      table.get('id') == tableId and table.getIn ['data', 'export']
 
-
+  _isTableShown: (tableId) ->
+    @state.tablesByBucket.find (table) ->
+      table.get('id') == tableId
 
   _oldTablesList: ->
     div
