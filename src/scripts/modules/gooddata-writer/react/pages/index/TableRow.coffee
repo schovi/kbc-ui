@@ -45,16 +45,19 @@ module.exports = React.createClass
         if @props.isDeleting
           React.createElement Loader
         else
-          React.createElement Confirm,
-            key: @props.table.get 'id'
-            title: "Remove #{@props.table.get('id')}"
-            text: 'You are about to remove table from the configuration.'
-            buttonLabel: 'Remove'
-            onConfirm: =>
-              @props.deleteTableFn(@props.table.get('id'))
-          ,
-            button className: 'btn btn-link',
-              i className: 'kbc-icon-cup'
+          React.createElement Tooltip,
+            tooltip: 'Remove table from configuration'
+            placement: 'top'
+            React.createElement Confirm,
+              key: @props.table.get 'id'
+              title: "Remove #{@props.table.get('id')}"
+              text: 'You are about to remove table from the configuration.'
+              buttonLabel: 'Remove'
+              onConfirm: =>
+                @props.deleteTableFn(@props.table.get('id'))
+            ,
+              button className: 'btn btn-link',
+                i className: 'kbc-icon-cup'
 
         if @props.table.get('pendingActions').contains 'uploadTable'
           React.DOM.span className: 'btn btn-link',

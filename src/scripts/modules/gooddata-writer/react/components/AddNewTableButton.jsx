@@ -1,5 +1,6 @@
 import React from 'react';
 import {Map, fromJS} from 'immutable';
+import _ from 'underscore';
 
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
@@ -54,7 +55,7 @@ export default React.createClass({
           {this.state.isSaving ? <Loader/> : null}
           <Button bsStyle="link" onClick={this.close}>Close</Button>
           <Button bsStyle="success"
-                  disabled={this.state.isSaving}
+                  disabled={this.state.isSaving || !this.isValid()}
                   onClick={() => this.saveNewTable()}>
             Add
           </Button>
@@ -78,8 +79,10 @@ export default React.createClass({
     const sapiSelector = (
       <SapiTableSelector
           onSelectTableFn={(e) => {
-            this.updateLocalState(['value'], e);
-            this.updateLocalState(['title'], e);
+            let tmpData = this.state.localState;
+            tmpData = tmpData.set('title', e);
+            tmpData = tmpData.set('value', e);
+            this.updateLocalState([], tmpData);
           }
           }
           value={this.state.localState.get('value')}
@@ -121,6 +124,11 @@ export default React.createClass({
         </div>
       </div>
     );
+  },
+
+  isValid() {
+    const data = this.state.localState;
+    return !(_.isEmpty(data.get('title')) || _.isEmpty(data.get('value')));
   },
 
   valueSetter(key) {
