@@ -352,8 +352,6 @@ dispatcher.register (payload) ->
           column
 
       table = Immutable.fromJS(action.table)
-        .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
-
       _store = _store.withMutations (store) ->
         store
         .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')

@@ -50,29 +50,26 @@ module.exports =
       response.body
 
   getTableDetail: (configurationId, tableId) ->
-    createRequest('GET', 'tables')
-    .query config: configurationId
-    .query tableId: tableId
+    createRequest('GET', "v2/" + configurationId + "/tables/" + tableId)
+    .query include: 'columns'
     .promise()
     .then (response) ->
-      response.body.table
+      response.body
 
   getReferenceableTables: (configurationId) ->
-    createRequest('GET', 'tables')
-    .query config: configurationId
+    createRequest('GET', "v2/" + configurationId + "/tables")
     .query connection: true
     .promise()
     .then (response) ->
-      response.body.tables
+      response.body
 
   updateTable: (configurationId, tableId, data) ->
-    data = Immutable.fromJS(data)
-      .set 'config', configurationId
-      .set 'tableId', tableId
+    # data = Immutable.fromJS(data)
+    #   .set 'config', configurationId
+    #   .set 'tableId', tableId
 
-    createRequest('POST', 'tables')
-    .query config: configurationId
-    .send data.toJS()
+    createRequest('PATCH', "v2/" + configurationId + "/tables/" + tableId)
+    .send data
     .promise()
     .then (response) ->
       response.body
