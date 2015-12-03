@@ -57,8 +57,7 @@ module.exports =
       response.body
 
   getReferenceableTables: (configurationId) ->
-    createRequest('GET', "v2/" + configurationId + "/tables")
-    .query connection: true
+    createRequest('GET', "v2/" + configurationId + "/referenceable-tables")
     .promise()
     .then (response) ->
       response.body

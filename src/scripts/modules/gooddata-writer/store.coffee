@@ -46,9 +46,18 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
 
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
+    title = currentColumn.get('title')
+    nonTitleTypes = [ColumnTypes.IGNORE, ColumnTypes.DATE, ColumnTypes.REFERENCE]
+    if newColumn.get('type') not in nonTitleTypes
+      if not title
+        title = newColumn.get('name')
+    else
+      title = null
+
     columns = columns.map (column) ->
       if column.get('name') == newColumn.get('name')
         columnDefaults =
+          title: title
           dataType: null
           dataTypeSize: null
           reference: null
@@ -86,7 +95,12 @@ getInvalidColumns = (columns) ->
   columns
   .filter (column) ->
     # empty name
-    return true if column.get('title').trim() == ''
+    isIgnored = column.get('type') == ColumnTypes.IGNORE
+    if isIgnored
+      return false
+
+    title = column.get('title')
+    return true if not title or title.trim() == ''
 
     # reference not set
     if [ColumnTypes.LABEL, ColumnTypes.HYPERLINK].indexOf(column.get('type')) >= 0
@@ -354,7 +368,7 @@ dispatcher.register (payload) ->
       table = Immutable.fromJS(action.table)
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
+        .setIn ['tables', action.configurationId, table.get('tableId'), 'data'], table.remove('columns')
         .setIn ['tableColumns', action.configurationId, table.get('tableId'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
@@ -365,14 +379,18 @@ dispatcher.register (payload) ->
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
-      _store = _store.withMutations (store) ->
+      _store = _store.withMutations( (store) ->
         columns =  store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
+        columns = columns.map((c) ->
+          if not c.get('title') and (c.get('type') != ColumnTypes.IGNORE)
+            return c.set('title', c.get('name'))
+          else
+            return c
+        )
         store
-        .setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
-          columns
-        .setIn ['tableColumns', action.configurationId, action.tableId, 'references'],
-          referencesForColumns(columns)
-
+        .setIn(['tableColumns', action.configurationId, action.tableId, 'editing'], columns)
+        .setIn(['tableColumns', action.configurationId, action.tableId, 'references'], referencesForColumns(columns))
+      )
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL

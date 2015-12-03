@@ -1,5 +1,7 @@
 React = require 'react'
 {List} = require 'immutable'
+_ = require 'underscore'
+
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -253,7 +255,7 @@ module.exports = React.createClass
   Tomas
   ###
 
-  _renderTableRow: (table) ->
+  _renderTableRow: (table, isDeleted = false) ->
     #bucketId = table.getIn ['bucket', 'id']
     writerTable = @state.tablesByBucket.get table.get('id')
     React.createElement TableRow,
@@ -262,6 +264,7 @@ module.exports = React.createClass
       sapiTable: table
       deleteTableFn: @_deleteTable
       isDeleting: @state.deletingTables.get(table.get('id'))
+      isDeleted: isDeleted
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -283,6 +286,10 @@ module.exports = React.createClass
         @state.writer.getIn(['bucketToggles', bucketId])
       showAllTables: false
       isTableShownFn: @_isTableShown
+      configuredTables: _.keys(@state.tablesByBucket?.toJS() or [])
+      renderDeletedTableRowFn: (table) =>
+        @_renderTableRow(table, true)
+
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
