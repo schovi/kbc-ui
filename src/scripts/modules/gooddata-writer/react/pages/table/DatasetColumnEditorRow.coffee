@@ -52,7 +52,7 @@ module.exports = React.createClass
       td className: 'kbc-static-cell',
         column.get('name'),
       td null,
-        if not @_isIgnoreType()
+        if not @_isIgnoreType() and @props.column.get('type') not in [ColumnTypes.DATE, ColumnTypes.REFERENCE]
           @_createInput
             type: 'text'
             value: column.get 'title'
