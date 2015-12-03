@@ -68,17 +68,33 @@
             }
             ];
 
+        kbcApp.helpers.Promise.longStackTraces();
         kbcApp
           .helpers
-          .request('GET', 'https://connection.keboola.com/v2/storage')
-          .end(function(error, response) {
-            if (!response || !response.ok) {
-              alert('Components fetch error');
-              return;
-            }
+          .Promise
+          .props({
+            components:  kbcApp.helpers
+              .request('GET', 'https://connection.keboola.com/v2/storage')
+              .promise()
+              .then(function(response) {
+                return response.body;
+              })
+            ,
+            token: kbcApp.helpers
+              .request('GET', 'https://connection.keboola.com/v2/storage/tokens/verify')
+              .set('X-StorageApi-Token', kbcApp.helpers.getUrlParameterByName('token', window.location.search))
+              .promise()
+              .then(function(response) {
+                return response.body;
+              })
+          })
+          .catch(function(error) {
+            alert('Error loading initial data ' + error);
+          })
+          .then(function(params) {
             kbcApp.start({
               "data": {
-                "components": response.body.components,
+                "components": params.components.components,
                 "organizations": organizations,
                 "maintainers": [
                   {
@@ -92,16 +108,7 @@
                 ],
                 "sapi": {
                   "url": "https://connection.keboola.com",
-                  "token": {
-                    "description":"tomas.kacur@keboola.com",
-                    "token": kbcApp.helpers.getUrlParameterByName('token', window.location.search),
-                    "owner": {
-                      "id": parseInt(kbcApp.helpers.getUrlParameterByName('token', window.location.search).split('-')[0]),
-                      "name": "Development",
-                      "dataSizeBytes": 1232343534543,
-                      "rowsCount": 13402344
-                    }
-                  }
+                  "token": params.token
                 },
                 "tokenStats": {
                   "totalCount": 56,
@@ -127,13 +134,16 @@
                     "organization": "/admin/organizations/<%= organizationId %>",
                     "maintainer": "/admin/maintainers/<%= maintainerId %>"
                   },
-                  "zendesk":{
-                    "project":{
-                      "dropboxId":"20299883",
-                      "url":"https:\/\/keboola-project.zendesk.com"},
-                    "direct":{
-                      "dropboxId":"20299883",
-                      "url":"https:\/\/keboola-direct.zendesk.com"}},
+                  "zendesk": {
+                    "project": {
+                      "dropboxId": "20299883",
+                      "url": "https:\/\/keboola-project.zendesk.com"
+                    },
+                    "direct": {
+                      "dropboxId": "20299883",
+                      "url": "https:\/\/keboola-direct.zendesk.com"
+                    }
+                  },
                   "adminEmails": ["martin@keboola.com"],
                   "goodDataTokens": {
                     "developer": "developer",
@@ -144,7 +154,7 @@
                     "name": "Some Developer",
                     "email": "example@example.com",
                     "features": ["ui-devel-preview"],
-                    "profileImageUrl":  "https://secure.gravatar.com/avatar/hovno?s=40"
+                    "profileImageUrl": "https://secure.gravatar.com/avatar/hovno?s=40"
 
                   }
                 }
