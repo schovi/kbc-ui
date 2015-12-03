@@ -9,7 +9,7 @@ Promise = require 'bluebird'
 _ = require 'underscore'
 Immutable = require 'immutable'
 
-routes = require './routes'
+routes = require('./routes').default
 createReactRouterRoutes = require './utils/createReactRouterRoutes'
 Timer = require './utils/Timer'
 Error = require './utils/Error'
