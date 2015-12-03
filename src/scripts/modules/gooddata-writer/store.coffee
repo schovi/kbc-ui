@@ -355,7 +355,7 @@ dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store
         .setIn ['tables', action.configurationId, table.get('id'), 'data'], table.remove('columns')
-        .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
+        .setIn ['tableColumns', action.configurationId, table.get('tableId'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
 

@@ -26,6 +26,9 @@ module.exports =
   defaultRouteHandler: IndexPage
   headerButtonsHandler: AddNewTableButton
   reloaderHandler: WriterReloader
+  title: (routerState) ->
+    configId = routerState.getIn ['params', 'config']
+    'GoodData - ' + InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
   childRoutes: [
     name: 'gooddata-writer-table'
     path: 'table/:table'
