@@ -43,7 +43,8 @@ export default React.createClass({
           return React.createElement(Metric, {
             title: settings.title,
             query: settings.query,
-            client: this.state.client
+            client: this.state.client,
+            key: settings.title
           });
         })}
       </div>
@@ -67,6 +68,21 @@ export default React.createClass({
         title: 'storage.rowsCount',
         eventCollection: 'sapi-project-snapshots',
         targetProperty: 'rowsCount'
+      },
+      {
+        title: 'goodData.dataSizeBytes',
+        eventCollection: 'gooddata-metrics',
+        targetProperty: 'dataSizeBytes'
+      },
+      {
+        title: 'goodData.rowsCount',
+        eventCollection: 'gooddata-metrics',
+        targetProperty: 'rowsCount'
+      },
+      {
+        title: 'goodData.usersCount',
+        eventCollection: 'gooddata-metrics',
+        targetProperty: 'usersCount'
       }
     ].map((metric) => {
       return {
