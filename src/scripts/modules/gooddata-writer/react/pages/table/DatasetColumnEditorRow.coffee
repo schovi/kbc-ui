@@ -52,11 +52,12 @@ module.exports = React.createClass
       td className: 'kbc-static-cell',
         column.get('name'),
       td null,
-        @_createInput
-          type: 'text'
-          value: column.get 'title'
-          disabled: @props.isSaving
-          onChange: @_handleInputChange.bind @, 'title'
+        if not @_isIgnoreType()
+          @_createInput
+            type: 'text'
+            value: column.get 'title'
+            disabled: @props.isSaving
+            onChange: @_handleInputChange.bind @, 'title'
       td null,
         @_createInput
           type: 'select'
@@ -72,22 +73,27 @@ module.exports = React.createClass
         @_renderDateSelect()
 
       td null,
-        @_renderSortLabelSelect()
+        if not @_isIgnoreType()
+          @_renderSortLabelSelect()
       td null,
-        @_renderSortOrderSelect()
+        if not @_isIgnoreType()
+          @_renderSortOrderSelect()
       td null,
-        @_renderDataTypeSelect()
+        if not @_isIgnoreType()
+          @_renderDataTypeSelect()
       if @props.showIdentifier
         td null,
-          @_createInput
-            type: 'text'
-            value: column.get 'identifier'
-            disabled: @props.isExported || @props.isSaving
-            onChange: @_handleInputChange.bind @, 'identifier'
+          if not @_isIgnoreType()
+            @_createInput
+              type: 'text'
+              value: column.get 'identifier'
+              disabled: @props.isExported || @props.isSaving
+              onChange: @_handleInputChange.bind @, 'identifier'
       if @props.showIdentifier
         td null,
-          @_renderIdentifierLabel()
-          @_renderIdentifierTime()
+          if not @_isIgnoreType()
+            @_renderIdentifierLabel()
+            @_renderIdentifierTime()
       td null,
         ColumnDataPreview
           columnName: @props.column.get 'name'
@@ -254,3 +260,6 @@ module.exports = React.createClass
       ,
         value
     .toArray()
+
+  _isIgnoreType: ->
+    @props.column.get('type') == ColumnTypes.IGNORE

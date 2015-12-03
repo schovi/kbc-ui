@@ -7,6 +7,7 @@ fuzzy = require 'fuzzy'
 {ColumnTypes, DataTypes} = constants
 {fromJS, Map, List} = Immutable
 
+NonTitleTypes = [ColumnTypes.IGNORE, ColumnTypes.DATE, ColumnTypes.REFERENCE]
 
 _store = Map
   writers: Map()
@@ -47,8 +48,7 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
     title = currentColumn.get('title')
-    nonTitleTypes = [ColumnTypes.IGNORE, ColumnTypes.DATE, ColumnTypes.REFERENCE]
-    if newColumn.get('type') not in nonTitleTypes
+    if newColumn.get('type') not in NonTitleTypes
       if not title
         title = newColumn.get('name')
     else
@@ -100,7 +100,7 @@ getInvalidColumns = (columns) ->
       return false
 
     title = column.get('title')
-    return true if not title or title.trim() == ''
+    return true if (not title or title.trim() == '') and (column.get('type') not in NonTitleTypes)
 
     # reference not set
     if [ColumnTypes.LABEL, ColumnTypes.HYPERLINK].indexOf(column.get('type')) >= 0
