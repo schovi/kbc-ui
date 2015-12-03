@@ -1,6 +1,7 @@
 import React from 'react';
 import ApplicationStore from '../../stores/ApplicationStore';
 import createStoreMixin from '../../react/mixins/createStoreMixin';
+import Graphs from './Graphs';
 
 export default React.createClass({
   mixins: [createStoreMixin(ApplicationStore)],
@@ -8,7 +9,8 @@ export default React.createClass({
   getStateFromStores() {
     return {
       limits: ApplicationStore.getSapiToken().getIn(['owner', 'limits']),
-      metrics: ApplicationStore.getSapiToken().getIn(['owner', 'metrics'])
+      metrics: ApplicationStore.getSapiToken().getIn(['owner', 'metrics']),
+      projectId: ApplicationStore.getSapiToken().getIn(['owner', 'id'])
     };
   },
 
@@ -35,6 +37,7 @@ export default React.createClass({
           {this.state.metrics.map(this.tableRow)}
           </tbody>
         </table>
+        <Graphs projectId={this.state.projectId}/>
       </div>
     );
   },
