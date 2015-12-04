@@ -74,7 +74,8 @@ module.exports = React.createClass
 
   _renderDeleteButton: ->
     if @props.isDeleting
-      React.createElement Loader
+      span className: 'btn btn-link',
+        React.createElement Loader
     else
       React.createElement Tooltip,
         tooltip: 'Remove table from configuration'
