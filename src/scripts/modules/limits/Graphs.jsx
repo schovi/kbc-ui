@@ -1,13 +1,10 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import StorageApi from '../components/StorageApi';
 import Keen from 'keen-js';
 
 import Metric from './Metric';
 
 export default React.createClass({
-  propTypes: {
-    projectId: PropTypes.number.isRequired
-  },
 
   getInitialState() {
     return {
@@ -91,14 +88,7 @@ export default React.createClass({
           eventCollection: metric.eventCollection,
           targetProperty: metric.targetProperty,
           timeframe: 'this_14_days',
-          interval: 'daily',
-          filters: [
-            {
-              property_name: 'kbc.project.id',
-              operator: 'eq',
-              property_value: this.props.projectId
-            }
-          ]
+          interval: 'daily'
         }
       };
     });

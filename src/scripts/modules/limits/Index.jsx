@@ -9,8 +9,7 @@ export default React.createClass({
   getStateFromStores() {
     return {
       limits: ApplicationStore.getSapiToken().getIn(['owner', 'limits']),
-      metrics: ApplicationStore.getSapiToken().getIn(['owner', 'metrics']),
-      projectId: ApplicationStore.getSapiToken().getIn(['owner', 'id'])
+      metrics: ApplicationStore.getSapiToken().getIn(['owner', 'metrics'])
     };
   },
 
@@ -37,7 +36,7 @@ export default React.createClass({
           {this.state.metrics.map(this.tableRow)}
           </tbody>
         </table>
-        <Graphs projectId={this.state.projectId}/>
+        <Graphs/>
       </div>
     );
   },
