@@ -1,5 +1,4 @@
 import React from 'react';
-import {Label} from 'react-bootstrap';
 import classNames from 'classnames';
 
 import ApplicationStore from '../../stores/ApplicationStore';
@@ -42,13 +41,7 @@ export default React.createClass({
 
   get3rdPartyLabel() {
     if (this.is3rdParty()) {
-      return (
-        <small className="thirdPartyLabel">
-          <Label title="3rd party application">
-            3rd
-          </Label>
-        </small>
-      );
+      return null;
     } else {
       return null;
     }
