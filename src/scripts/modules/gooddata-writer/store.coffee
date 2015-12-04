@@ -174,7 +174,7 @@ GoodDataWriterStore = StoreUtils.createStore
 
   getWriterTablesByBucket: (configurationId) ->
     _store
-    .getIn(['tables', configurationId])
+    .getIn(['tables', configurationId], Map())
     .toSeq()
     #.groupBy (table) ->
     #  table.getIn ['data', 'bucket']

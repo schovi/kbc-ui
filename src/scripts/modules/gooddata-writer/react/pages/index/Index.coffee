@@ -1,6 +1,5 @@
 React = require 'react'
 {Map, List} = require 'immutable'
-_ = require 'underscore'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -303,7 +302,7 @@ module.exports = React.createClass
         @state.writer.getIn(['bucketToggles', bucketId])
       showAllTables: false
       isTableShownFn: @_isTableShown
-      configuredTables: _.keys(@state.tablesByBucket?.toJS() or [])
+      configuredTables: @state.tablesByBucket.keySeq().toJS()
       renderDeletedTableRowFn: (table) =>
         @_renderTableRow(table, true)
 
