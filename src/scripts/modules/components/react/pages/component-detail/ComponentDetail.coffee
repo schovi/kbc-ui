@@ -11,6 +11,8 @@ ComponentDescription = React.createFactory(require './ComponentDescription.coffe
 ConfigurationRow = require('../ConfigurationRow.jsx').default
 Immutable = require 'immutable'
 ComponentEmptyState = require('../../components/ComponentEmptyState').default
+ComponentInfo = React.createFactory(require('../../components/ComponentInfo').default)
+
 
 {div, label, h3, h2} = React.DOM
 
@@ -41,30 +43,11 @@ module.exports = React.createClass
     state
 
   render: ->
-    div className: 'container-fluid kbc-main-content',
-      FormHeader
-        component: @state.component
-        withButtons: false
+    ComponentInfo
+      component: @state.component
+    ,
       div className: "row",
-        @_renderVendorInfo() if @_is3rdPartyApp()
-        @_renderAppUsageInfo() if @_is3rdPartyApp()
-        @_renderDescription() if @state.component.get('longDescription')
-      @_renderConfigurations()
-
-  _renderDescription: ->
-    ComponentDescription
-      component: @state.component
-
-  _renderAppUsageInfo: ->
-    AppUsageInfo
-      component: @state.component
-
-  _renderVendorInfo: ->
-    VendorInfo
-      component: @state.component
-
-  _is3rdPartyApp: ->
-    @state.component.get('flags').contains('3rdParty')
+        @_renderConfigurations()
 
   _renderConfigurations: ->
     state = @state

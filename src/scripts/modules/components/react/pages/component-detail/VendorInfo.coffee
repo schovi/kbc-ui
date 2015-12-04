@@ -1,6 +1,9 @@
 React = require 'react'
 Input = React.createFactory(require('react-bootstrap').Input)
 List = require('immutable').List
+is3rdParty = require('../../../is3rdParty.js').default
+
+require('./VendorInfo.less')
 
 {div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
 module.exports = React.createClass
@@ -9,9 +12,14 @@ module.exports = React.createClass
     component: React.PropTypes.object.isRequired
 
   render: ->
-    div null,
-      "Application developed by"
-      @_renderAddress()
+    div className: "kbcVendorInfo",
+      if (is3rdParty(@props.component))
+        div null,
+          "Component developed by"
+          @_renderAddress()
+      else
+        div null,
+          "Component is part of Keboola Connection"
 
   _renderAddress: ->
     contactData = @props.component.getIn(['data', 'vendor', 'contact'], 'No Address')

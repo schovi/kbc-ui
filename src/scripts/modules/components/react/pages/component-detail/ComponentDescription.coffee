@@ -1,13 +1,18 @@
 React = require 'react'
 Markdown = React.createFactory(require 'react-markdown')
+{div} = React.DOM
 
 module.exports = React.createClass
-  displayName: 'appUsageInfo'
+  displayName: 'ComponentDescription'
   propTypes:
     component: React.PropTypes.object.isRequired
 
   render: ->
-    Markdown
-      source: @props.component.get('longDescription')
-      escapeHtml: true
+    if (@props.component.get('longDescription'))
+      return Markdown
+        source: @props.component.get('longDescription')
+        escapeHtml: true
+    else
+      return div null,
+        "Component has no description"
 

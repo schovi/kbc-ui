@@ -1,6 +1,8 @@
 React = require 'react'
+is3rdParty = require('../../../is3rdParty.js').default
 
 {div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
+
 module.exports = React.createClass
   displayName: 'appUsageInfo'
   propTypes:
@@ -9,11 +11,12 @@ module.exports = React.createClass
   renderFeatures: ->
     features = []
 
-    features.push tr {key: "3rdParty"},
-      td null,
-        em {className: "fa fa-cloud fa-fw kbcLicenseIcon"}
-      td null,
-        'This is a 3rd party application'
+    if (is3rdParty(@props.component))
+      features.push tr {key: "3rdParty"},
+        td null,
+          em {className: "fa fa-cloud fa-fw kbcLicenseIcon"}
+        td null,
+          'This is a 3rd party component'
 
     if (@props.component.get("flags").contains("3rdParty.fee"))
       features.push tr {key: "fee"},
@@ -36,11 +39,19 @@ module.exports = React.createClass
         td null,
           'Data will be sent out of Keboola Connection'
 
-    features.push tr {key: "responsibility"},
-      td null,
-        em {className: "fa fa-life-ring fa-fw kbcLicenseIcon"}
-      td null,
-        'Keboola does not take any responsibility for this application and support is not provided by Keboola'
+    if (is3rdParty(@props.component))
+      features.push tr {key: "responsibility"},
+        td null,
+          em {className: "fa fa-life-ring fa-fw kbcLicenseIcon"}
+        td null,
+          'Keboola does not take any responsibility for this component and support is not provided by Keboola'
+
+    if (!is3rdParty(@props.component))
+      features.push tr {key: "responsibility"},
+        td null,
+          em {className: "fa fa-life-ring fa-fw kbcLicenseIcon"}
+        td null,
+          'Keboola is responsible for this component and support is provided by Keboola'
 
     if (@props.component.getIn(['vendor', 'licenseUrl']))
       features.push tr {key: "license"},
@@ -51,6 +62,7 @@ module.exports = React.createClass
           a {href: @props.component.getIn(['vendor', 'licenseUrl'])},
             'vendor\'s license agreement'
 
+    console.log("features", features)
     return features
 
   render: ->
