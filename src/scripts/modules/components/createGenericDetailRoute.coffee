@@ -9,7 +9,6 @@ ComponentNameEdit = require './react/components/ComponentName'
 {GENERIC_DETAIL_PREFIX} = require('./Constants').Routes
 ComponentDetailLink = require '../../react/common/ComponentDetailLink'
 ComponentDetail = require '../components/react/pages/component-detail/ComponentDetail'
-AddComponentConfigurationButton = require './react/components/AddComponentConfigurationButton'
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 
 ComponentsStore = require './stores/ComponentsStore'
@@ -18,7 +17,6 @@ ComponentsActionCreators = require './ComponentsActionCreators'
 
 module.exports = (componentType) ->
   name: GENERIC_DETAIL_PREFIX + componentType
-  headerButtonsHandler: AddComponentConfigurationButton
   title: (routerState) ->
     componentId = routerState.getIn ['params', 'component']
     ComponentsStore.getComponent(componentId).get 'name'

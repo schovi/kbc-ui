@@ -12,9 +12,10 @@ ConfigurationRow = require('../ConfigurationRow.jsx').default
 Immutable = require 'immutable'
 ComponentEmptyState = require('../../components/ComponentEmptyState').default
 ComponentInfo = React.createFactory(require('../../components/ComponentInfo').default)
+AddComponentConfigurationButton = React.createFactory(require '../../components/AddComponentConfigurationButton')
 
 
-{div, label, h3, h2} = React.DOM
+{div, label, h3, h2, span, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ComponentDetail'
@@ -56,6 +57,8 @@ module.exports = React.createClass
         div className: "kbc-header",
           div className: "kbc-title",
             h2 null, "Configurations"
+            span className: "pull-right",
+              AddComponentConfigurationButton null
         div className: "table table-hover",
           div className: "tbody",
             @state.configurations.map((configuration) ->
@@ -68,4 +71,7 @@ module.exports = React.createClass
             )
     else
       React.createElement ComponentEmptyState, null,
-        "No configurations"
+        p null, "No configurations"
+        p className: "text-center",
+          AddComponentConfigurationButton null
+
