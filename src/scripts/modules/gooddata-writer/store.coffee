@@ -48,11 +48,8 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
     title = currentColumn.get('title')
-    if newColumn.get('type') not in NonTitleTypes
-      if not title
-        title = newColumn.get('name')
-    else
-      title = null
+    if newColumn.get('type') not in NonTitleTypes and not title
+      title = newColumn.get('name')
 
     columns = columns.map (column) ->
       if column.get('name') == newColumn.get('name')
