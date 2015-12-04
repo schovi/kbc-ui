@@ -25,6 +25,7 @@ export default React.createClass({
       localState = InstalledComponentStore.getLocalState(componentId, configId);
 
     return {
+      configuredTables: writerStore.getWriterTablesByBucket(configId),
       configId: configId,
       localState: localState.get('newTable', Map()),
       componentLocalState: localState,
@@ -87,6 +88,7 @@ export default React.createClass({
           }
           value={this.state.localState.get('value')}
           allowedBuckets={['out']}
+          excludeTableFn={this.isTableConfigured}
           placeholder="out.c-main.data" />
     );
     return (
@@ -105,6 +107,10 @@ export default React.createClass({
                                      onChange={this.valueSetter('identifier')}/>))}
       </div>
     );
+  },
+
+  isTableConfigured(tableId) {
+    return this.state.configuredTables.has(tableId);
   },
 
   renderFormElement(label, element, description = '', hasError = false) {
