@@ -2,37 +2,18 @@ import React from 'react';
 import {Map, fromJS} from 'immutable';
 import _ from 'underscore';
 
-
-import createStoreMixin from '../../../../react/mixins/createStoreMixin';
-import RoutesStore from '../../../../stores/RoutesStore';
-import InstalledComponentStore from '../../../components/stores/InstalledComponentsStore';
-import writerStore from '../../store';
 import {Loader} from 'kbc-react-components';
 import SapiTableSelector from  '../../../components/react/components/SapiTableSelector';
 import {Button, Modal} from 'react-bootstrap';
 
-import installedComponentsActions from '../../../components/InstalledComponentsActionCreators';
-import writerActions from '../../actionCreators';
-
-const componentId = 'gooddata-writer';
-
-
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, writerStore)],
-
-  getStateFromStores() {
-    const configId = RoutesStore.getCurrentRouteParam('config'),
-      localState = InstalledComponentStore.getLocalState(componentId, configId);
-
-    return {
-      configuredTables: writerStore.getWriterTablesByBucket(configId),
-      configId: configId,
-      localState: localState.get('newTable', Map()),
-      componentLocalState: localState,
-      isSaving: writerStore.isAddingNewTable(configId)
-    };
+  propTypes: {
+    configuredTables: React.PropTypes.object.isRequired,
+    localState: React.PropTypes.object.isRequired,
+    isSaving: React.PropTypes.bool.isRequired,
+    addNewTableFn: React.PropTypes.func.isRequired,
+    updateLocalStateFn: React.PropTypes.func.isRequired
   },
-
 
   render() {
     return (
@@ -45,7 +26,7 @@ export default React.createClass({
 
   renderModal() {
     return (
-      <Modal show={this.state.localState.get('show', false)} onHide={this.close}>
+      <Modal show={this.props.localState.get('show', false)} onHide={this.close}>
         <Modal.Header>
           <Modal.Title> Add New Table </Modal.Title>
         </Modal.Header>
@@ -53,10 +34,10 @@ export default React.createClass({
           {this.renderBody()}
         </Modal.Body>
         <Modal.Footer>
-          {this.state.isSaving ? <Loader/> : null}
+          {this.props.isSaving ? <Loader/> : null}
           <Button bsStyle="link" onClick={this.close}>Cancel</Button>
           <Button bsStyle="success"
-                  disabled={this.state.isSaving || !this.isValid()}
+                  disabled={this.props.isSaving || !this.isValid()}
                   onClick={() => this.saveNewTable()}>
             Add
           </Button>
@@ -76,17 +57,17 @@ export default React.createClass({
   },
 
   renderBody() {
-    const data = this.state.localState;
+    const data = this.props.localState;
     const sapiSelector = (
       <SapiTableSelector
           onSelectTableFn={(e) => {
-            let tmpData = this.state.localState;
+            let tmpData = this.props.localState;
             tmpData = tmpData.set('title', e);
             tmpData = tmpData.set('value', e);
-            this.updateLocalState([], tmpData);
+            this.props.updateLocalStateFn([], tmpData);
           }
           }
-          value={this.state.localState.get('value')}
+          value={this.props.localState.get('value')}
           allowedBuckets={['out']}
           excludeTableFn={this.isTableConfigured}
           placeholder="out.c-main.data" />
@@ -110,7 +91,7 @@ export default React.createClass({
   },
 
   isTableConfigured(tableId) {
-    return this.state.configuredTables.has(tableId);
+    return this.props.configuredTables.has(tableId);
   },
 
   renderFormElement(label, element, description = '', hasError = false) {
@@ -133,37 +114,32 @@ export default React.createClass({
   },
 
   isValid() {
-    const data = this.state.localState;
+    const data = this.props.localState;
     return !(_.isEmpty(data.get('title')) || _.isEmpty(data.get('value')));
   },
 
   valueSetter(key) {
     return (event) => {
-      this.updateLocalState([key], event.target.value);
+      this.props.updateLocalStateFn([key], event.target.value);
     };
   },
   onAddNewTableButtonClick() {
-    this.updateLocalState(['show'], true);
+    this.props.updateLocalStateFn(['show'], true);
   },
 
   saveNewTable() {
-    const tableId = this.state.localState.get('value');
+    const tableId = this.props.localState.get('value');
     const data = fromJS({
-      title: this.state.localState.get('title'),
-      identifier: this.state.localState.get('identifier')
+      title: this.props.localState.get('title'),
+      identifier: this.props.localState.get('identifier')
     });
-    writerActions.addNewTable(this.state.configId, tableId, data).then( () =>
+    this.props.addNewTableFn(tableId, data).then( () =>
       this.close()
     );
   },
 
   close() {
-    this.updateLocalState([], Map());
-  },
-
-  updateLocalState(path, data) {
-    const newState = this.state.componentLocalState.setIn(['newTable'].concat(path), data);
-    installedComponentsActions.updateLocalState(componentId, this.state.configId, newState);
+    this.props.updateLocalStateFn([], Map());
   }
 
 });

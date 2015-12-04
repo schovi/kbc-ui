@@ -1,12 +1,12 @@
 React = require 'react'
-{List} = require 'immutable'
+{Map, List} = require 'immutable'
 _ = require 'underscore'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
-
+AddNewTableButton = require('../../components/AddNewTableButton').default
 ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
@@ -21,26 +21,40 @@ ActiveCountBadge = require './ActiveCountBadge'
 {Tooltip, Confirm} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
 
+InstalledComponentStore = require '../../../../components/stores/InstalledComponentsStore'
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
-
+installedComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 {strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
-  mixins: [createStoreMixin(goodDataWriterStore)]
+  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore)]
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
+    localState = InstalledComponentStore.getLocalState('gooddata-writer', config)
 
     configId: config
     writer: goodDataWriterStore.getWriter(config)
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
     deletingTables: goodDataWriterStore.getDeletingTables(config)
+    localState: localState
+    isAddingNewTable: goodDataWriterStore.isAddingNewTable(config)
 
   _handleFilterChange: (query) ->
     actionCreators.setWriterTablesFilter(@state.writer.getIn(['config', 'id']), query)
+
+  _renderAddNewTable: ->
+    React.createElement AddNewTableButton,
+      configuredTables: @state.tablesByBucket
+      localState: @state.localState.get('newTable', Map())
+      isSaving: @state.isAddingNewTable
+      addNewTableFn: (tableId, data) =>
+        actionCreators.addNewTable(@state.configId, tableId, data)
+      updateLocalStateFn: (path, data) =>
+        @_updateLocalState(['newTable'].concat(path), data)
 
   render: ->
     writer = @state.writer.get 'config'
@@ -51,6 +65,9 @@ module.exports = React.createClass
             React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
+          div className: 'col-sm-4 kbc-buttons',
+            @_renderAddNewTable()
+
         if writer.get('info')
           div className: 'row',
             React.createElement Alert,
@@ -306,6 +323,12 @@ module.exports = React.createClass
 
   _deleteTable: (tableId) ->
     actionCreators.deleteTable(@state.configId, tableId)
+
+
+  _updateLocalState: (path, data) ->
+    newState = @state.localState.setIn(path, data)
+    installedComponentsActions.updateLocalState('gooddata-writer', @state.configId, newState)
+
 
   _oldTablesList: ->
     div

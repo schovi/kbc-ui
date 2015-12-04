@@ -1,7 +1,6 @@
 actionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 GoodDataWriterStore = require './store'
-AddNewTableButton = require('./react/components/AddNewTableButton').default
 
 IndexPage = require './react/pages/index/Index'
 TablePage = require './react/pages/table/Table'
@@ -24,7 +23,6 @@ module.exports =
         storageActionCreators.loadTables()
   ]
   defaultRouteHandler: IndexPage
-  headerButtonsHandler: AddNewTableButton
   reloaderHandler: WriterReloader
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
