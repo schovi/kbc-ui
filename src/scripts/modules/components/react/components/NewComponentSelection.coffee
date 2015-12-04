@@ -4,13 +4,35 @@ ComponentIcon = React.createFactory(require('../../../../react/common/ComponentI
 ComponentDetailLink = React.createFactory(require('../../../../react/common/ComponentDetailLink'))
 SearchRow = React.createFactory(require('../../../../react/common/SearchRow').default)
 Link = React.createFactory(require('react-router').Link)
+Modal = React.createFactory(require('react-bootstrap').Modal)
+ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
+ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
+ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
+ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
+Button = React.createFactory(require('react-bootstrap').Button)
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM
+ComponentInfo = React.createFactory(require('../components/ComponentInfo').default)
+
+{div, table, tbody, tr, td, ul, li, a, span, h2, p, button} = React.DOM
+
+require('./NewComponentSelection.less')
 
 ComponentBox = React.createClass
   displayName: 'ComponentBox'
   propTypes:
     component: React.PropTypes.object.isRequired
+
+  getInitialState: ->
+    showModal: false
+
+  close: ->
+    @setState showModal: false
+
+  open: ->
+    @setState showModal: true
+
+  goToApp: ->
+    console.log("goto")
 
   shouldComponentUpdate: (nextProps) ->
     @props.component == nextProps.component
@@ -22,20 +44,39 @@ ComponentBox = React.createClass
         component: component
         size: '64'
       h2 null,
-        ComponentDetailLink
-          componentId: component.get('id')
-          type: component.get('type')
-        ,
-          component.get('name')
+        component.get('name')
       p null, component.get('description')
-      Link
+      button
         className: 'btn btn-success btn-lg'
-        to: "new-#{component.get('type')}-add"
-        params:
-          component: component.get 'id'
+        onClick: @open
       ,
-        span className: 'kbc-icon-plus'
-        ' Add'
+        'More'
+      Modal
+        show: @state.showModal
+        onHide: @close
+        bsSize: "large"
+      ,
+        ModalHeader
+          closeButton: true
+        ModalBody null,
+          ComponentInfo
+            component: @props.component
+        ModalFooter null,
+          ButtonToolbar null,
+            Button
+              bsStyle: 'link'
+              onClick: @close
+            ,
+              'Close'
+            ComponentDetailLink
+              componentId: @props.component.get("id")
+              type: @props.component.get("type")
+            ,
+              Button
+                bsStyle: 'primary'
+              ,
+                'Go To App'
+
 
 
 module.exports = React.createClass

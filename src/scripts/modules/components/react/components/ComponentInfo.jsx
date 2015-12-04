@@ -12,7 +12,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="container-fluid kbc-main-content">
+      <div className="container-fluid">
         <FormHeader
           component={this.props.component}
           withButtons={false}

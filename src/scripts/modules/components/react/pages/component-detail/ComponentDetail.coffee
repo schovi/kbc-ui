@@ -44,11 +44,13 @@ module.exports = React.createClass
     state
 
   render: ->
-    ComponentInfo
-      component: @state.component
+    div className: "container-fluid kbc-main-content"
     ,
-      div className: "row",
-        @_renderConfigurations()
+      ComponentInfo
+        component: @state.component
+      ,
+        div className: "row",
+          @_renderConfigurations()
 
   _renderConfigurations: ->
     state = @state
