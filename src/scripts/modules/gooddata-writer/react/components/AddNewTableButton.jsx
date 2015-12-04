@@ -54,7 +54,7 @@ export default React.createClass({
         </Modal.Body>
         <Modal.Footer>
           {this.state.isSaving ? <Loader/> : null}
-          <Button bsStyle="link" onClick={this.close}>Close</Button>
+          <Button bsStyle="link" onClick={this.close}>Cancel</Button>
           <Button bsStyle="success"
                   disabled={this.state.isSaving || !this.isValid()}
                   onClick={() => this.saveNewTable()}>
@@ -158,7 +158,7 @@ export default React.createClass({
   },
 
   close() {
-    this.updateLocalState(['show'], false);
+    this.updateLocalState([], Map());
   },
 
   updateLocalState(path, data) {

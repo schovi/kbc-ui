@@ -249,7 +249,7 @@ dispatcher.register (payload) ->
       tableId = action.tableId
       data = action.data or {}
       _store = _store.deleteIn ['pending', 'adding', configId]
-      tables = _store.getIn ['tables', configId, tableId]
+      tables = _store.getIn ['tables', configId]
       data['id'] = tableId
       newTable = fromJS
         isLoading: false
@@ -258,8 +258,8 @@ dispatcher.register (payload) ->
         savingFields: List()
         pendingActions: List()
         data: fromJS(data)
-      tables = tables.setIn tableId, newTable
-      _store = _store.setIn('tables', tables)
+      tables = tables.set tableId, newTable
+      _store = _store.setIn(['tables', configId], tables)
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
