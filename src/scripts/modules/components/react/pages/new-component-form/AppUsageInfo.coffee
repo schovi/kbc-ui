@@ -62,7 +62,6 @@ module.exports = React.createClass
           a {href: @props.component.getIn(['vendor', 'licenseUrl'])},
             'vendor\'s license agreement'
 
-    console.log("features", features)
     return features
 
   render: ->

@@ -1,0 +1,26 @@
+.kbc-readmore {
+  position: relative;
+  overflow: hidden;
+}
+
+.kbc-readmore-normal{
+  max-height: 250px;
+}
+
+.kbc-readmore .kbc-readmore-expand {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  margin: 0; padding: 10px 0;
+
+  /* "transparent" only works here because == rgba(0,0,0,0) */
+  background-image: linear-gradient(to bottom, transparent, white);
+}
+
+.kbc-readmore .kbc-readmore-collapse {
+  width: 100%;
+  text-align: center;
+  margin: 0; padding: 10px 0;
+}
