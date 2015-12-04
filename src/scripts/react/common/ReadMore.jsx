@@ -1,3 +1,5 @@
+/* eslint react/no-did-mount-set-state: 0 */
+
 import React from 'react';
 
 require('./ReadMore.less');
@@ -16,13 +18,23 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      expanded: false
+      expanded: false,
+      showExpandButton: true
     };
+  },
+
+  componentDidMount() {
+    var height = this.refs.container.getDOMNode().offsetHeight;
+    if (this.props.height === 'normal' && height < 250) {
+      this.setState({showExpandButton: false});
+    } else {
+      this.setState({showExpandButton: true});
+    }
   },
 
   render() {
     return (
-      <div className={'kbc-readmore ' + this.readmoreClass()}>
+      <div className={'kbc-readmore ' + this.readmoreClass()} ref="container">
         {this.props.children}
         {this.expandButton()}
       </div>
@@ -30,7 +42,9 @@ export default React.createClass({
   },
 
   expandButton() {
-    console.log(this.state, this.state.expanded);
+    if (!this.state.showExpandButton) {
+      return null;
+    }
     if (this.state.expanded) {
       return (<div className="kbc-readmore-collapse"><a className="button" onClick={this.onClick}>Less...</a></div>);
     } else {
