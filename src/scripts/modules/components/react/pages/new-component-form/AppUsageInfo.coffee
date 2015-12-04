@@ -18,21 +18,21 @@ module.exports = React.createClass
         td null,
           'This is a 3rd party component'
 
-    if (@props.component.get("flags").contains("3rdParty.fee"))
+    if (@props.component.get("flags").contains("appInfo.fee"))
       features.push tr {key: "fee"},
         td null,
           em {className: "fa fa-money fa-fw kbcLicenseIcon"}
         td null,
           'An extra fee will be charged'
 
-    if (@props.component.get("flags").contains("3rdParty.dataIn"))
+    if (@props.component.get("flags").contains("appInfo.dataIn"))
       features.push tr {key: "dataIn"},
         td null,
           em {className: "fa fa-cloud-download fa-fw kbcLicenseIcon"}
         td null,
           'Data from external sources will be ingested into Keboola Connection'
 
-    if (@props.component.get("flags").contains("3rdParty.dataOut"))
+    if (@props.component.get("flags").contains("appInfo.dataOut"))
       features.push tr {key: "dataOut"},
         td null,
           em {className: "fa fa-cloud-upload fa-fw kbcLicenseIcon"}
