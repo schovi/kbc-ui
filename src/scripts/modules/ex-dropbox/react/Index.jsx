@@ -26,6 +26,7 @@ import LatestJobs from '../../components/react/components/SidebarJobs';
 import ComponentsMetadata from '../../components/react/components/ComponentMetadata';
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
+import { Loader } from 'kbc-react-components';
 
 import {
   getBucketsForSelection,
@@ -127,17 +128,32 @@ export default React.createClass({
   },
 
   renderMainContent() {
+    const hasFiles = this.state.configData.hasIn(['parameters', 'config', 'files']);
+    const filesCount = hasFiles ? this.state.configData.getIn(['parameters', 'config', 'files']).count() : 0;
+
     return (
       <div className="col-md-9 kbc-main-content">
-        <div className="row">
+        {this.renderComponentDescription(hasFiles, filesCount)}
+        {this.renderConfigSummary()}
+        {this.renderDropboxLoginInformation()}
+        {this.renderInitialSelectionOfFiles(hasFiles, filesCount)}
+      </div>
+    );
+  },
+
+  renderComponentDescription(hasFiles, filesCount) {
+    const renderStandardFileSelection = hasFiles && filesCount > 0 ? this.renderFileSelectorModal() : null;
+    return (
+      <div className="row kbc-header">
+        <div className="col-sm-8">
           <ComponentDescription
             componentId={componentId}
             configId={this.state.configId}
           />
         </div>
-        {this.renderFileSelectorModal()}
-        {this.renderConfigSummary()}
-        {this.renderDropboxLoginInformation()}
+        <div className="col-sm-4 kbc-buttons">
+          {renderStandardFileSelection}
+        </div>
       </div>
     );
   },
@@ -145,27 +161,25 @@ export default React.createClass({
   renderFileSelectorModal() {
     if (this.state.hasCredentials) {
       return (
-        <div className="row component-empty-state text-right">
-          <div>
-            <a onClick={this.openFileSelectorModal}>
-              <span className="btn btn-success">Configure Input Files</span>
-            </a>
-            <FileSelectorModal
-              show={this.state.showFileSelectorModal}
-              onHide={this.closeFileSelectorModal}
-              dropboxFiles={this.state.dropboxFiles.get('fileNames')}
-              keboolaBuckets={this.getInputBuckets()}
-              configId={this.state.configId}
-              selectedCsvFiles={this.getSelectedCsvFiles}
-              selectedInputBucket={this.getSelectedBucket}
-              handleCsvSelectChange={this.handleCsvSelectChange}
-              handleBucketChange={this.handleInputBucketChange}
-              canSaveConfig={this.canSaveConfig}
-              saveConfig={this.saveConfig}
-              isSaving={this.state.isSaving}
-              cancelConfig={this.cancelConfig}
-            />
-          </div>
+        <div>
+          <a onClick={this.openFileSelectorModal}>
+            <span className="btn btn-success">+ Add Files</span>
+          </a>
+          <FileSelectorModal
+            show={this.state.showFileSelectorModal}
+            onHide={this.closeFileSelectorModal}
+            dropboxFiles={this.state.dropboxFiles.get('fileNames')}
+            keboolaBuckets={this.getInputBuckets()}
+            configId={this.state.configId}
+            selectedCsvFiles={this.getSelectedCsvFiles}
+            selectedInputBucket={this.getSelectedBucket}
+            handleCsvSelectChange={this.handleCsvSelectChange}
+            handleBucketChange={this.handleInputBucketChange}
+            canSaveConfig={this.canSaveConfig}
+            saveConfig={this.saveConfig}
+            isSaving={this.state.isSaving}
+            cancelConfig={this.cancelConfig}
+          />
         </div>
       );
     }
@@ -178,9 +192,10 @@ export default React.createClass({
           <table className="table table-striped">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Source</th>
-              <th>Destination Bucket</th>
+              <th>Dropbox File</th>
+              <th>Bucket</th>
+              <th></th>
+              <th>Output Table</th>
               <th></th>
             </tr>
           </thead>
@@ -192,16 +207,15 @@ export default React.createClass({
                 var destinationFile = this.state.configData.getIn(['parameters', 'config', 'bucket']);
                 return (
                   <tr key={index}>
-                      <td>{index + 1}.</td>
                       <td>{table}</td>
+                      <td>{destinationFile}</td>
+                      <td>&gt;</td>
                       <td>{destinationFile}.{getDestinationName(table)}</td>
                       <td className="text-right">
-                      <button className="btn btn-link" onClick={handleDeletingSingleElement}>
-                        <i className="fa kbc-icon-cup"></i>
-                      </button>
+                      {this.state.isSaving ? <Loader /> : <button className="btn btn-link" onClick={handleDeletingSingleElement}><i className="fa kbc-icon-cup"></i></button>}
                       <RunButtonModal
                         title="Upload"
-                        icon="fa fa-upload fa-fw"
+                        icon="fa fa-fw fa-play"
                         mode="button"
                         component="ex-dropbox"
                         runParams={handleUploadingSingleElement}
@@ -231,6 +245,19 @@ export default React.createClass({
               <span className="btn btn-success"><i className="fa fa-fw fa-dropbox"></i>Authorize Dropbox Account</span>
             </ModalTrigger>
           </div>
+        </div>
+      );
+    }
+  },
+
+
+  // This component will popup once the authorization is done, but no file has been selected yet.
+  renderInitialSelectionOfFiles(hasFiles, filesCount) {
+    if (this.state.hasCredentials && (!hasFiles || filesCount === 0)) {
+      return (
+        <div className="row component-empty-state text-center">
+          <p>No files selected yet.</p>
+          {this.renderFileSelectorModal()}
         </div>
       );
     }
