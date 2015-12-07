@@ -9,7 +9,6 @@ ComponentNameEdit = require './react/components/ComponentName'
 {GENERIC_DETAIL_PREFIX} = require('./Constants').Routes
 ComponentDetailLink = require '../../react/common/ComponentDetailLink'
 ComponentDetail = require '../components/react/pages/component-detail/ComponentDetail'
-NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 
 ComponentsStore = require './stores/ComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
@@ -25,13 +24,6 @@ module.exports = (componentType) ->
   requireData: (params) ->
     ComponentsActionCreators.loadComponent params.component
   childRoutes: [
-    name: 'generic-detail-' + componentType + '-new'
-    title: 'New Configuration'
-    path: 'new'
-    defaultRouteHandler: NewComponentFormPage
-    requireData: (params) ->
-      ComponentsActionCreators.loadComponent params.component
-  ,
     name: 'generic-detail-' + componentType + '-config'
     title: (routerState) ->
       configId = routerState.getIn ['params', 'config']

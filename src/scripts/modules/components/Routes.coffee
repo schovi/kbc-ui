@@ -5,7 +5,6 @@ ComponentsIndex = require('./react/pages/ComponentsIndex')
 NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
 
-NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 ComponentDetail = require './react/pages/component-detail/ComponentDetail'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
@@ -31,7 +30,6 @@ tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
 geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
 customScienceRoutes = require('../custom-science/Routes').default
-NewComponentFormPage = require '../components/react/pages/new-component-form/NewComponentForm'
 
 extractor = injectProps(type: 'extractor')
 writer = injectProps(type: 'writer')
@@ -53,20 +51,6 @@ routes =
     )(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
-      name: 'new-application'
-      title: 'New Application'
-      defaultRouteHandler: application(NewComponent)
-      childRoutes: [
-        name: 'new-application-add'
-        title: (routerState) ->
-          component = routerState.getIn ['params', 'component']
-          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
-        path: ':component'
-        defaultRouteHandler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.component
-      ]
-    ,
       appGeneeaRoutes.sentimentAnalysis
     ,
       appGeneeaRoutes.topicDetection
@@ -95,21 +79,6 @@ routes =
     headerButtonsHandler: injectProps(text: 'New Extractor', to: 'new-extractor', type: 'extractor')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
-      name: 'new-extractor'
-      title: 'New Extractor'
-      defaultRouteHandler: extractor(NewComponent)
-      childRoutes: [
-        name: 'new-extractor-add'
-        title: (routerState) ->
-          component = routerState.getIn ['params', 'component']
-          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
-        path: ':component'
-        defaultRouteHandler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.component
-      ]
-
-    ,
       createComponentRoute 'ex-db', [exDbRoutes]
     ,
       createComponentRoute 'ex-google-drive', [exGdriveGoogleRoutes]
@@ -133,20 +102,6 @@ routes =
     headerButtonsHandler: injectProps(text: 'New Writer', to: 'new-writer', type: 'writer')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
-      name: 'new-writer'
-      title: 'New Writer'
-      defaultRouteHandler: writer(NewComponent)
-      childRoutes: [
-        name: 'new-writer-add'
-        title: (routerState) ->
-          component = routerState.getIn ['params', 'component']
-          'New ' + ComponentsStore.getComponent(component).get('name') + ' Configuration'
-        path: ':component'
-        defaultRouteHandler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.component
-      ]
-    ,
       createComponentRoute 'gooddata-writer', [goodDataWriterRoutes]
     ,
       createComponentRoute 'wr-dropbox', [dropoxWriterRoutes]
