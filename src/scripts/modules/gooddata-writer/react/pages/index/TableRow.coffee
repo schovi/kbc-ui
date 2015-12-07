@@ -46,8 +46,8 @@ module.exports = React.createClass
       else
         span className: 'td text-right',
           React.createElement ActivateDeactivateButton,
-            activateTooltip: 'Enable Export'
-            deactivateTooltip: 'Disable Export'
+            activateTooltip: 'Add table to project upload'
+            deactivateTooltip: 'Remove table from the project upload'
             isActive: @props.table.getIn ['data', 'export']
             isPending: @props.table.get('savingFields').contains 'export'
             onChange: @_handleExportChange
