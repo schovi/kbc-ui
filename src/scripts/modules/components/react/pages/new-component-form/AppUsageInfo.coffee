@@ -1,5 +1,5 @@
 React = require 'react'
-is3rdParty = require('../../../is3rdParty.js').default
+is3rdParty = require('../../../is3rdParty').default
 
 {div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
 
