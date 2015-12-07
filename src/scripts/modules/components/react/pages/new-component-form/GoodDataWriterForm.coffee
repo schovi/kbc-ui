@@ -14,7 +14,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 #require './GoodDataWriterForm.less'
 
-{div, form, h3, p} = React.DOM
+{div, form, h3, p, span} = React.DOM
 
 
 module.exports = React.createClass
@@ -109,7 +109,7 @@ module.exports = React.createClass
             'Cancel'
           Button
             bsStyle: 'success'
-            disabled: !(@props.isValid and @_isLicenseAgreed()) || @props.isSaving
+            disabled: !(@props.isValid) || @props.isSaving
             onClick: @props.onSave
           ,
             'Create'
