@@ -22,6 +22,9 @@ module.exports = React.createClass
     isDeleted: React.PropTypes.bool
 
   render: ->
+    titleClass = 'td'
+    if not @props.table.getIn(['data', 'export'])
+      titleClass = 'td text-muted'
     elem = if @props.isDeleted then div else Link
     elem
       className: 'tr'
@@ -35,7 +38,7 @@ module.exports = React.createClass
           tableId: @props.table.get 'id'
           linkLabel: @props.sapiTable.get('name')
 
-      span className: 'td',
+      span className: titleClass,
         @props.table.getIn ['data', 'title']
       if @props.isDeleted
         span className: 'td text-right',
