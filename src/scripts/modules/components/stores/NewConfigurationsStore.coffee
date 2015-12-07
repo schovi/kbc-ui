@@ -56,10 +56,7 @@ Dispatcher.register (payload) ->
   switch action.type
 
     when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_UPDATE
-      console.log action, action.configuration.toJSON()
-      console.log _store.toJSON()
       _store = _store.setIn ['configurations', action.componentId], action.configuration
-      console.log _store.toJSON()
       NewConfigurationsStore.emitChange()
 
     when constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_CANCEL

@@ -48,7 +48,6 @@ module.exports = React.createClass
     NewConfigurationsActionCreators.saveConfiguration(@props.component.get('id'))
 
   render: ->
-    console.log 'render', @state
     React.createElement @_getFormHandler(),
       component: @props.component
       configuration: @state.configuration
