@@ -56,7 +56,12 @@ module.exports = React.createClass
       localState: @state.localState.get('newTable', Map())
       isSaving: @state.isAddingNewTable
       addNewTableFn: (tableId, data) =>
-        actionCreators.addNewTable(@state.configId, tableId, data)
+        actionCreators.addNewTable(@state.configId, tableId, data).then =>
+          RoutesStore.getRouter().transitionTo('gooddata-writer-table',
+            config: @state.configId
+            table: tableId
+          )
+
       updateLocalStateFn: (path, data) =>
         @_updateLocalState(['newTable'].concat(path), data)
 
