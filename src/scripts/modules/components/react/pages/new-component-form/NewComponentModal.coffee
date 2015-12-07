@@ -35,8 +35,10 @@ module.exports = React.createClass
     isValid: NewConfigurationsStore.isValidConfiguration(componentId)
     isSaving: NewConfigurationsStore.isSavingConfiguration(componentId)
 
-  _handleReset: ->
+  componentDidMount: ->
     NewConfigurationsActionCreators.resetConfiguration(@props.component.get 'id')
+
+  _handleReset: ->
     @props.onClose()
 
   _handleChange: (newConfiguration) ->
@@ -46,6 +48,7 @@ module.exports = React.createClass
     NewConfigurationsActionCreators.saveConfiguration(@props.component.get('id'))
 
   render: ->
+    console.log 'render', @state
     React.createElement @_getFormHandler(),
       component: @props.component
       configuration: @state.configuration
