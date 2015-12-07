@@ -4,8 +4,6 @@ injectProps = require('./react/injectProps').default
 ComponentsIndex = require('./react/pages/ComponentsIndex')
 NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
-AddComponentConfigurationButton = require './react/components/AddComponentConfigurationButton'
-
 
 NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
 ComponentDetail = require './react/pages/component-detail/ComponentDetail'

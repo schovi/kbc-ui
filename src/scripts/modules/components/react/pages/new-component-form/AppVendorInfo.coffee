@@ -24,7 +24,7 @@ module.exports = React.createClass
           label: @_renderCheckboxLabel()
           checked: @props.licenseAgreed
           wrapperClassName: 'col-xs-10'
-          labelClassName: 'col-xs-10'
+          labelClassName: 'col-xs-12'
           onChange: (event) =>
             @props.handleAgreedLicense(event.target.checked)
 

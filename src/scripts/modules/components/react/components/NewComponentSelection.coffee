@@ -31,9 +31,6 @@ ComponentBox = React.createClass
   open: ->
     @setState showModal: true
 
-  goToApp: ->
-    console.log("goto")
-
   shouldComponentUpdate: (nextProps) ->
     @props.component == nextProps.component
 

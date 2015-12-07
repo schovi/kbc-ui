@@ -14,7 +14,6 @@ ComponentEmptyState = require('../../components/ComponentEmptyState').default
 ComponentInfo = React.createFactory(require('../../components/ComponentInfo').default)
 AddComponentConfigurationButton = React.createFactory(require '../../components/AddComponentConfigurationButton')
 
-
 {div, label, h3, h2, span, p} = React.DOM
 
 module.exports = React.createClass
@@ -60,7 +59,8 @@ module.exports = React.createClass
           div className: "kbc-title",
             h2 null, "Configurations"
             span className: "pull-right",
-              AddComponentConfigurationButton null
+              AddComponentConfigurationButton
+                component: state.component
         div className: "table table-hover",
           div className: "tbody",
             @state.configurations.map((configuration) ->
@@ -75,5 +75,6 @@ module.exports = React.createClass
       React.createElement ComponentEmptyState, null,
         p null, "No configurations"
         p className: "text-center",
-          AddComponentConfigurationButton null
+          AddComponentConfigurationButton
+            component: state.component
 
