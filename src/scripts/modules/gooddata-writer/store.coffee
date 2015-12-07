@@ -3,6 +3,7 @@ Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 fuzzy = require 'fuzzy'
+_ = require 'underscore'
 
 {ColumnTypes, DataTypes} = constants
 {fromJS, Map, List} = Immutable
@@ -16,6 +17,12 @@ _store = Map
   filters: Map() # by [writer_id][tables] = value
   referenceableTables: Map()
   pending: Map()
+
+extendTable = (table) ->
+  tableId = table.get('id') or table.get('tableId')
+  if _.isEmpty(table.get('title'))
+    table = table.set('title', tableId)
+  return table
 
 
 modifyColumns =  (columns, newColumn, currentColumn) ->
@@ -284,13 +291,14 @@ dispatcher.register (payload) ->
       .fromJS(action.configuration.tables)
       .toOrderedMap()
       .map (table) ->
+        tableId = table.get('id') or table.get('tableId')
         Map
           isLoading: false
-          id: table.get('id') or table.get('tableId')
+          id: tableId
           editingFields: Map()
           savingFields: List()
           pendingActions: List()
-          data: table
+          data: extendTable(table)
       .mapKeys (key, table) ->
         table.get('id')
 
@@ -365,7 +373,7 @@ dispatcher.register (payload) ->
       table = Immutable.fromJS(action.table)
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, table.get('tableId'), 'data'], table.remove('columns')
+        .setIn ['tables', action.configurationId, table.get('tableId'), 'data'], extendTable(table.remove('columns'))
         .setIn ['tableColumns', action.configurationId, table.get('tableId'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
