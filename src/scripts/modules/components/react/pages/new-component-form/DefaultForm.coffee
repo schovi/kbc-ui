@@ -8,6 +8,7 @@ AppUsageInfo = React.createFactory(require './AppUsageInfo')
 Immutable = require('immutable')
 
 ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
+ModalTitle = React.createFactory(require('react-bootstrap/lib/ModalTitle'))
 ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
 ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
@@ -37,9 +38,11 @@ module.exports = React.createClass
   render: ->
     div null,
       ModalHeader
-        closeButton: false
+        closeButton: true
+        onHide: @props.onClose
       ,
-        "Add Configuration"
+        ModalTitle null,
+          "Add Configuration"
       ModalBody null,
         div className: 'container col-md-12',
           form

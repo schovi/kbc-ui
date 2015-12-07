@@ -38,7 +38,8 @@ module.exports = React.createClass
   render: ->
     div null,
       ModalHeader
-        closeButton: false
+        closeButton: true
+        onHide: @props.onClose
       ,
         "Add Configuration"
       ModalBody null,

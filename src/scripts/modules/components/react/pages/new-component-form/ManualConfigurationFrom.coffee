@@ -6,6 +6,7 @@ contactSupport = require('../../../../../utils/contactSupport').default
 ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
 ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
 ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
+ModalTitle = React.createFactory(require('react-bootstrap/lib/ModalTitle'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
@@ -23,9 +24,11 @@ module.exports = React.createClass
   render: ->
     div null,
       ModalHeader
-        closeButton: false
+        closeButton: true
+        onHide: @props.onClose
       ,
-        "Add Configuration"
+        ModalTitle null,
+          "Add Configuration"
       ModalBody null,
         div className: 'container col-md-12',
           form className: 'form-horizontal',
