@@ -7,7 +7,7 @@ ComponentDescription = require '../../../../components/react/components/Componen
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 AddNewTableButton = require('../../components/AddNewTableButton').default
 ApplicationStore = require '../../../../../stores/ApplicationStore'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 
 SearchRow = require('../../../../../react/common/SearchRow').default
@@ -28,7 +28,7 @@ installedComponentsActions = require '../../../../components/InstalledComponents
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
-  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore)]
+  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore, StorageTablesStore)]
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
@@ -41,12 +41,17 @@ module.exports = React.createClass
     deletingTables: goodDataWriterStore.getDeletingTables(config)
     localState: localState
     isAddingNewTable: goodDataWriterStore.isAddingNewTable(config)
+    storageTables: StorageTablesStore.getAll()
 
   _handleFilterChange: (query) ->
     actionCreators.setWriterTablesFilter(@state.writer.getIn(['config', 'id']), query)
 
   _renderAddNewTable: ->
+    remainingTables = @state.storageTables.filter (table) =>
+      table.getIn(['bucket', 'stage']) == 'out' and not @state.tablesByBucket.has(table.get('id'))
+
     React.createElement AddNewTableButton,
+      isDisabled: remainingTables.count() == 0
       configuredTables: @state.tablesByBucket
       localState: @state.localState.get('newTable', Map())
       isSaving: @state.isAddingNewTable
@@ -64,7 +69,7 @@ module.exports = React.createClass
             React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
-          div className: 'col-sm-4 kbc-buttons',
+          div className: 'col-sm-4 kbc-buttons text-right',
             @_renderAddNewTable()
 
         if writer.get('info')

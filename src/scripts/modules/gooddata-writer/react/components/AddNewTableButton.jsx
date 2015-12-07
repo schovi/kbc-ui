@@ -11,6 +11,7 @@ export default React.createClass({
     configuredTables: React.PropTypes.object.isRequired,
     localState: React.PropTypes.object.isRequired,
     isSaving: React.PropTypes.bool.isRequired,
+    isDisabled: React.PropTypes.bool.isRequired,
     addNewTableFn: React.PropTypes.func.isRequired,
     updateLocalStateFn: React.PropTypes.func.isRequired
   },
@@ -49,6 +50,7 @@ export default React.createClass({
   renderButton() {
     return (
       <Button
+          disabled={this.props.isDisabled}
           onClick={this.onAddNewTableButtonClick}
           bsStyle="success">
         + Add New Table
