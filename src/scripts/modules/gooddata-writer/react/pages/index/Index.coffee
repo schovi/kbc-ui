@@ -257,7 +257,7 @@ module.exports = React.createClass
     React.createElement ComponentEmptyState,
       null
     ,
-      div null, 'No tables configured.'
+      p null, 'No tables configured.'
       @_renderAddNewTable()
 
 
