@@ -25,7 +25,6 @@ createGoodDataWriter = (configuration) ->
   params =
     writerId: writerId
     description: configuration.get 'description'
-    users: ApplicationStore.getKbcVars().get('adminEmails').join ','
 
   # create new
   if configuration.get('mode') == constants.GoodDataWriterModes.NEW
@@ -43,7 +42,6 @@ createGoodDataWriter = (configuration) ->
     params.username = configuration.get 'username'
     params.password = configuration.get 'password'
 
-  console.log 'params', params
   syrupApi
   .createRequest('gooddata-writer', 'POST', 'writers')
   .send params
