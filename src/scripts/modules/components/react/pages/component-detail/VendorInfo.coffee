@@ -1,7 +1,7 @@
 React = require 'react'
 Input = React.createFactory(require('react-bootstrap').Input)
 List = require('immutable').List
-is3rdParty = require('../../../is3rdParty.js').default
+is3rdParty = require('../../../is3rdParty').default
 
 require('./VendorInfo.less')
 
