@@ -240,6 +240,7 @@ dispatcher.register (payload) ->
       tableId = action.tableId
       _store = _store.deleteIn ['pending', 'deletingTables', configId, tableId]
       _store = _store.deleteIn ['tables', configId, tableId]
+      _store = _store.deleteIn ['tableColumns', configId, tableId]
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_ERROR
