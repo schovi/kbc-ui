@@ -2,6 +2,7 @@ Dispatcher = require('../Dispatcher')
 Immutable = require('immutable')
 {Map, List} = Immutable
 Constants = require '../constants/KbcConstants'
+StoreUtils = require '../utils/StoreUtils'
 
 _store = Map(
   sapiToken: Map()
@@ -10,7 +11,7 @@ _store = Map(
   kbc: Map() # contains - projectBaseUrl, admin (object)
 )
 
-ApplicationStore =
+ApplicationStore = StoreUtils.createStore
 
   getSapiToken: ->
     _store.getIn [ 'sapiToken']

@@ -40,5 +40,5 @@ module.exports = React.createClass
 
 
   _gdModelLink: ->
-    pid = @state.writer.getIn ['config', 'gd', 'pid']
+    pid = @state.writer.getIn ['config', 'project', 'id']
     "https://secure.gooddata.com/labs/apps/app_link?pid=#{pid}&app=ldm_visualizer"

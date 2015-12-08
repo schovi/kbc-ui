@@ -51,10 +51,11 @@ module.exports = React.createClass
   _renderMainContent: ->
     items = @state.configuration.get('items')
     div {className: 'col-md-9 kbc-main-content'},
-      div className: 'row',
-        ComponentDescription
-          componentId: 'ex-google-drive'
-          configId: @state.configuration.get('id')
+      div className: 'row kbc-header',
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: 'ex-google-drive'
+            configId: @state.configuration.get('id')
         if @_showSelectSheets() and items.count()
           div className: 'col-sm-4 kbc-buttons',
             Link
