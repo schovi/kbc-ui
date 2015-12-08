@@ -42,7 +42,6 @@ module.exports = React.createClass
     filter: goodDataWriterStore.getWriterTablesFilter(config)
     deletingTables: goodDataWriterStore.getDeletingTables(config)
     localState: localState
-    isAddingNewTable: goodDataWriterStore.isAddingNewTable(config)
     storageTables: StorageTablesStore.getAll()
 
   _handleFilterChange: (query) ->
@@ -56,7 +55,6 @@ module.exports = React.createClass
       isDisabled: remainingTables.count() == 0
       configuredTables: @state.tablesByBucket
       localState: @state.localState.get('newTable', Map())
-      isSaving: @state.isAddingNewTable
       addNewTableFn: (tableId, data) =>
         actionCreators.addNewTable(@state.configId, tableId, data).then =>
           RoutesStore.getRouter().transitionTo('gooddata-writer-table',

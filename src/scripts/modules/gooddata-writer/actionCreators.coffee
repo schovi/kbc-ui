@@ -38,15 +38,14 @@ module.exports =
       tableId: tableId
       data: data
     goodDataWriterApi.addWriterTable(configurationId, tableId, data).then =>
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        data: data
       Promise.props
         tableDetail: @loadTableDetail(configurationId, tableId)
         refTables: @loadReferenceableTables(configurationId)
-      .then ->
-        dispatcher.handleViewAction
-          type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
-          configurationId: configurationId
-          tableId: tableId
-          data: data
       .catch (error) ->
         dispatcher.handleViewAction
           type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR

@@ -10,7 +10,6 @@ export default React.createClass({
   propTypes: {
     configuredTables: React.PropTypes.object.isRequired,
     localState: React.PropTypes.object.isRequired,
-    isSaving: React.PropTypes.bool.isRequired,
     isDisabled: React.PropTypes.bool.isRequired,
     addNewTableFn: React.PropTypes.func.isRequired,
     updateLocalStateFn: React.PropTypes.func.isRequired
@@ -35,10 +34,10 @@ export default React.createClass({
           {this.renderBody()}
         </Modal.Body>
         <Modal.Footer>
-          {this.props.isSaving ? <Loader/> : null}
+          {this.props.localState.get('saving', false) ? <Loader/> : null}
           <Button bsStyle="link" onClick={this.close}>Cancel</Button>
           <Button bsStyle="success"
-                  disabled={this.props.isSaving || !this.isValid()}
+                  disabled={this.props.localState.get('saving', false) || !this.isValid()}
                   onClick={() => this.saveNewTable()}>
             Add
           </Button>
@@ -135,6 +134,7 @@ export default React.createClass({
       title: this.props.localState.get('title'),
       identifier: this.props.localState.get('identifier')
     });
+    this.props.updateLocalStateFn(['saving'], true);
     this.props.addNewTableFn(tableId, data).then( () =>
       this.close()
     );
