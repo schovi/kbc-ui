@@ -17,6 +17,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 require './DefaultForm.less'
 
+
 module.exports = React.createClass
   displayName: 'NewComponentDefaultForm'
   propTypes:
@@ -40,23 +41,17 @@ module.exports = React.createClass
       ModalHeader
         closeButton: true
         onHide: @props.onClose
+        className: "add-configuration-form"
       ,
-        ModalTitle null,
-          "Add Configuration"
+        FormHeader
+          component: @props.component
+          withButtons: false
       ModalBody null,
         div className: 'container col-md-12',
           form
             className: 'form-horizontal'
             onSubmit: @_handleSubmit
           ,
-            FormHeader
-              component: @props.component
-              onCancel: @props.onCancel
-              onSave: @props.onSave
-              isValid: @props.isValid and @_isLicenseAgreed()
-              isSaving: @props.isSaving
-              withButtons: false
-
             div className: 'row',
               Input
                 type: 'text'

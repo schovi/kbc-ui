@@ -8,11 +8,12 @@ Input = React.createFactory(require('react-bootstrap').Input)
 ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
 ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
 ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
+ModalTitle = React.createFactory(require('react-bootstrap/lib/ModalTitle'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
-#require './GoodDataWriterForm.less'
+require './AddConfigurationForm.less'
 
 {div, form, h3, p, span} = React.DOM
 
@@ -38,23 +39,23 @@ module.exports = React.createClass
   render: ->
     div null,
       ModalHeader
+        className: "add-configuration-form"
         closeButton: true
         onHide: @props.onClose
       ,
-        "Add Configuration"
+        FormHeader
+          component: @props.component
+          onCancel: @props.onCancel
+          onSave: @props.onSave
+          isValid: @props.isValid
+          isSaving: @props.isSaving
+          withButtons: false
       ModalBody null,
         div className: 'container col-md-12',
           form
             className: 'form-horizontal'
             onSubmit: @_handleSubmit
           ,
-            FormHeader
-              component: @props.component
-              onCancel: @props.onCancel
-              onSave: @props.onSave
-              isValid: @props.isValid
-              isSaving: @props.isSaving
-              withButtons: false
             div className: 'row',
               Input
                 type: 'text'

@@ -10,8 +10,9 @@ ModalTitle = React.createFactory(require('react-bootstrap/lib/ModalTitle'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
-
 {div, form, p} = React.DOM
+
+require './AddConfigurationForm.less'
 
 module.exports = React.createClass
   displayName: 'ManualConfigurationForm'
@@ -26,18 +27,16 @@ module.exports = React.createClass
       ModalHeader
         closeButton: true
         onHide: @props.onClose
+        className: "add-configuration-form"
       ,
-        ModalTitle null,
-          "Add Configuration"
+        FormHeader
+          component: @props.component
+          withButtons: false
       ModalBody null,
         div className: 'container col-md-12',
-          form className: 'form-horizontal',
-            FormHeader
-              component: @props.component
-              withButtons: false
-            div className: 'row',
-              div className: 'col-xs-12',
-                p null, @_text()
+          div className: 'row',
+            div className: 'col-xs-12',
+              p null, @_text()
       ModalFooter null,
 
         ButtonToolbar null,
