@@ -45,7 +45,7 @@ module.exports =
         data: data
       Promise.props
         tableDetail: @loadTableDetail(configurationId, tableId)
-        refTables: @loadReferenceableTables(configurationId)
+        refTables: @loadReferencableTablesForce(configurationId)
       .catch (error) ->
         dispatcher.handleViewAction
           type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
@@ -270,7 +270,8 @@ module.exports =
     .updateTable(configurationId, tableId,
       columns: columns
     )
-    .then ->
+    .then =>
+      @loadReferencableTablesForce(configurationId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_SUCCESS
         configurationId: configurationId
