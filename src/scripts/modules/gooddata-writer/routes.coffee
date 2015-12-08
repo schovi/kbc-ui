@@ -35,7 +35,7 @@ module.exports =
         actionCreators.loadTableDetail(params.config, params.table)
     ,
       (params) ->
-        actionCreators.loadReferenceableTables(params.config)
+        actionCreators.loadReferencableTables(params.config)
     ]
     title: (routerState) ->
       configId = routerState.getIn ['params', 'config']

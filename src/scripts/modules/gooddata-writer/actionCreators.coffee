@@ -45,7 +45,7 @@ module.exports =
         data: data
       Promise.props
         tableDetail: @loadTableDetail(configurationId, tableId)
-        refTables: @loadReferencableTablesForce(configurationId)
+        refTables: @loadReferencableTables(configurationId)
       .catch (error) ->
         dispatcher.handleViewAction
           type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
@@ -125,7 +125,7 @@ module.exports =
         error: error
       throw error
 
-  loadReferenceableTables: (configurationId) ->
+  loadReferencableTables: (configurationId) ->
     if goodDataWriterStore.hasReferenceableTables(configurationId)
       return Promise.resolve()
     else
