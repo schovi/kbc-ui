@@ -51,6 +51,10 @@ routes =
     )(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
+      name: 'new-application'
+      title: 'New Application'
+      defaultRouteHandler: application(NewComponent)
+    ,
       appGeneeaRoutes.sentimentAnalysis
     ,
       appGeneeaRoutes.topicDetection
@@ -79,6 +83,10 @@ routes =
     headerButtonsHandler: injectProps(text: 'New Extractor', to: 'new-extractor', type: 'extractor')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
+      name: 'new-extractor'
+      title: 'New Extractor'
+      defaultRouteHandler: extractor(NewComponent)
+    ,
       createComponentRoute 'ex-db', [exDbRoutes]
     ,
       createComponentRoute 'ex-google-drive', [exGdriveGoogleRoutes]
@@ -102,6 +110,10 @@ routes =
     headerButtonsHandler: injectProps(text: 'New Writer', to: 'new-writer', type: 'writer')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
     childRoutes: [
+      name: 'new-writer'
+      title: 'New Writer'
+      defaultRouteHandler: writer(NewComponent)
+    ,
       createComponentRoute 'gooddata-writer', [goodDataWriterRoutes]
     ,
       createComponentRoute 'wr-dropbox', [dropoxWriterRoutes]
