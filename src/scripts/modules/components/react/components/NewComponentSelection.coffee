@@ -11,7 +11,6 @@ ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
-ComponentInfo = React.createFactory(require('../components/ComponentInfo').default)
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, button} = React.DOM
 

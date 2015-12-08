@@ -4,15 +4,19 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentsStore = require '../../../stores/ComponentsStore'
 InstalledComponentsStore = require '../../../stores/InstalledComponentsStore.coffee'
-FormHeader = React.createFactory(require '../new-component-form/FormHeader')
 AppUsageInfo = React.createFactory(require '../new-component-form/AppUsageInfo.coffee')
 VendorInfo = React.createFactory(require './VendorInfo.coffee')
 ComponentDescription = React.createFactory(require './ComponentDescription.coffee')
 ConfigurationRow = require('../ConfigurationRow.jsx').default
 Immutable = require 'immutable'
 ComponentEmptyState = require('../../components/ComponentEmptyState').default
-ComponentInfo = React.createFactory(require('../../components/ComponentInfo').default)
 AddComponentConfigurationButton = React.createFactory(require '../../components/AddComponentConfigurationButton')
+
+FormHeader = require('../new-component-form/FormHeader')
+VendorInfo = require('../component-detail/VendorInfo')
+AppUsageInfo = require('../new-component-form/AppUsageInfo')
+ReadMore = require('../../../../../react/common/ReadMore').default
+ComponentDescription = require '../component-detail/ComponentDescription'
 
 {div, label, h3, h2, span, p} = React.DOM
 
@@ -43,13 +47,21 @@ module.exports = React.createClass
     state
 
   render: ->
-    div className: "container-fluid kbc-main-content"
-    ,
-      ComponentInfo
+    div className: "container-fluid kbc-main-content",
+      React.createElement FormHeader,
         component: @state.component
-      ,
-        div className: "row",
-          @_renderConfigurations()
+        withButtons: false
+      div className: "row",
+        div className: "col-md-6",
+          React.createElement VendorInfo,
+            component: @state.component
+          React.createElement AppUsageInfo,
+            component: @state.component
+        div className: "col-md-6",
+          React.createElement ReadMore, null,
+            React.createElement ComponentDescription,
+              component: @state.component
+      @_renderConfigurations()
 
   _renderConfigurations: ->
     state = @state
@@ -72,9 +84,10 @@ module.exports = React.createClass
               )
             )
     else
-      React.createElement ComponentEmptyState, null,
-        p null, "No configurations"
-        p className: "text-center",
-          AddComponentConfigurationButton
-            component: state.component
+      div className: "row kbc-row",
+        React.createElement ComponentEmptyState, null,
+          p className: "text-center",
+            AddComponentConfigurationButton
+              label: "Create New Configuration"
+              component: state.component
 

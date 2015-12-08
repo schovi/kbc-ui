@@ -20,9 +20,13 @@ module.exports = React.createClass
 
   propTypes:
     component: React.PropTypes.object.isRequired
+    label: React.PropTypes.string
 
   getInitialState: ->
     showModal: false
+
+  getDefaultProps: ->
+    label: 'Add Configuration'
 
   close: ->
     @setState showModal: false
@@ -38,7 +42,7 @@ module.exports = React.createClass
         onClick: @open
       ,
         span className: 'kbc-icon-plus'
-        'Add Configuration'
+        @props.label
       Modal
         bsSize: 'medium'
         show: @state.showModal
