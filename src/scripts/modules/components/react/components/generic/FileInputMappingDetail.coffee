@@ -23,8 +23,8 @@ FileInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Tags'
         span {className: "col-md-6"},
-          if @props.value.get('tags').count()
-            @props.value.get('tags').map((tag) ->
+          if @props.value.get('tags', Immutable.List()).count()
+            @props.value.get('tags', Immutable.List()).map((tag) ->
               span
                 className: "label kbc-label-rounded-small label-default"
                 key: tag
@@ -46,8 +46,8 @@ FileInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Processed tags'
         span {className: "col-md-6"},
-          if @props.value.get('processed_tags').count()
-            @props.value.get('processed_tags').map((tag) ->
+          if @props.value.get('processed_tags', Immutable.List()).count()
+            @props.value.get('processed_tags', Immutable.List()).map((tag) ->
               span
                 className: "label kbc-label-rounded-small label-default"
                 key: tag
