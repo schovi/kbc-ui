@@ -179,6 +179,9 @@ GoodDataWriterStore = StoreUtils.createStore
     _store.getIn(['referenceableTables', configurationId]).filter (name, id) ->
       id != tableId
 
+  hasReferenceableTables: (configurationId) ->
+    _store.hasIn(['referenceableTables', configurationId])
+
   getWriterTablesByBucket: (configurationId) ->
     _store
     .getIn(['tables', configurationId], Map())

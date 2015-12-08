@@ -1,5 +1,6 @@
 React = require 'react'
 {Map, List} = require 'immutable'
+Promise = require('bluebird')
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -62,7 +63,6 @@ module.exports = React.createClass
             config: @state.configId
             table: tableId
           )
-
       updateLocalStateFn: (path, data) =>
         @_updateLocalState(['newTable'].concat(path), data)
 

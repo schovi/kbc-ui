@@ -37,19 +37,23 @@ module.exports =
       configurationId: configurationId
       tableId: tableId
       data: data
-    goodDataWriterApi.addWriterTable(configurationId, tableId, data).then ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
-        configurationId: configurationId
-        tableId: tableId
-        data: data
-    .catch (error) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
-        configurationId: configurationId
-        tableId: tableId
-        data: data
-      throw error
+    goodDataWriterApi.addWriterTable(configurationId, tableId, data).then =>
+      Promise.props
+        tableDetail: @loadTableDetail(configurationId, tableId)
+        refTables: @loadReferenceableTables(configurationId)
+      .then ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
+          configurationId: configurationId
+          tableId: tableId
+          data: data
+      .catch (error) ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
+          configurationId: configurationId
+          tableId: tableId
+          data: data
+        throw error
 
 
   loadConfigurationForce: (configurationId) ->
@@ -123,7 +127,10 @@ module.exports =
       throw error
 
   loadReferenceableTables: (configurationId) ->
-    @loadReferencableTablesForce(configurationId)
+    if goodDataWriterStore.hasReferenceableTables(configurationId)
+      return Promise.resolve()
+    else
+      return @loadReferencableTablesForce(configurationId)
 
   optimizeSLIHash: (configurationId) ->
     dispatcher.handleViewAction
