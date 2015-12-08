@@ -40,6 +40,7 @@ module.exports = React.createClass
         span className: 'kbc-icon-plus'
         'Add Configuration'
       Modal
+        bsSize: 'medium'
         show: @state.showModal
         onHide: @close
       ,

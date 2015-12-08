@@ -42,7 +42,7 @@ ComponentBox = React.createClass
           className: 'btn btn-success'
           onClick: @open
         ,
-          'Go To App'
+          'More'
 
 module.exports = React.createClass
   displayName: 'NewComponentSelection'

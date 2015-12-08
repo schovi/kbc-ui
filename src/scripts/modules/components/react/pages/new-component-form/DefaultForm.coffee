@@ -57,18 +57,19 @@ module.exports = React.createClass
                 type: 'text'
                 label: 'Name'
                 ref: 'name'
+                autoFocus: true
                 value: @props.configuration.get 'name'
                 placeholder: "My #{@props.component.get('name')}"
-                labelClassName: 'col-xs-2'
-                wrapperClassName: 'col-xs-10'
+                labelClassName: 'col-xs-3'
+                wrapperClassName: 'col-xs-8'
                 onChange: @_handleChange.bind @, 'name'
                 disabled: @props.isSaving
               Input
                 type: 'textarea'
                 label: 'Description'
                 value: @props.configuration.get 'description'
-                labelClassName: 'col-xs-2'
-                wrapperClassName: 'col-xs-10'
+                labelClassName: 'col-xs-3'
+                wrapperClassName: 'col-xs-8'
                 onChange: @_handleChange.bind @, 'description'
                 disabled: @props.isSaving
               @_renderAppUsageInfo() if @_is3rdPartyApp()

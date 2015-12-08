@@ -63,16 +63,16 @@ module.exports = React.createClass
                 ref: 'name'
                 value: @props.configuration.get 'name'
                 placeholder: "My #{@props.component.get('name')}"
-                labelClassName: 'col-xs-2'
-                wrapperClassName: 'col-xs-8'
+                labelClassName: 'col-xs-3'
+                wrapperClassName: 'col-xs-7'
                 onChange: @_handleChange.bind @, 'name'
                 disabled: @props.isSaving
               Input
                 type: 'textarea'
                 label: 'Description'
                 value: @props.configuration.get 'description'
-                labelClassName: 'col-xs-2'
-                wrapperClassName: 'col-xs-8'
+                labelClassName: 'col-xs-3'
+                wrapperClassName: 'col-xs-7'
                 onChange: @_handleChange.bind @, 'description'
                 disabled: @props.isSaving
             div className: 'row',
@@ -83,7 +83,7 @@ module.exports = React.createClass
                 value: GoodDataWriterModes.NEW
                 checked: @props.configuration.get('mode') == GoodDataWriterModes.NEW
                 onChange: @_handleChange.bind @, 'mode'
-                wrapperClassName: 'col-xs-offset-2 col-xs-10'
+                wrapperClassName: 'col-xs-offset-3 col-xs-9'
               Input
                 type: 'radio'
                 name: 'mode'
@@ -91,7 +91,7 @@ module.exports = React.createClass
                 label: 'Use existing GoodData project'
                 checked: @props.configuration.get('mode') == GoodDataWriterModes.EXISTING
                 onChange: @_handleChange.bind @, 'mode'
-                wrapperClassName: 'col-xs-offset-2 col-xs-10'
+                wrapperClassName: 'col-xs-offset-3 col-xs-9'
             if @props.configuration.get('mode') == GoodDataWriterModes.NEW
               @_renderNewForm()
             else
@@ -118,7 +118,7 @@ module.exports = React.createClass
 
   _renderNewForm: ->
     div className: 'row',
-      div className: 'col-xs-offset-2 col-xs-10',
+      div className: 'col-xs-offset-3 col-xs-9',
         h3 null, 'GoodData access token'
       Input
         type: 'radio'
@@ -128,7 +128,7 @@ module.exports = React.createClass
         value: GoodDataWriterTokenTypes.PRODUCTION
         checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.PRODUCTION
         onChange: @_handleChange.bind @, 'tokenType'
-        wrapperClassName: 'col-xs-offset-2 col-xs-10'
+        wrapperClassName: 'col-xs-offset-3 col-xs-9'
       Input
         type: 'radio'
         label: 'Demo'
@@ -137,7 +137,7 @@ module.exports = React.createClass
         value: GoodDataWriterTokenTypes.DEVELOPER
         checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.DEVELOPER
         onChange: @_handleChange.bind @, 'tokenType'
-        wrapperClassName: 'col-xs-offset-2 col-xs-10'
+        wrapperClassName: 'col-xs-offset-3 col-xs-9'
       Input
         type: 'radio'
         label: 'Custom'
@@ -146,19 +146,19 @@ module.exports = React.createClass
         value: GoodDataWriterTokenTypes.CUSTOM
         checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
         onChange: @_handleChange.bind @, 'tokenType'
-        wrapperClassName: 'col-xs-offset-2 col-xs-10'
+        wrapperClassName: 'col-xs-offset-3 col-xs-9'
       if @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
         Input
           type: 'text'
           placeholder: 'Your token'
           value: @props.configuration.get('accessToken')
           onChange: @_handleChange.bind @, 'accessToken'
-          wrapperClassName: 'col-xs-offset-2 col-xs-10'
+          wrapperClassName: 'col-xs-offset-3 col-xs-9'
 
 
   _renderExistingForm: ->
     div className: 'row',
-      div className: 'col-xs-offset-2 col-xs-10',
+      div className: 'col-xs-offset-3 col-xs-9',
         h3 null, 'GoodData Project Admin Credentials'
         p className: 'help-text',
           'We will use these credentials just once to invite Keboola Domain Admin to your project.
@@ -169,24 +169,24 @@ module.exports = React.createClass
         type: 'text'
         label: 'GoodData username'
         value: @props.configuration.get 'username'
-        labelClassName: 'col-xs-2'
-        wrapperClassName: 'col-xs-8'
+        labelClassName: 'col-xs-3'
+        wrapperClassName: 'col-xs-7'
         onChange: @_handleChange.bind @, 'username'
         disabled: @props.isSaving
       Input
         type: 'password'
         label: 'GoodData password'
         value: @props.configuration.get 'password'
-        labelClassName: 'col-xs-2'
-        wrapperClassName: 'col-xs-8'
+        labelClassName: 'col-xs-3'
+        wrapperClassName: 'col-xs-7'
         onChange: @_handleChange.bind @, 'password'
         disabled: @props.isSaving
       Input
         type: 'text'
         label: 'GoodData project ID'
         value: @props.configuration.get 'pid'
-        labelClassName: 'col-xs-2'
-        wrapperClassName: 'col-xs-8'
+        labelClassName: 'col-xs-3'
+        wrapperClassName: 'col-xs-7'
         onChange: @_handleChange.bind @, 'pid'
         disabled: @props.isSaving
 
