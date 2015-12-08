@@ -5,6 +5,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 AddNewTableButton = require('../../components/AddNewTableButton').default
 ApplicationStore = require '../../../../../stores/ApplicationStore'
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
@@ -74,8 +75,9 @@ module.exports = React.createClass
             React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
-          div className: 'col-sm-4 kbc-buttons text-right',
-            @_renderAddNewTable()
+          if @state.tablesByBucket.count()
+            div className: 'col-sm-4 kbc-buttons text-right',
+              @_renderAddNewTable()
 
         if writer.get('info')
           div className: 'row',
@@ -83,10 +85,11 @@ module.exports = React.createClass
               bsStyle: 'warning'
             ,
               writer.get('info')
-        React.createElement SearchRow,
-          className: 'row kbc-search-row'
-          onChange: @_handleFilterChange
-          query: @state.filter
+        if @state.tablesByBucket.count()
+          React.createElement SearchRow,
+            className: 'row kbc-search-row'
+            onChange: @_handleFilterChange
+            query: @state.filter
         if @state.tablesByBucket.count()
           @_renderTablesByBucketsPanel()
         else
@@ -246,10 +249,17 @@ module.exports = React.createClass
       @state.writer.getIn(['config', 'project', 'id']))
 
   _renderNotFound: ->
-    div {className: 'table table-striped'},
-      div {className: 'tfoot'},
-        div {className: 'tr'},
-          div {className: 'td'}, 'No tables found'
+    # div {className: 'table table-striped'},
+    #   div {className: 'tfoot'},
+    #     div {className: 'tr'},
+    #       div {className: 'td'}, 'No tables found'
+
+    React.createElement ComponentEmptyState,
+      null
+    ,
+      div null, 'No tables configured.'
+      @_renderAddNewTable()
+
 
 
   _renderBucketPanel: (bucketId, tables) ->
