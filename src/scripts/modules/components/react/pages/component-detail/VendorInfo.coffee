@@ -18,8 +18,7 @@ module.exports = React.createClass
           "Component developed by"
           @_renderAddress()
       else
-        div null,
-          "Component is part of Keboola Connection"
+        null
 
   _renderAddress: ->
     contactData = @props.component.getIn(['data', 'vendor', 'contact'], 'No Address')

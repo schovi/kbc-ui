@@ -36,7 +36,8 @@ module.exports = React.createClass
     else
       span null,
         "#{msg} and with "
-        a {href: licenseUrl, target: '_blank'}, "vendor license terms and conditions."
+        a {href: licenseUrl, target: '_blank'}, "vendor license terms and conditions"
+        "."
 
 
   _renderAddress: ->

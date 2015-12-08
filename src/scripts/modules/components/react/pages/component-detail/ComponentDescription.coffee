@@ -13,6 +13,5 @@ module.exports = React.createClass
         source: @props.component.get('longDescription')
         escapeHtml: true
     else
-      return div null,
-        "Component has no description"
+      return null
 
