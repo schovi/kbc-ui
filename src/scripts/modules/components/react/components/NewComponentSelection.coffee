@@ -22,15 +22,6 @@ ComponentBox = React.createClass
   propTypes:
     component: React.PropTypes.object.isRequired
 
-  getInitialState: ->
-    showModal: false
-
-  close: ->
-    @setState showModal: false
-
-  open: ->
-    @setState showModal: true
-
   shouldComponentUpdate: (nextProps) ->
     @props.component == nextProps.component
 
@@ -43,38 +34,15 @@ ComponentBox = React.createClass
       h2 null,
         component.get('name')
       p null, component.get('description')
-      button
-        className: 'btn btn-success btn-lg'
-        onClick: @open
-      ,
-        'More'
-      Modal
-        show: @state.showModal
-        onHide: @close
-        bsSize: "large"
-      ,
-        ModalHeader
-          closeButton: true
-        ModalBody null,
-          ComponentInfo
-            component: @props.component
-        ModalFooter null,
-          ButtonToolbar null,
-            Button
-              bsStyle: 'link'
-              onClick: @close
-            ,
-              'Close'
-            ComponentDetailLink
-              componentId: @props.component.get("id")
-              type: @props.component.get("type")
-            ,
-              Button
-                bsStyle: 'primary'
-              ,
-                'Go To App'
+      ComponentDetailLink
+        componentId: @props.component.get("id")
+        type: @props.component.get("type")
 
-
+        button
+          className: 'btn btn-success'
+          onClick: @open
+        ,
+          'Go To App'
 
 module.exports = React.createClass
   displayName: 'NewComponentSelection'
