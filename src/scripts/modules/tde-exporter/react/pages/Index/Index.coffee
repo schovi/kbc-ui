@@ -88,7 +88,6 @@ module.exports = React.createClass
       onToggleBucketFn: @_handleToggleBucket
       isBucketToggledFn: @_isBucketToggled
       showAllTables: false
-      toggleShowAllFn: null
       configuredTables: @state.typedefs?.keySeq().toJS()
       #renderDeletedTableRowFn: (table) =>
       #  @_renderTableRow(table, true)
