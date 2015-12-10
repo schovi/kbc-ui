@@ -129,6 +129,7 @@ module.exports = React.createClass
         @_handleExportChange(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
+      deleteTableFn: @_removeTableExport
 
   _prepareTableUploadData: (table) ->
     tableId = table.get('id')
