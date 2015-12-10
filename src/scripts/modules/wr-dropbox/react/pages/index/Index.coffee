@@ -1,11 +1,12 @@
 React = require 'react'
 {fromJS, Map, List} = require('immutable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+{Button} = require 'react-bootstrap'
 classnames = require 'classnames'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 {Loader, Check} = require 'kbc-react-components'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
-
+AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 SearchRow = require('../../../../../react/common/SearchRow').default
@@ -59,12 +60,39 @@ module.exports = React.createClass
       @_renderMainContent()
       @_renderSideBar()
 
+  _renderAddNewTable: ->
+    data = @state.localState.get('newTable', Map())
+    updateStateFn = (path, newData) =>
+      @_updateLocalState(['newTable'].concat(path), newData)
+    span null,
+      React.createElement Button,
+        onClick: ->
+          updateStateFn(['show'], true)
+        bsStyle: 'success'
+      ,
+        '+ Add New Table'
+      React.createElement AddNewTableModal,
+
+        show: data.get('show', false)
+        onHideFn: ->
+          updateStateFn([], Map())
+        selectedTableId: data.get('tableId')
+        onSetTableIdFn: (tableId) ->
+          updateStateFn(['tableId'], tableId)
+        configuredTables: Map()
+        onSaveFn: (tableId) ->
+
+
+
   _renderMainContent: ->
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
-        ComponentDescription
-          componentId: 'wr-dropbox'
-          configId: @state.configId
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: 'wr-dropbox'
+            configId: @state.configId
+        div className: 'col-sm-4 kbc-buttons text-right',
+          @_renderAddNewTable()
       if @state.hasCredentials
         React.createElement SearchRow,
           className: 'row kbc-search-row'
