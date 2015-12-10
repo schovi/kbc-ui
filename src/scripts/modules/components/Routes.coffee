@@ -5,8 +5,7 @@ ComponentsIndex = require('./react/pages/ComponentsIndex')
 NewComponent = require('./react/pages/NewComponent').default
 NewComponentButton = require './react/components/NewComponentButton'
 
-
-NewComponentFormPage = require './react/pages/new-component-form/NewComponentForm'
+ComponentDetail = require './react/pages/component-detail/ComponentDetail'
 
 ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 ComponentsStore = require './stores/ComponentsStore'
@@ -22,7 +21,10 @@ goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxExtractorRoutes = require('../ex-dropbox/routes').default
 dropoxWriterRoutes = require '../wr-dropbox/routes'
 createDbWriterRoutes = require '../wr-db/routes'
+
 createGenericDetailRoute = require './createGenericDetailRoute'
+createComponentRoute = require('./createComponentRoute').default
+
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
@@ -52,16 +54,6 @@ routes =
       name: 'new-application'
       title: 'New Application'
       defaultRouteHandler: application(NewComponent)
-      childRoutes: [
-        name: 'new-application-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ]
     ,
       appGeneeaRoutes.sentimentAnalysis
     ,
@@ -75,9 +67,9 @@ routes =
     ,
       appGeneeaRoutes.entityRecognition
     ,
-      geneeaGeneralRoutes
+      createComponentRoute 'geneea-nlp-analysis', [geneeaGeneralRoutes]
     ,
-      customScienceRoutes
+      createComponentRoute 'custom-science', [customScienceRoutes]
     ,
       createGenericDetailRoute 'application'
     ]
@@ -94,27 +86,19 @@ routes =
       name: 'new-extractor'
       title: 'New Extractor'
       defaultRouteHandler: extractor(NewComponent)
-      childRoutes: [
-        name: 'new-extractor-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ],
-      exDbRoutes
     ,
-      exGdriveGoogleRoutes
+      createComponentRoute 'ex-db', [exDbRoutes]
     ,
-      exGanalRoutes
+      createComponentRoute 'ex-google-drive', [exGdriveGoogleRoutes]
     ,
-      adformRoutes
+      createComponentRoute 'ex-google-analytics', [exGanalRoutes]
     ,
-      dropoxExtractorRoutes
+      createComponentRoute 'ex-adform', [adformRoutes]
+    ,
+      createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
     ,
       createGenericDetailRoute 'extractor'
+
     ]
 
   writers:
@@ -129,38 +113,27 @@ routes =
       name: 'new-writer'
       title: 'New Writer'
       defaultRouteHandler: writer(NewComponent)
-      childRoutes: [
-        name: 'new-writer-form'
-        title: (routerState) ->
-          componentId = routerState.getIn ['params', 'componentId']
-          ComponentsStore.getComponent(componentId).get 'name'
-        path: ':componentId'
-        handler: NewComponentFormPage
-        requireData: (params) ->
-          ComponentsActionCreators.loadComponent params.componentId
-      ]
     ,
-      goodDataWriterRoutes
+      createComponentRoute 'gooddata-writer', [goodDataWriterRoutes]
     ,
-      dropoxWriterRoutes
+      createComponentRoute 'wr-dropbox', [dropoxWriterRoutes]
     ,
-      tdeRoutes
+      createComponentRoute 'tde-exporter', [tdeRoutes]
     ,
-      googleDriveWriterRoutes
+      createComponentRoute 'wr-google-drive', [googleDriveWriterRoutes]
     ,
-      createDbWriterRoutes('wr-db', 'mysql', true)
+      createComponentRoute 'wr-db', [createDbWriterRoutes('wr-db', 'mysql', true)]
     ,
-      createDbWriterRoutes('wr-db-mysql', 'mysql', true)
+      createComponentRoute 'wr-db-mysql', [createDbWriterRoutes('wr-db-mysql', 'mysql', true)]
     ,
-      createDbWriterRoutes('wr-db-oracle', 'oracle', false)
+      createComponentRoute 'wr-db-oracle', [createDbWriterRoutes('wr-db-oracle', 'oracle', false)]
     ,
-      createDbWriterRoutes('wr-db-redshift', 'redshift', true)
+      createComponentRoute 'wr-db-redshift', [createDbWriterRoutes('wr-db-redshift', 'redshift', true)]
     ,
-      createDbWriterRoutes('wr-tableau', 'mysql', true)
+      createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
       createGenericDetailRoute 'writer'
 
     ]
-
 
 module.exports = routes

@@ -1,170 +1,170 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Keboola Connection</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <meta charset="utf-8">
+  <title>Keboola Connection</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
 </head>
 <body>
 <section id="react"></section>
 <script src="/scripts/bundle.js"></script>
 <script>
-    // New zendesk widget global mock
-    var zE = function() {};
-    zE.activate = function(options) { console.log('activate', options); alert('This will open Zendesk Widget on production');};
-    zE.hide = function() {console.log('hide')};
+  // New zendesk widget global mock
+  var zE = function() {};
+  zE.activate = function(options) { console.log('activate', options); alert('This will open Zendesk Widget on production');};
+  zE.hide = function() {console.log('hide')};
 
-    (function(kbcApp) {
-        var organizations = [
-            {
-                "name": "Keboola Demo",
+  (function(kbcApp) {
+    var organizations = [
+      {
+        "name": "Keboola Demo",
+        "id": 1,
+        "isAdmin": false,
+        "hasAccess": true,
+        "projects": [
+          {
+            "id": 3,
+            "name": "Martinuv",
+            "isDisabled": false
+          },
+          {
+            "id": 6,
+            "name": "novej",
+            "isDisabled": false
+          },
+          {
+            "id": 7,
+            "name": "Shared Config",
+            "isDisabled": false
+          },
+          {
+            "id": 4,
+            "name": "Tests PHP Client",
+            "isDisabled": true,
+            "disabledReason": "Redshift maintenance"
+          }
+        ]
+      },
+      {
+        "name": "Keboola CZ",
+        "id": "2",
+        "isAdmin": true,
+        "hasAccess": false,
+        "projects": [
+          {
+            "id": 8,
+            "name": "Another",
+            "isDisabled": false
+          }
+        ]
+      },
+      {
+        "name": "Without Projects",
+        "id": "2",
+        "isAdmin": true,
+        "hasAccess": true,
+        "projects": []
+      }
+    ];
+
+    kbcApp.helpers.Promise.longStackTraces();
+    kbcApp
+      .helpers
+      .Promise
+      .props({
+        components:  kbcApp.helpers
+          .request('GET', 'https://connection.keboola.com/v2/storage')
+          .promise()
+          .then(function(response) {
+            return response.body;
+          })
+        ,
+        token: kbcApp.helpers
+          .request('GET', 'https://connection.keboola.com/v2/storage/tokens/verify')
+          .set('X-StorageApi-Token', kbcApp.helpers.getUrlParameterByName('token', window.location.search))
+          .promise()
+          .then(function(response) {
+            return response.body;
+          })
+      })
+      .catch(function(error) {
+        alert('Error loading initial data ' + error);
+      })
+      .then(function(params) {
+        kbcApp.start({
+          "data": {
+            "components": params.components.components,
+            "organizations": organizations,
+            "maintainers": [
+              {
                 "id": 1,
-                "isAdmin": false,
-                "hasAccess": true,
-                "projects": [
-                    {
-                        "id": 3,
-                        "name": "Martinuv",
-                        "isDisabled": false
-                    },
-                    {
-                        "id": 6,
-                        "name": "novej",
-                        "isDisabled": false
-                    },
-                    {
-                        "id": 7,
-                        "name": "Shared Config",
-                        "isDisabled": false
-                    },
-                    {
-                        "id": 4,
-                        "name": "Tests PHP Client",
-                        "isDisabled": true,
-                        "disabledReason": "Redshift maintenance"
-                    }
-                ]
+                "name": "Keboola Testing"
+              },
+              {
+                "id": 2,
+                "name": "Keboola Data"
+              }
+            ],
+            "sapi": {
+              "url": "https://connection.keboola.com",
+              "token": params.token
             },
-            {
-                "name": "Keboola CZ",
-                "id": "2",
-                "isAdmin": true,
-                "hasAccess": false,
-                "projects": [
-                  {
-                    "id": 8,
-                    "name": "Another",
-                    "isDisabled": false
-                  }
-                ]
+            "tokenStats": {
+              "totalCount": 56,
+              "adminCount": 12
             },
-            {
-                "name": "Without Projects",
-                "id": "2",
-                "isAdmin": true,
-                "hasAccess": true,
-                "projects": []
-            }
-            ];
-
-        kbcApp.helpers.Promise.longStackTraces();
-        kbcApp
-          .helpers
-          .Promise
-          .props({
-            components:  kbcApp.helpers
-              .request('GET', 'https://connection.keboola.com/v2/storage')
-              .promise()
-              .then(function(response) {
-                return response.body;
-              })
-            ,
-            token: kbcApp.helpers
-              .request('GET', 'https://connection.keboola.com/v2/storage/tokens/verify')
-              .set('X-StorageApi-Token', kbcApp.helpers.getUrlParameterByName('token', window.location.search))
-              .promise()
-              .then(function(response) {
-                return response.body;
-              })
-          })
-          .catch(function(error) {
-            alert('Error loading initial data ' + error);
-          })
-          .then(function(params) {
-            kbcApp.start({
-              "data": {
-                "components": params.components.components,
-                "organizations": organizations,
-                "maintainers": [
-                  {
-                    "id": 1,
-                    "name": "Keboola Testing"
-                  },
-                  {
-                    "id": 2,
-                    "name": "Keboola Data"
-                  }
-                ],
-                "sapi": {
-                  "url": "https://connection.keboola.com",
-                  "token": params.token
+            "kbc": {
+              "projectBaseUrl": "/",
+              "scriptsBasePath": "",
+              "canCreateProject": true,
+              "canManageApps": true,
+              "canDoSupport": true,
+              "xsrfToken": "hovno",
+              "urlTemplates": {
+                "createProject": "/admin/projects-new/create-project",
+                "syrupJobsMonitoring": "http://syrup-kibana.internal.keboola.com:5601/#/dashboard/Overview?_g=(time:(from:now-24h,mode:quick,to:now))",
+                "home": "/admin/projects",
+                "manageApps": "/admin/manage-apps",
+                "logout": "/admin/auth/logout",
+                "changePassword": "/admin/account/change-password",
+                "project": "/admin/projects/<%= projectId %>/",
+                "legacyExtractorDetail": "/admin/projects/<%= projectId %>/extractor/?app=<%= appId %>#/?config=<%= configId %>",
+                "legacyWriterDetail": "/admin/projects/<%= projectId %>/writer/?app=<%= appId %>#/?config=<%= configId %>",
+                "organization": "/admin/organizations/<%= organizationId %>",
+                "maintainer": "/admin/maintainers/<%= maintainerId %>"
+              },
+              "zendesk": {
+                "project": {
+                  "dropboxId": "20299883",
+                  "url": "https:\/\/keboola-project.zendesk.com"
                 },
-                "tokenStats": {
-                  "totalCount": 56,
-                  "adminCount": 12
-                },
-                "kbc": {
-                  "projectBaseUrl": "/",
-                  "scriptsBasePath": "",
-                  "canCreateProject": true,
-                  "canManageApps": true,
-                  "canDoSupport": true,
-                  "xsrfToken": "hovno",
-                  "urlTemplates": {
-                    "createProject": "/admin/projects-new/create-project",
-                    "syrupJobsMonitoring": "http://syrup-kibana.internal.keboola.com:5601/#/dashboard/Overview?_g=(time:(from:now-24h,mode:quick,to:now))",
-                    "home": "/admin/projects",
-                    "manageApps": "/admin/manage-apps",
-                    "logout": "/admin/auth/logout",
-                    "changePassword": "/admin/account/change-password",
-                    "project": "/admin/projects/<%= projectId %>/",
-                    "legacyExtractorDetail": "/admin/projects/<%= projectId %>/extractor/?app=<%= appId %>#/?config=<%= configId %>",
-                    "legacyWriterDetail": "/admin/projects/<%= projectId %>/writer/?app=<%= appId %>#/?config=<%= configId %>",
-                    "organization": "/admin/organizations/<%= organizationId %>",
-                    "maintainer": "/admin/maintainers/<%= maintainerId %>"
-                  },
-                  "zendesk": {
-                    "project": {
-                      "dropboxId": "20299883",
-                      "url": "https:\/\/keboola-project.zendesk.com"
-                    },
-                    "direct": {
-                      "dropboxId": "20299883",
-                      "url": "https:\/\/keboola-direct.zendesk.com"
-                    }
-                  },
-                  "adminEmails": ["martin@keboola.com"],
-                  "goodDataTokens": {
-                    "developer": "developer",
-                    "production": "production"
-                  },
-                  "admin": {
-                    "id": 1,
-                    "name": "Some Developer",
-                    "email": "example@example.com",
-                    "features": ["ui-devel-preview"],
-                    "profileImageUrl": "https://secure.gravatar.com/avatar/hovno?s=40"
-
-                  }
+                "direct": {
+                  "dropboxId": "20299883",
+                  "url": "https:\/\/keboola-direct.zendesk.com"
                 }
               },
-              "rootNode": document.getElementById('react'),
-              "locationMode": 'hash'
-            });
-          });
+              "adminEmails": ["martin@keboola.com"],
+              "goodDataTokens": {
+                "developer": "developer",
+                "production": "production"
+              },
+              "admin": {
+                "id": 1,
+                "name": "Some Developer",
+                "email": "example@example.com",
+                "features": ["ui-devel-preview"],
+                "profileImageUrl": "https://secure.gravatar.com/avatar/hovno?s=40"
 
-    })(kbcApp);
+              }
+            }
+          },
+          "rootNode": document.getElementById('react'),
+          "locationMode": 'hash'
+        });
+      });
+
+  })(kbcApp);
 
 </script>
 </body>

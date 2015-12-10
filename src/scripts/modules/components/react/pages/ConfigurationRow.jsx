@@ -69,6 +69,6 @@ export default React.createClass({
   },
 
   handleDelete() {
-    InstalledComponentsActionCreators.deleteConfiguration(this.props.componentId, this.props.config.get('id'));
+    InstalledComponentsActionCreators.deleteConfiguration(this.props.componentId, this.props.config.get('id'), false);
   }
 });

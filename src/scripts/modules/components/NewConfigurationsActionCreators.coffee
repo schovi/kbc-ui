@@ -25,10 +25,6 @@ module.exports =
       type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_CANCEL
       componentId: componentId
 
-    component = ComponentsStore.getComponent componentId
-    RoutesStore.getRouter().transitionTo "new-#{component.get('type')}"
-
-
   saveConfiguration: (componentId) ->
     configuration = NewConfigurationsStore.getConfiguration componentId
 
