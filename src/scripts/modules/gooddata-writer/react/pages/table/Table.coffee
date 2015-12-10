@@ -39,8 +39,6 @@ module.exports = React.createClass
     dataPreview: null
 
   componentDidMount: ->
-    if not @state.isEditingColumns and @_isAllColumnsIgnored()
-      @_handleEditStart()
     component = @
     storageApi
     .exportTable @state.table.get('id'),
@@ -48,11 +46,6 @@ module.exports = React.createClass
     .then (csv) ->
       component.setState
         dataPreview: csv
-
-  _isAllColumnsIgnored: ->
-    this.state.columns.reduce((memo, c) ->
-      memo && c.get('type') == 'IGNORE'
-    , true)
 
   _handleEditStart: ->
     actionCreators.startTableColumnsEdit(@state.configurationId, @state.table.get 'id')
@@ -100,7 +93,7 @@ module.exports = React.createClass
           EditButtons
             isEditing: @state.isEditingColumns
             isSaving: @state.isSavingColumns
-            isDisabled: @state.invalidColumns.count() > 0 or @_isAllColumnsIgnored()
+            isDisabled: @state.invalidColumns.count() > 0
             onCancel: @_handleEditCancel
             onSave: @_handleEditSave
             onEditStart: @_handleEditStart

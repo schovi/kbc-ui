@@ -13,13 +13,8 @@ module.exports = React.createClass
     onSelectTableFn: React.PropTypes.func.isRequired
     placeholder: React.PropTypes.string.isRequired
     value: React.PropTypes.string.isRequired
-    excludeTableFn: React.PropTypes.func
-    allowedBuckets: React.PropTypes.Array
+    excludeTableFn: React.PropTypes.func.isRequired
 
-  getDefaultProps: ->
-    excludeTableFn: (tableId) ->
-      return false
-    allowedBuckets: ['in','out']
 
   getStateFromStores: ->
     isTablesLoading = storageTablesStore.getIsLoading()
@@ -52,8 +47,7 @@ module.exports = React.createClass
     tables = @state.tables
     tables = tables.filter (table) =>
       stage = table.get('bucket').get('stage')
-      excludeTable = @props.excludeTableFn(table.get('id'))
-      stage in @props.allowedBuckets and not excludeTable
+      stage in ['in','out'] and not @props.excludeTableFn(table.get('id'))
     tables = tables.sort (a, b) ->
       a.get('id').localeCompare(b.get('id'))
     tables = tables.map (table) ->

@@ -1,3 +1,4 @@
+
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
 ApplicationStore = require '../../stores/ApplicationStore'
@@ -29,46 +30,37 @@ module.exports =
       response.body
 
   getWriterTables: (configurationId) ->
-    createRequest('GET', "v2/" + configurationId + "/tables")
-    #.query config: configurationId
+    createRequest('GET', "tables")
+    .query config: configurationId
     .promise()
     .then((response) ->
-      response.body
+      response.body.tables
     )
 
-  deleteWriterTable: (configurationId, tableId) ->
-    createRequest('DELETE', "v2/" + configurationId + "/tables/" + tableId)
-    .promise()
-    .then (response) ->
-      response.body
-
-  addWriterTable: (configurationId, tableId, data) ->
-    createRequest('POST', "v2/" + configurationId + "/tables/" + tableId)
-    .send data.toJS()
-    .promise()
-    .then (response) ->
-      response.body
-
   getTableDetail: (configurationId, tableId) ->
-    createRequest('GET', "v2/" + configurationId + "/tables/" + tableId)
-    .query include: 'columns'
+    createRequest('GET', 'tables')
+    .query config: configurationId
+    .query tableId: tableId
     .promise()
     .then (response) ->
-      response.body
+      response.body.table
 
   getReferenceableTables: (configurationId) ->
-    createRequest('GET', "v2/" + configurationId + "/referenceable-tables")
+    createRequest('GET', 'tables')
+    .query config: configurationId
+    .query connection: true
     .promise()
     .then (response) ->
-      response.body
+      response.body.tables
 
   updateTable: (configurationId, tableId, data) ->
-    # data = Immutable.fromJS(data)
-    #   .set 'config', configurationId
-    #   .set 'tableId', tableId
+    data = Immutable.fromJS(data)
+      .set 'config', configurationId
+      .set 'tableId', tableId
 
-    createRequest('PATCH', "v2/" + configurationId + "/tables/" + tableId)
-    .send data
+    createRequest('POST', 'tables')
+    .query config: configurationId
+    .send data.toJS()
     .promise()
     .then (response) ->
       response.body

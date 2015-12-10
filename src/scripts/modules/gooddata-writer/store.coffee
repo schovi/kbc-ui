@@ -3,12 +3,10 @@ Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
 fuzzy = require 'fuzzy'
-_ = require 'underscore'
 
 {ColumnTypes, DataTypes} = constants
-{fromJS, Map, List} = Immutable
+{Map, List} = Immutable
 
-NonTitleTypes = [ColumnTypes.IGNORE, ColumnTypes.DATE, ColumnTypes.REFERENCE]
 
 _store = Map
   writers: Map()
@@ -16,13 +14,6 @@ _store = Map
   tableColumns: Map()
   filters: Map() # by [writer_id][tables] = value
   referenceableTables: Map()
-  pending: Map()
-
-extendTable = (table) ->
-  tableId = table.get('id') or table.get('tableId')
-  if _.isEmpty(table.get('title'))
-    table = table.set('title', tableId)
-  return table
 
 
 modifyColumns =  (columns, newColumn, currentColumn) ->
@@ -54,14 +45,9 @@ modifyColumns =  (columns, newColumn, currentColumn) ->
 
   # column type changed
   if newColumn.get('type') != currentColumn.get('type')
-    title = currentColumn.get('title')
-    if newColumn.get('type') not in NonTitleTypes and not title
-      title = newColumn.get('name')
-
     columns = columns.map (column) ->
       if column.get('name') == newColumn.get('name')
         columnDefaults =
-          title: title
           dataType: null
           dataTypeSize: null
           reference: null
@@ -99,12 +85,7 @@ getInvalidColumns = (columns) ->
   columns
   .filter (column) ->
     # empty name
-    isIgnored = column.get('type') == ColumnTypes.IGNORE
-    if isIgnored
-      return false
-
-    title = column.get('title')
-    return true if (not title or title.trim() == '') and (column.get('type') not in NonTitleTypes)
+    return true if column.get('title').trim() == ''
 
     # reference not set
     if [ColumnTypes.LABEL, ColumnTypes.HYPERLINK].indexOf(column.get('type')) >= 0
@@ -141,24 +122,17 @@ referencesForColumns = (columns) ->
       sortColumns: sortColumns
     )
 
-# extendTable = (table) ->
-#   if not table.has('id')
-#     table = table.set('id', table.get('tableId')) #ui fallback to id
+extendTable = (table) ->
+  table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
+  if !table.get('name')?.length
+    table = table.set('name', table.get('id')) # fallback to table id if name not set
 
-#   table = table.set('sapiName', table.get('id').replace(table.get('bucket') + '.', ''))
-#   if !table.get('name')?.length
-#     table = table.set('name', table.get('id')) # fallback to table id if name not set
-
-#   if !table.get('title')?.length
-#     table = table.set('title', table.get('id'))
-#   table
+  if !table.get('title')?.length
+    table = table.set('title', table.get('id'))
+  table
 
 GoodDataWriterStore = StoreUtils.createStore
-  getDeletingTables: (configurationId) ->
-    _store.getIn ['pending', 'deletingTables', configurationId], Map()
 
-  isAddingNewTable: (configurationId) ->
-    _store.hasIn ['pending', 'adding', configurationId]
 
   hasWriter: (configurationId) ->
     _store.hasIn ['writers', configurationId, 'config']
@@ -179,15 +153,12 @@ GoodDataWriterStore = StoreUtils.createStore
     _store.getIn(['referenceableTables', configurationId]).filter (name, id) ->
       id != tableId
 
-  hasReferenceableTables: (configurationId) ->
-    _store.hasIn(['referenceableTables', configurationId])
-
   getWriterTablesByBucket: (configurationId) ->
     _store
-    .getIn(['tables', configurationId], Map())
+    .getIn(['tables', configurationId])
     .toSeq()
-    #.groupBy (table) ->
-    #  table.getIn ['data', 'bucket']
+    .groupBy (table) ->
+      table.getIn ['data', 'bucket']
 
   getWriterTablesByBucketFiltered: (configurationId) ->
     filter = @getWriterTablesFilter configurationId
@@ -229,55 +200,6 @@ dispatcher.register (payload) ->
 
   switch action.type
 
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_START
-      configId = action.configurationId
-      tableId = action.tableId
-      _store = _store.setIn ['pending', 'deletingTables', configId, tableId], true
-      GoodDataWriterStore.emitChange()
-
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_SUCCESS
-      configId = action.configurationId
-      tableId = action.tableId
-      _store = _store.deleteIn ['pending', 'deletingTables', configId, tableId]
-      _store = _store.deleteIn ['tables', configId, tableId]
-      _store = _store.deleteIn ['tableColumns', configId, tableId]
-      GoodDataWriterStore.emitChange()
-
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_ERROR
-      configId = action.configurationId
-      tableId = action.tableId
-      _store = _store.deleteIn ['pending', 'deletingTables', configId, tableId]
-      GoodDataWriterStore.emitChange()
-
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_START
-      configId = action.configurationId
-      tableId = action.tableId
-      _store = _store.setIn ['pending', 'adding', configId], true
-      GoodDataWriterStore.emitChange()
-
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
-      configId = action.configurationId
-      tableId = action.tableId
-      data = action.data or {}
-      _store = _store.deleteIn ['pending', 'adding', configId]
-      tables = _store.getIn ['tables', configId]
-      data['id'] = tableId
-      newTable = fromJS
-        isLoading: false
-        id: tableId
-        editingFields: Map()
-        savingFields: List()
-        pendingActions: List()
-        data: fromJS(data)
-      tables = tables.set tableId, newTable
-      _store = _store.setIn(['tables', configId], tables)
-      GoodDataWriterStore.emitChange()
-
-    when constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
-      tableId = action.tableId
-      _store = _store.deleteIn ['pending', 'adding', configId]
-      GoodDataWriterStore.emitChange()
-
     when constants.ActionTypes.GOOD_DATA_WRITER_TABLES_FILTER_CHANGE
       _store = _store.setIn ['filters', action.configurationId, 'tables'], action.filter
       GoodDataWriterStore.emitChange()
@@ -295,22 +217,21 @@ dispatcher.register (payload) ->
       .fromJS(action.configuration.tables)
       .toOrderedMap()
       .map (table) ->
-        tableId = table.get('id') or table.get('tableId')
         Map
           isLoading: false
-          id: tableId
+          id: table.get 'id'
           editingFields: Map()
           savingFields: List()
           pendingActions: List()
           data: extendTable(table)
       .mapKeys (key, table) ->
-        table.get('id')
+        table.get 'id'
 
       # open bucket it there is only one
       bucketToggles = Map()
-      #buckets = tablesById.groupBy (table) -> table.getIn ['data', 'bucket']
-      #if buckets.count() == 1
-      #  bucketToggles = bucketToggles.set(buckets.keySeq().first(), true)
+      buckets = tablesById.groupBy (table) -> table.getIn ['data', 'bucket']
+      if buckets.count() == 1
+        bucketToggles = bucketToggles.set(buckets.keySeq().first(), true)
 
       _store = _store.withMutations (store) ->
         store
@@ -375,10 +296,12 @@ dispatcher.register (payload) ->
           column
 
       table = Immutable.fromJS(action.table)
+        .set 'bucket', action.table.id.split('.',2).join('.') # bucket is not returned by api
+
       _store = _store.withMutations (store) ->
         store
-        .setIn ['tables', action.configurationId, table.get('tableId'), 'data'], extendTable(table.remove('columns'))
-        .setIn ['tableColumns', action.configurationId, table.get('tableId'), 'current'], columns
+        .setIn ['tables', action.configurationId, table.get('id'), 'data'], extendTable(table.remove('columns'))
+        .setIn ['tableColumns', action.configurationId, table.get('id'), 'current'], columns
       GoodDataWriterStore.emitChange()
 
 
@@ -388,18 +311,14 @@ dispatcher.register (payload) ->
 
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_START
-      _store = _store.withMutations( (store) ->
+      _store = _store.withMutations (store) ->
         columns =  store.getIn ['tableColumns', action.configurationId, action.tableId, 'current']
-        columns = columns.map((c) ->
-          if not c.get('title') and (c.get('type') != ColumnTypes.IGNORE)
-            return c.set('title', c.get('name'))
-          else
-            return c
-        )
         store
-        .setIn(['tableColumns', action.configurationId, action.tableId, 'editing'], columns)
-        .setIn(['tableColumns', action.configurationId, action.tableId, 'references'], referencesForColumns(columns))
-      )
+        .setIn ['tableColumns', action.configurationId, action.tableId, 'editing'],
+          columns
+        .setIn ['tableColumns', action.configurationId, action.tableId, 'references'],
+          referencesForColumns(columns)
+
       GoodDataWriterStore.emitChange()
 
     when constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_CANCEL

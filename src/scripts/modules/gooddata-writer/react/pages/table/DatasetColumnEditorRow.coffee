@@ -52,12 +52,11 @@ module.exports = React.createClass
       td className: 'kbc-static-cell',
         column.get('name'),
       td null,
-        if not @_isIgnoreType() and @props.column.get('type') not in [ColumnTypes.DATE, ColumnTypes.REFERENCE]
-          @_createInput
-            type: 'text'
-            value: column.get 'title'
-            disabled: @props.isSaving
-            onChange: @_handleInputChange.bind @, 'title'
+        @_createInput
+          type: 'text'
+          value: column.get 'title'
+          disabled: @props.isSaving
+          onChange: @_handleInputChange.bind @, 'title'
       td null,
         @_createInput
           type: 'select'
@@ -73,27 +72,22 @@ module.exports = React.createClass
         @_renderDateSelect()
 
       td null,
-        if not @_isIgnoreType()
-          @_renderSortLabelSelect()
+        @_renderSortLabelSelect()
       td null,
-        if not @_isIgnoreType()
-          @_renderSortOrderSelect()
+        @_renderSortOrderSelect()
       td null,
-        if not @_isIgnoreType()
-          @_renderDataTypeSelect()
+        @_renderDataTypeSelect()
       if @props.showIdentifier
         td null,
-          if not @_isIgnoreType()
-            @_createInput
-              type: 'text'
-              value: column.get 'identifier'
-              disabled: @props.isExported || @props.isSaving
-              onChange: @_handleInputChange.bind @, 'identifier'
+          @_createInput
+            type: 'text'
+            value: column.get 'identifier'
+            disabled: @props.isExported || @props.isSaving
+            onChange: @_handleInputChange.bind @, 'identifier'
       if @props.showIdentifier
         td null,
-          if not @_isIgnoreType()
-            @_renderIdentifierLabel()
-            @_renderIdentifierTime()
+          @_renderIdentifierLabel()
+          @_renderIdentifierTime()
       td null,
         ColumnDataPreview
           columnName: @props.column.get 'name'
@@ -260,6 +254,3 @@ module.exports = React.createClass
       ,
         value
     .toArray()
-
-  _isIgnoreType: ->
-    @props.column.get('type') == ColumnTypes.IGNORE
