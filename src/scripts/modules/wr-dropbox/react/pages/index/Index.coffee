@@ -8,6 +8,7 @@ LatestJobs = require '../../../../components/react/components/SidebarJobs'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 ComponentDescription = React.createFactory(ComponentDescription)
 SearchRow = require('../../../../../react/common/SearchRow').default
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -95,14 +96,15 @@ module.exports = React.createClass
           ComponentDescription
             componentId: 'wr-dropbox'
             configId: @state.configId
-        div className: 'col-sm-4 kbc-buttons text-right',
-          @_renderAddNewTable()
-      if @state.hasCredentials
+        if @state.hasCredentials and @_getInputTables().count() > 0
+          div className: 'col-sm-4 kbc-buttons text-right',
+            @_renderAddNewTable()
+      if @state.hasCredentials and @_getInputTables().count() > 0
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery')
-      if @state.hasCredentials
+      if @state.hasCredentials and @_getInputTables().count() > 0
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
@@ -113,16 +115,19 @@ module.exports = React.createClass
           isBucketToggledFn: @_isBucketToggled
           showAllTables: false
       else
-        div className: 'row component-empty-state text-center',
-          div null,
-            p null, 'No Dropbox account authorized.'
-            ModalTrigger
-              modal: AuthorizeModal
-                configId: @state.configId
-            ,
-              span className: 'btn btn-success',
-                i className: 'fa fa-fw fa-dropbox'
-                ' Authorize Dropbox Account'
+        React.createElement ComponentEmptyState, null,
+          if not @state.hasCredentials
+            div null,
+              p null, 'No Dropbox account authorized.'
+              ModalTrigger
+                modal: AuthorizeModal
+                  configId: @state.configId
+              ,
+                span className: 'btn btn-success',
+                  i className: 'fa fa-fw fa-dropbox'
+                  ' Authorize Dropbox Account'
+          else
+            @_renderNoTables()
 
   _renderTableRow: (table) ->
     TableRow
@@ -246,6 +251,11 @@ module.exports = React.createClass
         else
           React.DOM.span className: 'fa fa-fw fa-times'
         ' Reset Authorization'
+
+  _renderNoTables: ->
+    div null,
+      p null, 'No tables configured.'
+      @_renderAddNewTable()
 
   _deleteCredentials: ->
     OAuthActions.deleteCredentials(componentId, @state.configId)
