@@ -109,7 +109,7 @@ module.exports = React.createClass
 
 
   _is3rdPartyApp: ->
-    @props.component.hasIn(['data','vendor']) || @props.component.get('flags', Immutable.List()).contains('3rdParty')
+    @props.component.hasIn(['data','vendor']) || @props.component.get('flags').contains('3rdParty')
 
   _isLicenseAgreed: ->
     # if is not 3rdparty app then license is always agreed by default

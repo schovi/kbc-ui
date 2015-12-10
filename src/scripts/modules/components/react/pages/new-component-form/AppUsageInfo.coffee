@@ -1,5 +1,4 @@
 React = require 'react'
-Immutable = require 'immutable'
 is3rdParty = require('../../../is3rdParty').default
 
 {div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
@@ -19,21 +18,21 @@ module.exports = React.createClass
         td null,
           'This is a 3rd party ' + @getAppType()
 
-    if (@props.component.get("flags", Immutable.List()).contains("appInfo.fee"))
+    if (@props.component.get("flags").contains("appInfo.fee"))
       features.push tr {key: "fee"},
         td null,
           em {className: "fa fa-money fa-fw kbcLicenseIcon"}
         td null,
           'There is an extra charge to use this ' + @getAppType()
 
-    if (@props.component.get("flags", Immutable.List()).contains("appInfo.dataIn"))
+    if (@props.component.get("flags").contains("appInfo.dataIn"))
       features.push tr {key: "dataIn"},
         td null,
           em {className: "fa fa-cloud-download fa-fw kbcLicenseIcon"}
         td null,
           "This #{@getAppType()} extracts data from outside sources"
 
-    if (@props.component.get("flags", Immutable.List()).contains("appInfo.dataOut"))
+    if (@props.component.get("flags").contains("appInfo.dataOut"))
       features.push tr {key: "dataOut"},
         td null,
           em {className: "fa fa-cloud-upload fa-fw kbcLicenseIcon"}

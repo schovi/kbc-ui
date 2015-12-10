@@ -20,7 +20,7 @@ deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 storeEncodedConfig = (componentId, configId, dataToSave) ->
   component = InstalledComponentsStore.getComponent(componentId)
   dataToSave = {configuration: JSON.stringify(dataToSave)}
-  if component.get('flags', Immutable.List()).includes('encrypt')
+  if component.get('flags').includes('encrypt')
     installedComponentsApi
     .updateComponentConfigurationEncrypted(component.get('uri'), configId, dataToSave)
   else

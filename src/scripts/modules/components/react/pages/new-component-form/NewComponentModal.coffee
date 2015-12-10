@@ -1,5 +1,4 @@
 React = require 'react'
-Immutable = require 'immutable'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -62,8 +61,8 @@ module.exports = React.createClass
   _getFormHandler: ->
     hasUI = @props.component.get('hasUI') or
       hiddenComponents.hasDevelPreview(@props.component.get('id')) or
-      @props.component.get('flags', Immutable.List()).includes('genericUI') or
-      @props.component.get('flags', Immutable.List()).includes('genericDockerUI')
+      @props.component.get('flags').includes('genericUI') or
+      @props.component.get('flags').includes('genericDockerUI')
 
     if !hasUI
       return ManualConfigurationForm

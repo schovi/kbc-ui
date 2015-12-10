@@ -1,7 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
 {Map} = require 'immutable'
-Immutable = require 'immutable'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
@@ -33,7 +32,7 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     components = ComponentsStore.getFilteredForType(@props.type).filter( (component) ->
-      not component.get('flags', Immutable.List()).includes('excludeFromNewList'))
+      not component.get('flags').includes('excludeFromNewList'))
 
     installedComponents: InstalledComponentsStore.getAllForType(@props.type)
     deletingConfigurations: InstalledComponentsStore.getDeletingConfigurations()

@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import Immutable from 'immutable';
 
 import ApplicationStore from '../../stores/ApplicationStore';
 
@@ -37,7 +36,7 @@ export default React.createClass({
     if (!component) {
       return false;
     }
-    return !!component.get('flags', Immutable.List()).contains('3rdParty');
+    return !!component.get('flags').contains('3rdParty');
   },
 
   get3rdPartyLabel() {
