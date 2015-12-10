@@ -79,8 +79,9 @@ module.exports = React.createClass
         selectedTableId: data.get('tableId')
         onSetTableIdFn: (tableId) ->
           updateStateFn(['tableId'], tableId)
-        configuredTables: Map()
-        onSaveFn: (tableId) ->
+        configuredTables: @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
+        onSaveFn: (tableId) =>
+          @_addTableExport(tableId)
 
 
 
@@ -107,6 +108,7 @@ module.exports = React.createClass
           isTableExportedFn: @_isTableExported
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
+          showAllTables: false
       else
         div className: 'row component-empty-state text-center',
           div null,
