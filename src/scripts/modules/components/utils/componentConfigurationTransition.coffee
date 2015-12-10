@@ -1,3 +1,4 @@
+Immutable = require 'immutable'
 RoutesStore = require '../../../stores/RoutesStore'
 ComponentsStore = require '../stores/ComponentsStore'
 {GENERIC_DETAIL_PREFIX} = require('../Constants').Routes
@@ -10,8 +11,8 @@ module.exports = (componentId, configurationId) ->
       config: configurationId
   else if ComponentsStore.hasComponentLegacyUI(componentId)
     window.location = ComponentsStore.getComponentDetailLegacyUrl(componentId, configurationId)
-  else if components.getIn([componentId, 'flags']).includes('genericUI') or
-      components.getIn([componentId, 'flags']).includes('genericDockerUI')
+  else if components.getIn([componentId, 'flags'], Immutable.List()).includes('genericUI') or
+      components.getIn([componentId, 'flags'], Immutable.List()).includes('genericDockerUI')
     RoutesStore.getRouter().transitionTo GENERIC_DETAIL_PREFIX + components.getIn([componentId, 'type']) + '-config',
       component: componentId
       config: configurationId

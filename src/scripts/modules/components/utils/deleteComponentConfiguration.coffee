@@ -1,3 +1,4 @@
+Immutable = require 'immutable'
 componentHasApi = require './hasComponentApi'
 
 installedComponentsApi = require '../InstalledComponentsApi'
@@ -7,8 +8,8 @@ componentsStore = require '../stores/ComponentsStore'
 module.exports = (componentId, configurationId) ->
   component = componentsStore.getComponent(componentId)
   if componentHasApi(componentId) and
-      !component.get('flags').includes('genericUI') and
-      !component.get('flags').includes('genericDockerUI')
+      !component.get('flags', Immutable.List()).includes('genericUI') and
+      !component.get('flags', Immutable.List()).includes('genericDockerUI')
     syrupApi
     .createRequest(componentId, 'DELETE', "configs/#{configurationId}")
     .promise()

@@ -6,6 +6,7 @@ ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
 componentHasApi = require './hasComponentApi'
 Promise = require 'bluebird'
+Immutable = require 'immutable'
 
 createConfigByApi = (componentId, configuration) ->
   syrupApi
@@ -51,7 +52,7 @@ createGoodDataWriter = (configuration) ->
 
 module.exports = (componentId, configuration) ->
   component = ComponentsStore.getComponent componentId
-  flags = component.get('flags')
+  flags = component.get('flags', Immutable.List())
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
   else if component.get('uri') and
