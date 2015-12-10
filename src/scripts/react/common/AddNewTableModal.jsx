@@ -1,6 +1,5 @@
 import React from 'react';
 import {Modal} from 'react-bootstrap';
-import {Loader} from 'kbc-react-components';
 import SapiTableSelector from '../../modules/components/react/components/SapiTableSelector';
 
 import ConfirmButtons from './ConfirmButtons';
@@ -19,7 +18,6 @@ export default React.createClass({
   },
 
   render() {
-    const loader = this.props.isSaving ? (<Loader/>) : null;
     return (
       <Modal
           onHide={this.props.onHideFn}
@@ -34,7 +32,6 @@ export default React.createClass({
               value={this.props.selectedTableId} />
         </Modal.Body>
         <Modal.Footer>
-          {loader}
           <ConfirmButtons
               isSaving={this.props.isSaving}
               isDisabled={!this.props.selectedTableId}

@@ -62,6 +62,7 @@ module.exports = React.createClass
 
   _renderAddNewTable: ->
     data = @state.localState.get('newTable', Map())
+    selectedTableId = data.get('tableId')
     updateStateFn = (path, newData) =>
       @_updateLocalState(['newTable'].concat(path), newData)
     span null,
@@ -76,12 +77,14 @@ module.exports = React.createClass
         show: data.get('show', false)
         onHideFn: ->
           updateStateFn([], Map())
-        selectedTableId: data.get('tableId')
+        selectedTableId: selectedTableId
         onSetTableIdFn: (tableId) ->
           updateStateFn(['tableId'], tableId)
         configuredTables: @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
         onSaveFn: (tableId) =>
-          @_addTableExport(tableId)
+          @_addTableExport(tableId).then ->
+            updateStateFn([], Map())
+        isSaving: @_isPendingTable(selectedTableId)
 
 
 
@@ -125,8 +128,6 @@ module.exports = React.createClass
     TableRow
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
-      onExportChangeFn: =>
-        @_handleExportChange(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
       deleteTableFn: @_removeTableExport
@@ -246,23 +247,11 @@ module.exports = React.createClass
           React.DOM.span className: 'fa fa-fw fa-times'
         ' Reset Authorization'
 
-
-
   _deleteCredentials: ->
     OAuthActions.deleteCredentials(componentId, @state.configId)
 
-
-
   _updateParmeters: (newParameters) ->
     @_updateAndSaveConfigData(['parameters'], newParameters)
-
-  _handleExportChange: (tableId) ->
-    _handleExport = (newExportStatus) =>
-      if newExportStatus
-        @_addTableExport(tableId)
-      else
-        @_removeTableExport(tableId)
-    return _handleExport
 
   _updateAndSaveConfigData: (path, data) ->
     newData = @state.configData.setIn(path, data)
@@ -298,7 +287,7 @@ module.exports = React.createClass
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in ['out', 'in']
     return buckets
 
 

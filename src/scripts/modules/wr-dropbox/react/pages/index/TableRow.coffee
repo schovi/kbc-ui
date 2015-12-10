@@ -13,7 +13,6 @@ module.exports = React.createClass
     deleteTableFn: React.PropTypes.func.isRequired
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
-    onExportChangeFn: React.PropTypes.func.isRequired
     prepareSingleUploadDataFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
 
