@@ -1,4 +1,3 @@
-
 actionCreators = require './actionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 GoodDataWriterStore = require './store'
@@ -10,7 +9,7 @@ TablePageHeaderButtons = require './react/components/TableHeaderButtons'
 TablePageHeaderExportStatus = require './react/components/TableHeaderExportStatus'
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
 ModelPage = require './react/pages/model/Model'
-
+storageActionCreators = require '../components/StorageActionCreators'
 
 module.exports =
   name: 'gooddata-writer'
@@ -19,12 +18,15 @@ module.exports =
   requireData: [
     (params) ->
       actionCreators.loadConfiguration params.config
+    ,
+      ->
+        storageActionCreators.loadTables()
   ]
+  defaultRouteHandler: IndexPage
+  reloaderHandler: WriterReloader
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
     'GoodData - ' + InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
-  defaultRouteHandler: IndexPage
-  reloaderHandler: WriterReloader
   childRoutes: [
     name: 'gooddata-writer-table'
     path: 'table/:table'
@@ -33,7 +35,7 @@ module.exports =
         actionCreators.loadTableDetail(params.config, params.table)
     ,
       (params) ->
-        actionCreators.loadReferenceableTables(params.config)
+        actionCreators.loadReferencableTables(params.config)
     ]
     title: (routerState) ->
       configId = routerState.getIn ['params', 'config']

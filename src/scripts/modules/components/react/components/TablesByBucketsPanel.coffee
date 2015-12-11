@@ -20,10 +20,11 @@ module.exports = React.createClass
     filterFn: React.PropTypes.func
     searchQuery: React.PropTypes.string #used as filter of tables
     isTableExportedFn: React.PropTypes.func
+    isTableShownFn: React.PropTypes.func # returns true/false whether
+# to show table or not, overides isTableExportedFn
     onToggleBucketFn: React.PropTypes.func
     isBucketToggledFn: React.PropTypes.func
     showAllTables: React.PropTypes.bool
-    toggleShowAllFn: React.PropTypes.func
     configuredTables: React.PropTypes.array
     renderDeletedTableRowFn: React.PropTypes.func
 
@@ -67,16 +68,6 @@ module.exports = React.createClass
             div
               className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
               @_renderBucketPanel 'Nonexisting tables', deletedTables, @props.renderDeletedTableRowFn
-
-        if @props.toggleShowAllFn
-          button
-            onClick: =>
-              @props.toggleShowAllFn()
-            className: 'btn btn-link',
-            if @props.showAllTables
-              'Only Configured Tables'
-            else
-              'All tables'
     else
       @_renderNotFound()
 
@@ -93,7 +84,7 @@ module.exports = React.createClass
           span className: 'tr',
             span className: 'td',
               bucketId
-            if @props.isTableExportedFn and @props.showAllTables
+            if @props.isTableExportedFn and (@props.showAllTables or @props.isTableShownFn)
               span className: 'td text-right',
                 React.createElement ActiveCountBadge,
                   totalCount: tables.size
@@ -187,11 +178,12 @@ module.exports = React.createClass
       tableId = table.get('id')
       return fuzzy.match(query, tableId)
     )
-    if not @props.showAllTables
+    if not @props.showAllTables or @props.isTableShownFn
       newTables = newTables.filter( (table) =>
         tableId = table.get('id')
+        isShown = if @props.isTableShownFn then @props.isTableShownFn(tableId) else false
         isExported = @props.isTableExportedFn(tableId)
-        return isExported
+        return isExported or isShown
       )
     newTables = newTables.sortBy (table) ->
       table.get('id').toLowerCase()
