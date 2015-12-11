@@ -22,6 +22,8 @@ ActiveCountBadge = require './ActiveCountBadge'
 {Tooltip, Confirm} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
 
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 InstalledComponentStore = require '../../../../components/stores/InstalledComponentsStore'
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
@@ -30,7 +32,7 @@ installedComponentsActions = require '../../../../components/InstalledComponents
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
-  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore, StorageTablesStore)]
+  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore, StorageTablesStore, LatestJobsStore)]
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
@@ -42,6 +44,7 @@ module.exports = React.createClass
     filter: goodDataWriterStore.getWriterTablesFilter(config)
     deletingTables: goodDataWriterStore.getDeletingTables(config)
     localState: localState
+    latestJobs: LatestJobsStore.getJobs 'gooddata-writer', config
     storageTables: StorageTablesStore.getAll()
 
   _handleFilterChange: (query) ->
@@ -222,6 +225,9 @@ module.exports = React.createClass
                 else
                   span className: 'kbc-icon-cup fa-fw'
                 ' Delete Writer'
+        React.createElement LatestJobs,
+          jobs: @state.latestJobs
+
 
   _handleBucketSelect: (bucketId, e) ->
     actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId

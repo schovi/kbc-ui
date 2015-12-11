@@ -10,6 +10,7 @@ TablePageHeaderExportStatus = require './react/components/TableHeaderExportStatu
 DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
 ModelPage = require './react/pages/model/Model'
 storageActionCreators = require '../components/StorageActionCreators'
+JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'gooddata-writer'
@@ -22,6 +23,11 @@ module.exports =
       ->
         storageActionCreators.loadTables()
   ]
+  poll:
+    interval: 5
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs('gooddata-writer', params.config)
+
   defaultRouteHandler: IndexPage
   reloaderHandler: WriterReloader
   title: (routerState) ->
