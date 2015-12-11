@@ -1,15 +1,18 @@
 React = require 'react'
 {fromJS, Map, List} = require('immutable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
+{Button} = require 'react-bootstrap'
 classnames = require 'classnames'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 {Loader, Check} = require 'kbc-react-components'
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
-
+AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 ComponentDescription = React.createFactory(ComponentDescription)
 SearchRow = require('../../../../../react/common/SearchRow').default
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 OAuthStore = require('../../../../components/stores/OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 OAuthActions = require('../../../../components/OAuthActionCreators')
@@ -31,7 +34,7 @@ componentId = 'wr-dropbox'
 
 module.exports = React.createClass
   displayName: 'wrDropboxIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -44,6 +47,7 @@ module.exports = React.createClass
     isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId)
 
     # state
+    allTables: StorageTablesStore.getAll()
     latestJobs: LatestJobsStore.getJobs(componentId, configId)
     configId: configId
     configData: configData
@@ -59,18 +63,57 @@ module.exports = React.createClass
       @_renderMainContent()
       @_renderSideBar()
 
+  _renderAddNewTable: ->
+    data = @state.localState.get('newTable', Map())
+    selectedTableId = data.get('tableId')
+    inputTables = @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
+    isAllConfigured = @state.allTables.filter( (t) ->
+      t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
+    ).count() == 0
+
+    updateStateFn = (path, newData) =>
+      @_updateLocalState(['newTable'].concat(path), newData)
+
+    span null,
+      React.createElement Button,
+        disabled: isAllConfigured
+        onClick: ->
+          updateStateFn(['show'], true)
+        bsStyle: 'success'
+      ,
+        '+ Add New Table'
+      React.createElement AddNewTableModal,
+
+        show: data.get('show', false)
+        onHideFn: ->
+          updateStateFn([], Map())
+        selectedTableId: selectedTableId
+        onSetTableIdFn: (tableId) ->
+          updateStateFn(['tableId'], tableId)
+        configuredTables: inputTables
+        onSaveFn: (tableId) =>
+          @_addTableExport(tableId).then ->
+            updateStateFn([], Map())
+        isSaving: @_isPendingTable(selectedTableId)
+
+
+
   _renderMainContent: ->
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
-        ComponentDescription
-          componentId: 'wr-dropbox'
-          configId: @state.configId
-      if @state.hasCredentials
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: 'wr-dropbox'
+            configId: @state.configId
+        if @state.hasCredentials and @_getInputTables().count() > 0
+          div className: 'col-sm-4 kbc-buttons text-right',
+            @_renderAddNewTable()
+      if @state.hasCredentials and @_getInputTables().count() > 0
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery')
-      if @state.hasCredentials
+      if @state.hasCredentials and @_getInputTables().count() > 0
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
@@ -79,26 +122,29 @@ module.exports = React.createClass
           isTableExportedFn: @_isTableExported
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
+          showAllTables: false
       else
-        div className: 'row component-empty-state text-center',
-          div null,
-            p null, 'No Dropbox account authorized.'
-            ModalTrigger
-              modal: AuthorizeModal
-                configId: @state.configId
-            ,
-              span className: 'btn btn-success',
-                i className: 'fa fa-fw fa-dropbox'
-                ' Authorize Dropbox Account'
+        React.createElement ComponentEmptyState, null,
+          if not @state.hasCredentials
+            div null,
+              p null, 'No Dropbox account authorized.'
+              ModalTrigger
+                modal: AuthorizeModal
+                  configId: @state.configId
+              ,
+                span className: 'btn btn-success',
+                  i className: 'fa fa-fw fa-dropbox'
+                  ' Authorize Dropbox Account'
+          else
+            @_renderNoTables()
 
   _renderTableRow: (table) ->
     TableRow
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
-      onExportChangeFn: =>
-        @_handleExportChange(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
+      deleteTableFn: @_removeTableExport
 
   _prepareTableUploadData: (table) ->
     tableId = table.get('id')
@@ -215,23 +261,16 @@ module.exports = React.createClass
           React.DOM.span className: 'fa fa-fw fa-times'
         ' Reset Authorization'
 
-
+  _renderNoTables: ->
+    div null,
+      p null, 'No tables configured.'
+      @_renderAddNewTable()
 
   _deleteCredentials: ->
     OAuthActions.deleteCredentials(componentId, @state.configId)
 
-
-
   _updateParmeters: (newParameters) ->
     @_updateAndSaveConfigData(['parameters'], newParameters)
-
-  _handleExportChange: (tableId) ->
-    _handleExport = (newExportStatus) =>
-      if newExportStatus
-        @_addTableExport(tableId)
-      else
-        @_removeTableExport(tableId)
-    return _handleExport
 
   _updateAndSaveConfigData: (path, data) ->
     newData = @state.configData.setIn(path, data)
@@ -267,7 +306,7 @@ module.exports = React.createClass
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in ['out', 'in']
     return buckets
 
 
@@ -291,3 +330,4 @@ module.exports = React.createClass
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+  _isAllTablesConfigured: ->
