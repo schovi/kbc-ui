@@ -12,6 +12,7 @@ ComponentEmptyState = require('../../../../components/react/components/Component
 ComponentDescription = React.createFactory(ComponentDescription)
 SearchRow = require('../../../../../react/common/SearchRow').default
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 OAuthStore = require('../../../../components/stores/OAuthStore')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 OAuthActions = require('../../../../components/OAuthActionCreators')
@@ -33,7 +34,7 @@ componentId = 'wr-dropbox'
 
 module.exports = React.createClass
   displayName: 'wrDropboxIndex'
-  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OAuthStore, LatestJobsStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -46,6 +47,7 @@ module.exports = React.createClass
     isDeletingCredentials = OAuthStore.isDeletingCredetials(componentId, configId)
 
     # state
+    allTables: StorageTablesStore.getAll()
     latestJobs: LatestJobsStore.getJobs(componentId, configId)
     configId: configId
     configData: configData
@@ -64,10 +66,17 @@ module.exports = React.createClass
   _renderAddNewTable: ->
     data = @state.localState.get('newTable', Map())
     selectedTableId = data.get('tableId')
+    inputTables = @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
+    isAllConfigured = @state.allTables.filter( (t) ->
+      t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
+    ).count() == 0
+
     updateStateFn = (path, newData) =>
       @_updateLocalState(['newTable'].concat(path), newData)
+
     span null,
       React.createElement Button,
+        disabled: isAllConfigured
         onClick: ->
           updateStateFn(['show'], true)
         bsStyle: 'success'
@@ -81,7 +90,7 @@ module.exports = React.createClass
         selectedTableId: selectedTableId
         onSetTableIdFn: (tableId) ->
           updateStateFn(['tableId'], tableId)
-        configuredTables: @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
+        configuredTables: inputTables
         onSaveFn: (tableId) =>
           @_addTableExport(tableId).then ->
             updateStateFn([], Map())
@@ -321,3 +330,4 @@ module.exports = React.createClass
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+  _isAllTablesConfigured: ->
