@@ -280,7 +280,6 @@ export default React.createClass({
         'type': 'object'
       },
       'function': {
-        'additionalProperties': false,
         'oneOf': [
           {
             '$ref': '#/definitions/fn_md5'
