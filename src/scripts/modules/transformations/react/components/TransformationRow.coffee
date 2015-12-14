@@ -1,12 +1,13 @@
 React = require 'react'
 Link = React.createFactory(require('react-router').Link)
+Immutable = require('immutable')
 ImmutableRenderMixin = require '../../../../react/mixins/ImmutableRendererMixin'
 InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
 RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
 TransformationTypeLabel = React.createFactory(require './TransformationTypeLabel')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 ActivateDeactivateButton = React.createFactory(require('../../../../react/common/ActivateDeactivateButton').default)
-
+CreateSandboxButton = require('./CreateSandboxButton').default
 TransformationsActionCreators = require '../../ActionCreators'
 
 {span, div, a, button, i, h4, small, em} = React.DOM
@@ -32,6 +33,14 @@ TransformationRow = React.createClass(
         text: "Do you really want to delete transformation #{@props.transformation.get('name')}?"
         onConfirm: @_deleteTransformation
     )
+
+    buttons.push(React.createElement CreateSandboxButton,
+      backend: @props.transformation.get("backend")
+      mode: "button"
+      runParams: Immutable.Map
+        configBucketId: @props.bucket.get('id')
+        transformations: [@props.transformation.get('id')]
+  )
 
     buttons.push(RunComponentButton(
       key: 'run'
