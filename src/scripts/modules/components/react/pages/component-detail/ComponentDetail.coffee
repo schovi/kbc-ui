@@ -75,7 +75,10 @@ module.exports = React.createClass
                 component: state.component
         div className: "table table-hover",
           div className: "tbody",
-            @state.configurations.map((configuration) ->
+            @state.configurations
+            .sortBy (configuration) ->
+              configuration.get('name').toLowerCase()
+            .map((configuration) ->
               React.createElement(ConfigurationRow,
                 config: configuration,
                 componentId: state.component.get('id'),
