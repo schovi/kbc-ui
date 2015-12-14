@@ -105,7 +105,7 @@ templateFn = (componentId) ->
           updateStateFn(['tableId'], tableId)
         configuredTables: inputTables
         onSaveFn: (tableId) =>
-          @_addTableExport(tableId).then ->
+          @_handleExportChange(tableId).then ->
             updateStateFn([], Map())
         isSaving: @_isPendingTable(selectedTableId)
 
