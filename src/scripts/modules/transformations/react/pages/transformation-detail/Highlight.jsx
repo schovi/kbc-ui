@@ -31,7 +31,7 @@ export default React.createClass({
     var st = [], pos = 0;
 
     for (var i = 0; i < lines.length; ++i) {
-      var line = lines[i], newLine = true;
+      var line = lines[i].replace(/\t/g, '    '), newLine = true;
       if (mode.indent) {
         var ws = line.match(/^\s*/)[0];
         var indent = mode.indent(state, line.slice(ws.length));
