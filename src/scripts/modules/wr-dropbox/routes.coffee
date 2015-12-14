@@ -12,7 +12,7 @@ JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'wr-dropbox'
-  path: 'wr-dropbox/:config'
+  path: ':config'
   isComponent: true
   requireData: [
     (params) ->

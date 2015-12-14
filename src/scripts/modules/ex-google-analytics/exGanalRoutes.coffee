@@ -15,7 +15,7 @@ ExGanalProfiles = require './react/pages/profiles/Profiles'
 ProfilesHeaderButton = require './react/components/ProfilesHeaderButton'
 module.exports =
   name: 'ex-google-analytics'
-  path: 'ex-google-analytics/:config'
+  path: ':config'
   isComponent: true
   defaultRouteHandler: ExGanalIndex
   requireData: [

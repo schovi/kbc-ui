@@ -9,7 +9,7 @@ import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 
 export default {
   name: 'ex-dropbox',
-  path: 'ex-dropbox/:config',
+  path: ':config',
   isComponent: true,
   requireData: [
     (params) => installedComponentsActions.loadComponentConfigData('ex-dropbox', params.config),

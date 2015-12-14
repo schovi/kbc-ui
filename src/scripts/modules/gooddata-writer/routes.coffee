@@ -14,7 +14,7 @@ JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'gooddata-writer'
-  path: 'gooddata-writer/:config'
+  path: ':config'
   isComponent: true
   requireData: [
     (params) ->
@@ -32,7 +32,7 @@ module.exports =
   reloaderHandler: WriterReloader
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'GoodData - ' + InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
+    InstalledComponentsStore.getConfig('gooddata-writer', configId).get 'name'
   childRoutes: [
     name: 'gooddata-writer-table'
     path: 'table/:table'

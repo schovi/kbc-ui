@@ -10,7 +10,7 @@ createComponentRoute = require('../components/createComponentRoute').default
 createRoute = (componentId) ->
   createComponentRoute componentId, [
     name: componentId
-    path: "#{componentId}/:config"
+    path: ":config"
     isComponent: true
     requireData: [
       (params) ->

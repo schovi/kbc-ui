@@ -12,13 +12,10 @@ storageActionCreators = require '../components/StorageActionCreators'
 
 createRoute = (componentId, driver, isProvisioning) ->
   name: componentId
-  path: "#{componentId}/:config"
+  path: ":config"
   title: (routerState) ->
-    component = ComponentsStore.getComponent componentId
     configId = routerState.getIn ['params', 'config']
-    componentName = component.get 'name'
-    configName = InstalledComponentsStore.getConfig(componentId, configId).get('name')
-    return "#{componentName} - #{configName}"
+    InstalledComponentsStore.getConfig(componentId, configId).get('name')
   isComponent: true
   defaultRouteHandler: dbwrIndex(componentId)
   requireData: [

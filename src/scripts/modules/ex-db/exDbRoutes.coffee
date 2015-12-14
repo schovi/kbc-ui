@@ -20,7 +20,7 @@ ExDbStore = require './exDbStore'
 
 module.exports =
   name: 'ex-db'
-  path: 'ex-db/:config'
+  path: ':config'
   isComponent: true
   requireData: [
     (params) ->
@@ -28,7 +28,7 @@ module.exports =
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'Database - ' + IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
+    IntalledComponentsStore.getConfig('ex-db', configId).get 'name'
   poll:
     interval: 5
     action: (params) ->
