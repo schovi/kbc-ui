@@ -344,14 +344,12 @@ module.exports =
       - component - id of component like ex-db
       - data - action parameters hashmap
       - method - default = run
-      - message - enqueue message
       - notify - send notification, default true
   ###
   runComponent: (params) ->
 
     defaultParams =
       method: 'run'
-      message: 'Job has been scheduled.'
       notify: true
 
     params = _.extend {}, defaultParams, params
@@ -363,19 +361,22 @@ module.exports =
     .then (job) ->
       JobsActionCreators.recieveJobDetail(job)
       if params.notify
+        component =  ComponentsStore.getComponent params.component
         ApplicationActionCreators.sendNotification(
           message: React.createClass
             render: ->
               React.DOM.span null,
-                "#{params.message} You can track the job progress "
                 React.createElement Link,
                   to: 'jobDetail'
                   params:
                     jobId: job.id
                   onClick: @props.onClick
                 ,
-                  'here'
-                '.'
+                  if component
+                    "#{component.get('name')} job"
+                  else
+                    'Job'
+                ' has been scheduled'
       )
       job
 
