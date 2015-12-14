@@ -21,12 +21,12 @@ WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 fieldsTemplate = require '../../../templates/credentialsFields'
-
+AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
 #componentId = 'wr-db'
 #driver = 'mysql'
-
+{Button} = require 'react-bootstrap'
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
@@ -36,7 +36,7 @@ module.exports = (componentId) ->
 templateFn = (componentId) ->
   displayName: 'wrdbIndex'
 
-  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, WrDbStore)]
+  mixins: [createStoreMixin(StorageTablesStore, InstalledComponentsStore, LatestJobsStore, WrDbStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -48,6 +48,7 @@ templateFn = (componentId) ->
 
     #state
     updatingTables: WrDbStore.getUpdatingTables(componentId, configId)
+    allTables: StorageTablesStore.getAll()
     tables: tables
     credentials: credentials
     configId: configId
@@ -57,7 +58,7 @@ templateFn = (componentId) ->
 
 
   render: ->
-    console.log 'render'
+    console.log 'render', @state.tables.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -76,6 +77,39 @@ templateFn = (componentId) ->
     , true)
     return result
 
+  _renderAddNewTable: ->
+    data = @state.localState.get('newTable', Map())
+    selectedTableId = data.get('tableId')
+    inputTables = @state.tables.toMap().mapKeys((key, c) -> c.get('id'))
+    isAllConfigured = @state.allTables.filter( (t) ->
+      t.getIn(['bucket', 'stage']) in ['out'] and not inputTables.has(t.get('id'))
+    ).count() == 0
+
+    updateStateFn = (path, newData) =>
+      @_updateLocalState(['newTable'].concat(path), newData)
+
+    span null,
+      React.createElement Button,
+        disabled: isAllConfigured
+        onClick: ->
+          updateStateFn(['show'], true)
+        bsStyle: 'success'
+      ,
+        '+ Add New Table'
+      React.createElement AddNewTableModal,
+        show: data.get('show', false)
+        onHideFn: ->
+          updateStateFn([], Map())
+        selectedTableId: selectedTableId
+        onSetTableIdFn: (tableId) ->
+          updateStateFn(['tableId'], tableId)
+        configuredTables: inputTables
+        onSaveFn: (tableId) =>
+          @_addTableExport(tableId).then ->
+            updateStateFn([], Map())
+        isSaving: @_isPendingTable(selectedTableId)
+
+
   _renderMainContent: ->
     configuredTables = @state.tables.filter (table) ->
       table.get('export')
@@ -83,9 +117,12 @@ templateFn = (componentId) ->
       table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
-        ComponentDescription
-          componentId: componentId
-          configId: @state.configId
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: componentId
+            configId: @state.configId
+        div className: 'col-sm-4 kbc-buttons text-right',
+          @_renderAddNewTable()
       if @_hasValidCredentials()
         React.createElement SearchRow,
           className: 'row kbc-search-row'
