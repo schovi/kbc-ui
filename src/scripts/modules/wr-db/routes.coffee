@@ -10,7 +10,7 @@ storageActionCreators = require '../components/StorageActionCreators'
 #driver = 'mysql'
 #componentId = 'wr-db'
 
-createRoute = (componentId, driver, isProvisioning, isDocker) ->
+createRoute = (componentId, driver, isProvisioning) ->
   name: componentId
   path: ":config"
   title: (routerState) ->
