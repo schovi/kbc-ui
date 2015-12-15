@@ -13,7 +13,9 @@ function computeNotificationAge(notification) {
 export default React.createClass({
   propTypes: {
     notification: React.PropTypes.object.isRequired,
-    onCancel: React.PropTypes.func.isRequired
+    onCancel: React.PropTypes.func.isRequired,
+    onMouseEnter: React.PropTypes.func.isRequired,
+    onMouseLeave: React.PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -36,8 +38,11 @@ export default React.createClass({
 
   render() {
     const {notification} = this.props;
+    const id = notification.get('id');
+
     return (
-      <div >
+      <div onMouseEnter={ () => this.props.onMouseEnter(id)}
+           onMouseLeave={ () => this.props.onMouseLeave(id)} >
         <Alert
           onDismiss={this.onCancel}
           bsStyle={classMap[notification.get('type')]}
@@ -52,8 +57,9 @@ export default React.createClass({
   opacity() {
     const timeout = this.props.notification.get('timeout'),
       age = this.state.age,
+      isPaused = this.props.notification.get('paused'),
       animationStartRatio = 0.6;
-    if (age / timeout < animationStartRatio) {
+    if (age / timeout < animationStartRatio || isPaused) {
       return {
         opacity: 1
       };

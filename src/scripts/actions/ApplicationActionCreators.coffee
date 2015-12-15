@@ -1,5 +1,3 @@
-
-
 dispatcher = require '../Dispatcher'
 constants = require '../constants/KbcConstants'
 _ = require 'underscore'
@@ -21,6 +19,7 @@ module.exports =
   sendNotification: (notification) ->
     timeout = 10000
     defaults =
+      pause: false
       message: ''
       type: 'success'
       autoDelete: false
@@ -39,9 +38,23 @@ module.exports =
 
     setTimeout @deleteNotification.bind(@, notification.id), timeout
 
-  deleteNotification: (id) ->
+  deleteNotification: (id, forceDelete) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.APPLICATION_DELETE_NOTIFICATION
       notificationId: id
+      forceDelete: forceDelete
 
 
+  pauseNotificationAging: (id) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.APPLICATION_SET_PAUSE_NOTIFICATION
+      notificationId: id
+      paused: true
+
+  resetNotificationAging: (id) ->
+    timeout = 10000
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.APPLICATION_SET_PAUSE_NOTIFICATION
+      notificationId: id
+      paused: false
+    setTimeout @deleteNotification.bind(@, id), timeout

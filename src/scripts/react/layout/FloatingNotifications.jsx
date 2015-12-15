@@ -20,15 +20,25 @@ export default React.createClass({
           return React.createElement(Notification, {
             key: notification.get('id'),
             notification: notification,
-            onCancel: this.handleCancel
+            onCancel: this.handleCancel,
+            onMouseEnter: this.handleEnter,
+            onMouseLeave: this.handleLeave
           });
         })}
       </div>
     );
   },
 
+  handleEnter(id) {
+    ApplicationActionCreators.pauseNotificationAging(id);
+  },
+
+  handleLeave(id) {
+    ApplicationActionCreators.resetNotificationAging(id);
+  },
+
   handleCancel(id) {
-    ApplicationActionCreators.deleteNotification(id);
+    ApplicationActionCreators.deleteNotification(id, true);
   }
 
 });
