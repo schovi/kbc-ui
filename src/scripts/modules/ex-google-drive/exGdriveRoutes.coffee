@@ -13,7 +13,7 @@ JobsActionCreators = require '../jobs/ActionCreators'
 module.exports =
   name: 'ex-google-drive'
   isComponent: true
-  path: 'ex-google-drive/:config'
+  path: ':config'
   defaultRouteHandler: ExGdriveIndex
   requireData: [
     (params) ->
@@ -25,8 +25,7 @@ module.exports =
       JobsActionCreators.loadComponentConfigurationLatestJobs('ex-google-drive', params.config)
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'Google Drive extractor - ' + IntalledComponentsStore.getConfig('ex-google-drive', configId).get 'name'
-
+    IntalledComponentsStore.getConfig('ex-google-drive', configId).get 'name'
   childRoutes: [
     name: 'ex-google-drive-select-sheets'
     path: 'sheets'

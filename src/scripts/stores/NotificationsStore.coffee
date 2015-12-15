@@ -1,4 +1,3 @@
-
 Dispatcher = require('../Dispatcher')
 Immutable = require('immutable')
 {Map, List} = Immutable
@@ -23,6 +22,16 @@ Dispatcher.register (payload) ->
   action = payload.action
 
   switch action.type
+    when Constants.ActionTypes.APPLICATION_SET_PAUSE_NOTIFICATION
+      paused = action.paused
+      id = action.notificationId
+      _store = _store
+        .update 'notifications', (notifications) ->
+          notifications.map( (notf) ->
+            notf.set('paused', paused).set('created', new Date())
+          )
+      NotificationsStore.emitChange()
+
     when Constants.ActionTypes.APPLICATION_SEND_NOTIFICATION
 
       # avoid duplication of same message
@@ -33,13 +42,15 @@ Dispatcher.register (payload) ->
         NotificationsStore.emitChange()
 
     when Constants.ActionTypes.APPLICATION_DELETE_NOTIFICATION
+      forceDelete = action.forceDelete
       index = _store.get('notifications').findIndex (notification) ->
         notification.get('id') == action.notificationId
-
-      console.log 'delete', index, action.notificationId
       if index >= 0
-        _store = _store.update 'notifications', (notifications) ->
-          notifications.delete index
-        NotificationsStore.emitChange()
+        isPaused = _store.get('notifications').get(index).get('paused')
+        if not isPaused or forceDelete
+          console.log 'delete', index, action.notificationId
+          _store = _store.update 'notifications', (notifications) ->
+            notifications.delete index
+          NotificationsStore.emitChange()
 
 module.exports = NotificationsStore

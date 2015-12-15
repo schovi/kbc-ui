@@ -211,7 +211,6 @@ Dispatcher.register (payload) ->
         OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_FIELD_EDIT_START
-      console.log 'start edit'
       _store = _store.setIn ['editing', action.orchestrationId, action.field],
         OrchestrationStore.get(action.orchestrationId).get action.field
       OrchestrationStore.emitChange()

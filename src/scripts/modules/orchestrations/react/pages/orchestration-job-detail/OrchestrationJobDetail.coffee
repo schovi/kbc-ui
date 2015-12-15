@@ -7,6 +7,9 @@ OrchestrationsActionCreators = require '../../../ActionCreators'
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+
+mergeTasksWithConfigurations = require('../../../mergeTasksWithConfigruations').default
 
 # components
 JobsNav = React.createFactory(require './JobsNav')
@@ -20,14 +23,18 @@ TabPane = React.createFactory(require('react-bootstrap').TabPane)
 
 OrchestrationJobDetail = React.createClass
   displayName: 'OrchestrationJobDetail'
-  mixins: [createStoreMixin(OrchestrationStore, OrchestrationJobsStore)]
+  mixins: [createStoreMixin(OrchestrationStore, OrchestrationJobsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
     jobId = RoutesStore.getCurrentRouteIntParam 'jobId'
+    job = OrchestrationJobsStore.getJob(jobId)
+    if job.hasIn ['results', 'tasks']
+      job = job.setIn(['results', 'tasks'],
+        mergeTasksWithConfigurations(job.getIn(['results', 'tasks'], List()), InstalledComponentsStore.getAll()))
     return {
       orchestrationId: orchestrationId
-      job: OrchestrationJobsStore.getJob jobId
+      job: job
       isLoading: OrchestrationJobsStore.isJobLoading jobId
       jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId

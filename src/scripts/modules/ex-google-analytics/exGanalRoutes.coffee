@@ -15,7 +15,7 @@ ExGanalProfiles = require './react/pages/profiles/Profiles'
 ProfilesHeaderButton = require './react/components/ProfilesHeaderButton'
 module.exports =
   name: 'ex-google-analytics'
-  path: 'ex-google-analytics/:config'
+  path: ':config'
   isComponent: true
   defaultRouteHandler: ExGanalIndex
   requireData: [
@@ -30,7 +30,7 @@ module.exports =
       JobsActionCreators.loadComponentConfigurationLatestJobs('ex-google-analytics', params.config)
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'Google Analytics extractor - ' + IntalledComponentsStore.getConfig('ex-google-analytics', configId).get 'name'
+    IntalledComponentsStore.getConfig('ex-google-analytics', configId).get 'name'
 
   childRoutes: [
     name: 'ex-google-analytics-select-profiles'

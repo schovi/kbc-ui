@@ -53,7 +53,7 @@ migrateUploadTasks = (configData, configId) ->
 
 module.exports =
   name: componentId
-  path: "#{componentId}/:config"
+  path: ":config"
   defaultRouteHandler: index
   isComponent: true
   poll:
@@ -75,11 +75,8 @@ module.exports =
         storageActionCreators.loadFiles(params)
   ]
   title: (routerState) ->
-    component = ComponentsStore.getComponent componentId
     configId = routerState.getIn ['params', 'config']
-    componentName = component.get 'name'
-    configName = InstalledComponentsStore.getConfig(componentId, configId).get('name')
-    return "#{componentName} - #{configName}"
+    InstalledComponentsStore.getConfig(componentId, configId).get('name')
 
   childRoutes: [
     #isComponent: true

@@ -23,7 +23,8 @@ module.exports = React.createClass
   _handleDelete: ->
     if @props.preDeleteFn
       @props.preDeleteFn()
-    InstalledComponentsActionCreators.deleteConfiguration(@props.componentId, @props.configId).then =>
+    InstalledComponentsActionCreators.deleteConfiguration(@props.componentId, @props.configId, true)
+    .then =>
       if @props.postDeleteFn
         @props.postDeleteFn()
 

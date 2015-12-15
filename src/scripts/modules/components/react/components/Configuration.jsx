@@ -17,12 +17,16 @@ export default React.createClass({
     isValid: PropTypes.bool.isRequired,
     supportsEncryption: PropTypes.bool.isRequired,
     headerText: PropTypes.string,
+    editLabel: PropTypes.string,
+    saveLabel: PropTypes.string,
     help: PropTypes.node
   },
 
   getDefaultProps() {
     return {
       headerText: 'Configuration Data',
+      editLabel: 'Edit configuration',
+      saveLabel: 'Save configuration',
       help: null
     };
   },
@@ -53,6 +57,7 @@ export default React.createClass({
             onChange={this.props.onEditChange}
             onCancel={this.props.onEditCancel}
             isValid={this.props.isValid}
+            saveLabel={this.props.saveLabel}
             />
         </span>
       );
@@ -61,6 +66,7 @@ export default React.createClass({
         <Static
           data={this.props.data}
           onEditStart={this.props.onEditStart}
+          editLabel={this.props.editLabel}
           />
       );
     }

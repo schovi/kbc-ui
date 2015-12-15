@@ -1,5 +1,6 @@
 React = require 'react'
 {ComponentIcon, ComponentName} = require '../../../../../react/common/common'
+ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
 OrchestrationTaskRunButton = React.createFactory(require('../../components/OrchestrationTaskRunButton').default)
 
@@ -28,6 +29,15 @@ module.exports = React.createClass
           React.createElement ComponentName, component: @props.component
         else
           @props.task.get('componentUrl')
+      td null,
+        if @props.task.has 'config'
+          React.createElement ComponentConfigurationLink,
+            componentId: @props.task.get 'component'
+            configId: @props.task.getIn ['config', 'id']
+          ,
+            @props.task.getIn ['config', 'name']
+        else
+          'N/A'
       td null,
         span className: 'label label-info',
           @props.task.get('action')

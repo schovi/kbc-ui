@@ -159,22 +159,21 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-            React.DOM.span {className: "help-block"},
-              "File will be available at"
-              React.DOM.code {}, "/data/in/tables/" + @_getFileName()
 
-      if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            type: 'text'
-            label: 'File name'
-            value: @props.value.get("destination")
-            disabled: @props.disabled
-            placeholder: "File name"
-            onChange: @_handleChangeDestination
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
+
+      React.DOM.div {className: "row col-md-12"},
+        Input
+          type: 'text'
+          label: 'File name'
+          value: @props.value.get("destination")
+          disabled: @props.disabled
+          placeholder: "File name"
+          onChange: @_handleChangeDestination
+          labelClassName: 'col-xs-2'
+          wrapperClassName: 'col-xs-10'
+          help: React.DOM.span {className: "help-block"},
+            "File will be available at"
+            React.DOM.code {}, "/data/in/tables/" + @_getFileName()
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',

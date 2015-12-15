@@ -7,7 +7,7 @@ const componentId = 'custom-science';
 
 export default {
   name: componentId,
-  path: `${componentId}/:config`,
+  path: ':config',
   isComponent: true,
   defaultRouteHandler: Index,
   requireData: [
