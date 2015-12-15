@@ -158,6 +158,8 @@ routes =
     ,
       createDbWriterRoutes('wr-tableau', 'mysql', true)
     ,
+      createDbWriterRoutes('wr-db-mssql', 'mssql', false, true)
+    ,
       createGenericDetailRoute 'writer'
 
     ]
