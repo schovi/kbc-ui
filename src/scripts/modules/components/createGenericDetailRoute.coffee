@@ -1,6 +1,7 @@
 React = require 'react'
 
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
+SchemasActionsCreators = require './SchemasActionCreators'
 InstalledComponentsActions = require './InstalledComponentsActionCreators'
 StorageActions = require './StorageActionCreators'
 GenericDetail = require('./react/pages/GenericDetail').default
@@ -36,6 +37,9 @@ module.exports = (componentType) ->
   ,
     ->
       StorageActions.loadBuckets()
+  ,
+    (params) ->
+      SchemasActionsCreators.loadSchema params.component
   ]
   poll:
     interval: 10
