@@ -25,6 +25,7 @@ TasksTable = React.createClass
           th null, 'Configuration'
           th style: {width: '10%'}, 'Action'
           th null, 'Parameters'
+          th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '12%'}, 'Continue on Failure'
           th style: {width: '8%'}, ''
