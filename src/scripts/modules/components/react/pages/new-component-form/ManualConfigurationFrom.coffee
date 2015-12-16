@@ -3,7 +3,16 @@ FormHeader = React.createFactory(require './FormHeader')
 Button = React.createFactory(require('react-bootstrap').Button)
 contactSupport = require('../../../../../utils/contactSupport').default
 
+ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
+ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
+ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
+ModalTitle = React.createFactory(require('react-bootstrap/lib/ModalTitle'))
+ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
+Button = React.createFactory(require('react-bootstrap').Button)
+
 {div, form, p} = React.DOM
+
+require './AddConfigurationForm.less'
 
 module.exports = React.createClass
   displayName: 'ManualConfigurationForm'
@@ -11,26 +20,36 @@ module.exports = React.createClass
     component: React.PropTypes.object.isRequired
     configuration: React.PropTypes.object.isRequired
     onCancel: React.PropTypes.func.isRequired
+    onClose: React.PropTypes.func.isRequired
 
   render: ->
-    form className: 'form-horizontal',
-      FormHeader
-        component: @props.component
-        withButtons: false
-      div className: 'row',
-        div className: 'col-xs-4',
-          p null, @_text()
-          div className: 'kbc-buttons',
-            Button
-              bsStyle: 'success'
-              onClick: @_contactSupport
-            ,
-              'Contact Support'
-            Button
-              bsStyle: 'link'
-              onClick: @props.onCancel
-            ,
-              'Back'
+    div null,
+      ModalHeader
+        closeButton: true
+        onHide: @props.onClose
+        className: "add-configuration-form"
+      ,
+        FormHeader
+          component: @props.component
+          withButtons: false
+      ModalBody null,
+        div className: 'container col-md-12',
+          div className: 'row',
+            div className: 'col-xs-12',
+              p null, @_text()
+      ModalFooter null,
+
+        ButtonToolbar null,
+          Button
+            bsStyle: 'link'
+            onClick: @props.onClose
+          ,
+            'Close'
+          Button
+            bsStyle: 'success'
+            onClick: @_contactSupport
+          ,
+            'Contact Support'
 
   _text: ->
     switch @props.component.get 'type'

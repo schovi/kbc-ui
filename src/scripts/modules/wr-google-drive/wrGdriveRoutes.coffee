@@ -8,7 +8,7 @@ storageActionCreators = require '../components/StorageActionCreators'
 module.exports =
   name: 'wr-google-drive'
   isComponent: true
-  path: 'wr-google-drive/:config'
+  path: ':config'
   defaultRouteHandler: Index
   poll:
     interval: 7
@@ -16,7 +16,7 @@ module.exports =
       JobsActionCreators.loadComponentConfigurationLatestJobs('wr-google-drive', params.config)
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
-    'Google Drive - ' + InstalledComponentsStore.getConfig('wr-google-drive', configId).get 'name'
+    InstalledComponentsStore.getConfig('wr-google-drive', configId).get 'name'
 
   requireData: [
     (params) ->

@@ -8,7 +8,7 @@ const componentId = 'geneea-nlp-analysis';
 
 export default {
   name: componentId,
-  path: `${componentId}/:config`,
+  path: ':config',
   isComponent: true,
   defaultRouteHandler: Index,
   headerButtonsHandler: HeaderButtons,

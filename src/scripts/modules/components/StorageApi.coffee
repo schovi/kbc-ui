@@ -57,6 +57,12 @@ storageApi =
     .then (response) ->
       response.body
 
+  getKeenCredentials: ->
+    createRequest 'GET', 'tokens/keen'
+    .promise()
+    .then (response) ->
+      response.body
+
   ###
     Returns parsed CSV info plain arrays
     [

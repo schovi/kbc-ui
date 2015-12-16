@@ -18,6 +18,8 @@ export default React.createClass({
     isValid: PropTypes.bool.isRequired,
     supportsEncryption: PropTypes.bool.isRequired,
     headerText: PropTypes.string,
+    editLabel: PropTypes.string,
+    saveLabel: PropTypes.string,
     help: PropTypes.node,
     useJsonSchema: PropTypes.bool
   },
@@ -26,6 +28,9 @@ export default React.createClass({
     return {
       headerText: 'Configuration Data',
       help: null,
+      editLabel: 'Edit configuration',
+      saveLabel: 'Save configuration',
+      // TODO FIXME dynamic
       useJsonSchema: true
     };
   },
@@ -57,6 +62,7 @@ export default React.createClass({
         <Static
           data={this.props.data}
           onEditStart={this.props.onEditStart}
+          editLabel={this.props.editLabel}
           />
       );
     }
@@ -72,18 +78,20 @@ export default React.createClass({
           onChange={this.props.onEditChange}
           onCancel={this.props.onEditCancel}
           isValid={this.props.isValid}
+          saveLabel={this.props.saveLabel}
           />
       );
     } else {
       return (
-        <Edit
-          data={this.props.data}
-          isSaving={this.props.isSaving}
-          onSave={this.props.onEditSubmit}
-          onChange={this.props.onEditChange}
-          onCancel={this.props.onEditCancel}
-          isValid={this.props.isValid}
-          />
+      <Edit
+        data={this.props.data}
+        isSaving={this.props.isSaving}
+        onSave={this.props.onEditSubmit}
+        onChange={this.props.onEditChange}
+        onCancel={this.props.onEditCancel}
+        isValid={this.props.isValid}
+        saveLabel={this.props.saveLabel}
+        />
       );
     }
   }

@@ -131,7 +131,7 @@ export default React.createClass({
     }
     return (
       <span>
-        Export started. You can track progress <Link to="jobDetail" params={{jobId: this.state.jobId}}>here</Link>
+        <Link to="jobDetail" params={{jobId: this.state.jobId}}>Export started</Link>
       </span>
     );
   }

@@ -1,4 +1,3 @@
-
 Promise = require 'bluebird'
 React = require 'react'
 dispatcher = require '../../Dispatcher'
@@ -15,6 +14,46 @@ Link = require('react-router').Link
 dimensionsStore = require './dateDimensionsStore'
 
 module.exports =
+  deleteTable: (configurationId, tableId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_START
+      configurationId: configurationId
+      tableId: tableId
+    goodDataWriterApi.deleteWriterTable(configurationId, tableId).then ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+    .catch (error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_DELETE_ERROR
+        configurationId: configurationId
+        tableId: tableId
+      throw error
+
+  addNewTable: (configurationId, tableId, data) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_START
+      configurationId: configurationId
+      tableId: tableId
+      data: data
+    goodDataWriterApi.addWriterTable(configurationId, tableId, data).then =>
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_SUCCESS
+        configurationId: configurationId
+        tableId: tableId
+        data: data
+      Promise.props
+        tableDetail: @loadTableDetail(configurationId, tableId)
+        refTables: @loadReferencableTables(configurationId)
+      .catch (error) ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_TABLE_ADD_ERROR
+          configurationId: configurationId
+          tableId: tableId
+          data: data
+        throw error
+
 
   loadConfigurationForce: (configurationId) ->
     dispatcher.handleViewAction
@@ -86,8 +125,11 @@ module.exports =
         error: error
       throw error
 
-  loadReferenceableTables: (configurationId) ->
-    @loadReferencableTablesForce(configurationId)
+  loadReferencableTables: (configurationId) ->
+    if goodDataWriterStore.hasReferenceableTables(configurationId)
+      return Promise.resolve()
+    else
+      return @loadReferencableTablesForce(configurationId)
 
   optimizeSLIHash: (configurationId) ->
     dispatcher.handleViewAction
@@ -228,7 +270,8 @@ module.exports =
     .updateTable(configurationId, tableId,
       columns: columns
     )
-    .then ->
+    .then =>
+      @loadReferencableTablesForce(configurationId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_COLUMNS_EDIT_SAVE_SUCCESS
         configurationId: configurationId

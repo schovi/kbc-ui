@@ -1,39 +1,71 @@
 React = require 'react'
-{List} = require 'immutable'
+{Map, List} = require 'immutable'
+Promise = require('bluebird')
+
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
-
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
+AddNewTableButton = require('../../components/AddNewTableButton').default
 ApplicationStore = require '../../../../../stores/ApplicationStore'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 {Panel, PanelGroup, Alert, DropdownButton} = require('react-bootstrap')
 
 SearchRow = require('../../../../../react/common/SearchRow').default
 TablesList = require './BucketTablesList'
+TableRow = require './TableRow'
+TablesByBucketsPanel = require '../../../../components/react/components/TablesByBucketsPanel'
+
 ActiveCountBadge = require './ActiveCountBadge'
 {Link} = require('react-router')
 {Tooltip, Confirm} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
 
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+InstalledComponentStore = require '../../../../components/stores/InstalledComponentsStore'
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
-
+installedComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 {strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
-  mixins: [createStoreMixin(goodDataWriterStore)]
+  mixins: [createStoreMixin(goodDataWriterStore, InstalledComponentStore, StorageTablesStore, LatestJobsStore)]
 
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
+    localState = InstalledComponentStore.getLocalState('gooddata-writer', config)
+
     configId: config
     writer: goodDataWriterStore.getWriter(config)
-    tablesByBucket: goodDataWriterStore.getWriterTablesByBucketFiltered(config)
+    tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
+    deletingTables: goodDataWriterStore.getDeletingTables(config)
+    localState: localState
+    latestJobs: LatestJobsStore.getJobs 'gooddata-writer', config
+    storageTables: StorageTablesStore.getAll()
 
   _handleFilterChange: (query) ->
     actionCreators.setWriterTablesFilter(@state.writer.getIn(['config', 'id']), query)
+
+  _renderAddNewTable: ->
+    remainingTables = @state.storageTables.filter (table) =>
+      table.getIn(['bucket', 'stage']) == 'out' and not @state.tablesByBucket.has(table.get('id'))
+
+    React.createElement AddNewTableButton,
+      isDisabled: remainingTables.count() == 0
+      configuredTables: @state.tablesByBucket
+      localState: @state.localState.get('newTable', Map())
+      addNewTableFn: (tableId, data) =>
+        actionCreators.addNewTable(@state.configId, tableId, data).then =>
+          RoutesStore.getRouter().transitionTo('gooddata-writer-table',
+            config: @state.configId
+            table: tableId
+          )
+      updateLocalStateFn: (path, data) =>
+        @_updateLocalState(['newTable'].concat(path), data)
 
   render: ->
     writer = @state.writer.get 'config'
@@ -44,26 +76,27 @@ module.exports = React.createClass
             React.createElement ComponentDescription,
               componentId: 'gooddata-writer'
               configId: writer.get 'id'
+          if @state.tablesByBucket.count()
+            div className: 'col-sm-4 kbc-buttons text-right',
+              @_renderAddNewTable()
+
         if writer.get('info')
           div className: 'row',
             React.createElement Alert,
               bsStyle: 'warning'
             ,
               writer.get('info')
-        React.createElement SearchRow,
-          className: 'row kbc-search-row'
-          onChange: @_handleFilterChange
-          query: @state.filter
         if @state.tablesByBucket.count()
-          div
-            className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'
-          ,
-            @state.tablesByBucket.map (tables, bucketId) ->
-              @_renderBucketPanel bucketId, tables
-            , @
-            .toArray()
+          React.createElement SearchRow,
+            className: 'row kbc-search-row'
+            onChange: @_handleFilterChange
+            query: @state.filter
+        if @state.tablesByBucket.count()
+          @_renderTablesByBucketsPanel()
         else
           @_renderNotFound()
+
+
 
       div className: 'col-md-3 kbc-main-sidebar',
         div className: 'kbc-buttons kbc-text-light',
@@ -192,11 +225,11 @@ module.exports = React.createClass
                 else
                   span className: 'kbc-icon-cup fa-fw'
                 ' Delete Writer'
+        React.createElement LatestJobs,
+          jobs: @state.latestJobs
+
 
   _handleBucketSelect: (bucketId, e) ->
-    e.preventDefault()
-    e.stopPropagation()
-    console.log 'selected', e.selected
     actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId
 
   _handleProjectUpload: ->
@@ -220,10 +253,17 @@ module.exports = React.createClass
       @state.writer.getIn(['config', 'project', 'id']))
 
   _renderNotFound: ->
-    div {className: 'table table-striped'},
-      div {className: 'tfoot'},
-        div {className: 'tr'},
-          div {className: 'td'}, 'No tables found'
+    # div {className: 'table table-striped'},
+    #   div {className: 'tfoot'},
+    #     div {className: 'tr'},
+    #       div {className: 'td'}, 'No tables found'
+
+    React.createElement ComponentEmptyState,
+      null
+    ,
+      p null, 'No tables configured.'
+      @_renderAddNewTable()
+
 
 
   _renderBucketPanel: (bucketId, tables) ->
@@ -250,3 +290,74 @@ module.exports = React.createClass
       React.createElement TablesList,
         configId: @state.writer.getIn ['config', 'id']
         tables: tables
+
+  ###
+  Tomas
+  ###
+
+  _renderTableRow: (table, isDeleted = false) ->
+    #bucketId = table.getIn ['bucket', 'id']
+    writerTable = @state.tablesByBucket.get table.get('id')
+    React.createElement TableRow,
+      table: writerTable
+      configId: @state.configId
+      sapiTable: table
+      deleteTableFn: @_deleteTable
+      isDeleting: @state.deletingTables.get(table.get('id'))
+      isDeleted: isDeleted
+
+  _renderHeaderRow: ->
+    div className: 'tr',
+      span className: 'th',
+        strong null, 'Table name'
+      span className: 'th',
+        strong null, 'GoodData title'
+      span className: 'th'
+
+  _renderTablesByBucketsPanel: ->
+    React.createElement TablesByBucketsPanel,
+      renderTableRowFn: @_renderTableRow
+      renderHeaderRowFn: @_renderHeaderRow
+      filterFn: @_filterBuckets
+      searchQuery: @state.filter
+      isTableExportedFn: @_isTableExported
+      onToggleBucketFn: @_handleBucketSelect
+      isBucketToggledFn: (bucketId) =>
+        @state.writer.getIn(['bucketToggles', bucketId])
+      showAllTables: false
+      isTableShownFn: @_isTableShown
+      configuredTables: @state.tablesByBucket.keySeq().toJS()
+      renderDeletedTableRowFn: (table) =>
+        @_renderTableRow(table, true)
+
+
+  _filterBuckets: (buckets) ->
+    buckets = buckets.filter (bucket) ->
+      bucket.get('stage') == 'out'
+    return buckets
+
+  _isTableExported: (tableId) ->
+    @state.tablesByBucket.find (table) ->
+      table.get('id') == tableId and table.getIn ['data', 'export']
+
+  _isTableShown: (tableId) ->
+    @state.tablesByBucket.find (table) ->
+      table.get('id') == tableId
+
+  _deleteTable: (tableId) ->
+    actionCreators.deleteTable(@state.configId, tableId)
+
+
+  _updateLocalState: (path, data) ->
+    newState = @state.localState.setIn(path, data)
+    installedComponentsActions.updateLocalState('gooddata-writer', @state.configId, newState)
+
+
+  _oldTablesList: ->
+    div
+      className: 'kbc-accordion kbc-panel-heading-with-table el-heading-with-table'
+    ,
+      @state.tablesByBucket.map (tables, bucketId) ->
+        @_renderBucketPanel bucketId, tables
+      , @
+      .toArray()

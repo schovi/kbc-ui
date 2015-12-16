@@ -1,47 +1,47 @@
 React = require 'react'
 Input = React.createFactory(require('react-bootstrap').Input)
 List = require('immutable').List
+VendorInfo = React.createFactory(require '../component-detail/VendorInfo.coffee')
 
-{div, label, ul, li, p, span, strong, address, a, br } = React.DOM
+{div, label, ul, li, p, span, strong, address, a, br, em, table, tr, td, h2} = React.DOM
 module.exports = React.createClass
   displayName: 'appVendorInfo'
   propTypes:
-    vendorData: React.PropTypes.object.isRequired
+    component: React.PropTypes.object.isRequired
+    licenseAgreed: React.PropTypes.bool.isRequired
     handleAgreedLicense: React.PropTypes.func.isRequired
 
   render: ->
     div className: 'form-group',
-      label className: 'control-label col-xs-2', 'License'
+      label className: 'control-label col-xs-2', 'Vendor'
       div className: 'col-xs-10',
-        span null, 'This is a 3rd party application with the following terms and conditions:'
-        ul null,
-          li null, 'An extra fee may be charged.'
-          li null, 'Data may be sent out of Keboola Connection.'
+        VendorInfo
         div null,
           "Application developed by"
           @_renderAddress()
         Input
           type: 'checkbox'
           label: @_renderCheckboxLabel()
-          checked: @props.vendorData.get('agreed')
+          checked: @props.licenseAgreed
           wrapperClassName: 'col-xs-10'
-          labelClassName: 'col-xs-10'
+          labelClassName: 'col-xs-12'
           onChange: (event) =>
             @props.handleAgreedLicense(event.target.checked)
 
   _renderCheckboxLabel: ->
-    licenseUrl = @props.vendorData.get 'licenseUrl'
+    licenseUrl = @props.component.getIn(['data', 'vendor', 'licenseUrl'], null)
     msg = 'I agree with these terms and conditions'
     if not licenseUrl
       return "#{msg}."
     else
       span null,
         "#{msg} and with "
-        a {href: licenseUrl, target: '_blank'}, "vendor license terms and conditions."
+        a {href: licenseUrl, target: '_blank'}, "vendor license terms and conditions"
+        "."
 
 
   _renderAddress: ->
-    contactData = @props.vendorData.get 'contact'
+    contactData = @props.component.getIn(['data', 'vendor', 'contact'], 'No Address')
     firstLine = strong(null, contactData)
     restLines = null
     if List.isList(contactData)

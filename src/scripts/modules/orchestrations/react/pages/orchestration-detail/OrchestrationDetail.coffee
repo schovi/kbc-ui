@@ -27,13 +27,15 @@ OrchestrationDetail = React.createClass
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    jobs = OrchestrationJobsStore.getOrchestrationJobs orchestrationId
     return {
       orchestration: OrchestrationStore.get orchestrationId
       tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filteredOrchestrations: OrchestrationStore.getFiltered()
       filter: OrchestrationStore.getFilter()
-      jobs: OrchestrationJobsStore.getOrchestrationJobs orchestrationId
+      jobs: jobs
+      graphJobs: jobs.filter (job) -> job.get('startTime') && job.get('endTime')
       jobsLoading: OrchestrationJobsStore.isLoading orchestrationId
     }
 
@@ -104,7 +106,7 @@ OrchestrationDetail = React.createClass
                     ' '
                     span className: 'fa fa-edit'
                     ' Configure Tasks'
-        (JobsGraph(jobs: @state.jobs) if @state.jobs.size >= 2)
+        (JobsGraph(jobs: @state.graphJobs) if @state.graphJobs.size >= 2)
         JobsTable(
           jobs: @state.jobs
           jobsLoading: @state.jobsLoading

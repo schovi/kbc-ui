@@ -3,7 +3,7 @@ installedComponentsActions = require '../components/InstalledComponentsActionCre
 installedComponentsStore = require '../components/stores/InstalledComponentsStore'
 oauthStore = require('../components/stores/OAuthStore')
 oauthActions = require('../components/OAuthActionCreators')
-
+StorageActions = require '../components/StorageActionCreators'
 Immutable = require 'immutable'
 RouterStore = require('../../stores/RoutesStore')
 {Navigation} = require 'react-router'
@@ -12,13 +12,14 @@ JobsActionCreators = require '../jobs/ActionCreators'
 
 module.exports =
   name: 'wr-dropbox'
-  path: 'wr-dropbox/:config'
+  path: ':config'
   isComponent: true
   requireData: [
     (params) ->
       installedComponentsActions.loadComponentConfigData('wr-dropbox', params.config)
     (params) ->
       oauthActions.loadCredentials('wr-dropbox', params.config)
+    (params) -> StorageActions.loadTables()
   ]
   poll:
     interval: 7
