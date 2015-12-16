@@ -1,5 +1,6 @@
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
+dockerProxyApi = require('./templates/dockerProxyApi').default
 #componentId = 'wr-db'
 
 module.exports = (componentId) ->
@@ -8,9 +9,11 @@ module.exports = (componentId) ->
     path = "#{configId}/#{path}"
     SyrupApi.createRequest(componentId, method, path)
 
+  proxyApi = dockerProxyApi(componentId)
 
   getCredentials: (configId) ->
-    createRequest('GET', configId, 'credentials')
+    proxyPromise = proxyApi?.getCredentials(configId)
+    return proxyPromise or createRequest('GET', configId, 'credentials')
     .promise()
     .then (response) ->
       response.body
@@ -24,7 +27,8 @@ module.exports = (componentId) ->
       response.body
 
   getTables: (configId) ->
-    createRequest('GET', configId, 'tables')
+    proxyPromise = proxyApi?.getTables(configId)
+    return proxyPromise or createRequest('GET', configId, 'tables')
     .promise()
     .then (response) ->
       response.body
