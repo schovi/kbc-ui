@@ -31,7 +31,8 @@ export default function(componentId) {
     getTables(configId) {
       return this.loadConfigData(configId).then(
         (data) => {
-          return data.getIn(['parameters', 'tables']);
+          const tables = data.getIn(['parameters', 'tables']);
+          return tables.map((table) => table.set('id', table.get('tableId')));
         }
       );
     }
