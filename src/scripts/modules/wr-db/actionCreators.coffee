@@ -136,6 +136,29 @@ module.exports =
         configId: configId
         error: err
       throw err
+  deleteTable: (componentId, configId, tableId) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_DELETE_TABLE_START
+      componentId: componentId
+      configId: configId
+      tableId: tableId
+
+    api(componentId).deleteTable(configId, tableId)
+    .then (result) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_DELETE_TABLE_SUCCESS
+        componentId: componentId
+        configId: configId
+        tableId: tableId
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        componentId: componentId
+        configId: configId
+        error: err
+      throw err
+
+
 
   saveTableColumns: (componentId, configId, tableId, columns) ->
     dispatcher.handleViewAction

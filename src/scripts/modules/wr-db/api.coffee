@@ -26,15 +26,19 @@ module.exports = (componentId) ->
     .then (response) ->
       response.body
 
+  deleteTable: (configId, tableId) ->
+    createRequest('DELETE', configId, 'config-tables/' + tableId )
+    .promise()
+
   getTables: (configId) ->
     proxyPromise = proxyApi?.getTables(configId)
-    return proxyPromise or createRequest('GET', configId, 'tables')
+    return proxyPromise or createRequest('GET', configId, 'config-tables')
     .promise()
     .then (response) ->
       response.body
 
   getTable: (configId, tableId) ->
-    path = "tables/#{tableId}"
+    path = "config-tables/#{tableId}"
     createRequest('GET', configId, path)
     .promise()
     .then (response) ->

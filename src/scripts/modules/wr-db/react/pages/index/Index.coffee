@@ -55,6 +55,7 @@ templateFn = (componentId) ->
     hasCredentials: WrDbStore.hasCredentials(componentId, configId)
     localState: localState
     bucketToggles: toggles
+    deletingTables: WrDbStore.getDeletingTables(componentId, configId)
 
 
   render: ->
@@ -135,9 +136,11 @@ templateFn = (componentId) ->
           filterFn: @_filterBuckets
           searchQuery: @state.localState.get('searchQuery')
           isTableExportedFn: @_isTableExported
+          isTableShownFn: @_isTableInConfig
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
           configuredTableIds: configuredIds
+          showAllTables: false
       else
         div className: 'row component-empty-state text-center',
           div null,
@@ -207,6 +210,9 @@ templateFn = (componentId) ->
         @_handleExportChange(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
+      deleteTableFn: (tableId) =>
+        WrDbActions.deleteTable(componentId, @state.configId, tableId)
+      isDeleting: @state.deletingTables.get(table.get('id'))
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -229,6 +235,10 @@ templateFn = (componentId) ->
 
   _prepareTableUploadData: (table) ->
     return []
+
+  _isTableInConfig: (tableId) ->
+    @state.tables.find (t) ->
+      t.get('id') == tableId
 
   _isTableExported: (tableId) ->
     table = @_getConfigTable(tableId)
