@@ -47,8 +47,7 @@ export default React.createClass({
               saveLabel="Add"
               onCancel={this.props.onHideFn}
               onSave={ () => {
-                this.props.onSaveFn(this.props.selectedTableId);
-                this.onHideFn();
+                this.props.onSaveFn(this.props.selectedTableId).then(() => this.props.onHideFn());
               }}
               />
         </Modal.Footer>
