@@ -99,17 +99,19 @@ templateFn = (componentId) ->
         '+ Add New Table'
       React.createElement AddNewTableModal,
         show: data.get('show', false)
-        onHideFn: ->
-          updateStateFn([], Map())
+        allowedBuckets: ['out']
+        onHideFn: =>
+          @_updateLocalState([], Map())
         selectedTableId: selectedTableId
         onSetTableIdFn: (tableId) ->
           updateStateFn(['tableId'], tableId)
         configuredTables: inputTables
         onSaveFn: (tableId) =>
-          @_handleExportChange(tableId).then ->
-            updateStateFn([], Map())
+          WrDbActions.addTableToConfig(componentId, @state.configId, tableId).then =>
+            RoutesStore.getRouter().transitionTo "#{componentId}-table",
+              tableId: tableId
+              config: @state.configId
         isSaving: @_isPendingTable(selectedTableId)
-
 
   _renderMainContent: ->
     configuredTables = @state.tables.filter (table) ->

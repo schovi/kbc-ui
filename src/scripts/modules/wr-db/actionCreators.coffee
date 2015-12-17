@@ -72,6 +72,7 @@ module.exports =
         error: err
       throw err
 
+
   resetCredentials: (componentId, configId) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_SAVE_CREDENTIALS_SUCCESS
@@ -86,6 +87,34 @@ module.exports =
       configId: configId
       path: path
       data: data
+
+  addTableToConfig: (componentId, configId, tableId) ->
+    table =
+      id: tableId
+      dbName: tableId
+      export: true
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.WR_DB_ADD_TABLE_START
+      componentId: componentId
+      configId: configId
+      tableId: tableId
+      table: table
+    api(componentId).postTable(configId, tableId, table)
+    .then (result) =>
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_ADD_TABLE_SUCCESS
+        componentId: componentId
+        configId: configId
+        tableId: tableId
+        table: table
+      @loadTableConfig componentId, configId, tableId
+    .catch (err) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.WR_DB_API_ERROR
+        componentId: componentId
+        configId: configId
+        error: err
+      throw err
 
   saveCredentials: (componentId, configId, credentials) ->
     dispatcher.handleViewAction

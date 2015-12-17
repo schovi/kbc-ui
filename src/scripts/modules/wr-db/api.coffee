@@ -52,6 +52,15 @@ module.exports = (componentId) ->
     .then (response) ->
       response.body
 
+  postTable: (configId, tableId, table) ->
+    path = "tables/#{tableId}"
+    createRequest('POST', configId, path)
+    .send table
+    .promise()
+    .then (response) ->
+      response.body
+
+
   setTable: (configId, tableId, dbName, isExported) ->
     exported = if isExported then 1 else 0
     path = "tables/#{tableId}"

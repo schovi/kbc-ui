@@ -19,6 +19,7 @@ _store = Map
 
 
 
+
 WrDbStore = StoreUtils.createStore
 
   getDeletingTables: (componentId, configId) ->
@@ -102,6 +103,25 @@ Dispatcher.register (payload) ->
       credentials = action.credentials
       _store = _store.deleteIn ['savingCredentials', componentId, configId]
       _store = _store.setIn ['credentials', componentId, configId], fromJS(credentials)
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_ADD_TABLE_START
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      table = action.table
+      _store = _store.setIn ['updatingTables', componentId, configId, tableId], true
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_ADD_TABLE_SUCCESS
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      table = action.table
+      _store = _store.deleteIn ['updatingTables', componentId, configId, tableId]
+      tables = WrDbStore.getTables(componentId, configId)
+      tables = tables.push(fromJS(table))
+      _store = _store.setIn ['tables', componentId, configId], tables
       WrDbStore.emitChange()
 
     when constants.ActionTypes.WR_DB_SAVE_COLUMNS_START

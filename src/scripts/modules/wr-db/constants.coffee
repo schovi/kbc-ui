@@ -25,3 +25,6 @@ module.exports =
 
     WR_DB_DELETE_TABLE_START: null
     WR_DB_DELETE_TABLE_SUCCESS: null
+
+    WR_DB_ADD_TABLE_START: null
+    WR_DB_ADD_TABLE_SUCCESS: null
