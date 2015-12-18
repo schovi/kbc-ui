@@ -4,6 +4,6 @@ node_modules
 dist
 npm-debug.log
 .idea
-/.tern-port
+**/.tern-port
 /.tern-project
 /src/scripts/modules/ex-google-drive/api-mocks/
