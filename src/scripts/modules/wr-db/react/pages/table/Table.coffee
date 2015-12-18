@@ -14,7 +14,7 @@ storageApi = require '../../../../components/StorageApi'
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
 
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
@@ -41,12 +41,13 @@ module.exports = (componentId) ->
 
 templateFn = (componentId) ->
   displayName: "WrDbTableDetail"
-  mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore)]
+  mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     tableConfig = WrDbStore.getTableConfig(componentId, configId, tableId)
+    storageTableColumns = StorageTablesStore.getAll().getIn [tableId, 'columns'], List()
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     tablesExportInfo = WrDbStore.getTables(componentId, configId)
     exportInfo = tablesExportInfo.find((tab) ->
@@ -66,7 +67,7 @@ templateFn = (componentId) ->
     editingData: editingData
     isUpdatingTable: isUpdatingTable
     tableConfig: tableConfig
-    columns: tableConfig.get('columns')
+    columns: @_prepareColumns(tableConfig.get('columns'), storageTableColumns)
     tableId: tableId
     configId: configId
     localState: localState
@@ -76,8 +77,26 @@ templateFn = (componentId) ->
   getInitialState: ->
     dataPreview: null
 
+  _prepareColumns: (configColumns, storageColumns) ->
+    storageColumns.map (storageColumn) ->
+      configColumnFound = configColumns.find( (cc) -> cc.get('name') == storageColumn)
+      if configColumnFound
+        configColumnFound
+      else
+        fromJS
+          name: storageColumn
+          dbName: storageColumn
+          type: 'IGNORE'
+          null: false
+          default: ''
+          size: ''
 
   componentDidMount: ->
+    if @state.columns.reduce(
+      (memo, value) ->
+        memo and value.get('type') == 'IGNORE'
+    , true)
+      @_handleEditColumnsStart()
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     component = @
     storageApi

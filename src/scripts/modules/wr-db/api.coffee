@@ -1,5 +1,6 @@
 SyrupApi = require '../components/SyrupComponentApi'
 Immutable = require 'immutable'
+dockerProxyApi = require('./templates/dockerProxyApi').default
 #componentId = 'wr-db'
 
 module.exports = (componentId) ->
@@ -8,9 +9,11 @@ module.exports = (componentId) ->
     path = "#{configId}/#{path}"
     SyrupApi.createRequest(componentId, method, path)
 
+  proxyApi = dockerProxyApi(componentId)
 
   getCredentials: (configId) ->
-    createRequest('GET', configId, 'credentials')
+    proxyPromise = proxyApi?.getCredentials(configId)
+    return proxyPromise or createRequest('GET', configId, 'credentials')
     .promise()
     .then (response) ->
       response.body
@@ -23,14 +26,19 @@ module.exports = (componentId) ->
     .then (response) ->
       response.body
 
+  deleteTable: (configId, tableId) ->
+    createRequest('DELETE', configId, 'config-tables/' + tableId )
+    .promise()
+
   getTables: (configId) ->
-    createRequest('GET', configId, 'tables')
+    proxyPromise = proxyApi?.getTables(configId)
+    return proxyPromise or createRequest('GET', configId, 'config-tables')
     .promise()
     .then (response) ->
       response.body
 
   getTable: (configId, tableId) ->
-    path = "tables/#{tableId}"
+    path = "config-tables/#{tableId}"
     createRequest('GET', configId, path)
     .promise()
     .then (response) ->
@@ -44,6 +52,15 @@ module.exports = (componentId) ->
     .then (response) ->
       response.body
 
+  postTable: (configId, tableId, table) ->
+    path = "tables/#{tableId}"
+    createRequest('POST', configId, path)
+    .send table
+    .promise()
+    .then (response) ->
+      response.body
+
+
   setTable: (configId, tableId, dbName, isExported) ->
     exported = if isExported then 1 else 0
     path = "tables/#{tableId}"
@@ -54,5 +71,4 @@ module.exports = (componentId) ->
     .send data
     .promise()
     .then (response) ->
-      console.log "API RESPONSE", response
       response.body

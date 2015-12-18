@@ -15,10 +15,15 @@ _store = Map
   savingCredentials: Map() #componentId#configId
   provisioningCredentials: Map() #componentId#configId
   loadingProvCredentials: Map() #componentId#configId
+  deletingTables: Map() #componentId#configId
+
 
 
 
 WrDbStore = StoreUtils.createStore
+
+  getDeletingTables: (componentId, configId) ->
+    _store.getIn ['deletingTables', componentId, configId], Map()
 
   isLoadingProvCredentials: (componentId, configId) ->
     _store.hasIn ['loadingProvCredentials', componentId, configId]
@@ -100,6 +105,25 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['credentials', componentId, configId], fromJS(credentials)
       WrDbStore.emitChange()
 
+    when constants.ActionTypes.WR_DB_ADD_TABLE_START
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      table = action.table
+      _store = _store.setIn ['updatingTables', componentId, configId, tableId], true
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_ADD_TABLE_SUCCESS
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      table = action.table
+      _store = _store.deleteIn ['updatingTables', componentId, configId, tableId]
+      tables = WrDbStore.getTables(componentId, configId)
+      tables = tables.push(fromJS(table))
+      _store = _store.setIn ['tables', componentId, configId], tables
+      WrDbStore.emitChange()
+
     when constants.ActionTypes.WR_DB_SAVE_COLUMNS_START
       componentId = action.componentId
       configId = action.configId
@@ -176,6 +200,24 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['credentials', componentId, configId], fromJS(credentials)
       WrDbStore.emitChange()
 
+    when constants.ActionTypes.WR_DB_DELETE_TABLE_START
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      _store = _store.setIn ['deletingTables', componentId, configId, tableId], true
+      WrDbStore.emitChange()
+
+    when constants.ActionTypes.WR_DB_DELETE_TABLE_SUCCESS
+      componentId = action.componentId
+      configId = action.configId
+      tableId = action.tableId
+      _store = _store.deleteIn ['deletingTables', componentId, configId, tableId]
+      tables = WrDbStore.getTables(componentId, configId)
+      tables = tables.filter((table) ->
+        table.get('id') != tableId
+      )
+      _store = _store.setIn ['tables', componentId, configId], tables
+      WrDbStore.emitChange()
     when constants.ActionTypes.WR_DB_API_ERROR
       componentId = action.componentId
       configId = action.configId
