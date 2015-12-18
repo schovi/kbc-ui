@@ -101,13 +101,13 @@ module.exports =
       table: table
     api(componentId).postTable(configId, tableId, table)
     .then (result) =>
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.WR_DB_ADD_TABLE_SUCCESS
-        componentId: componentId
-        configId: configId
-        tableId: tableId
-        table: table
-      @loadTableConfig componentId, configId, tableId
+      @loadTableConfig(componentId, configId, tableId).then ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.WR_DB_ADD_TABLE_SUCCESS
+          componentId: componentId
+          configId: configId
+          tableId: tableId
+          table: table
     .catch (err) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.WR_DB_API_ERROR
