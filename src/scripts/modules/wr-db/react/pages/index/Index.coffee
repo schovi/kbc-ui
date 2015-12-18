@@ -8,6 +8,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
@@ -117,6 +118,10 @@ templateFn = (componentId) ->
               config: @state.configId
         isSaving: @_isPendingTable(selectedTableId)
 
+  _hasConfigTables: ->
+    console.log "HAS TABLES", @state.tables.count()
+    @state.tables.count() > 0
+
   _renderMainContent: ->
     configuredTables = @state.tables.filter (table) ->
       table.get('export')
@@ -129,13 +134,14 @@ templateFn = (componentId) ->
             componentId: componentId
             configId: @state.configId
         div className: 'col-sm-4 kbc-buttons text-right',
-          @_renderAddNewTable()
-      if @_hasValidCredentials()
+          if @_hasConfigTables()
+            @_renderAddNewTable()
+      if @_hasValidCredentials() and @_hasConfigTables()
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery') or ''
-      if @_hasValidCredentials()
+      if @_hasValidCredentials() and @_hasConfigTables()
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
@@ -148,17 +154,20 @@ templateFn = (componentId) ->
           configuredTableIds: configuredIds
           showAllTables: false
       else
-        div className: 'row component-empty-state text-center',
-          div null,
-            p null, 'No credentials provided.'
-            Link
-              className: 'btn btn-success'
-              to: "#{componentId}-credentials"
-              params:
-                config: @state.configId
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Setup Credentials First'
+        React.createElement ComponentEmptyState, null,
+          if not @_hasValidCredentials()
+            div null,
+              p null, 'No credentials provided.'
+              Link
+                className: 'btn btn-success'
+                to: "#{componentId}-credentials"
+                params:
+                  config: @state.configId
+              ,
+                i className: 'fa fa-fw fa-user'
+                ' Setup Credentials First'
+          else
+            @_renderAddNewTable()
 
   _disabledToRun: ->
     if not @_hasValidCredentials()
