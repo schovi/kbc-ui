@@ -5,6 +5,9 @@ classnames = require 'classnames'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
@@ -47,6 +50,7 @@ templateFn = (componentId) ->
     credentials = WrDbStore.getCredentials(componentId, configId)
 
     #state
+    latestJobs: LatestJobsStore.getJobs componentId, configId
     updatingTables: WrDbStore.getUpdatingTables(componentId, configId)
     allTables: StorageTablesStore.getAll()
     tables: tables
@@ -198,6 +202,8 @@ templateFn = (componentId) ->
           React.createElement DeleteConfigurationButton,
             componentId: componentId
             configId: @state.configId
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
 
 
   _renderTableRow: (table) ->
