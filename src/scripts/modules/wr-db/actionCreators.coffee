@@ -92,6 +92,7 @@ module.exports =
     table =
       id: tableId
       dbName: tableId
+      name: tableId
       export: true
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_ADD_TABLE_START

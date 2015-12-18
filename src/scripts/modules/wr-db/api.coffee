@@ -71,5 +71,4 @@ module.exports = (componentId) ->
     .send data
     .promise()
     .then (response) ->
-      console.log "API RESPONSE", response
       response.body
