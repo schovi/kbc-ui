@@ -8,7 +8,7 @@ createRequest = (method, url) ->
 
 module.exports =
   getSchema: (componentId) ->
-    url = 'https://g4cms8rol6.execute-api.us-east-1.amazonaws.com/prod/templates/' + componentId
+    url = 'https://2aom76uwth.execute-api.us-east-1.amazonaws.com/prod/schemas/' + componentId
     request('GET', url)
     .promise().then (response) ->
       return response.body
