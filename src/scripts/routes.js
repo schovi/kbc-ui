@@ -3,11 +3,13 @@ import ErrorPage from './react/pages/ErrorPage';
 import Home from './modules/home/react/Index';
 import DataTakeout from './modules/data-takeout/Index';
 import Limits from './modules/limits/Index';
+import ComponentsOverview from './modules/components/react/pages/ComponentsOverview';
 
 import {extractors, writers, applications} from './modules/components/Routes';
 import orchestrationRoutes  from './modules/orchestrations/Routes';
 import transformationRoutes from './modules/transformations/Routes';
 import jobRoutes from './modules/jobs/Routes';
+
 
 export default {
   handler: App,
@@ -33,6 +35,11 @@ export default {
       name: 'limits',
       title: 'Limits',
       defaultRouteHandler: Limits
+    },
+    {
+      name: 'components',
+      title: 'Components Overview',
+      defaultRouteHandler: ComponentsOverview
     }
   ]
 };

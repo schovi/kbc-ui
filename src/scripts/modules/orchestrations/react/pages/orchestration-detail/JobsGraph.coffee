@@ -52,8 +52,7 @@ JobsGraph = React.createClass
     @chart.draw(200)
 
   _prepareData: ->
-    jobs = @props.jobs.filter (job) ->
-      job.get('startTime') && job.get('endTime')
+    jobs = @props.jobs
     .map (job) ->
       Map
         status: job.get('status')

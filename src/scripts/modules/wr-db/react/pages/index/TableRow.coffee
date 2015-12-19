@@ -2,12 +2,14 @@ React = require 'react'
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, button, strong, div} = React.DOM
+{Loader} = require 'kbc-react-components'
 Link = React.createFactory(require('react-router').Link)
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
+{span, div, a, button, i, strong} = React.DOM
 
 module.exports = React.createClass
 
@@ -22,6 +24,8 @@ module.exports = React.createClass
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
     componentId: React.PropTypes.string.isRequired
+    deleteTableFn: React.PropTypes.func.isRequired
+    isDeleting: React.PropTypes.bool.isRequired
 
   render: ->
     Link
@@ -43,6 +47,7 @@ module.exports = React.createClass
           isActive: @props.isTableExported
           isPending: @props.isPending
           onChange: @props.onExportChangeFn
+        @_renderDeleteButton()
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
         ,
@@ -57,3 +62,22 @@ module.exports = React.createClass
               writer: @props.configId
           ,
            "You are about to run upload of #{@props.table.get('id')} to the database."
+
+  _renderDeleteButton: ->
+    if @props.isDeleting
+      span className: 'btn btn-link',
+        React.createElement Loader
+    else
+      React.createElement Tooltip,
+        tooltip: 'Remove table from configuration'
+        placement: 'top'
+        React.createElement Confirm,
+          key: @props.table.get 'id'
+          title: "Remove #{@props.table.get('id')}"
+          text: 'You are about to remove table from the configuration.'
+          buttonLabel: 'Remove'
+          onConfirm: =>
+            @props.deleteTableFn(@props.table.get('id'))
+        ,
+          button className: 'btn btn-link',
+            i className: 'kbc-icon-cup'

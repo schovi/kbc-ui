@@ -15,7 +15,8 @@ TransformationsActionCreators = require '../../../ActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 {Tooltip, Confirm, Loader} = require '../../../../../react/common/common'
-CreateSandboxModal = require('../../modals/ConfigureSandbox').default
+CreateSandboxButton = require('../../components/CreateSandboxButton').default
+
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 ConfigureSnowflakeConnection = React.createFactory(require('./ConfigureSnowflakeConnection').default)
@@ -123,15 +124,7 @@ module.exports = React.createClass
           @state.transformation.get('backend') == 'mysql' && @state.transformation.get('type') == 'simple' or
           @state.transformation.get('backend') == 'snowflake'
             li {},
-              a
-                onClick: => @setState sandboxModalOpen: true
-              ,
-                React.DOM.i className: "fa fa-fw fa-wrench"
-                ' Create sandbox'
-              React.createElement CreateSandboxModal,
-                show: @state.sandboxModalOpen
-                onHide: => @setState sandboxModalOpen: false
-                defaultMode: 'prepare'
+              React.createElement CreateSandboxButton,
                 backend: @state.transformation.get("backend")
                 runParams: Immutable.Map
                   configBucketId: @state.bucketId

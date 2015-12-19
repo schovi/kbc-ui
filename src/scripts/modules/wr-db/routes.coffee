@@ -6,20 +6,22 @@ InstalledComponentsStore = require '../components/stores/InstalledComponentsStor
 ComponentsStore = require '../components/stores/ComponentsStore'
 CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 storageActionCreators = require '../components/StorageActionCreators'
+JobsActionCreators = require '../jobs/ActionCreators'
 
 #driver = 'mysql'
 #componentId = 'wr-db'
 
 createRoute = (componentId, driver, isProvisioning) ->
   name: componentId
-  path: "#{componentId}/:config"
+  path: ":config"
   title: (routerState) ->
-    component = ComponentsStore.getComponent componentId
     configId = routerState.getIn ['params', 'config']
-    componentName = component.get 'name'
-    configName = InstalledComponentsStore.getConfig(componentId, configId).get('name')
-    return "#{componentName} - #{configName}"
+    InstalledComponentsStore.getConfig(componentId, configId).get('name')
   isComponent: true
+  poll:
+    interval: 5
+    action: (params) ->
+      JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
   defaultRouteHandler: dbwrIndex(componentId)
   requireData: [
     (params) ->

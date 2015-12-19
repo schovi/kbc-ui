@@ -24,9 +24,21 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('table')
+    isEditingColumns = goodDataWriterStore.isEditingTableColumns(configId, tableId)
 
     table: goodDataWriterStore.getTable(configId, tableId)
     configurationId: configId
+    columns: goodDataWriterStore.getTableColumns(configId,
+      tableId,
+      if isEditingColumns then 'editing' else 'current'
+    )
+    isEditingColumns: isEditingColumns
+
+
+  _isAllColumnsIgnored: ->
+    this.state.columns.reduce((memo, c) ->
+      memo && c.get('type') == 'IGNORE'
+    , true)
 
   _handleResetExportStatus: ->
     actionCreators.saveTableField @state.configurationId,
@@ -120,7 +132,6 @@ module.exports = React.createClass
             buttonType: 'success'
             onConfirm: @_handleUpload
           ,
-            React.createElement Button, null,
+            React.createElement Button, disabled: @state.isEditingColumns or @_isAllColumnsIgnored(),
               span className: 'fa fa-upload fa-fw'
               ' Upload table'
-

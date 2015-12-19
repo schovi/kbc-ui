@@ -1,10 +1,20 @@
 React = require 'react'
 ComponentsActionCreators = require '../../ComponentsActionCreators'
 ComponentIcon = React.createFactory(require('../../../../react/common/ComponentIcon').default)
+ComponentDetailLink = React.createFactory(require('../../../../react/common/ComponentDetailLink'))
 SearchRow = React.createFactory(require('../../../../react/common/SearchRow').default)
 Link = React.createFactory(require('react-router').Link)
+Modal = React.createFactory(require('react-bootstrap').Modal)
+ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
+ModalBody = React.createFactory(require('react-bootstrap/lib/ModalBody'))
+ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
+ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
+Button = React.createFactory(require('react-bootstrap').Button)
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p} = React.DOM
+
+{div, table, tbody, tr, td, ul, li, a, span, h2, p, button} = React.DOM
+
+require('./NewComponentSelection.less')
 
 ComponentBox = React.createClass
   displayName: 'ComponentBox'
@@ -20,17 +30,18 @@ ComponentBox = React.createClass
       ComponentIcon
         component: component
         size: '64'
-      h2 null, component.get('name')
+      h2 null,
+        component.get('name')
       p null, component.get('description')
-      Link
-        className: 'btn btn-success btn-lg'
-        to: "new-#{component.get('type')}-form"
-        params:
-          componentId: component.get 'id'
-      ,
-        span className: 'kbc-icon-plus'
-        ' Add'
+      ComponentDetailLink
+        componentId: @props.component.get("id")
+        type: @props.component.get("type")
 
+        button
+          className: 'btn btn-success'
+          onClick: @open
+        ,
+          'More'
 
 module.exports = React.createClass
   displayName: 'NewComponentSelection'

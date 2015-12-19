@@ -1,7 +1,7 @@
 Dispatcher = require('../../../Dispatcher')
 Constants = require '../Constants'
 Immutable = require('immutable')
-Map = Immutable.Map
+{Map, List} = Immutable
 _ = require 'underscore'
 camelize = require 'underscore.string/camelize'
 fuzzy = require 'fuzzy'
@@ -74,6 +74,8 @@ ComponentsStore = StoreUtils.createStore
       id: name
       name: name
       type: 'unknown'
+      flags: List()
+      data: Map()
 
 Dispatcher.register (payload) ->
   action = payload.action
