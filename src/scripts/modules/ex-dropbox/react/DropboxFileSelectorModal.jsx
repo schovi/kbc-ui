@@ -11,7 +11,6 @@ export default React.createClass({
     dropboxFiles: React.PropTypes.array,
     canSaveConfig: React.PropTypes.func,
     saveConfig: React.PropTypes.func,
-    cancelConfig: React.PropTypes.func,
     isSaving: React.PropTypes.bool,
     selectedCsvFiles: React.PropTypes.func,
     selectedInputBucket: React.PropTypes.func,
@@ -21,7 +20,6 @@ export default React.createClass({
   },
 
   handleCancelFunction() {
-    this.props.cancelConfig();
     this.props.onHide();
   },
 
