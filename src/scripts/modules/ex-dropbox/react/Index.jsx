@@ -112,9 +112,6 @@ export default React.createClass({
     });
   },
 
-  //this.updateLocalState(['selectedDropboxFiles'], []);
-  //this.updateLocalState(['selectedInputBucket'], []);
-
   componentDidMount() {
     if (this.state.hasCredentials) {
       let data = this.state.credentials.get('data');
