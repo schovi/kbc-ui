@@ -38,8 +38,9 @@ module.exports = (componentId) ->
       response.body
 
   getTable: (configId, tableId) ->
+    proxyPromise = proxyApi?.getTable(configId, tableId)
     path = "config-tables/#{tableId}"
-    createRequest('GET', configId, path)
+    return proxyPromise or createRequest('GET', configId, path)
     .promise()
     .then (response) ->
       response.body
