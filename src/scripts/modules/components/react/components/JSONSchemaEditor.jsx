@@ -6,7 +6,7 @@ require('json-editor');
 
 export default React.createClass({
   propTypes: {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.object.isRequired,
     schema: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool.isRequired
@@ -17,10 +17,22 @@ export default React.createClass({
   componentDidMount() {
     var options =       {
       schema: this.props.schema,
-      startval: JSON.parse(this.props.value),
+      startval: this.props.value,
       theme: 'bootstrap3',
       iconlib: 'fontawesome4',
-      custom_validators: []
+      custom_validators: [],
+      ajax: false,
+      disable_array_add: false,
+      disable_array_delete: false,
+      disable_array_reorder: false,
+      disable_collapse: false,
+      disable_edit_json: false,
+      disable_properties: false,
+      no_additional_properties: false,
+      object_layout: 'normal',
+      required_by_default: true,
+      show_errors: 'interaction'
+
     };
 
     // Custom validators must return an array of errors or an empty array if valid
@@ -48,12 +60,15 @@ export default React.createClass({
     // When the value of the editor changes, update the JSON output and TODO validation message
     jsoneditor.on('change', function() {
       var json = jsoneditor.getValue();
-      props.onChange(JSON.stringify(json));
+      props.onChange(json);
     });
   },
 
-  componentWillUnmount() {
+  componentDidUpdate() {
+    this.jsoneditor.setValue(this.props.value);
+  },
 
+  componentWillUnmount() {
   },
 
   render() {

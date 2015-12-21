@@ -15,8 +15,10 @@ export default React.createClass({
   mixins: [createStoreMixin(SchemasStore)],
 
   getStateFromStores() {
+    var componentId = RoutesStore.getCurrentRouteParam('component');
     return {
-      paramsSchema: SchemasStore.getParamsSchema(RoutesStore.getCurrentRouteParam('component')).toJSON()
+      paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON(),
+      apiTemplate: SchemasStore.getApiTemplate(componentId).toJSON()
     };
   },
 
@@ -53,7 +55,7 @@ export default React.createClass({
             </Sticky>
             <JSONSchemaEditor
               schema={this.state.paramsSchema}
-              value={this.props.data}
+              value={this.extractValue()}
               onChange={this.handleChange}
               readOnly={this.props.isSaving}
             />
@@ -63,7 +65,22 @@ export default React.createClass({
     );
   },
 
+  extractValue() {
+    var value;
+    var parsed = JSON.parse(this.props.data);
+    if (parsed.config) {
+      value = parsed.config;
+    } else {
+      value = {};
+    }
+    return value;
+  },
+
   handleChange(value) {
-    this.props.onChange(value);
+    var config = {
+      api: this.state.apiTemplate,
+      config: value
+    };
+    this.props.onChange(JSON.stringify(config));
   }
 });

@@ -22,6 +22,9 @@ SchemasStore = StoreUtils.createStore
   getParamsSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'params'], Map()
 
+  getApiTemplate: (componentId) ->
+    _store.getIn ['schemas', componentId, 'templates', 'api'], Map()
+
 dispatcher.register (payload) ->
   action = payload.action
 
