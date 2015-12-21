@@ -33,8 +33,6 @@ import { ActivateDeactivateButton, Confirm } from '../../../react/common/common'
 import { Loader } from 'kbc-react-components';
 import { MD5 } from 'crypto-js';
 
-
-
 import {
   getBucketsForSelection,
   getDestinationName,
@@ -43,7 +41,6 @@ import {
   sortTimestampsInAscendingOrder,
   sortTimestampsInDescendingOrder
 } from '../actions/ApplicationActions';
-
 
 const componentId = 'ex-dropbox';
 
@@ -115,7 +112,7 @@ export default React.createClass({
     });
 
     this.updateLocalState(['selectedDropboxFiles'], fromJS([]));
-    this.updateLocalState(['selectedInputBucket'], "");
+    this.updateLocalState(['selectedInputBucket'], '');
   },
 
   componentDidMount() {
@@ -431,9 +428,8 @@ export default React.createClass({
 
   cancelConfig() {
     this.updateLocalState(['selectedDropboxFiles'], fromJS([]));
-    this.updateLocalState(['selectedInputBucket'], "");
+    this.updateLocalState(['selectedInputBucket'], '');
   },
-
 
   canRunUpload() {
     return (this.state.configData.hasIn(['parameters', 'config', 'dropboxFiles']) && this.state.configData.getIn(['parameters', 'config', 'dropboxFiles']).count() > 0 && this.state.hasCredentials);
