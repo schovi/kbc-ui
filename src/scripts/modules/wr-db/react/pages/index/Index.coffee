@@ -88,7 +88,7 @@ templateFn = (componentId) ->
     selectedTableId = data.get('tableId')
     inputTables = @state.tables.toMap().mapKeys((key, c) -> c.get('id'))
     isAllConfigured = @state.allTables.filter( (t) ->
-      t.getIn(['bucket', 'stage']) in ['out'] and not inputTables.has(t.get('id'))
+      t.getIn(['bucket', 'stage']) in ['out', 'in'] and not inputTables.has(t.get('id'))
     ).count() == 0
 
     updateStateFn = (path, newData) =>
@@ -104,7 +104,7 @@ templateFn = (componentId) ->
         '+ Add New Table'
       React.createElement AddNewTableModal,
         show: data.get('show', false)
-        allowedBuckets: ['out']
+        allowedBuckets: ['out', 'in']
         onHideFn: =>
           @_updateLocalState([], Map())
         selectedTableId: selectedTableId
@@ -119,7 +119,6 @@ templateFn = (componentId) ->
         isSaving: @_isPendingTable(selectedTableId)
 
   _hasConfigTables: ->
-    console.log "HAS TABLES", @state.tables.count()
     @state.tables.count() > 0
 
   _renderMainContent: ->
@@ -263,7 +262,7 @@ templateFn = (componentId) ->
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in ['out', 'in']
     return buckets
 
   _handleToggleBucket: (bucketId) ->
