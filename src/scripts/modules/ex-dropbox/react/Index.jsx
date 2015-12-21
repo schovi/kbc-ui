@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import React from 'react';
+import moment from 'moment';
 
 import AuthorizationModal from './DropboxAuthorizationModal';
 import FileSelectorModal from './DropboxFileSelectorModal';
@@ -8,6 +9,8 @@ import RunButtonModal from '../../components/react/components/RunComponentButton
 import classnames from 'classnames';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
+
+import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 
 import { ModalTrigger } from 'react-bootstrap';
 
@@ -28,9 +31,9 @@ import ComponentsMetadata from '../../components/react/components/ComponentMetad
 import { fromJS, Map, List } from 'immutable';
 import { ActivateDeactivateButton, Confirm } from '../../../react/common/common';
 import { Loader } from 'kbc-react-components';
-import moment from 'moment';
-
 import { MD5 } from 'crypto-js';
+
+
 
 import {
   getBucketsForSelection,
@@ -110,6 +113,9 @@ export default React.createClass({
     this.setState({
       showFileSelectorModal: this.state.isSaving
     });
+
+    this.updateLocalState(['selectedDropboxFiles'], fromJS([]));
+    this.updateLocalState(['selectedInputBucket'], "");
   },
 
   componentDidMount() {
@@ -183,6 +189,7 @@ export default React.createClass({
             canSaveConfig={this.canSaveConfig}
             saveConfig={this.saveConfig}
             isSaving={this.state.isSaving}
+            cancelConfig={this.cancelConfig}
           />
         </div>
       );
@@ -216,7 +223,7 @@ export default React.createClass({
                       <td>{table.file}</td>
                       <td>{table.bucket}</td>
                       <td>&gt;</td>
-                      <td>{table.output}</td>
+                      <td><SapiTableLinkEx tableId={table.output} /></td>
                       <td className="text-right">
                       {this.state.isSaving ? <Loader /> : <button className="btn btn-link" onClick={handleDeletingSingleElement}><i className="fa kbc-icon-cup"></i></button>}
                       <RunButtonModal
@@ -357,11 +364,13 @@ export default React.createClass({
 
   canSaveConfig() {
     let hasLocalConfigDataFiles = this.state.localState.has('selectedDropboxFiles');
+    let localConfigDataFiles = this.state.localState.get('selectedDropboxFiles');
     let hasLocalConfigDataBucket = this.state.localState.has('selectedInputBucket');
+    let localConfigDataBucket = this.state.localState.get('selectedInputBucket');
 
     // We can save new config whether user changed files selection.
     // On the other hand the bucket may be changed, but we also have to make sure the bucket is set.
-    if (hasLocalConfigDataFiles && hasLocalConfigDataBucket) {
+    if (hasLocalConfigDataFiles && hasLocalConfigDataBucket && localConfigDataFiles.length > 0 && localConfigDataBucket !== '') {
       return false;
     } else {
       return true;
@@ -393,7 +402,7 @@ export default React.createClass({
         };
       });
 
-      const oldState = this.state.configData.getIn(['parameters', 'config', 'dropboxFiles']).toJS();
+      const oldState = this.state.configData.getIn(['parameters', 'config', 'dropboxFiles'], Map()).toJS();
       const mergedState = [...oldState, ...localState];
 
       // We need to dedup the state in case there has been selected the same combination of file + bucket.
@@ -420,6 +429,12 @@ export default React.createClass({
     }
   },
 
+  cancelConfig() {
+    this.updateLocalState(['selectedDropboxFiles'], fromJS([]));
+    this.updateLocalState(['selectedInputBucket'], "");
+  },
+
+
   canRunUpload() {
     return (this.state.configData.hasIn(['parameters', 'config', 'dropboxFiles']) && this.state.configData.getIn(['parameters', 'config', 'dropboxFiles']).count() > 0 && this.state.hasCredentials);
   },
@@ -444,7 +459,7 @@ export default React.createClass({
     let localConfigDataBucket = this.state.localState.get('selectedInputBucket');
     let hasLocalConfigDataBucket = this.state.localState.has('selectedInputBucket');
 
-    if (hasLocalConfigDataBucket) {
+    if (hasLocalConfigDataBucket && localConfigDataBucket !== '') {
       selectedInputBucket.push({label: localConfigDataBucket, value: localConfigDataBucket});
     }
 
