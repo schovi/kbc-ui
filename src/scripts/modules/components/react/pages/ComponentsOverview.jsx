@@ -4,7 +4,7 @@ import ComponentName from '../../../../react/common/ComponentName';
 import ComponentDetailLink from '../../../../react/common/ComponentDetailLink';
 import SearchRow from '../../../../react/common/SearchRow';
 import ComponentsStore from '../../stores/ComponentsStore';
-import {ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 
 import lodash from 'lodash';
 import fuzzy from 'fuzzy';
@@ -27,11 +27,11 @@ var ComponentCheck = React.createClass({
 
   render() {
     return (
-      <ListGroupItem header={this.header()} bsStyle={this.itemClass()}>
+      <Panel header={this.header()} bsStyle={this.itemClass()} className="componentsOverview">
         {this.renderErrors()}
         {this.renderWarnings()}
         {this.renderDefinition()}
-      </ListGroupItem>
+      </Panel>
     );
   },
 
@@ -44,17 +44,16 @@ var ComponentCheck = React.createClass({
   renderDefinition() {
     if (!this.state.expanded) {
       return (
-        <a onClick={this.toggleExpand}>Expand &raquo;</a>
+        <p><a onClick={this.toggleExpand}>Expand &raquo;</a></p>
       );
     } else {
       return (
         <span>
+          <p><a onClick={this.toggleExpand}>&laquo; Collapse</a></p>
           <pre>
             {JSON.stringify(this.props.component.toJSON(), null, 2)}
           </pre>
-          <a onClick={this.toggleExpand}>&laquo; Collapse</a>
         </span>
-
       );
     }
   },
@@ -78,9 +77,9 @@ var ComponentCheck = React.createClass({
   renderErrors() {
     return lodash.map(this.getErrors(), function(error) {
       return (
-        <div className="text-error">
+        <p className="text-error">
           <i className="fa fa-exclamation fa-fw"></i> {error}
-        </div>
+        </p>
       );
     });
   },
@@ -88,9 +87,9 @@ var ComponentCheck = React.createClass({
   renderWarnings() {
     return lodash.map(this.getWarnings(), function(error) {
       return (
-        <div className="text-warning">
+        <p className="text-warning">
           <i className="fa fa-question fa-fw"></i> {error}
-        </div>
+        </p>
       );
     });
   },
@@ -101,8 +100,9 @@ var ComponentCheck = React.createClass({
       return 'danger';
     }
     if (this.getWarnings().length > 0) {
-      return 'warning';
+      return 'danger';
     }
+    return 'success';
   },
 
   isDockerComponent() {
@@ -157,10 +157,10 @@ var ComponentCheck = React.createClass({
   getWarnings() {
     var warnings = [];
     /*
-    if (!this.props.component.get('longDescription')) {
+     if (!this.props.component.get('longDescription')) {
      warnings.push('Missing long description');
-    }
-    */
+     }
+     */
     if (this.props.component.get('flags').contains('excludeFromNewList')) {
       warnings.push('Hidden in new list');
       var errors = this.getErrors(true);
@@ -193,9 +193,7 @@ export default React.createClass({
         <SearchRow
           onChange={this.handleFilterChange}
           query={this.state.filter} />
-        <ListGroup>
-          {this.components()}
-        </ListGroup>
+        {this.components()}
       </div>
     );
   },
