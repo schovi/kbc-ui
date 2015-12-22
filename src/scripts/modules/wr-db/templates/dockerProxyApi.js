@@ -52,6 +52,21 @@ export default function(componentId) {
       return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
     },
 
+    // ######### DELETE TABLE
+    deleteTable(configId, tableId) {
+      return this.loadConfigData(configId).then(
+        (data) => {
+          const paramTables = data.getIn(['parameters', 'tables']).filter((t) => t.get('tableId') !== tableId);
+          const mappingTables = data.getIn(tablesPath, List()).filter((t) => t.get('source') !== tableId);
+          const dataToSave = data
+                .setIn(['parameters', 'tables'], paramTables)
+                .setIn(tablesPath, mappingTables);
+
+          return this.saveConfigData(configId, dataToSave);
+        }
+      );
+    },
+
     // ######## POST TABLE
     postTable(configId, tableId, table) {
       const tableToSave = fromJS({

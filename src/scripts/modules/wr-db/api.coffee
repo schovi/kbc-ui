@@ -28,7 +28,8 @@ module.exports = (componentId) ->
       response.body
 
   deleteTable: (configId, tableId) ->
-    createRequest('DELETE', configId, 'config-tables/' + tableId )
+    proxyPromise = proxyApi?.deleteTable(configId, tableId)
+    return proxyPromise or createRequest('DELETE', configId, 'config-tables/' + tableId )
     .promise()
 
   getTables: (configId) ->
