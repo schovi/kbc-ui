@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react/addons';
 import ComponentIcon from '../../../../react/common/ComponentIcon';
 import ComponentName from '../../../../react/common/ComponentName';
+import SearchRow from '../../../../react/common/SearchRow';
 import ComponentsStore from '../../stores/ComponentsStore';
 import {ListGroup, ListGroupItem} from 'react-bootstrap';
 
 import lodash from 'lodash';
+import fuzzy from 'fuzzy';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import './componentsOverview.less';
@@ -30,7 +32,8 @@ var ComponentCheck = React.createClass({
       <div>
         <ComponentIcon component={this.props.component}/>
         <ComponentName component={this.props.component}/>
-        <small>{this.props.component.get('id')}</small>
+        &nbsp;
+        <small>({this.props.component.get('id')})</small>
       </div>
     );
   },
@@ -134,9 +137,18 @@ export default React.createClass({
     };
   },
 
+  getInitialState() {
+    return {
+      filter: ''
+    };
+  },
+
   render() {
     return (
       <div className="container-fluid kbc-main-content">
+        <SearchRow
+          onChange={this.handleFilterChange}
+          query={this.state.filter} />
         <ListGroup>
           {this.components()}
         </ListGroup>
@@ -145,7 +157,7 @@ export default React.createClass({
   },
 
   components() {
-    return this.state.components
+    return this.filteredComponents()
       .toIndexedSeq()
       .sortBy(function(component) {
         return component.get('id').toLowerCase();
@@ -154,5 +166,19 @@ export default React.createClass({
         return (<ComponentCheck component={component}/>);
       }
     ).toArray();
+  },
+
+  handleFilterChange(value) {
+    this.setState({filter: value});
+  },
+
+  filteredComponents() {
+    var filter = this.state.filter;
+    return this.state.components
+      .filter(function(value) {
+        return fuzzy.match(filter, value.get('name').toString()) || fuzzy.match(filter, value.get('id').toString());
+      }
+    );
   }
+
 });
