@@ -163,7 +163,12 @@ export default React.createClass({
         return component.get('id').toLowerCase();
       })
       .map(function(component) {
-        return (<ComponentCheck component={component}/>);
+        return (
+          <ComponentCheck
+            component={component}
+            key={component.get('id')}
+            />
+        );
       }
     ).toArray();
   },
