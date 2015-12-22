@@ -34,6 +34,8 @@ AddNewTableModal = require('../../../../../react/common/AddNewTableModal').defau
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
+allowedBuckets = ['out']
+
 module.exports = (componentId) ->
   React.createClass templateFn(componentId)
 
@@ -88,7 +90,7 @@ templateFn = (componentId) ->
     selectedTableId = data.get('tableId')
     inputTables = @state.tables.toMap().mapKeys((key, c) -> c.get('id'))
     isAllConfigured = @state.allTables.filter( (t) ->
-      t.getIn(['bucket', 'stage']) in ['out', 'in'] and not inputTables.has(t.get('id'))
+      t.getIn(['bucket', 'stage']) in allowedBuckets and not inputTables.has(t.get('id'))
     ).count() == 0
 
     updateStateFn = (path, newData) =>
@@ -104,7 +106,7 @@ templateFn = (componentId) ->
         '+ Add New Table'
       React.createElement AddNewTableModal,
         show: data.get('show', false)
-        allowedBuckets: ['out', 'in']
+        allowedBuckets: allowedBuckets
         onHideFn: =>
           @_updateLocalState([], Map())
         selectedTableId: selectedTableId
@@ -262,7 +264,7 @@ templateFn = (componentId) ->
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') in ['out', 'in']
+      bucket.get('stage') in allowedBuckets
     return buckets
 
   _handleToggleBucket: (bucketId) ->
