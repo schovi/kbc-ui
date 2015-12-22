@@ -77,7 +77,7 @@ var ComponentCheck = React.createClass({
   renderErrors() {
     return lodash.map(this.getErrors(), function(error) {
       return (
-        <p className="text-error">
+        <p>
           <i className="fa fa-exclamation fa-fw"></i> {error}
         </p>
       );
@@ -87,7 +87,7 @@ var ComponentCheck = React.createClass({
   renderWarnings() {
     return lodash.map(this.getWarnings(), function(error) {
       return (
-        <p className="text-warning">
+        <p>
           <i className="fa fa-question fa-fw"></i> {error}
         </p>
       );
