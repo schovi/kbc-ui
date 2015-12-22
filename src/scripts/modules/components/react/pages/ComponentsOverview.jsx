@@ -138,11 +138,11 @@ var ComponentCheck = React.createClass({
       errors.push('Missing 64px icon');
     }
 
-    if (this.is3rdPartyComponent() && !this.props.component.getIn(['vendor', 'contact'])) {
+    if (this.is3rdPartyComponent() && !this.props.component.getIn(['data', 'vendor', 'contact'])) {
       errors.push('Missing vendor contact information');
     }
 
-    if (this.is3rdPartyComponent() && !this.props.component.getIn(['vendor', 'licenseUrl'])) {
+    if (this.is3rdPartyComponent() && !this.props.component.getIn(['data', 'vendor', 'licenseUrl'])) {
       errors.push('Missing license url');
     }
 
