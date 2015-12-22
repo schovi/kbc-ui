@@ -52,6 +52,26 @@ export default function(componentId) {
       return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
     },
 
+    // ########## SET TABLE
+    setTable(configId, tableId, tableData) {
+      return this.loadConfigData(configId).then(
+        (data) => {
+          const tables = data.getIn(['parameters', 'tables'])
+                .map((t) => {
+                  if (t.get('tableId') === tableId) {
+                    return t
+                      .set('export', !!tableData.export)
+                      .set('dbName', tableData.dbName);
+                  } else {
+                    return t;
+                  }
+                }, tableData);
+          var dataToSave = data.setIn(['parameters', 'tables'], tables);
+          return this.saveConfigData(configId, dataToSave);
+        }
+      );
+    },
+
     // ########## SET TABLE COLUMNS
     setTableColumns(configId, tableId, columns) {
       return this.loadConfigData(configId).then(

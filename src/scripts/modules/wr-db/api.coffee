@@ -72,7 +72,8 @@ module.exports = (componentId) ->
     data =
       "dbName": dbName
       "export": exported
-    createRequest('POST', configId, path)
+    proxyPromise = proxyApi?.setTable(configId, tableId, data)
+    return proxyPromise or createRequest('POST', configId, path)
     .send data
     .promise()
     .then (response) ->
