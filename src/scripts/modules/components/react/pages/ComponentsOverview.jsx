@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react/addons';
 import ComponentIcon from '../../../../react/common/ComponentIcon';
 import ComponentName from '../../../../react/common/ComponentName';
+import ComponentDetailLink from '../../../../react/common/ComponentDetailLink';
 import SearchRow from '../../../../react/common/SearchRow';
 import ComponentsStore from '../../stores/ComponentsStore';
 import {ListGroup, ListGroupItem} from 'react-bootstrap';
@@ -18,22 +19,58 @@ var ComponentCheck = React.createClass({
     component: PropTypes.object.isRequired
   },
 
+  getInitialState() {
+    return {
+      expanded: false
+    };
+  },
+
   render() {
     return (
       <ListGroupItem header={this.header()} bsStyle={this.itemClass()}>
         {this.renderErrors()}
         {this.renderWarnings()}
+        {this.renderDefinition()}
       </ListGroupItem>
     );
+  },
+
+  toggleExpand() {
+    this.setState({
+      expanded: !this.state.expanded
+    });
+  },
+
+  renderDefinition() {
+    if (!this.state.expanded) {
+      return (
+        <a onClick={this.toggleExpand}>Expand &raquo;</a>
+      );
+    } else {
+      return (
+        <span>
+          <pre>
+            {JSON.stringify(this.props.component.toJSON(), null, 2)}
+          </pre>
+          <a onClick={this.toggleExpand}>&laquo; Collapse</a>
+        </span>
+
+      );
+    }
   },
 
   header() {
     return (
       <div>
-        <ComponentIcon component={this.props.component}/>
-        <ComponentName component={this.props.component}/>
-        &nbsp;
-        <small>({this.props.component.get('id')})</small>
+        <ComponentDetailLink
+          componentId={this.props.component.get('id')}
+          type={this.props.component.get('type')}
+          >
+          <ComponentIcon component={this.props.component}/>
+          <ComponentName component={this.props.component}/>
+          &nbsp;
+          <small>({this.props.component.get('id')})</small>
+        </ComponentDetailLink>
       </div>
     );
   },
@@ -41,9 +78,9 @@ var ComponentCheck = React.createClass({
   renderErrors() {
     return lodash.map(this.getErrors(), function(error) {
       return (
-        <p className="text-error">
+        <div className="text-error">
           <i className="fa fa-exclamation fa-fw"></i> {error}
-        </p>
+        </div>
       );
     });
   },
@@ -51,9 +88,9 @@ var ComponentCheck = React.createClass({
   renderWarnings() {
     return lodash.map(this.getWarnings(), function(error) {
       return (
-        <p className="text-warning">
+        <div className="text-warning">
           <i className="fa fa-question fa-fw"></i> {error}
-        </p>
+        </div>
       );
     });
   },
@@ -80,8 +117,11 @@ var ComponentCheck = React.createClass({
     return this.props.component.get('flags').contains('3rdParty');
   },
 
-  getErrors() {
+  getErrors(force) {
     var errors = [];
+    if (this.props.component.get('flags').contains('excludeFromNewList') && !force) {
+      return [];
+    }
     if (!this.props.component.get('description')) {
       errors.push('Missing description');
     }
@@ -115,18 +155,22 @@ var ComponentCheck = React.createClass({
   },
 
   getWarnings() {
-    var errors = [];
+    var warnings = [];
+    /*
     if (!this.props.component.get('longDescription')) {
-      errors.push('Missing long description');
+     warnings.push('Missing long description');
     }
+    */
     if (this.props.component.get('flags').contains('excludeFromNewList')) {
-      errors.push('Hidden in new list');
+      warnings.push('Hidden in new list');
+      var errors = this.getErrors(true);
+      for (var i = 0; i < errors.length; i++) {
+        warnings.push(errors[i]);
+      }
     }
-
-    return errors;
+    return warnings;
   }
 });
-
 
 export default React.createClass({
   mixins: [createStoreMixin(ComponentsStore)],
