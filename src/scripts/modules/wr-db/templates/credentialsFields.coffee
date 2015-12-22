@@ -20,13 +20,23 @@ fields =
   ]
 
   'wr-db-redshift': [
-        [ 'Host name', 'host']
-        [ 'Port', 'port', 'number', false, '5439']
-        [ 'Username', 'user']
-        [ 'Password', 'password', 'password', true]
-        [ 'Database Name', 'database', 'text']
-        [ 'Schema', 'schema', 'text']
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '5439']
+    [ 'Username', 'user']
+    [ 'Password', 'password', 'password', true]
+    [ 'Database Name', 'database', 'text']
+    [ 'Schema', 'schema', 'text']
     ]
+
+  'wr-db-mssql': [
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '1433']
+    [ 'Username', 'user']
+    [ 'Password', 'password', 'password', true]
+    [ 'Database Name', 'database', 'text']
+
+  ]
+
 
 
 module.exports = (componentId) ->
