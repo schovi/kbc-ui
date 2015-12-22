@@ -11,7 +11,7 @@ function isDockerBasedWriter(componentId) {
 const tablesPath = ['storage', 'input', 'tables'];
 
 function updateTablesMapping(data, table) {
-  const tableId = table.get('id');
+  const tableId = table.get('tableId');
   const columns = table.get('items')
         .filter((c) => c.get('type') !== 'IGNORE')
         .map( (c) => c.get('name'));
@@ -31,7 +31,7 @@ function updateTablesMapping(data, table) {
     }
   });
   if (!found) {
-    tables = tables.push(table);
+    tables = tables.push(mappingTable);
   }
   return data.setIn(tablesPath, tables);
 }
@@ -40,6 +40,7 @@ export default function(componentId) {
   if (!isDockerBasedWriter(componentId)) {
     return null;
   }
+
 
   return {
     loadConfigData(configId) {
@@ -51,6 +52,28 @@ export default function(componentId) {
     saveConfigData(configId, data) {
       return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
     },
+
+    // ######### GET SINGLE TABLE UPLOAD RUN PARAMS
+    getTableRunParams(configId, tableId) {
+      const data = InstalledComponentsStore.getConfigData(componentId, configId);
+      const tables = data.getIn(['parameters', 'tables']).filter((t) => t.get('tableId') === tableId);
+      const mapping = data.getIn(tablesPath).filter((t) => t.get('source') === tableId);
+      const runParams = {
+        configData: data
+          .setIn(['parameters', 'tables'], tables)
+          .setIn(tablesPath, mapping)
+          .toJS()
+      };
+      return runParams;
+    },
+
+    // ######### GET RUN PARAMS
+    getRunParams(configId) {
+      return {
+        config: configId
+      };
+    },
+
 
     // ########## SET TABLE
     setTable(configId, tableId, tableData) {

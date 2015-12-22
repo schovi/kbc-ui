@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
-
+dockerProxyApi = require('../../../templates/dockerProxyApi').default
 ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
@@ -205,7 +205,10 @@ templateFn = (componentId) ->
             icon: 'fa fa-upload fa-fw'
             component: componentId
             runParams: =>
-              writer: @state.configId
+              params =
+                writer: @state.configId
+              api = dockerProxyApi(componentId)
+              return api?.getRunParams(@state.configId) or params
           ,
            "You are about to run upload of all seleted tables"
         li null,
