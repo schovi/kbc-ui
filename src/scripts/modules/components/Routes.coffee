@@ -132,7 +132,7 @@ routes =
     ,
       createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
-      createComponentRoute 'wr-db-mssql', [createDbWriterRoutes('wr-db-mssql', 'N/A', false)]
+      createComponentRoute 'wr-db-mssql', [createDbWriterRoutes('wr-db-mssql', 'mssql', false)]
     ,
       createGenericDetailRoute 'writer'
 
