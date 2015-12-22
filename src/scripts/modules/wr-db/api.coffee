@@ -48,8 +48,9 @@ module.exports = (componentId) ->
       response.body
 
   setTableColumns: (configId, tableId, columns) ->
+    proxyPromise = proxyApi?.setTableColumns(configId, tableId, columns)
     path = "tables/#{tableId}/columns"
-    createRequest('POST', configId, path)
+    return proxyPromise or createRequest('POST', configId, path)
     .send columns
     .promise()
     .then (response) ->
