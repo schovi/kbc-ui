@@ -20,7 +20,8 @@ module.exports = (componentId) ->
 
   postCredentials: (configId, credentials) ->
     credentials.allowedTypes = undefined
-    createRequest('POST', configId, 'credentials')
+    proxyPromise = proxyApi?.postCredentials(configId, credentials)
+    return proxyPromise or createRequest('POST', configId, 'credentials')
     .send credentials
     .promise()
     .then (response) ->

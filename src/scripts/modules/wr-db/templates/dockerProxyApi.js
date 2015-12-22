@@ -52,6 +52,7 @@ export default function(componentId) {
       return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
     },
 
+    // ######## POST TABLE
     postTable(configId, tableId, table) {
       const tableToSave = fromJS({
         dbName: table.dbName,
@@ -71,6 +72,17 @@ export default function(componentId) {
       );
     },
 
+    // POST CREDENTIALS
+    postCredentials(configId, credentials) {
+      return this.loadConfigData(configId).then(
+        (data) => {
+          const dataToSave = data.setIn(['parameters', 'db'], fromJS(credentials));
+          return this.saveConfigData(configId, dataToSave);
+        }
+      );
+    },
+
+    // ########### GET CREDENTIALS
     getCredentials(configId) {
       return this.loadConfigData(configId).then(
         (data) => {
@@ -79,6 +91,7 @@ export default function(componentId) {
       );
     },
 
+    // ############# GET TABLES
     getTables(configId) {
       return this.loadConfigData(configId).then(
         (data) => {
@@ -92,6 +105,7 @@ export default function(componentId) {
       );
     },
 
+    // ############ GET TABLE
     getTable(configId, tableId) {
       return this.loadConfigData(configId).then(
         (data) => {
