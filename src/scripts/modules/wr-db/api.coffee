@@ -54,8 +54,9 @@ module.exports = (componentId) ->
       response.body
 
   postTable: (configId, tableId, table) ->
+    proxyPromise = proxyApi?.postTable(configId, tableId, table)
     path = "tables/#{tableId}"
-    createRequest('POST', configId, path)
+    return proxyPromise or createRequest('POST', configId, path)
     .send table
     .promise()
     .then (response) ->
