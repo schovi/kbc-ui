@@ -79,7 +79,7 @@ export default function(componentId) {
     setTable(configId, tableId, tableData) {
       return this.loadConfigData(configId).then(
         (data) => {
-          const tables = data.getIn(['parameters', 'tables'])
+          const tables = data.getIn(['parameters', 'tables'], List())
                 .map((t) => {
                   if (t.get('tableId') === tableId) {
                     return t
@@ -100,7 +100,7 @@ export default function(componentId) {
       return this.loadConfigData(configId).then(
         (data) => {
           var newTable = null;
-          const tables = data.getIn(['parameters', 'tables'])
+          const tables = data.getIn(['parameters', 'tables'], List())
                 .map((t) => {
                   if (t.get('tableId') === tableId) {
                     newTable = t.set('items', fromJS(columns));
@@ -165,7 +165,7 @@ export default function(componentId) {
     getCredentials(configId) {
       return this.loadConfigData(configId).then(
         (data) => {
-          return data.getIn(['parameters', 'db']);
+          return data.getIn(['parameters', 'db'], Map());
         }
       );
     },
@@ -174,7 +174,7 @@ export default function(componentId) {
     getTables(configId) {
       return this.loadConfigData(configId).then(
         (data) => {
-          const tables = data.getIn(['parameters', 'tables']);
+          const tables = data.getIn(['parameters', 'tables'], List());
           return tables.map((table) => {
             return table
               .set('id', table.get('tableId'))
@@ -188,7 +188,7 @@ export default function(componentId) {
     getTable(configId, tableId) {
       return this.loadConfigData(configId).then(
         (data) => {
-          const tables = data.getIn(['parameters', 'tables']);
+          const tables = data.getIn(['parameters', 'tables'], List());
           var table = tables.find( (t) => t.get('tableId') === tableId);
           if (!table) {
             return Promise.reject('Error: table ' + tableId + ' not exits in the config');
