@@ -12,6 +12,12 @@ export default React.createClass({
     readOnly: PropTypes.bool.isRequired
   },
 
+  getDefaultProps() {
+    return {
+      readOnly: false
+    };
+  },
+
   jsoneditor: null,
 
   componentDidMount() {
@@ -32,8 +38,15 @@ export default React.createClass({
       object_layout: 'normal',
       required_by_default: true,
       show_errors: 'interaction'
-
     };
+
+    if (this.props.readOnly) {
+      options.disable_array_add = true;
+      options.disable_collapse = true;
+      options.disable_edit_json = true;
+      options.disable_properties = true;
+      options.disable_array_delete = true;
+    }
 
     // Custom validators must return an array of errors or an empty array if valid
     options.custom_validators.push(function(schema, value, path) {
@@ -62,6 +75,10 @@ export default React.createClass({
       var json = jsoneditor.getValue();
       props.onChange(json);
     });
+
+    if (this.props.readOnly) {
+      jsoneditor.disable();
+    }
   },
 
   componentDidUpdate() {

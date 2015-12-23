@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
 import JSONEdit from './ConfigurationJSONEdit';
+import JSONStatic from './ConfigurationJSONStatic';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -58,13 +59,23 @@ export default React.createClass({
         </span>
       );
     } else {
-      return (
-        <Static
-          data={this.props.data}
-          onEditStart={this.props.onEditStart}
-          editLabel={this.props.editLabel}
-          />
-      );
+      if (this.props.useJsonSchema) {
+        return (
+          <JSONStatic
+            data={this.props.data}
+            onEditStart={this.props.onEditStart}
+            editLabel={this.props.editLabel}
+            />
+        );
+      } else {
+        return (
+          <Static
+            data={this.props.data}
+            onEditStart={this.props.onEditStart}
+            editLabel={this.props.editLabel}
+            />
+        );
+      }
     }
   },
 
