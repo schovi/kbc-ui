@@ -6,7 +6,6 @@ import SearchRow from '../../../../react/common/SearchRow';
 import ComponentsStore from '../../stores/ComponentsStore';
 import {Panel} from 'react-bootstrap';
 
-import lodash from 'lodash';
 import fuzzy from 'fuzzy';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
@@ -75,25 +74,36 @@ var ComponentCheck = React.createClass({
   },
 
   renderErrors() {
-    return lodash.map(this.getErrors(), function(error) {
-      return (
-        <p>
-          <i className="fa fa-exclamation fa-fw"></i> {error}
-        </p>
-      );
-    });
+    var result = [];
+    var errors = this.getErrors();
+    if (errors.length > 0) {
+      for (var i = 0; i < errors.length; i++) {
+        var error = errors[i];
+        result.push((
+          <p>
+            <i className="fa fa-exclamation fa-fw"></i> {error}
+          </p>
+        ));
+      }
+    }
+    return result;
   },
 
   renderWarnings() {
-    return lodash.map(this.getWarnings(), function(error) {
-      return (
-        <p>
-          <i className="fa fa-question fa-fw"></i> {error}
-        </p>
-      );
-    });
+    var result = [];
+    var warnings = this.getWarnings();
+    if (warnings.length > 0) {
+      for (var i = 0; i < warnings.length; i++) {
+        var warning = warnings[i];
+        result.push((
+          <p>
+            <i className="fa fa-question fa-fw"></i> {warning}
+          </p>
+        ));
+      }
+    }
+    return result;
   },
-
 
   itemClass() {
     if (this.getErrors().length > 0) {
