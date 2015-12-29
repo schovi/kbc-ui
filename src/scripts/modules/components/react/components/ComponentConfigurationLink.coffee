@@ -43,7 +43,7 @@ module.exports = React.createClass
         className: @props.className
       ,
         @props.children
-    else
+    else if @getComponentType() != 'other'
       Link
         className: @props.className
         to: GENERIC_DETAIL_PREFIX + @getComponentType() + '-config'
@@ -51,6 +51,9 @@ module.exports = React.createClass
           config: @props.configId
           component: @props.componentId
       ,
+        @props.children
+    else
+      span null,
         @props.children
 
   getComponentType: ->
