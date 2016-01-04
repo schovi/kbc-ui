@@ -59,6 +59,7 @@ export default function(componentId) {
       const tables = data.getIn(['parameters', 'tables']).filter((t) => t.get('tableId') === tableId);
       const mapping = data.getIn(tablesPath).filter((t) => t.get('source') === tableId);
       const runParams = {
+        config: configId,
         configData: data
           .setIn(['parameters', 'tables'], tables)
           .setIn(tablesPath, mapping)
