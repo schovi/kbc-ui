@@ -12,23 +12,26 @@ redshift = [
   'SMALLINT',
   'INTEGER',
   'BIGINT',
-  'DECIMAL': {defaultSize: ''},
+  'DECIMAL': {defaultSize: '12,2'},
   'REAL',
   'DOUBLE PRECISION',
-  'CHAR': {defaultSize: ''},
+  'CHAR': {defaultSize: '255'},
   'BOOLEAN',
-  'VARCHAR': {defaultSize: ''},
+  'VARCHAR': {defaultSize: '255'},
   'DATE',
   'TIMESTAMP']
 
 mssql = [
-  'int', 'smallint', 'bigint', 'money',
-  'decimal': {defaultSize: ''},
-  'real', 'float': {defaultSize: ''},
-  'date', 'datetime': {defaultSize: ''}, 'datetime2', 'time': {defaultSize: ''}, 'timestamp',
-  'char': {defaultSize: ''}, 'varchar': {defaultSize: ''}, 'text',
-  'nchar': {defaultSize: ''}, 'nvarchar': {defaultSize: ''}, 'ntext',
-  'binary': {defaultSize: ''}, 'varbinary': {defaultSize: ''}, 'image',
+  'bigint', 'money',
+  'decimal': {defaultSize: '12,2'},
+  'real', 'float': {defaultSize: '12'},
+  'date', 'datetime': {defaultSize: 'YYYY-MM-DDThh:mm:ss[.mmm]'},
+  'datetime2',
+  'time': {defaultSize: '7'}, 'timestamp',
+  'char': {defaultSize: '255'},
+  'text', 'varchar': {defaultSize: '255'}, 'smallint',
+  'nchar': {defaultSize: '255'}, 'int', 'nvarchar': {defaultSize: '255'}, 'ntext',
+  'binary': {defaultSize: '1'}, 'image', 'varbinary': {defaultSize: '1'}
 
   ]
 
