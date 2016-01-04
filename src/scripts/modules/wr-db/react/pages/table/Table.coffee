@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableNameEdit = React.createFactory require './TableNameEdit'
 ColumnsEditor = React.createFactory require './ColumnsEditor'
 ColumnRow = require './ColumnRow'
-dataTypes = require '../../../templates/dataTypes'
+DataTypes = require '../../../templates/dataTypes'
 
 storageApi = require '../../../../components/StorageApi'
 
@@ -120,7 +120,7 @@ templateFn = (componentId) ->
         div className: 'col-sm-2 kbc-buttons', @_renderEditButtons()
 
       ColumnsEditor
-        dataTypes: dataTypes[componentId] or defaultDataTypes
+        dataTypes: DataTypes[componentId] or defaultDataTypes
         columns: @state.columns
         renderRowFn: @_renderColumnRow
         editingColumns: @state.editingColumns
@@ -194,8 +194,8 @@ templateFn = (componentId) ->
       @_handleEditColumnsCancel()
 
   _renderSetColumnsType: ->
-    dataTypes = @_getDataTypes()
-    options = _.map dataTypes.concat('IGNORE'), (opKey, opValue) ->
+    tmpDataTypes = @_getDataTypes()
+    options = _.map tmpDataTypes.concat('IGNORE'), (opKey, opValue) ->
       option
         value: opKey
         key: opKey
@@ -217,7 +217,7 @@ templateFn = (componentId) ->
         options
 
   _getSizeParam: (dataType) ->
-    dtypes = dataTypes[componentId] or defaultDataTypes
+    dtypes = DataTypes[componentId] or defaultDataTypes
     dt = _.find dtypes, (d) ->
       _.isObject(d) and _.keys(d)[0] == dataType
     result = dt?[dataType]?.defaultSize
@@ -225,7 +225,7 @@ templateFn = (componentId) ->
 
 
   _getDataTypes: ->
-    dtypes = dataTypes[componentId] or defaultDataTypes
+    dtypes = DataTypes[componentId] or defaultDataTypes
     return _.map dtypes, (dataType) ->
       #it could be object eg {VARCHAR: {defaultSize:''}}
       if _.isObject dataType
