@@ -7,7 +7,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
-
+dockerProxyApi = require('../../../templates/dockerProxyApi').default
 ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
@@ -33,6 +33,8 @@ AddNewTableModal = require('../../../../../react/common/AddNewTableModal').defau
 {Button} = require 'react-bootstrap'
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
+
+allowedBuckets = ['out']
 
 module.exports = (componentId) ->
   React.createClass templateFn(componentId)
@@ -88,7 +90,7 @@ templateFn = (componentId) ->
     selectedTableId = data.get('tableId')
     inputTables = @state.tables.toMap().mapKeys((key, c) -> c.get('id'))
     isAllConfigured = @state.allTables.filter( (t) ->
-      t.getIn(['bucket', 'stage']) in ['out'] and not inputTables.has(t.get('id'))
+      t.getIn(['bucket', 'stage']) in allowedBuckets and not inputTables.has(t.get('id'))
     ).count() == 0
 
     updateStateFn = (path, newData) =>
@@ -104,7 +106,7 @@ templateFn = (componentId) ->
         '+ Add New Table'
       React.createElement AddNewTableModal,
         show: data.get('show', false)
-        allowedBuckets: ['out']
+        allowedBuckets: allowedBuckets
         onHideFn: =>
           @_updateLocalState([], Map())
         selectedTableId: selectedTableId
@@ -119,7 +121,6 @@ templateFn = (componentId) ->
         isSaving: @_isPendingTable(selectedTableId)
 
   _hasConfigTables: ->
-    console.log "HAS TABLES", @state.tables.count()
     @state.tables.count() > 0
 
   _renderMainContent: ->
@@ -204,7 +205,10 @@ templateFn = (componentId) ->
             icon: 'fa fa-upload fa-fw'
             component: componentId
             runParams: =>
-              writer: @state.configId
+              params =
+                writer: @state.configId
+              api = dockerProxyApi(componentId)
+              return api?.getRunParams(@state.configId) or params
           ,
            "You are about to run upload of all seleted tables"
         li null,
@@ -263,7 +267,7 @@ templateFn = (componentId) ->
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in allowedBuckets
     return buckets
 
   _handleToggleBucket: (bucketId) ->

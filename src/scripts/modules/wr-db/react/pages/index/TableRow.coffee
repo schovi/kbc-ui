@@ -5,6 +5,8 @@ React = require 'react'
 {Loader} = require 'kbc-react-components'
 Link = React.createFactory(require('react-router').Link)
 
+dockerProxyApi = require('../../../templates/dockerProxyApi').default
+
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
@@ -58,8 +60,13 @@ module.exports = React.createClass
             icon: 'fa fa-upload fa-fw'
             component: @props.componentId
             runParams: =>
-              table: @props.table.get('id')
-              writer: @props.configId
+              tableId = @props.table.get('id')
+              configId = @props.configId
+              params =
+                table: tableId
+                writer: configId
+              api = dockerProxyApi(@props.componentId)
+              return api?.getTableRunParams(configId, tableId) or params
           ,
            "You are about to run upload of #{@props.table.get('id')} to the database."
 

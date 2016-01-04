@@ -7,11 +7,12 @@ ComponentsStore = require '../components/stores/ComponentsStore'
 CredentialsHeader = require './react/components/CredentialsHeaderButtons'
 storageActionCreators = require '../components/StorageActionCreators'
 JobsActionCreators = require '../jobs/ActionCreators'
-
+DockerProxyApi = require('./templates/dockerProxyApi').default
 #driver = 'mysql'
 #componentId = 'wr-db'
 
 createRoute = (componentId, driver, isProvisioning) ->
+  dockerProxyActions = DockerProxyApi(componentId)
   name: componentId
   path: ":config"
   title: (routerState) ->
@@ -25,7 +26,14 @@ createRoute = (componentId, driver, isProvisioning) ->
   defaultRouteHandler: dbwrIndex(componentId)
   requireData: [
     (params) ->
-      ActionCreators.loadConfiguration componentId, params.config
+      prepareWriterDataFn = ->
+        ActionCreators.loadConfiguration(componentId, params.config)
+      dockerPromise = dockerProxyActions?.loadConfigData(params.config)
+      if dockerPromise
+        return dockerPromise.then ->
+          prepareWriterDataFn()
+      else
+        prepareWriterDataFn()
     ,
       ->
         storageActionCreators.loadTables()
@@ -42,7 +50,7 @@ createRoute = (componentId, driver, isProvisioning) ->
 
     requireData: [
       (params) ->
-        ActionCreators.loadTableConfig componentId, params.config, params.tableId
+        return ActionCreators.loadTableConfig componentId, params.config, params.tableId
     ]
   ,
     name: "#{componentId}-credentials"
