@@ -57,7 +57,8 @@ module.exports = (componentId, configuration) ->
   else if component.get('uri') and
       componentHasApi(component.get('id')) and
       !(flags.includes 'genericUI') and
-      !(flags.includes 'genericDockerUI')
+      !(flags.includes 'genericDockerUI') and
+      !(flags.includes 'genericTemplatesUI')
     promise = createConfigByApi(componentId, configuration)
   else
     promise = createConfigManually(configuration)

@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
+import JSONEdit from './ConfigurationJSONEdit';
+import JSONStatic from './ConfigurationJSONStatic';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -19,15 +21,17 @@ export default React.createClass({
     headerText: PropTypes.string,
     editLabel: PropTypes.string,
     saveLabel: PropTypes.string,
-    help: PropTypes.node
+    help: PropTypes.node,
+    useJsonSchema: PropTypes.bool
   },
 
   getDefaultProps() {
     return {
       headerText: 'Configuration Data',
+      help: null,
       editLabel: 'Edit configuration',
       saveLabel: 'Save configuration',
-      help: null
+      useJsonSchema: false
     };
   },
 
@@ -47,29 +51,58 @@ export default React.createClass({
         <span>
           {
             this.props.supportsEncryption ?
-              <p className="help-block small">Keys prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
+              <p className="help-block small">Properties prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
               : null
           }
-          <Edit
-            data={this.props.data}
-            isSaving={this.props.isSaving}
-            onSave={this.props.onEditSubmit}
-            onChange={this.props.onEditChange}
-            onCancel={this.props.onEditCancel}
-            isValid={this.props.isValid}
-            saveLabel={this.props.saveLabel}
-            />
+          { this.renderEditor() }
         </span>
       );
     } else {
+      if (this.props.useJsonSchema) {
+        return (
+          <JSONStatic
+            data={this.props.data}
+            onEditStart={this.props.onEditStart}
+            editLabel={this.props.editLabel}
+            />
+        );
+      } else {
+        return (
+          <Static
+            data={this.props.data}
+            onEditStart={this.props.onEditStart}
+            editLabel={this.props.editLabel}
+            />
+        );
+      }
+    }
+  },
+
+  renderEditor() {
+    if (this.props.useJsonSchema) {
       return (
-        <Static
+        <JSONEdit
           data={this.props.data}
-          onEditStart={this.props.onEditStart}
-          editLabel={this.props.editLabel}
+          isSaving={this.props.isSaving}
+          onSave={this.props.onEditSubmit}
+          onChange={this.props.onEditChange}
+          onCancel={this.props.onEditCancel}
+          isValid={this.props.isValid}
+          saveLabel={this.props.saveLabel}
           />
+      );
+    } else {
+      return (
+      <Edit
+        data={this.props.data}
+        isSaving={this.props.isSaving}
+        onSave={this.props.onEditSubmit}
+        onChange={this.props.onEditChange}
+        onCancel={this.props.onEditCancel}
+        isValid={this.props.isValid}
+        saveLabel={this.props.saveLabel}
+        />
       );
     }
   }
-
 });

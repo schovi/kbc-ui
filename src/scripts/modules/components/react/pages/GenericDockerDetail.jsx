@@ -79,7 +79,9 @@ export default React.createClass({
             headerText="Runtime"
             onEditSubmit={this.onEditRuntimeSubmit}
             isValid={this.state.isValidEditingConfigDataRuntime}
-          />
+            supportsEncryption="false"
+            useJsonSchema="false"
+            />
         </div>
       );
     } else {
@@ -187,6 +189,8 @@ export default React.createClass({
                 headerText="Parameters"
                 editLabel="Edit parameters"
                 saveLabel="Save parameters"
+                supportsEncryption={this.state.component.get('flags').includes('encrypt')}
+                useJsonSchema={this.state.component.get('flags').includes('genericTemplatesUI')}
                 />
               {this.runtimeConfiguration()}
             </div>
