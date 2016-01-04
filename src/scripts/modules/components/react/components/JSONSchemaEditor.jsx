@@ -32,7 +32,7 @@ export default React.createClass({
       disable_array_delete: false,
       disable_array_reorder: false,
       disable_collapse: false,
-      disable_edit_json: false,
+      disable_edit_json: true,
       disable_properties: false,
       no_additional_properties: false,
       object_layout: 'normal',
