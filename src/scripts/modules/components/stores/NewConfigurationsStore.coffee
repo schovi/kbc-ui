@@ -18,7 +18,7 @@ _defaults = Immutable.fromJS
     password: ''
     accessToken: ''
     mode: constants.GoodDataWriterModes.NEW
-    tokenType: constants.GoodDataWriterTokenTypes.PRODUCTION
+    tokenType: constants.GoodDataWriterTokenTypes.DEVELOPER
 
 getDefaultConfiguration = (componentId) ->
   _defaults.get componentId, Map(

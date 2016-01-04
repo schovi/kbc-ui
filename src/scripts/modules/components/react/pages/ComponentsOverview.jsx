@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react/addons';
 import ComponentIcon from '../../../../react/common/ComponentIcon';
 import ComponentName from '../../../../react/common/ComponentName';
+import ComponentDetailLink from '../../../../react/common/ComponentDetailLink';
+import SearchRow from '../../../../react/common/SearchRow';
 import ComponentsStore from '../../stores/ComponentsStore';
-import {ListGroup, ListGroupItem} from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 
-import lodash from 'lodash';
+import fuzzy from 'fuzzy';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import './componentsOverview.less';
@@ -16,53 +18,101 @@ var ComponentCheck = React.createClass({
     component: PropTypes.object.isRequired
   },
 
+  getInitialState() {
+    return {
+      expanded: false
+    };
+  },
+
   render() {
     return (
-      <ListGroupItem header={this.header()} bsStyle={this.itemClass()}>
+      <Panel header={this.header()} bsStyle={this.itemClass()} className="componentsOverview">
         {this.renderErrors()}
         {this.renderWarnings()}
-      </ListGroupItem>
+        {this.renderDefinition()}
+      </Panel>
     );
+  },
+
+  toggleExpand() {
+    this.setState({
+      expanded: !this.state.expanded
+    });
+  },
+
+  renderDefinition() {
+    if (!this.state.expanded) {
+      return (
+        <p><a onClick={this.toggleExpand}>Expand &raquo;</a></p>
+      );
+    } else {
+      return (
+        <span>
+          <p><a onClick={this.toggleExpand}>&laquo; Collapse</a></p>
+          <pre>
+            {JSON.stringify(this.props.component.toJSON(), null, 2)}
+          </pre>
+        </span>
+      );
+    }
   },
 
   header() {
     return (
       <div>
-        <ComponentIcon component={this.props.component}/>
-        <ComponentName component={this.props.component}/>
-        <small>{this.props.component.get('id')}</small>
+        <ComponentDetailLink
+          componentId={this.props.component.get('id')}
+          type={this.props.component.get('type')}
+          >
+          <ComponentIcon component={this.props.component}/>
+          <ComponentName component={this.props.component}/>
+          &nbsp;
+          <small>({this.props.component.get('id')})</small>
+        </ComponentDetailLink>
       </div>
     );
   },
 
   renderErrors() {
-    return lodash.map(this.getErrors(), function(error) {
-      return (
-        <p className="text-error">
-          <i className="fa fa-exclamation fa-fw"></i> {error}
-        </p>
-      );
-    });
+    var result = [];
+    var errors = this.getErrors();
+    if (errors.length > 0) {
+      for (var i = 0; i < errors.length; i++) {
+        var error = errors[i];
+        result.push((
+          <p>
+            <i className="fa fa-exclamation fa-fw"></i> {error}
+          </p>
+        ));
+      }
+    }
+    return result;
   },
 
   renderWarnings() {
-    return lodash.map(this.getWarnings(), function(error) {
-      return (
-        <p className="text-warning">
-          <i className="fa fa-question fa-fw"></i> {error}
-        </p>
-      );
-    });
+    var result = [];
+    var warnings = this.getWarnings();
+    if (warnings.length > 0) {
+      for (var i = 0; i < warnings.length; i++) {
+        var warning = warnings[i];
+        result.push((
+          <p>
+            <i className="fa fa-question fa-fw"></i> {warning}
+          </p>
+        ));
+      }
+    }
+    return result;
   },
-
 
   itemClass() {
     if (this.getErrors().length > 0) {
       return 'danger';
     }
     if (this.getWarnings().length > 0) {
-      return 'warning';
+      return 'danger';
     }
+    return 'success';
   },
 
   isDockerComponent() {
@@ -77,8 +127,11 @@ var ComponentCheck = React.createClass({
     return this.props.component.get('flags').contains('3rdParty');
   },
 
-  getErrors() {
+  getErrors(force) {
     var errors = [];
+    if (this.props.component.get('flags').contains('excludeFromNewList') && !force) {
+      return [];
+    }
     if (!this.props.component.get('description')) {
       errors.push('Missing description');
     }
@@ -95,11 +148,11 @@ var ComponentCheck = React.createClass({
       errors.push('Missing 64px icon');
     }
 
-    if (this.is3rdPartyComponent() && !this.props.component.getIn(['vendor', 'contact'])) {
+    if (this.is3rdPartyComponent() && !this.props.component.getIn(['data', 'vendor', 'contact'])) {
       errors.push('Missing vendor contact information');
     }
 
-    if (this.is3rdPartyComponent() && !this.props.component.getIn(['vendor', 'licenseUrl'])) {
+    if (this.is3rdPartyComponent() && !this.props.component.getIn(['data', 'vendor', 'licenseUrl'])) {
       errors.push('Missing license url');
     }
 
@@ -117,18 +170,22 @@ var ComponentCheck = React.createClass({
   },
 
   getWarnings() {
-    var errors = [];
-    if (!this.props.component.get('longDescription')) {
-      errors.push('Missing long description');
-    }
+    var warnings = [];
+    /*
+     if (!this.props.component.get('longDescription')) {
+     warnings.push('Missing long description');
+     }
+     */
     if (this.props.component.get('flags').contains('excludeFromNewList')) {
-      errors.push('Hidden in new list');
+      warnings.push('Hidden in new list');
+      var errors = this.getErrors(true);
+      for (var i = 0; i < errors.length; i++) {
+        warnings.push(errors[i]);
+      }
     }
-
-    return errors;
+    return warnings;
   }
 });
-
 
 export default React.createClass({
   mixins: [createStoreMixin(ComponentsStore)],
@@ -139,25 +196,51 @@ export default React.createClass({
     };
   },
 
+  getInitialState() {
+    return {
+      filter: ''
+    };
+  },
+
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        <ListGroup>
-          {this.components()}
-        </ListGroup>
+        <SearchRow
+          onChange={this.handleFilterChange}
+          query={this.state.filter} />
+        {this.components()}
       </div>
     );
   },
 
   components() {
-    return this.state.components
+    return this.filteredComponents()
       .toIndexedSeq()
       .sortBy(function(component) {
         return component.get('id').toLowerCase();
       })
       .map(function(component) {
-        return (<ComponentCheck component={component}/>);
+        return (
+          <ComponentCheck
+            component={component}
+            key={component.get('id')}
+            />
+        );
       }
     ).toArray();
+  },
+
+  handleFilterChange(value) {
+    this.setState({filter: value});
+  },
+
+  filteredComponents() {
+    var filter = this.state.filter;
+    return this.state.components
+      .filter(function(value) {
+        return fuzzy.match(filter, value.get('name').toString()) || fuzzy.match(filter, value.get('id').toString());
+      }
+    );
   }
+
 });

@@ -38,3 +38,23 @@ export function extractValues(inputArray) {
 
   return returnArray;
 }
+
+export function sortTimestampsInDescendingOrder(obj1, obj2) {
+  if (obj1.timestamp < obj2.timestamp) {
+    return 1;
+  } else if (obj1.timestamp > obj2.timestamp) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+export function sortTimestampsInAscendingOrder(obj1, obj2) {
+  if (obj1.timestamp > obj2.timestamp) {
+    return 1;
+  } else if (obj1.timestamp < obj2.timestamp) {
+    return -1;
+  } else {
+    return 0;
+  }
+}

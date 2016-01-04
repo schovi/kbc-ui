@@ -14,7 +14,14 @@ export default React.createClass({
     onSetTableIdFn: React.PropTypes.func,
     configuredTables: React.PropTypes.object,
     onSaveFn: React.PropTypes.func,
-    isSaving: React.PropTypes.bool
+    isSaving: React.PropTypes.bool,
+    allowedBuckets: React.PropTypes.array
+  },
+
+  getDefaultProps() {
+    return {
+      'allowedBuckets': ['in', 'out']
+    };
   },
 
   render() {
@@ -27,6 +34,7 @@ export default React.createClass({
         </Modal.Header>
         <Modal.Body>
           <SapiTableSelector
+              allowedBuckets={this.props.allowedBuckets}
               onSelectTableFn={this.props.onSetTableIdFn}
               excludeTableFn={ (tableId) => !!this.props.configuredTables.get(tableId)}
               value={this.props.selectedTableId} />
@@ -39,8 +47,7 @@ export default React.createClass({
               saveLabel="Add"
               onCancel={this.props.onHideFn}
               onSave={ () => {
-                this.props.onSaveFn(this.props.selectedTableId);
-                this.onHideFn();
+                this.props.onSaveFn(this.props.selectedTableId).then(() => this.props.onHideFn());
               }}
               />
         </Modal.Footer>
