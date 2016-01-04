@@ -31,8 +31,7 @@ export default React.createClass({
       help: null,
       editLabel: 'Edit configuration',
       saveLabel: 'Save configuration',
-      // TODO FIXME dynamic
-      useJsonSchema: true
+      useJsonSchema: false
     };
   },
 

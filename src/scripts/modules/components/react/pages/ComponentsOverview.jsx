@@ -104,7 +104,12 @@ var ComponentCheck = React.createClass({
     }
 
     if (!this.props.component.getIn(['documentationUrl']) &&
-      (this.props.component.get('flags').contains('genericUI') || this.props.component.get('flags').contains('genericDockerUI'))) {
+      (
+        this.props.component.get('flags').contains('genericUI') ||
+        this.props.component.get('flags').contains('genericDockerUI') ||
+        this.props.component.get('flags').contains('genericTemplatesUI')
+      )
+    )  {
       errors.push('Missing documentation url');
     }
 

@@ -8,7 +8,8 @@ module.exports = (componentId, configurationId) ->
   component = componentsStore.getComponent(componentId)
   if componentHasApi(componentId) and
       !component.get('flags').includes('genericUI') and
-      !component.get('flags').includes('genericDockerUI')
+      !component.get('flags').includes('genericDockerUI') and
+      !component.get('flags').includes('genericTemplatesUI')
     syrupApi
     .createRequest(componentId, 'DELETE', "configs/#{configurationId}")
     .promise()
