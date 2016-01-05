@@ -6,7 +6,7 @@ import InstalledComponentsActions from '../../components/InstalledComponentsActi
 import InstalledComponentsStore from '../../components/stores/InstalledComponentsStore';
 
 function isDockerBasedWriter(componentId) {
-  return dockerComponents.includes(componentId);
+  return dockerComponents.indexOf(componentId) >= 0;
 }
 const tablesPath = ['storage', 'input', 'tables'];
 
