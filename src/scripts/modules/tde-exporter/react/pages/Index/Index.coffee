@@ -1,4 +1,5 @@
 React = require 'react'
+_ = require 'underscore'
 {Map, fromJS} = require 'immutable'
 moment = require 'moment'
 classnames = require 'classnames'
@@ -14,16 +15,18 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableRow = require './TableRow'
 
-{Tooltip, OverlayTrigger, ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
+{OverlayTrigger, ModalFooter, Modal, ModalHeader, ModalTitle, ModalBody} = require('react-bootstrap')
 
+{Tooltip} = require '../../../../../react/common/common'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
-
+RefreshIcon = React.createFactory(require('kbc-react-components').RefreshIcon)
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+storageActionCreators = require '../../../../components/StorageActionCreators'
 
 AddNewTableModal = require './AddNewTableModal'
 
@@ -45,6 +48,7 @@ module.exports = React.createClass
     #state
     latestJobs: LatestJobsStore.getJobs(componentId, configId)
     files: files
+    isLoadingFiles: StorageFilesStore.getIsLoading()
     configId: configId
     configData: configData
     localState: localState
@@ -187,9 +191,23 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
-        strong null, 'Last TDE File'
+        strong null, 'Last TDE File '
+        React.createElement Tooltip,
+          tooltip: 'Refresh TDE files list'
+          placement: 'top'
+        ,
+          RefreshIcon
+            isLoading: @state.isLoadingFiles
+            onClick: =>
+              @_refreshFiles()
+
       span className: 'th',
         strong null, ''
+
+  _refreshFiles: ->
+    tags = ['tde', 'table-export']
+    params = "q": _.map(tags, (t) -> "+tags:#{t}").join(' ')
+    storageActionCreators.loadFilesForce(params)
 
   _getLastTdeFile: (tableId) ->
     idReplaced = tableId.replace(/-/g,"_")
