@@ -15,7 +15,9 @@ export default React.createClass({
   getStateFromStores() {
     var componentId = RoutesStore.getCurrentRouteParam('component');
     return {
-      paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON()
+      paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON(),
+      apiSchema: SchemasStore.getApiSchema(componentId).toJSON(),
+      apiTemplate: SchemasStore.getApiTemplate(componentId).toJSON()
     };
   },
 
@@ -32,7 +34,7 @@ export default React.createClass({
   },
 
   render() {
-    return this.extractValue() ? this.static() : this.emptyState();
+    return this.extractConfigValue() || this.extractApiValue() ? this.static() : this.emptyState();
   },
 
   static() {
@@ -43,9 +45,10 @@ export default React.createClass({
             <div className="kbc-sticky-buttons">
               {this.startEditButton()}
             </div>
+            {this.apiEditor()}
             <JSONSchemaEditor
               schema={this.state.paramsSchema}
-              value={this.extractValue()}
+              value={this.extractConfigValue()}
               onChange={this.handleChange}
               readOnly={true}
             />
@@ -63,6 +66,21 @@ export default React.createClass({
     );
   },
 
+  apiEditor() {
+    if (this.requiresApiSchema()) {
+      return (
+        <JSONSchemaEditor
+          schema={this.state.apiSchema}
+          value={this.extractApiValue()}
+          onChange={this.handleChange}
+          readOnly={true}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
+
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
@@ -71,13 +89,24 @@ export default React.createClass({
     );
   },
 
-  extractValue() {
+  extractConfigValue() {
     var value;
     var parsed = JSON.parse(this.props.data);
     if (parsed.config) {
       value = parsed.config;
-    } else {
-      return null;
+    }
+    return value;
+  },
+
+  requiresApiSchema() {
+    return Object.keys(this.state.apiTemplate).length === 0;
+  },
+
+  extractApiValue() {
+    var value;
+    var parsed = JSON.parse(this.props.data);
+    if (parsed.api) {
+      value = parsed.api;
     }
     return value;
   },

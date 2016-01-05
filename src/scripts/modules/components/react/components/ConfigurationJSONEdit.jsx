@@ -18,6 +18,7 @@ export default React.createClass({
     var componentId = RoutesStore.getCurrentRouteParam('component');
     return {
       paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON(),
+      apiSchema: SchemasStore.getApiSchema(componentId).toJSON(),
       apiTemplate: SchemasStore.getApiTemplate(componentId).toJSON()
     };
   },
@@ -53,10 +54,11 @@ export default React.createClass({
                 isDisabled={!this.props.isValid}
                 />
             </Sticky>
+            {this.apiEditor()}
             <JSONSchemaEditor
               schema={this.state.paramsSchema}
-              value={this.extractValue()}
-              onChange={this.handleChange}
+              value={this.extractConfigValue()}
+              onChange={this.handleConfigChange}
               readOnly={this.props.isSaving}
             />
           </div>
@@ -65,21 +67,63 @@ export default React.createClass({
     );
   },
 
-  extractValue() {
+  apiEditor() {
+    if (this.requiresApiSchema()) {
+      return (
+        <JSONSchemaEditor
+          schema={this.state.apiSchema}
+          value={this.extractApiValue()}
+          onChange={this.handleApiChange}
+          readOnly={this.props.isSaving}
+          />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  extractConfigValue() {
     var value;
     var parsed = JSON.parse(this.props.data);
     if (parsed.config) {
       value = parsed.config;
-    } else {
-      value = {};
     }
     return value;
   },
 
-  handleChange(value) {
+  requiresApiSchema() {
+    return Object.keys(this.state.apiTemplate).length === 0;
+  },
+
+  extractApiValue() {
+    var value;
+    var parsed = JSON.parse(this.props.data);
+    if (parsed.api) {
+      value = parsed.api;
+    }
+    return value;
+  },
+
+  handleConfigChange(value) {
+    var config = {};
+    if (this.requiresApiSchema()) {
+      config = {
+        api: this.extractApiValue(),
+        config: value
+      };
+    } else {
+      config = {
+        api: this.state.apiTemplate,
+        config: value
+      };
+    }
+    this.props.onChange(JSON.stringify(config));
+  },
+
+  handleApiChange(value) {
     var config = {
-      api: this.state.apiTemplate,
-      config: value
+      api: value,
+      config: this.extractConfigValue()
     };
     this.props.onChange(JSON.stringify(config));
   }

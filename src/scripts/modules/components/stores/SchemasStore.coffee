@@ -22,6 +22,9 @@ SchemasStore = StoreUtils.createStore
   getParamsSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'params'], Map()
 
+  getApiSchema: (componentId) ->
+    _store.getIn ['schemas', componentId, 'schemas', 'api'], Map()
+
   getApiTemplate: (componentId) ->
     _store.getIn ['schemas', componentId, 'templates', 'api'], Map()
 
