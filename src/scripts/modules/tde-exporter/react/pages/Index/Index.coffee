@@ -32,7 +32,7 @@ componentId = 'tde-exporter'
 
 module.exports = React.createClass
   displayName: 'tdeindex'
-  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, StorageFilesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
