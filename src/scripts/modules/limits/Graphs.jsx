@@ -87,7 +87,7 @@ export default React.createClass({
         query: {
           eventCollection: metric.eventCollection,
           targetProperty: metric.targetProperty,
-          timeframe: 'this_14_days',
+          timeframe: 'this_30_days',
           interval: 'daily'
         }
       };
