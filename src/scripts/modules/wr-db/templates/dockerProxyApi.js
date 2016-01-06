@@ -17,7 +17,7 @@ function updateTablesMapping(data, table) {
         .map( (c) => c.get('name'));
   var mappingTable = fromJS({
     source: tableId,
-    destination: tableId
+    destination: tableId + '.csv'
   });
   mappingTable = mappingTable.set('columns', columns);
   var tables = data.getIn(tablesPath, List());
