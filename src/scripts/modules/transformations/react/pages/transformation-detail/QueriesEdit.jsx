@@ -30,9 +30,6 @@ export default React.createClass({
     return (
       <div className="kbc-queries-edit">
         <div>
-          <div className="well">
-            {this.hint()}
-          </div>
           <div className="edit form-group kbc-queries-editor">
             <Sticky stickyClass="kbc-sticky-buttons-active" topOffset={-60} stickyStyle={{}}>
               <div className="text-right">
@@ -62,15 +59,6 @@ export default React.createClass({
         </div>
       </div>
     );
-  },
-
-  hint() {
-    switch (this.props.backend) {
-      case 'redshift':
-        return 'Redshift does not support functions or stored procedures.';
-      default:
-        return 'Keboola Connection does not officially support MySQL functions or stored procedures. Use at your own risk.';
-    }
   },
 
   editorMode() {

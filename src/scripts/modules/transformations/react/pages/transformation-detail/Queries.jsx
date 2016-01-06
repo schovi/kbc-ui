@@ -3,9 +3,11 @@ import Static from './QueriesStatic';
 import Edit from './QueriesEdit';
 import Clipboard from '../../../../../react/common/Clipboard';
 import string from 'underscore.string';
+import {OverlayTrigger, Popover} from 'react-bootstrap';
 
 /* global require */
 require('codemirror/mode/sql/sql');
+require('./queries.less');
 
 function getQueryPosition(queries, queryNumber) {
   return queries
@@ -39,7 +41,13 @@ export default React.createClass({
     return (
       <div>
         <h2>
-          Queries <small><Clipboard text={this.props.queries}/></small>
+          Queries
+          <small>
+            <OverlayTrigger trigger="hover" placement="top" overlay={this.hint()}>
+              <i className="fa fa-fw fa-question-circle"></i>
+            </OverlayTrigger>
+            <Clipboard text={this.props.queries}/>
+          </small>
         </h2>
         {this.queries()}
       </div>
@@ -75,6 +83,38 @@ export default React.createClass({
       cursorPos: getQueryPosition(this.props.transformation.get('queries'), queryNumber)
     });
     this.props.onEditStart();
+  },
+
+  hint() {
+    switch (this.props.transformation.get('backend')) {
+      case 'redshift':
+        return (
+          <Popover title="Redshift queries" className="popover-wide">
+            <ul>
+              <li>Comments after the last query will fail execution.</li>
+              <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
+              <li>Redshift does not support functions or stored procedures.</li>
+            </ul>
+          </Popover>);
+      case 'snowflake':
+        return (
+          <Popover title="Snowflake queries" className="popover-wide">
+            <ul>
+              <li>Comments after the last query will fail execution.</li>
+              <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
+            </ul>
+          </Popover>);
+      default:
+        return (
+          <Popover title="Snowflake queries" className="popover-wide">
+            <ul>
+              <li>Comments after the last query will fail execution.</li>
+              <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
+              <li>MySQL functions or stored procedures are not officially supported. Use at your own risk.</li>
+            </ul>
+          </Popover>);
+    }
   }
+
 
 });
