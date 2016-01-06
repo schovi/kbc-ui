@@ -10,15 +10,19 @@ module.exports = React.createClass
   propTypes:
     onChangeFrom: React.PropTypes.func.isRequired
     onChangeUntil: React.PropTypes.func.isRequired
+    dateFrom: React.PropTypes.string.isRequired
+    dateUntil: React.PropTypes.string.isRequired
 
-  getInitialState: ->
+  getDefaultProps: ->
     from = moment().subtract(4, 'day')
     dateUntil = moment()
-    dateFrom: @props.since or from
-    dateUntil: @props.until or dateUntil
+    dateFrom: from
+    dateUntil: dateUntil
 
   render: ->
-    daysRange = @state.dateUntil.from(@state.dateFrom, true)
+    console.log('FROM:', @props.dateFrom.toISOString(), @props.dateFrom)
+    console.log('UNTIL:', @props.dateUntil.toISOString())
+    daysRange = @props.dateUntil.from(@props.dateFrom, true)
     form className: 'form-horizontal',
       h3 {}, 'Specify date range'
       div className: 'form-group',
@@ -27,11 +31,9 @@ module.exports = React.createClass
           DatePicker
             key: 'fromdate'
             onChange: (value) =>
-              @setState
-                dateFrom: value
               @props.onChangeFrom(value)
-            selected: @state.dateFrom
-            maxDate: @state.dateUntil
+            selected: @props.dateFrom
+            maxDate: @props.dateUntil
             dateFormat: "DD/MM/YYYY"
 
       div className: 'form-group',
@@ -41,29 +43,25 @@ module.exports = React.createClass
             dateFormat: "DD/MM/YYYY"
             key: 'untildate'
             onChange: (value) =>
-              @setState
-                dateUntil: value
               @props.onChangeUntil(value)
-            minDate: @state.dateFrom
-            selected: @state.dateUntil
+            minDate: @props.dateFrom
+            selected: @props.dateUntil
       div className: 'form-group',
         label className: 'col-sm-3 control-label', 'Set Range:'
         div className: 'col-sm-2',
           Button
             bsStyle: 'primary'
             onClick: =>
-              @setState
-                dateUntil: moment()
-                dateFrom: moment().subtract(7, 'day')
+              @props.onChangeUntil(moment())
+              @props.onChangeFrom(moment().subtract(7, 'day'))
           ,
             'Last 7 days'
         div className: 'col-sm-2',
           Button
             bsStyle: 'primary'
             onClick: =>
-              @setState
-                dateUntil: moment()
-                dateFrom: moment().date(1)
+              @props.onChangeUntil(moment())
+              @props.onChangeFrom(moment().date(1))
           ,
             'This month'
         div className: 'col-sm-3',
@@ -71,19 +69,17 @@ module.exports = React.createClass
             bsStyle: 'primary'
             className: 'pull-left'
             onClick: =>
-              @setState
-                dateUntil: moment()
-                dateFrom: moment().subtract(30, 'day')
+              @props.onChangeUntil(moment())
+              @props.onChangeFrom(moment().subtract(30, 'day'))
           ,
             'Last 30 days'
       div className: 'form-group',
-        Input
-          label: 'days until today'
-          wrapperClassName: 'col-sm-offset-3 col-sm-3'
-          type: 'number'
-          value: @state.dateUntil.diff(@state.dateFrom, 'days')
-          onChange: (event) =>
-            if parseInt(event.target.value) > -1
-              @setState
-                dateUntil: moment()
-                dateFrom: moment().subtract(event.target.value, 'day')
+        label className: 'col-sm-3 control-label', 'Days in total'
+        div className: 'col-sm-6',
+          Input
+            type: 'static'
+            value: @props.dateUntil.diff(@props.dateFrom, 'days')
+            onChange: (event) =>
+              if parseInt(event.target.value) > -1
+                @props.onChangeUntil(moment())
+                @props.onChangeFrom(moment().subtract(event.target.value, 'day'))

@@ -33,8 +33,6 @@ module.exports = React.createClass
     owner: config.get 'owner'
     config: config
     configId: configId
-    since: moment().subtract(4, 'day')
-    until: moment()
     latestJobs: LatestJobsStore.getJobs 'ex-google-analytics', configId
     selectedProfilesCount: ExGanalStore.getSelectedProfiles(configId)?.count() || 0
 
@@ -42,6 +40,10 @@ module.exports = React.createClass
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
+
+  getInitialState: ->
+    since: moment().subtract(4, 'day')
+    until: moment()
 
   _renderMainContent: ->
     queries = @state.config.get('configuration')
@@ -150,8 +152,8 @@ module.exports = React.createClass
               until: @state.until.toISOString()
           ,
             RunDatePicker
-              since: @state.since
-              until: @state.until
+              dateFrom: @state.since
+              dateUntil: @state.until
               onChangeFrom: (date) =>
                 @setState
                   since: date
