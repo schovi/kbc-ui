@@ -104,7 +104,7 @@ export default function(componentId) {
           const tables = data.getIn(['parameters', 'tables'], List())
                 .map((t) => {
                   if (t.get('tableId') === tableId) {
-                    newTable = t.set('items', fromJS(columns));
+                    newTable = t.set('items', fromJS(columns).filter((c) => c.get('type') !== 'IGNORE'));
                     return newTable;
                   } else {
                     return t;
