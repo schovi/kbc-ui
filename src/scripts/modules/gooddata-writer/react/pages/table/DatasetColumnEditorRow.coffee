@@ -1,6 +1,6 @@
 React = require 'react'
 Immutable = require 'immutable'
-keyMirror = require('react/lib/keyMirror')
+keyMirror = require('keyMirror')
 
 {Map} = Immutable
 

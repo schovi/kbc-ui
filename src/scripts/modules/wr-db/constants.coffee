@@ -1,4 +1,4 @@
-keyMirror = require('react/lib/keyMirror')
+keyMirror = require('keyMirror')
 
 module.exports =
   ActionTypes: keyMirror
