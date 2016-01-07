@@ -3,6 +3,7 @@ tmp
 node_modules
 dist
 npm-debug.log
+stats.json
 .idea
 **/.tern-port
 /.tern-project

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react/addons';
-import ConfigurationRow from './ConfigurationRow';
+/* import ConfigurationRow from './ConfigurationRow'; */
 import ComponentIcon from '../../../../react/common/ComponentIcon';
 import ComponentDetailLink from '../../../../react/common/ComponentDetailLink';
 
@@ -33,13 +33,14 @@ export default React.createClass({
   },
 
   configurations() {
-    return this.props.component.get('configurations').map((configuration) => {
-      return React.createElement(ConfigurationRow, {
-        config: configuration,
-        componentId: this.props.component.get('id'),
-        isDeleting: this.props.deletingConfigurations.has(configuration.get('id')),
-        key: configuration.get('id')
-      });
-    }, this);
+    return '';
+    /* return this.props.component.get('configurations').map((configuration) => {
+       return React.createElement(ConfigurationRow, {
+       config: configuration,
+       componentId: this.props.component.get('id'),
+       isDeleting: this.props.deletingConfigurations.has(configuration.get('id')),
+       key: configuration.get('id')
+       });
+       }, this); */
   }
 });
