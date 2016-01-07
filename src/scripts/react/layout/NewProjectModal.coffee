@@ -1,5 +1,5 @@
 React = require 'react'
-Modal = React.createFactory(require('react-bootstrap').Modal)
+Modal = require('react-bootstrap').Modal
 Input = React.createFactory(require('react-bootstrap').Input)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
@@ -12,17 +12,21 @@ module.exports = React.createClass
     xsrf: React.PropTypes.string.isRequired
     organizations: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
-
+    show: React.PropTypes.bool
+    onRequestHide: React.PropTypes.func
   getInitialState: ->
     name: ''
     isSaving: false
 
   componentDidMount: ->
-    @refs.name.getInputDOMNode().focus()
+    @refs.nameInput.getInputDOMNode().focus()
 
   render: ->
-    Modal title: "New Project", onRequestHide: @props.onRequestHide,
-      div className: 'modal-body',
+    React.createElement Modal, show: @props.show, onRequestHide: @props.onRequestHide,
+      React.createElement Modal.Header, null,
+        React.createElement Modal.Title, null,
+          'New Project'
+      React.createElement Modal.Body, null,
         form
           className: 'form-horizontal'
           ref: 'projectCreateForm'
@@ -32,7 +36,7 @@ module.exports = React.createClass
           Input
             label: 'Name'
             name: 'name'
-            ref: 'name'
+            ref: 'nameInput'
             value: @state.name
             onChange: @_handleNameChange
             type: 'text'
@@ -59,7 +63,7 @@ module.exports = React.createClass
             value: @props.xsrf
 
 
-      div className: 'modal-footer',
+      React.createElement Modal.Footer, null,
         ButtonToolbar null,
           Button onClick: @props.onRequestHide,
             'Cancel'

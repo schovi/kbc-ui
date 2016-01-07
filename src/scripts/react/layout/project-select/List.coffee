@@ -21,6 +21,7 @@ module.exports = React.createClass
     xsrf: React.PropTypes.string.isRequired
 
   getInitialState: ->
+    showNewProject: false
     query: ''
     selectedProjectId: null
     selectedOrganizationId: null
@@ -47,7 +48,7 @@ module.exports = React.createClass
             ref: 'searchInput'
             onChange: @_handleQueryChange
             onKeyDown: @_handleKeyDown
-      @_projectsList()
+      #@_projectsList()
       @_newProject() if @props.canCreateProject
 
 
@@ -205,13 +206,19 @@ module.exports = React.createClass
   _newProject: ->
     ul className: 'list-unstyled kbc-project-select-new',
       li null,
-        ModalTrigger modal: NewProjectModal(
+        NewProjectModal(
+          show: @state.showNewProject
+          onRequestHide: =>
+            @setState
+              showNewProject: false
           urlTemplates: @props.urlTemplates
           xsrf: @props.xsrf
           organizations: @props.organizations.filter (organization) -> organization.get('hasAccess')
         ),
-          a null,
-            span className: 'fa fa-plus-circle'
-            ' New Project'
-
-
+        a
+          onClick: =>
+            @setState
+              showNewProject: true
+        ,
+          span className: 'fa fa-plus-circle'
+          ' New Project'
