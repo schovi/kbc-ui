@@ -17,7 +17,7 @@ module.exports = React.createClass
     canCreateProject: React.PropTypes.bool.isRequired
 
   render: ->
-    if @state.open then className = 'open' else ''
+    if @state?.open then className = 'open' else ''
     div className: "kbc-project-select dropdown #{className}",
       button onClick: @_handleDropdownClick, title: @props.currentProject.get('name'),
         span null,
@@ -31,8 +31,8 @@ module.exports = React.createClass
         urlTemplates: @props.urlTemplates
         xsrf: @props.xsrf
         canCreateProject: @props.canCreateProject
-        focus: @state.open
+        focus: @state?.open or false
 
   _handleDropdownClick: (e) ->
     e.preventDefault()
-    @setDropdownState(!@state.open)
+    @setDropdownState(!@state?.open)
