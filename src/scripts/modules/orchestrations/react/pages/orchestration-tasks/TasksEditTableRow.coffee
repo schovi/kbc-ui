@@ -47,7 +47,7 @@ TasksEditTableRow = React.createClass
       opacity: if isDragging then 0.5 else 1
 
     tr _.extend({style: style}, @dragSourceFor('task'), @dropTargetFor('task')),
-      td null,
+      td className: 'kb-orchestrator-task-drag text-center',
         i className: 'fa fa-bars'
       td null,
         span className: 'kbc-component-icon',

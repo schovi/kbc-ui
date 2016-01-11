@@ -19,11 +19,11 @@ TasksEditTable = React.createClass
     table className: 'table table-stripped kbc-table-layout-fixed',
       thead null,
         tr null,
-          th style: {width: '5%'},
-          th style: {width: '26%'}, 'Component'
+          th style: {width: '3%'},
+          th style: {width: '24%'}, 'Component'
           th style: null, 'Configuration'
-          th style: {width: '10%'}, 'Action'
-          th style: {width: '28%'}, 'Parameters'
+          th style: {width: '8%'}, 'Action'
+          th style: {width: '25%'}, 'Parameters'
           if @props.isParallelismEnabled
             th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
