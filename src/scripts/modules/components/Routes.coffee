@@ -20,6 +20,7 @@ appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxExtractorRoutes = require('../ex-dropbox/routes').default
 dropoxWriterRoutes = require '../wr-dropbox/routes'
+wrPortalSasRoutes = require('../wr-portal/Routes').default
 createDbWriterRoutes = require '../wr-db/routes'
 
 createGenericDetailRoute = require './createGenericDetailRoute'
@@ -133,6 +134,8 @@ routes =
       createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
       createComponentRoute 'wr-db-mssql', [createDbWriterRoutes('wr-db-mssql', 'mssql', false)]
+    ,
+      createComponentRoute 'wr-portal-sas', [wrPortalSasRoutes]
     ,
       createGenericDetailRoute 'writer'
 
