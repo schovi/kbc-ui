@@ -13,6 +13,7 @@ TasksTable = React.createClass
     orchestration: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
     onRun: React.PropTypes.func.isRequired
+    isParallelismEnabled: React.PropTypes.bool.isRequired
 
   _handleTaskRun: (task) ->
     @props.onRun(task)
@@ -25,7 +26,8 @@ TasksTable = React.createClass
           th null, 'Configuration'
           th style: {width: '10%'}, 'Action'
           th null, 'Parameters'
-          th style: {width: '8%'}, 'Phase'
+          if @props.isParallelismEnabled
+            th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '12%'}, 'Continue on Failure'
           th style: {width: '8%'}, ''
@@ -38,6 +40,7 @@ TasksTable = React.createClass
               component: @props.components.get(task.get('component'))
               key: task.get('id')
               onRun: @_handleTaskRun
+              isParallelismEnabled: @props.isParallelismEnabled
           , @).toArray()
         else
           tr null,

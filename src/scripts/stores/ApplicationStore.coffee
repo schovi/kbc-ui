@@ -37,6 +37,9 @@ ApplicationStore = StoreUtils.createStore
   getCurrentProject: ->
     _store.getIn ['sapiToken', 'owner']
 
+  getCurrentProjecFeatures: ->
+    @getCurrentProject().get 'features'
+
   getCurrentAdmin: ->
     _store.getIn ['kbc', 'admin']
 

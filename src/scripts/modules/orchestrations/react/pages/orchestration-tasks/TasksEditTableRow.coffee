@@ -28,6 +28,7 @@ TasksEditTableRow = React.createClass
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
+    isParallelismEnabled: React.PropTypes.bool.isRequired
 
   statics:
     configureDragDrop: (register) ->
@@ -81,10 +82,11 @@ TasksEditTableRow = React.createClass
             onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
         ,
           Tree data: @props.task.get('actionParameters')
-      td null,
-        Phase
-          onPhaseUpdate: @props.onTaskUpdate
-          task: @props.task
+      if @props.isParallelismEnabled
+        td null,
+          Phase
+            onPhaseUpdate: @props.onTaskUpdate
+            task: @props.task
       td null,
         input
           type: 'checkbox'

@@ -13,6 +13,7 @@ TasksEditTable = React.createClass
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
+    isParallelismEnabled: React.PropTypes.bool.isRequired
 
   render: ->
     table className: 'table table-stripped kbc-table-layout-fixed',
@@ -23,7 +24,8 @@ TasksEditTable = React.createClass
           th style: null, 'Configuration'
           th style: {width: '10%'}, 'Action'
           th style: {width: '28%'}, 'Parameters'
-          th style: {width: '8%'}, 'Phase'
+          if @props.isParallelismEnabled
+            th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '10%'}, 'Continue on Failure'
           th style: {width: '5%'}
@@ -38,6 +40,7 @@ TasksEditTable = React.createClass
               onTaskDelete: @props.onTaskDelete
               onTaskUpdate: @props.onTaskUpdate
               onTaskMove: @props.onTaskMove
+              isParallelismEnabled: @props.isParallelismEnabled
           , @).toArray()
         else
           tr null,

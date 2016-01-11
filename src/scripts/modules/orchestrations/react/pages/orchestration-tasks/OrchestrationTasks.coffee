@@ -8,6 +8,7 @@ OrchestrationStore = require '../../../stores/OrchestrationsStore'
 ComponentsStore = require '../../../../components/stores/ComponentsStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 mergeTasksWithConfigurations = require('../../../mergeTasksWithConfigruations').default
 
@@ -67,8 +68,18 @@ OrchestrationTasks = React.createClass
 
     OrchestrationsActionCreators.runOrchestration(@state.orchestration.get('id'), tasks, true)
 
+  _hasParallelismEnabled: ->
+    if ApplicationStore.getCurrentProjecFeatures().find((feature) ->
+      if feature.match(/syrup\-jobs\-limit\-[0-9]+/i)
+        true
+      else
+        false
+    )
+      true
+    else
+      false
+
   render: ->
-    console.log 'render', @state.tasks.toJS()
     div {className: 'container-fluid kbc-main-content'},
       div {className: 'col-md-3 kb-orchestrations-sidebar kbc-main-nav'},
         div {className: 'kbc-container'},
@@ -84,6 +95,7 @@ OrchestrationTasks = React.createClass
               isSaving: @state.isSaving
               components: @state.components
               onChange: @_handleTasksChange
+              isParallelismEnabled: @_hasParallelismEnabled()
         else
           div null,
             TasksTable
@@ -91,7 +103,7 @@ OrchestrationTasks = React.createClass
               orchestration: @state.orchestration
               components: @state.components
               onRun: @_handleTaskRun
-
+              isParallelismEnabled: @_hasParallelismEnabled()
 
 
 module.exports = OrchestrationTasks
