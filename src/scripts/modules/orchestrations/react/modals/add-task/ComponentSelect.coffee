@@ -15,6 +15,7 @@ ComponentSelect = React.createClass
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
       @_renderSection('Writers', @_getComponentsForType('writer'))
       @_renderSection('Applications', @_getComponentsForType('application'))
+      @_renderSection('Orchestrations', @props.components.filter((component) -> component.get('id') == 'orchestrator'))
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
