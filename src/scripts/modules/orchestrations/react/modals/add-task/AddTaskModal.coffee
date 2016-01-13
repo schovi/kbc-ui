@@ -10,6 +10,7 @@ ComponentsReloaderButton = require '../../../../components/react/components/Comp
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 
 STEP_COMPONENT_SELECT = 'componentSelect'
@@ -29,11 +30,16 @@ AddTaskModal = React.createClass
     currentStep: STEP_COMPONENT_SELECT
 
   getStateFromStores: ->
-    components: InstalledComponentsStore.getAll().filter (c) ->
-      not c.get('flags').includes('excludeRun')
-    orchestrations: OrchestrationStore.getAll()
+    orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    return {
+      orchestration: OrchestrationStore.get orchestrationId
+      components: InstalledComponentsStore.getAll().filter (c) ->
+        !c.get('flags').includes('excludeRun')
+      orchestrations: OrchestrationStore.getAll()
+    }
 
   render: ->
+    console.log()
     Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
 
       div className: 'modal-body',
@@ -53,6 +59,7 @@ AddTaskModal = React.createClass
           when STEP_ORCHESTRATOR_CONFIGURATION_SELECT
             OrchestrationSelect
               component: @state.selectedComponent
+              orchestration: @state.orchestration
               orchestrations: @state.orchestrations
               onReset: @_handleComponentReset
               onConfigurationSelect: @_handleConfigurationSelect

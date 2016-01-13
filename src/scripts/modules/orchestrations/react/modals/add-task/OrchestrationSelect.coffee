@@ -8,12 +8,16 @@ OrchestrationSelect = React.createClass
   displayName: 'OrchestrationSelect'
   propTypes:
     component: React.PropTypes.object.isRequired
+    orchestration: React.PropTypes.object.isRequired
     orchestrations: React.PropTypes.object.isRequired
     onReset: React.PropTypes.func.isRequired
     onConfigurationSelect: React.PropTypes.func.isRequired
 
   render: ->
-    orchestrations =  @props.orchestrations.filter((orchestration) -> !orchestration.get('crontabRecord'))
+    currentOrchestration = @props.orchestration
+    orchestrations = @props.orchestrations.filter((orchestration) ->
+      !orchestration.get('crontabRecord') && currentOrchestration.get('id') != orchestration.get('id')
+    )
 
     div null,
       h2 null,
