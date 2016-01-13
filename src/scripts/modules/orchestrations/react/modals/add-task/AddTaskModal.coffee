@@ -12,6 +12,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 STEP_COMPONENT_SELECT = 'componentSelect'
 STEP_CONFIGURATION_SELECT = 'configurationSelect'
@@ -31,15 +32,16 @@ AddTaskModal = React.createClass
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    currentOrchestration = OrchestrationStore.get orchestrationId
     return {
-      orchestration: OrchestrationStore.get orchestrationId
       components: InstalledComponentsStore.getAll().filter (c) ->
         !c.get('flags').includes('excludeRun')
-      orchestrations: OrchestrationStore.getAll()
+      orchestrations: OrchestrationStore.getAll().filter((orchestration) ->
+        !orchestration.get('crontabRecord') && currentOrchestration.get('id') != orchestration.get('id')
+      )
     }
 
   render: ->
-    console.log()
     Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
 
       div className: 'modal-body',
@@ -47,6 +49,9 @@ AddTaskModal = React.createClass
 
           when STEP_COMPONENT_SELECT
             ComponentSelect
+              isOrchestrationSelectEnabled:
+                ApplicationStore.getCurrentProject().get('features').includes('orchestrator-kbc-config')
+              orchestrations: @state.orchestrations
               components: @state.components
               onComponentSelect: @_handleComponentSelect
 
@@ -59,7 +64,6 @@ AddTaskModal = React.createClass
           when STEP_ORCHESTRATOR_CONFIGURATION_SELECT
             OrchestrationSelect
               component: @state.selectedComponent
-              orchestration: @state.orchestration
               orchestrations: @state.orchestrations
               onReset: @_handleComponentReset
               onConfigurationSelect: @_handleConfigurationSelect
