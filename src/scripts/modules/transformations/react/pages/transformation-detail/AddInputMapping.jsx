@@ -8,7 +8,8 @@ export default React.createClass({
     tables: React.PropTypes.object.isRequired,
     transformation: React.PropTypes.object.isRequired,
     bucket: React.PropTypes.object.isRequired,
-    mapping: React.PropTypes.object.isRequired
+    mapping: React.PropTypes.object.isRequired,
+    otherDestinations: React.PropTypes.object.isRequired
   },
 
   render() {
@@ -30,7 +31,8 @@ export default React.createClass({
       type: this.props.transformation.get('type'),
       onChange: this.handleChange,
       onCancel: this.handleCancel,
-      onSave: this.handleSave
+      onSave: this.handleSave,
+      otherDestinations: this.props.otherDestinations
     });
   },
 

@@ -16,6 +16,7 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     initialShowDetails: React.PropTypes.bool.isRequired
+    isDestinationDuplicate: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
@@ -197,6 +198,12 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
+          bsStyle: if @props.isDestinationDuplicate then 'error' else null
+          help: if @props.isDestinationDuplicate then React.DOM.small {'className': 'error'},
+              'Duplicate destination '
+              React.DOM.code {}, @props.value.get("destination")
+              '.'
+            else null
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',

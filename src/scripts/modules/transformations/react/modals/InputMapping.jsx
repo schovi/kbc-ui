@@ -16,6 +16,7 @@ export default React.createClass({
     tables: PropTypes.object.isRequired,
     backend: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    otherDestinations: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
@@ -23,13 +24,18 @@ export default React.createClass({
   },
 
   isValid() {
-    return !!this.props.mapping.get('source');
+    return !!this.props.mapping.get('source') &&
+      !this.isDestinationDuplicate();
   },
 
   getInitialState() {
     return {
       isSaving: false
     };
+  },
+
+  isDestinationDuplicate() {
+    return this.props.otherDestinations.contains(this.props.mapping.get('destination', '').toLowerCase());
   },
 
   render() {
@@ -57,7 +63,8 @@ export default React.createClass({
       tables: this.props.tables,
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
-      initialShowDetails: resolveInputShowDetails(this.props.backend, this.props.type, this.props.mapping)
+      initialShowDetails: resolveInputShowDetails(this.props.backend, this.props.type, this.props.mapping),
+      isDestinationDuplicate: this.isDestinationDuplicate()
     };
     if (this.props.backend === 'mysql' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowMySqlEditor, props);

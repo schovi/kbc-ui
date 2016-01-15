@@ -66,6 +66,14 @@ module.exports = React.createClass
       transformation.get("requires").contains(props.transformation.get("id"))
     )
 
+  _inputMappingDestinations: (exclude) ->
+    @props.transformation.get("input", Map()).map((mapping, key) ->
+      if key != exclude
+        return mapping.get("destination").toLowerCase()
+    ).filter((destination) ->
+      destination != undefined
+    )
+
   _renderDetail: ->
     props = @props
     component = @
@@ -121,6 +129,7 @@ module.exports = React.createClass
                 transformation: @props.transformation
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-input-mapping', Map())
+                otherDestinations: @_inputMappingDestinations()
         if @props.transformation.get('input').count()
           div {},
             @props.transformation.get('input').map((input, key) ->
@@ -144,6 +153,7 @@ module.exports = React.createClass
                       editingId: 'input-' + key
                       mappingIndex: key
                       pendingActions: @props.pendingActions
+                      otherDestinations: @_inputMappingDestinations(key)
               ,
                 InputMappingDetail
                   fill: true
@@ -159,6 +169,7 @@ module.exports = React.createClass
               transformation: @props.transformation
               bucket: @props.bucket
               mapping: @props.editingFields.get('new-input-mapping', Map())
+              otherDestinations: @_inputMappingDestinations()
       div {},
         h2 {},
           'Output Mapping'

@@ -22,6 +22,7 @@ module.exports = React.createClass(
     bucket: React.PropTypes.object.isRequired
     editingId: React.PropTypes.string.isRequired
     mappingIndex: React.PropTypes.string.isRequired
+    otherDestinations: React.PropTypes.object.isRequired
 
   render: ->
     span {className: 'table'},
@@ -67,6 +68,7 @@ module.exports = React.createClass(
                   backend: @props.transformation.get("backend")
                   type: @props.transformation.get("type")
                   mapping: @props.editingInputMapping
+                  otherDestinations: @props.otherDestinations
                   onChange: @_handleChange
                   onCancel: @_handleCancel
                   onSave: @_handleSave
