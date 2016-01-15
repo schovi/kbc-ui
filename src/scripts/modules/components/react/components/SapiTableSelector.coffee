@@ -45,15 +45,18 @@ module.exports = React.createClass
       clearable: false
       value: @props.value
       placeholder: @props.placeholder
-      onChange: @props.onSelectTableFn
+      onChange: (tableId) =>
+        table = @state.tables.find (t) ->
+          t.get('id') == tableId
+        @props.onSelectTableFn(tableId, table)
       options: @_getTables()
 
   _getTables: ->
     tables = @state.tables
     tables = tables.filter (table) =>
       stage = table.get('bucket').get('stage')
-      excludeTable = @props.excludeTableFn(table.get('id'))
-      stage in @props.allowedBuckets and not excludeTable
+      excludeTable = @props.excludeTableFn(table.get('id'), table)
+      (stage in @props.allowedBuckets) and not excludeTable
     tables = tables.sort (a, b) ->
       a.get('id').localeCompare(b.get('id'))
     tables = tables.map (table) ->
