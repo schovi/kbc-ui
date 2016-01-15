@@ -1,14 +1,16 @@
 import React from 'react';
-import {fromJS} from 'immutable';
+import {Map, fromJS} from 'immutable';
+
+import createStoreMixin from '../../../react/mixins/createStoreMixin';
+import RoutesStore from '../../../stores/RoutesStore';
+import InstalledComponentStore from '../../components/stores/InstalledComponentsStore';
+import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
 
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import Credentials from './Credentials';
-
-import createStoreMixin from '../../../react/mixins/createStoreMixin';
-import RoutesStore from '../../../stores/RoutesStore';
-import InstalledComponentStore from '../../components/stores/InstalledComponentsStore';
+import SelectBucket from './SelectBucket';
 /* import LatestJobsStore from '../../jobs/stores/LatestJobsStore'; */
 /* import storageTablesStore from '../../components/stores/StorageTablesStore'; */
 
@@ -33,9 +35,13 @@ export default React.createClass({
     return {
       credentials: credentials,
       configId: configId,
-      localState: localState,
+      localState: localState || Map(),
       configData: configData
     };
+  },
+
+  onSelectBucket() {
+    /* TODO! */
   },
 
   render() {
@@ -46,6 +52,12 @@ export default React.createClass({
             <ComponentDescription
               componentId={componentId}
               configId={this.state.configId}
+            />
+            <SelectBucket
+              localState={this.state.localState.get('bucket', Map())}
+              setState={(key, value) => this.updateLocalState(['bucket'].concat(key), value)}
+              selectBucketFn={this.onSelectBucket}
+              isSaving={false}
             />
           </div>
           <div className="row">
@@ -80,6 +92,11 @@ export default React.createClass({
         </ul>
       </div>
     );
+  },
+
+  updateLocalState(path, newData) {
+    const newState = this.state.localState.setIn(path, newData);
+    installedComponentsActions.updateLocalState(componentId, this.state.configId, newState);
   }
 
 });
