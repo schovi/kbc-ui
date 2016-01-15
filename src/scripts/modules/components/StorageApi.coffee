@@ -20,6 +20,28 @@ storageApi =
       response.body
     )
 
+  getBucketCredentials: (bucketId) ->
+    createRequest('GET', "buckets/#{bucketId}/credentials")
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  createBucketCredentials: (bucketId, name) ->
+    createRequest 'POST', "buckets/#{bucketId}/credentials"
+    .type 'form'
+    .send {name: name}
+    .promise()
+    .then (response) ->
+      response.body
+
+  deleteBucketCredentials: (credentialsId) ->
+    createRequest 'DELETE', "credentials/#{credentialsId}"
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   getTables: ->
     createRequest('GET', 'tables?include=attributes,buckets,columns')
     .promise()
@@ -56,6 +78,7 @@ storageApi =
     .promise()
     .then (response) ->
       response.body
+
 
   getKeenCredentials: ->
     createRequest 'GET', 'tokens/keen'
