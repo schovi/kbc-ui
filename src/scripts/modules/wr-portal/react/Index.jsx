@@ -1,12 +1,17 @@
 import React from 'react';
-import {Map, fromJS} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../stores/RoutesStore';
 import InstalledComponentStore from '../../components/stores/InstalledComponentsStore';
 import installedComponentsActions from '../../components/InstalledComponentsActionCreators';
+import storageActions from '../../components/StorageActionCreators';
+import BucketStore from '../../components/stores/StorageBucketsStore';
 
+import EmptyState from '../../components/react/components/ComponentEmptyState';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
+import {Loader} from 'kbc-react-components';
+import Confirm from '../../../react/common/Confirm';
 import ComponentMetadata from '../../components/react/components/ComponentMetadata';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import Credentials from './Credentials';
@@ -17,31 +22,38 @@ import SelectBucket from './SelectBucket';
 const componentId = 'wr-portal-sas';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, BucketStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
     const localState = InstalledComponentStore.getLocalState(componentId, configId);
     const configData = InstalledComponentStore.getConfigData(componentId, configId);
-    const credentials = fromJS({
-      hostname: 'asdasd',
-      port: '12345',
-      use: 'asdasd',
-      db: 'asdasd',
-      schema: 'asd',
-      id: '12'
-
-    });
+    const bucketId = configData.get('bucketId');
+    const credentialsId = configData.get('id');
+    const isCreatingCredentials = BucketStore.isCreatingCredentials(bucketId);
+    const isDeletingCredentials = BucketStore.isDeletingCredentials(bucketId);
+    const credentialsExist = bucketId && !!BucketStore.getCredentials(bucketId).find((c) => c.get('id') === credentialsId);
     return {
-      credentials: credentials,
+      credentialsExist: credentialsExist,
+      bucketId: bucketId,
+      credentialsId: credentialsId,
+      isDeleting: isDeletingCredentials,
+      isCreating: isCreatingCredentials,
       configId: configId,
       localState: localState || Map(),
-      configData: configData
+      configData: configData,
+      isConfigSaving: InstalledComponentStore.isSavingConfigData(componentId, configId)
     };
   },
 
-  onSelectBucket() {
-    /* TODO! */
+  onSelectBucket(bucketId) {
+    const name = `${componentId}#${this.state.configId}`;
+    storageActions.createCredentials(bucketId, name).then((credentials) => {
+      let newData = fromJS(credentials.redshift);
+      newData = newData.set('bucketId', bucketId).set('id', credentials.id);
+      /* save credentias id to config data and close modal */
+      installedComponentsActions.saveComponentConfigData(componentId, this.state.configId, newData).then(() => this.updateLocalState(['bucket'], Map()));
+    });
   },
 
   render() {
@@ -53,23 +65,37 @@ export default React.createClass({
               componentId={componentId}
               configId={this.state.configId}
             />
-            <SelectBucket
-              localState={this.state.localState.get('bucket', Map())}
-              setState={(key, value) => this.updateLocalState(['bucket'].concat(key), value)}
-              selectBucketFn={this.onSelectBucket}
-              isSaving={false}
-            />
           </div>
           <div className="row">
-            <Credentials
-              credentials={this.state.credentials}
-              isCreating={false}
-            />
+            {this.renderContent()}
           </div>
         </div>
         {this.renderSideBar()}
       </div>
     );
+  },
+
+  renderContent() {
+    if (this.state.credentialsExist) {
+      return (
+        <Credentials
+          credentials={this.state.configData}
+          isCreating={this.state.isCreating}
+        />
+      );
+    } else {
+      return (
+        <EmptyState>
+          <p> Select a bucket to connect to.</p>
+        <SelectBucket
+          localState={this.state.localState.get('bucket', Map())}
+          setState={(key, value) => this.updateLocalState(['bucket'].concat(key), value)}
+          selectBucketFn={this.onSelectBucket}
+          isSaving={this.state.isCreating || this.state.isConfigSaving}
+        />
+        </EmptyState>
+      );
+    }
   },
 
   renderSideBar() {
@@ -89,9 +115,51 @@ export default React.createClass({
               configId={this.state.configId}
             />
           </li>
+          {this.renderResetLink()}
         </ul>
       </div>
     );
+  },
+
+  renderResetLink() {
+    if (!this.state.credentialsExist) {
+      return null;
+    }
+    let content = (
+      <Confirm
+        text="You are about to delete the credentials"
+        title="Delete Credentials"
+        buttonLabel="Delete"
+        buttonType="danger"
+        onConfirm={this.resetCredentials}
+      >
+        <a>
+          <span className="fa fa-times fa-fw"/>
+          Delete Credentials
+        </a>
+      </Confirm>);
+    if (this.state.isDeleting) {
+      content = (
+        <a>
+          <Loader/>
+
+          {' Deleting...'}
+        </a>
+      );
+    }
+    return (
+      <li>
+        {content}
+      </li>
+    );
+  },
+
+  resetCredentials() {
+    const bucketId = this.state.configData.get('bucketId');
+    const credentialsId = this.state.configData.get('id');
+    storageActions.deleteCredentials(bucketId, credentialsId).then(() => {
+      return installedComponentsActions.saveComponentConfigData(componentId, this.state.configId, Map());
+    });
   },
 
   updateLocalState(path, newData) {

@@ -14,12 +14,18 @@ export default React.createClass({
     return (
       <form className="form-horizontal">
         <div className="col-md-12">
-          {this.renderInput('Host', 'hostname')}
+          <StaticText
+            wrapperClassName="col-xs-12">
+            Credentials to connect to the tables of <strong>{this.props.credentials.get('bucketId')}</strong> bucket:
+          </StaticText>
+        </div>
+        <div className="col-md-12">
+          {this.renderInput('Host', 'host')}
           {this.renderInput('Port', 'port')}
-          {this.renderInput('User', 'user')}
+          {this.renderInput('User', 'userName')}
           {this.renderInput('Password', 'password', true)}
-          {this.renderInput('Database', 'db')}
-          {this.renderInput('Schema', 'schema')}
+          {this.renderInput('Database', 'databaseName')}
+          {this.renderInput('Schema', 'schemaName')}
         </div>
       </form>
     );

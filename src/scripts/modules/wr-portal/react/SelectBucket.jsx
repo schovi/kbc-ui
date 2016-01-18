@@ -42,14 +42,15 @@ export default React.createClass({
             isDisabled={this.props.isSaving || !this.isValid()}
             onSave={this.onSaveBucket}
             onCancel={this.onHideModal}
-            />
+            saveLabel="Generate credentials"
+          />
         </Modal.Footer>
       </Modal>
     );
   },
 
   onSaveBucket() {
-    const bucketId = this.localState.get('bucketId');
+    const bucketId = this.props.localState.get('bucketId');
     this.props.selectBucketFn(bucketId);
   },
 
@@ -62,13 +63,13 @@ export default React.createClass({
       <Modal.Body>
         <div className="row">
           {this.renderFormElement(
-             'Select a table',
+             '',
              <SapiTableSelector
-               placeholder="Select.."
+               placeholder="select a table and the bucket will get selected automatically"
                value={this.props.localState.get('table')}
                onSelectTableFn={this.selectTable}
                excludeTableFn= {this.filterRedshiftTables}
-             />, 'select a table and the bucket will get selected automatically')
+             />, '')
           }
              {this.renderFormElement('Selected Bucket', this.props.localState.get('bucketId') || 'N/A')}
         </div>
@@ -77,8 +78,8 @@ export default React.createClass({
   },
 
   filterRedshiftTables(tableId, table) {
-    console.log(tableId, table.toJS());
-    return false && table.getIn(['bucket', 'backend']) !== 'redshift';
+    /*     console.log(tableId, table.toJS()); */
+    return table.getIn(['bucket', 'backend']) !== 'redshift';
   },
 
   selectTable(tableId, table) {
@@ -90,18 +91,29 @@ export default React.createClass({
     if (hasError) {
       errorClass = 'form-group has-error';
     }
+    if (label === '') {
+      return (
+        <div className={errorClass}>
+          <div className="col-sm-12">
+            {element}
+            <span className="help-block">{description}</span>
+          </div>
 
-    return (
-      <div className={errorClass}>
-        <label className="control-label col-sm-3">
-          {label}
-        </label>
-        <div className="col-sm-9">
-          {element}
-          <span className="help-block">{description}</span>
         </div>
-      </div>
-    );
+      );
+    }else {
+      return (
+        <div className={errorClass}>
+          <label className="control-label col-sm-3">
+            {label}
+          </label>
+          <div className="col-sm-9">
+            {element}
+            <span className="help-block">{description}</span>
+          </div>
+        </div>
+      );
+    }
   },
 
   onHideModal() {
