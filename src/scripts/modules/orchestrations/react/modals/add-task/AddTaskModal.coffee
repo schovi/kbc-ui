@@ -26,7 +26,9 @@ AddTaskModal = React.createClass
     currentStep: STEP_COMPONENT_SELECT
 
   getStateFromStores: ->
-    components: InstalledComponentsStore.getAll()
+    components = InstalledComponentsStore.getAll().filter (c) ->
+      not c.get('flags').includes('excludeRun')
+    components: components
 
   render: ->
     Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
