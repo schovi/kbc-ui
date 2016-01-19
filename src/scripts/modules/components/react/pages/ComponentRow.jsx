@@ -35,6 +35,7 @@ export default React.createClass({
   configurations() {
     return this.props.component.get('configurations').map((configuration) => {
       return React.createElement(ConfigurationRow, {
+        component: this.props.component,
         config: configuration,
         componentId: this.props.component.get('id'),
         isDeleting: this.props.deletingConfigurations.has(configuration.get('id')),

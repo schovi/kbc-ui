@@ -8,6 +8,7 @@ export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
     config: PropTypes.object.isRequired,
+    component: PropTypes.object.isRequired,
     componentId: PropTypes.string.isRequired,
     isDeleting: PropTypes.bool.isRequired
   },
@@ -18,7 +19,7 @@ export default React.createClass({
         componentId={this.props.componentId}
         configId={this.props.config.get('id')}
         className="tr"
-        >
+      >
         <span className="td">
           <strong className="kbc-config-name">
             {this.props.config.get('name', '---')}
@@ -30,20 +31,29 @@ export default React.createClass({
             Created by <strong>{this.props.config.getIn(['creatorToken', 'description'])}</strong>
           </span>
           <DeleteButton
-              tooltip="Delete Configuration"
-              isPending={this.props.isDeleting}
-              confirm={this.deleteConfirmProps()}
-              />
-          <RunConfigurationButton
-              title="Run"
-              component={this.props.componentId}
-              runParams={this.runParams()}
-
-              >
-            You are about to run component
-          </RunConfigurationButton>
+            tooltip="Delete Configuration"
+            isPending={this.props.isDeleting}
+            confirm={this.deleteConfirmProps()}
+          />
+          {this.renderRunButton()}
         </span>
       </ConfigurationLink>
+    );
+  },
+
+  renderRunButton() {
+    const flags = this.props.component.get('flags');
+    if (flags.includes('excludeRun')) {
+      return (<button className="btn btn-link"> </button>);
+    }
+    return (
+      <RunConfigurationButton
+        title="Run"
+        component={this.props.componentId}
+        runParams={this.runParams()}
+      >
+        You are about to run component
+      </RunConfigurationButton>
     );
   },
 
