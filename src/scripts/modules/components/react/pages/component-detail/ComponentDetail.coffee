@@ -78,8 +78,9 @@ module.exports = React.createClass
             @state.configurations
             .sortBy (configuration) ->
               configuration.get('name').toLowerCase()
-            .map((configuration) ->
+            .map((configuration) =>
               React.createElement(ConfigurationRow,
+                component: @state.component,
                 config: configuration,
                 componentId: state.component.get('id'),
                 isDeleting: state.deletingConfigurations.has(configuration.get('id')),
@@ -93,4 +94,3 @@ module.exports = React.createClass
             AddComponentConfigurationButton
               label: "Create New Configuration"
               component: state.component
-
