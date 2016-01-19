@@ -4,7 +4,7 @@ FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
 AppVendorInfo = React.createFactory(require './AppVendorInfo')
 AppUsageInfo = React.createFactory(require './AppUsageInfo')
-{div, form, label, span, h3} = React.DOM
+{div, p, form, label, span, h3} = React.DOM
 Immutable = require('immutable')
 
 ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
@@ -14,6 +14,8 @@ ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
+EmptyState = require('../../../react/components/ComponentEmptyState').default
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 require './DefaultForm.less'
 
@@ -37,6 +39,8 @@ module.exports = React.createClass
     @props.onChange(@props.configuration.set propName, event.target.value)
 
   render: ->
+    hasRedshift = ApplicationStore.getSapiToken().getIn ['owner', 'hasRedshift']
+    needsRedshift = @props.component.get('flags').includes('appInfo.redshiftOnly')
     div null,
       ModalHeader
         closeButton: true
@@ -52,28 +56,34 @@ module.exports = React.createClass
             className: 'form-horizontal'
             onSubmit: @_handleSubmit
           ,
-            div className: 'row',
-              Input
-                type: 'text'
-                label: 'Name'
-                ref: 'name'
-                autoFocus: true
-                value: @props.configuration.get 'name'
-                placeholder: "My #{@props.component.get('name')}"
-                labelClassName: 'col-xs-3'
-                wrapperClassName: 'col-xs-8'
-                onChange: @_handleChange.bind @, 'name'
-                disabled: @props.isSaving
-              Input
-                type: 'textarea'
-                label: 'Description'
-                value: @props.configuration.get 'description'
-                labelClassName: 'col-xs-3'
-                wrapperClassName: 'col-xs-8'
-                onChange: @_handleChange.bind @, 'description'
-                disabled: @props.isSaving
-              @_renderAppUsageInfo() if @_is3rdPartyApp()
-              @_renderAppVendorInfo() if @_is3rdPartyApp()
+            if needsRedshift and not hasRedshift
+              div className: 'row',
+                React.createElement EmptyState, null,
+                  p className: 'text-danger',
+                    'No redshift backend present in the project as required to configure this component.'
+            else
+              div className: 'row',
+                Input
+                  type: 'text'
+                  label: 'Name'
+                  ref: 'name'
+                  autoFocus: true
+                  value: @props.configuration.get 'name'
+                  placeholder: "My #{@props.component.get('name')}"
+                  labelClassName: 'col-xs-3'
+                  wrapperClassName: 'col-xs-8'
+                  onChange: @_handleChange.bind @, 'name'
+                  disabled: @props.isSaving
+                Input
+                  type: 'textarea'
+                  label: 'Description'
+                  value: @props.configuration.get 'description'
+                  labelClassName: 'col-xs-3'
+                  wrapperClassName: 'col-xs-8'
+                  onChange: @_handleChange.bind @, 'description'
+                  disabled: @props.isSaving
+                @_renderAppUsageInfo() if @_is3rdPartyApp()
+                @_renderAppVendorInfo() if @_is3rdPartyApp()
       ModalFooter null,
         ButtonToolbar null,
           if @props.isSaving
