@@ -16,6 +16,7 @@ import ComponentMetadata from '../../components/react/components/ComponentMetada
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import Credentials from './Credentials';
 import SelectBucket from './SelectBucket';
+import HowtoModal from './HowtoModal.jsx';
 /* import LatestJobsStore from '../../jobs/stores/LatestJobsStore'; */
 /* import storageTablesStore from '../../components/stores/StorageTablesStore'; */
 
@@ -109,7 +110,9 @@ export default function(componentId) {
             />
           </div>
           <ul className="nav nav-stacked">
-
+            <li>
+              {this.renderHowto()}
+            </li>
             <li>
               <DeleteConfigurationButton
                 componentId={componentId}
@@ -119,6 +122,20 @@ export default function(componentId) {
             {this.renderResetLink()}
           </ul>
         </div>
+      );
+    },
+
+    renderHowto() {
+      return (
+          <a onClick={() => this.updateLocalState(['showHowto'], true)}>
+            <span className="fa fa-question-circle fa-fw"/>
+            How To Connect
+            <HowtoModal
+              show={!!this.state.localState.get('showHowto')}
+              onHide={() => this.updateLocalState(['showHowto'], false)}
+              componentId={componentId}
+            />
+          </a>
       );
     },
 
