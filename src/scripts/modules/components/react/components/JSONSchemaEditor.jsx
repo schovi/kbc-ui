@@ -36,7 +36,7 @@ export default React.createClass({
       disable_properties: false,
       no_additional_properties: false,
       object_layout: 'normal',
-      required_by_default: true,
+      required_by_default: false,
       show_errors: 'interaction'
     };
 
