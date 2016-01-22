@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import SchemasStore from '../../stores/SchemasStore';
 import RoutesStore from '../../../../stores/RoutesStore';
+import Immutable from 'immutable';
+import propagateApiAttributes from './jsoneditor/propagateApiAttributes';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
@@ -47,7 +49,7 @@ export default React.createClass({
             </div>
             {this.apiEditor()}
             <JSONSchemaEditor
-              schema={this.state.paramsSchema}
+              schema={this.prepareParamsSchema()}
               value={this.extractConfigValue()}
               onChange={this.handleChange}
               readOnly={true}
@@ -70,7 +72,7 @@ export default React.createClass({
     if (this.requiresApiSchema()) {
       return (
         <JSONSchemaEditor
-          schema={this.state.apiSchema}
+          schema={Immutable.fromJS(this.state.apiSchema)}
           value={this.extractApiValue()}
           onChange={this.handleChange}
           readOnly={true}
@@ -113,5 +115,14 @@ export default React.createClass({
 
   handleChange() {
     // nothing
+  },
+
+  prepareParamsSchema() {
+    if (!this.requiresApiSchema()) {
+      return Immutable.fromJS(this.state.paramsSchema);
+    } else {
+      return propagateApiAttributes(this.extractApiValue(), Immutable.fromJS(this.state.paramsSchema));
+    }
   }
+
 });

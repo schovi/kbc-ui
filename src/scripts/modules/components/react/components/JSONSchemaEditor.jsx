@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import Immutable from 'immutable';
 
 /* global require */
 require('./configuration-json.less');
@@ -14,15 +15,25 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      readOnly: false
+      readOnly: false,
+      schema: Immutable.Map()
     };
   },
 
   jsoneditor: null,
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.schema.equals(nextProps.schema)) {
+      this.initJsonEditor();
+    }
+  },
+
+  initJsonEditor() {
+    if (this.jsoneditor) {
+      this.jsoneditor.destroy();
+    }
     var options =       {
-      schema: this.props.schema,
+      schema: this.props.schema.toJSON(),
       startval: this.props.value,
       theme: 'bootstrap3',
       iconlib: 'fontawesome4',
@@ -79,6 +90,10 @@ export default React.createClass({
     if (this.props.readOnly) {
       jsoneditor.disable();
     }
+  },
+
+  componentDidMount() {
+    this.initJsonEditor();
   },
 
   componentDidUpdate() {

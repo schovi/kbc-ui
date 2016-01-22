@@ -4,6 +4,8 @@ import Sticky from 'react-sticky';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import SchemasStore from '../../stores/SchemasStore';
 import RoutesStore from '../../../../stores/RoutesStore';
+import Immutable from 'immutable';
+import propagateApiAttributes from './jsoneditor/propagateApiAttributes';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
@@ -56,7 +58,7 @@ export default React.createClass({
             </Sticky>
             {this.apiEditor()}
             <JSONSchemaEditor
-              schema={this.state.paramsSchema}
+              schema={this.prepareParamsSchema()}
               value={this.extractConfigValue()}
               onChange={this.handleConfigChange}
               readOnly={this.props.isSaving}
@@ -71,7 +73,7 @@ export default React.createClass({
     if (this.requiresApiSchema()) {
       return (
         <JSONSchemaEditor
-          schema={this.state.apiSchema}
+          schema={Immutable.fromJS(this.state.apiSchema)}
           value={this.extractApiValue()}
           onChange={this.handleApiChange}
           readOnly={this.props.isSaving}
@@ -102,6 +104,14 @@ export default React.createClass({
       value = parsed.api;
     }
     return value;
+  },
+
+  prepareParamsSchema() {
+    if (!this.requiresApiSchema()) {
+      return Immutable.fromJS(this.state.paramsSchema);
+    } else {
+      return propagateApiAttributes(this.extractApiValue(), Immutable.fromJS(this.state.paramsSchema));
+    }
   },
 
   handleConfigChange(value) {
