@@ -4,6 +4,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalActionCreators  = require '../../../exGanalActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
+ProfilesLoader = require('../../../../google-utils/react/ProfilesPicker').default
 {Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 Panel  = React.createFactory Panel
@@ -22,6 +23,7 @@ module.exports = React.createClass
     name = RoutesStore.getRouterState().getIn ['params', 'name']
     config = exGanalStore.getConfig(configId)
     configLoaded = exGanalStore.hasConfig configId
+
     config: config
     configId: configId
     isConfigLoaded: configLoaded
@@ -42,6 +44,10 @@ module.exports = React.createClass
 
   _renderProfiles: ->
     div className: '',
+      React.createElement ProfilesLoader,
+        email: null
+        onProfilesLoad: (profiles) ->
+          console.log "PROFILESSS", profiles
       React.DOM.h2 className: '', "Available Profiles of #{@state.config.get('email')}"
       PanelGroup accordion: true,
         if @state.profiles and @state.profiles.count() > 0
