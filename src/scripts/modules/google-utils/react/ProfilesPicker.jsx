@@ -3,10 +3,9 @@
 import React, {PropTypes} from 'react';
 import {Button} from 'react-bootstrap';
 
-import gapi, {authorize, disconnect, injectGapiScript} from './InitGoogleApis';
+import gapi, {authorize, disconnect, apiKey, injectGapiScript} from './InitGoogleApis';
 
 const scope = 'https://www.googleapis.com/auth/analytics.readonly';
-const apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc';
 
 function authorizeAnal(callbackFn) {
   gapi().client.load('analytics', 'v3').then( () => {
@@ -17,10 +16,14 @@ function authorizeAnal(callbackFn) {
 
 function getProfiles() {
   const request = gapi().client.analytics.management.accountSummaries.list();
-  request.execute((resp) => {
-    console.log('PROFILES', resp);
-    disconnect();
-  }, (err) => (console.log(err))
+  request.execute(
+    (resp) => {
+      console.log('PROFILES', resp);
+      disconnect();
+    },
+    (err) => {
+      console.log(err);
+    }
   );
 }
 

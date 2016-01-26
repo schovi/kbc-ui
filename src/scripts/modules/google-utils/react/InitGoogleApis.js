@@ -1,6 +1,7 @@
 import _ from 'underscore';
 const apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLoad';
 const clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com';
+export const apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc';
 
 // import request from '../../../utils/request';
 
@@ -11,42 +12,24 @@ if (!window.handleGoogleClientLoad) {
   window.handleGoogleClientLoad = function() {
     gapi = window.gapi;
     gapi.load('picker');
-    // gapi.load('auth');
-    gapi.load('auth2', () => initialized = true);
+    gapi.load('auth');
+    initialized = true;
   };
 }
 
-export function authorize(scope, callbackFn) {
-  const authObject = gapi.auth2.getAuthInstance() || gapi.auth2.init({
+export function authorize(scope, callBackFn) {
+  const signInOptions = {
     'client_id': clientId,
     'scope': scope,
-    'fetch_basic_profile': false
-  });
-
-  const sigInOptions = {
-    'fetch_basic_profile': false,
-    'scope': scope,
+    'cookie_policy': 'single_host_origin',
     'prompt': 'select_account'
-
   };
-  if (authObject.isSignedIn.get()) {
-    callbackFn();
-  } else {
-    return authObject.signIn(sigInOptions).then((params) => {
-      callbackFn(params);
-    }, (err) => console.log('SIGN FAILED', err));
-  }
+  return gapi.auth.authorize(signInOptions, callBackFn);
 }
 
 export function disconnect() {
-  const authObject = gapi.auth2.getAuthInstance();
-  if (authObject) {
-    console.log('DISCONNECT');
-    authObject.signOut().then(() => {
-      console.log('SIGN OUT');
-      authObject.disconnect();
-    });
-  }
+  gapi.auth.signOut();
+  gapi.auth.setToken(null);
 }
 
 /*

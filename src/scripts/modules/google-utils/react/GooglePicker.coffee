@@ -16,11 +16,11 @@ setZIndex = ->
   for el in elements
     el.style.zIndex = '1500'
 
-window.handleGoogleClientLoad = ->
-
-  console.log  "GAPI LOADED", window.gapi
-  gapi.load('picker', -> )
-  gapi.load('auth', -> )
+# if not window.handleGoogleClientLoad
+#   window.handleGoogleClientLoad = ->
+#     console.log  "gdrive picker GAPI LOADED", window.gapi
+#     gapi.load('picker', -> )
+#     gapi.load('auth', -> )
 
 
 injectGoogleApiScript = ->
@@ -72,7 +72,7 @@ module.exports = React.createClass
     buttonProps: React.PropTypes.object
 
   componentDidMount: ->
-    injectGoogleApiScript()
+    #injectGoogleApiScript()
 
   render: ->
     buttonProps =
