@@ -1,52 +1,186 @@
 import React from 'react';
 import ApplicationStore from '../../stores/ApplicationStore';
 import createStoreMixin from '../../react/mixins/createStoreMixin';
-import Graphs from './Graphs';
+import LimitRow from './LimitRow';
+import StorageApi from '../components/StorageApi';
+import Keen from 'keen-js';
+
+import {fromJS} from 'immutable';
+
+const LIMITS_METADATA = fromJS({
+  'goodData.prodTokenEnabled': {
+    name: 'GoodData production project enabled'
+  },
+  'goodData.dataSizeBytes': {
+    name: 'GoodData projects size'
+  },
+  'goodData.usersCount': {
+    name: 'GoodData users count'
+  },
+  'kbc.adminsCount': {
+    name: 'Keboola Connection project administrators count'
+  },
+  'storage.dataSizeBytes': {
+    name: 'Backend storage size'
+  },
+  'storage.rowsCount': {
+    name: 'Backend storage rows count'
+  }
+});
+
+function prepareConnectionData(limits, metrics, limitsMetadata) {
+  let rows = [
+    {
+      id: 'storage.dataSizeBytes',
+      limitValue: limits.getIn(['storage.dataSizeBytes', 'value']),
+      metricValue: metrics.getIn(['storage.dataSizeBytes', 'value']),
+      name: limitsMetadata.getIn(['storage.dataSizeBytes', 'name']),
+      graph: {
+        eventCollection: 'sapi-project-snapshots',
+        targetProperty: 'dataSizeBytes'
+      }
+    },
+    {
+      id: 'storage.rowsCount',
+      limitValue: limits.getIn(['storage.rowsCount', 'value']),
+      metricValue: metrics.getIn(['storage.rowsCount', 'value']),
+      name: limitsMetadata.getIn(['storage.rowsCount', 'name']),
+      graph: {
+        eventCollection: 'sapi-project-snapshots',
+        targetProperty: 'rowsCount'
+      }
+    }
+  ];
+
+  return fromJS(rows).map((row) => {
+    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') > row.get('limitValue'));
+  });
+}
+
+function prepareGoodDataData(limits, metrics, limitsMetadata) {
+  let rows = [
+    {
+      id: 'goodData.dataSizeBytes',
+      limitValue: limits.getIn(['goodData.dataSizeBytes', 'value']),
+      metricValue: metrics.getIn(['goodData.dataSizeBytes', 'value']),
+      name: limitsMetadata.getIn(['goodData.dataSizeBytes', 'name']),
+      graph: {
+        eventCollection: 'gooddata-metrics',
+        targetProperty: 'dataSizeBytes'
+      }
+    },
+    {
+      id: 'goodData.usersCount',
+      limitValue: limits.getIn(['goodData.usersCount', 'value']),
+      metricValue: metrics.getIn(['goodData.usersCount', 'value']),
+      name: limitsMetadata.getIn(['goodData.usersCount', 'name']),
+      graph: {
+        eventCollection: 'gooddata-metrics',
+        targetProperty: 'usersCount'
+      }
+    }
+  ];
+
+  return fromJS(rows).map((row) => {
+    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') > row.get('limitValue'));
+  });
+}
 
 export default React.createClass({
   mixins: [createStoreMixin(ApplicationStore)],
 
+  getInitialState() {
+    return {
+      client: null,
+      isKeenReady: false
+    };
+  },
+
+  componentDidMount() {
+    StorageApi
+      .getKeenCredentials()
+      .then((response) => {
+        const client = new Keen({
+          readKey: response.keenToken,
+          projectId: '5571e4d559949a32ff02043e'
+        });
+        this.setState({
+          client: client
+        });
+        Keen.ready(this.keenReady);
+      });
+  },
+
   getStateFromStores() {
     return {
-      limits: ApplicationStore.getSapiToken().getIn(['owner', 'limits']),
-      metrics: ApplicationStore.getSapiToken().getIn(['owner', 'metrics'])
+      sections: fromJS([
+        {
+          id: 'connection',
+          icon: 'https://d3iz2gfan5zufq.cloudfront.net/images/cloud-services/rcp-data-type-assistant-32-1.png',
+          title: 'Keboola Connection',
+          limits: prepareConnectionData(
+            ApplicationStore.getSapiToken().getIn(['owner', 'limits']),
+            ApplicationStore.getSapiToken().getIn(['owner', 'metrics']),
+            LIMITS_METADATA
+          )
+        },
+        {
+          id: 'goodData',
+          icon: 'https://d3iz2gfan5zufq.cloudfront.net/images/cloud-services/gooddata32-2.png',
+          title: 'GoodData',
+          limits: prepareGoodDataData(
+            ApplicationStore.getSapiToken().getIn(['owner', 'limits']),
+            ApplicationStore.getSapiToken().getIn(['owner', 'metrics']),
+            LIMITS_METADATA
+          )
+        }
+      ])
     };
   },
 
   render() {
     return (
       <div className="container-fluid kbc-main-content">
+        {this.state.sections.map(this.section)}
+      </div>
+    );
+  },
+
+  section(section) {
+    return (
+      <div>
         <div className="kbc-header">
           <div className="kbc-title">
-            <h2>Limits</h2>
+            <h2>
+               <span className="kb-sapi-component-icon">
+                <img src={section.get('icon')} />
+              </span>
+              {section.get('title')}
+            </h2>
           </div>
         </div>
-        <table className="table table-striped">
-          <tbody>
-            {this.state.limits.map(this.tableRow)}
-          </tbody>
-        </table>
-        <div className="kbc-header">
-          <div className="kbc-title">
-            <h2>Metrics</h2>
+        <div className="table">
+          <div className="tbody">
+            {section.get('limits').map(this.tableRow)}
           </div>
         </div>
-        <table className="table table-striped">
-          <tbody>
-          {this.state.metrics.map(this.tableRow)}
-          </tbody>
-        </table>
-        <Graphs/>
       </div>
     );
   },
 
   tableRow(limit) {
-    return (
-      <tr>
-        <td>{limit.get('name')}</td>
-        <td>{limit.get('value')}</td>
-      </tr>
-    );
+    return React.createElement(LimitRow, {
+      limit: limit,
+      isKeenReady: this.state.isKeenReady,
+      keenClient: this.state.client,
+      key: limit.get('id')
+    });
+  },
+
+  keenReady() {
+    this.setState({
+      isKeenReady: true
+    });
   }
+
 });
