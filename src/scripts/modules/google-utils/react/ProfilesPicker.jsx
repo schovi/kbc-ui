@@ -1,6 +1,7 @@
 // Google analytics komponenta ktora vynuti od uzivatela docasny oauth token a
 // vylistuje mu jeho google analytics profily z ktorych si vyberie
 import React, {PropTypes} from 'react';
+import Tooltip from '../../../react/common/Tooltip';
 import {Button} from 'react-bootstrap';
 import _ from 'underscore';
 
@@ -43,7 +44,8 @@ export default React.createClass({
   propTypes: {
     email: PropTypes.string,
     buttonLabel: PropTypes.string,
-    onProfilesLoad: PropTypes.func
+    onProfilesLoad: PropTypes.func,
+    onProfilesLoadError: PropTypes.func
   },
 
   getDefaultProps() {
@@ -70,6 +72,12 @@ export default React.createClass({
         bsStyle="success"
         onClick={this.onButtonClick}>
         {this.props.buttonLabel}
+          <Tooltip
+             tooltip="Requires temporal authorization of a Google Account."
+             placement="top">
+            <i className="fa fa-fw fa-question-circle"></i>
+          </Tooltip>
+
       </Button>
     );
   },
@@ -80,11 +88,11 @@ export default React.createClass({
       (resp) => {
         console.log('PROFILES', resp);
         disconnect();
-        this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
-      },
-      (err) => {
-        console.log(err);
-        throw err.message;
+        if (resp.error) {
+          return this.props.onProfilesLoadError(resp);
+        } else {
+          this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
+        }
       }
     );
   },

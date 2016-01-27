@@ -2,12 +2,13 @@ React = require 'react'
 exGanalStore = require('../../../exGanalStore')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 ExGanalActionCreators  = require '../../../exGanalActionCreators'
+ApplicationActionCreators = require '../../../../../actions/ApplicationActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
 ProfilesLoader = require('../../../../google-utils/react/ProfilesPicker').default
 EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 EmptyState = React.createFactory EmptyState
-{Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
+{Alert, Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 Panel  = React.createFactory Panel
 PanelGroup = React.createFactory PanelGroup
@@ -16,7 +17,7 @@ ListGroupItem = React.createFactory ListGroupItem
 
 require('./Profiles.less')
 
-{span, h3, div, form} = React.DOM
+{strong, span, h3, div, form} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExGanalProfiles'
@@ -58,7 +59,19 @@ module.exports = React.createClass
       else
         span null,
           React.DOM.h2 null, "2. Select Profiles of #{email}"
+          @_renderWarning(email)
           @_renderProfilesPanel(profiles)
+
+  _renderWarning: (profilesEmail) ->
+    authorizedEmail = @state.config.get('email')
+    if profilesEmail and authorizedEmail and authorizedEmail != profilesEmail
+      React.createElement Alert, bsStyle: 'warning',
+        strong null, 'Warning: '
+        'Selected account ',
+        strong null, profilesEmail
+        ' does not match account authorized for data extraction ',
+        strong null, authorizedEmail
+        '.'
 
   _renderProfilesPanel: (profiles) ->
     div className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table',
@@ -74,9 +87,13 @@ module.exports = React.createClass
     div className: 'text-center',
       React.createElement ProfilesLoader,
         email: null
+        onProfilesLoadError: (err) ->
+          ApplicationActionCreators.sendNotification({
+            message: err.message,
+            type: 'error'
+          })
         onProfilesLoad: (profiles, email) =>
           console.log "loaded profiles", profiles
-
           ExGanalActionCreators.setLoadedProfiles(@state.configId, profiles, email)
 
 
