@@ -6,7 +6,7 @@ Button = React.createFactory(require('react-bootstrap').Button)
 ComponentSelect = React.createFactory(require './ComponentSelect')
 ConfigurationSelect = React.createFactory(require './ConfigurationSelect')
 OrchestrationSelect = React.createFactory(require './OrchestrationSelect')
-ComponentsReloaderButton = require '../../../../components/react/components/ComponentsReloaderButton'
+ComponentsReloaderButton = require '../../components/ComponentsReloaderButton'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -22,7 +22,7 @@ STEP_ORCHESTRATOR_CONFIGURATION_SELECT = 'orchestratorConfigurationSelect'
 
 AddTaskModal = React.createClass
   displayName: 'AddTaskModal'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationStore)]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
 
