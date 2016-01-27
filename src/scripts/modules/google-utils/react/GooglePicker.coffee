@@ -5,6 +5,8 @@ _ = require('underscore')
 InitGoogleApis = require('./InitGoogleApis')
 {apiKey, authorize, injectGapiScript} = InitGoogleApis
 templates = require './PickerViewTemplates'
+{GapiStore} = require './GapiFlux'
+createStoreMixin = require '../../../react/mixins/createStoreMixin'
 
 scope = 'https://www.googleapis.com/auth/drive.readonly'
 
@@ -36,6 +38,7 @@ createGdrivePicker = (views, viewGroups) ->
 module.exports = React.createClass
 
   displayName: "googlePicker"
+  mixins: [createStoreMixin(GapiStore)]
   propTypes:
     dialogTitle: React.PropTypes.string.isRequired
     buttonLabel: React.PropTypes.string.isRequired
@@ -44,6 +47,9 @@ module.exports = React.createClass
     viewGroups: React.PropTypes.array
     email: React.PropTypes.string
     buttonProps: React.PropTypes.object
+
+  getStateFromStores: ->
+    isInitialized: GapiStore.isInitialized()
 
   componentDidMount: ->
     injectGapiScript()
@@ -54,6 +60,7 @@ module.exports = React.createClass
     if @props.buttonProps
       buttonProps = @props.buttonProps
     buttonProps['onClick'] = @_ButtonClick
+    buttonProps['disabled'] = not @state.isInitialized
 
     React.createElement Button,
       buttonProps
