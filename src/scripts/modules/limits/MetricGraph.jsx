@@ -12,7 +12,7 @@ export default React.createClass({
   componentDidMount() {
     var query = new Keen.Query('average', this.props.query);
     this.props.client.draw(query, React.findDOMNode(this.refs.metric), {
-      chartType: 'columnchart',
+      chartType: 'areachart',
       chartOptions: {
         isStacked: true
       }
