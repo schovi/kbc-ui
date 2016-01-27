@@ -184,7 +184,7 @@ module.exports = React.createClass
 
       Input
         type: 'text'
-        label: 'GoodData username'
+        label: 'Username'
         value: @props.configuration.get 'username'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
@@ -192,7 +192,7 @@ module.exports = React.createClass
         disabled: @props.isSaving
       Input
         type: 'password'
-        label: 'GoodData password'
+        label: 'Password'
         value: @props.configuration.get 'password'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
@@ -200,7 +200,7 @@ module.exports = React.createClass
         disabled: @props.isSaving
       Input
         type: 'text'
-        label: 'GoodData project ID'
+        label: 'Project Id'
         value: @props.configuration.get 'pid'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
