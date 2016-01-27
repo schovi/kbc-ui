@@ -191,7 +191,8 @@ module.exports = React.createClass
     @state.config.get('external') == '1'
 
   _showSelectProfiles: ->
-    @_isCurrentAuthorized() and not @_isExtLinkOnly()
+    return true
+    #@_isCurrentAuthorized() and not @_isExtLinkOnly()
 
   _renderAddQueryButton: ->
     if @_isAuthorized()
