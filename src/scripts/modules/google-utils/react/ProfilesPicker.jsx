@@ -2,6 +2,7 @@
 // vylistuje mu jeho google analytics profily z ktorych si vyberie
 import React, {PropTypes} from 'react';
 import {Button} from 'react-bootstrap';
+import _ from 'underscore';
 
 import gapi, {authorize, disconnect, apiKey, injectGapiScript} from './InitGoogleApis';
 
@@ -14,17 +15,22 @@ function authorizeAnal(callbackFn) {
   });
 }
 
-function getProfiles() {
-  const request = gapi().client.analytics.management.accountSummaries.list();
-  request.execute(
-    (resp) => {
-      console.log('PROFILES', resp);
-      disconnect();
-    },
-    (err) => {
-      console.log(err);
-    }
-  );
+function reparseProfiles(profiles) {
+  let result = {};
+  _.each(profiles.items, (item) => {
+    const accountId = item.id;
+    let props = {};
+    _.each(item.webProperties, (property) => {
+      const webPropertyId = property.id;
+      _.each(property.profiles, (p) => {
+        p.accountId = accountId;
+        p.webPropertyId = webPropertyId;
+      });
+      props[property.name] = property.profiles;
+    });
+    result[item.name] = props;
+  });
+  return result;
 }
 
 export default React.createClass({
@@ -49,7 +55,18 @@ export default React.createClass({
   },
 
   loadAnalProfiles() {
-    getProfiles();
+    const request = gapi().client.analytics.management.accountSummaries.list();
+    request.execute(
+      (resp) => {
+        console.log('PROFILES', resp);
+        disconnect();
+        this.props.onProfilesLoad(reparseProfiles(resp));
+      },
+      (err) => {
+        console.log(err);
+        throw err.message;
+      }
+    );
   },
 
   onButtonClick() {

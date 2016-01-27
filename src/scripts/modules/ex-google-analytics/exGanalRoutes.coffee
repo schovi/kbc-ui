@@ -38,10 +38,10 @@ module.exports =
     title: 'Select Profiles'
     headerButtonsHandler: ProfilesHeaderButton
     handler: ExGanalProfiles
-    requireData: [
-      (params) ->
-        ExGanalActionCreators.loadProfiles params.config
-    ]
+    # requireData: [
+    #   (params) ->
+    #     ExGanalActionCreators.loadProfiles params.config
+    # ]
 
   ,
     name: 'ex-google-analytics-query'

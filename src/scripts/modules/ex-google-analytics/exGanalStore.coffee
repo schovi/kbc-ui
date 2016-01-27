@@ -42,15 +42,6 @@ GanalStore = StoreUtils.createStore
     _store.getIn ['savingProfiles', configId]
   getSelectedProfiles: (configId) ->
     _store.getIn ['selectedProfiles', configId]
-  resetSelectedProfiles: (configId) ->
-    config = GanalStore.getConfig configId
-    if config.has('items') and config.get('items').count() > 0
-      mappedProfiles = config.get('items').map( (profile, key) ->
-        profile = profile.set 'id', profile.get 'googleId'
-        return profile).toMap()
-        #remap by googleId
-      _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
-        return profile.get 'googleId')
 
   hasProfiles: (configId) ->
     _store.hasIn ['profiles', configId]
@@ -98,6 +89,17 @@ GanalStore = StoreUtils.createStore
 
     _store.setIn ['newQuery', configId], newQuery
     return newQuery
+
+
+resetSelectedProfiles = (configId) ->
+  config = GanalStore.getConfig configId
+  if config.has('items') and config.get('items').count() > 0
+    mappedProfiles = config.get('items').map( (profile, key) ->
+      profile = profile.set 'id', profile.get 'googleId'
+      return profile).toMap()
+      #remap by googleId
+    _store = _store.setIn(['selectedProfiles', configId], mappedProfiles.mapKeys (key, profile) ->
+      return profile.get 'googleId')
 
 
 Dispatcher.register (payload) ->
@@ -264,14 +266,14 @@ Dispatcher.register (payload) ->
     when Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_CANCEL
       configId = action.configId
       _store = _store.deleteIn ['selectedProfiles', configId]
-      GanalStore.resetSelectedProfiles(configId)
+      resetSelectedProfiles(configId)
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CONFIGURATION_LOAD_SUCCEES
       configId = action.configId
       data = Immutable.fromJS(action.data)
       _store = _store.setIn(['configs', configId], data)
-      GanalStore.resetSelectedProfiles(configId)
+      resetSelectedProfiles(configId)
       GanalStore.emitChange()
 
     when Constants.ActionTypes.EX_GANAL_CHANGE_NEW_QUERY

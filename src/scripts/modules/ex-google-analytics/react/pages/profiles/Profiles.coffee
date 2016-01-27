@@ -46,8 +46,10 @@ module.exports = React.createClass
     div className: '',
       React.createElement ProfilesLoader,
         email: null
-        onProfilesLoad: (profiles) ->
+        onProfilesLoad: (profiles) =>
           console.log "PROFILESSS", profiles
+          ExGanalActionCreators.setProfilesForce(@state.configId, profiles)
+
       React.DOM.h2 className: '', "Available Profiles of #{@state.config.get('email')}"
       PanelGroup accordion: true,
         if @state.profiles and @state.profiles.count() > 0
@@ -67,11 +69,11 @@ module.exports = React.createClass
       eventKey: profileGroupName,
     ,
       profileGroup.map( (profile, profileName) =>
-        @_renderProfilePanel(profile, profileName, profileGroupName)
+        @_renderProfilePanel(profile, profileName, profileGroupName, profileGroup)
       ).toArray()
 
 
-  _renderProfilePanel: (profile, profileName, profileGroupName) ->
+  _renderProfilePanel: (profile, profileName, profileGroupName, profileGroup) ->
     header = div
       className: ''
       profileName
