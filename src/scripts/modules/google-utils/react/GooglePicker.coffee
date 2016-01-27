@@ -2,44 +2,19 @@ React = require('react')
 _ = require('underscore')
 {Button} = require('react-bootstrap')
 {div, span} = React.DOM
-
+InitGoogleApis = require('./InitGoogleApis')
+{apiKey, authorize, injectGapiScript} = InitGoogleApis
 templates = require './PickerViewTemplates'
 
-apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLoad'
 scope = 'https://www.googleapis.com/auth/drive.readonly'
-clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com'
-apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc'
-
 
 setZIndex = ->
   elements = document.getElementsByClassName("picker")
   for el in elements
     el.style.zIndex = '1500'
 
-# if not window.handleGoogleClientLoad
-#   window.handleGoogleClientLoad = ->
-#     console.log  "gdrive picker GAPI LOADED", window.gapi
-#     gapi.load('picker', -> )
-#     gapi.load('auth', -> )
-
-
-injectGoogleApiScript = ->
-  scripts = document.body.getElementsByTagName('script')
-  apiScript = _.find scripts, (s) ->
-    s.src == apiUrl
-  if not apiScript and _.isUndefined(window.gapi)
-    script = document.createElement('script')
-    script.src = apiUrl
-    document.body.appendChild script
-
-
 authorizePicker = (userEmail, callbackFn) ->
-  gapi.auth.authorize(
-    'client_id': clientId
-    'scope': scope
-    'immediate': false
-    'user_id': userEmail if userEmail
-  , callbackFn)
+  authorize(scope, callbackFn, userEmail)
 
 createGdrivePicker = (views, viewGroups) ->
   picker = new google.picker.PickerBuilder()
@@ -54,7 +29,6 @@ createGdrivePicker = (views, viewGroups) ->
 
   for view in views
     picker = picker.addView(view())
-  console.log picker
   #picker.A.style.zIndex = 2000
   return picker
 
@@ -72,7 +46,7 @@ module.exports = React.createClass
     buttonProps: React.PropTypes.object
 
   componentDidMount: ->
-    #injectGoogleApiScript()
+    injectGapiScript()
 
   render: ->
     buttonProps =

@@ -3,8 +3,6 @@ const apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLo
 const clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com';
 export const apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc';
 
-// import request from '../../../utils/request';
-
 let gapi;
 let initialized = false;
 
@@ -17,12 +15,13 @@ if (!window.handleGoogleClientLoad) {
   };
 }
 
-export function authorize(scope, callBackFn) {
+export function authorize(scope, callBackFn, userEmail) {
   const signInOptions = {
     'client_id': clientId,
     'scope': scope,
     'cookie_policy': 'single_host_origin',
-    'prompt': 'select_account'
+    'user_id': userEmail, // forces to log in specific email
+    'prompt': 'select_account' // forces to always select account(no cached selection)
   };
   return gapi.auth.authorize(signInOptions, callBackFn);
 }
