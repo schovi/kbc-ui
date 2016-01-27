@@ -18,8 +18,10 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
+    selectedProfiles = ExGanalStore.getSelectedProfiles(configId)
     currentConfigId: configId
     isSaving: ExGanalStore.isSavingProfiles configId
+    isValid: selectedProfiles and selectedProfiles.count() > 0
 
 
   _handleCancel: ->
@@ -46,6 +48,6 @@ module.exports = React.createClass
       button
         className: 'btn btn-success'
         onClick: @_handleCreate
-        disabled: @state.isSaving
+        disabled: @state.isSaving or not @state.isValid
       ,
         'Save'

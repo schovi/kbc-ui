@@ -105,11 +105,12 @@ module.exports =
     @loadProfilesForce(configId)
 
 
-  setLoadedProfiles: (configId, profiles) ->
+  setLoadedProfiles: (configId, profiles, email) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
       configId: configId
       profiles: profiles
+      email: email
 
   loadProfilesForce: (configId) ->
     exGanalApi.getProfiles(configId).then (result) =>

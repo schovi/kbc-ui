@@ -5,6 +5,8 @@ ExGanalActionCreators  = require '../../../exGanalActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
 ProfilesLoader = require('../../../../google-utils/react/ProfilesPicker').default
+EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
+EmptyState = React.createFactory EmptyState
 {Panel, PanelGroup, ListGroup, ListGroupItem} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
 Panel  = React.createFactory Panel
@@ -31,6 +33,7 @@ module.exports = React.createClass
     selectedProfiles: exGanalStore.getSelectedProfiles(configId)
 
   render: ->
+    console.log('avalaible PROFILES', @state.profiles?.toJS())
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
@@ -43,21 +46,33 @@ module.exports = React.createClass
       div {}, 'Loading ...'
 
   _renderProfiles: ->
+    profiles = @state.profiles?.get('profiles')
+    email = @state.profiles?.get('email')
     div className: '',
+      React.DOM.h2 null, "1. Load Google Account Profiles"
+      @_renderProfilesLoader()
+      if profiles == undefined
+        EmptyState null, 'No profiles loaded.'
+      else
+        span null,
+          React.DOM.h2 null, "2. Select Profiles of #{email}"
+          PanelGroup accordion: true,
+            if profiles and profiles.count() > 0
+              profiles.map( (profileGroup, profileGroupName) =>
+                @_renderProfileGroup(profileGroup, profileGroupName)
+              ,@).toArray()
+            else
+              EmptyState null, 'The account has no profiles.'
+
+  _renderProfilesLoader: ->
+    div className: 'text-center',
       React.createElement ProfilesLoader,
         email: null
-        onProfilesLoad: (profiles) =>
-          console.log "PROFILESSS", profiles
-          ExGanalActionCreators.setLoadedProfiles(@state.configId, profiles)
+        onProfilesLoad: (profiles, email) =>
+          console.log "loaded profiles", profiles
 
-      React.DOM.h2 className: '', "Available Profiles of #{@state.config.get('email')}"
-      PanelGroup accordion: true,
-        if @state.profiles and @state.profiles.count() > 0
-          @state.profiles.map( (profileGroup, profileGroupName) =>
-            @_renderProfileGroup(profileGroup, profileGroupName)
-          ,@).toArray()
-        else
-          div className: 'well', 'No Profiles.'
+          ExGanalActionCreators.setLoadedProfiles(@state.configId, profiles, email)
+
 
   _renderProfileGroup: (profileGroup, profileGroupName) ->
     header = div
@@ -109,11 +124,11 @@ module.exports = React.createClass
 
   _renderProjectProfiles: ->
     div className: '',
-      React.DOM.h2 className: '', 'Selected Profiles'
-      if @state.selectedProfiles
+      React.DOM.h2 className: '', "Selected Profiles To Extract Data from #{@state.config.get('email')}"
+      if @state.selectedProfiles and @state.selectedProfiles.count() > 0
         @_renderProfilesItems(@state.selectedProfiles)
       else
-        div className: 'well', 'No profiles selected in project.'
+        EmptyState null, 'No profiles selected.'
 
   _renderProfilesItems: (profiles) ->
     React.DOM.ul {},

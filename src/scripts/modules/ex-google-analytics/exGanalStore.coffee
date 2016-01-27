@@ -166,7 +166,9 @@ Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
       configId = action.configId
-      profiles = Immutable.fromJS action.profiles
+      profiles = Immutable.fromJS
+        profiles: action.profiles
+        email: action.email
       _store = _store.setIn ['profiles', configId], profiles
       GanalStore.emitChange()
 
