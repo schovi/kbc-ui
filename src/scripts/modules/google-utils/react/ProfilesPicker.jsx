@@ -42,7 +42,14 @@ export default React.createClass({
 
   propTypes: {
     email: PropTypes.string,
+    buttonLabel: PropTypes.string,
     onProfilesLoad: PropTypes.func
+  },
+
+  getDefaultProps() {
+    return {
+      buttonLabel: 'Select Google Account and Load Profiles'
+    };
   },
 
   getStateFromStores() {
@@ -62,7 +69,7 @@ export default React.createClass({
         disabled={!this.state.isInitialized}
         bsStyle="success"
         onClick={this.onButtonClick}>
-        Pick me up bitch!
+        {this.props.buttonLabel}
       </Button>
     );
   },
@@ -73,7 +80,7 @@ export default React.createClass({
       (resp) => {
         console.log('PROFILES', resp);
         disconnect();
-        this.props.onProfilesLoad(reparseProfiles(resp));
+        this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
       },
       (err) => {
         console.log(err);
