@@ -1,17 +1,18 @@
 import _ from 'underscore';
+import {GapiActions} from './GapiFlux';
 const apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLoad';
 const clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com';
 export const apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc';
 
 let gapi;
-let initialized = false;
+
 
 if (!window.handleGoogleClientLoad) {
   window.handleGoogleClientLoad = function() {
+    GapiActions.startInit();
     gapi = window.gapi;
     gapi.load('picker');
-    gapi.load('auth');
-    initialized = true;
+    gapi.load('auth', () => GapiActions.finishInit());
   };
 }
 
@@ -68,8 +69,4 @@ export function injectGapiScript() {
 
 export default function() {
   return window.gapi;
-}
-
-export function isInitialized() {
-  return initialized;
 }

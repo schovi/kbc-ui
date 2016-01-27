@@ -48,7 +48,7 @@ module.exports = React.createClass
         email: null
         onProfilesLoad: (profiles) =>
           console.log "PROFILESSS", profiles
-          ExGanalActionCreators.setProfilesForce(@state.configId, profiles)
+          ExGanalActionCreators.setLoadedProfiles(@state.configId, profiles)
 
       React.DOM.h2 className: '', "Available Profiles of #{@state.config.get('email')}"
       PanelGroup accordion: true,

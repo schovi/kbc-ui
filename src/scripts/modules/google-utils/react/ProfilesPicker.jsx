@@ -4,6 +4,9 @@ import React, {PropTypes} from 'react';
 import {Button} from 'react-bootstrap';
 import _ from 'underscore';
 
+import {GapiStore} from './GapiFlux';
+import createStoreMixin from '../../../react/mixins/createStoreMixin';
+
 import gapi, {authorize, disconnect, apiKey, injectGapiScript} from './InitGoogleApis';
 
 const scope = 'https://www.googleapis.com/auth/analytics.readonly';
@@ -35,9 +38,18 @@ function reparseProfiles(profiles) {
 
 export default React.createClass({
 
+  mixins: [createStoreMixin(GapiStore)],
+
   propTypes: {
     email: PropTypes.string,
     onProfilesLoad: PropTypes.func
+  },
+
+  getStateFromStores() {
+    return {
+      isInitialized: GapiStore.isInitialized(),
+      isPicking: GapiStore.isPicking('profiles')
+    };
   },
 
   componentDidMount() {
@@ -47,6 +59,7 @@ export default React.createClass({
   render() {
     return (
       <Button
+        disabled={!this.state.isInitialized}
         bsStyle="success"
         onClick={this.onButtonClick}>
         Pick me up bitch!

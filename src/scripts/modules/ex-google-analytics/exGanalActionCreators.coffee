@@ -105,22 +105,15 @@ module.exports =
     @loadProfilesForce(configId)
 
 
-  setProfilesForce: (configId, profiles) ->
+  setLoadedProfiles: (configId, profiles) ->
     dispatcher.handleViewAction
       type: Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
       configId: configId
       profiles: profiles
-    dispatcher.handleViewAction
-      type: Constants.ActionTypes.EX_GANAL_SELECT_PROFILE_CANCEL
-      configId: configId
 
   loadProfilesForce: (configId) ->
-    exGanalApi.getProfiles(configId).then (result) ->
-      dispatcher.handleViewAction
-        type: Constants.ActionTypes.EX_GANAL_PROFILES_LOAD_SUCCESS
-        configId: configId
-        profiles: result
-
+    exGanalApi.getProfiles(configId).then (result) =>
+      @setLoadedProfiles(configId, result)
 
   generateExternalLink: (configId) ->
     dispatcher.handleViewAction
