@@ -5,7 +5,6 @@ import Keen from 'keen-js';
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
     client: PropTypes.object.isRequired
   },
 
@@ -13,6 +12,7 @@ export default React.createClass({
     var query = new Keen.Query('average', this.props.query);
     this.props.client.draw(query, React.findDOMNode(this.refs.metric), {
       chartType: 'areachart',
+      title: ' ',
       chartOptions: {
         isStacked: true
       }

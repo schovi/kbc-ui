@@ -35,7 +35,6 @@ export default React.createClass({
       );
     }
     return React.createElement(MetricGraph, {
-      title: graph.get('title'),
       query: {
         eventCollection: graph.get('eventCollection'),
         targetProperty: graph.get('targetProperty'),
