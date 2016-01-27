@@ -14,6 +14,8 @@ PanelGroup = React.createFactory PanelGroup
 ListGroup = React.createFactory ListGroup
 ListGroupItem = React.createFactory ListGroupItem
 
+require('./Profiles.less')
+
 {span, h3, div, form} = React.DOM
 
 module.exports = React.createClass
@@ -56,13 +58,17 @@ module.exports = React.createClass
       else
         span null,
           React.DOM.h2 null, "2. Select Profiles of #{email}"
-          PanelGroup accordion: true,
-            if profiles and profiles.count() > 0
-              profiles.map( (profileGroup, profileGroupName) =>
-                @_renderProfileGroup(profileGroup, profileGroupName)
-              ,@).toArray()
-            else
-              EmptyState null, 'The account has no profiles.'
+          @_renderProfilesPanel(profiles)
+
+  _renderProfilesPanel: (profiles) ->
+    div className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table',
+      if profiles and profiles.count() > 0
+        profiles.map( (profileGroup, profileGroupName) =>
+          @_renderProfileGroup(profileGroup, profileGroupName)
+        ,@).toArray()
+      else
+        EmptyState null, 'The account has no profiles.'
+
 
   _renderProfilesLoader: ->
     div className: 'text-center',
@@ -78,10 +84,19 @@ module.exports = React.createClass
     header = div
       className: ''
       profileGroupName
+
+    header = span null,
+      span {className: 'table', style: {margin: '0'}},
+        span className: 'tbody',
+          span className: 'tr',
+            span className: 'td',
+              profileGroupName
     Panel
       header: header
       key: profileGroupName
       eventKey: profileGroupName,
+      collapsible: true
+      className: 'profile-panel'
     ,
       profileGroup.map( (profile, profileName) =>
         @_renderProfilePanel(profile, profileName, profileGroupName, profileGroup)
@@ -92,11 +107,19 @@ module.exports = React.createClass
     header = div
       className: ''
       profileName
-    PanelGroup accordion: true,
+    header = span null,
+      span {className: 'table', style: {margin: '0'} },
+        span className: 'tbody',
+          span className: 'tr',
+            span className: 'td',
+              profileName
+    #PanelGroup accordion: true,
+    div className: 'kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table',
       Panel
         header: header
         key: profileName
         eventKey: profileName
+        collapsible: true
       ,
         div {className: 'row'},
           ListGroup {},
@@ -110,7 +133,7 @@ module.exports = React.createClass
                   profileItem = profileItem.set 'googleId', profileItem.get 'id'
                   @_profileOnClick(profileItem)
                 ,
-                  profileItem.get 'name'
+                  div className: 'text-center', profileItem.get 'name'
             ).toArray()
 
   _profileOnClick: (profile) ->
