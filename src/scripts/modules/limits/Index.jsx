@@ -53,7 +53,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
   ];
 
   return fromJS(rows).map((row) => {
-    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') > row.get('limitValue'));
+    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') < row.get('limitValue'));
   });
 }
 

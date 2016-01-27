@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
+import AlarmIndicator from './AlarmIndicator';
 
 export default React.createClass({
   propTypes: {
@@ -11,6 +12,9 @@ export default React.createClass({
   render() {
     return (
       <div className="tr">
+        <span className="td">
+          <AlarmIndicator isAlarm={this.props.limit.get('isAlarm')} />
+        </span>
         <span className="td">
           {this.props.limit.get('name')}
         </span>
