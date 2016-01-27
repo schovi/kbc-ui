@@ -24,18 +24,15 @@ OrchestrationSelect = React.createClass
           span className: 'fa fa-chevron-left', null,
             ' Back'
       div className: 'list-group',
-        @props.component.get('configurations')
-          .filter((configuration) ->
-            orchestrations.find((orchestration) -> configuration.get('id') == 'orchestrator-' + orchestration.get('id'))
-          )
-          .map((configuration) ->
-            a
-              className: 'list-group-item'
-              key: configuration.get('id')
-              onClick: @_handleSelect.bind(@, configuration)
-            ,
-              configuration.get('name')
-              i className: 'fa fa-plus-circle pull-right'
+        orchestrations
+        .map((configuration) ->
+          a
+            className: 'list-group-item'
+            key: configuration.get('id')
+            onClick: @_handleSelect.bind(@, configuration)
+          ,
+            configuration.get('name')
+            i className: 'fa fa-plus-circle pull-right'
         , @).toArray()
 
   _handleBack: ->
