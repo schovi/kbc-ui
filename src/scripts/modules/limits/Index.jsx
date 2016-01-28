@@ -25,6 +25,9 @@ const LIMITS_METADATA = fromJS({
   },
   'storage.rowsCount': {
     name: 'Backend storage rows count'
+  },
+  'orchestrations.count': {
+    name: 'Orchestrations count'
   }
 });
 
@@ -49,6 +52,18 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
         eventCollection: 'sapi-project-snapshots',
         targetProperty: 'rowsCount'
       }
+    },
+    {
+      id: 'kbc.adminsCount',
+      limitValue: limits.getIn(['kbc.adminsCount', 'value']),
+      metricValue: metrics.getIn(['kbc.adminsCount', 'value']),
+      name: limitsMetadata.getIn(['kbc.adminsCount', 'name'])
+    },
+    {
+      id: 'orchestrations.count',
+      limitValue: limits.getIn(['orchestrations.count', 'value']),
+      metricValue: metrics.getIn(['orchestrations.count', 'value']),
+      name: limitsMetadata.getIn(['orchestrations.count', 'name'])
     }
   ];
 
@@ -78,6 +93,13 @@ function prepareGoodDataData(limits, metrics, limitsMetadata) {
         eventCollection: 'gooddata-metrics',
         targetProperty: 'usersCount'
       }
+    },
+    {
+      id: 'goodData.prodTokenEnabled',
+      limitValue: limits.getIn(['goodData.prodTokenEnabled', 'value']),
+      metricValue: metrics.getIn(['goodData.prodTokenEnabled', 'value']),
+      name: limitsMetadata.getIn(['goodData.prodTokenEnabled', 'name'])
+
     }
   ];
 

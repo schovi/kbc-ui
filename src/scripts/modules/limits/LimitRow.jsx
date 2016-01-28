@@ -17,7 +17,7 @@ export default React.createClass({
           <AlarmIndicator isAlarm={this.props.limit.get('isAlarm')} />
         </span>
         <span className="td">
-          {this.props.limit.get('name')}
+          <h3>{this.props.limit.get('name')}</h3>
         </span>
         <span className="td">
           {this.props.limit.get('metricValue')} / {this.props.limit.get('limitValue')}
