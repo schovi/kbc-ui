@@ -29,6 +29,14 @@ module.exports = React.createClass
           bucketId: @props.configId
       ,
         @props.children
+    else if @props.componentId == 'orchestrator'
+      Link
+        className: @props.className
+        to: 'orchestration'
+        params:
+          orchestrationId: @props.configId
+        ,
+          @props.children
     else if RoutesStore.hasRoute(@props.componentId)
       Link
         className: @props.className

@@ -5,7 +5,7 @@ export default function(tasks, configurations) {
           task.getIn(['actionParameters', 'account'])
         )),
       componentId = task.get('component'),
-      config = configurations.getIn([componentId, 'configurations', configId]);
+      config = configurations.getIn([componentId, 'configurations', configId.toString()]);
 
     return config ? task.set('config', config) : task.remove('config');
   });
