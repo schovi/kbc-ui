@@ -73,7 +73,7 @@ export default React.createClass({
         onClick={this.onButtonClick}>
         {this.props.buttonLabel}
           <Tooltip
-             tooltip="Requires temporal authorization of a Google Account."
+             tooltip="Requires temporal authorization of a Google Account after which a short-lived access token is obtained to load profiles from the selected account."
              placement="top">
             <i className="fa fa-fw fa-question-circle"></i>
           </Tooltip>
