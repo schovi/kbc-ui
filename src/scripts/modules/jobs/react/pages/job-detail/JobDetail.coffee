@@ -54,7 +54,7 @@ module.exports = React.createClass
     configuration = null
     if job.hasIn ['params', 'config']
       config = job.getIn ['params', 'config']
-      configuration = InstalledComponentsStore.getConfig(getComponentId(job), config)
+      configuration = InstalledComponentsStore.getConfig(getComponentId(job), config.toString())
 
     job: job
     query: JobsStore.getQuery()
@@ -133,14 +133,6 @@ module.exports = React.createClass
           configId: @state.configuration.get 'id'
         ,
           @state.configuration.get 'name'
-    else if componentId == 'orchestrator'
-      configurationLink = span null,
-        React.createElement Link,
-          to: 'orchestration'
-          params:
-            orchestrationId: job.getIn ['params', 'orchestration', 'id']
-        ,
-          job.getIn ['params', 'orchestration', 'name']
     else
       configurationLink = null
     jobStarted = ->
