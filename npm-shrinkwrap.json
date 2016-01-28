@@ -3209,9 +3209,14 @@
       "version": "0.5.0",
       "from": "jsesc@0.5.0"
     },
+    "json-editor": {
+      "version": "0.7.23",
+      "from": "json-editor@>=0.7.23 <0.8.0",
+      "resolved": "https://registry.npmjs.org/json-editor/-/json-editor-0.7.23.tgz"
+    },
     "json-loader": {
       "version": "0.5.4",
-      "from": "json-loader@>=0.5.1 <0.6.0",
+      "from": "json-loader@*",
       "resolved": "https://registry.npmjs.org/json-loader/-/json-loader-0.5.4.tgz"
     },
     "json-stable-stringify": {
@@ -3260,9 +3265,9 @@
       }
     },
     "kbc-bootstrap": {
-      "version": "0.1.83",
+      "version": "0.1.87",
       "from": "git+https://git@github.com/keboola/kbc-bootstrap.git",
-      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#2fc13d3634209807793ae062fccf96dac93f8651"
+      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#24bfd5670d6add81e9363a5c2f3ff98c718d95f0"
     },
     "kbc-react-components": {
       "version": "0.0.9",

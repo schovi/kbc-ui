@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
 import AlarmIndicator from './AlarmIndicator';
+import classnames from 'classnames';
 
 export default React.createClass({
   propTypes: {
@@ -11,7 +12,7 @@ export default React.createClass({
 
   render() {
     return (
-      <div className="tr">
+      <div className={classnames('tr', {'danger': this.props.limit.get('isAlarm')})}>
         <span className="td">
           <AlarmIndicator isAlarm={this.props.limit.get('isAlarm')} />
         </span>
@@ -45,6 +46,7 @@ export default React.createClass({
         timeframe: 'this_30_days',
         interval: 'daily'
       },
+      isAlarm: this.props.limit.get('isAlarm'),
       client: this.props.keenClient
     });
   }

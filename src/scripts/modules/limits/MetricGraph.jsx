@@ -5,7 +5,8 @@ import Keen from 'keen-js';
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
-    client: PropTypes.object.isRequired
+    client: PropTypes.object.isRequired,
+    isAlarm: PropTypes.bool.isRequired
   },
 
   componentDidMount() {
@@ -14,7 +15,8 @@ export default React.createClass({
       chartType: 'areachart',
       title: ' ',
       chartOptions: {
-        isStacked: true
+        isStacked: true,
+        backgroundColor: this.props.isAlarm ? '#f2dede' : '#fff'
       }
     });
   },
