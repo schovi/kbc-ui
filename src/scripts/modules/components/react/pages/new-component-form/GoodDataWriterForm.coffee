@@ -177,10 +177,6 @@ module.exports = React.createClass
     div className: 'row',
       div className: 'col-xs-offset-3 col-xs-9',
         h3 null, 'GoodData Project Admin Credentials'
-        p className: 'help-text',
-          'We will use these credentials just once to invite Keboola Domain Admin to your project.
-          These credentials will not be stored anywhere or used for any other purpose,
-          we will perform all other activity using the invited account.'
 
       Input
         type: 'text'
@@ -206,6 +202,14 @@ module.exports = React.createClass
         wrapperClassName: 'col-xs-7'
         onChange: @_handleChange.bind @, 'pid'
         disabled: @props.isSaving
+      p className: 'help-text',
+        'We will use these credentials just once to invite Keboola Domain Admin to your project.
+        They will not be stored anywhere or used for any other purpose,
+        we will perform all other activity using the invited account.'
+      p className: 'help-text',
+        'We will read the project and create writer\'s configuration along with bucket '
+        React.DOM.code null, 'out.c-wr-gooddata-{writer_name}'
+        ' where you should put your data. This bucket cannot exist already.'
 
   _handleSubmit: (e) ->
     e.preventDefault()
