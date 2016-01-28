@@ -3,7 +3,7 @@ export default function(tasks, configurations) {
     const configId = task.getIn(['actionParameters', 'config'],
         task.getIn(['actionParameters', 'configBucketId'],
           task.getIn(['actionParameters', 'account'])
-        )),
+        ), ''),
       componentId = task.get('component'),
       config = configurations.getIn([componentId, 'configurations', configId.toString()]);
 
