@@ -1,7 +1,19 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
 import AlarmIndicator from './AlarmIndicator';
+import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
+import numeral from 'numeral';
+
+
+function bytesToGBFormatted(bytes) {
+  const gb = bytes / (1000 * 1000 * 1000);
+  return numeral(gb).format('0.00');
+}
+
+function numericMetricFormatted(value) {
+  return numeral(value).format('0,00');
+}
 
 export default React.createClass({
   propTypes: {
@@ -11,22 +23,40 @@ export default React.createClass({
   },
 
   render() {
+    const {limit} = this.props;
     return (
-      <div className={classnames('tr', {'danger': this.props.limit.get('isAlarm')})}>
+      <div className={classnames('tr', {'danger': limit.get('isAlarm')})}>
         <span className="td">
-          <AlarmIndicator isAlarm={this.props.limit.get('isAlarm')} />
+          {
+            limit.get('limitValue') ? <AlarmIndicator isAlarm={limit.get('isAlarm')} /> : null
+          }
         </span>
         <span className="td">
-          <h3>{this.props.limit.get('name')}</h3>
+          <h3>{limit.get('name')}</h3>
         </span>
         <span className="td">
-          {this.props.limit.get('metricValue')} / {this.props.limit.get('limitValue')}
+          {this.limit()}
         </span>
         <span className="td" style={{width: '50%'}}>
           {this.renderGraph()}
         </span>
       </div>
     );
+  },
+
+  limit() {
+    const {limit}  = this.props;
+    if (limit.get('unit') === 'bytes') {
+      return `${bytesToGBFormatted(limit.get('metricValue'))} of ${bytesToGBFormatted(limit.get('limitValue'))} GB used`;
+    } else if (limit.get('unit') === 'flag') {
+      return (
+        <Check isChecked={!!limit.get('metricValue')} />
+      );
+    } else if (!limit.get('limitValue')) {
+      return numericMetricFormatted(limit.get('metricValue'));
+    } else {
+      return `${numericMetricFormatted(limit.get('metricValue'))} / ${numericMetricFormatted(limit.get('limitValue'))}`;
+    }
   },
 
   renderGraph() {

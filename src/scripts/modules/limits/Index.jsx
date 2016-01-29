@@ -38,6 +38,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
       limitValue: limits.getIn(['storage.dataSizeBytes', 'value']),
       metricValue: metrics.getIn(['storage.dataSizeBytes', 'value']),
       name: limitsMetadata.getIn(['storage.dataSizeBytes', 'name']),
+      unit: 'bytes',
       graph: {
         eventCollection: 'sapi-project-snapshots',
         targetProperty: 'dataSizeBytes'
@@ -68,7 +69,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
   ];
 
   return fromJS(rows).map((row) => {
-    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') < row.get('limitValue'));
+    return row.set('isAlarm', row.get('limitValue') && row.get('metricValue') && row.get('metricValue') > row.get('limitValue'));
   });
 }
 
@@ -79,6 +80,7 @@ function prepareGoodDataData(limits, metrics, limitsMetadata) {
       limitValue: limits.getIn(['goodData.dataSizeBytes', 'value']),
       metricValue: metrics.getIn(['goodData.dataSizeBytes', 'value']),
       name: limitsMetadata.getIn(['goodData.dataSizeBytes', 'name']),
+      unit: 'bytes',
       graph: {
         eventCollection: 'gooddata-metrics',
         targetProperty: 'dataSizeBytes'
@@ -98,8 +100,8 @@ function prepareGoodDataData(limits, metrics, limitsMetadata) {
       id: 'goodData.prodTokenEnabled',
       limitValue: limits.getIn(['goodData.prodTokenEnabled', 'value']),
       metricValue: metrics.getIn(['goodData.prodTokenEnabled', 'value']),
-      name: limitsMetadata.getIn(['goodData.prodTokenEnabled', 'name'])
-
+      name: limitsMetadata.getIn(['goodData.prodTokenEnabled', 'name']),
+      unit: 'flag'
     }
   ];
 
