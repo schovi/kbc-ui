@@ -6,12 +6,12 @@ provisioningActions = require '../provisioning/ActionCreators'
 
 
 # load credentials and if they dont exists then create new
-loadCredentials = (permission, token, driver) ->
+loadCredentials = (permission, token, driver, forceRecreate) ->
   if driver == 'mysql'
     driver = 'wrdb'
   provisioningActions.loadWrDbCredentials(permission, token, driver).then ->
     creds = wrDbProvStore.getCredentials(permission, token)
-    if creds
+    if creds and not forceRecreate
       return creds
     else
       return provisioningActions.createWrDbCredentials(permission, token, driver).then ->
@@ -28,10 +28,12 @@ getWrDbToken = (driver) ->
 
 retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver) ->
   console.log "retrieve credentials", wrDbToken
-  readPromise = loadCredentials('read', wrDbToken, driver).then (creds) ->
-    console.log 'READ PROMISE RETURN', creds
-    creds
-
+  readPromise = null
+  #enforce recreate read credentials for redshift only(permisson for)
+  if driver == 'redshift' and not isReadOnly
+    readPromise = loadCredentials('read', wrDbToken, driver, true)
+  else
+    readPromise = loadCredentials('read', wrDbToken, driver)
   writePromise = null
   if not isReadOnly
     if driver == 'redshift'
