@@ -28,9 +28,7 @@ export default React.createClass({
       <div className={classnames('tr', {'danger': limit.get('isAlarm')})}>
         <span className="td">
           <h3>
-            {limit.get('name')}
-
-            {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
+            {limit.get('name')} {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
           </h3>
         </span>
         <span className="td">
