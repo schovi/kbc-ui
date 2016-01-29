@@ -22,10 +22,10 @@ const LIMITS_METADATA = fromJS({
     name: 'Administrators count'
   },
   'storage.dataSizeBytes': {
-    name: 'Backend storage size'
+    name: 'Storage size'
   },
   'storage.rowsCount': {
-    name: 'Backend storage rows count'
+    name: 'Storage rows count'
   },
   'orchestrations.count': {
     name: 'Orchestrations count'

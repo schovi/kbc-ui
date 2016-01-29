@@ -47,7 +47,7 @@ export default React.createClass({
   limit() {
     const {limit}  = this.props;
     if (limit.get('unit') === 'bytes') {
-      return `${bytesToGBFormatted(limit.get('metricValue'))} of ${bytesToGBFormatted(limit.get('limitValue'))} GB used`;
+      return `${bytesToGBFormatted(limit.get('metricValue'))} GB of ${bytesToGBFormatted(limit.get('limitValue'))} GB used`;
     } else if (limit.get('unit') === 'flag') {
       return (
         <Check isChecked={!!limit.get('metricValue')} />
