@@ -33,7 +33,7 @@ export default {
     },
     {
       name: 'limits',
-      title: 'Limits',
+      title: 'Project Settings',
       defaultRouteHandler: Limits
     },
     {

@@ -5,20 +5,21 @@ import LimitRow from './LimitRow';
 import StorageApi from '../components/StorageApi';
 import Keen from 'keen-js';
 
+import {TabbedArea, TabPane} from 'react-bootstrap';
 import {fromJS} from 'immutable';
 
 const LIMITS_METADATA = fromJS({
   'goodData.prodTokenEnabled': {
-    name: 'GoodData production project enabled'
+    name: 'Production project enabled'
   },
   'goodData.dataSizeBytes': {
-    name: 'GoodData projects size'
+    name: 'Project size'
   },
   'goodData.usersCount': {
-    name: 'GoodData users count'
+    name: 'Users count'
   },
   'kbc.adminsCount': {
-    name: 'Keboola Connection project administrators count'
+    name: 'Administrators count'
   },
   'storage.dataSizeBytes': {
     name: 'Backend storage size'
@@ -165,7 +166,14 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        {this.state.sections.map(this.section)}
+        <TabbedArea activeKey="limits">
+          <TabPane eventKey="settings" tab="Settings"/>
+          <TabPane eventKey="limits" tab="Limits">
+            {this.state.sections.map(this.section)}
+          </TabPane>
+          <TabPane eventKey="admins" tab="Users"/>
+        </TabbedArea>
+
       </div>
     );
   },
