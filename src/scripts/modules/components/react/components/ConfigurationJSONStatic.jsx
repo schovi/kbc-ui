@@ -3,6 +3,8 @@ import JSONSchemaEditor from './JSONSchemaEditor';
 import SchemasStore from '../../stores/SchemasStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import Immutable from 'immutable';
+import Markdown from 'react-markdown';
+
 import propagateApiAttributes from './jsoneditor/propagateApiAttributes';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
@@ -18,6 +20,8 @@ export default React.createClass({
     var componentId = RoutesStore.getCurrentRouteParam('component');
     return {
       paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON(),
+      pureParamsSchema: SchemasStore.getPureParamsSchema(componentId).toJSON(),
+      jobsTemplates: SchemasStore.getJobsTemplates(componentId),
       apiSchema: SchemasStore.getApiSchema(componentId).toJSON(),
       apiTemplate: SchemasStore.getApiTemplate(componentId).toJSON()
     };
@@ -35,8 +39,42 @@ export default React.createClass({
     };
   },
 
+  jobsValue: Immutable.List(),
+  paramsValue: Immutable.Map(),
+  apiValue: Immutable.Map(),
+
+  componentDidMount() {
+    var parsed = JSON.parse(this.props.data);
+
+    if (parsed.config) {
+      this.paramsValue = Immutable.fromJS(parsed.config).delete('jobs');
+    } else {
+      this.paramsValue = Immutable.Map();
+    }
+
+    if (parsed.config && parsed.config.jobs) {
+      this.jobsValue = Immutable.fromJS(parsed.config.jobs);
+    } else {
+      this.jobsValue = Immutable.List();
+    }
+
+    if (this.requiresApiSchema()) {
+      if (parsed.api) {
+        this.apiValue = Immutable.fromJS(parsed.api);
+      } else {
+        this.apiValue = Immutable.Map();
+      }
+    } else {
+      this.apiValue = Immutable.fromJS(this.state.apiTemplate);
+    }
+  },
+
   render() {
-    return this.extractConfigValue() || this.extractApiValue() ? this.static() : this.emptyState();
+    if (this.requiresApiSchema()) {
+      return !this.paramsValue.isEmpty() || !this.apiValue.isEmpty() || !this.jobsValue.isEmpty() ? this.static() : this.emptyState();
+    } else {
+      return !this.paramsValue.isEmpty() || !this.jobsValue.isEmpty() ? this.static() : this.emptyState();
+    }
   },
 
   static() {
@@ -50,10 +88,11 @@ export default React.createClass({
             {this.apiEditor()}
             <JSONSchemaEditor
               schema={this.prepareParamsSchema()}
-              value={this.extractConfigValue()}
+              value={this.paramsValue.toJS()}
               onChange={this.handleChange}
               readOnly={true}
             />
+            {this.renderJobs()}
           </div>
         </div>
       </div>
@@ -68,12 +107,34 @@ export default React.createClass({
     );
   },
 
+  getTemplate(hashCode) {
+    return this.state.jobsTemplates.filter(
+      function(template) {
+        return template.get('jobs').hashCode() === parseInt(hashCode, 10);
+      }
+    ).first();
+  },
+
+  renderJobs() {
+    var template = this.getTemplate(this.jobsValue.hashCode());
+    if (template) {
+      return (
+        <span>
+          <h3>{template.get('name')}</h3>
+          <Markdown
+            source={template.get('description')}
+            />
+        </span>
+      );
+    }
+  },
+
   apiEditor() {
     if (this.requiresApiSchema()) {
       return (
         <JSONSchemaEditor
           schema={Immutable.fromJS(this.state.apiSchema)}
-          value={this.extractApiValue()}
+          value={this.apiValue.toJS()}
           onChange={this.handleChange}
           readOnly={true}
           />
@@ -91,26 +152,8 @@ export default React.createClass({
     );
   },
 
-  extractConfigValue() {
-    var value;
-    var parsed = JSON.parse(this.props.data);
-    if (parsed.config) {
-      value = parsed.config;
-    }
-    return value;
-  },
-
   requiresApiSchema() {
     return Object.keys(this.state.apiTemplate).length === 0;
-  },
-
-  extractApiValue() {
-    var value;
-    var parsed = JSON.parse(this.props.data);
-    if (parsed.api) {
-      value = parsed.api;
-    }
-    return value;
   },
 
   handleChange() {
@@ -119,9 +162,9 @@ export default React.createClass({
 
   prepareParamsSchema() {
     if (!this.requiresApiSchema()) {
-      return Immutable.fromJS(this.state.paramsSchema);
+      return Immutable.fromJS(this.state.pureParamsSchema);
     } else {
-      return propagateApiAttributes(this.extractApiValue(), Immutable.fromJS(this.state.paramsSchema));
+      return propagateApiAttributes(this.apiValue, Immutable.fromJS(this.state.paramsSchema));
     }
   }
 

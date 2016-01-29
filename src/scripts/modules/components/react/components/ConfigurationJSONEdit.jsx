@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import Sticky from 'react-sticky';
 import JSONSchemaEditor from './JSONSchemaEditor';
+import JobsEditor from './ConfigurationJobsEditor';
 import SchemasStore from '../../stores/SchemasStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import Immutable from 'immutable';
@@ -20,6 +21,8 @@ export default React.createClass({
     var componentId = RoutesStore.getCurrentRouteParam('component');
     return {
       paramsSchema: SchemasStore.getParamsSchema(componentId).toJSON(),
+      pureParamsSchema: SchemasStore.getPureParamsSchema(componentId).toJSON(),
+      jobsTemplates: SchemasStore.getJobsTemplates(componentId),
       apiSchema: SchemasStore.getApiSchema(componentId).toJSON(),
       apiTemplate: SchemasStore.getApiTemplate(componentId).toJSON()
     };
@@ -41,6 +44,36 @@ export default React.createClass({
     };
   },
 
+  jobsValue: Immutable.List(),
+  paramsValue: Immutable.Map(),
+  apiValue: Immutable.Map(),
+
+  componentDidMount() {
+    var parsed = JSON.parse(this.props.data);
+
+    if (parsed.config) {
+      this.paramsValue = Immutable.fromJS(parsed.config).delete('jobs');
+    } else {
+      this.paramsValue = Immutable.Map();
+    }
+
+    if (parsed.config && parsed.config.jobs) {
+      this.jobsValue = Immutable.fromJS(parsed.config.jobs);
+    } else {
+      this.jobsValue = Immutable.List();
+    }
+
+    if (this.requiresApiSchema()) {
+      if (parsed.api) {
+        this.apiValue = Immutable.fromJS(parsed.api);
+      } else {
+        this.apiValue = Immutable.Map();
+      }
+    } else {
+      this.apiValue = Immutable.fromJS(this.state.apiTemplate);
+    }
+  },
+
   render() {
     return (
       <div className="kbc-configuration-json-edit">
@@ -59,10 +92,17 @@ export default React.createClass({
             {this.apiEditor()}
             <JSONSchemaEditor
               schema={this.prepareParamsSchema()}
-              value={this.extractConfigValue()}
-              onChange={this.handleConfigChange}
+              value={this.paramsValue.toJS()}
+              onChange={this.handleParamsChange}
               readOnly={this.props.isSaving}
             />
+            <h3>Jobs</h3>
+            <JobsEditor
+              templates={this.state.jobsTemplates}
+              value={this.jobsValue}
+              onChange={this.handleJobsChange}
+              readOnly={this.props.isSaving}
+              />
           </div>
         </div>
       </div>
@@ -74,7 +114,7 @@ export default React.createClass({
       return (
         <JSONSchemaEditor
           schema={Immutable.fromJS(this.state.apiSchema)}
-          value={this.extractApiValue()}
+          value={this.apiValue.toJS()}
           onChange={this.handleApiChange}
           readOnly={this.props.isSaving}
           />
@@ -84,57 +124,39 @@ export default React.createClass({
     }
   },
 
-  extractConfigValue() {
-    var value;
-    var parsed = JSON.parse(this.props.data);
-    if (parsed.config) {
-      value = parsed.config;
-    }
-    return value;
-  },
-
   requiresApiSchema() {
     return Object.keys(this.state.apiTemplate).length === 0;
   },
 
-  extractApiValue() {
-    var value;
-    var parsed = JSON.parse(this.props.data);
-    if (parsed.api) {
-      value = parsed.api;
-    }
-    return value;
-  },
-
   prepareParamsSchema() {
     if (!this.requiresApiSchema()) {
-      return Immutable.fromJS(this.state.paramsSchema);
+      return Immutable.fromJS(this.state.pureParamsSchema);
     } else {
-      return propagateApiAttributes(this.extractApiValue(), Immutable.fromJS(this.state.paramsSchema));
+      return propagateApiAttributes(this.apiValue, Immutable.fromJS(this.state.paramsSchema));
     }
   },
 
-  handleConfigChange(value) {
-    var config = {};
-    if (this.requiresApiSchema()) {
-      config = {
-        api: this.extractApiValue(),
-        config: value
-      };
-    } else {
-      config = {
-        api: this.state.apiTemplate,
-        config: value
-      };
-    }
-    this.props.onChange(JSON.stringify(config));
+  handleJobsChange(value) {
+    this.jobsValue = value;
+    this.handleChange();
+  },
+
+  handleParamsChange(value) {
+    this.paramsValue = Immutable.fromJS(value);
+    this.handleChange();
   },
 
   handleApiChange(value) {
+    this.apiValue = Immutable.fromJS(value);
+    this.handleChange();
+  },
+
+  handleChange() {
     var config = {
-      api: value,
-      config: this.extractConfigValue()
+      api: this.apiValue.toJS(),
+      config: this.paramsValue.toJS()
     };
+    config.config.jobs = this.jobsValue.toJS();
     this.props.onChange(JSON.stringify(config));
   }
 });

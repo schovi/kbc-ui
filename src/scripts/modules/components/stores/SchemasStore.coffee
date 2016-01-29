@@ -22,6 +22,19 @@ SchemasStore = StoreUtils.createStore
   getParamsSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'params'], Map()
 
+  getPureParamsSchema: (componentId) ->
+    schema = _store.getIn ['schemas', componentId, 'schemas', 'params'], Map()
+    if schema.hasIn ['properties', 'jobs']
+      schema = schema.deleteIn ['properties', 'jobs']
+    schema
+
+  getJobsSchema: (componentId) ->
+    _store.getIn ['schemas', componentId, 'schemas', 'params', 'jobs'], Map()
+
+  getJobsTemplates: (componentId) ->
+    _store.getIn ['schemas', componentId, 'templates', 'jobs'], Map()
+
+
   getApiSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'api'], Map()
 
