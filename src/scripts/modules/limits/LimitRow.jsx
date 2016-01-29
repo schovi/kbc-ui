@@ -27,12 +27,11 @@ export default React.createClass({
     return (
       <div className={classnames('tr', {'danger': limit.get('isAlarm')})}>
         <span className="td">
-          {
-            limit.get('limitValue') ? <AlarmIndicator isAlarm={limit.get('isAlarm')} /> : null
-          }
-        </span>
-        <span className="td">
-          <h3>{limit.get('name')}</h3>
+          <h3>
+            {limit.get('name')}
+
+            {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
+          </h3>
         </span>
         <span className="td">
           {this.limit()}
@@ -77,6 +76,7 @@ export default React.createClass({
         interval: 'daily'
       },
       isAlarm: this.props.limit.get('isAlarm'),
+      limitValue: this.props.limit.get('limitValue'),
       client: this.props.keenClient
     });
   }
