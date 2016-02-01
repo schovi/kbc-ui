@@ -6,6 +6,7 @@ export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
     limitValue: PropTypes.number,
+    unit: PropTypes.string,
     client: PropTypes.object.isRequired,
     isAlarm: PropTypes.bool.isRequired
   },
@@ -22,7 +23,10 @@ export default React.createClass({
       })
       .prepare();
 
-    var limitValue = this.props.limitValue;
+    var limitValue = this.props.limitValue,
+      conversion = this.props.unit === 'bytes' ? function(val) {
+        return val / (1000 * 1000 * 1000);
+      } : function(val) {return val;};
 
     this.props.client.run([query], function(err, res) {
       var result = res.result;
@@ -34,14 +38,14 @@ export default React.createClass({
           data[i] = {
             timeframe: result[i].timeframe,
             value: [
-              { category: 'Metric', result: result[i].value },
-              { category: 'Limit', result: limitValue }
+              { category: 'Metric', result: conversion(result[i].value) },
+              { category: 'Limit', result: conversion(limitValue) }
             ]
           };
         } else {
           data[i] = { // format the data so it can be charted
             timeframe: result[i].timeframe,
-            value: result[i].value
+            value: conversion(result[i].value)
           };
         }
 

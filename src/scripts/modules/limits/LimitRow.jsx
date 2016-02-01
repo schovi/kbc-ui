@@ -75,6 +75,7 @@ export default React.createClass({
       },
       isAlarm: this.props.limit.get('isAlarm'),
       limitValue: this.props.limit.get('limitValue'),
+      unit: this.props.limit.get('unit'),
       client: this.props.keenClient
     });
   }
