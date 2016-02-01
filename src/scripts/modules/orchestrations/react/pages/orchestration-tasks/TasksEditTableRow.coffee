@@ -70,12 +70,13 @@ TasksEditTableRow = React.createClass
         else
           'N/A'
       td null,
-        input
-          className: 'form-control'
-          type: 'text'
-          defaultValue: @props.task.get('action')
-          disabled: @props.disabled
-          onChange: @_handleActionChange
+        div className: 'form-group form-group-sm',
+          input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.task.get('action')
+            disabled: @props.disabled
+            onChange: @_handleActionChange
       td className: 'kbc-cursor-pointer',
         ModalTrigger
           modal: TaskParametersEditModal(
