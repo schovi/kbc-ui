@@ -78,7 +78,7 @@ export default React.createClass({
 
   renderModalBody() {
     return (
-      <TabbedArea activeKey="limits" animation={false}>
+      <TabbedArea key="tabbedarea" animation={false}>
         <TabPane key="general" eventKey="general" tab="General Info">
           {this.renderGeneralInfo()}
         </TabPane>
