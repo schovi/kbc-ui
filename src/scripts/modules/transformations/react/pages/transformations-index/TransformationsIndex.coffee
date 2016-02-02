@@ -60,7 +60,7 @@ TransformationsIndex = React.createClass
       else
         span {},
           h2 null,
-            'Transformations allows you to modify your data.'
+            'Transformations allow you to modify your data.'
           p null,
             'It picks data from Storage,
               manipulates it and then stores it back. Transformations can use MySQL, Redshift or R.'
