@@ -5,7 +5,6 @@ import LimitRow from './LimitRow';
 import StorageApi from '../components/StorageApi';
 import Keen from 'keen-js';
 
-import {TabbedArea, TabPane} from 'react-bootstrap';
 import {fromJS} from 'immutable';
 
 const LIMITS_METADATA = fromJS({
@@ -166,16 +165,24 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        <TabbedArea activeKey="limits">
-          <TabPane eventKey="settings" tab="Settings"/>
-          <TabPane eventKey="limits" tab="Limits">
-            {this.state.sections.map(this.section)}
-          </TabPane>
-          <TabPane eventKey="admins" tab="Users"/>
-        </TabbedArea>
-
+        <ul className="nav nav-tabs">
+          <li role="presentation">
+            <a href={this.projectPageUrl('settings')}>Settings</a>
+          </li>
+          <li role="presentation" className="active">
+            <a href={this.projectPageUrl('settings-limits')}>Limits</a>
+          </li>
+          <li role="presentation">
+            <a href={this.projectPageUrl('settings-users')}>Users</a>
+          </li>
+        </ul>
+        {this.state.sections.map(this.section)}
       </div>
     );
+  },
+
+  projectPageUrl(path) {
+    return ApplicationStore.getProjectPageUrl(path);
   },
 
   section(section) {
