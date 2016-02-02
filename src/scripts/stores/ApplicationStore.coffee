@@ -28,6 +28,12 @@ ApplicationStore = StoreUtils.createStore
   getMaintainers: ->
     _store.get 'maintainers'
 
+  getNotifications: ->
+    Map
+      url: @getUrlTemplates().get 'notifications'
+      unreadCount: _store.getIn ['notifications', 'unreadCount']
+      isEnabled: @hasCurrentAdminFeature 'kbc-notifications'
+
   getTokenStats: ->
     _store.get 'tokenStats'
 
@@ -82,5 +88,6 @@ Dispatcher.register (payload) ->
           .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
           .set 'maintainers', Immutable.fromJS(action.applicationData.maintainers)
           .set 'tokenStats', Immutable.fromJS(action.applicationData.tokenStats)
+          .set 'notifications', Immutable.fromJS(action.applicationData.notifications)
 
 module.exports = ApplicationStore

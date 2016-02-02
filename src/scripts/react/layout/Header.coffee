@@ -9,6 +9,7 @@ Link = React.createFactory(require('react-router').Link)
 RoutePendingIndicator = React.createFactory(require './RoutePendingIndicator')
 ComponentIcon = React.createFactory(require('../common/ComponentIcon').default)
 ComponentNameEdit = React.createFactory(require '../../modules/components/react/components/ComponentName')
+NotificationsAccess = require('../../react/common/NotificationsAccess').default
 
 {div, nav, span, a, h1} = React.DOM
 
@@ -18,6 +19,7 @@ Header = React.createClass
   mixins: [createStoreMixin(RoutesStore), immutableMixin]
   propTypes:
     homeUrl: React.PropTypes.string.isRequired
+    notifications: React.PropTypes.object.isRequired
 
   getStateFromStores: ->
     componentId = RoutesStore.getCurrentRouteComponentId()
@@ -36,6 +38,7 @@ Header = React.createClass
       div {className: 'col-xs-3 kbc-logo'},
         a href: @props.homeUrl,
           span className: "kbc-icon-keboola-logo", null
+        @_renderNotifications()
       div {className: 'col-xs-9 col-xs-offset-3 kbc-main-header-container'},
         div {className: 'kbc-main-header kbc-header'},
           div {className: 'kbc-title'},
@@ -47,6 +50,12 @@ Header = React.createClass
             RoutePendingIndicator() if @state.isRoutePending
           div {className: 'kbc-buttons'},
             @_renderButtons()
+
+  _renderNotifications: ->
+    return null if !@props.notifications.get('isEnabled')
+
+    React.createElement NotificationsAccess,
+      notifications: @props.notifications
 
   _renderComponentIcon: ->
     if @state.component

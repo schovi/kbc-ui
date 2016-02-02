@@ -25,6 +25,7 @@ App = React.createClass
   getInitialState: ->
     organizations: ApplicationStore.getOrganizations()
     maintainers: ApplicationStore.getMaintainers()
+    notifications: ApplicationStore.getNotifications()
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
@@ -37,6 +38,7 @@ App = React.createClass
       PageTitle()
       Header
         homeUrl: @state.homeUrl
+        notifications: @state.notifications
       React.createElement(FloatingNotifications)
       div className: 'container-fluid',
         div className: 'row',
