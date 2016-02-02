@@ -1,5 +1,4 @@
-
-
+_ = require 'underscore'
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 orchestrationsApi = require './OrchestrationsApi'
@@ -11,6 +10,36 @@ ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
 React = require 'react'
 {Link} = require 'react-router'
 RoutesStore = require '../../stores/RoutesStore'
+
+rephaseTasks = (tasks) ->
+  isNullPhase = (phase) ->
+    return phase == null or phase == 0
+  nullPhaseIdx = 1
+  currentPhase =
+    id: null
+  result = []
+  for task in tasks
+    phase = task.phase
+    if isNullPhase(phase) or phase != currentPhase.id
+      newPhaseId = phase
+      if isNullPhase(phase)
+        newPhaseId = "Phase #{nullPhaseIdx}"
+        nullPhaseIdx++
+      #create new phase
+      newPhase =
+        id: "#{newPhaseId}"
+        tasks: [task]
+      currentPhase = newPhase
+      result.push(newPhase)
+    else
+      currentPhase.tasks.push(task)
+  console.log 'REPHASED', tasks, result
+  return result
+
+
+
+  return tasks
+
 
 module.exports =
 
@@ -75,6 +104,7 @@ module.exports =
     )
 
   receiveOrchestration: (orchestration) ->
+    orchestration.tasks = rephaseTasks(orchestration.tasks)
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
       orchestration: orchestration
