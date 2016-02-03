@@ -3,6 +3,7 @@ Immutable = require('immutable')
 {Map, List} = Immutable
 Constants = require '../constants/KbcConstants'
 StoreUtils = require '../utils/StoreUtils'
+composeLimits = require('./composeLimits').default
 
 _store = Map(
   sapiToken: Map()
@@ -33,6 +34,9 @@ ApplicationStore = StoreUtils.createStore
       url: @getUrlTemplates().get 'notifications'
       unreadCount: _store.getIn ['notifications', 'unreadCount']
       isEnabled: @hasCurrentAdminFeature 'kbc-notifications'
+
+  getLimits: ->
+    composeLimits @getSapiToken().getIn(['owner', 'limits']), @getSapiToken().getIn(['owner', 'metrics'])
 
   getTokenStats: ->
     _store.get 'tokenStats'
