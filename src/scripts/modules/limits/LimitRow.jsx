@@ -3,17 +3,7 @@ import MetricGraph from './MetricGraph';
 import AlarmIndicator from './AlarmIndicator';
 import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
-import numeral from 'numeral';
-
-
-function bytesToGBFormatted(bytes) {
-  const gb = bytes / (1000 * 1000 * 1000);
-  return numeral(gb).format('0.00');
-}
-
-function numericMetricFormatted(value) {
-  return numeral(value).format('0,00');
-}
+import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 
 export default React.createClass({
   propTypes: {

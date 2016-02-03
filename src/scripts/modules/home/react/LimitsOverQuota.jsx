@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
+import {bytesToGBFormatted, numericMetricFormatted} from '../../../utils/numbers';
 
 import './limits.less';
 
@@ -33,10 +34,17 @@ export default React.createClass({
   },
 
   limit(limit) {
+    let values = '';
+    if (limit.get('unit') === 'bytes') {
+      values = `(${bytesToGBFormatted(limit.get('metricValue'))} GB of ${bytesToGBFormatted(limit.get('limitValue'))} GB)`;
+    } else {
+      values = `(${numericMetricFormatted(limit.get('metricValue'))} of ${numericMetricFormatted(limit.get('limitValue'))})`;
+    }
     return (
       <li>
-        <strong>{limit.get('name')}</strong> ({limit.get('metricValue')} of {limit.get('limitValue')})
+        <strong>{limit.get('name')}</strong> {values}
       </li>
     );
   }
+
 });
