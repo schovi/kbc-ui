@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
+import './limits.less';
+
 export default React.createClass({
   propTypes: {
     limits: PropTypes.object.isRequired
@@ -12,17 +14,17 @@ export default React.createClass({
       return null;
     }
     return (
-      <div className="row kbc-header">
+      <div className="row kbc-header kbc-limits">
         <div className="alert alert-danger">
-          <h4>
+          <h3>
             <span className="fa fa-exclamation-triangle"/> Project is over quota!
-          </h4>
+          </h3>
           <ul>
             {limits.map(this.limit)}
           </ul>
           <p>
             <Link to="settings-limits">
-              Limits settings
+              Limits Settings
             </Link>
           </p>
         </div>

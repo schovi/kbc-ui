@@ -21,10 +21,12 @@ export default React.createClass({
   },
 
   render() {
-    console.log('limits', this.state.limitsOverQuota.toJS());
     return (
       <div className="container-fluid kbc-main-content">
-        <LimitsOverQuota limits={this.state.limitsOverQuota} />
+        {ApplicationStore.hasCurrentAdminFeature('kbc-notifications') ?
+          <LimitsOverQuota limits={this.state.limitsOverQuota}/> :
+          null
+        }
         <div className="table kbc-table-border-vertical kbc-layout-table kbc-overview">
           <div className="tbody">
             <div className="tr">
