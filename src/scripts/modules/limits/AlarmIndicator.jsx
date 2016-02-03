@@ -14,7 +14,7 @@ export default React.createClass({
 
   style() {
     return {
-      fontSize: '20px',
+      fontSize: '14px',
       color: this.props.isAlarm ? '#a94442' : '#3c763d'
     };
   }
