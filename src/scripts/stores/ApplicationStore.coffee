@@ -38,6 +38,12 @@ ApplicationStore = StoreUtils.createStore
   getLimits: ->
     composeLimits @getSapiToken().getIn(['owner', 'limits']), @getSapiToken().getIn(['owner', 'metrics'])
 
+  getLimitsOverQuota: ->
+    @getLimits()
+    .map (section) -> section.get('limits')
+    .flatten 1
+    .filter (limit) -> limit.get('isAlarm')
+
   getTokenStats: ->
     _store.get 'tokenStats'
 

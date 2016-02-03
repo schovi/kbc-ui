@@ -2,6 +2,7 @@ import React from 'react';
 import ApplicationStore from '../../../stores/ApplicationStore';
 import filesize from 'filesize';
 import string from 'underscore.string';
+import LimitsOverQuota from './LimitsOverQuota';
 
 export default React.createClass({
 
@@ -14,13 +15,16 @@ export default React.createClass({
         rowsCount: currentProject.get('rowsCount')
       },
       tokens: tokenStats,
-      projectId: currentProject.get('id')
+      projectId: currentProject.get('id'),
+      limitsOverQuota: ApplicationStore.getLimitsOverQuota()
     };
   },
 
   render() {
+    console.log('limits', this.state.limitsOverQuota.toJS());
     return (
       <div className="container-fluid kbc-main-content">
+        <LimitsOverQuota limits={this.state.limitsOverQuota} />
         <div className="table kbc-table-border-vertical kbc-layout-table kbc-overview">
           <div className="tbody">
             <div className="tr">
