@@ -35,6 +35,7 @@ TasksEditor = React.createClass
         isParallelismEnabled: @props.isParallelismEnabled
         updateLocalState: @props.updateLocalState
         localState: @props.localState
+        handlePhaseMove: @_handlePhaseMove
       div className: 'kbc-block-with-padding',
         ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
           Button
@@ -63,6 +64,15 @@ TasksEditor = React.createClass
     @props.onChange(
       @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
     )
+
+  _handlePhaseMove: (id, afterId) ->
+    phase = @props.tasks.find((phase) -> phase.get('id') == id)
+    currentIndex = @props.tasks.findIndex((phase) -> phase.get('id') == id)
+    afterIndex = @props.tasks.findIndex((phase) -> phase.get('id') == afterId)
+    @props.onChange(
+      @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, phase)
+    )
+
 
   _handleTaskAdd: (component, configuration) ->
     # prepare task

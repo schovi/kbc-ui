@@ -3,11 +3,14 @@ React = require 'react'
 TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 
+dnd = require 'react-dnd'
+
 {div, strong, table, thead, tbody, th, td, tr} = React.DOM
 
 
 TasksEditTable = React.createClass
   displayName: 'TasksEditTable'
+
   propTypes:
     tasks: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
@@ -18,6 +21,7 @@ TasksEditTable = React.createClass
     isParallelismEnabled: React.PropTypes.bool.isRequired
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
+    handlePhaseMove: React.PropTypes.func.isRequired
 
   render: ->
     table className: 'table table-stripped kbc-table-layout-fixed',
@@ -56,6 +60,7 @@ TasksEditTable = React.createClass
           onTaskDelete: @props.onTaskDelete
           onTaskUpdate: @props.onTaskUpdate
           onTaskMove: @props.onTaskMove
+          isDraggingPhase: @props.localState.getIn [phase.get('id'), 'isDragging']
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -67,15 +72,21 @@ TasksEditTable = React.createClass
   renderPhaseRow: (phase) ->
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
-    tr
-      onClick: =>
+    return PhaseEditRow
+      onPhaseMove: @onPhaseMove
+      phase: phase
+      toggleHide: =>
         @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
-    ,
-      td colSpan: '8',
-        div className: 'text-center',
-          strong null, phaseId
+      onBeginDrag: (phaseId) ->
+        @props.updateLocalState([phaseId, 'isDragging'], true)
+      onEndDrag: (phaseId) ->
+        @props.updateLocalState([phaseId, 'isDragging'], false)
 
   isPhaseHidden: (phase) ->
     @props.localState.getIn [phase.get('id'), 'isHidden'], false
+
+  onPhaseMove: (afterPhaseId, phaseId) ->
+    console.log('MOVE', afterPhaseId, phaseId)
+    @props.handlePhaseMove(phaseId, afterPhaseId)
 
 module.exports = TasksEditTable

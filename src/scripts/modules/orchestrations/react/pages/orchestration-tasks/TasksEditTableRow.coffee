@@ -29,6 +29,7 @@ TasksEditTableRow = React.createClass
     onTaskUpdate: React.PropTypes.func.isRequired
     onTaskMove: React.PropTypes.func.isRequired
     isParallelismEnabled: React.PropTypes.bool.isRequired
+    isDraggingPhase: React.PropTypes.bool.isRequired
 
   statics:
     configureDragDrop: (register) ->
@@ -41,7 +42,7 @@ TasksEditTableRow = React.createClass
             component.props.onTaskMove task.get('id'), component.props.task.get('id')
 
   render: ->
-    isDragging = @getDragState('task').isDragging
+    isDragging = @getDragState('task').isDragging or @props.isDraggingPhase
     style =
       cursor: 'move'
       opacity: if isDragging then 0.5 else 1
