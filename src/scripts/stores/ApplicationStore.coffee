@@ -40,7 +40,7 @@ ApplicationStore = StoreUtils.createStore
 
   getLimitsOverQuota: ->
     @getLimits()
-    .map (section) -> section.get('limits')
+    .map (section) -> section.get('limits').map((limits) -> limits.set('section', section.get('title')))
     .flatten 1
     .filter (limit) -> limit.get('isAlarm')
 

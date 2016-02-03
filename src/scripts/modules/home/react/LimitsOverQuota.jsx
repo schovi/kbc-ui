@@ -42,7 +42,7 @@ export default React.createClass({
     }
     return (
       <li>
-        <strong>{limit.get('name')}</strong> {values}
+        <strong>{limit.get('section')} - {limit.get('name')}</strong> {values}
       </li>
     );
   }
