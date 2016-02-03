@@ -20,7 +20,7 @@ rephaseTasks = (tasks) ->
   result = []
   for task in tasks
     phase = task.phase
-    if isNullPhase(phase) or phase != currentPhase.id
+    if isNullPhase(phase) or phase.toString() != currentPhase.id
       newPhaseId = phase
       if isNullPhase(phase)
         newPhaseId = "Phase #{nullPhaseIdx}"
@@ -34,6 +34,7 @@ rephaseTasks = (tasks) ->
     else
       currentPhase.tasks.push(task)
   console.log 'REPHASED', tasks, result
+  #return tasks
   return result
 
 
