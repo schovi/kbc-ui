@@ -49,8 +49,6 @@ AddTaskModal = React.createClass
 
           when STEP_COMPONENT_SELECT
             ComponentSelect
-              isOrchestrationSelectEnabled:
-                ApplicationStore.getCurrentProject().get('features').includes('orchestrator-kbc-config')
               orchestrations: @state.orchestrations
               components: @state.components
               onComponentSelect: @_handleComponentSelect

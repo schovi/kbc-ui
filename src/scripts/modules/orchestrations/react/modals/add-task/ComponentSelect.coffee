@@ -6,7 +6,6 @@ ComponentIcon = React.createFactory(require('../../../../../react/common/Compone
 ComponentSelect = React.createClass
   displayName: 'ComponentSelect'
   propTypes:
-    isOrchestrationSelectEnabled: React.PropTypes.bool.isRequired
     components: React.PropTypes.object.isRequired
     orchestrations: React.PropTypes.object.isRequired
     onComponentSelect: React.PropTypes.func.isRequired
@@ -17,10 +16,9 @@ ComponentSelect = React.createClass
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
       @_renderSection('Writers', @_getComponentsForType('writer'))
       @_renderSection('Applications', @_getComponentsForType('application'))
-      if @props.isOrchestrationSelectEnabled
-        @_renderOrchestratorSection('Orchestrations', @props.components.filter((component) ->
-          component.get('id') == 'orchestrator')
-        )
+      @_renderOrchestratorSection('Orchestrations', @props.components.filter((component) ->
+        component.get('id') == 'orchestrator')
+      )
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
