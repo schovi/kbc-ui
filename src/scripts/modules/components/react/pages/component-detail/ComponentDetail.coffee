@@ -56,11 +56,13 @@ module.exports = React.createClass
         withButtons: false
       div className: "row",
         div className: "col-md-6",
-          React.createElement VendorInfo,
-            component: @state.component
           React.createElement AppUsageInfo,
             component: @state.component
         div className: "col-md-6",
+          React.createElement VendorInfo,
+            component: @state.component
+      div className: "row",
+        div className: "col-md-12",
           React.createElement ReadMore, null,
             React.createElement ComponentDescription,
               component: @state.component
