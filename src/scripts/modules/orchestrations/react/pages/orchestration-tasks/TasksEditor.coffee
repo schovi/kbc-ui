@@ -20,6 +20,8 @@ TasksEditor = React.createClass
     isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
     isParallelismEnabled: React.PropTypes.bool.isRequired
+    updateLocalState: React.PropTypes.func.isRequired
+    localState: React.PropTypes.object.isRequired
 
   render: ->
     div null,
@@ -31,6 +33,8 @@ TasksEditor = React.createClass
         onTaskUpdate: @_handleTaskUpdate
         onTaskMove: @_handleTaskMove
         isParallelismEnabled: @props.isParallelismEnabled
+        updateLocalState: @props.updateLocalState
+        localState: @props.localState
       div className: 'kbc-block-with-padding',
         ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
           Button

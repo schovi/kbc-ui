@@ -1,9 +1,11 @@
 React = require 'react'
-
+Immutable = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
 OrchestrationsActionCreators = require '../../../ActionCreators'
+installedComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 ComponentsStore = require '../../../../components/stores/ComponentsStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
@@ -20,18 +22,24 @@ TasksEditor = React.createFactory(require './TasksEditor')
 
 {div, button} = React.DOM
 
+componentId = 'orchestrations'
+
 OrchestrationTasks = React.createClass
   displayName: 'OrchestrationTasks'
   mixins: [createStoreMixin(OrchestrationStore, ComponentsStore, InstalledComponentsStore)]
 
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    localState = InstalledComponentsStore.getLocalState(componentId, orchestrationId)
+
     isEditing = OrchestrationStore.isEditing(orchestrationId, 'tasks')
     if isEditing
       tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
     else
       tasks = OrchestrationStore.getOrchestrationTasks(orchestrationId)
     return {
+      localState: localState or Immutable.Map()
+      orchestrationId: orchestrationId
       orchestration: OrchestrationStore.get orchestrationId
       tasks: mergeTasksWithConfigurations(tasks, InstalledComponentsStore.getAll())
       components: ComponentsStore.getAll()
@@ -96,6 +104,9 @@ OrchestrationTasks = React.createClass
               components: @state.components
               onChange: @_handleTasksChange
               isParallelismEnabled: @_hasParallelismEnabled()
+              localState: @state.localState.get('taskstable', Immutable.Map())
+              updateLocalState: (path, data) =>
+                @updateLocalState(['taskstable'].concat(path), data)
         else
           div null,
             TasksTable
@@ -104,6 +115,14 @@ OrchestrationTasks = React.createClass
               components: @state.components
               onRun: @_handleTaskRun
               isParallelismEnabled: @_hasParallelismEnabled()
+              localState: @state.localState.get('taskstable', Immutable.Map())
+              updateLocalState: (path, data) =>
+                @updateLocalState(['taskstable'].concat(path), data)
+
+
+  updateLocalState: (path, data) ->
+    newState = @state.localState.setIn([].concat(path), data)
+    installedComponentsActions.updateLocalState(componentId, @state.orchestrationId, newState)
 
 
 module.exports = OrchestrationTasks
