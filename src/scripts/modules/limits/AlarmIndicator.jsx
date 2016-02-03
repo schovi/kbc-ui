@@ -8,7 +8,7 @@ export default React.createClass({
 
   render() {
     return (
-      <span className={classnames('fa', {'fa-check-circle-o': !this.props.isAlarm, 'fa-exclamation-circle ': this.props.isAlarm})} style={this.style()}></span>
+      <span className={classnames('fa', {'fa-check-circle-o': !this.props.isAlarm, 'fa-exclamation-triangle ': this.props.isAlarm})} style={this.style()}></span>
     );
   },
 
