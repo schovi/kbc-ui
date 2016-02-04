@@ -68,6 +68,7 @@ TasksEditTable = React.createClass
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
     return PhaseEditRow
+      key: phaseId
       onPhaseMove: @onPhaseMove
       phase: phase
       toggleHide: =>

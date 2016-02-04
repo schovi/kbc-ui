@@ -4,7 +4,7 @@ TasksTableRow = React.createFactory(require './TasksTableRow')
 PhaseRow = React.createFactory(require('./PhaseRow').default)
 
 
-{div, strong, table, thead, tbody, th, td, tr} = React.DOM
+{div, span, table, thead, tbody, th, td, tr} = React.DOM
 
 
 TasksTable = React.createClass
@@ -63,13 +63,11 @@ TasksTable = React.createClass
   renderPhaseRow: (phase) ->
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
-    tr
-      onClick: =>
+    PhaseRow
+      key: phaseId
+      phase: phase
+      toggleHide: =>
         @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
-    ,
-      td colSpan: '7',
-        div className: 'text-center',
-          strong null, phaseId
 
   isPhaseHidden: (phase) ->
     @props.localState.getIn [phase.get('id'), 'isHidden'], false
