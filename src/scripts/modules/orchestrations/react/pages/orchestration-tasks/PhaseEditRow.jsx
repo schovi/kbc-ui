@@ -9,7 +9,8 @@ export default React.createClass({
     phase: PropTypes.object.isRequired,
     onPhaseMove: PropTypes.func.isRequired,
     onBeginDrag: PropTypes.func.isRequired,
-    onEndDrag: PropTypes.func.isRequired
+    onEndDrag: PropTypes.func.isRequired,
+    onPhaseIdEdit: PropTypes.func.isRequired
   },
 
   statics: {
@@ -36,19 +37,35 @@ export default React.createClass({
     const props = _.extend({style: style}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
     return (
       <tr {...props}
-        onClick={this.props.toggleHide}>
+        onClick={this.onRowClick}>
         <td className="kb-orchestrator-task-drag text-center">
           <i className="fa fa-bars" />
         </td>
         <td colSpan="6">
-          <div className="text-center">
-            <strong>
-              {this.props.phase.get('id')}
-            </strong>
+          <div className="text-center form-group form-group-sm">
+            <input
+              className="form-control"
+              type="text"
+              onClick={this.onStopPropagation}
+              disabled={isDragging}
+              onChange={this.props.onPhaseIdEdit}
+              value={this.props.phase.get('id')}
+            />
           </div>
         </td>
       </tr>
     );
+  },
+
+  onRowClick(e) {
+    this.props.toggleHide();
+    e.preventDefault();
+    e.stopPropagation();
+  },
+
+  onStopPropagation(e) {
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   /* <TasksEditTableRow

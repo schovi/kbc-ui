@@ -20,6 +20,7 @@ TasksEditTable = React.createClass
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
     handlePhaseMove: React.PropTypes.func.isRequired
+    handlePhaseUpdate: React.PropTypes.func.isRequired
 
   render: ->
     table className: 'table table-stripped kbc-table-layout-fixed',
@@ -77,6 +78,11 @@ TasksEditTable = React.createClass
         @props.updateLocalState([phaseId, 'isDragging'], true)
       onEndDrag: (phaseId) ->
         @props.updateLocalState([phaseId, 'isDragging'], false)
+      onPhaseIdEdit: (e) =>
+        newId = e.target.value
+        @props.handlePhaseUpdate(phaseId, phase.set('id', newId))
+
+
 
   isPhaseHidden: (phase) ->
     @props.localState.getIn [phase.get('id'), 'isHidden'], false
