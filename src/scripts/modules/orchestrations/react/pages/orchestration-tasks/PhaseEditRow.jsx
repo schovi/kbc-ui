@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {DragDropMixin} from 'react-dnd';
 import _ from 'underscore';
+import Tooltip from '../../../../../react/common/Tooltip';
 
 export default React.createClass({
   mixins: [DragDropMixin],
@@ -10,7 +11,7 @@ export default React.createClass({
     onPhaseMove: PropTypes.func.isRequired,
     onBeginDrag: PropTypes.func.isRequired,
     onEndDrag: PropTypes.func.isRequired,
-    onPhaseIdEdit: PropTypes.func.isRequired
+    togglePhaseIdChange: PropTypes.bool.isRequired
   },
 
   statics: {
@@ -43,18 +44,25 @@ export default React.createClass({
         </td>
         <td colSpan="6">
           <div className="text-center form-group form-group-sm">
-            <input
-              className="form-control"
-              type="text"
-              onClick={this.onStopPropagation}
-              disabled={isDragging}
-              onChange={this.props.onPhaseIdEdit}
-              value={this.props.phase.get('id')}
-            />
+            <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
+              <span>{this.props.phase.get('id')} </span>
+              <Tooltip
+                tooltip="Change phase title">
+                <span
+                  onClick={this.toggleTitleChange}
+                  className="kbc-icon-pencil"/>
+              </Tooltip>
+            </span>
+
           </div>
         </td>
       </tr>
     );
+  },
+
+  toggleTitleChange(e) {
+    this.props.togglePhaseIdChange(this.props.phase.get('id'));
+    this.onStopPropagation(e);
   },
 
   onRowClick(e) {
@@ -76,7 +84,7 @@ export default React.createClass({
      onTaskDelete: @props.onTaskDelete
      onTaskUpdate: @props.onTaskUpdate
      onTaskMove: @props.onTaskMove
-      */
+   */
 
 
 });
