@@ -4,8 +4,6 @@ TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 PhaseModal = require('../../modals/Phase').default
 
-dnd = require 'react-dnd'
-
 {div, span, strong, table, thead, tbody, th, td, tr} = React.DOM
 
 

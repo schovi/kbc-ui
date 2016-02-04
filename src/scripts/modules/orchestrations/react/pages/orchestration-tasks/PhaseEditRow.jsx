@@ -32,15 +32,15 @@ export default React.createClass({
   render() {
     const isDragging = this.getDragState('phase').isDragging;
     const style = {
-      cursor: 'move',
       opacity: isDragging ? 0.5 : 1
     };
-    const props = _.extend({style: style}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
+    const facn = 'fa fa-bars';
+    const dragprops = _.extend({style: {cursor: 'move'}, className: facn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
     return (
-      <tr {...props}
+      <tr style={style}
         onClick={this.onRowClick}>
-        <td className="kb-orchestrator-task-drag text-center">
-          <i className="fa fa-bars" />
+        <td className="kb-orchestrator-task-drag text-center" >
+          <i  {...dragprops}/>
         </td>
         <td colSpan="6">
           <div className="text-center form-group form-group-sm">
