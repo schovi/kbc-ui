@@ -1,4 +1,5 @@
 _ = require 'underscore'
+{List} = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 orchestrationsApi = require './OrchestrationsApi'
@@ -37,10 +38,13 @@ rephaseTasks = (tasks) ->
   #return tasks
   return result
 
-
-
-  return tasks
-
+dephaseTasks = (tasks) ->
+  result = List()
+  tasks.forEach (phase) ->
+    phaseId = phase.get('id')
+    phase.get('tasks').forEach (task) ->
+      result = result.push(task.set('phase', phaseId))
+  return result
 
 module.exports =
 
@@ -318,7 +322,7 @@ module.exports =
 
   saveOrchestrationTasks: (orchestrationId) ->
     tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
-
+    tasks = dephaseTasks(tasks)
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_START
       orchestrationId: orchestrationId
