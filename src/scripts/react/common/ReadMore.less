@@ -4,23 +4,23 @@
 }
 
 .kbc-readmore-normal{
-  max-height: 250px;
+  max-height: 300px;
 }
 
-.kbc-readmore .kbc-readmore-expand {
+.kbc-readmore .kbc-readmore-fadeout {
+  height: 50px;
+  display: block;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  text-align: center;
-  margin: 0; padding: 10px 0;
 
   /* "transparent" only works here because == rgba(0,0,0,0) */
   background-image: linear-gradient(to bottom, transparent, white);
 }
 
-.kbc-readmore .kbc-readmore-collapse {
-  width: 100%;
+.kbc-readmore-button {
+  display: block;
   text-align: center;
-  margin: 0; padding: 10px 0;
+  width: 100%;
 }

@@ -34,21 +34,35 @@ export default React.createClass({
 
   render() {
     return (
-      <div className={'kbc-readmore ' + this.readmoreClass()} ref="container">
-        {this.props.children}
-        {this.expandButton()}
+      <div>
+        <div className={'kbc-readmore ' + this.readmoreClass()} ref="container">
+          {this.props.children}
+          {this.gradient()}
+        </div>
+        {this.button()}
       </div>
     );
   },
 
-  expandButton() {
+  gradient() {
     if (!this.state.showExpandButton) {
       return null;
     }
     if (this.state.expanded) {
-      return (<div className="kbc-readmore-collapse"><a className="button" onClick={this.onClick}>Less...</a></div>);
+      return null;
     } else {
-      return (<div className="kbc-readmore-expand"><a className="button" onClick={this.onClick}>More...</a></div>);
+      return (<div className="kbc-readmore-fadeout"></div>);
+    }
+  },
+
+  button() {
+    if (!this.state.showExpandButton) {
+      return null;
+    }
+    if (this.state.expanded) {
+      return (<div className="kbc-readmore-button"><a className="button" onClick={this.onClick}>Show less</a></div>);
+    } else {
+      return (<div className="kbc-readmore-button"><a className="button" onClick={this.onClick}>Show more</a></div>);
     }
   },
 
