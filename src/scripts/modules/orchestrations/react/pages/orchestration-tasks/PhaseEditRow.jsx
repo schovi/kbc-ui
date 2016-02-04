@@ -40,7 +40,7 @@ export default React.createClass({
         <td className="kb-orchestrator-task-drag text-center">
           <i className="fa fa-bars" />
         </td>
-        <td colSpan="7">
+        <td colSpan="6">
           <div className="text-center">
             <strong>
               {this.props.phase.get('id')}
@@ -59,7 +59,7 @@ export default React.createClass({
      onTaskDelete: @props.onTaskDelete
      onTaskUpdate: @props.onTaskUpdate
      onTaskMove: @props.onTaskMove
-     isParallelismEnabled: @props.isParallelismEnabled */
+      */
 
 
 });

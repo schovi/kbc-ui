@@ -76,16 +76,6 @@ OrchestrationTasks = React.createClass
 
     OrchestrationsActionCreators.runOrchestration(@state.orchestration.get('id'), tasks, true)
 
-  _hasParallelismEnabled: ->
-    if ApplicationStore.getCurrentProjecFeatures().find((feature) ->
-      if feature.match(/syrup\-jobs\-limit\-[0-9]+/i)
-        true
-      else
-        false
-    )
-      true
-    else
-      false
 
   render: ->
     div {className: 'container-fluid kbc-main-content'},
@@ -103,7 +93,6 @@ OrchestrationTasks = React.createClass
               isSaving: @state.isSaving
               components: @state.components
               onChange: @_handleTasksChange
-              isParallelismEnabled: @_hasParallelismEnabled()
               localState: @state.localState.get('taskstable', Immutable.Map())
               updateLocalState: (path, data) =>
                 @updateLocalState(['taskstable'].concat(path), data)
@@ -114,7 +103,6 @@ OrchestrationTasks = React.createClass
               orchestration: @state.orchestration
               components: @state.components
               onRun: @_handleTaskRun
-              isParallelismEnabled: @_hasParallelismEnabled()
               localState: @state.localState.get('taskstable', Immutable.Map())
               updateLocalState: (path, data) =>
                 @updateLocalState(['taskstable'].concat(path), data)

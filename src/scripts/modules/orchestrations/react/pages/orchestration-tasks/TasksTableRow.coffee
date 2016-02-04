@@ -15,7 +15,6 @@ module.exports = React.createClass
     onRun: React.PropTypes.func.isRequired
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
-    isParallelismEnabled: React.PropTypes.bool.isRequired
 
   render: ->
     tr null,
@@ -44,12 +43,6 @@ module.exports = React.createClass
           @props.task.get('action')
       td null,
         React.createElement Tree, data: @props.task.get('actionParameters')
-      if @props.isParallelismEnabled
-        td null,
-          span
-            className: 'label label-default kbc-label-rounded'
-          ,
-            @props.task.get('phase')
       td null,
         React.createElement Check, isChecked: @props.task.get('active')
       td null,

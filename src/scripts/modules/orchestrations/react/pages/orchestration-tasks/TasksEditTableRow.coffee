@@ -6,8 +6,6 @@ _ = require 'underscore'
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
-Phase = React.createFactory(require('./Phase').default)
-
 TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
@@ -24,7 +22,6 @@ TasksEditTableRow = React.createClass
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
-    isParallelismEnabled: React.PropTypes.bool.isRequired
     isDraggingPhase: React.PropTypes.bool.isRequired
 
   render: ->
@@ -65,11 +62,6 @@ TasksEditTableRow = React.createClass
             onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
         ,
           Tree data: @props.task.get('actionParameters')
-      if @props.isParallelismEnabled
-        td null,
-          Phase
-            onPhaseUpdate: @props.onTaskUpdate
-            task: @props.task
       td null,
         input
           type: 'checkbox'

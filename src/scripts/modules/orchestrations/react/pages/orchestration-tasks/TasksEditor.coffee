@@ -19,7 +19,6 @@ TasksEditor = React.createClass
     components: React.PropTypes.object.isRequired
     isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
-    isParallelismEnabled: React.PropTypes.bool.isRequired
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
 
@@ -31,7 +30,6 @@ TasksEditor = React.createClass
         disabled: @props.isSaving
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
-        isParallelismEnabled: @props.isParallelismEnabled
         updateLocalState: @props.updateLocalState
         localState: @props.localState
         handlePhaseMove: @_handlePhaseMove

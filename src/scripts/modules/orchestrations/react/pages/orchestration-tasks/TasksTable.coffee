@@ -14,7 +14,6 @@ TasksTable = React.createClass
     orchestration: React.PropTypes.object.isRequired
     components: React.PropTypes.object.isRequired
     onRun: React.PropTypes.func.isRequired
-    isParallelismEnabled: React.PropTypes.bool.isRequired
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
 
@@ -29,8 +28,6 @@ TasksTable = React.createClass
           th null, 'Configuration'
           th style: {width: '10%'}, 'Action'
           th null, 'Parameters'
-          if @props.isParallelismEnabled
-            th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '12%'}, 'Continue on Failure'
           th style: {width: '8%'}, ''
@@ -55,7 +52,6 @@ TasksTable = React.createClass
           component: @props.components.get(task.get('component'))
           key: task.get('id')
           onRun: @_handleTaskRun
-          isParallelismEnabled: @props.isParallelismEnabled
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -71,7 +67,7 @@ TasksTable = React.createClass
       onClick: =>
         @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
     ,
-      td colSpan: '8',
+      td colSpan: '7',
         div className: 'text-center',
           strong null, phaseId
 

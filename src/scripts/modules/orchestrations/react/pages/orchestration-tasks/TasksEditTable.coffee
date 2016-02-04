@@ -17,7 +17,6 @@ TasksEditTable = React.createClass
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
-    isParallelismEnabled: React.PropTypes.bool.isRequired
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
     handlePhaseMove: React.PropTypes.func.isRequired
@@ -31,8 +30,6 @@ TasksEditTable = React.createClass
           th style: null, 'Configuration'
           th style: {width: '8%'}, 'Action'
           th style: {width: '25%'}, 'Parameters'
-          if @props.isParallelismEnabled
-            th style: {width: '8%'}, 'Phase'
           th style: {width: '8%'}, 'Active'
           th style: {width: '10%'}, 'Continue on Failure'
           th style: {width: '5%'}
@@ -43,7 +40,7 @@ TasksEditTable = React.createClass
           tr null,
             td
               className: 'text-muted'
-              colSpan: 8
+              colSpan: 7
             ,
               'There are no tasks assigned yet. Please start by adding first task.'
 
@@ -59,7 +56,6 @@ TasksEditTable = React.createClass
           onTaskDelete: @props.onTaskDelete
           onTaskUpdate: @props.onTaskUpdate
           isDraggingPhase: @props.localState.getIn [phase.get('id'), 'isDragging']
-          isParallelismEnabled: @props.isParallelismEnabled
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
