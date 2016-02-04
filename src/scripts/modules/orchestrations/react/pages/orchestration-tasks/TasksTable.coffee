@@ -55,6 +55,7 @@ TasksTable = React.createClass
           component: @props.components.get(task.get('component'))
           key: task.get('id')
           onRun: @_handleTaskRun
+          isParallelismEnabled: @props.isParallelismEnabled
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)

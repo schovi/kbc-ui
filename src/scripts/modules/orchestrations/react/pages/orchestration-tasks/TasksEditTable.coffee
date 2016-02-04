@@ -17,7 +17,6 @@ TasksEditTable = React.createClass
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
-    onTaskMove: React.PropTypes.func.isRequired
     isParallelismEnabled: React.PropTypes.bool.isRequired
     updateLocalState: React.PropTypes.func.isRequired
     localState: React.PropTypes.object.isRequired
@@ -59,8 +58,8 @@ TasksEditTable = React.createClass
           key: task.get('id')
           onTaskDelete: @props.onTaskDelete
           onTaskUpdate: @props.onTaskUpdate
-          onTaskMove: @props.onTaskMove
           isDraggingPhase: @props.localState.getIn [phase.get('id'), 'isDragging']
+          isParallelismEnabled: @props.isParallelismEnabled
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -86,7 +85,6 @@ TasksEditTable = React.createClass
     @props.localState.getIn [phase.get('id'), 'isHidden'], false
 
   onPhaseMove: (afterPhaseId, phaseId) ->
-    console.log('MOVE', afterPhaseId, phaseId)
     @props.handlePhaseMove(phaseId, afterPhaseId)
 
 module.exports = TasksEditTable

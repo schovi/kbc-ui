@@ -31,7 +31,6 @@ TasksEditor = React.createClass
         disabled: @props.isSaving
         onTaskDelete: @_handleTaskDelete
         onTaskUpdate: @_handleTaskUpdate
-        onTaskMove: @_handleTaskMove
         isParallelismEnabled: @props.isParallelismEnabled
         updateLocalState: @props.updateLocalState
         localState: @props.localState
@@ -55,14 +54,6 @@ TasksEditor = React.createClass
         @props.tasks.findIndex((task) -> task.get('id') == updatedTask.get('id')),
         updatedTask
       )
-    )
-
-  _handleTaskMove: (id, afterId) ->
-    task = @props.tasks.find((task) -> task.get('id') == id)
-    currentIndex = @props.tasks.findIndex((task) -> task.get('id') == id)
-    afterIndex = @props.tasks.findIndex((task) -> task.get('id') == afterId)
-    @props.onChange(
-      @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
     )
 
   _handlePhaseMove: (id, afterId) ->

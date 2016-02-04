@@ -3,8 +3,6 @@ Immutable = require 'immutable'
 common = require '../../../../../react/common/common'
 _ = require 'underscore'
 
-DragDropMixin = require('react-dnd').DragDropMixin
-
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
 
@@ -20,36 +18,19 @@ Check = React.createFactory(common.Check)
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
-  mixins: [DragDropMixin]
   propTypes:
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
-    onTaskMove: React.PropTypes.func.isRequired
     isParallelismEnabled: React.PropTypes.bool.isRequired
     isDraggingPhase: React.PropTypes.bool.isRequired
 
-  statics:
-    configureDragDrop: (register) ->
-      register 'task',
-        dragSource:
-          beginDrag: (component) ->
-            item: component.props.task
-        dropTarget:
-          over: (component, task) ->
-            component.props.onTaskMove task.get('id'), component.props.task.get('id')
-
   render: ->
-    isDragging = @getDragState('task').isDragging or @props.isDraggingPhase
-    style =
-      cursor: 'move'
-      opacity: if isDragging then 0.5 else 1
-
-    tr _.extend({style: style}, @dragSourceFor('task'), @dropTargetFor('task')),
+    tr null,
       td className: 'kb-orchestrator-task-drag text-center',
-        i className: 'fa fa-bars'
+        'move task'
       td null,
         span className: 'kbc-component-icon',
           if @props.component
