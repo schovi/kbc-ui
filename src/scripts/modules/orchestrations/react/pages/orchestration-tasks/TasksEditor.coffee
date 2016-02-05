@@ -34,6 +34,7 @@ TasksEditor = React.createClass
         localState: @props.localState
         handlePhaseMove: @_handlePhaseMove
         handlePhaseUpdate: @_handlePhaseUpdate
+        handlePhasesSet: @_handlePhasesSet
       div className: 'kbc-block-with-padding',
         ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
           Button
@@ -50,6 +51,9 @@ TasksEditor = React.createClass
     phaseIdx = @props.tasks.findIndex((phase) -> phase.get('id') == phaseId)
     newTasks = @props.tasks.set(phaseIdx, newPhase)
     @props.onChange(newTasks)
+
+  _handlePhasesSet: (phases) ->
+    @props.onChange(phases)
 
   _handleTaskUpdate: (updatedTask) ->
     taskId = updatedTask.get('id')

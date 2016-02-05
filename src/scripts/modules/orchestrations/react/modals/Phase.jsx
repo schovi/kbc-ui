@@ -37,14 +37,14 @@ export default React.createClass({
       formDivClass = 'form-group has-error';
       helpBlock = (
         <span className="help-block">
-          Phase with title {value} already exists.
+          Phase with name {value} already exists.
         </span>);
     }
     return (
       <Modal
         show={this.props.show}
         onHide={this.props.onHide}
-        title={`Change Title`}>
+        title={`Rename Phase`}>
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>

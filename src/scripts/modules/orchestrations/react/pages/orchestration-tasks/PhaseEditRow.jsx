@@ -9,9 +9,9 @@ export default React.createClass({
     toggleHide: PropTypes.func.isRequired,
     phase: PropTypes.object.isRequired,
     onPhaseMove: PropTypes.func.isRequired,
-    onBeginDrag: PropTypes.func.isRequired,
-    onEndDrag: PropTypes.func.isRequired,
-    togglePhaseIdChange: PropTypes.bool.isRequired
+    onMarkPhase: PropTypes.func.isRequired,
+    togglePhaseIdChange: PropTypes.bool.isRequired,
+    isMarked: PropTypes.bool.isRequired
   },
 
   statics: {
@@ -47,17 +47,31 @@ export default React.createClass({
             <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
               <span>{this.props.phase.get('id')} </span>
               <Tooltip
-                tooltip="Change phase title">
+                tooltip="rename phase">
                 <span
                   onClick={this.toggleTitleChange}
                   className="kbc-icon-pencil"/>
               </Tooltip>
             </span>
 
+            <Tooltip
+              tooltip="Select phase to merge">
+              <input
+                checked={this.props.isMarked}
+                type="checkbox"
+                onClick={this.toggleMarkPhase}
+              />
+            </Tooltip>
+
           </div>
         </td>
       </tr>
     );
+  },
+
+  toggleMarkPhase(e) {
+    this.props.onMarkPhase(this.props.phase.get('id'), e.shiftKey);
+    e.stopPropagation();
   },
 
   toggleTitleChange(e) {
@@ -68,7 +82,6 @@ export default React.createClass({
   onRowClick(e) {
     this.props.toggleHide();
     e.preventDefault();
-    e.stopPropagation();
   },
 
   onStopPropagation(e) {

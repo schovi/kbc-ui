@@ -1,5 +1,5 @@
 React = require 'react'
-{List} = require 'immutable'
+{Map, List} = require 'immutable'
 TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 PhaseModal = require('../../modals/Phase').default
@@ -20,6 +20,7 @@ TasksEditTable = React.createClass
     localState: React.PropTypes.object.isRequired
     handlePhaseMove: React.PropTypes.func.isRequired
     handlePhaseUpdate: React.PropTypes.func.isRequired
+    handlePhasesSet: React.PropTypes.func.isRequired
 
   render: ->
     span null,
@@ -76,11 +77,10 @@ TasksEditTable = React.createClass
       phase: phase
       toggleHide: =>
         @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
-      onBeginDrag: (phaseId) ->
-        @props.updateLocalState([phaseId, 'isDragging'], true)
-      onEndDrag: (phaseId) ->
-        @props.updateLocalState([phaseId, 'isDragging'], false)
       togglePhaseIdChange: @togglePhaseIdEdit
+      isMarked: @props.localState.getIn(['markedPhases', phaseId], false)
+      onMarkPhase: @toggleMarkPhase
+
 
   _renderPhaseModal: ->
     phaseId = @props.localState.get('editingPhaseId')
@@ -99,6 +99,23 @@ TasksEditTable = React.createClass
       onHide: @hidePhaseIdEdit
       existingIds: existingIds
 
+  toggleMarkPhase: (phaseId, shiftKey) ->
+    if not shiftKey
+      marked = @props.localState.getIn(['markedPhases', phaseId], false)
+      return @props.updateLocalState(['markedPhases', phaseId], !marked)
+    markedPhases = @props.localState.get('markedPhases')
+    isInMarkingRange = false
+    isAfterMarkingRange = false
+    @props.tasks.forEach (phase) =>
+      pId = phase.get('id')
+      marked = @props.localState.getIn(['markedPhases', pId], false)
+      if marked and not isInMarkingRange
+        isInMarkingRange = true
+      if isInMarkingRange and not isAfterMarkingRange
+        markedPhases = markedPhases.set(pId, true)
+      if pId == phaseId
+        isAfterMarkingRange = true
+    @props.updateLocalState('markedPhases', markedPhases)
   hidePhaseIdEdit: ->
     @props.updateLocalState(['editingPhaseId'], null)
 
