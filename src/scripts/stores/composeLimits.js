@@ -12,7 +12,7 @@ const LIMITS_METADATA = fromJS({
     name: 'Users count'
   },
   'kbc.adminsCount': {
-    name: 'Administrators count'
+    name: 'Users count'
   },
   'storage.dataSizeBytes': {
     name: 'Storage size'
