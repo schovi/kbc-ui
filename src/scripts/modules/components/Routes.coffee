@@ -137,6 +137,8 @@ routes =
     ,
       createComponentRoute 'wr-portal-sas', [wrPortalCreateRouteFn('wr-portal-sas')]
     ,
+      createComponentRoute 'keboola.wr-portal-periscope', [wrPortalCreateRouteFn('keboola.wr-portal-periscope')]
+    ,
       createGenericDetailRoute 'writer'
 
     ]
