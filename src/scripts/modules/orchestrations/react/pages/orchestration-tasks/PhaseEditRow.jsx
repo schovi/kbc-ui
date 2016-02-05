@@ -42,7 +42,7 @@ export default React.createClass({
         <td className="kb-orchestrator-task-drag text-center" >
           <i  {...dragprops}/>
         </td>
-        <td colSpan="6">
+        <td colSpan="7">
           <div className="text-center form-group form-group-sm">
             <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
               <span>{this.props.phase.get('id')} </span>

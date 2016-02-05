@@ -27,7 +27,8 @@ TasksEditTableRow = React.createClass
   render: ->
     tr null,
       td className: 'kb-orchestrator-task-drag text-center',
-        'mv'
+        input
+          type: 'checkbox'
       td null,
         span className: 'kbc-component-icon',
           if @props.component
