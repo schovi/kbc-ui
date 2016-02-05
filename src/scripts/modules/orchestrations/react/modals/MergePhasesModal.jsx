@@ -1,13 +1,14 @@
 import React, {PropTypes} from 'react/addons';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import Select from 'react-select';
 
 export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
-    phaseId: PropTypes.object.isRequired,
-    existingIds: PropTypes.object.isRequired,
-    onPhaseUpdate: React.PropTypes.func.isRequired,
+    tasks: PropTypes.object.isRequired,
+    phases: PropTypes.object.isRequired,
+    onMergePhases: React.PropTypes.func.isRequired,
     onHide: React.PropTypes.func.isRequired,
     show: React.PropTypes.bool.isRequired
   },
@@ -18,55 +19,46 @@ export default React.createClass({
     };
   },
 
-  alreadyExist() {
-    const val = this.state.value;
-    return this.props.existingIds.find((eid) => eid === val);
-  },
 
   isValid() {
     const val = this.state.value;
-    return val && val !== this.props.phaseId && !this.alreadyExist();
+    return !!val;
   },
 
   render() {
-    const value = this.state.value === null ? this.props.phaseId : this.state.value;
-    let helpBlock = null;
     let formDivClass = 'form-group';
-
-    if (this.alreadyExist()) {
-      formDivClass = 'form-group has-error';
-      helpBlock = (
-        <span className="help-block">
-          Phase with name {value} already exists.
-        </span>);
-    }
     return (
       <Modal
         show={this.props.show}
         onHide={this.props.onHide}
-        title={`Rename Phase`}>
+        title="Merge Selected Phases">
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>
-              <label htmlFor="title" className="col-sm-3 control-label">
-                New Title:
+              <label htmlFor="title" className="col-sm-1 control-label">
+                Into:
               </label>
-              <div className="col-sm-9">
-                <input
-                  id="title"
-                  type="text"
-                  className="form-control"
-                  value={value}
-                  onChange={this.handlePhaseChange}
+              <div className="col-sm-11">
+                <Select
+                  placeholder="Select phase..."
+                  clearable={false}
+                  key="phases select"
+                  name="phaseselector"
+                  allowCreate={true}
+                  value={this.state.value}
+                  onChange= {(newValue) => this.setState({value: newValue})}
+                  options= {this.getPhasesOptions()}
                 />
-                {helpBlock}
+                <span className="help-block">
+                  Select a existing phase name or type new phase name.
+                  </span>
               </div>
             </div>
           </div>
         </div>
         <div className="modal-footer">
           <ConfirmButtons
-            saveLabel="Rename"
+            saveLabel="Merge"
             isDisabled={!this.isValid()}
             onCancel={this.closeModal}
             onSave={this.handleSave}
@@ -74,6 +66,16 @@ export default React.createClass({
         </div>
       </Modal>
     );
+  },
+
+  getPhasesOptions() {
+    const result = this.props.phases.map((key) => {
+      return {
+        'label': key,
+        'value': key
+      };
+    }).toList().toJS();
+    return result;
   },
 
   closeModal() {
@@ -84,17 +86,10 @@ export default React.createClass({
   },
 
   handleSave() {
-    this.props.onPhaseUpdate(this.state.value);
+    this.props.onMergePhases(this.state.value);
     this.setState({
       value: null
     });
-  },
-
-  handlePhaseChange(e) {
-    this.setState({
-      value: e.target.value
-    });
   }
-
 
 });

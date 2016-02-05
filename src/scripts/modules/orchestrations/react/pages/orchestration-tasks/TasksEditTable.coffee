@@ -3,8 +3,9 @@ React = require 'react'
 TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 PhaseModal = require('../../modals/Phase').default
-
-{div, span, strong, table, thead, tbody, th, td, tr} = React.DOM
+MergePhasesModal = require('../../modals/MergePhasesModal').default
+Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
+{div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 
 
 TasksEditTable = React.createClass
@@ -25,8 +26,8 @@ TasksEditTable = React.createClass
   render: ->
     span null,
       @_renderPhaseModal()
+      @_renderMergePhaseModal()
       table className: 'table table-stripped kbc-table-layout-fixed',
-
         thead null,
           tr null,
             th style: {width: '3%'},
@@ -36,7 +37,26 @@ TasksEditTable = React.createClass
             th style: {width: '25%'}, 'Parameters'
             th style: {width: '8%'}, 'Active'
             th style: {width: '10%'}, 'Continue on Failure'
-            th style: {width: '5%'}
+            th style: {width: '10%'},
+              Tooltip
+                placement: 'top'
+                tooltip: 'Merge selected phases'
+              ,
+                div null,
+                  button
+                    disabled: !@canMergePhases()
+                    onClick: @toggleMergePhases
+                    className: 'btn btn-xs btn-primary',
+                    'merge phases'
+              Tooltip
+                placement: 'top'
+                tooltip: 'Move selected tasks between phases'
+              ,
+                button
+                  className: 'btn btn-xs btn-primary'
+                  disabled: !@canMoveTasks()
+                  onClick: @onMoveTasks
+                  'move tasks'
         tbody null,
           if @props.tasks.count()
             @renderPhasedTasksRows()
@@ -99,6 +119,56 @@ TasksEditTable = React.createClass
       onHide: @hidePhaseIdEdit
       existingIds: existingIds
 
+  canMergePhases: ->
+    @props.localState.get('markedPhases', Map()).count() > 0
+
+  toggleMergePhases: ->
+    @props.updateLocalState('mergePhases', true)
+
+  _renderMergePhaseModal: ->
+    React.createElement MergePhasesModal,
+      show: @props.localState.get('mergePhases', false)
+      onHide: =>
+        @props.updateLocalState('mergePhases', false)
+      tasks: @props.tasks
+      phases: @props.tasks.map((phase) -> phase.get('id'))
+      onMergePhases: @_mergePhases
+
+  _mergePhases: (destinationPhaseId) ->
+    markedPhases = @props.localState.get('markedPhases')
+    mergedTasks = List()
+    # filter only those not selected and not choosed to merge to and
+    # concat their tasks
+    newPhases = @props.tasks.filter( (phase) ->
+      pid = phase.get('id')
+      isMarked = markedPhases.get(pid)
+      if isMarked or destinationPhaseId == pid
+        mergedTasks = mergedTasks.concat(phase.get('tasks'))
+      !isMarked or destinationPhaseId == pid
+    )
+    found = false
+    #if merging into existing phase then replace its tasks
+    newPhases = newPhases.map((ph) ->
+      if ph.get('id') == destinationPhaseId
+        found = true
+        return ph.set('tasks', mergedTasks)
+      else
+        return ph
+    , found)
+    #if not merging into existing phase then push new phase to the end
+    if not found
+      newPhase = Map({id: destinationPhaseId}).set('tasks', mergedTasks)
+      newPhases = newPhases.push(newPhase)
+    # save to the store
+    @props.handlePhasesSet(newPhases)
+    # reset marked phases state
+    @props.updateLocalState([], Map())
+    return true
+
+  canMoveTasks: ->
+    false
+
+
   toggleMarkPhase: (phaseId, shiftKey) ->
     if not shiftKey
       marked = @props.localState.getIn(['markedPhases', phaseId], false)
@@ -116,6 +186,8 @@ TasksEditTable = React.createClass
       if pId == phaseId
         isAfterMarkingRange = true
     @props.updateLocalState('markedPhases', markedPhases)
+
+
   hidePhaseIdEdit: ->
     @props.updateLocalState(['editingPhaseId'], null)
 
