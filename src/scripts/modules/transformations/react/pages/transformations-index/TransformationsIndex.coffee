@@ -73,6 +73,7 @@ TransformationsIndex = React.createClass
       span className: 'table',
         TransformationBucketRow
           bucket: bucket
+          transformations: TransformationsStore.getTransformations(bucket.get('id'))
           description: InstalledComponentsStore.getConfig('transformation', bucket.get('id')).get 'description'
           pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
           key: bucket.get 'id'

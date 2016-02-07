@@ -16,6 +16,7 @@ TransformationBucketRow = React.createClass(
   mixins: [ImmutableRenderMixin]
   propTypes:
     bucket: React.PropTypes.object
+    transformations: React.PropTypes.object
     pendingActions: React.PropTypes.object
     description: React.PropTypes.string
 
@@ -30,7 +31,7 @@ TransformationBucketRow = React.createClass(
         title: 'Delete Transformation Bucket'
         text: "Do you really want to delete transformation bucket #{@props.bucket.get('name')}?"
         onConfirm: @_deleteTransformationBucket
-      isEnabled: @props.bucket.get('transformationsCount') == 0
+      isEnabled: @props.transformations.count() == 0
       key: 'delete-new'
     )
 
