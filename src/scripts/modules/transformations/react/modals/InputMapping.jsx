@@ -72,7 +72,7 @@ export default React.createClass({
       return React.createElement(InputMappingRowRedshiftEditor, props);
     } else if (this.props.backend === 'snowflake' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowSnowflakeEditor, props);
-    } else if (this.props.backend === 'docker' && this.props.type === 'r') {
+    } else if (this.props.backend === 'docker') {
       return React.createElement(InputMappingRowDockerEditor, props);
     }
     return null;

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
+import resolveHighlightMode from './resolveHighlightMode';
 
 /* global require */
 require('./queries.less');
@@ -8,6 +9,7 @@ require('./queries.less');
 export default React.createClass({
   propTypes: {
     script: PropTypes.string.isRequired,
+    transformationType: PropTypes.string.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -18,11 +20,13 @@ export default React.createClass({
     return (
       <div className="kbc-queries-edit">
         <div>
-          <div className="well">
-            Read on <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/user-space/transformations/-r">
-              R limitations and best practices
-            </a>.
-          </div>
+          {this.props.transformationType === 'r' ? (
+            <div className="well">
+              Read on <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/user-space/transformations/-r">
+                R limitations and best practices
+              </a>.
+            </div>
+          ) : null}
           <div className="well">
             All source tables are stored in <code>/data/in/tables</code>
             (relative path <code>in/tables</code> , save all tables for output mapping to
@@ -42,7 +46,7 @@ export default React.createClass({
               value={this.props.script}
               theme="solarized"
               lineNumbers={true}
-              mode="text/x-rsrc"
+              mode={resolveHighlightMode('docker', this.props.transformationType)}
               autofocus={true}
               lineWrapping={true}
               onChange={this.handleChange}

@@ -100,7 +100,7 @@ export default function(backend, type, mapping) {
     return mysql(mapping);
   } else if (backend === 'redshift' && type === 'simple') {
     return redshift(mapping);
-  } else if (backend === 'docker' && type === 'r') {
+  } else if (backend === 'docker') {
     return docker(mapping);
   } else {
     return false;

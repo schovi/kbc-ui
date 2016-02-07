@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
 import Sticky from 'react-sticky';
+import resolveHighlightMode from './resolveHighlightMode';
 
 /* global require */
 require('./queries.less');
@@ -48,7 +49,7 @@ export default React.createClass({
               theme="solarized"
               lineNumbers={true}
               cursorPos={this.props.cursorPos}
-              mode={this.editorMode()}
+              mode={resolveHighlightMode(this.props.backend, null)}
               lineWrapping={true}
               autofocus={true}
               onChange={this.handleChange}
@@ -59,18 +60,6 @@ export default React.createClass({
         </div>
       </div>
     );
-  },
-
-  editorMode() {
-    switch (this.props.backend) {
-      case 'redshift':
-        return 'text/x-sql';
-      case 'snowflake':
-        return 'text/x-sql';
-      default:
-        return 'text/x-mysql';
-
-    }
   },
 
   handleChange(e) {
