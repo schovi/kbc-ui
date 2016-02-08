@@ -27,6 +27,14 @@ export default React.createClass({
               </a>.
             </div>
           ) : null}
+          {this.props.transformationType === 'python' ? (
+            <div className="well">
+              Introducing <a href="https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/user-space/transformations/python/01---introduction">
+                Python in Keboola Connection
+              </a>.
+            </div>
+          ) : null}
+
           <div className="well">
             All source tables are stored in <code>/data/in/tables</code>
             (relative path <code>in/tables</code> , save all tables for output mapping to
