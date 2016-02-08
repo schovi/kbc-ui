@@ -30,8 +30,8 @@ retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver) ->
   console.log "retrieve credentials", wrDbToken
   readPromise = null
   #enforce recreate read credentials for redshift only(permisson for)
-  if driver == 'redshift' and not isReadOnly
-    readPromise = loadCredentials('read', wrDbToken, driver, true)
+  if driver == 'redshift'
+    readPromise = loadCredentials('write', wrDbToken, driver)
   else
     readPromise = loadCredentials('read', wrDbToken, driver)
   writePromise = null
