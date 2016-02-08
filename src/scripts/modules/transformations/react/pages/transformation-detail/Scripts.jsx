@@ -46,7 +46,7 @@ export default React.createClass({
     } else {
       return (
         <Static
-          script={this.props.transformation.get('queries').get(0)}
+          script={this.props.scripts}
           transformationType={this.props.transformation.get('type')}
           onEditStart={this.props.onEditStart}
           />
