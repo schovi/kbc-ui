@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react/addons';
 import Highlight from './Highlight';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import resolveHighlightMode from './resolveHighlightMode';
 
 /* global require */
 require('codemirror/mode/sql/sql');
@@ -50,7 +51,10 @@ export default React.createClass({
         </div>
         <div className="col-md-11 vertical-center">
           <span className="static">
-            <Highlight script={query} mode={this.editorMode()} />
+            <Highlight
+              script={query}
+              mode={resolveHighlightMode(this.props.backend, null)}
+              />
           </span>
         </div>
       </div>
@@ -63,17 +67,6 @@ export default React.createClass({
         <span className="kbc-icon-pencil"></span> Edit Queries
       </button>
     );
-  },
-
-  editorMode() {
-    switch (this.props.backend) {
-      case 'redshift':
-        return 'text/x-sql';
-      case 'snowflake':
-        return 'text/x-sql';
-      default:
-        return 'text/x-mysql';
-    }
   },
 
   startEdit(queryNumber) {

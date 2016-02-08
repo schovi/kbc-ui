@@ -74,10 +74,8 @@ module.exports = React.createClass
       destination != undefined
     )
 
-  _renderDetail: ->
-    props = @props
-    component = @
-    div {className: 'kbc-row'},
+  _renderRequires: ->
+    span {},
       h2 {}, 'Requires'
       React.createElement Requires,
         bucketId: @props.bucket.get('id')
@@ -119,6 +117,12 @@ module.exports = React.createClass
             div {className: "help-block"}, small {},
               "No transformations are dependent on the current transformation."
 
+  _renderDetail: ->
+    props = @props
+    component = @
+    div {className: 'kbc-row'},
+      if @props.transformation.get('backend') != 'docker'
+        @_renderRequires()
       div {},
         h2 {},
           'Input Mapping'
@@ -223,7 +227,7 @@ module.exports = React.createClass
               bucket: @props.bucket
               mapping: @props.editingFields.get('new-output-mapping', Map())
 
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+      if @props.transformation.get('backend') == 'docker'
         div {},
           h2 {}, 'Packages'
           React.createElement Packages,
@@ -245,7 +249,7 @@ module.exports = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+      if @props.transformation.get('backend') == 'docker'
         div {},
           h2 {}, 'Stored Files'
           React.createElement SavedFiles,
@@ -269,7 +273,7 @@ module.exports = React.createClass
       @_renderCodeEditor()
 
   _renderCodeEditor: ->
-    if  @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+    if  @props.transformation.get('backend') == 'docker'
       element = Scripts
     else
       element = Queries

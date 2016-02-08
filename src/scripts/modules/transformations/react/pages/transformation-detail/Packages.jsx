@@ -21,6 +21,7 @@ export default React.createClass({
       return (
         <Edit
           packages={this.props.packages}
+          transformationType={this.props.transformation.get('type')}
           isSaving={this.props.isSaving}
           onChange={this.props.onEditChange}
           onCancel={this.props.onEditCancel}
@@ -31,6 +32,7 @@ export default React.createClass({
       return (
         <Static
           packages={this.props.transformation.get('packages')}
+          transformationType={this.props.transformation.get('type')}
           onEditStart={this.props.onEditStart}
           />
       );

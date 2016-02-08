@@ -5,6 +5,7 @@ import Clipboard from '../../../../../react/common/Clipboard';
 
 /* global require */
 require('codemirror/mode/r/r');
+require('codemirror/mode/python/python');
 
 export default React.createClass({
   propTypes: {
@@ -35,6 +36,7 @@ export default React.createClass({
       return (
         <Edit
           script={this.props.scripts}
+          transformationType={this.props.transformation.get('type')}
           isSaving={this.props.isSaving}
           onSave={this.props.onEditSubmit}
           onChange={this.props.onEditChange}
@@ -44,7 +46,8 @@ export default React.createClass({
     } else {
       return (
         <Static
-          script={this.props.transformation.get('queries').get(0)}
+          script={this.props.scripts}
+          transformationType={this.props.transformation.get('type')}
           onEditStart={this.props.onEditStart}
           />
       );
