@@ -204,6 +204,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       isSaving: isSaving
       isProvisioning: isProvisioningProp
       componentId: componentId
+      driver: driver
 
   _isProvCredentials: ->
     host = @state.credentials?.get('host')

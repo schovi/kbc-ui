@@ -22,8 +22,12 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool
     isProvisioning: React.PropTypes.bool
     componentId: React.PropTypes.string
+    driver: React.PropTypes.string
 
   render: ->
+    provDescription = 'This is readonly credentials to the database provided by Keboola.'
+    if @props.driver == 'redshift'
+      provDescription = 'This is write credentials to the database provided by Keboola.'
     fields = fieldsTemplates(@props.componentId)
 
     form className: 'form-horizontal',
@@ -33,7 +37,7 @@ module.exports = React.createClass
             h2 null,
               'Keboola provided database credentials'
               div null,
-                small null, 'This is readonly credentials to the database provided by Keboola.'
+                small null, provDescription
 
           else
             h2 null,
