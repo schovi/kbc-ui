@@ -23,7 +23,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        {ApplicationStore.hasCurrentAdminFeature('kbc-notifications') ?
+        {ApplicationStore.hasCurrentAdminFeature('kbc-limits') ?
           <LimitsOverQuota limits={this.state.limitsOverQuota}/> :
           null
         }
