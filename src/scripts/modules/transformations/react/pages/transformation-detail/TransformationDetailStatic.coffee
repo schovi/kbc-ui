@@ -108,11 +108,11 @@ module.exports = React.createClass
                   Link
                     key: dependent.get("id")
                     to: 'transformationDetail'
-                    params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
+                    params: {transformationId: dependent.get("id"), bucketId: @props.bucket.get('id')}
                   ,
                     span {className: 'label kbc-label-rounded-small label-default'},
                       dependent.get("name")
-                ).toArray()
+                , @).toArray()
           else
             div {className: "help-block"}, small {},
               "No transformations are dependent on the current transformation."
