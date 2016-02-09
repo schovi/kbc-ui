@@ -22,13 +22,18 @@ TasksEditTableRow = React.createClass
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
+    toggleMarkTask: React.PropTypes.func.isRequired
     isDraggingPhase: React.PropTypes.bool.isRequired
+    isMarked: React.PropTypes.bool.isRequired
 
   render: ->
     tr null,
       td className: 'kb-orchestrator-task-drag text-center',
         input
           type: 'checkbox'
+          checked: @props.isMarked
+          onClick: =>
+            @props.toggleMarkTask(@props.task.get('id'))
       td null,
         span className: 'kbc-component-icon',
           if @props.component

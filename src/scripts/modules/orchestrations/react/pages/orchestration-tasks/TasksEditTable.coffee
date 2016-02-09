@@ -4,6 +4,7 @@ TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 PhaseModal = require('../../modals/Phase').default
 MergePhasesModal = require('../../modals/MergePhasesModal').default
+MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 {div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 
@@ -27,6 +28,7 @@ TasksEditTable = React.createClass
     span null,
       @_renderPhaseModal()
       @_renderMergePhaseModal()
+      @_renderMoveTasksModal()
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
@@ -55,7 +57,7 @@ TasksEditTable = React.createClass
                 button
                   className: 'btn btn-xs btn-primary'
                   disabled: !@canMoveTasks()
-                  onClick: @onMoveTasks
+                  onClick: @onToggleMoveTasks
                   'move tasks'
         tbody null,
           if @props.tasks.count()
@@ -72,14 +74,18 @@ TasksEditTable = React.createClass
     result = List()
     @props.tasks.map((phase) =>
       tasksRows = phase.get('tasks').map((task) =>
+        taskId = task.get('id')
         TasksEditTableRow
           task: task
           component: @props.components.get(task.get('component'))
           disabled: @props.disabled
-          key: task.get('id')
+          key: taskId
           onTaskDelete: @props.onTaskDelete
           onTaskUpdate: @props.onTaskUpdate
           isDraggingPhase: @props.localState.getIn [phase.get('id'), 'isDragging']
+          isMarked: @props.localState.getIn(['moveTasks', 'marked', taskId], false)
+          toggleMarkTask: =>
+            @_toggleMarkTask(task)
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -87,6 +93,48 @@ TasksEditTable = React.createClass
         result = result.concat(tasksRows)
     )
     return result.toArray()
+
+  _renderMoveTasksModal: ->
+    React.createElement MoveTasksModal,
+      show: @props.localState.getIn(['moveTasks', 'show'], false)
+      phases: @props.tasks.map((phase) -> phase.get('id'))
+      onHide: =>
+        @props.updateLocalState(['moveTasks', 'show'], false)
+      onMoveTasks: @_moveTasks
+
+  onToggleMoveTasks: ->
+    @props.updateLocalState(['moveTasks', 'show'], true)
+
+  _moveTasks: (phaseId) ->
+    markedTasks = @props.localState.getIn(['moveTasks', 'marked'])
+    found = true
+    phase = @props.tasks.find((p) -> p.get('id') == phaseId)
+    if not phase
+      phase = Map({id: phaseId})
+      found = false
+    destinationTasks = phase.get('tasks', List())
+    tasksToMerge = markedTasks.filter((mt) ->
+      not destinationTasks.find((dt) -> dt.get('id') == mt.get('id'))
+      ).toList()
+    resultTasks = destinationTasks.concat(tasksToMerge)
+    newPhase = phase.set('tasks', resultTasks)
+    newPhases = @props.tasks.map (p) ->
+      if p.get('id') == phaseId
+        return newPhase
+      tmpTasks = p.get('tasks').filter((t) -> not markedTasks.has(t.get('id')))
+      return p.set('tasks', tmpTasks)
+
+    if not found
+      newPhases = newPhases.push(newPhase)
+    @props.handlePhasesSet(newPhases)
+    @props.updateLocalState('moveTasks', Map())
+
+  _toggleMarkTask: (task) ->
+    path = ['moveTasks', 'marked', task.get('id')]
+    #invert true/false task/null
+    if @props.localState.getIn(path, null) != null
+      task = null
+    @props.updateLocalState(path, task)
 
   renderPhaseRow: (phase) ->
     phaseId = phase.get('id')
@@ -166,7 +214,7 @@ TasksEditTable = React.createClass
     return true
 
   canMoveTasks: ->
-    false
+    @props.localState.getIn(['moveTasks', 'marked'], List()).count() > 0
 
 
   toggleMarkPhase: (phaseId, shiftKey) ->

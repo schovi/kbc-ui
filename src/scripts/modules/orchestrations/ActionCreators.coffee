@@ -332,6 +332,7 @@ module.exports =
     .saveOrchestrationTasks(orchestrationId, tasks.toJS())
     .then((tasks) ->
       # update tasks from server
+      tasks = rephaseTasks(tasks)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_SUCCESS
         orchestrationId: orchestrationId
