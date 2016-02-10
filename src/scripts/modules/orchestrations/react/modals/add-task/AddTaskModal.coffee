@@ -20,6 +20,9 @@ AddTaskModal = React.createClass
   mixins: [createStoreMixin(InstalledComponentsStore)]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
+    onHide: React.PropTypes.func
+    show: React.PropTypes.bool
+    phaseId: React.PropTypes.string
 
   getInitialState: ->
     selectedComponent: null
@@ -29,8 +32,11 @@ AddTaskModal = React.createClass
     components: InstalledComponentsStore.getAll()
 
   render: ->
-    Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
-
+    Modal
+      title: @_modalTitle()
+      onRequestHide: @props.onRequestHide
+      show: @props.show
+      onHide: @props.onHide
       div className: 'modal-body',
         switch @state.currentStep
 
@@ -73,8 +79,9 @@ AddTaskModal = React.createClass
     close modal with selected configuration
   ###
   _handleConfigurationSelect: (configuration) ->
-    @props.onRequestHide() # hide modal
-    @props.onConfigurationSelect(@state.selectedComponent, configuration)
+    #@props.onRequestHide() # hide modal
+    @props.onConfigurationSelect(@state.selectedComponent, configuration, @props.phaseId)
+    @props.onHide()
 
 
 

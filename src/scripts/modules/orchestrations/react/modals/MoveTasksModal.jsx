@@ -9,12 +9,20 @@ export default React.createClass({
     phases: PropTypes.object.isRequired,
     onMoveTasks: React.PropTypes.func.isRequired,
     onHide: React.PropTypes.func.isRequired,
-    show: React.PropTypes.bool.isRequired
+    show: React.PropTypes.bool.isRequired,
+    title: React.PropTypes.string,
+    ignorePhaseId: React.PropTypes.string
   },
 
   getInitialState() {
     return {
       value: null
+    };
+  },
+
+  getDefaultProps() {
+    return {
+      title: 'Move Selected Tasks to Phases'
     };
   },
 
@@ -24,7 +32,7 @@ export default React.createClass({
       <Modal
         show={this.props.show}
         onHide={this.props.onHide}
-        title="Move Selected Tasks to Phases">
+        title={this.props.title}>
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>
@@ -43,7 +51,7 @@ export default React.createClass({
                 />
                 <span className="help-block">
                   Select a existing phase name or type new phase name.
-                  </span>
+                </span>
               </div>
             </div>
           </div>
@@ -65,15 +73,16 @@ export default React.createClass({
   },
 
   getPhasesOptions() {
-    const result = this.props.phases.map((key) => {
-      return {
-        'label': key,
-        'value': key
-      };
-    }).toList().toJS();
+    const result = this.props.phases
+                       .filter((pid) => pid !== this.props.ignorePhaseId)
+                       .map((key) => {
+                         return {
+                           'label': key,
+                           'value': key
+                         };
+                       }).toList().toJS();
     return result;
   },
-
 
   closeModal() {
     this.props.onHide();

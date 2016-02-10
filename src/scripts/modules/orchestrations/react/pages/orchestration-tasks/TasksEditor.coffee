@@ -1,6 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 Immutable = require 'immutable'
+List = Immutable.List
 
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
@@ -35,6 +36,7 @@ TasksEditor = React.createClass
         handlePhaseMove: @_handlePhaseMove
         handlePhaseUpdate: @_handlePhaseUpdate
         handlePhasesSet: @_handlePhasesSet
+        handleAddTask: @_handleTaskAdd
       div className: 'kbc-block-with-padding',
         ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
           Button
@@ -75,10 +77,11 @@ TasksEditor = React.createClass
     )
 
 
-  _handleTaskAdd: (component, configuration) ->
+  _handleTaskAdd: (component, configuration, phaseId) ->
     # prepare task
     task =
       id: _.uniqueId() # temporary id
+      phase: phaseId
       component: component.get('id')
       action: "run"
       actionParameters:
@@ -96,9 +99,12 @@ TasksEditor = React.createClass
 
     if _.contains ['ex-recurly', 'ex-youtube'], component.get('id')
       task.actionParameters = {}
-
     @props.onChange(
-      @props.tasks.push(Immutable.fromJS(task))
+      @props.tasks.map (phase) ->
+        if phase.get('id') == phaseId
+          return phase.set('tasks', phase.get('tasks', List()).push(Immutable.fromJS(task)))
+        else
+          return phase
     )
 
 

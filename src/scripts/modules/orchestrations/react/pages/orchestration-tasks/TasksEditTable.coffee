@@ -7,7 +7,7 @@ MergePhasesModal = require('../../modals/MergePhasesModal').default
 MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 {div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
-
+AddTaskModal = require('../../modals/add-task/AddTaskModal')
 
 TasksEditTable = React.createClass
   displayName: 'TasksEditTable'
@@ -23,12 +23,15 @@ TasksEditTable = React.createClass
     handlePhaseMove: React.PropTypes.func.isRequired
     handlePhaseUpdate: React.PropTypes.func.isRequired
     handlePhasesSet: React.PropTypes.func.isRequired
+    handleAddTask: React.PropTypes.func.isRequired
 
   render: ->
     span null,
       @_renderPhaseModal()
       @_renderMergePhaseModal()
       @_renderMoveTasksModal()
+      @_renderSingleMoveTaskModal()
+      @_renderAddTaskModal()
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
@@ -86,6 +89,10 @@ TasksEditTable = React.createClass
           isMarked: @props.localState.getIn(['moveTasks', 'marked', taskId], false)
           toggleMarkTask: =>
             @_toggleMarkTask(task)
+          onMoveSingleTask: =>
+            @_toggleMoveSingleTask(task, phase.get('id'))
+          onAddNewTask: =>
+            @props.updateLocalState(['newTask', 'phaseId'], phase.get('id'))
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -94,19 +101,53 @@ TasksEditTable = React.createClass
     )
     return result.toArray()
 
+
+  _renderAddTaskModal: ->
+    React.createElement AddTaskModal,
+      onConfigurationSelect: @props.handleAddTask
+      phaseId: @props.localState.getIn ['newTask', 'phaseId']
+      show: !!@props.localState.getIn ['newTask', 'phaseId']
+      onHide: =>
+        @props.updateLocalState ['newTask', 'phaseId'], null
+
+
+  _toggleMoveSingleTask: (task, ignoredPhaseId) ->
+    toggleMap = Map({
+      ignorePhase: ignoredPhaseId
+      show: true
+      task: task })
+    @props.updateLocalState(['moveSingleTask'], toggleMap)
+
+  _renderSingleMoveTaskModal: ->
+    React.createElement MoveTasksModal,
+      title: 'Move task to phase'
+      ignorePhaseId: @props.localState.getIn(['moveSingleTask', 'ignorePhase'], null)
+      show: @props.localState.getIn(['moveSingleTask', 'show'], false)
+      phases: @props.tasks.map((phase) -> phase.get('id'))
+      onHide: =>
+        @props.updateLocalState(['moveSingleTask', 'show'], false)
+      onMoveTasks: (phaseId) =>
+        task = @props.localState.getIn(['moveSingleTask', 'task'])
+        tasks = Map().set(task.get('id'), task)
+        @_moveTasks(phaseId, tasks)
+        @props.updateLocalState('moveSingleTask', Map())
+
+
   _renderMoveTasksModal: ->
     React.createElement MoveTasksModal,
       show: @props.localState.getIn(['moveTasks', 'show'], false)
       phases: @props.tasks.map((phase) -> phase.get('id'))
       onHide: =>
         @props.updateLocalState(['moveTasks', 'show'], false)
-      onMoveTasks: @_moveTasks
+      onMoveTasks: (phaseId) =>
+        markedTasks = @props.localState.getIn(['moveTasks', 'marked'])
+        @_moveTasks(phaseId, markedTasks)
+        @props.updateLocalState('moveTasks', Map())
 
   onToggleMoveTasks: ->
     @props.updateLocalState(['moveTasks', 'show'], true)
 
-  _moveTasks: (phaseId) ->
-    markedTasks = @props.localState.getIn(['moveTasks', 'marked'])
+  _moveTasks: (phaseId, markedTasks) ->
     found = true
     phase = @props.tasks.find((p) -> p.get('id') == phaseId)
     if not phase
@@ -127,7 +168,7 @@ TasksEditTable = React.createClass
     if not found
       newPhases = newPhases.push(newPhase)
     @props.handlePhasesSet(newPhases)
-    @props.updateLocalState('moveTasks', Map())
+
 
   _toggleMarkTask: (task) ->
     path = ['moveTasks', 'marked', task.get('id')]

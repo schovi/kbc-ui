@@ -11,6 +11,7 @@ ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(require('kbc-react-components').Tree)
 Check = React.createFactory(common.Check)
+Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 
 {tr, td, span, div, i, input} = React.DOM
 
@@ -25,6 +26,8 @@ TasksEditTableRow = React.createClass
     toggleMarkTask: React.PropTypes.func.isRequired
     isDraggingPhase: React.PropTypes.bool.isRequired
     isMarked: React.PropTypes.bool.isRequired
+    onMoveSingleTask: React.PropTypes.func.isRequired
+    onAddNewTask: React.PropTypes.func.isRequired
 
   render: ->
     tr null,
@@ -80,9 +83,18 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td className: 'kbc-cursor-pointer',
+      td className: '',
         div className: 'pull-right',
-          i className: 'kbc-icon-cup', onClick: @_handleDelete
+          i className: 'kbc-cursor-pointer kbc-icon-cup', onClick: @_handleDelete
+          Tooltip
+            tooltip: 'Move task to other phase'
+            placement: 'top'
+            i className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer', onClick: @props.onMoveSingleTask
+          Tooltip
+            tooltip: 'Add New Task'
+            placement: 'top'
+            i className: 'fa fa-fw fa-plus kbc-cursor-pointer', onClick: @props.onAddNewTask
+
 
   _handleParametersChange: (parameters) ->
     @props.onTaskUpdate @props.task.set('actionParameters', Immutable.fromJS(parameters))
