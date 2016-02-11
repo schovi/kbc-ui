@@ -7,15 +7,25 @@ import SchemasStore from '../../stores/SchemasStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import Immutable from 'immutable';
 import propagateApiAttributes from './jsoneditor/propagateApiAttributes';
+import CodeMirror from 'react-code-mirror';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
 /* global require */
 require('./configuration-json.less');
+require('codemirror/addon/lint/lint');
+require('../../../../utils/codemirror/json-lint');
+
 
 export default React.createClass({
 
   mixins: [createStoreMixin(SchemasStore)],
+
+  getInitialState() {
+    return {
+      jobsJsonEdit: false
+    };
+  },
 
   getStateFromStores() {
     var componentId = RoutesStore.getCurrentRouteParam('component');
@@ -47,7 +57,8 @@ export default React.createClass({
   jobsValue: Immutable.List(),
   paramsValue: Immutable.Map(),
   apiValue: Immutable.Map(),
-
+  jobsJsonValue: '',
+  /*
   componentDidMount() {
     var parsed = JSON.parse(this.props.data);
 
@@ -58,7 +69,19 @@ export default React.createClass({
     }
 
     if (parsed.config && parsed.config.jobs) {
-      this.jobsValue = Immutable.fromJS(parsed.config.jobs);
+      // match templates
+      var jobsValue = Immutable.fromJS(parsed.config.jobs);
+      console.log(this.state.jobsTemplates);
+      var matchedTemplate = this.state.jobsTemplates.filter(function(template) {
+        return template.equals(jobsValue);
+      });
+      if (matchedTemplate) {
+        this.setState({jobsJsonEdit: false});
+        this.jobsValue = jobsValue;
+      } else {
+        this.setState({jobsJsonEdit: true});
+        this.jobsJsonValue = parsed.config.jobs;
+      }
     } else {
       this.jobsValue = Immutable.List();
     }
@@ -73,7 +96,7 @@ export default React.createClass({
       this.apiValue = Immutable.fromJS(this.state.apiTemplate);
     }
   },
-
+  */
   render() {
     return (
       <div className="kbc-configuration-json-edit">
@@ -96,13 +119,32 @@ export default React.createClass({
               onChange={this.handleParamsChange}
               readOnly={this.props.isSaving}
             />
-            <h3>Jobs</h3>
-            <JobsEditor
-              templates={this.state.jobsTemplates}
-              value={this.jobsValue}
-              onChange={this.handleJobsChange}
-              readOnly={this.props.isSaving}
-              />
+            <h3>Jobs
+              {!this.state.jobsJsonEdit ? (
+                <a className="pull-right" onClick={this.switchToJsonEditor}><small>Switch to JSON editor</small></a>
+              ) : null}
+            </h3>
+            {this.state.jobsJsonEdit ? (
+              <CodeMirror
+                value={this.jobsJsonValue}
+                theme="solarized"
+                lineNumbers={true}
+                mode="application/json"
+                autofocus={true}
+                lineWrapping={true}
+                onChange={this.handleJobsJsonChange}
+                readOnly={this.props.isSaving}
+                lint={true}
+                gutters={['CodeMirror-lint-markers']}
+                />
+            ) : (
+              <JobsEditor
+                templates={this.state.jobsTemplates}
+                value={this.jobsValue}
+                onChange={this.handleJobsChange}
+                readOnly={this.props.isSaving}
+                />
+            )}
           </div>
         </div>
       </div>
@@ -151,6 +193,11 @@ export default React.createClass({
     this.handleChange();
   },
 
+  handleJobsJsonChange(value) {
+    this.jobsJsonValue = value;
+    this.handleChange();
+  },
+
   handleChange() {
     var config = {
       api: this.apiValue.toJS(),
@@ -158,5 +205,12 @@ export default React.createClass({
     };
     config.config.jobs = this.jobsValue.toJS();
     this.props.onChange(JSON.stringify(config));
+  },
+
+  switchToJsonEditor() {
+    this.jobsJsonValue = JSON.stringify(this.jobsValue.toJS(), null, 2);
+    this.setState({jobsJsonEdit: true});
   }
+
+
 });

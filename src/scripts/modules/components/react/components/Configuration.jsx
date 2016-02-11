@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
-import JSONEdit from './ConfigurationJSONEdit';
-import JSONStatic from './ConfigurationJSONStatic';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -21,8 +19,7 @@ export default React.createClass({
     headerText: PropTypes.string,
     editLabel: PropTypes.string,
     saveLabel: PropTypes.string,
-    help: PropTypes.node,
-    useJsonSchema: PropTypes.bool
+    help: PropTypes.node
   },
 
   getDefaultProps() {
@@ -30,8 +27,7 @@ export default React.createClass({
       headerText: 'Configuration Data',
       help: null,
       editLabel: 'Edit configuration',
-      saveLabel: 'Save configuration',
-      useJsonSchema: false
+      saveLabel: 'Save configuration'
     };
   },
 
@@ -58,41 +54,18 @@ export default React.createClass({
         </span>
       );
     } else {
-      if (this.props.useJsonSchema) {
-        return (
-          <JSONStatic
-            data={this.props.data}
-            onEditStart={this.props.onEditStart}
-            editLabel={this.props.editLabel}
-            />
-        );
-      } else {
-        return (
-          <Static
-            data={this.props.data}
-            onEditStart={this.props.onEditStart}
-            editLabel={this.props.editLabel}
-            />
-        );
-      }
+      return (
+        <Static
+          data={this.props.data}
+          onEditStart={this.props.onEditStart}
+          editLabel={this.props.editLabel}
+          />
+      );
     }
   },
 
   renderEditor() {
-    if (this.props.useJsonSchema) {
-      return (
-        <JSONEdit
-          data={this.props.data}
-          isSaving={this.props.isSaving}
-          onSave={this.props.onEditSubmit}
-          onChange={this.props.onEditChange}
-          onCancel={this.props.onEditCancel}
-          isValid={this.props.isValid}
-          saveLabel={this.props.saveLabel}
-          />
-      );
-    } else {
-      return (
+    return (
       <Edit
         data={this.props.data}
         isSaving={this.props.isSaving}
@@ -102,7 +75,6 @@ export default React.createClass({
         isValid={this.props.isValid}
         saveLabel={this.props.saveLabel}
         />
-      );
-    }
+    );
   }
 });

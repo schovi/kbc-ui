@@ -3,6 +3,7 @@ constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
+propagateApiAttributes = require('../react/components/jsoneditor/propagateApiAttributes').default
 
 _store = Map(
   configData: Map() #componentId #configId
@@ -12,6 +13,10 @@ _store = Map(
   configDataParametersEditing: Map() #componentId #configId - configuration
   rawConfigDataEditing: Map() #componentId #configId - configuration stringified JSON
   rawConfigDataParametersEditing: Map() #componentId #configId - configuration stringified JSON
+  templatedConfigValuesEditing: Map() #componentId #configId
+                                    # group (apiValue:Map|jobsValue:Map|paramsValue:Map|jobsJsonValue:string)
+  templatedConfigEditingState: Map() #componentId #configId
+                                    # attribute (jobsJsonEdit:bool) - configuration
   #detail JSON
   configDataSaving: Map()
   configDataParametersSaving: Map()
@@ -139,6 +144,29 @@ InstalledComponentsStore = StoreUtils.createStore
 
   getOpenMappings: (componentId, configId) ->
     _store.getIn ['openMappings', componentId, configId], Map()
+
+  getTemplatedConfigEditingValue: (componentId, configId, parameter) ->
+    _store.getIn ['templatedConfigValuesEditing', componentId, configId, parameter]
+
+  getTemplatedConfigValueJobs: (componentId, configId) ->
+    _store.getIn(['configData', componentId, configId, 'parameters', 'config', 'jobs'], Immutable.List())
+
+  getTemplatedConfigValueParams: (componentId, configId) ->
+    config = _store.getIn(['configData', componentId, configId, 'parameters', 'config'], Immutable.Map())
+
+    if (config.has('jobs'))
+      config = config.delete('jobs')
+    config
+    ###
+    api = _store.getIn(['configData', componentId, configId, 'parameters', 'api'], Immutable.Map())
+    propagateApiAttributes(api.toJS(), config)
+    ###
+
+  getTemplatedConfigValueApi: (componentId, configId) ->
+    _store.getIn(['configData', componentId, configId, "api"], Immutable.Map())
+
+  getTemplatedConfigEditingState: (componentId, configId, stateVariable) ->
+    _store.getIn ['templatedConfigEditingState', componentId, configId, stateVariable]
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -477,6 +505,10 @@ Dispatcher.register (payload) ->
       ]
       _store = _store.deleteIn(path)
       InstalledComponentsStore.emitChange()
+
+
+    #when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDITING_START
+
 
 
 module.exports = InstalledComponentsStore

@@ -12,6 +12,7 @@ import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
+import TemplatedConfiguration from '../components/TemplatedConfiguration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
 import TableOutputMapping from '../components/generic/TableOutputMapping';
@@ -33,6 +34,7 @@ export default React.createClass({
 
     return {
       componentId: componentId,
+      configId: configId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
       configData: InstalledComponentStore.getConfigData(componentId, configId),
       editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
@@ -177,21 +179,28 @@ export default React.createClass({
               {this.fileInputMapping()}
               {this.tableOutputMapping()}
               {this.fileOutputMapping()}
-              <Configuration
-                data={this.getConfigDataParameters()}
-                isEditing={this.state.isParametersEditing}
-                isSaving={this.state.isParametersSaving}
-                onEditStart={this.onEditParametersStart}
-                onEditCancel={this.onEditParametersCancel}
-                onEditChange={this.onEditParametersChange}
-                onEditSubmit={this.onEditParametersSubmit}
-                isValid={this.state.isValidEditingConfigDataParameters}
-                headerText="Parameters"
-                editLabel="Edit parameters"
-                saveLabel="Save parameters"
-                supportsEncryption={this.state.component.get('flags').includes('encrypt')}
-                useJsonSchema={this.state.component.get('flags').includes('genericTemplatesUI')}
-                />
+              {this.isTemplatedComponent() ? (
+                <TemplatedConfiguration
+                  headerText="Parameters"
+                  editLabel="Edit parameters"
+                  saveLabel="Save parameters"
+                  />
+              ) : (
+                <Configuration
+                  data={this.getConfigDataParameters()}
+                  isEditing={this.state.isParametersEditing}
+                  isSaving={this.state.isParametersSaving}
+                  onEditStart={this.onEditParametersStart}
+                  onEditCancel={this.onEditParametersCancel}
+                  onEditChange={this.onEditParametersChange}
+                  onEditSubmit={this.onEditParametersSubmit}
+                  isValid={this.state.isValidEditingConfigDataParameters}
+                  headerText="Parameters"
+                  editLabel="Edit parameters"
+                  saveLabel="Save parameters"
+                  supportsEncryption={this.state.component.get('flags').includes('encrypt')}
+                  />
+              )}
               {this.runtimeConfiguration()}
             </div>
 
@@ -316,6 +325,10 @@ export default React.createClass({
     const componentId = this.state.componentId;
     const newState = this.state.localState.setIn(path, data);
     InstalledComponentsActionCreators.updateLocalState(componentId, configId, newState);
+  },
+
+  isTemplatedComponent() {
+    return this.state.component.get('flags').includes('genericTemplatesUI');
   }
 
 });
