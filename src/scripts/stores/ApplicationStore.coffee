@@ -33,7 +33,7 @@ ApplicationStore = StoreUtils.createStore
     Map
       url: @getUrlTemplates().get 'notifications'
       unreadCount: _store.getIn ['notifications', 'unreadCount']
-      isEnabled: @hasCurrentAdminFeature 'kbc-notifications'
+      isEnabled: true
 
   getLimits: ->
     composeLimits @getSapiToken().getIn(['owner', 'limits']), @getSapiToken().getIn(['owner', 'metrics'])
