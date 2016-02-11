@@ -8,7 +8,6 @@ Button = React.createFactory(require('react-bootstrap').Button)
 
 TasksEditTable = React.createFactory(require './TasksEditTable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {div, button, span} = React.DOM
@@ -37,13 +36,6 @@ TasksEditor = React.createClass
         handlePhaseUpdate: @_handlePhaseUpdate
         handlePhasesSet: @_handlePhasesSet
         handleAddTask: @_handleTaskAdd
-      div className: 'kbc-block-with-padding',
-        ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
-          Button
-            bsStyle: 'primary'
-            disabled: @props.isSaving
-          ,
-            'Add task'
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(

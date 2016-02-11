@@ -91,8 +91,6 @@ TasksEditTable = React.createClass
             @_toggleMarkTask(task)
           onMoveSingleTask: =>
             @_toggleMoveSingleTask(task, phase.get('id'))
-          onAddNewTask: =>
-            @props.updateLocalState(['newTask', 'phaseId'], phase.get('id'))
       )
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
@@ -108,7 +106,7 @@ TasksEditTable = React.createClass
       phaseId: @props.localState.getIn ['newTask', 'phaseId']
       show: !!@props.localState.getIn ['newTask', 'phaseId']
       onHide: =>
-        @props.updateLocalState ['newTask', 'phaseId'], null
+        @props.updateLocalState ['newTask'], null
 
 
   _toggleMoveSingleTask: (task, ignoredPhaseId) ->
@@ -189,6 +187,8 @@ TasksEditTable = React.createClass
       togglePhaseIdChange: @togglePhaseIdEdit
       isMarked: @props.localState.getIn(['markedPhases', phaseId], false)
       onMarkPhase: @toggleMarkPhase
+      toggleAddNewTask: =>
+        @props.updateLocalState(['newTask', 'phaseId'], phase.get('id'))
 
 
   _renderPhaseModal: ->

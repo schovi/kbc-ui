@@ -34,9 +34,9 @@ AddTaskModal = React.createClass
   render: ->
     Modal
       title: @_modalTitle()
-      onRequestHide: @props.onRequestHide
+      #onRequestHide: @props.onRequestHide
       show: @props.show
-      onHide: @props.onHide
+
       div className: 'modal-body',
         switch @state.currentStep
 
@@ -55,7 +55,7 @@ AddTaskModal = React.createClass
         ButtonToolbar null,
           Button
             bsStyle: 'link'
-            onClick: @props.onRequestHide
+            onClick: @props.onHide
           ,
             'Cancel'
 

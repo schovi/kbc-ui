@@ -90,10 +90,6 @@ TasksEditTableRow = React.createClass
             tooltip: 'Move task to other phase'
             placement: 'top'
             i className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer', onClick: @props.onMoveSingleTask
-          Tooltip
-            tooltip: 'Add New Task'
-            placement: 'top'
-            i className: 'fa fa-fw fa-plus kbc-cursor-pointer', onClick: @props.onAddNewTask
 
 
   _handleParametersChange: (parameters) ->

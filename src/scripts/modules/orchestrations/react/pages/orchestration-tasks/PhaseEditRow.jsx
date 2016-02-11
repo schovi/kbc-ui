@@ -11,7 +11,8 @@ export default React.createClass({
     onPhaseMove: PropTypes.func.isRequired,
     onMarkPhase: PropTypes.func.isRequired,
     togglePhaseIdChange: PropTypes.bool.isRequired,
-    isMarked: PropTypes.bool.isRequired
+    isMarked: PropTypes.bool.isRequired,
+    toggleAddNewTask: PropTypes.func.isRequired
   },
 
   statics: {
@@ -42,7 +43,7 @@ export default React.createClass({
         <td className="kb-orchestrator-task-drag text-center" >
           <i  {...dragprops}/>
         </td>
-        <td colSpan="7">
+        <td colSpan="6">
           <div className="text-center form-group form-group-sm">
             <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
               <span>{this.props.phase.get('id')} </span>
@@ -65,8 +66,21 @@ export default React.createClass({
 
           </div>
         </td>
+        <td className="pull-right">
+          <Tooltip tooltip="Add New Task" placement="top">
+            <i className="fa fa-fw fa-plus kbc-cursor-pointer"
+              onClick={this.toggleTaskAdd}
+            />
+          </Tooltip>
+        </td>
+
       </tr>
     );
+  },
+
+  toggleTaskAdd(e) {
+    this.props.toggleAddNewTask();
+    this.onStopPropagation(e);
   },
 
   toggleMarkPhase(e) {
