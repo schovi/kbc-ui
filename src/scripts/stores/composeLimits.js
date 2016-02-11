@@ -30,7 +30,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
     {
       id: 'storage.dataSizeBytes',
       limitValue: limits.getIn(['storage.dataSizeBytes', 'value']),
-      metricValue: metrics.getIn(['storage.dataSizeBytes', 'value']),
+      metricValue: metrics.getIn(['storage.dataSizeBytes', 'value'], 0),
       name: limitsMetadata.getIn(['storage.dataSizeBytes', 'name']),
       unit: 'bytes',
       graph: {
@@ -41,7 +41,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
     {
       id: 'storage.rowsCount',
       limitValue: limits.getIn(['storage.rowsCount', 'value']),
-      metricValue: metrics.getIn(['storage.rowsCount', 'value']),
+      metricValue: metrics.getIn(['storage.rowsCount', 'value'], 0),
       name: limitsMetadata.getIn(['storage.rowsCount', 'name']),
       graph: {
         eventCollection: 'sapi-project-snapshots',
@@ -72,7 +72,7 @@ function prepareGoodDataData(limits, metrics, limitsMetadata) {
     {
       id: 'goodData.dataSizeBytes',
       limitValue: limits.getIn(['goodData.dataSizeBytes', 'value']),
-      metricValue: metrics.getIn(['goodData.dataSizeBytes', 'value']),
+      metricValue: metrics.getIn(['goodData.dataSizeBytes', 'value'], 0),
       name: limitsMetadata.getIn(['goodData.dataSizeBytes', 'name']),
       unit: 'bytes',
       graph: {
@@ -83,7 +83,7 @@ function prepareGoodDataData(limits, metrics, limitsMetadata) {
     {
       id: 'goodData.usersCount',
       limitValue: limits.getIn(['goodData.usersCount', 'value']),
-      metricValue: metrics.getIn(['goodData.usersCount', 'value']),
+      metricValue: metrics.getIn(['goodData.usersCount', 'value'], 0),
       name: limitsMetadata.getIn(['goodData.usersCount', 'name']),
       graph: {
         eventCollection: 'gooddata-metrics',
