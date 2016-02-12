@@ -34,7 +34,7 @@ AddTaskModal = React.createClass
   render: ->
     Modal
       title: @_modalTitle()
-      #onRequestHide: @props.onRequestHide
+      onRequestHide: @props.onHide
       show: @props.show
 
       div className: 'modal-body',
@@ -61,7 +61,7 @@ AddTaskModal = React.createClass
 
   _modalTitle: ->
     React.DOM.h4 className: 'modal-title',
-      "Add task "
+      "Add task to #{@props.phaseId} "
       React.createElement ComponentsReloaderButton
 
   _handleComponentSelect: (component) ->

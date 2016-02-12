@@ -106,7 +106,7 @@ TasksEditTable = React.createClass
       phaseId: @props.localState.getIn ['newTask', 'phaseId']
       show: !!@props.localState.getIn ['newTask', 'phaseId']
       onHide: =>
-        @props.updateLocalState ['newTask'], null
+        @props.updateLocalState ['newTask'], Map()
 
 
   _toggleMoveSingleTask: (task, ignoredPhaseId) ->
