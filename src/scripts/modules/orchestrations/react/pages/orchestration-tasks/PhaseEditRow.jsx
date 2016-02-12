@@ -47,11 +47,13 @@ export default React.createClass({
         <td colSpan="6" className="kbc-cursor-pointer">
           <Tooltip
             tooltip="Select phase to merge">
-            <input
-              checked={this.props.isMarked}
-              type="checkbox"
-              onClick={this.toggleMarkPhase}
-            />
+            <span>
+              <input
+                checked={this.props.isMarked}
+                type="checkbox"
+                onClick={this.toggleMarkPhase}
+              />
+            </span>
           </Tooltip>
 
           <div className="text-center form-group form-group-sm">

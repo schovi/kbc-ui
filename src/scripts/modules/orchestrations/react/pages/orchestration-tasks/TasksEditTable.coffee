@@ -42,7 +42,7 @@ TasksEditTable = React.createClass
             th style: {width: '30%'}, 'Parameters'
             th style: {width: '6%'}, 'Active'
             th style: {width: '8%'}, 'Continue on Failure'
-            th style: {width: '4%'}
+            th style: {width: '6%'}
 
         tbody null,
           if @props.tasks.count()

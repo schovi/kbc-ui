@@ -83,12 +83,12 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td className: 'text-right',
-        div className: 'text-right',
+      td className: 'text-right kbc-no-wrap',
+        div className: '',
           button
             style: {padding: '2px'}
             onClick: @_handleDelete
-            className: 'btn btn-sm btn-link'
+            className: 'btn btn-link'
           ,
             Tooltip
               placement: 'top'
@@ -96,7 +96,7 @@ TasksEditTableRow = React.createClass
               span className: 'kbc-icon-cup'
           button
             style: {padding: '2px'}
-            className: 'btn btn-sm btn-link'
+            className: 'btn btn-link'
             onClick: @props.onMoveSingleTask
           ,
             Tooltip
