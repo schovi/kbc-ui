@@ -1,4 +1,3 @@
-
 Dispatcher = require '../../../Dispatcher'
 Immutable = require('immutable')
 Map = Immutable.Map
@@ -19,6 +18,19 @@ _store = Map(
   isLoaded: false
   loadingOrchestrations: List()
 )
+
+addEmptyPhase = (tasks) ->
+  phaseIds = tasks.map((phase) -> phase.get('id'))
+  newId = 'new phase 1'
+  idx = 2
+  while newId in phaseIds
+    newId = "new phase #{idx++}"
+  newPhase = Map({
+    id: newId
+    tasks: []
+  })
+  return tasks.push(newPhase)
+
 
 updateOrchestration = (store, id, payload) ->
   store.updateIn(['orchestrationsById', id], (orchestration) ->
@@ -265,8 +277,9 @@ Dispatcher.register (payload) ->
 
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_START
-      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'],
-        OrchestrationStore.getOrchestrationTasks(action.orchestrationId)
+      tasks = addEmptyPhase(OrchestrationStore.getOrchestrationTasks(action.orchestrationId))
+      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'], tasks
+
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_CANCEL
