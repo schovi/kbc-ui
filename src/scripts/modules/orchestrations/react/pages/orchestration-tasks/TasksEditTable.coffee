@@ -95,10 +95,20 @@ TasksEditTable = React.createClass
       phaseRow = @renderPhaseRow(phase)
       result = result.push(phaseRow)
       if not @isPhaseHidden(phase)
-        result = result.concat(tasksRows)
+        if tasksRows.count() > 0
+          result = result.concat(tasksRows)
+        else
+          result = result.concat(@_renderEmptyTasksRow())
     )
     return result.toArray()
 
+  _renderEmptyTasksRow: ->
+    tr null,
+      td
+        className: 'text-muted'
+        colSpan: 7
+      ,
+        'No tasks assigned to the phase yet. Empty phases will not be saved.'
 
   _renderAddTaskModal: ->
     React.createElement AddTaskModal,

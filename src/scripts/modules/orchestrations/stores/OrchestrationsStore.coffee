@@ -21,13 +21,13 @@ _store = Map(
 
 addEmptyPhase = (tasks) ->
   phaseIds = tasks.map((phase) -> phase.get('id'))
-  newId = 'new phase 1'
-  idx = 2
+  newId = 'new phase'
+  idx = 1
   while newId in phaseIds
     newId = "new phase #{idx++}"
   newPhase = Map({
     id: newId
-    tasks: []
+    tasks: List()
   })
   return tasks.push(newPhase)
 
