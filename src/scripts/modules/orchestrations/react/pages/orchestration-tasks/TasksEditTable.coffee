@@ -6,7 +6,7 @@ PhaseModal = require('../../modals/Phase').default
 MergePhasesModal = require('../../modals/MergePhasesModal').default
 MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
-{div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
+{i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 AddTaskModal = require('../../modals/add-task/AddTaskModal')
 
 TasksEditTable = React.createClass
@@ -35,33 +35,34 @@ TasksEditTable = React.createClass
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
-            th style: {width: '3%'},
-            th style: {width: '24%'}, 'Component'
-            th style: null, 'Configuration'
-            th style: {width: '8%'}, 'Action'
-            th style: {width: '25%'}, 'Parameters'
-            th style: {width: '8%'}, 'Active'
-            th style: {width: '10%'}, 'Continue on Failure'
+            th style: {width: '2%'},
+            th style: {width: '20%'}, 'Component'
+            th style: {width: '10%'}, 'Configuration'
+            th style: {width: '12%'}, 'Action'
+            th style: {width: '30%'}, 'Parameters'
+            th style: {width: '6%'}, 'Active'
+            th style: {width: '6%'}, 'Continue on Failure'
             th style: {width: '10%'},
-              Tooltip
-                placement: 'top'
-                tooltip: 'Merge selected phases'
-              ,
-                div null,
+              div className: 'pull-right',
+                Tooltip
+                  placement: 'top'
+                  tooltip: 'Merge selected phases'
+                ,
                   button
                     disabled: !@canMergePhases()
                     onClick: @toggleMergePhases
-                    className: 'btn btn-xs btn-primary',
-                    'merge phases'
-              Tooltip
-                placement: 'top'
-                tooltip: 'Move selected tasks between phases'
-              ,
-                button
-                  className: 'btn btn-xs btn-primary'
-                  disabled: !@canMoveTasks()
-                  onClick: @onToggleMoveTasks
-                  'move tasks'
+                    className: 'btn btn-xs btn-default',
+                    i className: 'fa fa-fw fa-compress'
+                Tooltip
+                  placement: 'top'
+                  tooltip: 'Move selected tasks between phases'
+                ,
+                  button
+                    className: 'btn btn-xs btn-default'
+                    disabled: !@canMoveTasks()
+                    onClick: @onToggleMoveTasks
+                    i className: 'fa fa-fw fa-mail-forward'
+
         tbody null,
           if @props.tasks.count()
             @renderPhasedTasksRows()
@@ -98,17 +99,17 @@ TasksEditTable = React.createClass
         if tasksRows.count() > 0
           result = result.concat(tasksRows)
         else
-          result = result.concat(@_renderEmptyTasksRow())
+          result = result.concat(@_renderEmptyTasksRow(phase.get('id')))
     )
     return result.toArray()
 
-  _renderEmptyTasksRow: ->
+  _renderEmptyTasksRow: (phaseId) ->
     tr null,
       td
         className: 'text-muted'
-        colSpan: 7
+        colSpan: 8
       ,
-        'No tasks assigned to the phase yet. Empty phases will not be saved.'
+        "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
 
   _renderAddTaskModal: ->
     React.createElement AddTaskModal,

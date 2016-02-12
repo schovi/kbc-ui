@@ -22,7 +22,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      title: 'Move Selected Tasks to Phases'
+      title: 'Move Selected Tasks to Phase'
     };
   },
 
@@ -40,7 +40,7 @@ export default React.createClass({
               </label>
               <div className="col-sm-11">
                 <Select
-                  placeholder="Select phase..."
+                  placeholder="Select phase or type new..."
                   clearable={false}
                   key="phases select"
                   name="phaseselector"

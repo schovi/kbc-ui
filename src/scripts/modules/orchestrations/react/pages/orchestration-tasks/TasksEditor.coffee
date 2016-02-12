@@ -39,8 +39,13 @@ TasksEditor = React.createClass
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(
-      @props.tasks.remove(@props.tasks.findIndex((task) -> task.get('id') == configurationId))
+      @props.tasks.map((phase) ->
+        tasks = phase.get('tasks')
+        tasks = tasks.filter((task) -> task.get('id') != configurationId)
+        phase.set('tasks', tasks)
+      )
     )
+
   _handlePhaseUpdate: (phaseId, newPhase) ->
     phaseIdx = @props.tasks.findIndex((phase) -> phase.get('id') == phaseId)
     newTasks = @props.tasks.set(phaseIdx, newPhase)
