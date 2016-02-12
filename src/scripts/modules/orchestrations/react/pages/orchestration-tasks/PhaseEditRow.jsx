@@ -34,16 +34,26 @@ export default React.createClass({
     const isDragging = this.getDragState('phase').isDragging;
     const style = {
       opacity: isDragging ? 0.5 : 1
+
     };
-    const facn = 'fa fa-bars';
-    const dragprops = _.extend({style: {cursor: 'move'}, className: facn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
+    const tdcn = 'kb-orchestrator-task-drag text-center';
+    const dragprops = _.extend({style: {cursor: 'move'}, className: tdcn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
     return (
       <tr style={style}
         onClick={this.onRowClick}>
-        <td className="kb-orchestrator-task-drag text-center" >
-          <i  {...dragprops}/>
+        <td {...dragprops} >
+          <i  className="fa fa-bars"/>
         </td>
-        <td colSpan="6">
+        <td colSpan="6" className="kbc-cursor-pointer">
+          <Tooltip
+            tooltip="Select phase to merge">
+            <input
+              checked={this.props.isMarked}
+              type="checkbox"
+              onClick={this.toggleMarkPhase}
+            />
+          </Tooltip>
+
           <div className="text-center form-group form-group-sm">
             <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
               <span>{this.props.phase.get('id')} </span>
@@ -54,23 +64,16 @@ export default React.createClass({
                   className="kbc-icon-pencil"/>
               </Tooltip>
             </span>
-
-            <Tooltip
-              tooltip="Select phase to merge">
-              <input
-                checked={this.props.isMarked}
-                type="checkbox"
-                onClick={this.toggleMarkPhase}
-              />
-            </Tooltip>
-
           </div>
         </td>
-        <td className="pull-right">
+        <td>
           <Tooltip tooltip="Add New Task" placement="top">
-            <i className="fa fa-fw fa-plus kbc-cursor-pointer"
-              onClick={this.toggleTaskAdd}
-            />
+            <button
+              className="btn btn-link"
+              style={{padding: '0'}}
+              onClick={this.toggleTaskAdd}>
+              <span className="fa fa-fw fa-plus"/>
+            </button>
           </Tooltip>
         </td>
 

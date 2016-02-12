@@ -13,7 +13,7 @@ Tree = React.createFactory(require('kbc-react-components').Tree)
 Check = React.createFactory(common.Check)
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 
-{tr, td, span, div, i, input} = React.DOM
+{button, tr, td, span, div, i, input} = React.DOM
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
@@ -83,13 +83,26 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td className: '',
-        div className: 'pull-right',
-          i className: 'kbc-cursor-pointer kbc-icon-cup', onClick: @_handleDelete
-          Tooltip
-            tooltip: 'Move task to other phase'
-            placement: 'top'
-            i className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer', onClick: @props.onMoveSingleTask
+      td className: 'text-right',
+        div className: 'text-right',
+          button
+            style: {padding: '2px'}
+            onClick: @_handleDelete
+            className: 'btn btn-sm btn-link'
+          ,
+            Tooltip
+              placement: 'top'
+              tooltip: 'Remove task'
+              span className: 'kbc-icon-cup'
+          button
+            style: {padding: '2px'}
+            className: 'btn btn-sm btn-link'
+            onClick: @props.onMoveSingleTask
+          ,
+            Tooltip
+              tooltip: 'Move task to other phase'
+              placement: 'top'
+              span className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer'
 
 
   _handleParametersChange: (parameters) ->

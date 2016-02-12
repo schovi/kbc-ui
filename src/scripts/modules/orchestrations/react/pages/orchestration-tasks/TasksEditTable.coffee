@@ -35,33 +35,14 @@ TasksEditTable = React.createClass
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
-            th style: {width: '2%'},
+            th style: {width: '6%'}, @renderHeaderActionButtons()
             th style: {width: '20%'}, 'Component'
-            th style: {width: '10%'}, 'Configuration'
+            th style: {width: '12%'}, 'Configuration'
             th style: {width: '12%'}, 'Action'
             th style: {width: '30%'}, 'Parameters'
             th style: {width: '6%'}, 'Active'
-            th style: {width: '6%'}, 'Continue on Failure'
-            th style: {width: '10%'},
-              div className: 'pull-right',
-                Tooltip
-                  placement: 'top'
-                  tooltip: 'Merge selected phases'
-                ,
-                  button
-                    disabled: !@canMergePhases()
-                    onClick: @toggleMergePhases
-                    className: 'btn btn-xs btn-default',
-                    i className: 'fa fa-fw fa-compress'
-                Tooltip
-                  placement: 'top'
-                  tooltip: 'Move selected tasks between phases'
-                ,
-                  button
-                    className: 'btn btn-xs btn-default'
-                    disabled: !@canMoveTasks()
-                    onClick: @onToggleMoveTasks
-                    i className: 'fa fa-fw fa-mail-forward'
+            th style: {width: '8%'}, 'Continue on Failure'
+            th style: {width: '4%'}
 
         tbody null,
           if @props.tasks.count()
@@ -73,6 +54,27 @@ TasksEditTable = React.createClass
                 colSpan: 7
               ,
                 'There are no tasks assigned yet. Please start by adding first task.'
+
+  renderHeaderActionButtons: ->
+    div className: 'pull-right',
+      Tooltip
+        placement: 'top'
+        tooltip: 'Merge selected phases'
+      ,
+        button
+          disabled: !@canMergePhases()
+          onClick: @toggleMergePhases
+          className: 'btn btn-xs btn-default',
+          i className: 'fa fa-fw fa-compress'
+      Tooltip
+        placement: 'top'
+        tooltip: 'Move selected tasks between phases'
+      ,
+        button
+          className: 'btn btn-xs btn-default'
+          disabled: !@canMoveTasks()
+          onClick: @onToggleMoveTasks
+          i className: 'fa fa-fw fa-mail-forward'
 
   renderPhasedTasksRows: ->
     result = List()
@@ -220,7 +222,8 @@ TasksEditTable = React.createClass
       existingIds: existingIds
 
   canMergePhases: ->
-    @props.localState.get('markedPhases', Map()).count() > 0
+    @props.localState.get('markedPhases', Map()).find (isMarked, phase) ->
+      isMarked == true
 
   toggleMergePhases: ->
     @props.updateLocalState('mergePhases', true)
@@ -266,7 +269,8 @@ TasksEditTable = React.createClass
     return true
 
   canMoveTasks: ->
-    @props.localState.getIn(['moveTasks', 'marked'], List()).count() > 0
+    @props.localState.getIn(['moveTasks', 'marked'], Map()).find (task) ->
+      task != null
 
 
   toggleMarkPhase: (phaseId, shiftKey) ->
