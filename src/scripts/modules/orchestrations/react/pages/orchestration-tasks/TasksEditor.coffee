@@ -23,19 +23,18 @@ TasksEditor = React.createClass
     localState: React.PropTypes.object.isRequired
 
   render: ->
-    div null,
-      TasksEditTable
-        tasks: @props.tasks
-        components: @props.components
-        disabled: @props.isSaving
-        onTaskDelete: @_handleTaskDelete
-        onTaskUpdate: @_handleTaskUpdate
-        updateLocalState: @props.updateLocalState
-        localState: @props.localState
-        handlePhaseMove: @_handlePhaseMove
-        handlePhaseUpdate: @_handlePhaseUpdate
-        handlePhasesSet: @_handlePhasesSet
-        handleAddTask: @_handleTaskAdd
+    TasksEditTable
+      tasks: @props.tasks
+      components: @props.components
+      disabled: @props.isSaving
+      onTaskDelete: @_handleTaskDelete
+      onTaskUpdate: @_handleTaskUpdate
+      updateLocalState: @props.updateLocalState
+      localState: @props.localState
+      handlePhaseMove: @_handlePhaseMove
+      handlePhaseUpdate: @_handlePhaseUpdate
+      handlePhasesSet: @_handlePhasesSet
+      handleAddTask: @_handleTaskAdd
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(

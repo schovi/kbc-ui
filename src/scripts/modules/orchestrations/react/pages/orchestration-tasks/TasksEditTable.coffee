@@ -35,15 +35,13 @@ TasksEditTable = React.createClass
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
-            th style: {width: '6%'}, @renderHeaderActionButtons()
-            th style: {width: '20%'}, 'Component'
-            th style: {width: '12%'}, 'Configuration'
+            th style: {width: '10%'}, @renderHeaderActionButtons()
+            th null, 'Component'
+            th null, 'Configuration'
             th style: {width: '12%'}, 'Action'
-            th style: {width: '30%'}, 'Parameters'
-            th style: {width: '6%'}, 'Active'
+            th style: {width: '8%'}, 'Active'
             th style: {width: '8%'}, 'Continue on Failure'
-            th style: {width: '6%'}
-
+            th {style: {width: '10%'}, className: 'text-center'}, 'Actions'
         tbody null,
           if @props.tasks.count()
             @renderPhasedTasksRows()
@@ -51,12 +49,12 @@ TasksEditTable = React.createClass
             tr null,
               td
                 className: 'text-muted'
-                colSpan: 7
+                colSpan: '7'
               ,
                 'There are no tasks assigned yet. Please start by adding first task.'
 
   renderHeaderActionButtons: ->
-    div className: 'pull-right',
+    div className: 'pull-left',
       Tooltip
         placement: 'top'
         tooltip: 'Merge selected phases'
@@ -109,7 +107,7 @@ TasksEditTable = React.createClass
     tr null,
       td
         className: 'text-muted'
-        colSpan: 8
+        colSpan: 7
       ,
         "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
 

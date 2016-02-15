@@ -9,7 +9,8 @@ export default React.createClass({
     task: React.PropTypes.object.isRequired,
     notify: React.PropTypes.bool,
     tooltipPlacement: React.PropTypes.string,
-    onRun: React.PropTypes.func.isRequired
+    onRun: React.PropTypes.func.isRequired,
+    buttonStyle: React.PropTypes.object.isRequired
   },
 
   getDefaultProps() {
@@ -29,7 +30,8 @@ export default React.createClass({
     return (
       <OverlayTrigger overlay={<Tooltip>Run</Tooltip>} key="run" placement={this.props.tooltipPlacement}>
         <ModalTrigger modal={this.modal()}>
-          <button className="btn btn-link" onClick={this.handleButtonClick}>
+          <button style={this.props.buttonStyle}
+            className="btn btn-link" onClick={this.handleButtonClick}>
             {this.icon()}
           </button>
         </ModalTrigger>

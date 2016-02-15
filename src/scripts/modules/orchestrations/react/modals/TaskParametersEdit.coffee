@@ -16,6 +16,9 @@ TaskParametersEdit = React.createClass
     parametersString: JSON.stringify @props.parameters, null, '\t'
     isValid: true
 
+  getDefaultProps: ->
+    isEditable: true
+
   render: ->
     Modal title: 'Task parameters edit', onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
@@ -24,18 +27,19 @@ TaskParametersEdit = React.createClass
           value: @state.parametersString
           onChange: @_handleChange
       div className: 'modal-footer',
-        ButtonToolbar null,
-          Button
-            bsStyle: 'default'
-            onClick: @props.onRequestHide
-          ,
-            'Cancel'
-          Button
-            bsStyle: 'primary'
-            disabled: !@state.isValid
-            onClick: @_handleSet
-          ,
-            'Set'
+        if @props.isEditable
+          ButtonToolbar null,
+            Button
+              bsStyle: 'default'
+              onClick: @props.onRequestHide
+            ,
+              'Cancel'
+            Button
+              bsStyle: 'primary'
+              disabled: !@state.isValid
+              onClick: @_handleSet
+            ,
+              'Set'
 
   _handleChange: (e) ->
     @setState

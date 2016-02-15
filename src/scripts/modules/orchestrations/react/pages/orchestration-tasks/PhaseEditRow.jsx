@@ -44,7 +44,7 @@ export default React.createClass({
         <td {...dragprops} >
           <i  className="fa fa-bars"/>
         </td>
-        <td colSpan="6" className="kbc-cursor-pointer">
+        <td colSpan="5" className="kbc-cursor-pointer">
           <Tooltip
             tooltip="Select phase to merge">
             <span>
@@ -69,14 +69,16 @@ export default React.createClass({
           </div>
         </td>
         <td>
-          <Tooltip tooltip="Add New Task" placement="top">
-            <button
-              className="btn btn-link"
-              style={{padding: '0'}}
-              onClick={this.toggleTaskAdd}>
-              <span className="fa fa-fw fa-plus"/>
-            </button>
-          </Tooltip>
+          <div className="pull-right">
+            <Tooltip tooltip="Add New Task" placement="top">
+              <button
+                className="btn btn-link"
+                style={{padding: '0'}}
+                onClick={this.toggleTaskAdd}>
+                <span className="fa fa-fw fa-plus"/>
+              </button>
+            </Tooltip>
+          </div>
         </td>
 
       </tr>

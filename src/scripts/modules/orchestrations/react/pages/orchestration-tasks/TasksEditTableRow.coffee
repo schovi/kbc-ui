@@ -65,12 +65,6 @@ TasksEditTableRow = React.createClass
             defaultValue: @props.task.get('action')
             disabled: @props.disabled
             onChange: @_handleActionChange
-      td className: 'kbc-cursor-pointer',
-        ModalTrigger
-          modal: TaskParametersEditModal(
-            onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
-        ,
-          Tree data: @props.task.get('actionParameters')
       td null,
         input
           type: 'checkbox'
@@ -83,27 +77,47 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td className: 'text-right kbc-no-wrap',
-        div className: '',
-          button
-            style: {padding: '2px'}
-            onClick: @_handleDelete
-            className: 'btn btn-link'
-          ,
-            Tooltip
-              placement: 'top'
-              tooltip: 'Remove task'
-              span className: 'kbc-icon-cup'
-          button
-            style: {padding: '2px'}
-            className: 'btn btn-link'
-            onClick: @props.onMoveSingleTask
-          ,
-            Tooltip
-              tooltip: 'Move task to other phase'
-              placement: 'top'
-              span className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer'
+      @_renderActionButtons()
 
+
+  _renderActionButtons: ->
+    moreStyle =
+      padding: '2px'
+      position: 'relative'
+      top: '+2px'
+    td className: 'text-right kbc-no-wrap',
+      div className: '',
+        ModalTrigger
+          modal: TaskParametersEditModal(
+            onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
+        ,
+
+          button
+            style: moreStyle
+            className: 'btn btn-link'
+          ,
+            Tooltip
+              placement: 'top'
+              tooltip: 'More'
+              span className: 'fa fa-fw fa-ellipsis-h fa-lg'
+        button
+          style: {padding: '2px'}
+          onClick: @_handleDelete
+          className: 'btn btn-link'
+        ,
+          Tooltip
+            placement: 'top'
+            tooltip: 'Remove task'
+            span className: 'kbc-icon-cup'
+        button
+          style: {padding: '2px'}
+          className: 'btn btn-link'
+          onClick: @props.onMoveSingleTask
+        ,
+          Tooltip
+            tooltip: 'Move task to other phase'
+            placement: 'top'
+            span className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer'
 
   _handleParametersChange: (parameters) ->
     @props.onTaskUpdate @props.task.set('actionParameters', Immutable.fromJS(parameters))

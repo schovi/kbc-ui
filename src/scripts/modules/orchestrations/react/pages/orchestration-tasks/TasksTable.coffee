@@ -26,18 +26,17 @@ TasksTable = React.createClass
         tr null,
           th null, 'Component'
           th null, 'Configuration'
-          th style: {width: '10%'}, 'Action'
-          th null, 'Parameters'
+          th style: {width: '12%'}, 'Action'
           th style: {width: '8%'}, 'Active'
-          th style: {width: '12%'}, 'Continue on Failure'
-          th style: {width: '8%'}, ''
+          th style: {width: '8%'}, 'Continue on Failure'
+          th {style: {width: '10%'}, className: 'text-right'}, 'Actions'
       tbody null,
         if @props.tasks.count()
           @renderPhasedTasksRows()
         else
           tr null,
             td
-              colSpan: 7
+              colSpan: '6'
               className: 'text-muted'
             ,
               'There are no tasks assigned yet.'
