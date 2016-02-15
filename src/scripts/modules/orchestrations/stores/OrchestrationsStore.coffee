@@ -20,7 +20,7 @@ _store = Map(
 )
 
 addEmptyPhase = (tasks) ->
-  phaseIds = tasks.map((phase) -> phase.get('id'))
+  phaseIds = tasks.map((phase) -> phase.get('id')).toJS()
   newId = 'new phase'
   idx = 1
   while newId in phaseIds

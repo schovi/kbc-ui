@@ -2,6 +2,7 @@ React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
+Input = React.createFactory(require('react-bootstrap').Input)
 
 {div, textarea} = React.DOM
 
@@ -22,10 +23,12 @@ TaskParametersEdit = React.createClass
   render: ->
     Modal title: 'Task parameters edit', onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
-        textarea
-          className: 'form-control'
+        Input
+          type: 'textarea'
+          #className: 'form-control'
           value: @state.parametersString
           onChange: @_handleChange
+          disabled: not @props.isEditable
       div className: 'modal-footer',
         if @props.isEditable
           ButtonToolbar null,
