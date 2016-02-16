@@ -29,6 +29,7 @@ App = React.createClass
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
+    projectTemplates: ApplicationStore.getProjectTemplates()
     xsrf: ApplicationStore.getXsrfToken()
     canCreateProject: ApplicationStore.getCanCreateProject()
     canManageApps: ApplicationStore.getKbcVars().get 'canManageApps'
@@ -49,6 +50,7 @@ App = React.createClass
               urlTemplates: @state.urlTemplates
               xsrf: @state.xsrf
               canCreateProject: @state.canCreateProject
+              projectTemplates: @state.projectTemplates
             SidebarNavigation()
             div className: 'kbc-sidebar-footer',
               CurrentUser

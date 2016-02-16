@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>Keboola Connection</title>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&subset=latin,latin-ext' rel='stylesheet'
+        type='text/css'>
 
 </head>
 <body>
@@ -11,11 +12,17 @@
 <script src="/scripts/bundle.js"></script>
 <script>
   // New zendesk widget global mock
-  var zE = function() {};
-  zE.activate = function(options) { console.log('activate', options); alert('This will open Zendesk Widget on production');};
-  zE.hide = function() {console.log('hide')};
+  var zE = function () {
+  };
+  zE.activate = function (options) {
+    console.log('activate', options);
+    alert('This will open Zendesk Widget on production');
+  };
+  zE.hide = function () {
+    console.log('hide')
+  };
 
-  (function(kbcApp) {
+  (function (kbcApp) {
     var organizations = [
       {
         "name": "Keboola Demo",
@@ -73,10 +80,10 @@
       .helpers
       .Promise
       .props({
-        components:  kbcApp.helpers
+        components: kbcApp.helpers
           .request('GET', 'https://connection.keboola.com/v2/storage')
           .promise()
-          .then(function(response) {
+          .then(function (response) {
             return response.body;
           })
         ,
@@ -84,14 +91,14 @@
           .request('GET', 'https://connection.keboola.com/v2/storage/tokens/verify')
           .set('X-StorageApi-Token', kbcApp.helpers.getUrlParameterByName('token', window.location.search))
           .promise()
-          .then(function(response) {
+          .then(function (response) {
             return response.body;
           })
       })
-      .catch(function(error) {
+      .catch(function (error) {
         alert('Error loading initial data ' + error);
       })
-      .then(function(params) {
+      .then(function (params) {
         kbcApp.start({
           "data": {
             "components": params.components.components,
@@ -110,6 +117,23 @@
               "url": "https://connection.keboola.com",
               "token": params.token
             },
+            "projectTemplates": [
+              {"id": 2, "stringId": "demo", "name": "Demo", "description": "30 days trial", "expirationDays": null},
+              {
+                "id": 1,
+                "stringId": "poc",
+                "name": "POC",
+                "description": "Proof of concept",
+                "expirationDays": 0
+              },
+              {
+                "id": 1,
+                "stringId": "production",
+                "name": "Production",
+                "description": "Production project billed monthly",
+                "expirationDays": 0
+              }
+             ],
             "notifications": {
               "unreadCount": 2
             },

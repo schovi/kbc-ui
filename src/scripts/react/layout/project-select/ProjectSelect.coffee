@@ -13,6 +13,7 @@ module.exports = React.createClass
     organizations: React.PropTypes.object.isRequired
     currentProject: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
+    projectTemplates: React.PropTypes.object.isRequired
     xsrf: React.PropTypes.string.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
 
@@ -29,6 +30,7 @@ module.exports = React.createClass
         organizations: @props.organizations
         currentProjectId: @props.currentProject.get('id')
         urlTemplates: @props.urlTemplates
+        projectTemplates: @props.projectTemplates
         xsrf: @props.xsrf
         canCreateProject: @props.canCreateProject
         focus: @state.open

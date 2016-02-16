@@ -35,6 +35,9 @@ ApplicationStore = StoreUtils.createStore
       unreadCount: _store.getIn ['notifications', 'unreadCount']
       isEnabled: true
 
+  getProjectTemplates: ->
+    _store.get 'projectTemplates'
+
   getLimits: ->
     composeLimits @getSapiToken().getIn(['owner', 'limits']), @getSapiToken().getIn(['owner', 'metrics'])
 
@@ -99,5 +102,6 @@ Dispatcher.register (payload) ->
           .set 'maintainers', Immutable.fromJS(action.applicationData.maintainers)
           .set 'tokenStats', Immutable.fromJS(action.applicationData.tokenStats)
           .set 'notifications', Immutable.fromJS(action.applicationData.notifications)
+          .set 'projectTemplates', Immutable.fromJS(action.applicationData.projectTemplates)
 
 module.exports = ApplicationStore

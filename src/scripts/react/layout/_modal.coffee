@@ -12,6 +12,7 @@ module.exports = React.createClass
     xsrf: React.PropTypes.string.isRequired
     organizations: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
+    projectTemplates: React.PropTypes.object.isRequired
 
   getInitialState: ->
     name: ''
@@ -61,7 +62,7 @@ module.exports = React.createClass
 
       div className: 'modal-footer',
         ButtonToolbar null,
-          Button onClick: @props.onRequestHide,
+          Button onClick: @props.onRequestHide, bsStyle: 'link',
             'Cancel'
           Button
             bsStyle: 'primary'
