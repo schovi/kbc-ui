@@ -70,7 +70,7 @@ export default React.createClass({
         </td>
         <td>
           <div className="pull-right">
-            <Tooltip tooltip="Add New Task" placement="top">
+            <Tooltip tooltip={`Add New Task to ${this.props.phase.get('id')}`} placement="top">
               <button
                 className="btn btn-link"
                 style={{padding: '0'}}

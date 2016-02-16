@@ -6,7 +6,7 @@ PhaseModal = require('../../modals/Phase').default
 MergePhasesModal = require('../../modals/MergePhasesModal').default
 MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
-{small, a, ul, li, i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
+{p, small, a, ul, li, i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 AddTaskModal = require('../../modals/add-task/AddTaskModal')
 EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 DropdownButton = React.createFactory(require('react-bootstrap').DropdownButton)
@@ -129,7 +129,8 @@ TasksEditTable = React.createClass
         colSpan: 7
       ,
         React.createElement EmptyState, null,
-          "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
+          p null, "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
+
           div null,
             button
               className: 'btn btn-primary btn-sm'
