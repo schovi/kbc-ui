@@ -8,7 +8,7 @@ OrchestrationTaskRunButton = React.createFactory(require('../../components/Orche
 
 {Tree, Check} = require 'kbc-react-components'
 
-{div, tr, td, span, button, i} = React.DOM
+{small, div, tr, td, span, button, i} = React.DOM
 
 moreStyle =
   padding: '2px'
@@ -25,6 +25,7 @@ module.exports = React.createClass
     component: React.PropTypes.object
 
   render: ->
+    console.log @props.task.toJS()
     tr null,
       td null,
         span className: 'kbc-component-icon',
@@ -44,6 +45,8 @@ module.exports = React.createClass
             configId: @props.task.getIn ['config', 'id']
           ,
             @props.task.getIn ['config', 'name']
+            div className: 'help-block',
+              small null, @props.task.getIn ['config', 'description']
         else
           'N/A'
       td null,

@@ -13,7 +13,7 @@ Tree = React.createFactory(require('kbc-react-components').Tree)
 Check = React.createFactory(common.Check)
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 
-{button, tr, td, span, div, i, input} = React.DOM
+{small, button, tr, td, span, div, i, input} = React.DOM
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
@@ -55,6 +55,9 @@ TasksEditTableRow = React.createClass
             configId: @props.task.getIn ['config', 'id']
           ,
             @props.task.getIn ['config', 'name']
+            div className: 'help-block',
+              small null, @props.task.getIn ['config', 'description']
+
         else
           'N/A'
       td null,
