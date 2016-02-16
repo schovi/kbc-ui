@@ -81,9 +81,9 @@ TasksEditTable = React.createClass
 
   onToggleCollapsePhases: ->
     phases = @props.localState.get('phases', Map())
-    allHidden = false
+    allHidden = true
     allHidden = phases.reduce((allHidden, p) ->
-      return allHidden or p.get('isHidden', false)
+      return allHidden and p.get('isHidden', false)
     , allHidden)
     phases = @props.tasks.map((p) ->
       phaseId = p.get('id')
