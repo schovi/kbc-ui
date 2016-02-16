@@ -8,6 +8,8 @@ MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 {i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 AddTaskModal = require('../../modals/add-task/AddTaskModal')
+EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
+
 
 TasksEditTable = React.createClass
   displayName: 'TasksEditTable'
@@ -109,7 +111,15 @@ TasksEditTable = React.createClass
         className: 'text-muted'
         colSpan: 7
       ,
-        "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
+        React.createElement EmptyState, null,
+          "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
+          div null,
+            button
+              className: 'btn btn-primary btn-sm'
+              onClick: =>
+                @props.updateLocalState(['newTask', 'phaseId'], phaseId)
+            ,
+              'Add task'
 
   _renderAddTaskModal: ->
     React.createElement AddTaskModal,
