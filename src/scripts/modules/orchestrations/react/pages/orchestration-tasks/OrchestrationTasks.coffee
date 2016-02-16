@@ -37,11 +37,12 @@ OrchestrationTasks = React.createClass
       tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
     else
       tasks = OrchestrationStore.getOrchestrationTasks(orchestrationId)
+    tasksWithConfig = mergeTasksWithConfigurations(tasks, InstalledComponentsStore.getAll())
     return {
       localState: localState or Immutable.Map()
       orchestrationId: orchestrationId
       orchestration: OrchestrationStore.get orchestrationId
-      tasks: mergeTasksWithConfigurations(tasks, InstalledComponentsStore.getAll())
+      tasks: tasksWithConfig
       components: ComponentsStore.getAll()
       filter: OrchestrationStore.getFilter()
       isEditing: isEditing
