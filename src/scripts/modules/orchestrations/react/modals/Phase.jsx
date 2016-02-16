@@ -30,16 +30,15 @@ export default React.createClass({
 
   render() {
     const value = this.state.value === null ? this.props.phaseId : this.state.value;
-    let helpBlock = null;
-    let formDivClass = 'form-group';
 
+    let formDivClass = 'form-group';
+    let helpText = 'Phase name is a unique string and helps to describe the phase. Typical name could be extract, transform, load etc.';
     if (this.alreadyExist()) {
       formDivClass = 'form-group has-error';
-      helpBlock = (
-        <span className="help-block">
-          Phase with name {value} already exists.
-        </span>);
+      helpText = `Phase with name ${value} already exists.`;
     }
+    const helpBlock = (<span className="help-block">{helpText}</span>);
+
     return (
       <Modal
         show={this.props.show}
@@ -48,10 +47,7 @@ export default React.createClass({
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>
-              <label htmlFor="title" className="col-sm-3 control-label">
-                New Title:
-              </label>
-              <div className="col-sm-9">
+              <div className="col-sm-12">
                 <input
                   id="title"
                   type="text"
