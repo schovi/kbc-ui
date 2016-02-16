@@ -429,7 +429,7 @@ module.exports =
   runOrchestration: (id, tasks, notify = false) ->
     data = {}
     if tasks
-      data = {tasks: tasks}
+      data = {tasks: dephaseTasks(tasks)}
 
     orchestrationsApi
     .runOrchestration(

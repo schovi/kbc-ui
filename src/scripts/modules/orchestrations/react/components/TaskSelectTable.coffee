@@ -2,7 +2,7 @@ React = require 'react'
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 ComponentsStore = require '../../../components/stores/ComponentsStore'
 TaskSelectTableRow = React.createFactory(require './TaskSelectTableRow')
-
+{List} = require 'immutable'
 
 {span} = React.DOM
 {input} = React.DOM
@@ -19,7 +19,9 @@ module.exports = React.createClass
     components: ComponentsStore.getAll()
 
   render: ->
-    tasks = @props.tasks
+    tasks = List()
+    @props.tasks.forEach (phase) ->
+      tasks = tasks.concat(phase.get('tasks'))
     table className: 'table table-stripped kbc-table-layout-fixed',
       thead null,
         tr null,

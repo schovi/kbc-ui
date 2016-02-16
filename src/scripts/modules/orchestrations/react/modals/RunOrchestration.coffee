@@ -59,8 +59,15 @@ module.exports = React.createClass
   _handleTaskUpdate: (updatedTask) ->
     tasks = @props.tasks
     index = tasks.findIndex((task) -> task.get('id') == updatedTask.get('id'))
+    tasks = tasks.map (phase) ->
+      newTasks = phase.get('tasks').map (t) ->
+        if t.get('id') == updatedTask.get('id')
+          return updatedTask
+        else
+          return t
+      return phase.set('tasks', newTasks)
 
     OrchestrationActionCreators.updateOrchestrationRunTasksEdit(
       @props.orchestration.get('id')
-      tasks.set(index, tasks.get(index).set('active', updatedTask.get('active')))
+      tasks
     )

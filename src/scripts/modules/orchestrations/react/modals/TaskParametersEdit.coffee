@@ -22,7 +22,7 @@ TaskParametersEdit = React.createClass
     isEditable: true
 
   render: ->
-    Modal title: 'Task parameters edit', onRequestHide: @props.onRequestHide,
+    Modal title: 'Task parameters', onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
         Textarea
           className: 'form-control'
