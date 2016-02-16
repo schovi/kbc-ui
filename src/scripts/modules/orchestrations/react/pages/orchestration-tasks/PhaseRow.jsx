@@ -11,9 +11,9 @@ export default React.createClass({
       <tr onClick={this.props.toggleHide}>
         <td colSpan="6" className="kbc-cursor-pointer">
           <div>
-            <span className="label label-default kbc-label-rounded">
+            <strong>
               {this.props.phase.get('id')}
-            </span>
+            </strong>
           </div>
         </td>
       </tr>

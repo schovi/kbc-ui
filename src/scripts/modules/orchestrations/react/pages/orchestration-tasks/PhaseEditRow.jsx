@@ -55,15 +55,15 @@ export default React.createClass({
         <td colSpan="5" className="kbc-cursor-pointer">
 
           <div className="text-center form-group form-group-sm">
-            <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
+            <strong>
               <span>{this.props.phase.get('id')} </span>
-              <Tooltip
-                tooltip="rename phase">
-                <span
-                  onClick={this.toggleTitleChange}
-                  className="kbc-icon-pencil"/>
-              </Tooltip>
-            </span>
+            </strong>
+            <Tooltip
+              tooltip="rename phase">
+              <span
+                onClick={this.toggleTitleChange}
+                className="kbc-icon-pencil"/>
+            </Tooltip>
           </div>
         </td>
         <td>
