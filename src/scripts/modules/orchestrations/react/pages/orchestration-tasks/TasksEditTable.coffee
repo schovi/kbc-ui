@@ -65,18 +65,38 @@ TasksEditTable = React.createClass
         title: span null, 'Actions'
         navItem: true
       ,
+        li className: (if @canMergePhases() then '' else 'disabled'),
+          a
+            onClick: if @canMergePhases() then @toggleMergePhases else ->
+            small null,
+              ' Merge selected phases'
+        li className: (if @canMoveTasks() then '' else 'disabled'),
+          a
+            onClick: if @canMoveTasks() then @onToggleMoveTasks else ->
+            small null,
+              ' Move selected tasks between phases'
         li null,
           a
-            disabled: !@canMergePhases()
-            onClick: @toggleMergePhases
-            i className: 'fa fa-fw fa-compress',
-            small null, ' Merge selected phases'
-        li null,
-          a
-            disabled: !@canMoveTasks()
-            onClick: @onToggleMoveTasks
-            i className: 'fa fa-fw fa-mail-forward',
-            small null, ' Move selected tasks between phases'
+            onClick: @onToggleCollapsePhases
+            small null, ' Collapse/Expand phases'
+
+  onToggleCollapsePhases: ->
+    phases = @props.localState.get('phases', Map())
+    allHidden = false
+    allHidden = phases.reduce((allHidden, p) ->
+      return allHidden or p.get('isHidden', false)
+    , allHidden)
+    phases = @props.tasks.map((p) ->
+      phaseId = p.get('id')
+      return Map({phaseId: phaseId, isHidden: not allHidden})
+      ).toMap().mapKeys((key, phase) ->
+      phase.get('phaseId')
+    )
+    @props.updateLocalState('phases', phases)
+
+
+    # ['phases', phase.get('id'), 'isHidden'], false
+
 
   renderPhasedTasksRows: ->
     result = List()
@@ -90,7 +110,7 @@ TasksEditTable = React.createClass
           key: taskId
           onTaskDelete: @props.onTaskDelete
           onTaskUpdate: @props.onTaskUpdate
-          isDraggingPhase: @props.localState.getIn [phase.get('id'), 'isDragging']
+          isDraggingPhase: @props.localState.getIn ['phases', phase.get('id'), 'isDragging']
           isMarked: @props.localState.getIn(['moveTasks', 'marked', taskId], false)
           toggleMarkTask: =>
             @_toggleMarkTask(task)
@@ -206,7 +226,7 @@ TasksEditTable = React.createClass
       onPhaseMove: @onPhaseMove
       phase: phase
       toggleHide: =>
-        @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
+        @props.updateLocalState(['phases', phaseId, 'isHidden'], not isHidden)
       togglePhaseIdChange: @togglePhaseIdEdit
       isMarked: @props.localState.getIn(['markedPhases', phaseId], false)
       onMarkPhase: @toggleMarkPhase
@@ -313,7 +333,7 @@ TasksEditTable = React.createClass
     val != null and val != undefined
 
   isPhaseHidden: (phase) ->
-    @props.localState.getIn [phase.get('id'), 'isHidden'], false
+    @props.localState.getIn ['phases', phase.get('id'), 'isHidden'], false
 
   onPhaseMove: (afterPhaseId, phaseId) ->
     @props.handlePhaseMove(phaseId, afterPhaseId)

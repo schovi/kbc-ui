@@ -66,9 +66,9 @@ TasksTable = React.createClass
       key: phaseId
       phase: phase
       toggleHide: =>
-        @props.updateLocalState([phaseId, 'isHidden'], not isHidden)
+        @props.updateLocalState(['phases', phaseId, 'isHidden'], not isHidden)
 
   isPhaseHidden: (phase) ->
-    @props.localState.getIn [phase.get('id'), 'isHidden'], false
+    @props.localState.getIn ['phases', phase.get('id'), 'isHidden'], false
 
 module.exports = TasksTable
