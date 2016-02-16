@@ -10,7 +10,7 @@ Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').def
 AddTaskModal = require('../../modals/add-task/AddTaskModal')
 EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 DropdownButton = React.createFactory(require('react-bootstrap').DropdownButton)
-
+AboutPhases = require('../../components/AboutPhases').default
 
 TasksEditTable = React.createClass
   displayName: 'TasksEditTable'
@@ -129,8 +129,8 @@ TasksEditTable = React.createClass
         colSpan: 7
       ,
         React.createElement EmptyState, null,
-          p null, "No tasks assigned to #{phaseId} yet. Empty phases will not be saved."
-
+          span null, "No tasks assigned to #{phaseId} yet. Empty phases will not be saved. "
+          React.createElement AboutPhases, null
           div null,
             button
               className: 'btn btn-primary btn-sm'
