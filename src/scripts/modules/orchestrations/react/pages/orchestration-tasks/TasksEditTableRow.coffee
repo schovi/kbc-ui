@@ -26,7 +26,6 @@ TasksEditTableRow = React.createClass
     toggleMarkTask: React.PropTypes.func.isRequired
     isDraggingPhase: React.PropTypes.bool.isRequired
     isMarked: React.PropTypes.bool.isRequired
-    onMoveSingleTask: React.PropTypes.func.isRequired
     onAddNewTask: React.PropTypes.func.isRequired
 
   render: ->
@@ -112,15 +111,6 @@ TasksEditTableRow = React.createClass
             placement: 'top'
             tooltip: 'Remove task'
             span className: 'kbc-icon-cup'
-        button
-          style: {padding: '2px'}
-          className: 'btn btn-link'
-          onClick: @props.onMoveSingleTask
-        ,
-          Tooltip
-            tooltip: 'Move task to other phase'
-            placement: 'top'
-            span className: 'fa fa-fw fa-mail-forward kbc-cursor-pointer'
 
   _handleParametersChange: (parameters) ->
     @props.onTaskUpdate @props.task.set('actionParameters', Immutable.fromJS(parameters))

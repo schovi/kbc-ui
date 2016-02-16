@@ -33,7 +33,6 @@ TasksEditTable = React.createClass
       @_renderPhaseModal()
       @_renderMergePhaseModal()
       @_renderMoveTasksModal()
-      @_renderSingleMoveTaskModal()
       @_renderAddTaskModal()
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
@@ -94,10 +93,6 @@ TasksEditTable = React.createClass
     )
     @props.updateLocalState('phases', phases)
 
-
-    # ['phases', phase.get('id'), 'isHidden'], false
-
-
   renderPhasedTasksRows: ->
     result = List()
     @props.tasks.map((phase) =>
@@ -150,28 +145,6 @@ TasksEditTable = React.createClass
       show: !!@props.localState.getIn ['newTask', 'phaseId']
       onHide: =>
         @props.updateLocalState ['newTask'], Map()
-
-
-  _toggleMoveSingleTask: (task, ignoredPhaseId) ->
-    toggleMap = Map({
-      ignorePhase: ignoredPhaseId
-      show: true
-      task: task })
-    @props.updateLocalState(['moveSingleTask'], toggleMap)
-
-  _renderSingleMoveTaskModal: ->
-    React.createElement MoveTasksModal,
-      title: 'Move task to phase'
-      ignorePhaseId: @props.localState.getIn(['moveSingleTask', 'ignorePhase'], null)
-      show: @props.localState.getIn(['moveSingleTask', 'show'], false)
-      phases: @props.tasks.map((phase) -> phase.get('id'))
-      onHide: =>
-        @props.updateLocalState(['moveSingleTask', 'show'], false)
-      onMoveTasks: (phaseId) =>
-        task = @props.localState.getIn(['moveSingleTask', 'task'])
-        tasks = Map().set(task.get('id'), task)
-        @_moveTasks(phaseId, tasks)
-        @props.updateLocalState('moveSingleTask', Map())
 
 
   _renderMoveTasksModal: ->

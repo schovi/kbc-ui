@@ -42,14 +42,16 @@ export default React.createClass({
       <tr style={style}
         onClick={this.onRowClick}>
         <td {...dragprops} >
-          <span className="col-xs-12">
-            <span className="col-xs-3">
-              {this.renderSelectPhaseCheckbox()}
+          <div className="form-group form-group-sm">
+            <span className="col-xs-12 ">
+              <span className="col-xs-3">
+                {this.renderSelectPhaseCheckbox()}
+              </span>
+              <span className="col-xs-9">
+                <i  className="fa fa-bars pull-right"/>
+              </span>
             </span>
-            <span className="col-xs-9">
-              <i  className="fa fa-bars pull-right"/>
-            </span>
-          </span>
+          </div>
 
         </td>
         <td colSpan="5" className="kbc-cursor-pointer">
@@ -85,16 +87,17 @@ export default React.createClass({
 
   renderSelectPhaseCheckbox() {
     return (
-      <span className="checkbox">
+
+      <div className="checkbox">
         <Tooltip
           tooltip="Select phase to merge">
-          <input
-            checked={this.props.isMarked}
-            type="checkbox"
-            onClick={this.toggleMarkPhase}
-          />
+            <input
+              checked={this.props.isMarked}
+              type="checkbox"
+              onClick={this.toggleMarkPhase}
+            />
         </Tooltip>
-      </span>
+      </div>
     );
   },
 
