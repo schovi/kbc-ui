@@ -101,7 +101,7 @@ TasksEditTableRow = React.createClass
           ,
             Tooltip
               placement: 'top'
-              tooltip: 'More'
+              tooltip: 'Task parameters'
               span className: 'fa fa-fw fa-ellipsis-h fa-lg'
         button
           style: {padding: '2px'}
