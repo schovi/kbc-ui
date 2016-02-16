@@ -29,7 +29,7 @@ TasksTable = React.createClass
           th style: {width: '12%'}, 'Action'
           th style: {width: '8%'}, 'Active'
           th style: {width: '8%'}, 'Continue on Failure'
-          th {style: {width: '10%'}, className: 'text-right'}, 'Actions'
+          th style: {width: '10%'}
       tbody null,
         if @props.tasks.count()
           @renderPhasedTasksRows()

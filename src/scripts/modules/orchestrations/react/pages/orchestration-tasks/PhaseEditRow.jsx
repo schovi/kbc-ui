@@ -36,25 +36,23 @@ export default React.createClass({
       opacity: isDragging ? 0.5 : 1
 
     };
-    const tdcn = 'kb-orchestrator-task-drag text-center';
+    const tdcn = 'kb-orchestrator-task-drag';
     const dragprops = _.extend({style: {cursor: 'move'}, className: tdcn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
     return (
       <tr style={style}
         onClick={this.onRowClick}>
         <td {...dragprops} >
-          <i  className="fa fa-bars"/>
+          <span className="col-xs-12">
+            <span className="col-xs-3">
+              {this.renderSelectPhaseCheckbox()}
+            </span>
+            <span className="col-xs-9">
+              <i  className="fa fa-bars pull-right"/>
+            </span>
+          </span>
+
         </td>
         <td colSpan="5" className="kbc-cursor-pointer">
-          <Tooltip
-            tooltip="Select phase to merge">
-            <span>
-              <input
-                checked={this.props.isMarked}
-                type="checkbox"
-                onClick={this.toggleMarkPhase}
-              />
-            </span>
-          </Tooltip>
 
           <div className="text-center form-group form-group-sm">
             <span className="label label-default kbc-label-rounded kbc-cursor-pointer">
@@ -82,6 +80,21 @@ export default React.createClass({
         </td>
 
       </tr>
+    );
+  },
+
+  renderSelectPhaseCheckbox() {
+    return (
+      <span className="checkbox">
+        <Tooltip
+          tooltip="Select phase to merge">
+          <input
+            checked={this.props.isMarked}
+            type="checkbox"
+            onClick={this.toggleMarkPhase}
+          />
+        </Tooltip>
+      </span>
     );
   },
 

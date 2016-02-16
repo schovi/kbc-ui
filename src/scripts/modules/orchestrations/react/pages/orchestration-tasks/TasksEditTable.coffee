@@ -6,9 +6,10 @@ PhaseModal = require('../../modals/Phase').default
 MergePhasesModal = require('../../modals/MergePhasesModal').default
 MoveTasksModal = require('../.././modals/MoveTasksModal').default
 Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
-{i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
+{small, a, ul, li, i, div, span, strong, table, button, thead, tbody, th, td, tr} = React.DOM
 AddTaskModal = require('../../modals/add-task/AddTaskModal')
 EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
+DropdownButton = React.createFactory(require('react-bootstrap').DropdownButton)
 
 
 TasksEditTable = React.createClass
@@ -37,13 +38,13 @@ TasksEditTable = React.createClass
       table className: 'table table-stripped kbc-table-layout-fixed',
         thead null,
           tr null,
-            th style: {width: '10%'}, @renderHeaderActionButtons()
+            th style: {width: '12%'}, @renderHeaderActionButtons()
             th null, 'Component'
             th null, 'Configuration'
             th style: {width: '12%'}, 'Action'
             th style: {width: '8%'}, 'Active'
             th style: {width: '8%'}, 'Continue on Failure'
-            th {style: {width: '10%'}, className: 'text-center'}, 'Actions'
+            th style: {width: '10%'},
         tbody null,
           if @props.tasks.count()
             @renderPhasedTasksRows()
@@ -56,25 +57,26 @@ TasksEditTable = React.createClass
                 'There are no tasks assigned yet. Please start by adding first task.'
 
   renderHeaderActionButtons: ->
-    div className: 'pull-left',
-      Tooltip
-        placement: 'top'
-        tooltip: 'Merge selected phases'
+    ul className: 'nav nav-stacked',
+      DropdownButton
+        bsSize: 'small'
+        bsStyle: 'small'
+        style: {padding: '0'}
+        title: span null, 'Actions'
+        navItem: true
       ,
-        button
-          disabled: !@canMergePhases()
-          onClick: @toggleMergePhases
-          className: 'btn btn-xs btn-default',
-          i className: 'fa fa-fw fa-compress'
-      Tooltip
-        placement: 'top'
-        tooltip: 'Move selected tasks between phases'
-      ,
-        button
-          className: 'btn btn-xs btn-default'
-          disabled: !@canMoveTasks()
-          onClick: @onToggleMoveTasks
-          i className: 'fa fa-fw fa-mail-forward'
+        li null,
+          a
+            disabled: !@canMergePhases()
+            onClick: @toggleMergePhases
+            i className: 'fa fa-fw fa-compress',
+            small null, ' Merge selected phases'
+        li null,
+          a
+            disabled: !@canMoveTasks()
+            onClick: @onToggleMoveTasks
+            i className: 'fa fa-fw fa-mail-forward',
+            small null, ' Move selected tasks between phases'
 
   renderPhasedTasksRows: ->
     result = List()
