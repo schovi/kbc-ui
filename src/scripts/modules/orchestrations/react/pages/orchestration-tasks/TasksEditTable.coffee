@@ -98,7 +98,7 @@ TasksEditTable = React.createClass
     idx = 0
     @props.tasks.map((phase) =>
       idx++
-      color = if idx % 2 > 0 then '#fff' else '#f9f9f9'
+      color = if idx % 2 > 0 then '#fff' else '#f9f9f9' #'rgb(227, 248, 255)'
       tasksRows = phase.get('tasks').map((task) =>
         taskId = task.get('id')
         TasksEditTableRow
@@ -249,8 +249,7 @@ TasksEditTable = React.createClass
   _mergePhases: (destinationPhaseId) ->
     markedPhases = @props.localState.get('markedPhases')
     mergedTasks = List()
-    # filter only those not selected and not choosed to merge to and
-    # concat their tasks
+    # find the best suitable position for new phase
     markedPhasesIndexes = markedPhases.filter((isMarked, pid) -> isMarked == true)
       .map((_, phaseId) =>
         idx = @props.tasks.findIndex((phase) -> phase.get('id') == phaseId)
@@ -258,7 +257,8 @@ TasksEditTable = React.createClass
       )
     newPhasePosition = markedPhasesIndexes.min()
 
-
+    # filter only those not selected and not choosed to merge to and
+    # concat their tasks
     newPhases = @props.tasks.filter( (phase) ->
       pid = phase.get('id')
       isMarked = markedPhases.get(pid)

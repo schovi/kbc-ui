@@ -46,7 +46,7 @@ TasksTable = React.createClass
     idx = 0
     @props.tasks.map((phase) =>
       idx++
-      color = if idx % 2 > 0 then '#fff' else '#f9f9f9'
+      color = if idx % 2 > 0 then '#fff' else '#f9f9f9' #'rgb(227, 248, 255)'
       tasksRows = phase.get('tasks').map((task) =>
         TasksTableRow
           color: color

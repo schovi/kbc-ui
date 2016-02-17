@@ -7,7 +7,7 @@ TaskSelectTableRow = React.createFactory(require './TaskSelectTableRow')
 {span} = React.DOM
 {input} = React.DOM
 {table, thead, tbody} = React.DOM
-{th, td, tr} = React.DOM
+{strong, th, td, tr} = React.DOM
 
 module.exports = React.createClass
   displayName: 'TaskSelectTable'
@@ -20,8 +20,16 @@ module.exports = React.createClass
 
   render: ->
     tasks = List()
-    @props.tasks.forEach (phase) ->
-      tasks = tasks.concat(phase.get('tasks'))
+    @props.tasks.forEach (phase) =>
+      tasks = tasks.push(@renderPhaseRow(phase.get('id')))
+      tasksRows = phase.get('tasks').map((task) =>
+        TaskSelectTableRow
+          task: task
+          component: @state.components.get(task.get('component'))
+          onTaskUpdate: @props.onTaskUpdate
+      , @)
+      tasks = tasks.concat(tasksRows)
+
     table className: 'table table-stripped kbc-table-layout-fixed',
       thead null,
         tr null,
@@ -31,12 +39,7 @@ module.exports = React.createClass
           th style: {width: '8%'}, 'Active'
       tbody null,
         if tasks.count()
-          tasks.map((task) ->
-            TaskSelectTableRow
-              task: task
-              component: @state.components.get(task.get('component'))
-              onTaskUpdate: @props.onTaskUpdate
-          , @).toArray()
+          tasks.toArray()
         else
           tr null,
             td
@@ -44,3 +47,8 @@ module.exports = React.createClass
               className: 'text-muted'
             ,
               'There are no tasks assigned yet.'
+
+  renderPhaseRow: (phaseId) ->
+    tr null,
+      td colSpan: 4,
+        strong null, phaseId
