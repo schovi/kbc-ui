@@ -3,12 +3,15 @@ import React, {PropTypes} from 'react';
 export default React.createClass({
   propTypes: {
     phase: PropTypes.object.isRequired,
-    toggleHide: PropTypes.func.isRequired
+    toggleHide: PropTypes.func.isRequired,
+    color: PropTypes.string
   },
 
   render() {
     return (
-      <tr onClick={this.props.toggleHide}>
+      <tr
+        style={{'background-color': this.props.color}}
+        onClick={this.props.toggleHide}>
         <td colSpan="6" className="kbc-cursor-pointer">
           <div>
             <strong>

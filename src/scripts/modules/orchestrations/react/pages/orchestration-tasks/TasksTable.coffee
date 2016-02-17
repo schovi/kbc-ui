@@ -43,26 +43,31 @@ TasksTable = React.createClass
 
   renderPhasedTasksRows: ->
     result = List()
+    idx = 0
     @props.tasks.map((phase) =>
+      idx++
+      color = if idx % 2 > 0 then '#fff' else '#f9f9f9'
       tasksRows = phase.get('tasks').map((task) =>
         TasksTableRow
+          color: color
           task: task
           orchestration: @props.orchestration
           component: @props.components.get(task.get('component'))
           key: task.get('id')
           onRun: @_handleTaskRun
       )
-      phaseRow = @renderPhaseRow(phase)
+      phaseRow = @renderPhaseRow(phase, color)
       result = result.push(phaseRow)
       if not @isPhaseHidden(phase)
         result = result.concat(tasksRows)
     )
     return result.toArray()
 
-  renderPhaseRow: (phase) ->
+  renderPhaseRow: (phase, color) ->
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
     PhaseRow
+      color: color
       key: phaseId
       phase: phase
       toggleHide: =>

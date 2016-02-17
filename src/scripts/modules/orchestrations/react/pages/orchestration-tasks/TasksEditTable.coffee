@@ -95,11 +95,15 @@ TasksEditTable = React.createClass
 
   renderPhasedTasksRows: ->
     result = List()
+    idx = 0
     @props.tasks.map((phase) =>
+      idx++
+      color = if idx % 2 > 0 then '#fff' else '#f9f9f9'
       tasksRows = phase.get('tasks').map((task) =>
         taskId = task.get('id')
         TasksEditTableRow
           task: task
+          color: color
           component: @props.components.get(task.get('component'))
           disabled: @props.disabled
           key: taskId
@@ -112,18 +116,18 @@ TasksEditTable = React.createClass
           onMoveSingleTask: =>
             @_toggleMoveSingleTask(task, phase.get('id'))
       )
-      phaseRow = @renderPhaseRow(phase)
+      phaseRow = @renderPhaseRow(phase, color)
       result = result.push(phaseRow)
       if not @isPhaseHidden(phase)
         if tasksRows.count() > 0
           result = result.concat(tasksRows)
         else
-          result = result.concat(@_renderEmptyTasksRow(phase.get('id')))
+          result = result.concat(@_renderEmptyTasksRow(phase.get('id'), color))
     )
     return result.toArray()
 
-  _renderEmptyTasksRow: (phaseId) ->
-    tr null,
+  _renderEmptyTasksRow: (phaseId, color) ->
+    tr {style: {'background-color': color}},
       td
         className: 'text-muted'
         colSpan: 7
@@ -192,13 +196,14 @@ TasksEditTable = React.createClass
       task = null
     @props.updateLocalState(path, task)
 
-  renderPhaseRow: (phase) ->
+  renderPhaseRow: (phase, color) ->
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
     return PhaseEditRow
       key: phaseId
       onPhaseMove: @onPhaseMove
       phase: phase
+      color: color
       toggleHide: =>
         @props.updateLocalState(['phases', phaseId, 'isHidden'], not isHidden)
       togglePhaseIdChange: @togglePhaseIdEdit

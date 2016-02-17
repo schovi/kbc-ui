@@ -23,10 +23,10 @@ module.exports = React.createClass
     onRun: React.PropTypes.func.isRequired
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
+    color: React.PropTypes.string
 
   render: ->
-    console.log @props.task.toJS()
-    tr null,
+    tr {style: {'background-color': @props.color}},
       td null,
         span className: 'kbc-component-icon',
           if @props.component

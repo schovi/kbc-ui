@@ -12,7 +12,8 @@ export default React.createClass({
     onMarkPhase: PropTypes.func.isRequired,
     togglePhaseIdChange: PropTypes.bool.isRequired,
     isMarked: PropTypes.bool.isRequired,
-    toggleAddNewTask: PropTypes.func.isRequired
+    toggleAddNewTask: PropTypes.func.isRequired,
+    color: PropTypes.string
   },
 
   statics: {
@@ -33,8 +34,8 @@ export default React.createClass({
   render() {
     const isDragging = this.getDragState('phase').isDragging;
     const style = {
-      opacity: isDragging ? 0.5 : 1
-
+      opacity: isDragging ? 0.5 : 1,
+      'background-color': this.props.color
     };
     const tdcn = 'dkb-orchestrator-task-drag';
     const dragprops = _.extend({style: {cursor: 'move'}, className: tdcn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
