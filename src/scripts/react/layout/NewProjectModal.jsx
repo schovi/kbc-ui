@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Modal, Input, ButtonToolbar, Button} from 'react-bootstrap';
+import ApplicationStore from '../../stores/ApplicationStore';
 
 export default React.createClass({
   propTypes: {
@@ -15,7 +16,8 @@ export default React.createClass({
     return {
       name: '',
       type: 'demo',
-      isSaving: false
+      isSaving: false,
+      showPlans: ApplicationStore.hasCurrentAdminFeature('kbc-project-templates')
     };
   },
 
@@ -58,21 +60,7 @@ export default React.createClass({
               name="xsrf"
               value={this.props.xsrf}
               />
-            <div>
-              <div className="form-group">
-                <label className="control-label col-sm-4">
-                  Type
-                </label>
-                <div className="col-sm-6">
-                  <p className="form-control-static">
-                    <span className="help-block">
-                      Project can be upgraded anytime later.
-                    </span>
-                  </p>
-                </div>
-              </div>
-              {this.types()}
-            </div>
+            {this.typesGroup()}
             </form>
         </Modal.Body>
         <Modal.Footer>
@@ -97,6 +85,30 @@ export default React.createClass({
         </option>
       );
     }).toArray();
+  },
+
+  typesGroup() {
+    if (!this.state.showPlans) {
+      return null;
+    }
+
+    return (
+      <div>
+        <div className="form-group">
+          <label className="control-label col-sm-4">
+            Type
+          </label>
+          <div className="col-sm-6">
+            <p className="form-control-static">
+                    <span className="help-block">
+                      Project can be upgraded anytime later.
+                    </span>
+            </p>
+          </div>
+        </div>
+        {this.types()}
+      </div>
+    );
   },
 
   types() {
