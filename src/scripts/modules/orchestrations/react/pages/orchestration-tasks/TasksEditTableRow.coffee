@@ -30,7 +30,7 @@ TasksEditTableRow = React.createClass
 
   render: ->
     tr null,
-      td className: 'kb-orchestrator-task-drag text-center',
+      td className: 'kb-orchestrator-task-drasg',
         input
           type: 'checkbox'
           checked: @props.isMarked
