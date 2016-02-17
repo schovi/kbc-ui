@@ -251,6 +251,14 @@ TasksEditTable = React.createClass
     mergedTasks = List()
     # filter only those not selected and not choosed to merge to and
     # concat their tasks
+    markedPhasesIndexes = markedPhases.filter((isMarked, pid) -> isMarked == true)
+      .map((_, phaseId) =>
+        idx = @props.tasks.findIndex((phase) -> phase.get('id') == phaseId)
+        return idx
+      )
+    newPhasePosition = markedPhasesIndexes.min()
+
+
     newPhases = @props.tasks.filter( (phase) ->
       pid = phase.get('id')
       isMarked = markedPhases.get(pid)
@@ -270,7 +278,7 @@ TasksEditTable = React.createClass
     #if not merging into existing phase then push new phase to the end
     if not found
       newPhase = Map({id: destinationPhaseId}).set('tasks', mergedTasks)
-      newPhases = newPhases.push(newPhase)
+      newPhases = newPhases.splice(newPhasePosition, 0, newPhase)
     # save to the store
     @props.handlePhasesSet(newPhases)
     # reset marked phases state
