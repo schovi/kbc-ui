@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {Modal, Input, ButtonToolbar, Button} from 'react-bootstrap';
-import ApplicationStore from '../../stores/ApplicationStore';
 
 export default React.createClass({
   propTypes: {
@@ -9,6 +8,7 @@ export default React.createClass({
     urlTemplates: PropTypes.object.isRequired,
     projectTemplates: PropTypes.object.isRequired,
     isOpen: PropTypes.bool,
+    showPlans: PropTypes.bool,
     onHide: PropTypes.func.isRequired
   },
 
@@ -16,8 +16,7 @@ export default React.createClass({
     return {
       name: '',
       type: 'demo',
-      isSaving: false,
-      showPlans: ApplicationStore.hasCurrentAdminFeature('kbc-project-templates')
+      isSaving: false
     };
   },
 
@@ -88,7 +87,7 @@ export default React.createClass({
   },
 
   typesGroup() {
-    if (!this.state.showPlans) {
+    if (!this.props.showPlans) {
       return null;
     }
 

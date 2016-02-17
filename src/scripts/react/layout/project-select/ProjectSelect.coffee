@@ -14,8 +14,12 @@ module.exports = React.createClass
     currentProject: React.PropTypes.object.isRequired
     urlTemplates: React.PropTypes.object.isRequired
     projectTemplates: React.PropTypes.object.isRequired
+    showPlans: React.PropTypes.bool
     xsrf: React.PropTypes.string.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
+
+  getDefaultProps: ->
+    showPlans: false
 
   render: ->
     if @state.open then className = 'open' else ''
@@ -31,6 +35,7 @@ module.exports = React.createClass
         currentProjectId: @props.currentProject.get('id')
         urlTemplates: @props.urlTemplates
         projectTemplates: @props.projectTemplates
+        showPlans: @props.showPlans
         xsrf: @props.xsrf
         canCreateProject: @props.canCreateProject
         focus: @state.open
