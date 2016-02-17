@@ -32,7 +32,8 @@ export default React.createClass({
 
   getStateFromStores() {
     return {
-      sections: ApplicationStore.getLimits()
+      sections: ApplicationStore.getLimits(),
+      canEdit: ApplicationStore.getKbcVars().get('canEditProjectLimits')
     };
   },
 
@@ -86,6 +87,7 @@ export default React.createClass({
       limit: limit,
       isKeenReady: this.state.isKeenReady,
       keenClient: this.state.client,
+      canEdit: this.state.canEdit,
       key: limit.get('id')
     });
   },

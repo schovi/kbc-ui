@@ -147,6 +147,8 @@
               "canCreateProject": true,
               "canManageApps": true,
               "canDoSupport": true,
+              "canEditProjectLimits": true,
+              "canEditProjectTypeAndBilling": true,
               "xsrfToken": "hovno",
               "urlTemplates": {
                 "createProject": "/admin/projects-new/create-project",
@@ -160,7 +162,8 @@
                 "legacyWriterDetail": "/admin/projects/<%= projectId %>/writer/?app=<%= appId %>#/?config=<%= configId %>",
                 "organization": "/admin/organizations/<%= organizationId %>",
                 "maintainer": "/admin/maintainers/<%= maintainerId %>",
-                "notifications": "/admin/account/notifications"
+                "notifications": "/admin/account/notifications",
+                "editProjectLimit": "/admin/projects/edit-limit"
               },
               "zendesk": {
                 "project": {

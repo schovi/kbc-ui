@@ -4,11 +4,13 @@ import AlarmIndicator from './AlarmIndicator';
 import {Check} from 'kbc-react-components';
 import classnames from 'classnames';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
+import EditLimitButton from './EditLimitButton';
 
 export default React.createClass({
   propTypes: {
     limit: PropTypes.object.isRequired,
     isKeenReady: PropTypes.bool.isRequired,
+    canEdit: PropTypes.bool.isRequired,
     keenClient: PropTypes.object.isRequired
   },
 
@@ -23,6 +25,7 @@ export default React.createClass({
         </span>
         <span className="td">
           {this.limit()}
+          {this.props.canEdit ? <EditLimitButton limit={limit}/> : null}
         </span>
         <span className="td" style={{width: '50%'}}>
           {this.renderGraph()}
