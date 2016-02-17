@@ -35,7 +35,7 @@ export default React.createClass({
   renderInfo() {
     return (
       <span>
-        Phases are executed sequentially. All tasks within a phase are run in parallel. The next phase begins right after all task within the previous phase are finished.
+        Phases are executed sequentially according to order specified from the top to the bottom. All tasks belonging to a phase are run in parallel. The next phase begins right after all tasks from the previous phase are finished. Ideally there should be 3 phases: Extract, Transform and Load.
       </span>
     );
   }
