@@ -47,7 +47,10 @@ dephaseTasks = (tasks) ->
   return result
 
 module.exports =
-
+  rephaseTasks: (tasks) ->
+    rephaseTasks(tasks)
+  dephaseTasks: (tasks) ->
+    dephaseTasks(tasks)
   ###
     Request orchestrations reload from server
   ###
