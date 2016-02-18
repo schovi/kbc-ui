@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Modal, Input, ButtonToolbar, Button} from 'react-bootstrap';
+import numeral from 'numeral';
 
 export default React.createClass({
   propTypes: {
@@ -118,13 +119,25 @@ export default React.createClass({
           label={template.get('name')}
           name="type"
           checked={template.get('stringId') === this.state.type}
-          help={template.get('description')}
+          help={this.help(template)}
           value={template.get('stringId')}
           onChange={this.handleTypeChange}
           wrapperClassName="col-xs-offset-4 col-xs-6"
           />
       );
     });
+  },
+
+  help(template) {
+    const price = template.get('billedMonthlyPrice') ?
+      <span><br/>{`$${numeral(template.get('billedMonthlyPrice')).format('0,0')} / month`}</span> : null;
+    return (
+      <span>
+        {template.get('description')}
+
+        {price}
+      </span>
+    );
   },
 
   handleNameChange(e) {
