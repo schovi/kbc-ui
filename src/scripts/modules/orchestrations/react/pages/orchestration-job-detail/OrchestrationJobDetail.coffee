@@ -30,8 +30,11 @@ OrchestrationJobDetail = React.createClass
     jobId = RoutesStore.getCurrentRouteIntParam 'jobId'
     job = OrchestrationJobsStore.getJob(jobId)
     if job.hasIn ['results', 'tasks']
-      job = job.setIn(['results', 'tasks'],
-        mergeTasksWithConfigurations(job.getIn(['results', 'tasks'], List()), InstalledComponentsStore.getAll()))
+      merged = mergeTasksWithConfigurations(job.getIn(['results', 'tasks'], List())
+      , InstalledComponentsStore.getAll(), true)
+
+      job = job.setIn(['results', 'tasks'], merged)
+
     return {
       orchestrationId: orchestrationId
       job: job
