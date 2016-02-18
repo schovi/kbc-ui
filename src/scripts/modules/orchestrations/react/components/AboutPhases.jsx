@@ -9,14 +9,14 @@ export default React.createClass({
   render() {
     if (this.state.isExpanded) {
       return (
-        <span>
+        <div>
           {this.renderInfo()}
           <button
             onClick={ () => this.setState({isExpanded: false})}
             className="btn btn-sm btn-link">
             Hide
           </button>
-        </span>
+        </div>
       );
     } else {
       return (

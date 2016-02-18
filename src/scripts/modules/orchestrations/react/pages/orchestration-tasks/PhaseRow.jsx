@@ -12,7 +12,7 @@ export default React.createClass({
       <tr
         style={{'background-color': this.props.color}}
         onClick={this.props.toggleHide}>
-        <td colSpan="6" className="kbc-cursor-pointer">
+        <td colSpan="6" className="kbc-cursor-pointer text-center">
           <div>
             <strong>
               {this.props.phase.get('id')}

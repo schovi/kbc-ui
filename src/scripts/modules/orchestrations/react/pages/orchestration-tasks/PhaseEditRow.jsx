@@ -54,7 +54,7 @@ export default React.createClass({
           </div>
 
         </td>
-        <td colSpan="5" className="kbc-cursor-pointer">
+        <td colSpan="5" className="kbc-cursor-pointer text-center">
 
           <div className="text-center form-group form-group-sm">
             <strong>
