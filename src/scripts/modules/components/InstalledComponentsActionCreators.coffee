@@ -488,3 +488,95 @@ module.exports =
         configId: configId
         error: e
       throw e
+
+  startEditTemplatedComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_START
+      componentId: componentId
+      configId: configId
+    )
+
+  cancelEditTemplatedComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_CANCEL
+      componentId: componentId
+      configId: configId
+    )
+
+
+  updateEditTemplatedComponentConfigDataJobs: (componentId, configId, value) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS
+      componentId: componentId
+      configId: configId
+      value: value
+    )
+
+
+  updateEditTemplatedComponentConfigDataJobsString: (componentId, configId, value) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS_STRING
+      componentId: componentId
+      configId: configId
+      value: value
+    )
+
+
+  updateEditTemplatedComponentConfigDataParams: (componentId, configId, value) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_PARAMS
+      componentId: componentId
+      configId: configId
+      value: value
+    )
+
+  saveEditTemplatedComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_START
+      componentId: componentId
+      configId: configId
+    )
+    dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
+    console.log("dataToSave", dataToSave.toJS())
+    dataToSave = dataToSave?.toJS()
+
+    storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_SUCCESS
+        componentId: componentId
+        configId: configId
+        configData: response.configuration
+      )
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_ERROR
+        componentId: componentId
+        configId: configId
+      )
+      throw error
+
+  toggleEditTemplatedComponentConfigDataJobsString: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_JOBS_STRING_TOGGLE
+      componentId: componentId
+      configId: configId
+    )
+
+  ###
+  updateEditComponentConfigData: (componentId, configId, newData) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_UPDATE
+      componentId: componentId
+      configId: configId
+      data: newData
+    )
+
+  cancelEditComponentConfigData: (componentId, configId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_EDIT_CANCEL
+      componentId: componentId
+      configId: configId
+    )
+
+
+###

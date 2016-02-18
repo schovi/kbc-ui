@@ -4,6 +4,7 @@ Immutable = require('immutable')
 Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
 propagateApiAttributes = require('../react/components/jsoneditor/propagateApiAttributes').default
+SchemasStore = require './SchemasStore'
 
 _store = Map(
   configData: Map() #componentId #configId
@@ -14,9 +15,7 @@ _store = Map(
   rawConfigDataEditing: Map() #componentId #configId - configuration stringified JSON
   rawConfigDataParametersEditing: Map() #componentId #configId - configuration stringified JSON
   templatedConfigValuesEditing: Map() #componentId #configId
-                                    # group (apiValue:Map|jobsValue:Map|paramsValue:Map|jobsJsonValue:string)
-  templatedConfigEditingState: Map() #componentId #configId
-                                    # attribute (jobsJsonEdit:bool) - configuration
+                                    # group (apiValue:Map|jobsValue:Map|paramsValue:Map|jobsStringValue:string)
   #detail JSON
   configDataSaving: Map()
   configDataParametersSaving: Map()
@@ -94,6 +93,9 @@ InstalledComponentsStore = StoreUtils.createStore
   isEditingRawConfigDataParameters: (componentId, configId) ->
     _store.hasIn ['rawConfigDataParametersEditing', componentId, configId]
 
+  isEditingTemplatedConfig: (componentId, configId) ->
+    _store.hasIn ['templatedConfigValuesEditing', componentId, configId]
+
   getEditingConfig: (componentId, configId, field) ->
     _store.getIn ['editingConfigurations', componentId, configId, field]
 
@@ -145,8 +147,8 @@ InstalledComponentsStore = StoreUtils.createStore
   getOpenMappings: (componentId, configId) ->
     _store.getIn ['openMappings', componentId, configId], Map()
 
-  getTemplatedConfigEditingValue: (componentId, configId, parameter) ->
-    _store.getIn ['templatedConfigValuesEditing', componentId, configId, parameter]
+  #getTemplatedConfigEditingValue: (componentId, configId, parameter) ->
+  #  _store.getIn ['templatedConfigValuesEditing', componentId, configId, parameter]
 
   getTemplatedConfigValueJobs: (componentId, configId) ->
     _store.getIn(['configData', componentId, configId, 'parameters', 'config', 'jobs'], Immutable.List())
@@ -165,8 +167,20 @@ InstalledComponentsStore = StoreUtils.createStore
   getTemplatedConfigValueApi: (componentId, configId) ->
     _store.getIn(['configData', componentId, configId, "api"], Immutable.Map())
 
-  getTemplatedConfigEditingState: (componentId, configId, stateVariable) ->
-    _store.getIn ['templatedConfigEditingState', componentId, configId, stateVariable]
+  getTemplatedConfigEditingValueApi: (componentId, configId) ->
+    _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'api'], Immutable.Map())
+
+  getTemplatedConfigEditingValueParams: (componentId, configId) ->
+    _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'params'], Immutable.Map())
+
+  getTemplatedConfigEditingValueJobsString: (componentId, configId) ->
+    _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'jobsString'], "")
+
+  getTemplatedConfigEditingValueJobs: (componentId, configId) ->
+    _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'jobs'], Immutable.Map())
+
+  isTemplatedConfigEditingJobsString: (componentId, configId) ->
+    _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'jobsString'], "") != ""
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -507,8 +521,105 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
 
-    #when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDITING_START
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_START
+      _store = _store.withMutations (store) ->
+        jobs = InstalledComponentsStore.getTemplatedConfigValueJobs(action.componentId, action.configId)
 
+        # compare with templates
+        if SchemasStore.isJobsTemplate(action.componentId, jobs) || jobs.count() == 0
+          store = store.setIn(["templatedConfigValuesEditing", action.componentId, action.configId, "jobs"], jobs)
+        else
+          store = store.setIn(
+            ["templatedConfigValuesEditing", action.componentId, action.configId, "jobsString"],
+            JSON.stringify(jobs.toJS())
+          )
 
+        params = InstalledComponentsStore.getTemplatedConfigValueParams(action.componentId, action.configId)
+        store = store.setIn ["templatedConfigValuesEditing", action.componentId, action.configId, "params"], params
+
+        api = InstalledComponentsStore.getTemplatedConfigValueApi(action.componentId, action.configId)
+        store = store.setIn ["templatedConfigValuesEditing", action.componentId, action.configId, "api"], api
+
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_CANCEL
+      _store = _store.deleteIn(["templatedConfigValuesEditing", action.componentId, action.configId])
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS
+      _store = _store.setIn(["templatedConfigValuesEditing", action.componentId, action.configId, "jobs"], action.value)
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS_STRING
+      _store = _store.setIn(
+        ["templatedConfigValuesEditing", action.componentId, action.configId, "jobsString"],
+        action.value
+      )
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_PARAMS
+      _store = _store.setIn(
+        ["templatedConfigValuesEditing", action.componentId, action.configId, "params"],
+        action.value
+      )
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_START
+      editingData = new Map()
+      editingData = editingData.setIn(
+        ['parameters', 'api'],
+        _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'api'])
+      )
+      editingData = editingData.setIn(
+        ['parameters', 'config'],
+        _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'params'])
+      )
+
+      if _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'jobs'])
+        editingData = editingData.setIn(
+          ['parameters', 'config', 'jobs'],
+          _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'jobs'])
+        )
+      else if _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'jobsString'])
+        editingData = editingData.setIn(
+          ['parameters', 'config', 'jobs'],
+          Immutable.fromJS(
+            JSON.parse(
+              _store.getIn(
+                ['templatedConfigValuesEditing', action.componentId, action.configId, 'jobsString']
+              )
+            )
+          )
+        )
+      else
+        editingData = editingData.setIn(['parameters', 'config', 'jobs'], Immutable.List())
+
+      _store = _store.setIn ['configDataSaving', action.componentId, action.configId], editingData
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_SUCCESS
+      _store = _store.setIn(
+        ['configData', action.componentId, action.configId],
+        Immutable.fromJS(action.configData)
+      )
+      _store = _store.deleteIn(['templatedConfigValuesEditing', action.componentId, action.configId])
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_ERROR
+      _store = _store.deleteIn(['templatedConfigValuesEditing', action.componentId, action.configId])
+      InstalledComponentsStore.emitChange()
+
+    when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_JOBS_STRING_TOGGLE
+      _store = _store.withMutations (store) ->
+        store = store.setIn(
+          ["templatedConfigValuesEditing", action.componentId, action.configId, "jobsString"],
+          JSON.stringify(
+            store.getIn(["templatedConfigValuesEditing", action.componentId, action.configId, "jobs"]).toJS(),
+            null,
+            2
+          )
+        )
+        store.deleteIn(["templatedConfigValuesEditing", action.componentId, action.configId, "jobs"])
+      InstalledComponentsStore.emitChange()
 
 module.exports = InstalledComponentsStore
