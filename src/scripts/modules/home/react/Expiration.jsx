@@ -6,6 +6,7 @@ import IntlMessageFormat from 'intl-messageformat';
 
 const MESSAGES = {
   DAYS: '{days, plural, ' +
+  '=0 {less than a day}' +
   '=1 {# day}' +
   'other {# days}}'
 };
@@ -35,7 +36,7 @@ export default React.createClass({
 
   days() {
     return new IntlMessageFormat(MESSAGES.DAYS).format({
-      days: moment(new Date(this.props.expires)).diff(moment(), 'days')
+      days: Math.max(0, moment(new Date(this.props.expires)).diff(moment(), 'days'))
     });
   }
 });
