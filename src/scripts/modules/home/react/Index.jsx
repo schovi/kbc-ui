@@ -3,6 +3,7 @@ import ApplicationStore from '../../../stores/ApplicationStore';
 import filesize from 'filesize';
 import string from 'underscore.string';
 import LimitsOverQuota from './LimitsOverQuota';
+import Expiration from './Expiration';
 
 export default React.createClass({
 
@@ -16,13 +17,18 @@ export default React.createClass({
       },
       tokens: tokenStats,
       projectId: currentProject.get('id'),
-      limitsOverQuota: ApplicationStore.getLimitsOverQuota()
+      limitsOverQuota: ApplicationStore.getLimitsOverQuota(),
+      expires: ApplicationStore.getCurrentProject().get('expires')
     };
   },
 
   render() {
     return (
       <div className="container-fluid kbc-main-content">
+        {ApplicationStore.hasCurrentAdminFeature('kbc-project-templates') ?
+          <Expiration expires={this.state.expires} /> :
+          null
+        }
         {ApplicationStore.hasCurrentAdminFeature('kbc-limits') ?
           <LimitsOverQuota limits={this.state.limitsOverQuota}/> :
           null
