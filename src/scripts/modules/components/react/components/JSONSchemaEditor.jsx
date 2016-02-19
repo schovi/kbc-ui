@@ -105,8 +105,10 @@ export default React.createClass({
 
   render() {
     return (
+      <form autoComplete="off">
         <div ref="jsoneditor">
         </div>
+      </form>
     );
   }
 
