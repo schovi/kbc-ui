@@ -13,7 +13,8 @@ export default React.createClass({
     togglePhaseIdChange: PropTypes.bool.isRequired,
     isMarked: PropTypes.bool.isRequired,
     toggleAddNewTask: PropTypes.func.isRequired,
-    color: PropTypes.string
+    color: PropTypes.string,
+    isPhaseHidden: PropTypes.bool
   },
 
   statics: {
@@ -33,10 +34,13 @@ export default React.createClass({
 
   render() {
     const isDragging = this.getDragState('phase').isDragging;
-    const style = {
+    let style = {
       opacity: isDragging ? 0.5 : 1,
       'background-color': this.props.color
     };
+    if (this.props.isPhaseHidden) {
+      style['border-bottom'] = '2px groove';
+    }
     const tdcn = 'dkb-orchestrator-task-drag';
     const dragprops = _.extend({style: {cursor: 'move'}, className: tdcn}, this.dragSourceFor('phase'), this.dropTargetFor('phase'));
     return (

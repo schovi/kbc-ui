@@ -98,6 +98,7 @@ TasksEditTable = React.createClass
     idx = 0
     @props.tasks.map((phase) =>
       idx++
+      isPhaseHidden = @isPhaseHidden(phase)
       color = if idx % 2 > 0 then '#fff' else '#f9f9f9' #'rgb(227, 248, 255)'
       tasksRows = phase.get('tasks').map((task) =>
         taskId = task.get('id')
@@ -118,11 +119,11 @@ TasksEditTable = React.createClass
       )
       phaseRow = @renderPhaseRow(phase, color)
       result = result.push(phaseRow)
-      if not @isPhaseHidden(phase)
+      if not isPhaseHidden
         if tasksRows.count() > 0
           result = result.concat(tasksRows)
         else
-          result = result.concat(@_renderEmptyTasksRow(phase.get('id'), color))
+          result = result.concat(@_renderEmptyTasksRow(phase.get('id'), isPhaseHidden, color))
     )
     return result.toArray()
 
@@ -200,6 +201,7 @@ TasksEditTable = React.createClass
     phaseId = phase.get('id')
     isHidden = @isPhaseHidden(phase)
     return PhaseEditRow
+      isPhaseHidden: isHidden
       key: phaseId
       onPhaseMove: @onPhaseMove
       phase: phase
