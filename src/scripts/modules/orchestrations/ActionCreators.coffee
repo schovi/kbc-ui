@@ -14,7 +14,7 @@ RoutesStore = require '../../stores/RoutesStore'
 
 rephaseTasks = (tasks) ->
   isNullPhase = (phase) ->
-    return phase == null or phase == 0
+    return phase == null or phase == 0 or phase == undefined
   nullPhaseIdx = 1
   currentPhase =
     id: null

@@ -3,7 +3,11 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Input = React.createFactory(require('react-bootstrap').Input)
-Textarea = React.createFactory(require('react-textarea-autosize'))
+CodeMirror = React.createFactory(require('react-code-mirror'))
+
+require('codemirror/addon/lint/lint')
+require('../../../../utils/codemirror/json-lint')
+
 
 {div, textarea} = React.DOM
 
@@ -21,14 +25,25 @@ TaskParametersEdit = React.createClass
   getDefaultProps: ->
     isEditable: true
 
+  renderJsonArea: ->
+    CodeMirror
+      theme: 'solarized'
+      lineNumbers: true
+      defaultValue: @state.parametersString
+      readOnly: not @props.isEditable
+      cursorHeight: 0 if not @props.isEditable
+      height: 'auto'
+      mode: 'application/json'
+      lineWrapping: true
+      autofocus: @props.isEditable
+      onChange: @_handleChange
+      lint: true
+      gutters: ['CodeMirror-lint-markers']
+
   render: ->
     Modal title: 'Task parameters', onRequestHide: @props.onRequestHide,
       div className: 'modal-body',
-        Textarea
-          className: 'form-control'
-          value: @state.parametersString
-          onChange: @_handleChange
-          disabled: not @props.isEditable
+        @renderJsonArea()
       div className: 'modal-footer',
         if @props.isEditable
           ButtonToolbar null,
