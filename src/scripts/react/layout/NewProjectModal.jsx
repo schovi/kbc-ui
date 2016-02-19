@@ -12,6 +12,7 @@ export default React.createClass({
     projectTemplates: PropTypes.object.isRequired,
     isOpen: PropTypes.bool,
     showPlans: PropTypes.bool,
+    showOrganizationsSelect: PropTypes.bool,
     onHide: PropTypes.func.isRequired
   },
 
@@ -25,7 +26,8 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      selectedOrganizationId: null
+      selectedOrganizationId: null,
+      showOrganizationsSelect: true
     };
   },
 
@@ -78,7 +80,7 @@ export default React.createClass({
   },
 
   organization() {
-    if (this.props.selectedOrganizationId) {
+    if (!this.props.showOrganizationsSelect) {
       return (
         <input
           type="hidden"
@@ -92,6 +94,7 @@ export default React.createClass({
           label="Organization"
           name="organizationId"
           type="select"
+          value={this.props.selectedOrganizationId}
           labelClassName="col-sm-4"
           wrapperClassName="col-sm-6">
           {this.organizationOptions()}
