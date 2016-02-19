@@ -33,8 +33,8 @@ export default React.createClass({
       this.jsoneditor.destroy();
     }
     var options =       {
-      schema: this.props.schema.toJSON(),
-      startval: this.props.value,
+      schema: this.props.schema.toJS(),
+      startval: this.props.value.toJS(),
       theme: 'bootstrap3',
       iconlib: 'fontawesome4',
       custom_validators: [],
@@ -84,7 +84,7 @@ export default React.createClass({
     // When the value of the editor changes, update the JSON output and TODO validation message
     jsoneditor.on('change', function() {
       var json = jsoneditor.getValue();
-      props.onChange(json);
+      props.onChange(Immutable.fromJS(json));
     });
 
     if (this.props.readOnly) {
@@ -97,7 +97,7 @@ export default React.createClass({
   },
 
   componentDidUpdate() {
-    this.jsoneditor.setValue(this.props.value);
+    this.jsoneditor.setValue(this.props.value.toJS());
   },
 
   componentWillUnmount() {
