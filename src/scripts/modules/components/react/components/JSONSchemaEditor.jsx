@@ -96,13 +96,6 @@ export default React.createClass({
     this.initJsonEditor();
   },
 
-  componentDidUpdate() {
-    this.jsoneditor.setValue(this.props.value.toJS());
-  },
-
-  componentWillUnmount() {
-  },
-
   render() {
     return (
       <form autoComplete="off">
