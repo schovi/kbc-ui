@@ -1,11 +1,13 @@
 import React, {PropTypes} from 'react';
-import {Modal, Input, ButtonToolbar, Button} from 'react-bootstrap';
+import {Modal, Input} from 'react-bootstrap';
+import ConfirmButtons from '../common/ConfirmButtons';
 import numeral from 'numeral';
 
 export default React.createClass({
   propTypes: {
     xsrf: PropTypes.string.isRequired,
     organizations: PropTypes.object.isRequired,
+    selectedOrganizationId: PropTypes.number,
     urlTemplates: PropTypes.object.isRequired,
     projectTemplates: PropTypes.object.isRequired,
     isOpen: PropTypes.bool,
@@ -21,6 +23,11 @@ export default React.createClass({
     };
   },
 
+  getDefaultProps() {
+    return {
+      selectedOrganizationId: null
+    };
+  },
 
   render() {
     return (
@@ -47,14 +54,7 @@ export default React.createClass({
                 labelClassName="col-sm-4"
                 wrapperClassName="col-sm-6"
                 />
-            <Input
-              label="Organization"
-              name="organizationId"
-              type="select"
-              labelClassName="col-sm-4"
-              wrapperClassName="col-sm-6">
-              {this.organizationOptions()}
-              </Input>
+            {this.organization()}
             <Input
               type="hidden"
               name="xsrf"
@@ -64,17 +64,40 @@ export default React.createClass({
             </form>
         </Modal.Body>
         <Modal.Footer>
-          <ButtonToolbar>
-            <Button onClick={this.props.onHide} bsStyle="link">
-              Cancel
-            </Button>
-            <Button bsStyle="primary" onClick={this.handleCreate} disabled={!this.isValid() || this.state.isSaving}>
-              Create Project
-            </Button>
-          </ButtonToolbar>
+          <ConfirmButtons
+            isDisabled={!this.isValid()}
+            isSaving={this.state.isSaving}
+            saveLabel="Create Project"
+            saveStyle="primary"
+            onCancel={this.props.onHide}
+            onSave={this.handleCreate}
+            />
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  organization() {
+    if (this.props.selectedOrganizationId) {
+      return (
+        <input
+          type="hidden"
+          name="organizationId"
+          value={this.props.selectedOrganizationId}
+          />
+      );
+    } else {
+      return (
+        <Input
+          label="Organization"
+          name="organizationId"
+          type="select"
+          labelClassName="col-sm-4"
+          wrapperClassName="col-sm-6">
+          {this.organizationOptions()}
+        </Input>
+      );
+    }
   },
 
   organizationOptions() {
