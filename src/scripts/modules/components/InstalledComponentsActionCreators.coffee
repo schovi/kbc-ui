@@ -537,7 +537,6 @@ module.exports =
       configId: configId
     )
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
-    console.log("dataToSave", dataToSave.toJS())
     dataToSave = dataToSave?.toJS()
 
     storeEncodedConfig(componentId, configId, dataToSave).then (response) ->

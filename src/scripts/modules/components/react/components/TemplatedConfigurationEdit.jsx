@@ -13,13 +13,6 @@ require('../../../../utils/codemirror/json-lint');
 
 export default React.createClass({
 
-  /*
-  shouldComponentUpdate(nextProps) {
-    // TODO
-    return false;
-  },
-  */
-
   propTypes: {
     jobs: PropTypes.object.isRequired,
     jobsString: PropTypes.string.isRequired,
@@ -44,17 +37,12 @@ export default React.createClass({
     };
   },
 
-  componentDidMount() {
-    console.log('templated configuration edit component did mount');
-  },
-
   render() {
-    console.log('templated configuration edit render');
     return (
-      <div className="kbc-configuration-json-edit">
+      <div className="kbc-templated-configuration-edit">
         <div>
           <div className="edit kbc-configuration-editor">
-            <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-60} stickyStyle={{}}>
+            <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-30} stickyStyle={{}}>
               <ConfirmButtons
                 isSaving={this.props.isSaving}
                 onSave={this.props.onSave}
@@ -109,7 +97,6 @@ export default React.createClass({
   },
 
   handleJobsStringChange(e) {
-    console.log('handleJobsStringChange', e.target.value);
     this.props.onChangeJobsString(e.target.value);
   },
 

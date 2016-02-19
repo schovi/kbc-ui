@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import Markdown from 'react-markdown';
+import CodeMirror from 'react-code-mirror';
 
 /* global require */
 require('./configuration-json.less');
@@ -15,7 +16,6 @@ export default React.createClass({
     jobsTemplates: PropTypes.object.isRequired,
     apiSchema: PropTypes.object.isRequired,
     apiTemplate: PropTypes.object.isRequired,
-    // onEditStart: PropTypes.func.isRequired,
     onEditStart: PropTypes.func,
     requiresApiSchema: PropTypes.bool.isRequired,
     editLabel: PropTypes.string
@@ -37,21 +37,17 @@ export default React.createClass({
 
   static() {
     return (
-      <div className="kbc-configuration-json-edit">
-        <div>
-          <div className="edit kbc-configuration-editor">
-            <div className="kbc-sticky-buttons">
-              {this.startEditButton()}
-            </div>
-            {this.apiEditor()}
-            <JSONSchemaEditor
-              schema={this.props.paramsSchema}
-              value={this.props.params}
-              onChange={this.handleChange}
-              readOnly={true}
-            />
-            {this.renderJobs()}
-          </div>
+      <div>
+        <div className="edit kbc-configuration-editor">
+          <div className="text-right">{this.startEditButton()}</div>
+          {this.apiEditor()}
+          <JSONSchemaEditor
+            schema={this.props.paramsSchema}
+            value={this.props.params}
+            onChange={this.handleChange}
+            readOnly={true}
+          />
+          {this.renderJobs()}
         </div>
       </div>
     );
@@ -75,7 +71,26 @@ export default React.createClass({
 
   renderJobs() {
     var template = this.getTemplate(this.props.jobs.hashCode());
-    if (template) {
+    if (!template) {
+      return (
+        <span>
+          <h3>Jobs</h3>
+          <CodeMirror
+            ref="CodeMirror"
+            value={JSON.stringify(this.props.jobs.toJS(), null, 2)}
+            theme="solarized"
+            lineNumbers={false}
+            mode="application/json"
+            lineWrapping={true}
+            autofocus={false}
+            readOnly="nocursor"
+            lint={true}
+            gutters={['CodeMirror-lint-markers']}
+            placeholder="[]"
+            />
+        </span>
+      );
+    } else {
       return (
         <span>
           <h3>{template.get('name')}</h3>
@@ -113,14 +128,4 @@ export default React.createClass({
   handleChange() {
     // nothing
   }
-  /*
-  prepareParamsSchema() {
-    if (!this.requiresApiSchema()) {
-      return Immutable.fromJS(this.state.pureParamsSchema);
-    } else {
-      return propagateApiAttributes(this.apiValue, Immutable.fromJS(this.state.paramsSchema));
-    }
-  }
-  */
-
 });

@@ -182,6 +182,11 @@ InstalledComponentsStore = StoreUtils.createStore
   isTemplatedConfigEditingJobsString: (componentId, configId) ->
     _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'jobsString'], "") != ""
 
+  isTemplatedConfigJobsString: (componentId, configId) ->
+    jobs = _store.getIn(['configData', componentId, configId, 'parameters', 'config', 'jobs'], Immutable.List())
+    SchemasStore.isJobsTemplate(componentId, jobs)
+
+
 Dispatcher.register (payload) ->
   action = payload.action
 
@@ -531,7 +536,7 @@ Dispatcher.register (payload) ->
         else
           store = store.setIn(
             ["templatedConfigValuesEditing", action.componentId, action.configId, "jobsString"],
-            JSON.stringify(jobs.toJS())
+            JSON.stringify(jobs.toJS(), null, 2)
           )
 
         params = InstalledComponentsStore.getTemplatedConfigValueParams(action.componentId, action.configId)

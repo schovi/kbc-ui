@@ -14,7 +14,7 @@ import InstalledComponentsActionCreators from '../../InstalledComponentsActionCr
 require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({
-  mixins: [createStoreMixin(RoutesStore, InstalledComponentsStore, ComponentStore, SchemasStore)],
+  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, SchemasStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -34,6 +34,7 @@ export default React.createClass({
       apiSchema: SchemasStore.getApiSchema(componentId),
       apiTemplate: SchemasStore.getApiTemplate(componentId),
       supportsEncryption: component.get('flags').includes('encrypt'),
+      isJobsString: InstalledComponentsStore.isTemplatedConfigJobsString(componentId, configId),
 
       isEditing: InstalledComponentsStore.isEditingTemplatedConfig(componentId, configId),
       isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId),
@@ -163,6 +164,4 @@ export default React.createClass({
     }
     return true;
   }
-
-
 });
