@@ -71,7 +71,14 @@ export default React.createClass({
 
   renderJobs() {
     var template = this.getTemplate(this.props.jobs.hashCode());
-    if (!template) {
+    if (!template && this.props.jobs.count() === 0) {
+      return (
+        <span>
+          <h3>Jobs</h3>
+          <div><em>No template selected</em></div>
+        </span>
+      );
+    } else if (!template) {
       return (
         <span>
           <h3>Jobs</h3>
