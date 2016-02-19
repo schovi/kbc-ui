@@ -19,6 +19,7 @@ export default React.createClass({
   getInitialState() {
     return {
       name: '',
+      organizationId: this.props.selectedOrganizationId,
       type: 'demo',
       isSaving: false
     };
@@ -26,7 +27,6 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      selectedOrganizationId: null,
       showOrganizationsSelect: true
     };
   },
@@ -94,7 +94,8 @@ export default React.createClass({
           label="Organization"
           name="organizationId"
           type="select"
-          value={this.props.selectedOrganizationId}
+          value={this.state.organizationId}
+          onChange={this.handleOrganizationChange}
           labelClassName="col-sm-4"
           wrapperClassName="col-sm-6">
           {this.organizationOptions()}
@@ -169,6 +170,12 @@ export default React.createClass({
   handleNameChange(e) {
     this.setState({
       name: e.target.value
+    });
+  },
+
+  handleOrganizationChange(e) {
+    this.setState({
+      organizationId: e.target.value
     });
   },
 
