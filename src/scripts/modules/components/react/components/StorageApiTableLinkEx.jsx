@@ -60,7 +60,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    storageActions.loadTables();
+    setTimeout(() => storageActions.loadTables());
   },
 
   componentWilUnmount() {

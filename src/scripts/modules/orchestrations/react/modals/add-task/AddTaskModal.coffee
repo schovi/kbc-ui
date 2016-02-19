@@ -5,19 +5,24 @@ Button = React.createFactory(require('react-bootstrap').Button)
 
 ComponentSelect = React.createFactory(require './ComponentSelect')
 ConfigurationSelect = React.createFactory(require './ConfigurationSelect')
-ComponentsReloaderButton = require '../../../../components/react/components/ComponentsReloaderButton'
+OrchestrationSelect = React.createFactory(require './OrchestrationSelect')
+ComponentsReloaderButton = require '../../components/ComponentsReloaderButton'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+RoutesStore = require '../../../../../stores/RoutesStore'
+OrchestrationStore = require '../../../stores/OrchestrationsStore'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 STEP_COMPONENT_SELECT = 'componentSelect'
 STEP_CONFIGURATION_SELECT = 'configurationSelect'
+STEP_ORCHESTRATOR_CONFIGURATION_SELECT = 'orchestratorConfigurationSelect'
 
 {div, p, strong, h2, a} = React.DOM
 
 AddTaskModal = React.createClass
   displayName: 'AddTaskModal'
-  mixins: [createStoreMixin(InstalledComponentsStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationStore)]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
     onHide: React.PropTypes.func
@@ -29,7 +34,15 @@ AddTaskModal = React.createClass
     currentStep: STEP_COMPONENT_SELECT
 
   getStateFromStores: ->
-    components: InstalledComponentsStore.getAll()
+    orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
+    currentOrchestration = OrchestrationStore.get orchestrationId
+    return {
+      components: InstalledComponentsStore.getAll().filter (c) ->
+        !c.get('flags').includes('excludeRun')
+      orchestrations: OrchestrationStore.getAll().filter((orchestration) ->
+        !orchestration.get('crontabRecord') && currentOrchestration.get('id') != orchestration.get('id')
+      )
+    }
 
   render: ->
     Modal
@@ -42,12 +55,20 @@ AddTaskModal = React.createClass
 
           when STEP_COMPONENT_SELECT
             ComponentSelect
+              orchestrations: @state.orchestrations
               components: @state.components
               onComponentSelect: @_handleComponentSelect
 
           when STEP_CONFIGURATION_SELECT
             ConfigurationSelect
               component: @state.selectedComponent
+              onReset: @_handleComponentReset
+              onConfigurationSelect: @_handleConfigurationSelect
+
+          when STEP_ORCHESTRATOR_CONFIGURATION_SELECT
+            OrchestrationSelect
+              component: @state.selectedComponent
+              orchestrations: @state.orchestrations
               onReset: @_handleComponentReset
               onConfigurationSelect: @_handleConfigurationSelect
 
@@ -67,7 +88,11 @@ AddTaskModal = React.createClass
   _handleComponentSelect: (component) ->
     @setState
       selectedComponent: component
-      currentStep: STEP_CONFIGURATION_SELECT
+      currentStep:
+        if component.get('id') == 'orchestrator'
+          STEP_ORCHESTRATOR_CONFIGURATION_SELECT
+        else
+          STEP_CONFIGURATION_SELECT
 
   _handleComponentReset: ->
     @setState

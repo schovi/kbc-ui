@@ -39,6 +39,58 @@ module.exports =
       throw error
     )
 
+  loadCredentialsForce: (bucketId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_LOAD
+      bucketId: bucketId
+    )
+    storageApi
+    .getBucketCredentials(bucketId)
+    .then((credentials) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_LOAD_SUCCESS
+        credentials: credentials
+        bucketId: bucketId
+      )
+    )
+
+  loadCredentials: (bucketId) ->
+    return Promise.resolve() if StorageBucketsStore.hasCredentials(bucketId)
+    @loadCredentialsForce(bucketId)
+
+  createCredentials: (bucketId, name) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_CREATE
+      bucketId: bucketId
+    )
+    storageApi
+    .createBucketCredentials(bucketId, name)
+    .then((credentials) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_CREATE_SUCCESS
+        credentials: credentials
+        bucketId: bucketId
+      )
+      credentials
+    )
+
+  deleteCredentials: (bucketId, credentialsId) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_DELETE
+      bucketId: bucketId
+      credentialsId: credentialsId
+    )
+    storageApi
+    .deleteBucketCredentials(credentialsId)
+    .then( ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_DELETE_SUCCESS
+        bucketId: bucketId
+        credentialsId: credentialsId
+      )
+    )
+
+
   loadBuckets: ->
     return Promise.resolve() if StorageBucketsStore.getIsLoaded()
     @loadBucketsForce()

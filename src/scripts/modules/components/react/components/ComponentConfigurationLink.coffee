@@ -29,6 +29,14 @@ module.exports = React.createClass
           bucketId: @props.configId
       ,
         @props.children
+    else if @props.componentId == 'orchestrator'
+      Link
+        className: @props.className
+        to: 'orchestration'
+        params:
+          orchestrationId: @props.configId
+        ,
+          @props.children
     else if RoutesStore.hasRoute(@props.componentId)
       Link
         className: @props.className
@@ -43,7 +51,7 @@ module.exports = React.createClass
         className: @props.className
       ,
         @props.children
-    else
+    else if @getComponentType() != 'other'
       Link
         className: @props.className
         to: GENERIC_DETAIL_PREFIX + @getComponentType() + '-config'
@@ -51,6 +59,9 @@ module.exports = React.createClass
           config: @props.configId
           component: @props.componentId
       ,
+        @props.children
+    else
+      span null,
         @props.children
 
   getComponentType: ->

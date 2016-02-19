@@ -7,6 +7,7 @@ ComponentSelect = React.createClass
   displayName: 'ComponentSelect'
   propTypes:
     components: React.PropTypes.object.isRequired
+    orchestrations: React.PropTypes.object.isRequired
     onComponentSelect: React.PropTypes.func.isRequired
 
   render: ->
@@ -15,6 +16,9 @@ ComponentSelect = React.createClass
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
       @_renderSection('Writers', @_getComponentsForType('writer'))
       @_renderSection('Applications', @_getComponentsForType('application'))
+      @_renderOrchestratorSection('Orchestrations', @props.components.filter((component) ->
+        component.get('id') == 'orchestrator')
+      )
 
   _renderSection: (title, components) ->
     components = components.map((component) ->
@@ -36,6 +40,27 @@ ComponentSelect = React.createClass
       table className: 'table table-striped table-hover kbc-tasks-list',
         tbody null,
           components
+
+  _renderOrchestratorSection: (title, components) ->
+    components = components.map((component) ->
+      tr null,
+        td null,
+          a
+            key: component.get('id')
+            onClick: @_handleSelect.bind(@, component)
+          ,
+            ComponentIcon component: component
+            ' '
+            component.get('name')
+            ' '
+            span className: 'kbc-icon-arrow-right pull-right'
+    , @).toArray()
+
+    div null,
+      h2 null, title
+      table className: 'table table-striped table-hover kbc-tasks-list',
+        tbody null,
+          components if @props.orchestrations.length
 
   _handleSelect: (component) ->
     @props.onComponentSelect(component)

@@ -32,8 +32,13 @@ export default {
       defaultRouteHandler: DataTakeout
     },
     {
+      name: 'settings-limits',
+      title: 'Settings',
+      defaultRouteHandler: Limits
+    },
+    {
       name: 'limits',
-      title: 'Limits',
+      title: 'Project Settings',
       defaultRouteHandler: Limits
     },
     {

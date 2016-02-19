@@ -4,8 +4,7 @@ fuzzy = require 'fuzzy'
 Tooltip = require('../../common/Tooltip').default
 _ = require 'underscore'
 
-ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-NewProjectModal = React.createFactory(require '../NewProjectModal')
+NewProjectModal = require('../NewProjectModal').default
 Emptylist = require './EmptyList'
 
 {div, ul, li, a, span, input} = React.DOM
@@ -16,14 +15,20 @@ module.exports = React.createClass
     organizations: React.PropTypes.object.isRequired
     currentProjectId: React.PropTypes.number.isRequired
     urlTemplates: React.PropTypes.object.isRequired
+    projectTemplates: React.PropTypes.object.isRequired
+    showPlans: React.PropTypes.bool
     focus: React.PropTypes.bool.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
     xsrf: React.PropTypes.string.isRequired
+
+  getDefaultProps: ->
+    showPlans: false
 
   getInitialState: ->
     query: ''
     selectedProjectId: null
     selectedOrganizationId: null
+    isNewProjectModalOpen: false
 
   componentDidMount: ->
     if @props.focus
@@ -205,13 +210,24 @@ module.exports = React.createClass
   _newProject: ->
     ul className: 'list-unstyled kbc-project-select-new',
       li null,
-        ModalTrigger modal: NewProjectModal(
+        a onClick: @openModal,
+          span className: 'fa fa-plus-circle'
+          ' New Project'
+        React.createElement NewProjectModal,
           urlTemplates: @props.urlTemplates
+          projectTemplates: @props.projectTemplates
+          showPlans: @props.showPlans
           xsrf: @props.xsrf
+          isOpen: @state.isNewProjectModalOpen
+          onHide: @closeModal
           organizations: @props.organizations.filter (organization) -> organization.get('hasAccess')
-        ),
-          a null,
-            span className: 'fa fa-plus-circle'
-            ' New Project'
+
+  openModal: ->
+    @setState
+      isNewProjectModalOpen: true
+
+  closeModal: ->
+    @setState
+      isNewProjectModalOpen: false
 
 

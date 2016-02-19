@@ -25,18 +25,22 @@ App = React.createClass
   getInitialState: ->
     organizations: ApplicationStore.getOrganizations()
     maintainers: ApplicationStore.getMaintainers()
+    notifications: ApplicationStore.getNotifications()
     currentProject: ApplicationStore.getCurrentProject()
     currentAdmin: ApplicationStore.getCurrentAdmin()
     urlTemplates: ApplicationStore.getUrlTemplates()
+    projectTemplates: ApplicationStore.getProjectTemplates()
     xsrf: ApplicationStore.getXsrfToken()
     canCreateProject: ApplicationStore.getCanCreateProject()
     canManageApps: ApplicationStore.getKbcVars().get 'canManageApps'
     homeUrl: ApplicationStore.getUrlTemplates().get 'home'
+    showPlans: ApplicationStore.hasCurrentAdminFeature('kbc-project-templates')
   render: ->
     div null,
       PageTitle()
       Header
         homeUrl: @state.homeUrl
+        notifications: @state.notifications
       React.createElement(FloatingNotifications)
       div className: 'container-fluid',
         div className: 'row',
@@ -47,6 +51,8 @@ App = React.createClass
               urlTemplates: @state.urlTemplates
               xsrf: @state.xsrf
               canCreateProject: @state.canCreateProject
+              projectTemplates: @state.projectTemplates
+              showPlans: @state.showPlans
             SidebarNavigation()
             div className: 'kbc-sidebar-footer',
               CurrentUser

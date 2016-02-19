@@ -25,6 +25,8 @@ export default React.createClass({
       return (<GenericDockerDetail />);
     } else if (flags.includes('genericUI')) {
       return (<GenericDetailEditable />);
+    } else if (flags.includes('genericTemplatesUI')) {
+      return (<GenericDockerDetail />);
     } else {
       return (<GenericDetailStatic />);
     }

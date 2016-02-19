@@ -61,8 +61,8 @@ module.exports = React.createClass
               dataset: queryName
           ,
             RunDatePicker
-              since: @state.since
-              until: @state.until
+              dateFrom: @state.since
+              dateUntil: @state.until
               onChangeFrom: (date) =>
                 @setState
                   since: date

@@ -116,7 +116,7 @@ module.exports = React.createClass
                 checked: @state.showDetails
                 onChange: @_handleToggleShowDetails
         React.DOM.div {className: "row col-md-12"},
-          if @props.backend == 'docker' && @props.type == 'r'
+          if @props.backend == 'docker'
             Input
               type: 'text'
               name: 'source'

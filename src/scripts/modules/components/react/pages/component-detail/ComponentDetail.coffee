@@ -4,6 +4,8 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentsStore = require '../../../stores/ComponentsStore'
 InstalledComponentsStore = require '../../../stores/InstalledComponentsStore.coffee'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
+
 AppUsageInfo = React.createFactory(require '../new-component-form/AppUsageInfo.coffee')
 VendorInfo = React.createFactory(require './VendorInfo.coffee')
 ComponentDescription = React.createFactory(require './ComponentDescription.coffee')
@@ -17,8 +19,9 @@ VendorInfo = require('../component-detail/VendorInfo')
 AppUsageInfo = require('../new-component-form/AppUsageInfo')
 ReadMore = require('../../../../../react/common/ReadMore').default
 ComponentDescription = require '../component-detail/ComponentDescription'
+contactSupport = require('../../../../../utils/contactSupport').default
 
-{div, label, h3, h2, span, p} = React.DOM
+{a, div, label, h3, h2, span, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ComponentDetail'
@@ -53,17 +56,31 @@ module.exports = React.createClass
         withButtons: false
       div className: "row",
         div className: "col-md-6",
-          React.createElement VendorInfo,
-            component: @state.component
           React.createElement AppUsageInfo,
             component: @state.component
         div className: "col-md-6",
+          React.createElement VendorInfo,
+            component: @state.component
+      div className: "row",
+        div className: "col-md-12",
           React.createElement ReadMore, null,
             React.createElement ComponentDescription,
               component: @state.component
       @_renderConfigurations()
 
   _renderConfigurations: ->
+    hasRedshift = ApplicationStore.getSapiToken().getIn ['owner', 'hasRedshift']
+    needsRedshift = @state.component.get('flags').includes('appInfo.redshiftOnly')
+
+    if needsRedshift and not hasRedshift
+      return div className: 'row',
+        span {},
+          "Redshift is not enabled for this project, please "
+        ,
+          a {onClick: @_openSupportModal}, "contact us"
+        ,
+          " to get more info."
+
     state = @state
     if @state.configurations.count()
       div null,
@@ -78,8 +95,9 @@ module.exports = React.createClass
             @state.configurations
             .sortBy (configuration) ->
               configuration.get('name').toLowerCase()
-            .map((configuration) ->
+            .map((configuration) =>
               React.createElement(ConfigurationRow,
+                component: @state.component,
                 config: configuration,
                 componentId: state.component.get('id'),
                 isDeleting: state.deletingConfigurations.has(configuration.get('id')),
@@ -94,3 +112,7 @@ module.exports = React.createClass
               label: "Create New Configuration"
               component: state.component
 
+  _openSupportModal: (e) ->
+    contactSupport(type: 'project')
+    e.preventDefault()
+    e.stopPropagation()

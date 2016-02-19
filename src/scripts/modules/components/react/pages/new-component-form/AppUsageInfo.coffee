@@ -25,6 +25,13 @@ module.exports = React.createClass
         td null,
           'There is an extra charge to use this ' + @getAppType()
 
+    if (@props.component.get("flags").contains("appInfo.redshiftOnly"))
+      features.push tr {key: "redshift"},
+        td null,
+          em {className: "fa fa-database fa-fw kbcLicenseIcon"}
+        td null,
+          'Redshift backend is required to use this ' + @getAppType()
+
     if (@props.component.get("flags").contains("appInfo.dataIn"))
       features.push tr {key: "dataIn"},
         td null,

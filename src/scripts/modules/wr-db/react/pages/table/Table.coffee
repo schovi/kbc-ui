@@ -7,14 +7,14 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 TableNameEdit = React.createFactory require './TableNameEdit'
 ColumnsEditor = React.createFactory require './ColumnsEditor'
 ColumnRow = require './ColumnRow'
-dataTypes = require '../../../templates/dataTypes'
+DataTypes = require '../../../templates/dataTypes'
 
 storageApi = require '../../../../components/StorageApi'
 
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
 
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
@@ -41,12 +41,13 @@ module.exports = (componentId) ->
 
 templateFn = (componentId) ->
   displayName: "WrDbTableDetail"
-  mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore)]
+  mixins: [createStoreMixin(WrDbStore, InstalledComponentsStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     tableConfig = WrDbStore.getTableConfig(componentId, configId, tableId)
+    storageTableColumns = StorageTablesStore.getAll().getIn [tableId, 'columns'], List()
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     tablesExportInfo = WrDbStore.getTables(componentId, configId)
     exportInfo = tablesExportInfo.find((tab) ->
@@ -66,7 +67,7 @@ templateFn = (componentId) ->
     editingData: editingData
     isUpdatingTable: isUpdatingTable
     tableConfig: tableConfig
-    columns: tableConfig.get('columns')
+    columns: @_prepareColumns(tableConfig.get('columns'), storageTableColumns)
     tableId: tableId
     configId: configId
     localState: localState
@@ -76,8 +77,26 @@ templateFn = (componentId) ->
   getInitialState: ->
     dataPreview: null
 
+  _prepareColumns: (configColumns, storageColumns) ->
+    storageColumns.map (storageColumn) ->
+      configColumnFound = configColumns.find( (cc) -> cc.get('name') == storageColumn)
+      if configColumnFound
+        configColumnFound
+      else
+        fromJS
+          name: storageColumn
+          dbName: storageColumn
+          type: 'IGNORE'
+          null: false
+          default: ''
+          size: ''
 
   componentDidMount: ->
+    if @state.columns.reduce(
+      (memo, value) ->
+        memo and value.get('type') == 'IGNORE'
+    , true)
+      @_handleEditColumnsStart()
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     component = @
     storageApi
@@ -101,7 +120,7 @@ templateFn = (componentId) ->
         div className: 'col-sm-2 kbc-buttons', @_renderEditButtons()
 
       ColumnsEditor
-        dataTypes: dataTypes[componentId] or defaultDataTypes
+        dataTypes: DataTypes[componentId] or defaultDataTypes
         columns: @state.columns
         renderRowFn: @_renderColumnRow
         editingColumns: @state.editingColumns
@@ -175,8 +194,8 @@ templateFn = (componentId) ->
       @_handleEditColumnsCancel()
 
   _renderSetColumnsType: ->
-    dataTypes = @_getDataTypes()
-    options = _.map dataTypes.concat('IGNORE'), (opKey, opValue) ->
+    tmpDataTypes = @_getDataTypes()
+    options = _.map tmpDataTypes.concat('IGNORE'), (opKey, opValue) ->
       option
         value: opKey
         key: opKey
@@ -198,7 +217,7 @@ templateFn = (componentId) ->
         options
 
   _getSizeParam: (dataType) ->
-    dtypes = dataTypes[componentId] or defaultDataTypes
+    dtypes = DataTypes[componentId] or defaultDataTypes
     dt = _.find dtypes, (d) ->
       _.isObject(d) and _.keys(d)[0] == dataType
     result = dt?[dataType]?.defaultSize
@@ -206,7 +225,7 @@ templateFn = (componentId) ->
 
 
   _getDataTypes: ->
-    dtypes = dataTypes[componentId] or defaultDataTypes
+    dtypes = DataTypes[componentId] or defaultDataTypes
     return _.map dtypes, (dataType) ->
       #it could be object eg {VARCHAR: {defaultSize:''}}
       if _.isObject dataType

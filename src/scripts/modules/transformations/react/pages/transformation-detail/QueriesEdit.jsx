@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import CodeMirror from 'react-code-mirror';
 import Sticky from 'react-sticky';
+import resolveHighlightMode from './resolveHighlightMode';
 
 /* global require */
 require('./queries.less');
@@ -30,9 +31,6 @@ export default React.createClass({
     return (
       <div className="kbc-queries-edit">
         <div>
-          <div className="well">
-            {this.hint()}
-          </div>
           <div className="edit form-group kbc-queries-editor">
             <Sticky stickyClass="kbc-sticky-buttons-active" topOffset={-60} stickyStyle={{}}>
               <div className="text-right">
@@ -51,7 +49,7 @@ export default React.createClass({
               theme="solarized"
               lineNumbers={true}
               cursorPos={this.props.cursorPos}
-              mode={this.editorMode()}
+              mode={resolveHighlightMode(this.props.backend, null)}
               lineWrapping={true}
               autofocus={true}
               onChange={this.handleChange}
@@ -62,27 +60,6 @@ export default React.createClass({
         </div>
       </div>
     );
-  },
-
-  hint() {
-    switch (this.props.backend) {
-      case 'redshift':
-        return 'Redshift does not support functions or stored procedures.';
-      default:
-        return 'Keboola Connection does not officially support MySQL functions or stored procedures. Use at your own risk.';
-    }
-  },
-
-  editorMode() {
-    switch (this.props.backend) {
-      case 'redshift':
-        return 'text/x-sql';
-      case 'snowflake':
-        return 'text/x-sql';
-      default:
-        return 'text/x-mysql';
-
-    }
   },
 
   handleChange(e) {

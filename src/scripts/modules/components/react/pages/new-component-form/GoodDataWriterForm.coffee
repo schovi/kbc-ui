@@ -15,7 +15,10 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 require './AddConfigurationForm.less'
 
-{div, form, h3, p, span} = React.DOM
+ApplicationStore = require '../../../../../stores/ApplicationStore'
+contactSupport = require('../../../../../utils/contactSupport').default
+
+{div, form, h3, p, span, a} = React.DOM
 
 
 module.exports = React.createClass
@@ -33,10 +36,14 @@ module.exports = React.createClass
   componentDidMount: ->
     @refs.name.getInputDOMNode().focus()
 
+  getInitialState: ->
+    canCreateProdProject: !!ApplicationStore.getCurrentProject().getIn(['limits', 'goodData.prodTokenEnabled', 'value'])
+
   _handleChange: (propName, event) ->
     @props.onChange @props.configuration.set(propName, event.target.value)
 
   render: ->
+    console.log 'can create', @state.canCreateProdProject
     div null,
       ModalHeader
         className: "add-configuration-form"
@@ -123,12 +130,13 @@ module.exports = React.createClass
       Input
         type: 'radio'
         label: 'Production'
-        help: 'You are paying for it'
+        help: @_renderProductionHelp()
         name: 'tokenType'
         value: GoodDataWriterTokenTypes.PRODUCTION
         checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.PRODUCTION
         onChange: @_handleChange.bind @, 'tokenType'
         wrapperClassName: 'col-xs-offset-3 col-xs-9'
+        disabled: !@state.canCreateProdProject
       Input
         type: 'radio'
         label: 'Demo'
@@ -155,19 +163,24 @@ module.exports = React.createClass
           onChange: @_handleChange.bind @, 'accessToken'
           wrapperClassName: 'col-xs-offset-3 col-xs-9'
 
+  _renderProductionHelp: ->
+    span null,
+      'You are paying for it'
+      if !@state.canCreateProdProject
+        div null,
+          'Please '
+          a onClick: contactSupport,
+            'contact support'
+          ' to enable production project.'
 
   _renderExistingForm: ->
     div className: 'row',
       div className: 'col-xs-offset-3 col-xs-9',
         h3 null, 'GoodData Project Admin Credentials'
-        p className: 'help-text',
-          'We will use these credentials just once to invite Keboola Domain Admin to your project.
-          These credentials will not be stored anywhere or used for any other purpose,
-          we will perform all other activity using the invited account.'
 
       Input
         type: 'text'
-        label: 'GoodData username'
+        label: 'Username'
         value: @props.configuration.get 'username'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
@@ -175,7 +188,7 @@ module.exports = React.createClass
         disabled: @props.isSaving
       Input
         type: 'password'
-        label: 'GoodData password'
+        label: 'Password'
         value: @props.configuration.get 'password'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
@@ -183,12 +196,20 @@ module.exports = React.createClass
         disabled: @props.isSaving
       Input
         type: 'text'
-        label: 'GoodData project ID'
+        label: 'Project Id'
         value: @props.configuration.get 'pid'
         labelClassName: 'col-xs-3'
         wrapperClassName: 'col-xs-7'
         onChange: @_handleChange.bind @, 'pid'
         disabled: @props.isSaving
+      p className: 'help-text',
+        'We will use these credentials just once to invite Keboola Domain Admin to your project.
+        They will not be stored anywhere or used for any other purpose,
+        we will perform all other activity using the invited account.'
+      p className: 'help-text',
+        'We will read the project and create writer\'s configuration along with bucket '
+        React.DOM.code null, 'out.c-wr-gooddata-{writer_name}'
+        ' where you should put your data. This bucket cannot exist already.'
 
   _handleSubmit: (e) ->
     e.preventDefault()

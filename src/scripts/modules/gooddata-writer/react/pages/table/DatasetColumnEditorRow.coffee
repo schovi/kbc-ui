@@ -92,8 +92,9 @@ module.exports = React.createClass
       if @props.showIdentifier
         td null,
           if not @_isIgnoreType()
-            @_renderIdentifierLabel()
-            @_renderIdentifierTime()
+            span null,
+              @_renderIdentifierLabel()
+              @_renderIdentifierTime()
       td null,
         ColumnDataPreview
           columnName: @props.column.get 'name'

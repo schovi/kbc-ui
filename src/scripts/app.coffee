@@ -39,6 +39,8 @@ startApp = (appOptions) ->
     sapiToken: appOptions.data.sapi.token
     organizations: appOptions.data.organizations
     maintainers: appOptions.data.maintainers
+    notifications: appOptions.data.notifications
+    projectTemplates: appOptions.data.projectTemplates
     kbc: appOptions.data.kbc
     tokenStats: appOptions.data.tokenStats
   )

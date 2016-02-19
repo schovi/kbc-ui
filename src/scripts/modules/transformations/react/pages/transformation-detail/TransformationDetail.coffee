@@ -67,7 +67,7 @@ module.exports = React.createClass
     @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'redshift' and @state.transformation.get('type') == 'simple' or
     @state.transformation.get('backend') == 'snowflake' and @state.transformation.get('type') == 'simple' or
-    @state.transformation.get('backend') == 'docker' and @state.transformation.get('type') == 'r'
+    @state.transformation.get('backend') == 'docker'
 
   render: ->
     div className: 'container-fluid',

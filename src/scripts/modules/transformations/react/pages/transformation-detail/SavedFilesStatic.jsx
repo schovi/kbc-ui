@@ -23,7 +23,7 @@ export default React.createClass({
   emptyState() {
     return (
       <div className="help-block">
-        <small>No files will downloaded.</small> {this.startEditButton()}
+        <small>No files will be downloaded.</small> {this.startEditButton()}
       </div>
     );
   },

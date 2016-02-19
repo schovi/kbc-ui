@@ -62,7 +62,8 @@ module.exports = React.createClass
     hasUI = @props.component.get('hasUI') or
       hiddenComponents.hasDevelPreview(@props.component.get('id')) or
       @props.component.get('flags').includes('genericUI') or
-      @props.component.get('flags').includes('genericDockerUI')
+      @props.component.get('flags').includes('genericDockerUI') or
+      @props.component.get('flags').includes('genericTemplatesUI')
 
     if !hasUI
       return ManualConfigurationForm

@@ -2,12 +2,16 @@ React = require 'react'
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, button, strong, div} = React.DOM
+{Loader} = require 'kbc-react-components'
 Link = React.createFactory(require('react-router').Link)
+
+dockerProxyApi = require('../../../templates/dockerProxyApi').default
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
+{span, div, a, button, i, strong} = React.DOM
 
 module.exports = React.createClass
 
@@ -22,6 +26,8 @@ module.exports = React.createClass
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
     componentId: React.PropTypes.string.isRequired
+    deleteTableFn: React.PropTypes.func.isRequired
+    isDeleting: React.PropTypes.bool.isRequired
 
   render: ->
     Link
@@ -43,6 +49,7 @@ module.exports = React.createClass
           isActive: @props.isTableExported
           isPending: @props.isPending
           onChange: @props.onExportChangeFn
+        @_renderDeleteButton()
         React.createElement Tooltip,
           tooltip: 'Upload table to Dropbox'
         ,
@@ -53,7 +60,31 @@ module.exports = React.createClass
             icon: 'fa fa-upload fa-fw'
             component: @props.componentId
             runParams: =>
-              table: @props.table.get('id')
-              writer: @props.configId
+              tableId = @props.table.get('id')
+              configId = @props.configId
+              params =
+                table: tableId
+                writer: configId
+              api = dockerProxyApi(@props.componentId)
+              return api?.getTableRunParams(configId, tableId) or params
           ,
            "You are about to run upload of #{@props.table.get('id')} to the database."
+
+  _renderDeleteButton: ->
+    if @props.isDeleting
+      span className: 'btn btn-link',
+        React.createElement Loader
+    else
+      React.createElement Tooltip,
+        tooltip: 'Remove table from configuration'
+        placement: 'top'
+        React.createElement Confirm,
+          key: @props.table.get 'id'
+          title: "Remove #{@props.table.get('id')}"
+          text: 'You are about to remove table from the configuration.'
+          buttonLabel: 'Remove'
+          onConfirm: =>
+            @props.deleteTableFn(@props.table.get('id'))
+        ,
+          button className: 'btn btn-link',
+            i className: 'kbc-icon-cup'

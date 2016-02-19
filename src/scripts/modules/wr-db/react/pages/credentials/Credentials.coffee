@@ -204,11 +204,12 @@ templateFn = (componentId, driver, isProvisioning) ->
       isSaving: isSaving
       isProvisioning: isProvisioningProp
       componentId: componentId
+      driver: driver
 
   _isProvCredentials: ->
     host = @state.credentials?.get('host')
     if driver == 'mysql'
-      return host == 'wr-db.keboola.com'
+      return host == 'wr-db-aws.keboola.com'
 
     if driver == 'redshift'
       return _.str.include(host,'redshift.amazonaws.com') and _.str.include(host, 'sapi')

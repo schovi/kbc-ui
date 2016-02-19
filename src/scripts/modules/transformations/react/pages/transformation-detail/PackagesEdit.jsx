@@ -6,6 +6,7 @@ import {fromJS} from 'immutable';
 export default React.createClass({
   propTypes: {
     packages: PropTypes.object.isRequired,
+    transformationType: PropTypes.string.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -16,8 +17,16 @@ export default React.createClass({
     return (
       <div className="well">
         <p>
-          These packages will be installed in the Docker container running the R script.
-          Do not forget to load them using <code>library()</code>.
+          {this.props.transformationType === 'r' ? (
+            <span>
+              These packages will be installed into the Docker container running the R script.
+              Do not forget to load them using <code>library()</code>.
+            </span>) : null}
+          {this.props.transformationType === 'python' ? (
+            <span>
+              These packages will be installed into the Docker container running the Python script.
+              Do not forget to load them using <code>import</code>.
+            </span>) : null}
         </p>
         <div className="form-group">
           <Select

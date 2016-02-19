@@ -18,7 +18,6 @@ SqlDepModal = React.createClass
   getInitialState: ->
     isLoading: true
     sqlDepUrl: null
-    warnings: List()
 
   componentDidMount: ->
     if (@props.backend == 'redshift')
@@ -32,7 +31,6 @@ SqlDepModal = React.createClass
         component.setState
           isLoading: false
           sqlDepUrl: response.url
-          warnings: Immutable.fromJS(response.warnings)
       )
 
   render: ->
@@ -49,30 +47,7 @@ SqlDepModal = React.createClass
             Loader {}
             ' '
             'Loading SQLdep data. This may take a minute or two...'
-        else if !@state.isLoading && @state.warnings.count() > 0
-          span {},
-            p {},
-              'SQLdep was processed, but the transformation contained some errors.'
-            p {},
-              a {href: @state.sqlDepUrl},
-                'Open SQLDep'
-            h4 {},
-              'Errors'
-            @state.warnings.map((warning) ->
-              p {},
-                div {},
-                  strong {},
-                    warning.getIn ['query', 'name']
-                div {},
-                  '['
-                  warning.get 'processStatusCode'
-                  '] '
-                  warning.get 'processStatusDesc'
-                div {},
-                  code {},
-                    warning.getIn ['query', 'sourceCode']
-            ).toArray()
-        else
+        else if !@state.isLoading
           span {},
             p {},
               'SQLdep is ready.'

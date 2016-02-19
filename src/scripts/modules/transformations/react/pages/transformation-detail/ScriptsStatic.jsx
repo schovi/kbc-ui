@@ -1,9 +1,11 @@
 import React, {PropTypes} from 'react';
 import CodeMirror from 'react-code-mirror';
+import resolveHighlightMode from './resolveHighlightMode';
 
 export default React.createClass({
   propTypes: {
     script: PropTypes.string.isRequired,
+    transformationType: PropTypes.string.isRequired,
     onEditStart: PropTypes.func.isRequired
   },
 
@@ -22,7 +24,7 @@ export default React.createClass({
             defaultValue={this.props.script}
             readOnly={true}
             cursorHeight={0}
-            mode="text/x-rsrc"
+            mode={resolveHighlightMode('docker', this.props.transformationType)}
             lineWrapping={true}
             />
         </div>
@@ -33,7 +35,9 @@ export default React.createClass({
   emptyState() {
     return (
       <p>
-        <small>No R script.</small> {this.startEditButton()}
+        {this.props.transformationType === 'r' ? (<small>No R script.</small>) : null}
+        {this.props.transformationType === 'python' ? (<small>No Python script.</small>) : null}
+        {this.startEditButton()}
       </p>
     );
   },
@@ -41,7 +45,9 @@ export default React.createClass({
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
-        <span className="kbc-icon-pencil"></span> Edit R Script
+        <span className="kbc-icon-pencil"></span>
+          {this.props.transformationType === 'r' ? 'Edit R Script' : null}
+          {this.props.transformationType === 'python' ? 'Edit Python Script' : null}
       </button>
     );
   }

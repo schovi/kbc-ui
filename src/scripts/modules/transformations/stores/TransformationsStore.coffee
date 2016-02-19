@@ -30,7 +30,10 @@ removeFromLoadingBuckets = (store, bucketId) ->
     loadingTransformationBuckets.remove(loadingTransformationBuckets.indexOf(bucketId))
 
 enhanceTransformation = (transformation) ->
-  transformation.set('queriesString', transformation.get('queries').join("\n\n"))
+  if (transformation.get('backend') == 'docker')
+    return transformation.set('queriesString', transformation.get('queries').join("\n"))
+  else
+    return transformation.set('queriesString', transformation.get('queries').join("\n\n"))
 
 TransformationsStore = StoreUtils.createStore
 

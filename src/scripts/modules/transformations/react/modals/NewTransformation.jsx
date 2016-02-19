@@ -24,6 +24,9 @@ function prepareDataForCreate(data) {
     case 'r':
       newData = newData.set('backend', 'docker').set('type', 'r');
       break;
+    case 'python':
+      newData = newData.set('backend', 'docker').set('type', 'python');
+      break;
     default:
       throw new Error('Unknown backend ' + data.get('backend'));
   }
@@ -124,8 +127,9 @@ export default React.createClass({
     return [
       {value: 'mysql', label: 'MySQL'},
       {value: 'redshift', label: 'Redshift'},
+      {value: 'snowflake', label: 'Snowflake'},
       {value: 'r', label: 'R'},
-      {value: 'snowflake', label: 'Snowflake'}
+      {value: 'python', label: 'Python'}
     ].map(function(option) {
       return (
         <option value={option.value} key={option.value}>{option.label}</option>

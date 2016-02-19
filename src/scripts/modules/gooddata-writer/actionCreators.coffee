@@ -182,11 +182,8 @@ module.exports =
       field: fieldName
       value: newValue
 
-    isNewWriter = goodDataWriterStore.isNewWriter(configurationId)
-    if fieldName == 'title' && !isNewWriter
-      saveFieldName = 'name'
-    else
-      saveFieldName = fieldName
+    #isNewWriter bc migration
+    saveFieldName = fieldName
 
     data = {}
     data[saveFieldName] = newValue
@@ -259,12 +256,8 @@ module.exports =
       configurationId: configurationId
       tableId: tableId
 
-    isNewWriter = goodDataWriterStore.isNewWriter(configurationId)
-    if isNewWriter
-      columns = columns.map((column) -> column.remove('gdName'))
-    else
-      columns = columns.map (column) ->
-        column.set('gdName', column.get('title'))
+    #isNewWriter bc migration
+    columns = columns.map((column) -> column.remove('gdName'))
 
     goodDataWriterApi
     .updateTable(configurationId, tableId,

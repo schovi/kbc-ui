@@ -5,6 +5,10 @@ classnames = require 'classnames'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
+LatestJobs = require '../../../../components/react/components/SidebarJobs'
+LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+dockerProxyApi = require('../../../templates/dockerProxyApi').default
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
@@ -21,14 +25,16 @@ WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
-
+StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 fieldsTemplate = require '../../../templates/credentialsFields'
-
+AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
 #componentId = 'wr-db'
 #driver = 'mysql'
-
+{Button} = require 'react-bootstrap'
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
+
+allowedBuckets = ['out']
 
 module.exports = (componentId) ->
   React.createClass templateFn(componentId)
@@ -36,7 +42,7 @@ module.exports = (componentId) ->
 templateFn = (componentId) ->
   displayName: 'wrdbIndex'
 
-  mixins: [createStoreMixin(InstalledComponentsStore, LatestJobsStore, WrDbStore)]
+  mixins: [createStoreMixin(StorageTablesStore, InstalledComponentsStore, LatestJobsStore, WrDbStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam('config')
@@ -47,17 +53,20 @@ templateFn = (componentId) ->
     credentials = WrDbStore.getCredentials(componentId, configId)
 
     #state
+    latestJobs: LatestJobsStore.getJobs componentId, configId
     updatingTables: WrDbStore.getUpdatingTables(componentId, configId)
+    allTables: StorageTablesStore.getAll()
     tables: tables
     credentials: credentials
     configId: configId
     hasCredentials: WrDbStore.hasCredentials(componentId, configId)
     localState: localState
     bucketToggles: toggles
+    deletingTables: WrDbStore.getDeletingTables(componentId, configId)
 
 
   render: ->
-    console.log 'render'
+    console.log 'render', @state.tables.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()
@@ -76,6 +85,44 @@ templateFn = (componentId) ->
     , true)
     return result
 
+  _renderAddNewTable: ->
+    data = @state.localState.get('newTable', Map())
+    selectedTableId = data.get('tableId')
+    inputTables = @state.tables.toMap().mapKeys((key, c) -> c.get('id'))
+    isAllConfigured = @state.allTables.filter( (t) ->
+      t.getIn(['bucket', 'stage']) in allowedBuckets and not inputTables.has(t.get('id'))
+    ).count() == 0
+
+    updateStateFn = (path, newData) =>
+      @_updateLocalState(['newTable'].concat(path), newData)
+
+    span null,
+      React.createElement Button,
+        disabled: isAllConfigured
+        onClick: ->
+          updateStateFn(['show'], true)
+        bsStyle: 'success'
+      ,
+        '+ Add New Table'
+      React.createElement AddNewTableModal,
+        show: data.get('show', false)
+        allowedBuckets: allowedBuckets
+        onHideFn: =>
+          @_updateLocalState([], Map())
+        selectedTableId: selectedTableId
+        onSetTableIdFn: (tableId) ->
+          updateStateFn(['tableId'], tableId)
+        configuredTables: inputTables
+        onSaveFn: (tableId) =>
+          WrDbActions.addTableToConfig(componentId, @state.configId, tableId).then =>
+            RoutesStore.getRouter().transitionTo "#{componentId}-table",
+              tableId: tableId
+              config: @state.configId
+        isSaving: @_isPendingTable(selectedTableId)
+
+  _hasConfigTables: ->
+    @state.tables.count() > 0
+
   _renderMainContent: ->
     configuredTables = @state.tables.filter (table) ->
       table.get('export')
@@ -83,36 +130,45 @@ templateFn = (componentId) ->
       table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
-        ComponentDescription
-          componentId: componentId
-          configId: @state.configId
-      if @_hasValidCredentials()
+        div className: 'col-sm-8',
+          ComponentDescription
+            componentId: componentId
+            configId: @state.configId
+        div className: 'col-sm-4 kbc-buttons text-right',
+          if @_hasConfigTables()
+            @_renderAddNewTable()
+      if @_hasValidCredentials() and @_hasConfigTables()
         React.createElement SearchRow,
           className: 'row kbc-search-row'
           onChange: @_handleSearchQueryChange
           query: @state.localState.get('searchQuery') or ''
-      if @_hasValidCredentials()
+      if @_hasValidCredentials() and @_hasConfigTables()
         TablesByBucketsPanel
           renderTableRowFn: @_renderTableRow
           renderHeaderRowFn: @_renderHeaderRow
           filterFn: @_filterBuckets
           searchQuery: @state.localState.get('searchQuery')
           isTableExportedFn: @_isTableExported
+          isTableShownFn: @_isTableInConfig
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
           configuredTableIds: configuredIds
+          showAllTables: false
       else
-        div className: 'row component-empty-state text-center',
-          div null,
-            p null, 'No credentials provided.'
-            Link
-              className: 'btn btn-success'
-              to: "#{componentId}-credentials"
-              params:
-                config: @state.configId
-            ,
-              i className: 'fa fa-fw fa-user'
-              ' Setup Credentials First'
+        React.createElement ComponentEmptyState, null,
+          if not @_hasValidCredentials()
+            div null,
+              p null, 'No credentials provided.'
+              Link
+                className: 'btn btn-success'
+                to: "#{componentId}-credentials"
+                params:
+                  config: @state.configId
+              ,
+                i className: 'fa fa-fw fa-user'
+                ' Setup Credentials First'
+          else
+            @_renderAddNewTable()
 
   _disabledToRun: ->
     if not @_hasValidCredentials()
@@ -149,13 +205,18 @@ templateFn = (componentId) ->
             icon: 'fa fa-upload fa-fw'
             component: componentId
             runParams: =>
-              writer: @state.configId
+              params =
+                writer: @state.configId
+              api = dockerProxyApi(componentId)
+              return api?.getRunParams(@state.configId) or params
           ,
            "You are about to run upload of all seleted tables"
         li null,
           React.createElement DeleteConfigurationButton,
             componentId: componentId
             configId: @state.configId
+      React.createElement LatestJobs,
+        jobs: @state.latestJobs
 
 
   _renderTableRow: (table) ->
@@ -170,6 +231,9 @@ templateFn = (componentId) ->
         @_handleExportChange(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
+      deleteTableFn: (tableId) =>
+        WrDbActions.deleteTable(componentId, @state.configId, tableId)
+      isDeleting: @state.deletingTables.get(table.get('id'))
 
   _renderHeaderRow: ->
     div className: 'tr',
@@ -193,13 +257,17 @@ templateFn = (componentId) ->
   _prepareTableUploadData: (table) ->
     return []
 
+  _isTableInConfig: (tableId) ->
+    @state.tables.find (t) ->
+      t.get('id') == tableId
+
   _isTableExported: (tableId) ->
     table = @_getConfigTable(tableId)
     table and (table.get('export') == true)
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in allowedBuckets
     return buckets
 
   _handleToggleBucket: (bucketId) ->

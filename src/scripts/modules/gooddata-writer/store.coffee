@@ -112,6 +112,12 @@ getInvalidColumns = (columns) ->
 
     # schema reference not set
     return true if column.get('type') == ColumnTypes.REFERENCE && !column.get('schemaReference')
+    # identifier must contain only lowercase and uppercase letters,
+    # numbers, underscore "_" and dot "."
+    identifier = column.get('identifier')
+    identifierPattern = ///^([a-zA-Z0-9_.]+)$///g
+    if not _.isEmpty(identifier)
+      return true if not identifier.match(identifierPattern)
 
     # format and dateDimension not set for DATE type
     return true if column.get('type') == ColumnTypes.DATE && !(column.get('format') && column.get('dateDimension'))
@@ -168,9 +174,6 @@ GoodDataWriterStore = StoreUtils.createStore
 
   getWriter: (configurationId) ->
     _store.getIn ['writers', configurationId]
-
-  isNewWriter: (configurationId) ->
-    @getWriter(configurationId).getIn(['config', 'feats', 'new_config'], false)
 
   getWriterTablesFilter: (configurationId) ->
     _store.getIn ['filters', configurationId, 'tables'], ''

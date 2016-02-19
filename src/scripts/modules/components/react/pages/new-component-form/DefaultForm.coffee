@@ -4,7 +4,7 @@ FormHeader = React.createFactory(require './FormHeader')
 Input = React.createFactory(require('react-bootstrap').Input)
 AppVendorInfo = React.createFactory(require './AppVendorInfo')
 AppUsageInfo = React.createFactory(require './AppUsageInfo')
-{div, form, label, span, h3} = React.DOM
+{div, p, form, label, span, h3} = React.DOM
 Immutable = require('immutable')
 
 ModalHeader = React.createFactory(require('react-bootstrap/lib/ModalHeader'))
@@ -14,6 +14,7 @@ ModalFooter = React.createFactory(require('react-bootstrap/lib/ModalFooter'))
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
+EmptyState = require('../../../react/components/ComponentEmptyState').default
 
 require './DefaultForm.less'
 
@@ -92,7 +93,6 @@ module.exports = React.createClass
             onClick: @props.onSave
           ,
             'Create'
-
 
   _renderAppVendorInfo: ->
     AppVendorInfo

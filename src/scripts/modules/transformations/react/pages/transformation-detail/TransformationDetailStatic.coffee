@@ -66,10 +66,16 @@ module.exports = React.createClass
       transformation.get("requires").contains(props.transformation.get("id"))
     )
 
-  _renderDetail: ->
-    props = @props
-    component = @
-    div {className: 'kbc-row'},
+  _inputMappingDestinations: (exclude) ->
+    @props.transformation.get("input", Map()).map((mapping, key) ->
+      if key != exclude
+        return mapping.get("destination").toLowerCase()
+    ).filter((destination) ->
+      destination != undefined
+    )
+
+  _renderRequires: ->
+    span {},
       h2 {}, 'Requires'
       React.createElement Requires,
         bucketId: @props.bucket.get('id')
@@ -102,15 +108,21 @@ module.exports = React.createClass
                   Link
                     key: dependent.get("id")
                     to: 'transformationDetail'
-                    params: {transformationId: dependent.get("id"), bucketId: props.bucket.get('id')}
+                    params: {transformationId: dependent.get("id"), bucketId: @props.bucket.get('id')}
                   ,
                     span {className: 'label kbc-label-rounded-small label-default'},
                       dependent.get("name")
-                ).toArray()
+                , @).toArray()
           else
             div {className: "help-block"}, small {},
               "No transformations are dependent on the current transformation."
 
+  _renderDetail: ->
+    props = @props
+    component = @
+    div {className: 'kbc-row'},
+      if @props.transformation.get('backend') != 'docker'
+        @_renderRequires()
       div {},
         h2 {},
           'Input Mapping'
@@ -121,6 +133,7 @@ module.exports = React.createClass
                 transformation: @props.transformation
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-input-mapping', Map())
+                otherDestinations: @_inputMappingDestinations()
         if @props.transformation.get('input').count()
           div {},
             @props.transformation.get('input').map((input, key) ->
@@ -144,6 +157,7 @@ module.exports = React.createClass
                       editingId: 'input-' + key
                       mappingIndex: key
                       pendingActions: @props.pendingActions
+                      otherDestinations: @_inputMappingDestinations(key)
               ,
                 InputMappingDetail
                   fill: true
@@ -159,6 +173,7 @@ module.exports = React.createClass
               transformation: @props.transformation
               bucket: @props.bucket
               mapping: @props.editingFields.get('new-input-mapping', Map())
+              otherDestinations: @_inputMappingDestinations()
       div {},
         h2 {},
           'Output Mapping'
@@ -212,7 +227,7 @@ module.exports = React.createClass
               bucket: @props.bucket
               mapping: @props.editingFields.get('new-output-mapping', Map())
 
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+      if @props.transformation.get('backend') == 'docker'
         div {},
           h2 {}, 'Packages'
           React.createElement Packages,
@@ -234,7 +249,7 @@ module.exports = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+      if @props.transformation.get('backend') == 'docker'
         div {},
           h2 {}, 'Stored Files'
           React.createElement SavedFiles,
@@ -258,7 +273,7 @@ module.exports = React.createClass
       @_renderCodeEditor()
 
   _renderCodeEditor: ->
-    if  @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') == 'r'
+    if  @props.transformation.get('backend') == 'docker'
       element = Scripts
     else
       element = Queries

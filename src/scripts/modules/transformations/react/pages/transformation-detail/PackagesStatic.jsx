@@ -3,7 +3,8 @@ import React, {PropTypes} from 'react';
 export default React.createClass({
   propTypes: {
     packages: PropTypes.object.isRequired,
-    onEditStart: PropTypes.func.isRequired
+    onEditStart: PropTypes.func.isRequired,
+    transformationType: PropTypes.string.isRequired
   },
 
   render() {
@@ -15,8 +16,16 @@ export default React.createClass({
     return (
       <div>
         <div className="help-block">
-          These packages will be installed into the Docker container running the R script.
-          Do not forget to load them using <code>library()</code>
+          {this.props.transformationType === 'r' ? (
+            <span>
+              These packages will be installed into the Docker container running the R script.
+              Do not forget to load them using <code>library()</code>.
+            </span>) : null}
+          {this.props.transformationType === 'python' ? (
+            <span>
+              These packages will be installed into the Docker container running the Python script.
+              Do not forget to load them using <code>import</code>.
+            </span>) : null}
         </div>
         <div>
           {this.props.packages.map(this.renderPackage)}

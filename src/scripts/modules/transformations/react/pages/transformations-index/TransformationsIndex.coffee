@@ -60,7 +60,7 @@ TransformationsIndex = React.createClass
       else
         span {},
           h2 null,
-            'Transformations allows you to modify your data.'
+            'Transformations allow you to modify your data.'
           p null,
             'It picks data from Storage,
               manipulates it and then stores it back. Transformations can use MySQL, Redshift or R.'
@@ -73,6 +73,7 @@ TransformationsIndex = React.createClass
       span className: 'table',
         TransformationBucketRow
           bucket: bucket
+          transformations: TransformationsStore.getTransformations(bucket.get('id'))
           description: InstalledComponentsStore.getConfig('transformation', bucket.get('id')).get 'description'
           pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
           key: bucket.get 'id'

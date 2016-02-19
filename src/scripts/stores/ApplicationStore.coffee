@@ -3,6 +3,7 @@ Immutable = require('immutable')
 {Map, List} = Immutable
 Constants = require '../constants/KbcConstants'
 StoreUtils = require '../utils/StoreUtils'
+composeLimits = require('./composeLimits').default
 
 _store = Map(
   sapiToken: Map()
@@ -27,6 +28,24 @@ ApplicationStore = StoreUtils.createStore
 
   getMaintainers: ->
     _store.get 'maintainers'
+
+  getNotifications: ->
+    Map
+      url: @getUrlTemplates().get 'notifications'
+      unreadCount: _store.getIn ['notifications', 'unreadCount']
+      isEnabled: true
+
+  getProjectTemplates: ->
+    _store.get 'projectTemplates'
+
+  getLimits: ->
+    composeLimits @getSapiToken().getIn(['owner', 'limits']), @getSapiToken().getIn(['owner', 'metrics'])
+
+  getLimitsOverQuota: ->
+    @getLimits()
+    .map (section) -> section.get('limits').map((limits) -> limits.set('section', section.get('title')))
+    .flatten 1
+    .filter (limit) -> limit.get('isAlarm')
 
   getTokenStats: ->
     _store.get 'tokenStats'
@@ -85,5 +104,7 @@ Dispatcher.register (payload) ->
           .set 'organizations', Immutable.fromJS(action.applicationData.organizations)
           .set 'maintainers', Immutable.fromJS(action.applicationData.maintainers)
           .set 'tokenStats', Immutable.fromJS(action.applicationData.tokenStats)
+          .set 'notifications', Immutable.fromJS(action.applicationData.notifications)
+          .set 'projectTemplates', Immutable.fromJS(action.applicationData.projectTemplates)
 
 module.exports = ApplicationStore

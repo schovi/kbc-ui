@@ -46,7 +46,7 @@ Index = React.createClass
   _renderEmptyState: ->
     div className: 'row',
       h2 null,
-        'Orchestrations allows you to group together related tasks and schedule it\'s execution.'
+        'Orchestrations allow you to group together related tasks and schedule their execution.'
       p null,
         React.createElement NewOrchestrationButton,
           buttonLabel: 'Get Started Now'

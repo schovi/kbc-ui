@@ -1,10 +1,12 @@
 _ = require 'underscore'
 {List} = require 'immutable'
+moment = require 'moment'
 index = require './react/pages/Index/Index'
 tableDetail = require './react/pages/Table/Table'
 destinationPage = require './react/pages/Destination/Destination'
 tableEditButtons = require './react/components/TableHeaderButtons'
 JobsActionCreators = require '../jobs/ActionCreators'
+LatestJobsStore = require '../jobs/stores/LatestJobsStore'
 installedComponentsActions = require '../components/InstalledComponentsActionCreators'
 oauthStore = require '../components/stores/OAuthStore'
 oauthActions = require '../components/OAuthActionCreators'
@@ -24,6 +26,27 @@ findNonEmptyAccount = (configData) ->
     if not _.isEmpty(data?.toJS())
       return account
   return null
+
+# load files from file uploads
+loadFiles = (force) ->
+  tags = ['tde', 'table-export']
+  params = "q": _.map(tags, (t) -> "+tags:#{t}").join(' ')
+  if force
+    storageActionCreators.loadFilesForce(params)
+  else
+    storageActionCreators.loadFiles(params)
+
+#reload files from files uploads if at least one job has finished up to 10 seconds ago
+reloadSapiFilesTrigger = (jobs) ->
+  tresholdTrigger = 20 #seconds of end time from now to reload all files
+  for job in jobs
+    if job.endTime
+      endTime = moment(job.endTime)
+      now = moment()
+      diff = moment.duration(now.diff(endTime))
+      if (diff < moment.duration(tresholdTrigger, 'seconds'))
+        return loadFiles(true)
+
 
 #migrate tasks that have and uploadTasks set but no stageTask
 # setup first non empty authorized account if uploadTasks is empty
@@ -59,7 +82,9 @@ module.exports =
   poll:
     interval: 7
     action: (params) ->
-      JobsActionCreators.loadComponentConfigurationLatestJobs('tde-exporter', params.config)
+      JobsActionCreators.loadComponentConfigurationLatestJobs('tde-exporter', params.config).then ->
+        jobs = LatestJobsStore.getJobs('tde-exporter', params.config)
+        reloadSapiFilesTrigger(jobs.get('jobs')?.toJS())
 
   requireData: [
     (params) ->
@@ -70,9 +95,7 @@ module.exports =
       ->
         storageActionCreators.loadTables()
       ->
-        tags = ['tde', 'table-export']
-        params = "q": _.map(tags, (t) -> "+tags:#{t}").join(' ')
-        storageActionCreators.loadFiles(params)
+        loadFiles(false)
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']

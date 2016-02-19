@@ -5,6 +5,7 @@ Textarea = require 'react-textarea-autosize'
 {Input} = require 'react-bootstrap'
 {form, div, label, p, a, label} = React.DOM
 TestCredentials = require './TestCredentialsButtonGroup'
+{NewLineToBr} = require('kbc-react-components')
 
 _helpUrl = 'https://sites.google.com/a/keboola.com/wiki/home/keboola-connection/ui-articles/-db-ex-ssl-credentials'
 
@@ -67,6 +68,6 @@ module.exports = React.createClass
       div null,
         p className: 'form-control-static',
           if @props.credentials.getIn(['ssl', propName])
-            @props.credentials.getIn(['ssl', propName])
+            React.createElement NewLineToBr, text: @props.credentials.getIn(['ssl', propName])
           else
             'Not set.'

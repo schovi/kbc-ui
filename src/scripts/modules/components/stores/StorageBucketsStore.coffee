@@ -1,8 +1,9 @@
-
 Dispatcher = require('../../../Dispatcher')
 constants = require '../Constants'
 Immutable = require('immutable')
 Map = Immutable.Map
+List = Immutable.List
+fromJS = Immutable.fromJS
 StoreUtils = require '../../../utils/StoreUtils'
 _ = require 'underscore'
 
@@ -10,6 +11,8 @@ _store = Map(
   buckets: Map()
   isLoaded: false
   isLoading: false
+  credentials: Map() #bucketId
+  pendingCredentials: Map() #bucketId/(loading, deleting, creating)
 )
 
 StorageBucketsStore = StoreUtils.createStore
@@ -23,6 +26,17 @@ StorageBucketsStore = StoreUtils.createStore
   getIsLoaded: ->
     _store.get 'isLoaded'
 
+  hasCredentials: (bucketId) ->
+    _store.get('credentials').has(bucketId)
+
+  getCredentials: (bucketId) ->
+    _store.getIn(['credentials', bucketId])
+
+  isCreatingCredentials: ->
+    _store.getIn ['pendingCredentials', 'creating'], false
+
+  isDeletingCredentials: ->
+    _store.getIn ['pendingCredentials', 'deleting'], false
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -40,11 +54,51 @@ Dispatcher.register (payload) ->
           store = store.setIn ['buckets', bObj.get 'id'], bObj
         )
         store.set 'isLoading', false
-
       StorageBucketsStore.emitChange()
 
     when constants.ActionTypes.STORAGE_BUCKETS_LOAD_ERROR
       _store = _store.set 'isLoading', false
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_CREATE
+      bucketId = action.bucketId
+      _store = _store.setIn(['pendingCredentials', 'creating'], true)
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_CREATE_SUCCESS
+      bucketId = action.bucketId
+      newCreds = fromJS action.credentials
+      _store = _store.setIn(['pendingCredentials', 'creating'], false)
+      creds = StorageBucketsStore.getCredentials(bucketId) or List()
+      _store = _store.setIn ['credentials', bucketId], creds.push(newCreds)
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_LOAD
+      bucketId = action.bucketId
+      _store = _store.setIn(['pendingCredentials', bucketId, 'loading'], true)
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_LOAD_SUCCESS
+      bucketId = action.bucketId
+      credentials = fromJS action.credentials
+      _store = _store.deleteIn(['pendingCredentials', bucketId, 'loading'])
+
+      _store = _store.setIn ['credentials', bucketId], credentials
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_DELETE
+      bucketId = action.bucketId
+      credentialsId = action.credentialsId
+      _store = _store.setIn ['pendingCredentials', 'deleting'], true
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREDENTIALS_DELETE_SUCCESS
+      bucketId = action.bucketId
+      credentialsId = action.credentialsId
+      _store = _store.deleteIn ['pendingCredentials', 'deleting']
+      creds = StorageBucketsStore.getCredentials(bucketId).filter((c) ->
+        c.get('id') != credentialsId)
+      _store = _store.setIn ['credentials', bucketId], creds
       StorageBucketsStore.emitChange()
 
 

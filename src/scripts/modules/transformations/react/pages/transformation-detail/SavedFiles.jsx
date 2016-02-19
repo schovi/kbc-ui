@@ -45,7 +45,6 @@ export default React.createClass({
     return (
       <div className="help-block">
         The latest file with a given tag will be saved to <code>/data/in/user/&#123;tag&#125;</code>.
-        The transformation will fail when no files found for a given tag.
       </div>
     );
   }

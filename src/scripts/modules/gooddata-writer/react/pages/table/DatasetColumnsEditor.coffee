@@ -100,7 +100,8 @@ module.exports = React.createClass
                 ,
                   'Identifier of column in GoodData. '
                   'This can be useful when you are migrating project from CloudConnect. '
-                  'Otherwise defaults should be fine.'
+                  'If left empty the defaults will be used.'
+                  ' Allowed characters: lowercase and uppercase letters, numbers, underscore "_" and dot "."'
             if @props.showIdentifier
               th null, 'Identifier Label'
             th null
@@ -123,6 +124,3 @@ module.exports = React.createClass
               isExported: @props.isExported
           , @
           .toArray()
-
-
-

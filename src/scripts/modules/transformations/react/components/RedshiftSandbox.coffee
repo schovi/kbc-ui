@@ -13,16 +13,23 @@ DeleteButton = React.createFactory(require '../../../../react/common/DeleteButto
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
-
+ApplicationStore = require('../../../../stores/ApplicationStore')
+contactSupport = require('../../../../utils/contactSupport').default
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
 
-  mixins: [createStoreMixin(RedshiftSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)]
+  mixins: [createStoreMixin(
+    RedshiftSandboxCredentialsStore,
+    StorageBucketsStore,
+    StorageTablesStore,
+    ApplicationStore
+  )]
 
   displayName: 'RedshiftSandbox'
 
   getStateFromStores: ->
+    hasRedshift: ApplicationStore.getSapiToken().getIn(["owner", "hasRedshift"], false)
     credentials: RedshiftSandboxCredentialsStore.getCredentials()
     pendingActions: RedshiftSandboxCredentialsStore.getPendingActions()
     isLoading: RedshiftSandboxCredentialsStore.getIsLoading()
@@ -30,11 +37,26 @@ RedshiftSandbox = React.createClass
     tables: StorageTablesStore.getAll()
     buckets: StorageBucketsStore.getAll()
 
+  _openSupportModal: (e) ->
+    contactSupport(type: 'project')
+    e.preventDefault()
+    e.stopPropagation()
+
   _renderCredentials: ->
-    span {},
-      RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
+    if (!@state.hasRedshift)
+      span {},
+        "Redshift is not enabled for this project, please "
+      ,
+        a {onClick: @_openSupportModal}, "contact us"
+      ,
+        " to get more info."
+    else
+      span {},
+        RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
+    if !@state.hasRedshift
+      return null
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       div {},

@@ -15,6 +15,7 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     initialShowDetails: React.PropTypes.bool.isRequired
+    isDestinationDuplicate: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
@@ -44,9 +45,11 @@ module.exports = React.createClass
   ]
 
   _handleChangeSource: (value) ->
+    # use only table name from the table identifier
+    destination = value.substr(value.lastIndexOf(".") + 1)
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
-      mapping = mapping.set("destination", value)
+      mapping = mapping.set("destination", destination)
       mapping = mapping.set("persistent", false)
       mapping = mapping.set("type", "table")
       mapping = mapping.set("datatypes", Immutable.Map())
@@ -250,6 +253,12 @@ module.exports = React.createClass
           onChange: @_handleChangeDestination
           labelClassName: 'col-xs-2'
           wrapperClassName: 'col-xs-10'
+          bsStyle: if @props.isDestinationDuplicate then 'error' else null
+          help: if @props.isDestinationDuplicate then React.DOM.small {'className': 'error'},
+              'Duplicate destination '
+              React.DOM.code {}, @props.value.get("destination")
+              '.'
+            else null
       if @state.showDetails && @_isSourceTableRedshift()
         React.DOM.div {className: "row col-md-12"},
           Input

@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
-import { Button, ButtonToolbar, Modal} from 'react-bootstrap';
-import { Loader } from 'kbc-react-components';
+import ConfirmButtons from '../../../react/common/ConfirmButtons';
+import { Modal} from 'react-bootstrap';
 
 export default React.createClass({
 
@@ -60,21 +60,13 @@ export default React.createClass({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <ButtonToolbar>
-            {this.props.isSaving ? <Loader /> : null}
-            <Button
-              bgStyle="link"
-              onClick={this.handleCancelFunction}>
-              Cancel
-            </Button>
-            <Button
-              className="btn btn-success"
-              bgStyle="success"
-              disabled={this.props.canSaveConfig()}
-              onClick={this.handleSaveFunction}>
-              Save
-            </Button>
-          </ButtonToolbar>
+          <ConfirmButtons
+            saveLabel="Save"
+            isSaving={this.props.isSaving}
+            onCancel={this.handleCancelFunction}
+            onSave={this.handleSaveFunction}
+            isDisabled={this.props.canSaveConfig()}
+          />
         </Modal.Footer>
       </Modal>
     );
