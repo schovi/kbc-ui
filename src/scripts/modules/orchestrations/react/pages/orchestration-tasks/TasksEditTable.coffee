@@ -123,7 +123,7 @@ TasksEditTable = React.createClass
         if tasksRows.count() > 0
           result = result.concat(tasksRows)
         else
-          result = result.concat(@_renderEmptyTasksRow(phase.get('id'), isPhaseHidden, color))
+          result = result.concat(@_renderEmptyTasksRow(phase.get('id'), color))
     )
     return result.toArray()
 
