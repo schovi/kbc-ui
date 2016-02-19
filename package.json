@@ -75,7 +75,8 @@
     "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --port 3000 --inline",
     "start-projects-list": "webpack-dev-server --config webpack/dev-server-projects-list.config.js --hot --progress --colors --port 3000 --inline",
     "build": "webpack --config webpack/production.config.js --profile --colors --bail && node webpack/generate-manifest.js",
-    "lint": "eslint src --ext .js --ext .jsx"
+    "lint": "eslint src --ext .js --ext .jsx",
+    "test": "cross-env NODE_ENV=test mocha --reporter progress --recursive \"./src/**/*.spec.js\""
   },
   "pre-commit": [
     "lint"
@@ -83,5 +84,9 @@
   "author": "Martin Halamicek",
   "jest": {
     "rootDir": "./js"
+  },
+  "devDependencies": {
+    "cross-env": "^1.0.7",
+    "mocha": "^2.4.5"
   }
 }

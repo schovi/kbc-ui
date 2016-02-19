@@ -16,10 +16,11 @@ RoutesStore = require '../../stores/RoutesStore'
 ComponentsStore = require './stores/ComponentsStore'
 
 deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
+removeEmptyEncryptAttributes = require './utils/removeEmptyEncryptAttributes'
 
 storeEncodedConfig = (componentId, configId, dataToSave) ->
   component = InstalledComponentsStore.getComponent(componentId)
-  dataToSave = {configuration: JSON.stringify(dataToSave)}
+  dataToSave = {configuration: JSON.stringify(removeEmptyEncryptAttributes(dataToSave))}
   if component.get('flags').includes('encrypt')
     installedComponentsApi
     .updateComponentConfigurationEncrypted(component.get('uri'), configId, dataToSave)
