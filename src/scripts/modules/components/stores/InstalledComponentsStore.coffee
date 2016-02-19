@@ -608,6 +608,7 @@ Dispatcher.register (payload) ->
         Immutable.fromJS(action.configData)
       )
       _store = _store.deleteIn(['templatedConfigValuesEditing', action.componentId, action.configId])
+      _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_ERROR
