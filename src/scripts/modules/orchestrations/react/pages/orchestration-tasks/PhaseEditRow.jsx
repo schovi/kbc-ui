@@ -80,6 +80,7 @@ export default React.createClass({
                 style={{padding: '0'}}
                 onClick={this.toggleTaskAdd}>
                 <span className="fa fa-fw fa-plus"/>
+                Add task
               </button>
             </Tooltip>
           </div>
