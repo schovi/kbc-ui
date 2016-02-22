@@ -119,7 +119,7 @@ export default React.createClass({
   renderKeboolaDimHelp() {
     return (
       <small>
-        Default date dimension provided by Keboola: Added all week setups: Mon-Sun, Tue-Mon, Wed-Tue, Thu-Wed, Fri-Thu, Sat-Fri, Sun-Sat + Boolean value whether its weekend or working day
+        Default date dimension provided by Keboola. Added all week setups: Mon-Sun, Tue-Mon, Wed-Tue, Thu-Wed, Fri-Thu, Sat-Fri, Sun-Sat + Boolean value whether its weekend or working day
       </small>
     );
   },
@@ -127,7 +127,7 @@ export default React.createClass({
   renderCustomDimHelp() {
     return (
       <small>
-        Provide your own template: You can generate the csv file containing all necessary details and provide with GoodData.
+        Provide your own template. You can generate the csv file containing all necessary details and provide it to GoodData.
         More info:{' '}
         <a href="http://wiki.keboola.com/pure-gooddata-hints/custom-date-dimensions" target="_blank">
            Custom date dimmensions
