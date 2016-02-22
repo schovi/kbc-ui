@@ -42,13 +42,13 @@ TaskParametersEdit = React.createClass
 
   render: ->
     Modal title: 'Task parameters', onRequestHide: @props.onRequestHide,
-      div className: 'modal-body',
+      div className: 'modal-body', style: {padding: 0},
         @renderJsonArea()
       div className: 'modal-footer',
         if @props.isEditable
           ButtonToolbar null,
             Button
-              bsStyle: 'default'
+              bsStyle: 'link'
               onClick: @props.onRequestHide
             ,
               'Cancel'

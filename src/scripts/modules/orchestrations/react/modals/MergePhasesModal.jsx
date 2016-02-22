@@ -36,7 +36,7 @@ export default React.createClass({
           <div className="form form-horizontal">
             <div className={formDivClass}>
               <label htmlFor="title" className="col-sm-1 control-label">
-                Into:
+                Into
               </label>
               <div className="col-sm-11">
                 <Select
