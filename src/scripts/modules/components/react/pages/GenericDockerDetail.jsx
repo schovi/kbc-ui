@@ -15,6 +15,7 @@ import Configuration from '../components/Configuration';
 import TemplatedConfiguration from '../components/TemplatedConfiguration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
+import AuthorizationRow from '../../../oauth-v2/react/AuthorizationRow.jsx';
 import TableOutputMapping from '../components/generic/TableOutputMapping';
 import FileOutputMapping from '../components/generic/FileOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
@@ -162,6 +163,19 @@ export default React.createClass({
     }
   },
 
+  accountAuthorization() {
+    if (this.state.component.get('flags').includes('genericDockerUI-authorization')) {
+      return (
+        <AuthorizationRow
+          id={this.state.configId}
+          componentId={this.state.componentId}
+        />
+      );
+    } else {
+      return null;
+    }
+  },
+
   render() {
     return (
       <div className="container-fluid">
@@ -175,6 +189,7 @@ export default React.createClass({
           <div className="row">
             <div classNmae="col-xs-4">
               <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
+              {this.accountAuthorization()}
               {this.tableInputMapping()}
               {this.fileInputMapping()}
               {this.tableOutputMapping()}
