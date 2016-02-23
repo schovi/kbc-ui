@@ -75,16 +75,7 @@ export default React.createClass({
 
   scripts() {
     if (this.state.isEditing) {
-      return (
-        <span>
-          {
-            this.state.supportsEncryption ?
-              <p className="help-block small">Properties prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
-              : null
-          }
-          { this.renderEditor() }
-        </span>
-      );
+      return this.renderEditor();
     } else {
       return (
         <Static
