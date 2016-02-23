@@ -22,8 +22,6 @@ HiddenComponents = require './modules/components/utils/hiddenComponents'
 RoutesStore = require './stores/RoutesStore'
 initializeData = require './initializeData'
 
-gaTrackPageview = require('./utils/gaTrackPageview').default
-
 ###
   Bootstrap and start whole application
   appOptions:
@@ -99,8 +97,6 @@ startApp = (appOptions) ->
 
     # run only once on first render
     loading(Handler)
-
-    gaTrackPageview()
 
     # stop pollers required by previous page
     registeredPollers.forEach((action) ->
