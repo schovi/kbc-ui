@@ -1,13 +1,14 @@
 import {fromJS, Map} from 'immutable';
 import OauthActions from './ActionCreators';
 import OauthStore from './Store';
-
+import ComponentsStore from '../components/stores/ComponentsStore';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
 import RouterStore from '../../stores/RoutesStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 
 const configOauthPath = ['authorization', 'oauth_api', 'id'];
+export {configOauthPath};
 
 function processRedirectData(componentId, configId, id) {
   // config component configuration
@@ -62,4 +63,11 @@ export function createRedirectRoute(routeName, redirectPathName, redirectParamsF
       }
     ]
   };
+}
+
+
+export function loadCredentials(componentId, id) {
+  if (ComponentsStore.getComponent(componentId).get('flags').includes('genericDockerUI-authorization')) {
+    OauthActions.loadCredentials(componentId, id);
+  }
 }

@@ -1,11 +1,16 @@
 import React, {PropTypes} from 'react';
 import AuthorizationModal from './AuthorizationModal';
+import Confirm from '../../../react/common/Confirm';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
 
   propTypes: {
     componentId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired
+    credentials: PropTypes.object,
+    onResetCredentials: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    isResetingCredentials: PropTypes.bool
   },
 
   getInitialState() {
@@ -20,11 +25,42 @@ export default React.createClass({
         {this.renderAuthorizationModal()}
         <h2> Authorization
         </h2>
-        <button
-          onClick={this.showModal}
-          className="btn btn-primary">
-          Authorize
-        </button>
+        {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
+
+      </div>
+    );
+  },
+
+  renderAuth() {
+    return (
+      <button
+        onClick={this.showModal}
+        className="btn btn-primary">
+        Authorize
+      </button>
+    );
+  },
+
+  renderAuthorizedInfo() {
+    return (
+      <div>
+        Account authorized for {this.props.credentials.get('authorizedFor')}
+        {!this.props.isResetingCredentials ?  (
+           <Confirm
+             text="Do you really want to reset the authorized account?"
+             title="Reset Authorization"
+             buttonLabel="Reset"
+             onConfirm={this.props.onResetCredentials}>
+             <a
+               className="btn btn-link">
+               Reset Authorization
+             </a>
+           </Confirm>
+         ) : (
+           <Loader/>
+         )
+        }
+
       </div>
     );
   },
@@ -38,6 +74,12 @@ export default React.createClass({
         onHideFn={this.hideModal}
       />
     );
+  },
+
+  isAuthorized() {
+    const creds = this.props.credentials;
+    console.log(creds);
+    return  creds && creds.has('id');
   },
 
   hideModal() {
