@@ -6,6 +6,10 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 
+import {configOauthPath} from '../../../oauth-v2/OauthUtils';
+import OauthStore from '../../../oauth-v2/Store';
+import OauthActions from '../../../oauth-v2/ActionCreators';
+
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
@@ -31,13 +35,15 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing']));
+      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
+      configData = InstalledComponentStore.getConfigData(componentId, configId),
+      credentialsId = configData.getIn(configOauthPath);
 
     return {
       componentId: componentId,
       configId: configId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
-      configData: InstalledComponentStore.getConfigData(componentId, configId),
+      configData: configData,
       editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
@@ -51,7 +57,10 @@ export default React.createClass({
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
       openMappings: InstalledComponentStore.getOpenMappings(componentId, configId),
       component: ComponentStore.getComponent(componentId),
-      localState: localState
+      localState: localState,
+      credentialsId: credentialsId,
+      oauthCredentials: OauthStore.getCredentials(componentId, credentialsId),
+      isDeletingCredentials: OauthStore.isDeletingCredetials(componentId, credentialsId)
     };
   },
 
@@ -167,8 +176,11 @@ export default React.createClass({
     if (this.state.component.get('flags').includes('genericDockerUI-authorization')) {
       return (
         <AuthorizationRow
-          id={this.state.configId}
+          id={this.state.credentialsId}
           componentId={this.state.componentId}
+          credentials={this.state.oauthCredentials}
+          isResetingCredentials={this.state.isDeletingCredentials}
+          onResetCredentials={() => OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)}
         />
       );
     } else {

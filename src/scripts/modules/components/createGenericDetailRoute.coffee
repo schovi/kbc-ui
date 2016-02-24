@@ -47,6 +47,9 @@ module.exports = (componentType) ->
       ->
         StorageActions.loadTables()
     ,
+      (params) ->
+        OauthUtils.loadCredentials(params.component, params.config)
+    ,
       ->
         StorageActions.loadBuckets()
     ,
