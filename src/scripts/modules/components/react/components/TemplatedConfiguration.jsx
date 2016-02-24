@@ -27,12 +27,9 @@ export default React.createClass({
 
       jobs: InstalledComponentsStore.getTemplatedConfigValueJobs(componentId, configId),
       params: InstalledComponentsStore.getTemplatedConfigValueParams(componentId, configId),
-      api: InstalledComponentsStore.getTemplatedConfigValueApi(componentId, configId),
       paramsSchema: SchemasStore.getParamsSchema(componentId),
       pureParamsSchema: SchemasStore.getPureParamsSchema(componentId),
       jobsTemplates: SchemasStore.getJobsTemplates(componentId),
-      apiSchema: SchemasStore.getApiSchema(componentId),
-      apiTemplate: SchemasStore.getApiTemplate(componentId),
       supportsEncryption: component.get('flags').includes('encrypt'),
       isJobsString: InstalledComponentsStore.isTemplatedConfigJobsString(componentId, configId),
 
@@ -81,12 +78,8 @@ export default React.createClass({
         <Static
           jobs={this.state.jobs}
           params={this.state.params}
-          api={this.state.api}
           paramsSchema={this.state.paramsSchema}
           jobsTemplates={this.state.jobsTemplates}
-          apiSchema={this.state.apiSchema}
-          apiTemplate={this.state.apiTemplate}
-          requiresApiSchema={this.state.apiTemplate.count() === 0}
           onEditStart={this.onEditStart}
           editLabel={this.props.editLabel}
           />
