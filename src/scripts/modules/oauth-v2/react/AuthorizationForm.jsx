@@ -6,14 +6,20 @@ export default React.createClass({
   propTypes: {
     componentId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    returnUrl: PropTypes.string.isRequired,
     children: PropTypes.any
   },
 
+  getDefaultProps() {
+    return {
+
+    };
+  },
+
   render() {
-    const oauthUrl = ComponentsStore.getComponent('keboola.oauth-v2');
+    const oauthUrl = ComponentsStore.getComponent('keboola.oauth-v2').get('uri');
     const actionUrl = `${oauthUrl}/authorize/${this.props.componentId}`;
     const token = ApplicationStore.getSapiTokenString();
+    const returnUrl = `${window.location.href}/oauth-redirect`;
     return (
       <form
         method="POST"
@@ -21,7 +27,7 @@ export default React.createClass({
         className="form form-horizontal">
         {this.renderHiddenInput('token', token)}
         {this.renderHiddenInput('id', this.props.id)}
-        {this.renderHiddenInput('returnUrl', this.props.returnUrl)}
+        {this.renderHiddenInput('returnUrl', returnUrl)}
         {this.props.children}
       </form>
     );
@@ -30,6 +36,5 @@ export default React.createClass({
   renderHiddenInput(name, value) {
     return (<input type="hidden" name={name} value={value}/>);
   }
-
 
 });

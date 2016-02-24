@@ -5,8 +5,7 @@ export default React.createClass({
 
   propTypes: {
     componentId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    returnUrl: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired
   },
 
   getInitialState() {
@@ -35,7 +34,6 @@ export default React.createClass({
       <AuthorizationModal
         componentId={this.props.componentId}
         id={this.props.id}
-        returnUrl={this.props.returnUrl}
         show={this.state.showModal}
         onHideFn={this.hideModal}
       />

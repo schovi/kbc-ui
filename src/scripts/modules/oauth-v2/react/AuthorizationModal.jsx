@@ -6,7 +6,6 @@ export default React.createClass({
   propTypes: {
     componentId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    returnUrl: PropTypes.string.isRequired,
     show: PropTypes.bool,
     onHideFn: PropTypes.func
   },
@@ -19,7 +18,7 @@ export default React.createClass({
 
 
   componentDidMount() {
-    if (this.refs.description) {
+    if (this.refs.authorizedFor) {
       return this.refs.description.getInputDOMNode().focus();
     }
   },
@@ -39,13 +38,12 @@ export default React.createClass({
           <AuthorizationForm
             componentId={this.props.componentId}
             id={this.props.id}
-            returnUrl={this.props.returnUrl}
           >
             <Modal.Body>
               <Input
                 label="Authorize For"
                 type="text"
-                ref="description"
+                ref="authorizedFor"
                 name="authorizedFor"
                 help="Used afterwards as a description of the authorized account"
                 labelClassName="col-xs-3"
@@ -63,7 +61,7 @@ export default React.createClass({
                 <Button
                   bsStyle="success"
                   type="submit"
-                  disabled={_.isEmpty(this.state.description)}
+                  disabled={_.isEmpty(this.state.authorizedFor)}
                 ><span>Authorize</span>
                 </Button>
               </ButtonToolbar>
