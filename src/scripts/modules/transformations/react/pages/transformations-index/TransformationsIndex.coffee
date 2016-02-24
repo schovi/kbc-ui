@@ -63,7 +63,7 @@ TransformationsIndex = React.createClass
             'Transformations allow you to modify your data.'
           p null,
             'It picks data from Storage,
-              manipulates it and then stores it back. Transformations can use MySQL, Redshift or R.'
+              manipulates it and then stores it back. Transformations can use MySQL, Redshift, R or Python.'
           p null,
             React.createElement NewTransformationBucketButton,
               buttonLabel: 'Get Started Now'
