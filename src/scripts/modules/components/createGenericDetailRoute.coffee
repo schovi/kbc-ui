@@ -15,6 +15,8 @@ ComponentsStore = require './stores/ComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
 
+OauthUtils = require '../oauth-v2/OauthUtils'
+
 module.exports = (componentType) ->
   name: GENERIC_DETAIL_PREFIX + componentType
   title: (routerState) ->
@@ -55,4 +57,10 @@ module.exports = (componentType) ->
       interval: 10
       action: (params) ->
         JobsActionCreators.loadComponentConfigurationLatestJobs(params.component, params.config)
+    childRoutes: [
+      OauthUtils.createRedirectRoute('generic-' + componentType + '-oauth-redirect'
+      , 'generic-detail-' + componentType + '-config'
+      , (params) -> {component: params.component, config: params.config}
+      )
+    ]
   ]
