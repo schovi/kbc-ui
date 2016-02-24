@@ -15,6 +15,9 @@ StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
 ApplicationStore = require('../../../../stores/ApplicationStore')
 contactSupport = require('../../../../utils/contactSupport').default
+OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
+Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
+RedshiftSSLInfoModal = React.createFactory(require './RedshiftSSLInfoModal')
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
@@ -36,6 +39,9 @@ RedshiftSandbox = React.createClass
     isLoaded: RedshiftSandboxCredentialsStore.getIsLoaded()
     tables: StorageTablesStore.getAll()
     buckets: StorageBucketsStore.getAll()
+
+  getInitialState: ->
+    showSSLInfoModal: false
 
   _openSupportModal: (e) ->
     contactSupport(type: 'project')
@@ -87,6 +93,16 @@ RedshiftSandbox = React.createClass
               span {className: 'fa fa-fw fa-refresh'}
               " Refresh privileges"
         div {},
+          OverlayTrigger
+            overlay: Tooltip null, "Information about secure connection"
+            key: 'ssl'
+            placement: 'top'
+          ,
+            button {className: "btn btn-link", onClick: @_showSSLInfoModal},
+              span {className: 'fa fa-fw fa-lock '}
+              " SSL"
+          RedshiftSSLInfoModal {show: @state.showSSLInfoModal, onHide: @_hideSSLInfoModal}
+        div {},
           DeleteButton
             tooltip: 'Delete Redshift Sandbox'
             isPending: @state.pendingActions.get 'drop'
@@ -119,6 +135,12 @@ RedshiftSandbox = React.createClass
 
   _refreshCredentials: ->
     CredentialsActionCreators.refreshRedshiftSandboxCredentials()
+
+  _showSSLInfoModal: ->
+    @setState({showSSLInfoModal: true})
+
+  _hideSSLInfoModal: ->
+    @setState({showSSLInfoModal: false})
 
 
 module.exports = RedshiftSandbox

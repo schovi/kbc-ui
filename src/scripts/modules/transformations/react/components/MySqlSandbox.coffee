@@ -14,6 +14,9 @@ DeleteButton = React.createFactory(require '../../../../react/common/DeleteButto
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
+OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
+Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
+MySqlSSLInfoModal = React.createFactory(require './MySqlSSLInfoModal')
 
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
@@ -22,6 +25,9 @@ MySqlSandbox = React.createClass
   mixins: [createStoreMixin(MySqlSandboxCredentialsStore, StorageTablesStore, StorageBucketsStore)]
 
   displayName: 'MySqlSandbox'
+
+  getInitialState: ->
+    showSSLInfoModal: false
 
   getStateFromStores: ->
     credentials: MySqlSandboxCredentialsStore.getCredentials()
@@ -62,6 +68,16 @@ MySqlSandbox = React.createClass
               span {className: 'fa fa-fw fa-database'}
               " Connect"
         div {},
+          OverlayTrigger
+            overlay: Tooltip null, "Information about secure connection"
+            key: 'ssl'
+            placement: 'top'
+          ,
+            button {className: "btn btn-link", onClick: @_showSSLInfoModal},
+              span {className: 'fa fa-fw fa-lock '}
+              " SSL"
+          MySqlSSLInfoModal {show: @state.showSSLInfoModal, onHide: @_hideSSLInfoModal}
+        div {},
           DeleteButton
             label: 'Drop credentials'
             tooltip: 'Delete MySQL Sandbox'
@@ -92,5 +108,11 @@ MySqlSandbox = React.createClass
 
   _dropCredentials: ->
     CredentialsActionCreators.dropMySqlSandboxCredentials()
+
+  _showSSLInfoModal: ->
+    @setState({showSSLInfoModal: true})
+
+  _hideSSLInfoModal: ->
+    @setState({showSSLInfoModal: false})
 
 module.exports = MySqlSandbox
