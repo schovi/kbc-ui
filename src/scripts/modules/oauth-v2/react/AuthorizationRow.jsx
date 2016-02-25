@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import AuthorizationModal from './AuthorizationModal';
 import Confirm from '../../../react/common/Confirm';
 import {Loader} from 'kbc-react-components';
+import EmptyState from '../../components/react/components/ComponentEmptyState';
 
 export default React.createClass({
 
@@ -33,11 +34,14 @@ export default React.createClass({
 
   renderAuth() {
     return (
-      <button
-        onClick={this.showModal}
-        className="btn btn-primary">
-        Authorize
-      </button>
+      <EmptyState>
+        <p>No Account authorized</p>
+        <button
+          onClick={this.showModal}
+          className="btn btn-primary">
+          Authorize
+        </button>
+      </EmptyState>
     );
   },
 
