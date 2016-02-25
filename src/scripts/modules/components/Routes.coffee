@@ -11,6 +11,7 @@ ComponentReloaderButton = require './react/components/ComponentsReloaderButton'
 ComponentsStore = require './stores/ComponentsStore'
 InstalledComponentsActionsCreators = require './InstalledComponentsActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
+StorageActionCreators = require './StorageActionCreators'
 
 
 exDbRoutes = require '../ex-db/exDbRoutes'
@@ -43,7 +44,10 @@ routes =
     name: 'applications'
     title: 'Applications'
     requireData: ->
-      InstalledComponentsActionsCreators.loadComponents()
+      [
+        InstalledComponentsActionsCreators.loadComponents(),
+        StorageActionCreators.loadBuckets()
+      ]
     defaultRouteHandler: application(ComponentsIndex)
     headerButtonsHandler: injectProps(
       text: 'New Application'
@@ -79,7 +83,10 @@ routes =
     name: 'extractors'
     title: 'Extractors'
     requireData: ->
-      InstalledComponentsActionsCreators.loadComponents()
+      [
+        InstalledComponentsActionsCreators.loadComponents(),
+        StorageActionCreators.loadBuckets()
+      ]
     defaultRouteHandler: extractor(ComponentsIndex)
     headerButtonsHandler: injectProps(text: 'New Extractor', to: 'new-extractor', type: 'extractor')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton
@@ -106,7 +113,10 @@ routes =
     name: 'writers'
     title: 'Writers'
     requireData: ->
-      InstalledComponentsActionsCreators.loadComponents()
+      [
+        InstalledComponentsActionsCreators.loadComponents(),
+        StorageActionCreators.loadBuckets()
+      ]
     defaultRouteHandler: writer(ComponentsIndex)
     headerButtonsHandler: injectProps(text: 'New Writer', to: 'new-writer', type: 'writer')(NewComponentButton)
     reloaderHandler: ComponentReloaderButton

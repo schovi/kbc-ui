@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
 import Edit from './TemplatedConfigurationEdit';
 import Static from './TemplatedConfigurationStatic';
+import StorageApiBucketLink from './StorageApiBucketLink';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 import SchemasStore from '../../stores/SchemasStore';
+import BucketsStore from '../../stores/StorageBucketsStore';
 
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
@@ -14,7 +16,7 @@ import InstalledComponentsActionCreators from '../../InstalledComponentsActionCr
 require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, SchemasStore)],
+  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, SchemasStore, BucketsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -24,6 +26,8 @@ export default React.createClass({
     return {
       componentId: componentId,
       configId: configId,
+
+      component: component,
 
       jobs: InstalledComponentsStore.getTemplatedConfigValueJobs(componentId, configId),
       params: InstalledComponentsStore.getTemplatedConfigValueParams(componentId, configId),
@@ -39,7 +43,9 @@ export default React.createClass({
 
       editingJobs: InstalledComponentsStore.getTemplatedConfigEditingValueJobs(componentId, configId),
       editingJobsString: InstalledComponentsStore.getTemplatedConfigEditingValueJobsString(componentId, configId),
-      editingParams: InstalledComponentsStore.getTemplatedConfigEditingValueParams(componentId, configId)
+      editingParams: InstalledComponentsStore.getTemplatedConfigEditingValueParams(componentId, configId),
+
+      buckets: BucketsStore.getAll()
 
     };
   },
@@ -65,6 +71,7 @@ export default React.createClass({
       <div>
         <h2>{this.props.headerText}</h2>
         {this.props.help}
+        {this.defaultBucketDestination()}
         {this.scripts()}
       </div>
     );
@@ -147,5 +154,32 @@ export default React.createClass({
       }
     }
     return true;
+  },
+
+  defaultBucketDestination() {
+    if (this.state.component.getIn(['data', 'default_bucket'])) {
+      var defaultBucket =
+        this.state.component.getIn(['data', 'default_bucket_stage'], 'in') +
+        '.c-' +
+        this.state.componentId.replace(/[^a-zA-Z0-9-]/ig, '-') +
+        '-' +
+        this.state.configId;
+      if (this.state.buckets.has(defaultBucket)) {
+        return (
+          <p>
+            Data is stored in <StorageApiBucketLink bucketId={defaultBucket}>{defaultBucket}</StorageApiBucketLink>.
+          </p>
+        );
+      } else {
+        return (
+          <p>
+            Data will be stored in <code>{defaultBucket}</code>.
+          </p>
+        );
+      }
+    } else {
+      return null;
+    }
   }
+
 });
