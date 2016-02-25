@@ -72,7 +72,7 @@ export default React.createClass({
     } else if (!template) {
       return (
         <span>
-          <h3>Jobs</h3>
+          <h3>Endpoints</h3>
           <CodeMirror
             ref="CodeMirror"
             value={JSON.stringify(this.props.jobs.toJS(), null, 2)}

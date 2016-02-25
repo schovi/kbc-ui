@@ -58,26 +58,29 @@ export default React.createClass({
               onChange={this.handleParamsChange}
               readOnly={this.props.isSaving}
             />
-            <h3>Jobs
+            <h3>Endpoints
               {!this.props.isEditingJobsString ? (
                 <a className="pull-right" onClick={this.switchToJsonEditor}><small>Switch to JSON editor</small></a>
               ) : null}
             </h3>
             {this.props.isEditingJobsString ? (
-              <CodeMirror
-                ref="CodeMirror"
-                value={this.props.jobsString}
-                theme="solarized"
-                lineNumbers={true}
-                mode="application/json"
-                lineWrapping={true}
-                autofocus={true}
-                onChange={this.handleJobsStringChange}
-                readOnly={this.props.isSaving ? 'nocursor' : false}
-                lint={true}
-                gutters={['CodeMirror-lint-markers']}
-                placeholder="[]"
-                />
+              <span>
+                <p>Endpoints configuration uses <a href="https://github.com/keboola/generic-extractor#jobs">Jobs notation</a> from Generic Extractor.</p>
+                <CodeMirror
+                  ref="CodeMirror"
+                  value={this.props.jobsString}
+                  theme="solarized"
+                  lineNumbers={true}
+                  mode="application/json"
+                  lineWrapping={true}
+                  autofocus={true}
+                  onChange={this.handleJobsStringChange}
+                  readOnly={this.props.isSaving ? 'nocursor' : false}
+                  lint={true}
+                  gutters={['CodeMirror-lint-markers']}
+                  placeholder="[]"
+                  />
+              </span>
             ) : (
               <JobsEditor
                 templates={this.props.jobsTemplates}
