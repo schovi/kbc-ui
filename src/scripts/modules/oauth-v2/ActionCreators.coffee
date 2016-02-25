@@ -1,6 +1,6 @@
 dispatcher = require('../../Dispatcher')
 Promise = require('bluebird')
-oauthStore = require './store'
+oauthStore = require './Store'
 oauthApi = require './Api'
 Constants = require('./Constants')
 Immutable = require('immutable')
