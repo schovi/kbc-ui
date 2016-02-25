@@ -231,7 +231,6 @@ export default React.createClass({
                   />
               ) : (
                 <span>
-                  <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
                   <Configuration
                     data={this.getConfigDataParameters()}
                     isEditing={this.state.isParametersEditing}
