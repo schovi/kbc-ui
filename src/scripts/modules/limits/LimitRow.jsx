@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
 import AlarmIndicator from './AlarmIndicator';
+import {Button} from 'react-bootstrap';
 import {Check} from 'kbc-react-components';
-import classnames from 'classnames';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 import EditLimitButton from './EditLimitButton';
 
@@ -17,19 +17,27 @@ export default React.createClass({
   render() {
     const {limit} = this.props;
     return (
-      <div className={classnames('tr', {'danger': limit.get('isAlarm')})}>
-        <span className="td">
-          <h3>
-            {limit.get('name')} {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
-          </h3>
-        </span>
-        <span className="td">
-          {this.limit()}
-          {this.props.canEdit ? <EditLimitButton limit={limit}/> : null}
-        </span>
-        <span className="td" style={{width: '50%'}}>
+      <div className="td">
+        <div>
           {this.renderGraph()}
-        </span>
+        </div>
+        <div>
+        <h3>
+          {limit.get('name')} {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
+        </h3>
+        </div>
+        <div className="kbc-limit-values">
+          <h4>{this.limit()}</h4>
+        </div>
+        <div className="kbc-limit-action">
+          {this.props.canEdit ?
+            <EditLimitButton limit={limit}/> :
+            <Button bsStyle="success">
+              <span className="fa fa-plus"/>
+              Add More
+            </Button>
+          }
+        </div>
       </div>
     );
   },
@@ -38,7 +46,14 @@ export default React.createClass({
     const {limit}  = this.props;
     console.log('limit', limit.toJS());
     if (limit.get('unit') === 'bytes') {
-      return `${bytesToGBFormatted(limit.get('metricValue'))} GB of ${bytesToGBFormatted(limit.get('limitValue'))} GB used`;
+      return (
+        <span>
+          <strong>{bytesToGBFormatted(limit.get('metricValue'))} GB</strong>
+          <span className="kbc-limit-values-minor"> of </span>
+          <span>{bytesToGBFormatted(limit.get('limitValue'))} GB</span>
+          <span className="kbc-limit-values-minor"> used</span>
+        </span>
+      );
     } else if (limit.get('unit') === 'flag') {
       return (
         <Check isChecked={!!limit.get('metricValue')} />
