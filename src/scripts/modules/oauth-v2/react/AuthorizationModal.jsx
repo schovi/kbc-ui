@@ -17,12 +17,6 @@ export default React.createClass({
   },
 
 
-  componentDidMount() {
-    if (this.refs.authorizedFor) {
-      return this.refs.description.getInputDOMNode().focus();
-    }
-  },
-
   render() {
     return (
       <div className="static-modal">
@@ -43,13 +37,13 @@ export default React.createClass({
               <Input
                 label="Authorize For"
                 type="text"
-                ref="authorizedFor"
                 name="authorizedFor"
                 help="Used afterwards as a description of the authorized account"
                 labelClassName="col-xs-3"
                 wrapperClassName="col-xs-9"
                 defaultValue={this.state.authorizedFor}
                 onChange={this.changeAuthorizedFor}
+                autoFocus={true}
               />
             </Modal.Body>
             <Modal.Footer>

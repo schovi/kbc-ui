@@ -38,8 +38,9 @@ export default React.createClass({
         <p>No Account authorized</p>
         <button
           onClick={this.showModal}
-          className="btn btn-primary">
-          Authorize
+          className="btn btn-success">
+          <i className="fa fa-fw fa-user"/>
+          Authorize Account
         </button>
       </EmptyState>
     );
@@ -48,7 +49,7 @@ export default React.createClass({
   renderAuthorizedInfo() {
     return (
       <div>
-        Account authorized for {this.props.credentials.get('authorizedFor')}
+        Account authorized for <strong>{this.props.credentials.get('authorizedFor')}</strong>
         {!this.props.isResetingCredentials ?  (
            <Confirm
              text="Do you really want to reset the authorized account?"
@@ -82,7 +83,6 @@ export default React.createClass({
 
   isAuthorized() {
     const creds = this.props.credentials;
-    console.log(creds);
     return  creds && creds.has('id');
   },
 
