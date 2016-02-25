@@ -164,9 +164,6 @@ InstalledComponentsStore = StoreUtils.createStore
     propagateApiAttributes(api.toJS(), config)
     ###
 
-  getTemplatedConfigValueApi: (componentId, configId) ->
-    _store.getIn(['configData', componentId, configId, "api"], Immutable.Map())
-
   getTemplatedConfigEditingValueApi: (componentId, configId) ->
     _store.getIn(['templatedConfigValuesEditing', componentId, configId, 'api'], Immutable.Map())
 
@@ -542,9 +539,6 @@ Dispatcher.register (payload) ->
         params = InstalledComponentsStore.getTemplatedConfigValueParams(action.componentId, action.configId)
         store = store.setIn ["templatedConfigValuesEditing", action.componentId, action.configId, "params"], params
 
-        api = InstalledComponentsStore.getTemplatedConfigValueApi(action.componentId, action.configId)
-        store = store.setIn ["templatedConfigValuesEditing", action.componentId, action.configId, "api"], api
-
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_CANCEL
@@ -573,7 +567,7 @@ Dispatcher.register (payload) ->
       editingData = new Map()
       editingData = editingData.setIn(
         ['parameters', 'api'],
-        _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'api'])
+        SchemasStore.getApiTemplate(action.componentId)
       )
       editingData = editingData.setIn(
         ['parameters', 'config'],

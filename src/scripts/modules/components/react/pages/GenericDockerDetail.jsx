@@ -27,6 +27,7 @@ import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
+import Immutable from 'immutable';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore)],
@@ -224,25 +225,28 @@ export default React.createClass({
               {this.fileOutputMapping()}
               {this.isTemplatedComponent() ? (
                 <TemplatedConfiguration
-                  headerText="Parameters"
-                  editLabel="Edit parameters"
-                  saveLabel="Save parameters"
+                  headerText="Configuration"
+                  editLabel="Edit configuration"
+                  saveLabel="Save configuration"
                   />
               ) : (
-                <Configuration
-                  data={this.getConfigDataParameters()}
-                  isEditing={this.state.isParametersEditing}
-                  isSaving={this.state.isParametersSaving}
-                  onEditStart={this.onEditParametersStart}
-                  onEditCancel={this.onEditParametersCancel}
-                  onEditChange={this.onEditParametersChange}
-                  onEditSubmit={this.onEditParametersSubmit}
-                  isValid={this.state.isValidEditingConfigDataParameters}
-                  headerText="Parameters"
-                  editLabel="Edit parameters"
-                  saveLabel="Save parameters"
-                  supportsEncryption={this.state.component.get('flags').includes('encrypt')}
-                  />
+                <span>
+                  <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
+                  <Configuration
+                    data={this.getConfigDataParameters()}
+                    isEditing={this.state.isParametersEditing}
+                    isSaving={this.state.isParametersSaving}
+                    onEditStart={this.onEditParametersStart}
+                    onEditCancel={this.onEditParametersCancel}
+                    onEditChange={this.onEditParametersChange}
+                    onEditSubmit={this.onEditParametersSubmit}
+                    isValid={this.state.isValidEditingConfigDataParameters}
+                    headerText="Parameters"
+                    editLabel="Edit parameters"
+                    saveLabel="Save parameters"
+                    supportsEncryption={this.state.component.get('flags').includes('encrypt')}
+                    />
+                </span>
               )}
               {this.runtimeConfiguration()}
             </div>
@@ -371,7 +375,6 @@ export default React.createClass({
   },
 
   isTemplatedComponent() {
-    return this.state.component.get('flags').includes('genericTemplatesUI');
+    return this.state.component.get('flags', Immutable.List()).includes('genericTemplatesUI');
   }
-
 });
