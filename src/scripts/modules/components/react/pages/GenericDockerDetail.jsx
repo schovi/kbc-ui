@@ -193,7 +193,8 @@ export default React.createClass({
     this.updateLocalState(['deletingCredentials'], true);
     OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)
                 .then(() => {
-                  const newConfigData = this.state.configData.deleteIn(configOauthPath);
+                  // delete the whole authorization object of the configuration
+                  const newConfigData = this.state.configData.deleteIn([].concat(configOauthPath[0]));
                   const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
                   const componentId = this.state.componentId;
                   const configId = this.state.config.get('id');
