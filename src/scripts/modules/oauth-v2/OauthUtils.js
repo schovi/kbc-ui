@@ -15,13 +15,11 @@ function processRedirectData(componentId, configId, id) {
   return installedComponentsActions.loadComponentConfigData(componentId, configId)
     .then( () => {
       const configuration = installedComponentsStore.getConfigData(componentId, configId) || Map();
-      console.log(configuration.toJS());
 
       // load credentials for componentId and id
       return OauthActions.loadCredentials(componentId, id)
         .then(() => {
           const credentials = OauthStore.getCredentials(componentId, id);
-          console.log('KREDENCE', credentials.toJS());
           const newConfiguration = configuration.setIn(configOauthPath, id);
 
           // save configuration with authorization id
@@ -49,7 +47,7 @@ export function createRedirectRoute(routeName, redirectPathName, redirectParamsF
   return {
     name: routeName,
     path: 'oauth-redirect',
-    title: 'redirect pico',
+    title: 'Authorizing...',
     requireData: [
       (params) => {
         const configId = params.config;
@@ -66,8 +64,11 @@ export function createRedirectRoute(routeName, redirectPathName, redirectParamsF
 }
 
 
-export function loadCredentials(componentId, id) {
+export function loadCredentials(componentId, configuration) {
   if (ComponentsStore.getComponent(componentId).get('flags').includes('genericDockerUI-authorization')) {
-    OauthActions.loadCredentials(componentId, id);
+    const id = configuration.getIn(configOauthPath);
+    if (id) {
+      return OauthActions.loadCredentials(componentId, id);
+    }
   }
 }
