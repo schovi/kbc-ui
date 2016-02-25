@@ -37,7 +37,7 @@
     "json-loader": "^0.5.4",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",
     "kbc-react-components": "0.0.9",
-    "keen-js": "~3.3.0",
+    "keen-js": "^3.4.0",
     "later": "~1.1.6",
     "less": "~2.5.0",
     "less-loader": "~2.2.0",

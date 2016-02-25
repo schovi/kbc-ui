@@ -1,7 +1,7 @@
 import React from 'react';
 import ApplicationStore from '../../stores/ApplicationStore';
 import createStoreMixin from '../../react/mixins/createStoreMixin';
-import LimitRow from './LimitRow';
+import LimitsSection from './LimitsSection';
 import StorageApi from '../components/StorageApi';
 import Keen from 'keen-js';
 
@@ -51,45 +51,20 @@ export default React.createClass({
             <a href={this.projectPageUrl('settings-users')}>Users</a>
           </li>
         </ul>
-        {this.state.sections.map(this.section)}
+        {this.state.sections.map((section) => {
+          return React.createElement(LimitsSection, {
+            section: section,
+            keenClient: this.state.client,
+            isKeenReady: this.state.isKeenReady,
+            canEdit: this.state.canEdit
+          });
+        }, this)}
       </div>
     );
   },
 
   projectPageUrl(path) {
     return ApplicationStore.getProjectPageUrl(path);
-  },
-
-  section(section) {
-    return (
-      <div>
-        <div className="kbc-header">
-          <div className="kbc-title">
-            <h2>
-               <span className="kb-sapi-component-icon">
-                <img src={section.get('icon')} />
-              </span>
-              {section.get('title')}
-            </h2>
-          </div>
-        </div>
-        <div className="table">
-          <div className="tbody">
-            {section.get('limits').map(this.tableRow)}
-          </div>
-        </div>
-      </div>
-    );
-  },
-
-  tableRow(limit) {
-    return React.createElement(LimitRow, {
-      limit: limit,
-      isKeenReady: this.state.isKeenReady,
-      keenClient: this.state.client,
-      canEdit: this.state.canEdit,
-      key: limit.get('id')
-    });
   },
 
   keenReady() {

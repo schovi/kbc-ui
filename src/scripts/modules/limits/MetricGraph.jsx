@@ -14,8 +14,9 @@ export default React.createClass({
   componentDidMount() {
     var query = new Keen.Query('average', this.props.query);
     var chart = new Keen.Dataviz()
-      .el(React.findDOMNode(this.refs.metric))
       .chartType('linechart')
+      .dateFormat('MMM d')
+      .el(React.findDOMNode(this.refs.metric))
       .chartOptions({
         isStacked: true,
         legend: { position: 'none' },
