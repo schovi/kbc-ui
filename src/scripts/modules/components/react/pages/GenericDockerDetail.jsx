@@ -6,6 +6,10 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 
+import {configOauthPath} from '../../../oauth-v2/OauthUtils';
+import OauthStore from '../../../oauth-v2/Store';
+import OauthActions from '../../../oauth-v2/ActionCreators';
+
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
@@ -15,6 +19,7 @@ import Configuration from '../components/Configuration';
 import TemplatedConfiguration from '../components/TemplatedConfiguration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
+import AuthorizationRow from '../../../oauth-v2/react/AuthorizationRow.jsx';
 import TableOutputMapping from '../components/generic/TableOutputMapping';
 import FileOutputMapping from '../components/generic/FileOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
@@ -31,13 +36,15 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing']));
+      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
+      configData = InstalledComponentStore.getConfigData(componentId, configId),
+      credentialsId = configData.getIn(configOauthPath) || configId;
 
     return {
       componentId: componentId,
       configId: configId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
-      configData: InstalledComponentStore.getConfigData(componentId, configId),
+      configData: configData,
       editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
@@ -51,7 +58,10 @@ export default React.createClass({
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
       openMappings: InstalledComponentStore.getOpenMappings(componentId, configId),
       component: ComponentStore.getComponent(componentId),
-      localState: localState
+      localState: localState,
+      credentialsId: credentialsId,
+      oauthCredentials: OauthStore.getCredentials(componentId, credentialsId),
+      isDeletingCredentials: OauthStore.isDeletingCredetials(componentId, credentialsId)
     };
   },
 
@@ -163,6 +173,38 @@ export default React.createClass({
     }
   },
 
+  accountAuthorization() {
+    if (this.state.component.get('flags').includes('genericDockerUI-authorization')) {
+      return (
+        <AuthorizationRow
+          id={this.state.credentialsId}
+          componentId={this.state.componentId}
+          credentials={this.state.oauthCredentials}
+          isResetingCredentials={this.state.isDeletingCredentials}
+          onResetCredentials={this.deleteCredentials}
+
+        />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  deleteCredentials() {
+    this.updateLocalState(['deletingCredentials'], true);
+    OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)
+                .then(() => {
+                  // delete the whole authorization object of the configuration
+                  const newConfigData = this.state.configData.deleteIn([].concat(configOauthPath[0]));
+                  const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
+                  const componentId = this.state.componentId;
+                  const configId = this.state.config.get('id');
+                  saveFn(componentId, configId, newConfigData).then( () => {
+                    this.updateLocalState(['deletingCredentials'], false);
+                  });
+                });
+  },
+
   render() {
     return (
       <div className="container-fluid">
@@ -175,6 +217,8 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
+              <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
+              {this.accountAuthorization()}
               {this.tableInputMapping()}
               {this.fileInputMapping()}
               {this.tableOutputMapping()}
