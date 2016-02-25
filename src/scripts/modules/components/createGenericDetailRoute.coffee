@@ -42,13 +42,12 @@ module.exports = (componentType) ->
     isComponent: true
     requireData: [
       (params) ->
-        InstalledComponentsActions.loadComponentConfigData params.component, params.config
+        InstalledComponentsActions.loadComponentConfigData(params.component, params.config).then ->
+          configuration = IntalledComponentsStore.getConfigData(params.component, params.config)
+          OauthUtils.loadCredentials(params.component, configuration)
     ,
       ->
         StorageActions.loadTables()
-    ,
-      (params) ->
-        OauthUtils.loadCredentials(params.component, params.config)
     ,
       ->
         StorageActions.loadBuckets()

@@ -37,7 +37,7 @@ export default React.createClass({
       localState = InstalledComponentStore.getLocalState(componentId, configId),
       isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
       configData = InstalledComponentStore.getConfigData(componentId, configId),
-      credentialsId = configData.getIn(configOauthPath);
+      credentialsId = configData.getIn(configOauthPath) || configId;
 
     return {
       componentId: componentId,
@@ -180,12 +180,27 @@ export default React.createClass({
           componentId={this.state.componentId}
           credentials={this.state.oauthCredentials}
           isResetingCredentials={this.state.isDeletingCredentials}
-          onResetCredentials={() => OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)}
+          onResetCredentials={this.deleteCredentials}
+
         />
       );
     } else {
       return null;
     }
+  },
+
+  deleteCredentials() {
+    this.updateLocalState(['deletingCredentials'], true);
+    OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)
+                .then(() => {
+                  const newConfigData = this.state.configData.deleteIn(configOauthPath);
+                  const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
+                  const componentId = this.state.componentId;
+                  const configId = this.state.config.get('id');
+                  saveFn(componentId, configId, newConfigData).then( () => {
+                    this.updateLocalState(['deletingCredentials'], false);
+                  });
+                });
   },
 
   render() {
