@@ -43,8 +43,8 @@ module.exports = (componentType) ->
     requireData: [
       (params) ->
         InstalledComponentsActions.loadComponentConfigData(params.component, params.config).then ->
-          configuration = IntalledComponentsStore.getConfigData(params.component, params.config)
-          OauthUtils.loadCredentials(params.component, configuration)
+          if ComponentsStore.getComponent(params.component).get('flags').includes('genericDockerUI-authorization')
+            OauthUtils.loadCredentialsFromConfig(params.component, params.config)
     ,
       ->
         StorageActions.loadTables()
@@ -60,7 +60,8 @@ module.exports = (componentType) ->
       action: (params) ->
         JobsActionCreators.loadComponentConfigurationLatestJobs(params.component, params.config)
     childRoutes: [
-      OauthUtils.createRedirectRoute('generic-' + componentType + '-oauth-redirect'
+      OauthUtils.createRedirectRoute(
+        'generic-' + componentType + '-oauth-redirect'
       , 'generic-detail-' + componentType + '-config'
       , (params) -> {component: params.component, config: params.config}
       )

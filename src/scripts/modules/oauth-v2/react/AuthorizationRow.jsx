@@ -62,7 +62,10 @@ export default React.createClass({
              </a>
            </Confirm>
          ) : (
-           <Loader/>
+           <span>
+             {' '}
+             <Loader/>
+           </span>
          )
         }
 

@@ -6,9 +6,9 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 
-import {configOauthPath} from '../../../oauth-v2/OauthUtils';
+import * as oauthUtils from '../../../oauth-v2/OauthUtils';
 import OauthStore from '../../../oauth-v2/Store';
-import OauthActions from '../../../oauth-v2/ActionCreators';
+
 
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
@@ -30,7 +30,7 @@ import contactSupport from '../../../../utils/contactSupport';
 import Immutable from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -38,7 +38,7 @@ export default React.createClass({
       localState = InstalledComponentStore.getLocalState(componentId, configId),
       isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
       configData = InstalledComponentStore.getConfigData(componentId, configId),
-      credentialsId = configData.getIn(configOauthPath) || configId;
+      credentialsId = oauthUtils.getCredentialsId(configData) || configId;
 
     return {
       componentId: componentId,
@@ -60,8 +60,7 @@ export default React.createClass({
       component: ComponentStore.getComponent(componentId),
       localState: localState,
       credentialsId: credentialsId,
-      oauthCredentials: OauthStore.getCredentials(componentId, credentialsId),
-      isDeletingCredentials: OauthStore.isDeletingCredetials(componentId, credentialsId)
+      oauthCredentials: oauthUtils.getCredentials(componentId, credentialsId)
     };
   },
 
@@ -180,7 +179,7 @@ export default React.createClass({
           id={this.state.credentialsId}
           componentId={this.state.componentId}
           credentials={this.state.oauthCredentials}
-          isResetingCredentials={this.state.isDeletingCredentials}
+          isResetingCredentials={this.state.localState.get('deletingCredentials', false)}
           onResetCredentials={this.deleteCredentials}
 
         />
@@ -192,17 +191,11 @@ export default React.createClass({
 
   deleteCredentials() {
     this.updateLocalState(['deletingCredentials'], true);
-    OauthActions.deleteCredentials(this.state.componentId, this.state.credentialsId)
-                .then(() => {
-                  // delete the whole authorization object of the configuration
-                  const newConfigData = this.state.configData.deleteIn([].concat(configOauthPath[0]));
-                  const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
-                  const componentId = this.state.componentId;
-                  const configId = this.state.config.get('id');
-                  saveFn(componentId, configId, newConfigData).then( () => {
-                    this.updateLocalState(['deletingCredentials'], false);
-                  });
-                });
+    const componentId = this.state.componentId;
+    const configId = this.state.config.get('id');
+    oauthUtils.deleteCredentialsAndConfigAuth(componentId, configId).then( () => {
+      this.updateLocalState(['deletingCredentials'], false);
+    });
   },
 
   render() {
