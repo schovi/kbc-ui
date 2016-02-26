@@ -19,12 +19,11 @@ export default React.createClass({
         <p>
           {this.props.transformationType === 'r' ? (
             <span>
-              These packages will be installed into the Docker container running the R script.
-              Do not forget to load them using <code>library()</code>.
+              These packages will be installed from CRAN and loaded to the R script environment.
             </span>) : null}
           {this.props.transformationType === 'python' ? (
             <span>
-              These packages will be installed into the Docker container running the Python script.
+              These packages will be installed from PyPI to the Python script environment.
               Do not forget to load them using <code>import</code>.
             </span>) : null}
         </p>
