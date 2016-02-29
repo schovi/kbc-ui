@@ -5,6 +5,8 @@ import {createTransformation} from '../../ActionCreators';
 
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
+import ApplicationStore from '../../../../stores/ApplicationStore';
+
 function prepareDataForCreate(data) {
   let newData = Map({
     name: data.get('name'),
@@ -46,7 +48,7 @@ export default React.createClass({
         isSaving: false,
         name: '',
         description: '',
-        backend: 'mysql'
+        backend: ApplicationStore.getCurrentProject().get('defaultBackend')
       })
     };
   },
