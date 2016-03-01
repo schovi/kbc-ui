@@ -59,9 +59,11 @@ export default React.createClass({
         <Check isChecked={!!limit.get('metricValue')} />
       );
     } else if (!limit.get('limitValue')) {
-      return numericMetricFormatted(limit.get('metricValue'));
+      return (
+        <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
+      );
     } else {
-      return `${numericMetricFormatted(limit.get('metricValue'))} / ${numericMetricFormatted(limit.get('limitValue'))}`;
+      return `${numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))} / ${numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}`;
     }
   },
 

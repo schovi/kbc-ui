@@ -43,6 +43,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
       limitValue: limits.getIn(['storage.rowsCount', 'value']),
       metricValue: metrics.getIn(['storage.rowsCount', 'value'], 0),
       name: limitsMetadata.getIn(['storage.rowsCount', 'name']),
+      unit: 'millions',
       graph: {
         eventCollection: 'sapi-project-snapshots',
         targetProperty: 'rowsCount'
