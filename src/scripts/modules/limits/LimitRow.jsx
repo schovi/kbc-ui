@@ -5,6 +5,8 @@ import {Button} from 'react-bootstrap';
 import {Check} from 'kbc-react-components';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 import EditLimitButton from './EditLimitButton';
+import LimitProgress from './LimitProgress';
+import _ from 'underscore';
 
 export default React.createClass({
   propTypes: {
@@ -14,12 +16,25 @@ export default React.createClass({
     keenClient: PropTypes.object.isRequired
   },
 
+  getInitialState() {
+    return {
+      elWidth: null
+    };
+  },
+
+  componentDidMount() {
+    _.defer(() => this.setState({
+      elWidth: React.findDOMNode(this.refs.limit).offsetWidth
+    }));
+  },
+
   render() {
+    console.log('limit', this.state);
     const {limit} = this.props;
     return (
-      <div className="td kbc-limit">
-        <div>
-          {this.renderGraph()}
+      <div className="td kbc-limit" ref="limit">
+        <div style={{height: `${0.5 * this.state.elWidth}px`, position: 'relative'}}>
+          {this.renderVizualization()}
         </div>
         <div>
         <h3>
@@ -63,19 +78,39 @@ export default React.createClass({
         <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
       );
     } else {
-      return `${numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))} / ${numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}`;
+      return (
+        <span>
+          <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
+          <span className="kbc-limit-values-minor"> of </span>
+          <span>{numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}</span>
+        </span>
+      );
     }
+  },
+
+  renderVizualization() {
+    const {limit} = this.props;
+    if (limit.get('graph')) {
+      return this.renderGraph();
+    }
+    if (limit.get('limitValue') && limit.get('metricValue')) {
+      return this.renderProgress();
+    }
+    return null;
+  },
+
+  renderProgress() {
+    const {limit} = this.props;
+    return React.createElement(LimitProgress, {
+      valueMax: limit.get('limitValue'),
+      valueCurrent: limit.get('metricValue')
+    });
   },
 
   renderGraph() {
     const graph = this.props.limit.get('graph');
-    if (!graph) {
-      return null;
-    }
     if (!this.props.isKeenReady) {
-      return (
-        <span>Loading ... </span>
-      );
+      return null;
     }
     return React.createElement(MetricGraph, {
       query: {
