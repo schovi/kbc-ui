@@ -12,51 +12,115 @@ export default React.createClass({
   },
 
   componentDidMount() {
+    var el = React.findDOMNode(this.refs.metric);
     var query = new Keen.Query('average', this.props.query);
+    var chartOptions = {
+      colors: [
+        /* teal      red        yellow     purple     orange     mint       blue       green      lavender */
+        '#00bbde', '#fe6672', '#eeb058', '#8a8ad6', '#ff855c', '#00cfbb', '#5a9eed', '#73d483', '#c879bb',
+        '#0099b6', '#d74d58', '#cb9141', '#6b6bb6', '#d86945', '#00aa99', '#4281c9', '#57b566', '#ac5c9e',
+        '#27cceb', '#ff818b', '#f6bf71', '#9b9be1', '#ff9b79', '#26dfcd', '#73aff4', '#87e096', '#d88bcb'
+      ],
+      legend: {
+        position: 'none'
+      },
+      hAxis: {
+        gridlines: {
+          color: 'none'
+        },
+        textStyle: {
+          color: '#98a2b5'
+        },
+        format: 'd.M.'
+      },
+      vAxis: {
+        gridlines: {
+          count: 4,
+          color: '#e8e8ef'
+        },
+        baseline: 0,
+        baselineColor: '#CCC',
+        minValue: 0,
+        format: '#,### GB',
+        textPosition: 'in',
+        textStyle: {
+          color: '#98a2b5'
+        }
+      },
+      chartArea: {
+        left: 10,
+        top: 0,
+        width: el.offsetWidth - 20,
+        height: 0.5 * el.offsetWidth - 20
+      },
+      lineWidth: 3,
+      areaOpacity: 0.1,
+      seriesType: 'area',
+      series: {
+        1: {
+          type: 'line',
+          lineWidth: 1
+        }
+      }
+    };
     var chart = new Keen.Dataviz()
-      .chartType('linechart')
-      .dateFormat('MMM d')
-      .el(React.findDOMNode(this.refs.metric))
-      .chartOptions({
-        isStacked: true,
-        legend: { position: 'none' },
-        backgroundColor: this.props.isAlarm ? '#f2dede' : '#fff'
-      })
+      .chartType('areachart')
+      .width(el.offsetWidth)
+      .height(0.5 * el.offsetWidth)
+      .el(el)
+      .chartOptions(chartOptions)
       .prepare();
 
     var limitValue = this.props.limitValue,
       conversion = this.props.unit === 'bytes' ? function(val) {
         return val / (1000 * 1000 * 1000);
-      } : function(val) {return val;};
+      } : function(val) {
+        return val;
+      };
 
-    this.props.client.run([query], function(err, res) {
-      var result = res.result;
-      var data = [];
-      var i = 0;
-
-      while (i < result.length) {
-        if (limitValue) {
-          data[i] = {
-            timeframe: result[i].timeframe,
-            value: [
-              { category: 'Metric', result: conversion(result[i].value) },
-              { category: 'Limit', result: conversion(limitValue) }
-            ]
-          };
-        } else {
-          data[i] = { // format the data so it can be charted
-            timeframe: result[i].timeframe,
-            value: conversion(result[i].value)
-          };
-        }
-
-        if (i === result.length - 1) { // chart the data
-          chart
-            .parseRawData({ result: data })
-            .render();
-        }
-        i++;
-      }
+    this.props.client.run([query], function() {
+      chart
+        .parseRequest(this)
+        .call(function() {
+          var converted = this.data().map(function(row, i, data) {
+            const style = (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
+            if (i === 0) {
+              if (limitValue) {
+                return [
+                  'Date',
+                  'Value',
+                  {'type': 'string', 'role': 'style'},
+                  'Limit'
+                ];
+              } else {
+                return [
+                  'Date',
+                  'Value',
+                  {'type': 'string', 'role': 'style'}
+                ];
+              }
+            } else {
+              if (limitValue) {
+                return [
+                  row[0],
+                  conversion(row[1]),
+                  style,
+                  conversion(limitValue)
+                ];
+              } else {
+                return [
+                  row[0],
+                  conversion(row[1]),
+                  style
+                ];
+              }
+            }
+          });
+          /* global google */
+          var ds = new google.visualization.arrayToDataTable(converted);
+          var combo = new google.visualization.ComboChart(this.el());
+          combo.draw(ds, chartOptions);
+        });
     });
   },
 

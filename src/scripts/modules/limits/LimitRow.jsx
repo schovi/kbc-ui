@@ -17,7 +17,7 @@ export default React.createClass({
   render() {
     const {limit} = this.props;
     return (
-      <div className="td">
+      <div className="td kbc-limit">
         <div>
           {this.renderGraph()}
         </div>

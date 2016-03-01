@@ -1856,6 +1856,11 @@
       "from": "detective@>=4.3.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/detective/-/detective-4.3.1.tgz"
     },
+    "diff": {
+      "version": "1.4.0",
+      "from": "diff@1.4.0",
+      "resolved": "https://registry.npmjs.org/diff/-/diff-1.4.0.tgz"
+    },
     "dimple": {
       "version": "2.1.6",
       "from": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
@@ -2891,6 +2896,11 @@
       "from": "graphlib@0.7.4",
       "resolved": "https://registry.npmjs.org/graphlib/-/graphlib-0.7.4.tgz"
     },
+    "growl": {
+      "version": "1.8.1",
+      "from": "growl@1.8.1",
+      "resolved": "https://registry.npmjs.org/growl/-/growl-1.8.1.tgz"
+    },
     "handlebars": {
       "version": "4.0.4",
       "from": "handlebars@>=4.0.0 <5.0.0",
@@ -3185,6 +3195,21 @@
       "version": "0.1.2",
       "from": "isstream@0.1.2"
     },
+    "jade": {
+      "version": "0.26.3",
+      "from": "jade@0.26.3",
+      "resolved": "https://registry.npmjs.org/jade/-/jade-0.26.3.tgz",
+      "dependencies": {
+        "commander": {
+          "version": "0.6.1",
+          "from": "commander@0.6.1"
+        },
+        "mkdirp": {
+          "version": "0.3.0",
+          "from": "mkdirp@0.3.0"
+        }
+      }
+    },
     "js-base64": {
       "version": "2.1.9",
       "from": "js-base64@>=2.1.9 <3.0.0",
@@ -3275,9 +3300,9 @@
       "resolved": "https://registry.npmjs.org/kbc-react-components/-/kbc-react-components-0.0.9.tgz"
     },
     "keen-js": {
-      "version": "3.3.0",
-      "from": "keen-js@>=3.3.0 <3.4.0",
-      "resolved": "https://registry.npmjs.org/keen-js/-/keen-js-3.3.0.tgz"
+      "version": "3.4.0",
+      "from": "keen-js@>=3.4.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/keen-js/-/keen-js-3.4.0.tgz"
     },
     "kind-of": {
       "version": "2.0.1",
@@ -4441,6 +4466,10 @@
     "shelljs": {
       "version": "0.3.0",
       "from": "shelljs@0.3.0"
+    },
+    "sigmund": {
+      "version": "1.0.1",
+      "from": "sigmund@>=1.0.0 <1.1.0"
     },
     "simple-fmt": {
       "version": "0.1.0",
