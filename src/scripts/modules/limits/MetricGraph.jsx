@@ -2,6 +2,34 @@ import React, {PropTypes} from 'react';
 import Keen from 'keen-js';
 
 
+function format(unit) {
+  switch (unit) {
+    case 'millions':
+      return '#,### M';
+    case 'bytes':
+      return '#,### GB';
+    default:
+      return '#,###';
+  }
+}
+
+function getConversion(unit) {
+  switch (unit) {
+    case 'millions':
+      return function(val) {
+        return val / (1000 * 1000);
+      };
+    case 'bytes':
+      return function(val) {
+        return val / (1000 * 1000 * 1000);
+      };
+    default:
+      return function(val) {
+        return val;
+      };
+  }
+}
+
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
@@ -14,6 +42,7 @@ export default React.createClass({
   componentDidMount() {
     var el = React.findDOMNode(this.refs.metric);
     var query = new Keen.Query('average', this.props.query);
+
     var chartOptions = {
       colors: [
         /* teal      red        yellow     purple     orange     mint       blue       green      lavender */
@@ -41,7 +70,7 @@ export default React.createClass({
         baseline: 0,
         baselineColor: '#CCC',
         minValue: 0,
-        format: '#,### GB',
+        format: format(this.props.unit),
         textPosition: 'in',
         textStyle: {
           color: '#98a2b5'
@@ -72,11 +101,7 @@ export default React.createClass({
       .prepare();
 
     var limitValue = this.props.limitValue,
-      conversion = this.props.unit === 'bytes' ? function(val) {
-        return val / (1000 * 1000 * 1000);
-      } : function(val) {
-        return val;
-      };
+      conversion = getConversion(this.props.unit);
 
     this.props.client.run([query], function() {
       chart
