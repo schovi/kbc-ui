@@ -1,36 +1,40 @@
 React = require 'react'
 Navigation = require('react-router').Navigation
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
-ExDbStore = require '../../exDbStore'
+
+storeProvisioning = require '../../storeProvisioning'
+actionsProvisioning = require '../../actionsProvisioning'
+
 RoutesStore = require '../../../../stores/RoutesStore'
-ExDbActionCreators = require '../../exDbActionCreators'
 
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
 
+componentId = 'keboola.ex-db-pgsql'
+ExDbActionCreators = actionsProvisioning.createActions(componentId)
+
 module.exports = React.createClass
   displayName: 'NewQueryHeaderButtons'
-  mixins: [createStoreMixin(ExDbStore), Navigation]
+  mixins: [createStoreMixin(storeProvisioning.store), Navigation]
 
-  componentWillReceiveProps: ->
-    @setState(@getStateFromStores())
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
+    ExDbStore = storeProvisioning.createStore(componentId, configId)
     currentConfigId: configId
-    isSaving: ExDbStore.isSavingNewQuery configId
-    isValid: ExDbStore.isValidNewQuery configId
+    isSaving: ExDbStore.isSavingNewQuery()
+    isValid: ExDbStore.isValidNewQuery()
 
   _handleCancel: ->
     ExDbActionCreators.resetNewQuery @state.currentConfigId
-    @transitionTo 'ex-db', config: @state.currentConfigId
+    @transitionTo componentId, config: @state.currentConfigId
 
   _handleCreate: ->
     ExDbActionCreators
     .createQuery @state.currentConfigId
     .then (query) =>
-      @transitionTo 'ex-db',
+      @transitionTo componentId,
         config: @state.currentConfigId
 
   render: ->
@@ -49,4 +53,3 @@ module.exports = React.createClass
         disabled: @state.isSaving || !@state.isValid
       ,
         'Save'
-

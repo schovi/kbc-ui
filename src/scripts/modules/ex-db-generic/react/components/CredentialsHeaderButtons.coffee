@@ -1,26 +1,28 @@
 React = require 'react'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
-ExDbStore = require '../../exDbStore'
+storeProvisioning = require '../../storeProvisioning'
+actionsProvisioning = require '../../actionsProvisioning'
+
 RoutesStore = require '../../../../stores/RoutesStore'
-ExDbActionCreators = require '../../exDbActionCreators'
+
 {Navigation} = require 'react-router'
 
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
+componentId = 'keboola.ex-db-pgsql'
+ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'CredentialsHeaderButtons'
-  mixins: [createStoreMixin(ExDbStore), Navigation]
-
-  componentWillReceiveProps: ->
-    @setState(@getStateFromStores())
+  mixins: [createStoreMixin(storeProvisioning.store), Navigation]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
+    ExDbStore = storeProvisioning.createStore(componentId, configId)
     currentConfigId: configId
-    isEditing: ExDbStore.isEditingCredentials configId
-    isSaving: ExDbStore.isSavingCredentials configId
+    isEditing: ExDbStore.isEditingCredentials()
+    isSaving: ExDbStore.isSavingCredentials()
 
   _handleEditStart: ->
     ExDbActionCreators.editCredentials @state.currentConfigId

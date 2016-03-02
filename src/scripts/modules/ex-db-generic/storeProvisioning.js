@@ -11,6 +11,19 @@ function fetch(componentId, configId) {
   };
 }
 
+function generateId(existingIds) {
+  const randomNumber = () => Math.floor((Math.random() * 100000) + 1);
+  let newId = randomNumber();
+  while (existingIds.indexOf(newId) >= 0) {
+    newId = randomNumber();
+  }
+  return newId;
+}
+
+function isValidQuery(query) {
+  return query.get('name', '').trim().length > 0;
+}
+
 export function getLocalState(componentId, configId) {
   return fetch(componentId, configId).localState;
 }
@@ -20,13 +33,55 @@ export function createStore(componentId, configId) {
   const data = fetch(componentId, configId);
 
   return {
+    // -------- LOCAL STATE manipulation -----------------
     getQueriesPendingActions() {
-      return data.localState.getIn(['pending', 'queries']);
+      return data.localState.getIn(['pending'], Map());
     },
 
     getQueriesFilter() {
       return data.localState.get('queriesFilter');
     },
+
+    isEditingCredentials() {
+      return !!data.localState.get('editingCredentials');
+    },
+
+    isSavingCredentials() {
+      return data.localState.get('isSavingCredentials', false);
+    },
+
+    getEditingCredentials() {
+      return data.localState.get('editingCredentials');
+    },
+
+    isSavingNewQuery() {
+      return data.localState.getIn(['newQueries', 'isSaving']);
+    },
+
+    isValidNewQuery() {
+      const query = this.getNewQuery();
+      return isValidQuery(query);
+    },
+
+    getNewCredentials() {
+      const defaultNewCredentials = data.parameters.get('db');
+      return data.localState.get('newCredentials', defaultNewCredentials);
+    },
+
+    getNewQuery() {
+      const ids = this.getQueries().map((q) => q.get('id')).toJS();
+      const defaultNewQuery = {
+        incremental: false,
+        outputTable: '',
+        primaryKey: '',
+        query: '',
+        id: generateId(ids)
+      };
+      return data.localState.getIn(['newQueries', 'query'], defaultNewQuery);
+    },
+
+    // -------- CONFIGDATA manipulation -----------------
+    configData: data.config,
 
     getQueries() {
       return data.parameters.get('tables');

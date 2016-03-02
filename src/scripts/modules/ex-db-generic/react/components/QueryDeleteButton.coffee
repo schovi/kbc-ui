@@ -1,5 +1,6 @@
 React = require 'react'
-ExDbActionCreators = require '../../exDbActionCreators'
+
+actionsProvisioning = require '../../actionsProvisioning'
 
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
@@ -12,6 +13,9 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 ###
   Enabled/Disabled orchestration button with tooltip
 ###
+componentId = 'keboola.ex-db-pgsql'
+ExDbActionCreators = actionsProvisioning.createActions(componentId)
+
 module.exports = React.createClass
   displayName: 'QueryDeleteButton'
   mixins: [Navigation]

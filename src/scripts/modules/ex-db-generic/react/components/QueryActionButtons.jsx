@@ -1,26 +1,34 @@
 import React from 'react';
-import ExDbStore from '../../exDbStore';
+import {Map} from 'immutable';
+
 import RoutesStore from '../../../../stores/RoutesStore';
+
+import storeProvisioning from '../../storeProvisioning';
+import actionsProvisioning from '../../actionsProvisioning';
+
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import QueryDeleteButton from './QueryDeleteButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
-import actionCreators from '../../exDbActionCreators';
-import {Map} from 'immutable';
+
+
+const componentId = 'keboola.ex-db-pgsql';
+const actionCreators = actionsProvisioning.createActions(componentId);
 
 export default React.createClass({
-  mixins: [createStoreMixin(ExDbStore)],
+  mixins: [createStoreMixin(storeProvisioning.store)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
+      ExDbStore = storeProvisioning.createStore(componentId, configId),
       queryId = RoutesStore.getCurrentRouteIntParam('query'),
-      query = ExDbStore.getConfigQuery(configId, queryId);
+      query = ExDbStore.getConfigQuery(queryId);
 
     return {
       configId: configId,
       queryId: queryId,
       query: query,
-      pendingActions: ExDbStore.getQueriesPendingActions(configId).get(query.get('id'), Map())
+      pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('id'), Map())
     };
   },
 

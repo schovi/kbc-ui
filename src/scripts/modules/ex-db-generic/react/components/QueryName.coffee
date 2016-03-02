@@ -1,19 +1,20 @@
-
 React = require 'react'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 immutableMixin = require '../../../../react/mixins/ImmutableRendererMixin'
-ExDbStore = require '../../exDbStore'
+storeProvisioning = require '../../storeProvisioning'
 
+componentId = 'keboola.ex-db-pgsql'
 module.exports = React.createClass
   displayName: "ExDbQuerNameEdit"
-  mixins: [createStoreMixin(ExDbStore), immutableMixin]
+  mixins: [createStoreMixin(storeProvisioning.store), immutableMixin]
   propTypes:
     configId: React.PropTypes.string.isRequired
     queryId: React.PropTypes.number.isRequired
 
   getStateFromStores: ->
-    name: ExDbStore.getConfigQuery(@props.configId, @props.queryId)?.get 'name'
+    ExDbStore = storeProvisioning.createStore(componentId, @props.configId)
+    name: ExDbStore.getConfigQuery(@props.queryId)?.get 'name'
 
   render: ->
     if @state.name

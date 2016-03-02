@@ -1,19 +1,25 @@
 import React from 'react';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import routesStore from '../../../../stores/RoutesStore';
-import dbStore from '../../exDbStore';
-import actionCreators from '../../exDbActionCreators';
+
+import storeProvisioning from '../../storeProvisioning';
+import actionsProvisioning from '../../actionsProvisioning';
+
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import {Navigation} from 'react-router';
 
+const componentId = 'keboola.ex-db-pgsql';
+const actionCreators = actionsProvisioning.createActions(componentId);
+
 export default React.createClass({
-  mixins: [createStoreMixin(dbStore), Navigation],
+  mixins: [createStoreMixin(storeProvisioning.store), Navigation],
 
   getStateFromStores() {
     const config = routesStore.getCurrentRouteParam('config');
+    const dbStore = storeProvisioning.createStore(componentId, config);
     return {
       configId: config,
-      isSaving: dbStore.isSavingCredentials(config)
+      isSaving: dbStore.isSavingCredentials()
     };
   },
 
@@ -29,7 +35,7 @@ export default React.createClass({
   },
 
   goToIndex() {
-    this.transitionTo('ex-db', {
+    this.transitionTo(componentId, {
       config: this.state.configId
     });
   },
