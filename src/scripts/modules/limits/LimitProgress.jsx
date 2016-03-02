@@ -1,4 +1,5 @@
 import React, {PropTypes} from  'react';
+import classnames  from 'classnames';
 
 export default React.createClass({
   propTypes: {
@@ -7,20 +8,54 @@ export default React.createClass({
   },
 
   render() {
+    const isOverLimit = this.isOverLimit();
     return (
-      <div className="kbc-limit-progress">
-        <div className="progress">
-          <div className="progress-bar" role="progressbar" aria-valuenow={this.props.valueCurrent} aria-valuemin="0" aria-valuemax={this.props.valueMax} style={this.barStyle()}>
-            <span className="progress-value">{this.props.valueCurrent}</span>
+      <div className={classnames('kbc-limit-progress', {'kbc-limit-ok': !isOverLimit})}>
+        <div className={classnames('progress', {'kbc-limit-exceed': isOverLimit})}>
+          <div className="progress-bar" role="progressbar" aria-valuenow={this.currentValue()} aria-valuemin="0" aria-valuemax={this.maxValue()} style={this.barStyle()}>
+            {isOverLimit ?
+              null :
+              <span className="progress-value">{this.props.valueCurrent}</span>
+            }
           </div>
+          {isOverLimit ?
+            <span className="progress-value">{this.props.valueCurrent}</span>
+            : null
+          }
         </div>
+        <div className="kbc-limit-line" style={this.limitLineStyle()}/>
       </div>
     );
   },
 
   barStyle() {
     return {
-      width: `${this.props.valueCurrent / this.props.valueMax * 100}%`
+      width: `${this.currentValue() / this.maxValue() * 100}%`
     };
+  },
+
+  limitLineStyle() {
+    if (this.isOverLimit()) {
+      return {
+        left: `${this.props.valueMax / this.props.valueCurrent * 100}%`
+      };
+    } else {
+      return {
+        right: 0
+      };
+    }
+  },
+
+  isOverLimit() {
+    return this.props.valueCurrent > this.props.valueMax;
+  },
+
+  currentValue() {
+    return this.isOverLimit() ? this.props.valueMax : this.props.valueCurrent;
+  },
+
+  maxValue() {
+    return this.isOverLimit() ? this.props.valueCurrent : this.props.valueMax;
   }
+
 });
