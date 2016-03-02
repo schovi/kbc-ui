@@ -42,6 +42,10 @@ export function createStore(componentId, configId) {
 
     getCredentials() {
       return data.parameters.get('db');
+    },
+
+    getConfigQuery(qid) {
+      return this.getQueries().find((q) => q.get('id') === qid );
     }
 
   };
