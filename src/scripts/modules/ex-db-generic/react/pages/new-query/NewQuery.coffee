@@ -2,23 +2,27 @@ React = require 'react'
 Map = require('immutable').Map
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore'
+storeProvisioning = require '../../storeProvisioning'
+actionsProvisioning = require '../../actionsProvisioning'
+
 RoutesStore = require '../../../../../stores/RoutesStore'
-ExDbActionCreators = require '../../../exDbActionCreators'
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
-
+componentId = 'keboola.ex-db-pgsql'
+ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'ExDbNewQuery'
-  mixins: [createStoreMixin(ExDbStore, StorageTablesStore)]
+  mixins: [createStoreMixin(storeProvisioning.store, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getRouterState().getIn ['params', 'config']
+    ExDbStore = storeProvisioning.createStore(componentId, configId)
+
     configId: configId
-    newQuery: ExDbStore.getNewQuery configId
+    newQuery: ExDbStore.getNewQuery()
     tables: StorageTablesStore.getAll()
 
   _handleQueryChange: (newQuery) ->

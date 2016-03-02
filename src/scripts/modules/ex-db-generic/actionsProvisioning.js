@@ -58,6 +58,10 @@ export function createActions(componentId) {
       saveConfigData(configId, newData, ['pending', qid, 'enabled']);
     },
 
+    updateNewQuery(configId, newQuery) {
+      updateLocalState(configId, ['newQueries', 'query'], newQuery);
+    },
+
     resetNewCredentials(configId) {
       updateLocalState(configId, ['newCredentials'], null);
     },
