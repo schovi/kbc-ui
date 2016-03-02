@@ -2,8 +2,8 @@ React = require 'react'
 Map = require('immutable').Map
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-storeProvisioning = require '../../storeProvisioning'
-actionsProvisioning = require '../../actionsProvisioning'
+storeProvisioning = require '../../../storeProvisioning'
+actionsProvisioning = require '../../../actionsProvisioning'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
