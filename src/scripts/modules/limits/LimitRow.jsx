@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
 import {Button} from 'react-bootstrap';
-import {Check} from 'kbc-react-components';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 import EditLimitButton from './EditLimitButton';
 import LimitProgress from './LimitProgress';
@@ -60,7 +59,6 @@ export default React.createClass({
 
   limit() {
     const {limit}  = this.props;
-    console.log('limit', limit.toJS());
     if (limit.get('unit') === 'bytes') {
       return (
         <span>
@@ -71,9 +69,7 @@ export default React.createClass({
         </span>
       );
     } else if (limit.get('unit') === 'flag') {
-      return (
-        <Check isChecked={!!limit.get('metricValue')} />
-      );
+      return limit.get('limitValue') > 0 ? <strong>ENABLED</strong> : <strong>DISABLED</strong>;
     } else if (!limit.get('limitValue')) {
       return (
         <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
