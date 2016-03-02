@@ -82,7 +82,7 @@ export default React.createClass({
 
   handleChange(e) {
     this.setState({
-      limitValue: e.tagret.value
+      limitValue: e.target.value
     });
   },
 
