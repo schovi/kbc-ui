@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
-import AlarmIndicator from './AlarmIndicator';
 import {Button} from 'react-bootstrap';
 import {Check} from 'kbc-react-components';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 import EditLimitButton from './EditLimitButton';
 import LimitProgress from './LimitProgress';
 import _ from 'underscore';
+import classnames from 'classnames';
 
 export default React.createClass({
   propTypes: {
@@ -29,29 +29,30 @@ export default React.createClass({
   },
 
   render() {
-    console.log('limit', this.state);
     const {limit} = this.props;
     return (
       <div className="td kbc-limit" ref="limit">
-        <div style={{height: `${0.5 * this.state.elWidth}px`, position: 'relative'}}>
-          {this.renderVizualization()}
-        </div>
-        <div>
-        <h3>
-          {limit.get('name')} {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
-        </h3>
-        </div>
-        <div className="kbc-limit-values">
-          <h4>{this.limit()}</h4>
-        </div>
-        <div className="kbc-limit-action">
-          {this.props.canEdit ?
-            <EditLimitButton limit={limit}/> :
-            <Button bsStyle="success">
-              <span className="fa fa-plus"/>
-              Add More
-            </Button>
-          }
+        <div className={classnames('kbc-limit-inner', {'kbc-limit-alarm': limit.get('isAlarm')})}>
+          <div style={{height: `${0.5 * this.state.elWidth}px`, position: 'relative'}}>
+            {this.renderVizualization()}
+          </div>
+          <div>
+          <h3>
+            {limit.get('name')}
+          </h3>
+          </div>
+          <div className="kbc-limit-values">
+            <h4>{this.limit()}</h4>
+          </div>
+          <div className="kbc-limit-action">
+            {this.props.canEdit ?
+              <EditLimitButton limit={limit}/> :
+              <Button bsStyle="success">
+                <span className="fa fa-plus"/>
+                Add More
+              </Button>
+            }
+          </div>
         </div>
       </div>
     );
