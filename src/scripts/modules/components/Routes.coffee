@@ -14,6 +14,7 @@ ComponentsActionCreators = require './ComponentsActionCreators'
 
 
 exDbRoutes = require '../ex-db/exDbRoutes'
+exDbGenericRoutes = require '../ex-db-generic/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
@@ -97,6 +98,8 @@ routes =
       createComponentRoute 'ex-adform', [adformRoutes]
     ,
       createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
+    ,
+      createComponentRoute 'keboola.ex-db-pgsql', [exDbGenericRoutes]
     ,
       createGenericDetailRoute 'extractor'
 
