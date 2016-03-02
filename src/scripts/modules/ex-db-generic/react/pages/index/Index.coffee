@@ -5,7 +5,7 @@ classnames = require 'classnames'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore'
+storeProvisioning = require '../../../storeProvisioning'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 
@@ -19,48 +19,54 @@ LatestJobs = React.createFactory(require '../../../../components/react/component
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 Link = React.createFactory(require('react-router').Link)
 SearchRow = require('../../../../../react/common/SearchRow').default
-actionCreators = require '../../../exDbActionCreators'
-
+actionProvisioning = require '../../../actionsProvisioning'
 
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
+componentId = 'keboola.ex-db-pgsql'
+actionCreators = actionProvisioning.createActions(componentId)
 
 module.exports = React.createClass
-  displayName: 'ExDbIndex'
-  mixins: [createStoreMixin(ExDbStore, LatestJobsStore)]
 
-  componentWillReceiveProps: ->
-    @setState(@getStateFromStores())
+  displayName: 'ExDbIndex'
+  mixins: [createStoreMixin(LatestJobsStore, storeProvisioning.componentsStore)]
+
+  # componentWillReceiveProps: ->
+  #   @setState(@getStateFromStores())
 
   getStateFromStores: ->
     config = RoutesStore.getRouterState().getIn ['params', 'config']
-    configuration = ExDbStore.getConfig config
-    configuration: configuration
-    pendingActions: ExDbStore.getQueriesPendingActions config
-    latestJobs: LatestJobsStore.getJobs 'ex-db', config
-    hasCredentials: !!configuration.getIn ['credentials', 'host']
-    queriesFilter: ExDbStore.getQueriesFilter(config)
-    queriesFiltered: ExDbStore.getQueriesFiltered(config)
-    hasEnabledQueries: configuration.get('queries').filter((query) -> query.get('enabled')).count() > 0
+    ExDbStore = storeProvisioning.createStore(componentId, config)
+    queries = ExDbStore.getQueries()
+
+    #state
+    configId: config
+    pendingActions: ExDbStore.getQueriesPendingActions()
+    latestJobs: LatestJobsStore.getJobs componentId, config
+    hasCredentials: !!ExDbStore.getCredentials().get('host')
+    queries: queries
+    queriesFilter: ExDbStore.getQueriesFilter()
+    queriesFiltered: ExDbStore.getQueriesFiltered()
+    hasEnabledQueries: queries.filter((query) -> query.get('enabled')).count() > 0
 
   _handleFilterChange: (query) ->
-    actionCreators.setQueriesFilter(@state.configuration.get('id'), query)
+    actionCreators.setQueriesFilter(@state.configId, query)
 
   render: ->
-    configurationId = @state.configuration.get('id')
+    configurationId = @state.configId
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row kbc-header',
           div className: 'col-sm-8',
             React.createElement ComponentDescription,
-              componentId: 'ex-db'
-              configId: @state.configuration.get('id')
+              componentId: componentId
+              configId: @state.configId
           div className: 'col-sm-4 kbc-buttons',
-            if @state.configuration.get('queries').count() >= 1
+            if @state.queries.count() >= 1
               Link
                 to: 'ex-db-new-query'
                 params:
-                  config: @state.configuration.get 'id'
+                  config: @state.configId
                 className: 'btn btn-success'
               ,
                 span className: 'kbc-icon-plus'
@@ -72,20 +78,20 @@ module.exports = React.createClass
             Link
               to: 'ex-db-new-credentials'
               params:
-                config: @state.configuration.get 'id'
+                config: @state.configId
             ,
               button className: 'btn btn-success',
                 'Setup Database Credentials'
-        if @state.configuration.get('queries').count() > 1
+        if @state.queries.count() > 1
           React.createElement SearchRow,
             onChange: @_handleFilterChange
             query: @state.queriesFilter
             className: 'row kbc-search-row'
-        if @state.configuration.get('queries').count()
+        if @state.queries.count()
           if @state.queriesFiltered.count()
             QueryTable
               queries: @state.queriesFiltered
-              configurationId: @state.configuration.get('id')
+              configurationId: @state.configId
               pendingActions: @state.pendingActions
           else
             @_renderNotFound()
@@ -96,7 +102,7 @@ module.exports = React.createClass
             Link
               to: 'ex-db-new-query'
               params:
-                config: @state.configuration.get 'id'
+                config: @state.configId
               className: 'btn btn-success'
             ,
               span className: 'kbc-icon-plus'
@@ -104,8 +110,8 @@ module.exports = React.createClass
       div className: 'col-md-3 kbc-main-sidebar',
         div className: 'kbc-buttons kbc-text-light',
           React.createElement ComponentMetadata,
-            componentId: 'ex-db'
-            configId: @state.configuration.get 'id'
+            componentId: componentId
+            configId: @state.configId
 
         ul className: 'nav nav-stacked',
           if @state.hasCredentials
@@ -113,14 +119,14 @@ module.exports = React.createClass
               Link
                 to: 'ex-db-credentials'
                 params:
-                  config: @state.configuration.get 'id'
+                  config: @state.configId
               ,
                 i className: 'fa fa-fw fa-user'
                 ' Database Credentials'
           li className: classnames(disabled: !@state.hasEnabledQueries),
             RunExtractionButton
               title: 'Run Extraction'
-              component: 'ex-db'
+              component: componentId
               mode: 'link'
               disabled: !@state.hasEnabledQueries
               disabledReason: 'There are no queries to be executed'
@@ -130,8 +136,8 @@ module.exports = React.createClass
               'You are about to run extraction.'
           li null,
             React.createElement DeleteConfigurationButton,
-              componentId: 'ex-db'
-              configId: @state.configuration.get 'id'
+              componentId: componentId
+              configId: @state.configId
 
         LatestJobs
           jobs: @state.latestJobs
