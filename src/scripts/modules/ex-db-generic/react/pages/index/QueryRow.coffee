@@ -8,7 +8,7 @@ RunExtractionButton = React.createFactory(require '../../../../components/react/
 SapiTableLinkEx = require('../../../../components/react/components/StorageApiTableLinkEx').default
 ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
 
-actionCreators = require '../../../exDbActionCreators'
+actionsProvisioning = require '../../../actionsProvisioning'
 
 {span, div, a, button, i} = React.DOM
 
@@ -19,8 +19,10 @@ module.exports = React.createClass
     query: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
     configurationId: React.PropTypes.string.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   _handleActiveChange: (newValue) ->
+    actionCreators = actionsProvisioning.createActions(@props.componentId)
     actionCreators.changeQueryEnabledState(@props.configurationId, @props.query.get('id'), newValue)
 
   render: ->

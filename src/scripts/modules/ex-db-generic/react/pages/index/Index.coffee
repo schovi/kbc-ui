@@ -92,6 +92,7 @@ module.exports = React.createClass
             QueryTable
               queries: @state.queriesFiltered
               configurationId: @state.configId
+              componentId: componentId
               pendingActions: @state.pendingActions
           else
             @_renderNotFound()

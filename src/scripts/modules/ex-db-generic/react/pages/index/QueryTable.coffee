@@ -14,12 +14,14 @@ module.exports = React.createClass
   propTypes:
     queries: React.PropTypes.object
     configurationId: React.PropTypes.string
+    componentId: React.PropTypes.string
     pendingActions: React.PropTypes.object
 
   render: ->
     childs = @props.queries.map((query) ->
       QueryRow
         query: query
+        componentId: @props.componentId
         pendingActions: @props.pendingActions.get query.get('id'), Map()
         configurationId: @props.configurationId
         key: query.get('id')
