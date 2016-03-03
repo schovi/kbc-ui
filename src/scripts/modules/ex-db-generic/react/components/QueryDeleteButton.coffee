@@ -13,8 +13,6 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 ###
   Enabled/Disabled orchestration button with tooltip
 ###
-componentId = 'keboola.ex-db-pgsql'
-ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'QueryDeleteButton'
@@ -24,6 +22,7 @@ module.exports = React.createClass
     configurationId: React.PropTypes.string.isRequired
     isPending: React.PropTypes.bool.isRequired
     tooltipPlacement: React.PropTypes.string
+    componentId: React.PropTypes.string
 
   getDefaultProps: ->
     tooltipPlacement: 'top'
@@ -48,11 +47,12 @@ module.exports = React.createClass
             i className: 'kbc-icon-cup'
 
   _deleteQuery: ->
-    @transitionTo 'ex-db',
+    @transitionTo "ex-db-generic-#{@props.componentId}",
       config: @props.configurationId
 
     # if query is deleted immediatelly view is rendered with missing orchestration because of store changed
     id = @props.query.get('id')
     config = @props.configurationId
+    ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
     setTimeout ->
       ExDbActionCreators.deleteQuery config, id

@@ -16,7 +16,7 @@ ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'NewQueryHeaderButtons'
-  mixins: [createStoreMixin(storeProvisioning.store), Navigation]
+  mixins: [createStoreMixin(storeProvisioning.componentsStore), Navigation]
 
 
   getStateFromStores: ->
@@ -28,13 +28,13 @@ module.exports = React.createClass
 
   _handleCancel: ->
     ExDbActionCreators.resetNewQuery @state.currentConfigId
-    @transitionTo componentId, config: @state.currentConfigId
+    @transitionTo "ex-db-generic-#{componentId}", config: @state.currentConfigId
 
   _handleCreate: ->
     ExDbActionCreators
     .createQuery @state.currentConfigId
     .then (query) =>
-      @transitionTo componentId,
+      @transitionTo "ex-db-generic-#{componentId}",
         config: @state.currentConfigId
 
   render: ->

@@ -15,7 +15,7 @@ ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'ExDbNewQuery'
-  mixins: [createStoreMixin(storeProvisioning.store, StorageTablesStore)]
+  mixins: [createStoreMixin(storeProvisioning.componentsStore, StorageTablesStore)]
 
   getStateFromStores: ->
     configId = RoutesStore.getRouterState().getIn ['params', 'config']

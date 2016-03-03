@@ -53,6 +53,7 @@ module.exports = React.createClass
           query: @props.query
           configurationId: @props.configurationId
           isPending: @props.pendingActions.get 'deleteQuery'
+          componentId: @props.componentId
         ActivateDeactivateButton
           activateTooltip: 'Enable Query'
           deactivateTooltip: 'Disable Query'

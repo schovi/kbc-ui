@@ -42,14 +42,14 @@ export default React.createClass({
         <QueryDeleteButton
           query={this.state.query}
           configurationId={this.state.configId}
-          isPending={this.state.pendingActions.has('deleteQuery')}
+          isPending={this.state.pendingActions.get('deleteQuery')}
           tooltipPlacement="bottom"
           />
         <ActivateDeactivateButton
           activateTooltip="Enable Query"
           deactivateTooltip="Disable Query"
           isActive={this.state.query.get('enabled')}
-          isPending={this.state.pendingActions.has('enabled')}
+          isPending={this.state.pendingActions.get('enabled')}
           onChange={this.handleActiveChange}
           tooltipPlacement="bottom"
           />

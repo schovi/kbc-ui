@@ -89,7 +89,7 @@ export function createActions(componentId) {
       const newQuery = store.getNewQuery();
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['newQueries', 'isSaving']);
+      return saveConfigData(configId, newData, ['newQueries', 'isSaving']);
     },
 
     saveCredentialsEdit(configId) {

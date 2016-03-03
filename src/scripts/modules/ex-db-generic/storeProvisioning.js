@@ -1,5 +1,5 @@
 import store from '../components/stores/InstalledComponentsStore';
-import {Map} from 'immutable';
+import {Map, fromJS} from 'immutable';
 import fuzzy from 'fuzzy';
 
 function fetch(componentId, configId) {
@@ -70,13 +70,13 @@ export function createStore(componentId, configId) {
 
     getNewQuery() {
       const ids = this.getQueries().map((q) => q.get('id')).toJS();
-      const defaultNewQuery = {
+      const defaultNewQuery = fromJS({
         incremental: false,
         outputTable: '',
         primaryKey: '',
         query: '',
         id: generateId(ids)
-      };
+      });
       return data.localState.getIn(['newQueries', 'query'], defaultNewQuery);
     },
 
