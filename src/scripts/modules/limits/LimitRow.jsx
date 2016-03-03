@@ -7,7 +7,7 @@ import LimitProgress from './LimitProgress';
 import _ from 'underscore';
 import classnames from 'classnames';
 import contactSupport from '../../utils/contactSupport';
-import Switch from 'rc-switch';
+import SwitchButton from './SwitchButton';
 
 export default React.createClass({
   propTypes: {
@@ -82,7 +82,7 @@ export default React.createClass({
   },
 
   renderVizualization() {
-    const {limit} = this.props;
+    const {limit, canEdit} = this.props;
     if (limit.get('graph')) {
       return this.renderGraph();
     }
@@ -91,8 +91,10 @@ export default React.createClass({
     }
     if (limit.get('unit') === 'flag') {
       return (
-        <Switch  checkedChildren={'✓'}
-                 unCheckedChildren={'x'}/>
+        <SwitchButton
+          limit={limit}
+          canEdit={canEdit}
+          />
       );
     }
     return null;
@@ -129,6 +131,10 @@ export default React.createClass({
     const {limit} = this.props;
 
     if (!limit.get('limitValue')) {
+      return <span/>;
+    }
+
+    if (limit.get('unit') === 'flag') {
       return <span/>;
     }
 

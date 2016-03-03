@@ -42,13 +42,13 @@ export default React.createClass({
       <div className="container-fluid kbc-main-content">
         <ul className="nav nav-tabs">
           <li role="presentation">
+            <a href={this.projectPageUrl('settings-users')}>Users</a>
+          </li>
+          <li role="presentation">
             <a href={this.projectPageUrl('settings')}>Settings</a>
           </li>
           <li role="presentation" className="active">
             <a href={this.projectPageUrl('settings-limits')}>Limits</a>
-          </li>
-          <li role="presentation">
-            <a href={this.projectPageUrl('settings-users')}>Users</a>
           </li>
         </ul>
         {this.state.sections.map((section) => {
