@@ -1,8 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
 
-ExDbActionCreators = require '../../../exDbActionCreators'
-
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
@@ -22,6 +20,7 @@ module.exports = React.createClass
     credentials: React.PropTypes.object.isRequired
     enabled: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func
+    componentId: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -38,6 +37,7 @@ module.exports = React.createClass
         @_createInput 'Connection retries', 'retries', 'number'
         TestCredentialsButtonGroup
           credentials: @props.credentials
+          componentId: @props.componentId
 
   _handleChange: (propName, event) ->
     if ['port', 'retries'].indexOf(propName) >= 0

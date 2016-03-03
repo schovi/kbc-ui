@@ -8,7 +8,8 @@ export default React.createClass({
   propTypes: {
     credentials: PropTypes.object.isRequired,
     isEditing: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    componentId: PropTypes.string.isRequired
   },
 
   render() {
@@ -20,6 +21,7 @@ export default React.createClass({
               credentials={this.props.credentials}
               enabled={this.props.isEditing}
               onChange={this.props.onChange}
+              componentId={this.props.componentId}
               />
           </TabPane>
           <TabPane eventKey="ssl" tab="SSL">
@@ -27,6 +29,7 @@ export default React.createClass({
               credentials={this.props.credentials}
               enabled={this.props.isEditing}
               onChange={this.props.onChange}
+              componentId={this.props.componentId}
               />
           </TabPane>
           <TabPane eventKey="fixedIp" tab="Fixed IP">

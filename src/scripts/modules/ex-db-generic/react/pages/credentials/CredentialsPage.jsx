@@ -1,20 +1,26 @@
 import React from 'react';
 import Credentials from './Credentials';
 import createStoreMixin from '../../../../../react/mixins/createStoreMixin';
-import dbStore from '../../../exDbStore';
 import routesStore from '../../../../../stores/RoutesStore';
-import actionCreators from '../../../exDbActionCreators';
+
+import storeProvisioning from '../../../storeProvisioning';
+import actionsProvisioning from '../../../actionsProvisioning';
+
+const componentId = 'keboola.ex-db-pgsql';
+const actionCreators = actionsProvisioning.createActions(componentId);
 
 export default React.createClass({
-  mixins: [createStoreMixin(dbStore)],
+  mixins: [createStoreMixin(storeProvisioning.store)],
 
   getStateFromStores() {
     const config = routesStore.getCurrentRouteParam('config');
+    const dbStore = storeProvisioning.createStore(componentId, config);
     return {
-      configuration: dbStore.getConfig(config),
-      isEditing: dbStore.isEditingCredentials(config),
-      editingCredentials: dbStore.getEditingCredentials(config),
-      isSaving: dbStore.isSavingCredentials(config)
+      configId: config,
+      credentials: dbStore.getCredentials(),
+      isEditing: dbStore.isEditingCredentials(),
+      editingCredentials: dbStore.getEditingCredentials(),
+      isSaving: dbStore.isSavingCredentials()
     };
   },
 
@@ -24,16 +30,17 @@ export default React.createClass({
         credentials={ this.getCredentials() }
         isEditing={ this.state.isEditing && !this.state.isSaving }
         onChange={ this.handleChange }
+        componentId={componentId}
         />
     );
   },
 
   handleChange(newCredentials) {
-    actionCreators.updateEditingCredentials(this.state.configuration.get('id'), newCredentials);
+    actionCreators.updateEditingCredentials(this.state.configId, newCredentials);
   },
 
   getCredentials() {
-    return this.state.isEditing ? this.state.editingCredentials : this.state.configuration.get('credentials');
+    return this.state.isEditing ? this.state.editingCredentials : this.state.credentials;
   }
 
 });

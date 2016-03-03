@@ -1,19 +1,24 @@
 import React from 'react';
 import Credentials from './Credentials';
 import createStoreMixin from '../../../../../react/mixins/createStoreMixin';
-import dbStore from '../../../exDbStore';
 import routesStore from '../../../../../stores/RoutesStore';
-import actionCreators from '../../../exDbActionCreators';
+
+import storeProvisioning from '../../../storeProvisioning';
+import actionsProvisioning from '../../../actionsProvisioning';
+
+const componentId = 'keboola.ex-db-pgsql';
+const actionCreators = actionsProvisioning.createActions(componentId);
 
 export default React.createClass({
-  mixins: [createStoreMixin(dbStore)],
+  mixins: [createStoreMixin(storeProvisioning.store)],
 
   getStateFromStores() {
     const config = routesStore.getCurrentRouteParam('config');
+    const dbStore = storeProvisioning.createStore(componentId, config);
     return {
       configurationId: config,
-      credentials: dbStore.getNewCredentials(config),
-      isSaving: dbStore.isSavingCredentials(config)
+      credentials: dbStore.getNewCredentials(),
+      isSaving: dbStore.isSavingCredentials()
     };
   },
 
@@ -23,6 +28,7 @@ export default React.createClass({
         credentials={ this.state.credentials }
         isEditing={ !this.state.isSaving }
         onChange={ this.handleChange }
+        componentId={componentId}
         />
     );
   },

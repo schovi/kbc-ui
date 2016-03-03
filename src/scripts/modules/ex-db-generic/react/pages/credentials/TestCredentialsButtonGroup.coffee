@@ -3,17 +3,18 @@ classnames = require 'classnames'
 Button = React.createFactory(require('react-bootstrap').Button)
 
 Loader = React.createFactory(require('kbc-react-components').Loader)
-ExDbActionCreators = require '../../../exDbActionCreators'
 Link = React.createFactory(require('react-router').Link)
 
-
 {div, span} = React.DOM
+
+
 
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
     credentials: React.PropTypes.object.isRequired
     hasOffset: React.PropTypes.bool.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     hasOffset: true
@@ -23,6 +24,7 @@ module.exports = React.createClass
     job: null
 
   _startTesting: ->
+    ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
     @setState
       isTesting: true
       job: null

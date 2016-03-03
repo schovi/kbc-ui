@@ -1,5 +1,6 @@
 import storeProvisioning from './storeProvisioning';
 import componentsActions from '../components/InstalledComponentsActionCreators';
+import exDbApi from '../ex-db/exDbApi';
 
 export function loadConfiguration(componentId, configId) {
   componentsActions.loadComponentConfigData(componentId, configId);
@@ -41,6 +42,10 @@ export function createActions(componentId) {
       updateLocalState(configId, 'editingCredentials', null);
     },
 
+    updateEditingCredentials(configId, newCredentials) {
+      updateLocalState(configId, 'editingCredentials', newCredentials);
+    },
+
     resetNewQuery(configId) {
       updateLocalState(configId, ['newQueries'], null);
     },
@@ -66,12 +71,17 @@ export function createActions(componentId) {
       updateLocalState(configId, ['newCredentials'], null);
     },
 
+    updateNewCredentials(configId, newCredentials) {
+      updateLocalState(configId, ['newCredentials'], newCredentials);
+    },
+
     saveNewCredentials(configId) {
       const store = getStore(configId);
       const newCredentials = store.getNewCredentials();
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
       saveConfigData(configId, newData, ['isSavingCredentials']);
     },
+
 
     createQuery(configId) {
       const store = getStore(configId);
@@ -110,6 +120,10 @@ export function createActions(componentId) {
       const newQueries = store.getQueries().map((q) => q.get('id') === queryId ? newQuery : q);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
       saveConfigData(configId, newData, ['savingQueries']);
+    },
+
+    testCredentials(credentials) {
+      exDbApi.testAndWaitForCredentials(credentials.toJS());
     }
   };
 }

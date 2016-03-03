@@ -15,6 +15,7 @@ module.exports = React.createClass
     credentials: React.PropTypes.object.isRequired
     enabled: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func
+    componentId: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -41,7 +42,7 @@ module.exports = React.createClass
         React.createElement TestCredentials,
           credentials: @props.credentials
           hasOffset: false
-
+          componentId: @props.componentId
 
   _createInput: (labelValue, propName, help = null) ->
     if @props.enabled
