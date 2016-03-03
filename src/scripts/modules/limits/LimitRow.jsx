@@ -6,6 +6,8 @@ import EditLimitButton from './EditLimitButton';
 import LimitProgress from './LimitProgress';
 import _ from 'underscore';
 import classnames from 'classnames';
+import contactSupport from '../../utils/contactSupport';
+import Switch from 'rc-switch';
 
 export default React.createClass({
   propTypes: {
@@ -44,13 +46,7 @@ export default React.createClass({
             <h4>{this.limit()}</h4>
           </div>
           <div className="kbc-limit-action">
-            {this.props.canEdit ?
-              <EditLimitButton limit={limit}/> :
-              <Button bsStyle="success">
-                <span className="fa fa-plus"/>
-                Add More
-              </Button>
-            }
+            {this.renderActionButton()}
           </div>
         </div>
       </div>
@@ -93,6 +89,12 @@ export default React.createClass({
     if (limit.get('limitValue') && limit.get('metricValue')) {
       return this.renderProgress();
     }
+    if (limit.get('unit') === 'flag') {
+      return (
+        <Switch  checkedChildren={'✓'}
+                 unCheckedChildren={'x'}/>
+      );
+    }
     return null;
   },
 
@@ -121,6 +123,26 @@ export default React.createClass({
       unit: this.props.limit.get('unit'),
       client: this.props.keenClient
     });
+  },
+
+  renderActionButton() {
+    const {limit} = this.props;
+
+    if (!limit.get('limitValue')) {
+      return <span/>;
+    }
+
+    if (this.props.canEdit) {
+      return (
+        <EditLimitButton limit={this.props.limit}/>
+      );
+    }
+
+    return (
+      <Button bsStyle="success" onClick={contactSupport}>
+        <span className="fa fa-plus"/> Request More
+      </Button>
+    );
   }
 
 });
