@@ -16,7 +16,7 @@ const componentId = 'keboola.ex-db-pgsql';
 const actionCreators = actionsProvisioning.createActions(componentId);
 
 export default React.createClass({
-  mixins: [createStoreMixin(storeProvisioning.store)],
+  mixins: [createStoreMixin(storeProvisioning.componentsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),

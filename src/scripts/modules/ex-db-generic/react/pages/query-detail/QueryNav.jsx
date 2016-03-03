@@ -29,7 +29,8 @@ export default React.createClass({
       return this.props.queries.map((query) => {
         return React.createElement(NavRow, {
           query: query,
-          configurationId: this.props.configurationId
+          configurationId: this.props.configurationId,
+          componentId: this.props.componentId
         });
       });
     } else {

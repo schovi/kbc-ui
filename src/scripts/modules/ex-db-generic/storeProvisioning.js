@@ -97,7 +97,7 @@ export function createStore(componentId, configId) {
       if (!query) {
         return false;
       }
-      return this.isValidQuery(query);
+      return isValidQuery(query);
     },
     // -------- CONFIGDATA manipulation -----------------
     configData: data.config,

@@ -4,13 +4,14 @@ import {Link} from 'react-router';
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
-    configurationId: PropTypes.string.isRequired
+    configurationId: PropTypes.string.isRequired,
+    componentId: PropTypes.string.isRequired
   },
   render() {
     return (
       <Link
         className="list-group-item"
-        to="ex-db-query"
+        to={`ex-db-generic-${this.props.componentId}-query`}
         params={this.linkParams()}
         >
         <strong>{this.props.query.get('name')}</strong>

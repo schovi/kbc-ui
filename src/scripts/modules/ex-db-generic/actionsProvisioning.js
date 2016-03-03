@@ -24,7 +24,7 @@ export function createActions(componentId) {
 
   function saveConfigData(configId, data, waitingPath) {
     updateLocalState(configId, waitingPath, true);
-    componentsActions.saveComponentConfigData(componentId, configId, data)
+    return componentsActions.saveComponentConfigData(componentId, configId, data)
       .then(() => updateLocalState(configId, waitingPath, false));
   }
 
@@ -106,6 +106,11 @@ export function createActions(componentId) {
       saveConfigData(configId, newData, ['pending', qid, 'deleteQuery']);
     },
 
+    updateEditingQuery(configId, query) {
+      const queryId = query.get('id');
+      updateLocalState(configId, ['editingQueries', queryId], query);
+    },
+
     editQuery(configId, queryId) {
       const query = getStore(configId).getConfigQuery(queryId);
       updateLocalState(configId, ['editingQueries', queryId], query);
@@ -120,7 +125,7 @@ export function createActions(componentId) {
       const newQuery = store.getEditingQuery(queryId);
       const newQueries = store.getQueries().map((q) => q.get('id') === queryId ? newQuery : q);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['savingQueries']);
+      saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
     },
 
     testCredentials(credentials) {

@@ -7,7 +7,7 @@ storeProvisioning = require '../../storeProvisioning'
 componentId = 'keboola.ex-db-pgsql'
 module.exports = React.createClass
   displayName: "ExDbQuerNameEdit"
-  mixins: [createStoreMixin(storeProvisioning.store), immutableMixin]
+  mixins: [createStoreMixin(storeProvisioning.componentsStore), immutableMixin]
   propTypes:
     configId: React.PropTypes.string.isRequired
     queryId: React.PropTypes.number.isRequired
