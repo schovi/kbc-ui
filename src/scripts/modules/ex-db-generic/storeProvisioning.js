@@ -39,7 +39,7 @@ export function createStore(componentId, configId) {
     },
 
     getQueriesFilter() {
-      return data.localState.get('queriesFilter');
+      return data.localState.get('queriesFilter', '');
     },
 
     isEditingCredentials() {

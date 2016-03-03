@@ -64,7 +64,7 @@ module.exports = React.createClass
           div className: 'col-sm-4 kbc-buttons',
             if @state.queries.count() >= 1
               Link
-                to: 'ex-db-new-query'
+                to: "ex-db-generic-#{componentId}-new-query"
                 params:
                   config: @state.configId
                 className: 'btn btn-success'
@@ -76,7 +76,7 @@ module.exports = React.createClass
             p null,
               'Please setup database credentials for this extractor'
             Link
-              to: 'ex-db-new-credentials'
+              to: "ex-db-generic-#{componentId}-new-credentials"
               params:
                 config: @state.configId
             ,
@@ -101,7 +101,7 @@ module.exports = React.createClass
             p null,
               'No queries configured yet.'
             Link
-              to: 'ex-db-new-query'
+              to: "ex-db-generic-#{componentId}-new-query"
               params:
                 config: @state.configId
               className: 'btn btn-success'
@@ -118,7 +118,7 @@ module.exports = React.createClass
           if @state.hasCredentials
             li null,
               Link
-                to: 'ex-db-credentials'
+                to: "ex-db-generic-#{componentId}-credentials"
                 params:
                   config: @state.configId
               ,

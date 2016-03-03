@@ -26,10 +26,11 @@ module.exports = React.createClass
     actionCreators.changeQueryEnabledState(@props.configurationId, @props.query.get('id'), newValue)
 
   render: ->
+    actionCreators = actionsProvisioning.createActions(@props.componentId)
     props = @props
     Link
       className: 'tr'
-      to: 'ex-db-query'
+      to: "ex-db-generic-#{@props.componentId}-query"
       params:
         config: @props.configurationId
         query: @props.query.get 'id'
@@ -46,23 +47,23 @@ module.exports = React.createClass
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
       span className: 'td',
-        @props.query.get('primaryKey').split(',').join(', ')
+        (@props.query.get('primaryKey', '') or '').split(',').join(', ')
       span className: 'td text-right kbc-no-wrap',
         QueryDeleteButton
           query: @props.query
           configurationId: @props.configurationId
-          isPending: @props.pendingActions.has 'deleteQuery'
+          isPending: @props.pendingActions.get 'deleteQuery'
         ActivateDeactivateButton
           activateTooltip: 'Enable Query'
           deactivateTooltip: 'Disable Query'
           isActive: @props.query.get('enabled')
-          isPending: @props.pendingActions.has 'enabled'
+          isPending: @props.pendingActions.get 'enabled'
           onChange: @_handleActiveChange
         RunExtractionButton
           title: 'Run Extraction'
-          component: 'ex-db'
+          component: @props.componentId
           runParams: ->
-            query: props.query.get 'id'
             config: props.configurationId
+            configData: actionCreators.prepareSingleQueryRunData(props.configurationId, props.query)
         ,
           'You are about to run extraction.'

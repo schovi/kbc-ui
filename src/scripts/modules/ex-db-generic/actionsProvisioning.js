@@ -1,4 +1,5 @@
-import storeProvisioning from './storeProvisioning';
+import * as storeProvisioning from './storeProvisioning';
+import {List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import exDbApi from '../ex-db/exDbApi';
 
@@ -124,6 +125,12 @@ export function createActions(componentId) {
 
     testCredentials(credentials) {
       exDbApi.testAndWaitForCredentials(credentials.toJS());
+    },
+
+    prepareSingleQueryRunData(configId, query) {
+      const store = getStore(configId);
+      const runData = store.configData.setIn(['parameters', 'tables'], List().push(query));
+      return runData;
     }
   };
 }
