@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react';
 import SearchRow from '../../../../../react/common/SearchRow';
 import NavRow from './QueryNavRow';
-import actionCreators from '../../../exDbActionCreators';
-
+import actionsProvisioning from '../../../actionsProvisioning';
 
 export default React.createClass({
   propTypes: {
     queries: PropTypes.object.isRequired,
     configurationId: PropTypes.string.isRequired,
-    filter: PropTypes.string.isRequired
+    filter: PropTypes.string.isRequired,
+    componentId: PropTypes.string.isRequired
   },
   render() {
     return (
@@ -42,6 +42,7 @@ export default React.createClass({
   },
 
   handleFilterChange(newQuery) {
+    const actionCreators = actionsProvisioning.createActions(this.props.componentId);
     actionCreators.setQueriesFilter(this.props.configurationId, newQuery);
   }
 });

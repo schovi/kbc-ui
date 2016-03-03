@@ -2,11 +2,11 @@ React = require 'react'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-ExDbStore = require '../../../exDbStore'
+storeProvisioning = require '../../../storeProvisioning'
+actionsProvisioning = require '../../../actionsProvisioning'
+
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
-
-ExDbActionCreators = require '../../../exDbActionCreators'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
@@ -16,10 +16,12 @@ EditButtons = require '../../../../../react/common/EditButtons'
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM
 
+componentId = 'keboola.ex-db-pgsql'
+ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetail'
-  mixins: [createStoreMixin(ExDbStore, StorageTablesStore)]
+  mixins: [createStoreMixin(storeProvisioning.store, StorageTablesStore)]
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
@@ -27,18 +29,19 @@ module.exports = React.createClass
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'
     queryId = RoutesStore.getCurrentRouteIntParam 'query'
-    isEditing = ExDbStore.isEditingQuery configId, queryId
+    ExDbStore = storeProvisioning.createStore(componentId, configId)
+    isEditing = ExDbStore.isEditingQuery(queryId)
 
     configId: configId
-    driver: ExDbStore.getConfig(configId).getIn(['credentials', 'driver'])
-    query: ExDbStore.getConfigQuery configId, queryId
-    editingQuery: ExDbStore.getEditingQuery configId, queryId
+    driver: ExDbStore.getCredentials().get('driver') #TODO: remove driver use
+    query: ExDbStore.getConfigQuery(queryId)
+    editingQuery: ExDbStore.getEditingQuery(queryId)
     isEditing: isEditing
-    isSaving: ExDbStore.isSavingQuery configId, queryId
-    isValid: ExDbStore.isEditingQueryValid configId, queryId
+    isSaving: ExDbStore.isSavingQuery()
+    isValid: ExDbStore.isEditingQueryValid(queryId)
     tables: StorageTablesStore.getAll()
-    queriesFilter: ExDbStore.getQueriesFilter(configId)
-    queriesFiltered: ExDbStore.getQueriesFiltered(configId)
+    queriesFilter: ExDbStore.getQueriesFilter()
+    queriesFiltered: ExDbStore.getQueriesFiltered()
 
   _handleQueryChange: (newQuery) ->
     ExDbActionCreators.updateEditingQuery @state.configId, newQuery
@@ -60,6 +63,7 @@ module.exports = React.createClass
             queries: @state.queriesFiltered
             configurationId: @state.configId
             filter: @state.queriesFilter
+            componentId: componentId
       div className: 'col-md-9 kbc-main-content-with-nav',
         div className: 'row kbc-header',
           div className: 'kbc-buttons',

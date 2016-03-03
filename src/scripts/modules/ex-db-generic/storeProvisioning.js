@@ -80,6 +80,25 @@ export function createStore(componentId, configId) {
       return data.localState.getIn(['newQueries', 'query'], defaultNewQuery);
     },
 
+    isEditingQuery(queryId) {
+      return !!data.localState.getIn(['editingQueries', queryId]);
+    },
+
+    getEditingQuery(queryId) {
+      return data.localState.getIn(['editingQueries', queryId]);
+    },
+
+    isSavingQuery() {
+      return data.localState.get('savingQueries');
+    },
+
+    isEditingQueryValid(queryId) {
+      const query = this.getEditingQuery(queryId);
+      if (!query) {
+        return false;
+      }
+      return this.isValidQuery(query);
+    },
     // -------- CONFIGDATA manipulation -----------------
     configData: data.config,
 
