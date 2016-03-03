@@ -7,7 +7,7 @@ Link = React.createFactory(require('react-router').Link)
 
 {div, span} = React.DOM
 
-
+actionsProvisioning = require '../../../actionsProvisioning'
 
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'

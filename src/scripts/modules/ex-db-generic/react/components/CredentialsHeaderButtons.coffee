@@ -15,7 +15,7 @@ ExDbActionCreators = actionsProvisioning.createActions(componentId)
 
 module.exports = React.createClass
   displayName: 'CredentialsHeaderButtons'
-  mixins: [createStoreMixin(storeProvisioning.store), Navigation]
+  mixins: [createStoreMixin(storeProvisioning.componentsStore), Navigation]
 
   getStateFromStores: ->
     configId = RoutesStore.getCurrentRouteParam 'config'

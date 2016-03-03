@@ -80,7 +80,7 @@ export function createActions(componentId) {
       const store = getStore(configId);
       const newCredentials = store.getNewCredentials();
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
-      saveConfigData(configId, newData, ['isSavingCredentials']);
+      saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
 
 
@@ -96,7 +96,7 @@ export function createActions(componentId) {
       const store = getStore(configId);
       const credentials = store.getEditingCredentials();
       const newConfigData = store.configData.setIn(['parameters', 'db'], credentials);
-      saveConfigData(configId, newConfigData, 'isSavingCredentials');
+      saveConfigData(configId, newConfigData, 'isSavingCredentials').then(() => this.cancelCredentialsEdit(configId));
     },
 
     deleteQuery(configId, qid) {
@@ -129,7 +129,7 @@ export function createActions(componentId) {
     },
 
     testCredentials(credentials) {
-      exDbApi.testAndWaitForCredentials(credentials.toJS());
+      return exDbApi.testAndWaitForCredentials(credentials.toJS());
     },
 
     prepareSingleQueryRunData(configId, query) {
