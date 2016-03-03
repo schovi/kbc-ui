@@ -3,8 +3,8 @@ import Credentials from './Credentials';
 import createStoreMixin from '../../../../../react/mixins/createStoreMixin';
 import routesStore from '../../../../../stores/RoutesStore';
 
-import storeProvisioning from '../../../storeProvisioning';
-import actionsProvisioning from '../../../actionsProvisioning';
+import * as storeProvisioning from '../../../storeProvisioning';
+import * as actionsProvisioning from '../../../actionsProvisioning';
 
 const componentId = 'keboola.ex-db-pgsql';
 const actionCreators = actionsProvisioning.createActions(componentId);

@@ -3,8 +3,8 @@ import {Map} from 'immutable';
 
 import RoutesStore from '../../../../stores/RoutesStore';
 
-import storeProvisioning from '../../storeProvisioning';
-import actionsProvisioning from '../../actionsProvisioning';
+import * as storeProvisioning from '../../storeProvisioning';
+import * as actionsProvisioning from '../../actionsProvisioning';
 
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import QueryDeleteButton from './QueryDeleteButton';
