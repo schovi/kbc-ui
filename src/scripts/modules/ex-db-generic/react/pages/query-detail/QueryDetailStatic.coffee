@@ -4,7 +4,7 @@ Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input} = React.DOM
-editorMode = require('../../../editorMode').default
+editorMode = require('../../../templates/editorMode').default
 
 
 module.exports = React.createClass
@@ -12,6 +12,7 @@ module.exports = React.createClass
   propTypes:
     query: React.PropTypes.object.isRequired
     mode: React.PropTypes.string.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   render: ->
     div className: 'row',
@@ -57,7 +58,7 @@ module.exports = React.createClass
                 readOnly: true
                 lineNumbers: false
                 value: @props.query.get 'query'
-                mode: editorMode(@props.driver)
+                mode: editorMode(@props.componentId)
             else
               div className: 'row kbc-header',
                 p className: 'text-muted',

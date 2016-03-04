@@ -5,7 +5,7 @@ CodeEditor  = React.createFactory(require('../../../../react/common/common').Cod
 Check = React.createFactory(require('../../../../react/common/common').Check)
 
 Autosuggest = React.createFactory(require 'react-autosuggest')
-editorMode = require('../../editorMode').default
+editorMode = require('../../templates/editorMode').default
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label} = React.DOM
 
@@ -26,7 +26,7 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     showOutputTable: React.PropTypes.bool
     configId: React.PropTypes.string.isRequired
-    driver: React.PropTypes.string.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   componentDidMount: ->
     React.findDOMNode(this.refs.queryName).focus()
@@ -94,7 +94,7 @@ module.exports = React.createClass
               readOnly: false
               placeholder: 'SELECT `id`, `name` FROM `myTable`'
               value: @props.query.get 'query'
-              mode: editorMode(@props.driver)
+              mode: editorMode(@props.componentId)
               onChange: @_handleQueryChange
 
 

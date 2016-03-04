@@ -33,7 +33,6 @@ module.exports = React.createClass
     isEditing = ExDbStore.isEditingQuery(queryId)
 
     configId: configId
-    driver: ExDbStore.getCredentials().get('driver') #TODO: remove driver use
     query: ExDbStore.getConfigQuery(queryId)
     editingQuery: ExDbStore.getEditingQuery(queryId)
     isEditing: isEditing
@@ -80,8 +79,8 @@ module.exports = React.createClass
             tables: @state.tables
             onChange: @_handleQueryChange
             configId: @state.configId
-            driver: @state.driver
+            componentId: componentId
         else
           QueryDetailStatic
             query: @state.query
-            driver: @state.driver
+            componentId: componentId
