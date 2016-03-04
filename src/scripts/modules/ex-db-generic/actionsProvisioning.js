@@ -122,7 +122,10 @@ export function createActions(componentId) {
 
     saveQueryEdit(configId, queryId) {
       const store = getStore(configId);
-      const newQuery = store.getEditingQuery(queryId);
+      let newQuery = store.getEditingQuery(queryId);
+      if (newQuery.get('primaryKey') === '') {
+        newQuery = newQuery.set('primaryKey', null);
+      }
       const newQueries = store.getQueries().map((q) => q.get('id') === queryId ? newQuery : q);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
       saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
