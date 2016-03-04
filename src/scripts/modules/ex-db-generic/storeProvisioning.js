@@ -1,12 +1,12 @@
 import store from '../components/stores/InstalledComponentsStore';
-import {Map, fromJS} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 import fuzzy from 'fuzzy';
 
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
   return {
-    config: config,
-    parameters: config.get('parameters'),
+    config: config || Map(),
+    parameters: config.get('parameters', Map()),
     localState: store.getLocalState(componentId, configId) || Map()
   };
 }
@@ -103,7 +103,7 @@ export function createStore(componentId, configId) {
     configData: data.config,
 
     getQueries() {
-      return data.parameters.get('tables');
+      return data.parameters.get('tables', List());
     },
 
     getQueriesFiltered() {
@@ -115,7 +115,7 @@ export function createStore(componentId, configId) {
     },
 
     getCredentials() {
-      return data.parameters.get('db');
+      return data.parameters.get('db', Map());
     },
 
     getConfigQuery(qid) {

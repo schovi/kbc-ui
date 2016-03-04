@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import SearchRow from '../../../../../react/common/SearchRow';
 import NavRow from './QueryNavRow';
-import actionsProvisioning from '../../../actionsProvisioning';
+import * as actionsProvisioning from '../../../actionsProvisioning';
 
 export default React.createClass({
   propTypes: {
