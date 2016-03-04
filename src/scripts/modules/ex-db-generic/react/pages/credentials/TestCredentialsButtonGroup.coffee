@@ -8,7 +8,7 @@ Link = React.createFactory(require('react-router').Link)
 {div, span} = React.DOM
 
 actionsProvisioning = require '../../../actionsProvisioning'
-
+# THIS REACT COMPONENT IS NOT USED!!! SEE render method!
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
@@ -39,6 +39,8 @@ module.exports = React.createClass
       job: job
 
   render: ->
+    return null #TODO: remove when the backend has the test credentials feature
+
     div className: 'form-group',
       div className: classnames('col-xs-8', 'col-xs-offset-4': @props.hasOffset),
         Button
