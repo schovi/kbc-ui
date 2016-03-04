@@ -9,7 +9,7 @@ export default React.createClass({
   propTypes: {
     onChange: PropTypes.func,
     data: PropTypes.object,
-    isEnabled: PropTypes.bool
+    isEditing: PropTypes.bool
   },
 
   render() {
@@ -25,6 +25,11 @@ export default React.createClass({
 
   renderPublicKey() {
     return (
+      <div className="form-group">
+        <label className="control-label col-sm-4">
+          SSH Public Key
+        </label>
+
       <Textarea
         disabled={true}
         label="SSH Key"
@@ -34,6 +39,7 @@ export default React.createClass({
         minRows={4}
         className="form-control"
       />
+      </div>
     );
   },
 
@@ -42,7 +48,7 @@ export default React.createClass({
   },
 
   createInput(labelValue, propName, type = 'text', isProtected = false) {
-    if (this.props.isEnabled) {
+    if (this.props.isEditing) {
       return (
         <Input
           label={labelValue}
