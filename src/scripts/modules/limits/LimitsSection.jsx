@@ -23,7 +23,7 @@ export default React.createClass({
           <div className="kbc-title">
             <h2>
                <span className="kb-sapi-component-icon">
-                <img src={section.get('icon')} />
+                <img src={section.get('icon')} width="32" height="32"/>
               </span>
               {section.get('title')}
             </h2>
