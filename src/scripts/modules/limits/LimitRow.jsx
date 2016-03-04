@@ -4,7 +4,6 @@ import {Button} from 'react-bootstrap';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
 import EditLimitButton from './EditLimitButton';
 import LimitProgress from './LimitProgress';
-import _ from 'underscore';
 import classnames from 'classnames';
 import contactSupport from '../../utils/contactSupport';
 import SwitchButton from './SwitchButton';
@@ -24,9 +23,11 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    _.defer(() => this.setState({
+    /* eslint-disable react/no-did-mount-set-state */
+    this.setState({
       elWidth: React.findDOMNode(this.refs.limit).offsetWidth
-    }));
+    });
+    /* eslint-enable react/no-did-mount-set-state */
   },
 
   render() {
