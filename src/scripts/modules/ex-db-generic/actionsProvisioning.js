@@ -4,7 +4,7 @@ import componentsActions from '../components/InstalledComponentsActionCreators';
 import exDbApi from '../ex-db/exDbApi';
 
 export function loadConfiguration(componentId, configId) {
-  componentsActions.loadComponentConfigData(componentId, configId);
+  return componentsActions.loadComponentConfigData(componentId, configId);
 }
 
 export function createActions(componentId) {
