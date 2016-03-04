@@ -131,14 +131,14 @@ export default React.createClass({
               if (limitValue) {
                 return [
                   row[0],
-                  conversion(row[1]),
+                  conversion(row[1] === null ? 0 : row[1]),
                   style,
                   conversion(limitValue)
                 ];
               } else {
                 return [
                   row[0],
-                  conversion(row[1]),
+                  conversion(row[1] === null ? 0 : row[1]),
                   style
                 ];
               }
