@@ -22,23 +22,29 @@ export default React.createClass({
               enabled={this.props.isEditing}
               onChange={this.props.onChange}
               componentId={this.props.componentId}
-              />
+            />
           </TabPane>
-          <TabPane eventKey="ssl" tab="SSL">
-            <SSLForm
-              credentials={this.props.credentials}
-              enabled={this.props.isEditing}
-              onChange={this.props.onChange}
-              componentId={this.props.componentId}
-              />
-          </TabPane>
+          {/* {this.renderSSLForm()} */}
           <TabPane eventKey="fixedIp" tab="Fixed IP">
             <FixedIP
               credentials={this.props.credentials}
-              />
+            />
           </TabPane>
         </TabbedArea>
       </div>
+    );
+  },
+
+  renderSSLForm() {
+    return (
+      <TabPane eventKey="ssl" tab="SSL">
+        <SSLForm
+          credentials={this.props.credentials}
+          enabled={this.props.isEditing}
+          onChange={this.props.onChange}
+          componentId={this.props.componentId}
+        />
+      </TabPane>
     );
   }
 
