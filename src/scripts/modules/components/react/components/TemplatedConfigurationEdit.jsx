@@ -45,7 +45,7 @@ export default React.createClass({
             <Sticky stickyClass="kbc-sticky-buttons-active" className="kbc-sticky-buttons" topOffset={-30} stickyStyle={{}}>
               <ConfirmButtons
                 isSaving={this.props.isSaving}
-                onSave={this.props.onSave}
+                onSave={this.handleSave}
                 onCancel={this.props.onCancel}
                 placement="right"
                 saveLabel={this.props.saveLabel}
@@ -53,6 +53,7 @@ export default React.createClass({
                 />
             </Sticky>
             <JSONSchemaEditor
+              ref="paramsEditor"
               schema={this.props.paramsSchema}
               value={this.props.params}
               onChange={this.handleParamsChange}
@@ -109,5 +110,12 @@ export default React.createClass({
 
   switchToJsonEditor() {
     this.props.onChangeJobsEditingMode(!this.props.isEditingJobsString);
+  },
+
+  handleSave() {
+    // json-editor doesn't trigger onChange handler on each key stroke
+    // so sometimes not actualized data were saved https://github.com/keboola/kbc-ui/issues/501
+    this.handleParamsChange(this.refs.paramsEditor.getCurrentValue());
+    this.props.onSave();
   }
 });

@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react/addons';
 import Immutable from 'immutable';
 
 /* global require */
@@ -6,6 +6,7 @@ require('./configuration-json.less');
 require('json-editor');
 
 export default React.createClass({
+  mixins: [React.addons.PureRenderMixin],
   propTypes: {
     value: PropTypes.object.isRequired,
     schema: PropTypes.object.isRequired,
@@ -94,6 +95,10 @@ export default React.createClass({
 
   componentDidMount() {
     this.initJsonEditor();
+  },
+
+  getCurrentValue() {
+    return Immutable.fromJS(this.jsoneditor.getValue());
   },
 
   render() {
