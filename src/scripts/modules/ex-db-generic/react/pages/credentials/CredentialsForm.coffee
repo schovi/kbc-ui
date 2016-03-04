@@ -1,10 +1,12 @@
 React = require 'react'
+{Map} = require 'immutable'
 _ = require 'underscore'
 
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 {Protected} = require 'kbc-react-components'
+SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
 
 CredentialsTemplate = require '../../../templates/credentials'
 
@@ -27,6 +29,12 @@ module.exports = React.createClass
         CredentialsTemplate.getFields(@props.componentId).map((field) =>
           @_createInput(field[0], field[1], field[2], field[3])
           )
+      SshTunnelRow
+        isEditing: @props.enabled
+        data: @props.credentials.get('ssh') or Map()
+        onChange: (sshObject) =>
+          @props.onChange(@props.credentials.set('ssh', sshObject))
+
         TestCredentialsButtonGroup
           credentials: @props.credentials
           componentId: @props.componentId
