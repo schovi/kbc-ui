@@ -74,6 +74,9 @@ export default React.createClass({
         textPosition: 'in',
         textStyle: {
           color: '#98a2b5'
+        },
+        viewWindow: {
+          min: 0
         }
       },
       chartArea: {
@@ -141,6 +144,7 @@ export default React.createClass({
               }
             }
           });
+
           /* global google */
           var ds = new google.visualization.arrayToDataTable(converted);
           var combo = new google.visualization.ComboChart(this.el());
