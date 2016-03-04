@@ -64,8 +64,13 @@ export function createStore(componentId, configId) {
     },
 
     getNewCredentials() {
-      const defaultNewCredentials = data.parameters.get('db');
-      return data.localState.get('newCredentials', defaultNewCredentials);
+      const defaultNewCredentials = data.parameters.get('db', Map());
+      const result = data.localState.get('newCredentials', defaultNewCredentials);
+      if (result) {
+        return result;
+      } else {
+        return defaultNewCredentials;
+      }
     },
 
     getNewQuery() {

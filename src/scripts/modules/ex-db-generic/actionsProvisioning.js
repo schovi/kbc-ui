@@ -61,7 +61,7 @@ export function createActions(componentId) {
         }
       });
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['pending', qid, 'enabled']);
+      return saveConfigData(configId, newData, ['pending', qid, 'enabled']);
     },
 
     updateNewQuery(configId, newQuery) {
@@ -80,7 +80,7 @@ export function createActions(componentId) {
       const store = getStore(configId);
       const newCredentials = store.getNewCredentials();
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
-      saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
+      return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
 
 
@@ -96,14 +96,14 @@ export function createActions(componentId) {
       const store = getStore(configId);
       const credentials = store.getEditingCredentials();
       const newConfigData = store.configData.setIn(['parameters', 'db'], credentials);
-      saveConfigData(configId, newConfigData, 'isSavingCredentials').then(() => this.cancelCredentialsEdit(configId));
+      return saveConfigData(configId, newConfigData, 'isSavingCredentials').then(() => this.cancelCredentialsEdit(configId));
     },
 
     deleteQuery(configId, qid) {
       const store = getStore(configId);
       const newQueries = store.getQueries().filter((q) => q.get('id') !== qid);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['pending', qid, 'deleteQuery']);
+      return saveConfigData(configId, newData, ['pending', qid, 'deleteQuery']);
     },
 
     updateEditingQuery(configId, query) {

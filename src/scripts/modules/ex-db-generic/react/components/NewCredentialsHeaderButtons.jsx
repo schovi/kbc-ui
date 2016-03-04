@@ -35,7 +35,7 @@ export default React.createClass({
   },
 
   goToIndex() {
-    this.transitionTo(componentId, {
+    this.transitionTo(`ex-db-generic-${componentId}`, {
       config: this.state.configId
     });
   },
