@@ -6,6 +6,8 @@ TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButto
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 {Protected} = require 'kbc-react-components'
 
+CredentialsTemplate = require '../../../templates/credentials'
+
 {form, div, label, p, option} = React.DOM
 
 _drivers =
@@ -29,12 +31,15 @@ module.exports = React.createClass
     form className: 'form-horizontal',
       div className: 'row',
         @_createSelect 'Driver', 'driver', _drivers
-        @_createInput 'Host name', 'host'
-        @_createInput 'Port', 'port', 'number'
-        @_createInput 'Username', 'user'
-        @_createInput 'Password', 'password', 'password', true
-        @_createInput 'Database', 'database', 'text'
-        @_createInput 'Connection retries', 'retries', 'number'
+        CredentialsTemplate.getFields(@props.componentId).map((field) =>
+          @_createInput(field[0], field[1], field[2], field[3])
+          )
+        # @_createInput 'Host name', 'host'
+        # @_createInput 'Port', 'port', 'number'
+        # @_createInput 'Username', 'user'
+        # @_createInput 'Password', 'password', 'password', true
+        # @_createInput 'Database', 'database', 'text'
+        # @_createInput 'Connection retries', 'retries', 'number'
         TestCredentialsButtonGroup
           credentials: @props.credentials
           componentId: @props.componentId
