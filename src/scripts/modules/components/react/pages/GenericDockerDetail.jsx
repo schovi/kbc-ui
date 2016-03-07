@@ -172,8 +172,12 @@ export default React.createClass({
     }
   },
 
+  hasAuthorizeFlag() {
+    return this.state.component.get('flags').includes('genericDockerUI-authorization');
+  },
+
   accountAuthorization() {
-    if (this.state.component.get('flags').includes('genericDockerUI-authorization')) {
+    if (this.hasAuthorizeFlag()) {
       return (
         <AuthorizationRow
           id={this.state.credentialsId}
@@ -253,8 +257,10 @@ export default React.createClass({
               />
           </div>
           <ul className="nav nav-stacked">
-            <li>
+            <li className={!!this.isRunDisabledReason() ? 'disabled' : ''}>
               <RunComponentButton
+                disabled={!!this.isRunDisabledReason()}
+                disabledReason={this.isRunDisabledReason()}
                 title="Run"
                 component={this.state.componentId}
                 mode="link"
@@ -348,6 +354,17 @@ export default React.createClass({
     InstalledComponentsActionCreators.saveComponentRawConfigDataParameters(this.state.componentId, this.state.config.get('id'));
   },
 
+  isAuthorized() {
+    const creds = this.state.oauthCredentials;
+    return  creds && creds.has('id');
+  },
+
+  isRunDisabledReason() {
+    if (this.hasAuthorizeFlag() && !this.isAuthorized()) {
+      return 'No account authorized';
+    }
+    return null;
+  },
 
   isStringValidJson(stringObject) {
     try {
