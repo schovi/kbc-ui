@@ -11,70 +11,69 @@ import QueryDeleteButton from './QueryDeleteButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
 
+export default function(componentId) {
+  const actionCreators = actionsProvisioning.createActions(componentId);
+  return React.createClass({
+    mixins: [createStoreMixin(storeProvisioning.componentsStore)],
 
-const componentId = 'keboola.ex-db-pgsql';
-const actionCreators = actionsProvisioning.createActions(componentId);
+    getStateFromStores() {
+      const configId = RoutesStore.getCurrentRouteParam('config'),
+        ExDbStore = storeProvisioning.createStore(componentId, configId),
+        queryId = RoutesStore.getCurrentRouteIntParam('query'),
+        query = ExDbStore.getConfigQuery(queryId);
 
-export default React.createClass({
-  mixins: [createStoreMixin(storeProvisioning.componentsStore)],
+      return {
+        configId: configId,
+        queryId: queryId,
+        query: query,
+        pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('id'), Map())
+      };
+    },
 
-  getStateFromStores() {
-    const configId = RoutesStore.getCurrentRouteParam('config'),
-      ExDbStore = storeProvisioning.createStore(componentId, configId),
-      queryId = RoutesStore.getCurrentRouteIntParam('query'),
-      query = ExDbStore.getConfigQuery(queryId);
+    componentWillReceiveProps() {
+      this.setState(this.getStateFromStores());
+    },
 
-    return {
-      configId: configId,
-      queryId: queryId,
-      query: query,
-      pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('id'), Map())
-    };
-  },
-
-  componentWillReceiveProps() {
-    this.setState(this.getStateFromStores());
-  },
-
-  render() {
-    return (
-      <div>
-        <QueryDeleteButton
-          query={this.state.query}
-          configurationId={this.state.configId}
-          isPending={this.state.pendingActions.get('deleteQuery')}
-          tooltipPlacement="bottom"
+    render() {
+      return (
+        <div>
+          <QueryDeleteButton
+            query={this.state.query}
+            configurationId={this.state.configId}
+            isPending={this.state.pendingActions.get('deleteQuery')}
+            tooltipPlacement="bottom"
           />
-        <ActivateDeactivateButton
-          activateTooltip="Enable Query"
-          deactivateTooltip="Disable Query"
-          isActive={this.state.query.get('enabled')}
-          isPending={this.state.pendingActions.get('enabled')}
-          onChange={this.handleActiveChange}
-          tooltipPlacement="bottom"
+          <ActivateDeactivateButton
+            activateTooltip="Enable Query"
+            deactivateTooltip="Disable Query"
+            isActive={this.state.query.get('enabled')}
+            isPending={this.state.pendingActions.get('enabled')}
+            onChange={this.handleActiveChange}
+            tooltipPlacement="bottom"
           />
-        <RunExtractionButton
-          title="Run Extraction"
-          component="ex-db"
-          runParams={this.runParams}
-          config={this.state.configId}
-          tooltipPlacement="bottom"
-        >
+          <RunExtractionButton
+            title="Run Extraction"
+            component="ex-db"
+            runParams={this.runParams}
+            config={this.state.configId}
+            tooltipPlacement="bottom"
+          >
           You are about to run extraction
-        </RunExtractionButton>
-      </div>
-    );
-  },
+          </RunExtractionButton>
+        </div>
+      );
+    },
 
-  runParams() {
-    return {
-      config: this.state.configId,
-      query: this.state.query.get('id')
-    };
-  },
+    runParams() {
+      return {
+        config: this.state.configId,
+        query: this.state.query.get('id')
+      };
+    },
 
-  handleActiveChange(newValue) {
-    actionCreators.changeQueryEnabledState(this.state.configId, this.state.query.get('id'), newValue);
-  }
+    handleActiveChange(newValue) {
+      actionCreators.changeQueryEnabledState(this.state.configId, this.state.query.get('id'), newValue);
+    }
 
-});
+  });
+}

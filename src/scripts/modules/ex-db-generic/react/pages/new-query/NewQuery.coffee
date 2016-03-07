@@ -10,28 +10,27 @@ StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 
-componentId = 'keboola.ex-db-pgsql'
-ExDbActionCreators = actionsProvisioning.createActions(componentId)
+module.exports = (componentId) ->
+  ExDbActionCreators = actionsProvisioning.createActions(componentId)
+  React.createClass
+    displayName: 'ExDbNewQuery'
+    mixins: [createStoreMixin(storeProvisioning.componentsStore, StorageTablesStore)]
 
-module.exports = React.createClass
-  displayName: 'ExDbNewQuery'
-  mixins: [createStoreMixin(storeProvisioning.componentsStore, StorageTablesStore)]
+    getStateFromStores: ->
+      configId = RoutesStore.getRouterState().getIn ['params', 'config']
+      ExDbStore = storeProvisioning.createStore(componentId, configId)
 
-  getStateFromStores: ->
-    configId = RoutesStore.getRouterState().getIn ['params', 'config']
-    ExDbStore = storeProvisioning.createStore(componentId, configId)
+      configId: configId
+      newQuery: ExDbStore.getNewQuery()
+      tables: StorageTablesStore.getAll()
 
-    configId: configId
-    newQuery: ExDbStore.getNewQuery()
-    tables: StorageTablesStore.getAll()
+    _handleQueryChange: (newQuery) ->
+      ExDbActionCreators.updateNewQuery @state.configId, newQuery
 
-  _handleQueryChange: (newQuery) ->
-    ExDbActionCreators.updateNewQuery @state.configId, newQuery
-
-  render: ->
-    React.DOM.div className: 'container-fluid kbc-main-content',
-      QueryEditor
-        query: @state.newQuery
-        tables: @state.tables
-        onChange: @_handleQueryChange
-        configId: @state.configId
+    render: ->
+      React.DOM.div className: 'container-fluid kbc-main-content',
+        QueryEditor
+          query: @state.newQuery
+          tables: @state.tables
+          onChange: @_handleQueryChange
+          configId: @state.configId

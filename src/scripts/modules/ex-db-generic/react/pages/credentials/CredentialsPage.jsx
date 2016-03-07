@@ -6,41 +6,40 @@ import routesStore from '../../../../../stores/RoutesStore';
 import * as storeProvisioning from '../../../storeProvisioning';
 import * as actionsProvisioning from '../../../actionsProvisioning';
 
-const componentId = 'keboola.ex-db-pgsql';
-const actionCreators = actionsProvisioning.createActions(componentId);
+export default function(componentId) {
+  const actionCreators = actionsProvisioning.createActions(componentId);
+  return React.createClass({
+    mixins: [createStoreMixin(storeProvisioning.componentsStore)],
 
-export default React.createClass({
-  mixins: [createStoreMixin(storeProvisioning.componentsStore)],
+    getStateFromStores() {
+      const config = routesStore.getCurrentRouteParam('config');
+      const dbStore = storeProvisioning.createStore(componentId, config);
+      return {
+        configId: config,
+        credentials: dbStore.getCredentials(),
+        isEditing: dbStore.isEditingCredentials(),
+        editingCredentials: dbStore.getEditingCredentials(),
+        isSaving: dbStore.isSavingCredentials()
+      };
+    },
 
-  getStateFromStores() {
-    const config = routesStore.getCurrentRouteParam('config');
-    const dbStore = storeProvisioning.createStore(componentId, config);
-    return {
-      configId: config,
-      credentials: dbStore.getCredentials(),
-      isEditing: dbStore.isEditingCredentials(),
-      editingCredentials: dbStore.getEditingCredentials(),
-      isSaving: dbStore.isSavingCredentials()
-    };
-  },
-
-  render() {
-    return (
-      <Credentials
-        credentials={ this.getCredentials() }
-        isEditing={ this.state.isEditing && !this.state.isSaving }
-        onChange={ this.handleChange }
-        componentId={componentId}
+    render() {
+      return (
+        <Credentials
+          credentials={ this.getCredentials() }
+          isEditing={ this.state.isEditing && !this.state.isSaving }
+          onChange={ this.handleChange }
+          componentId={componentId}
         />
-    );
-  },
+      );
+    },
 
-  handleChange(newCredentials) {
-    actionCreators.updateEditingCredentials(this.state.configId, newCredentials);
-  },
+    handleChange(newCredentials) {
+      actionCreators.updateEditingCredentials(this.state.configId, newCredentials);
+    },
 
-  getCredentials() {
-    return this.state.isEditing ? this.state.editingCredentials : this.state.credentials;
-  }
-
-});
+    getCredentials() {
+      return this.state.isEditing ? this.state.editingCredentials : this.state.credentials;
+    }
+  });
+}

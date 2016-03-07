@@ -99,7 +99,7 @@ routes =
     ,
       createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
     ,
-      createComponentRoute 'keboola.ex-db-pgsql', [exDbGenericRoutes]
+      createComponentRoute 'keboola.ex-db-pgsql', [exDbGenericRoutes('keboola.ex-db-pgsql')]
     ,
       createGenericDetailRoute 'extractor'
 

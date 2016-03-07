@@ -17,9 +17,8 @@ JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
 
 storeProvisioning = require './storeProvisioning'
-componentId = 'keboola.ex-db-pgsql'
 
-module.exports =
+module.exports = (componentId) ->
   name: "ex-db-generic-#{componentId}"
   path: ':config'
   isComponent: true
@@ -34,7 +33,7 @@ module.exports =
     interval: 5
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
-  defaultRouteHandler: ExDbIndex
+  defaultRouteHandler: ExDbIndex(componentId)
   childRoutes: [
     name: "ex-db-generic-#{componentId}-query"
     path: 'query/:query'
@@ -44,15 +43,15 @@ module.exports =
       ExDbStore = storeProvisioning.createStore(componentId, configId)
       'Query ' + ExDbStore.getConfigQuery(parseInt(queryId)).get 'name'
     nameEdit: (params) ->
-      React.createElement ExDbQueryName,
+      React.createElement ExDbQueryName(componentId),
         configId: params.config
         queryId: parseInt params.query
     requireData: [
       ->
         StorageActionCreators.loadTables()
     ]
-    handler: ExDbQueryDetail
-    headerButtonsHandler: ExDbQueryHeaderButtons
+    handler: ExDbQueryDetail(componentId)
+    headerButtonsHandler: ExDbQueryHeaderButtons(componentId)
   ,
     name: "ex-db-generic-#{componentId}-new-query"
     path: 'new-query'
@@ -62,20 +61,20 @@ module.exports =
       ->
         StorageActionCreators.loadTables()
     ]
-    handler: ExDbNewQuery
-    headerButtonsHandler: ExDbNewQueryHeaderButtons
+    handler: ExDbNewQuery(componentId)
+    headerButtonsHandler: ExDbNewQueryHeaderButtons(componentId)
   ,
     name: "ex-db-generic-#{componentId}-credentials"
     path: 'credentials'
     title: ->
       'Credentials'
-    handler: ExDbCredentialsPage
-    headerButtonsHandler: ExDbCredentialsHeaderButtons
+    handler: ExDbCredentialsPage(componentId)
+    headerButtonsHandler: ExDbCredentialsHeaderButtons(componentId)
   ,
     name: "ex-db-generic-#{componentId}-new-credentials"
     path: 'new-credentials'
     title: ->
       'New Credentials'
-    handler: ExDbNewCredentialsPage
-    headerButtonsHandler: ExDbNewCredentialsHeaderButtons
+    handler: ExDbNewCredentialsPage(componentId)
+    headerButtonsHandler: ExDbNewCredentialsHeaderButtons(componentId)
   ]

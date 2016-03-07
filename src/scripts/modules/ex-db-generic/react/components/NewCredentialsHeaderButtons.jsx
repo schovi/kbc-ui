@@ -8,46 +8,46 @@ import * as actionsProvisioning from '../../actionsProvisioning';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import {Navigation} from 'react-router';
 
-const componentId = 'keboola.ex-db-pgsql';
-const actionCreators = actionsProvisioning.createActions(componentId);
+export default function(componentId) {
+  const actionCreators = actionsProvisioning.createActions(componentId);
+  return React.createClass({
+    mixins: [createStoreMixin(storeProvisioning.componentsStore), Navigation],
 
-export default React.createClass({
-  mixins: [createStoreMixin(storeProvisioning.componentsStore), Navigation],
+    getStateFromStores() {
+      const config = routesStore.getCurrentRouteParam('config');
+      const dbStore = storeProvisioning.createStore(componentId, config);
+      return {
+        configId: config,
+        isSaving: dbStore.isSavingCredentials()
+      };
+    },
 
-  getStateFromStores() {
-    const config = routesStore.getCurrentRouteParam('config');
-    const dbStore = storeProvisioning.createStore(componentId, config);
-    return {
-      configId: config,
-      isSaving: dbStore.isSavingCredentials()
-    };
-  },
+    handleCancel() {
+      this.goToIndex();
+      actionCreators.resetNewCredentials(this.state.configId);
+    },
 
-  handleCancel() {
-    this.goToIndex();
-    actionCreators.resetNewCredentials(this.state.configId);
-  },
-
-  handleSave() {
-    actionCreators
+    handleSave() {
+      actionCreators
       .saveNewCredentials(this.state.configId)
       .then(() => this.goToIndex());
-  },
+    },
 
-  goToIndex() {
-    this.transitionTo(`ex-db-generic-${componentId}`, {
-      config: this.state.configId
-    });
-  },
+    goToIndex() {
+      this.transitionTo(`ex-db-generic-${componentId}`, {
+        config: this.state.configId
+      });
+    },
 
-  render() {
-    return (
-      <ConfirmButtons
+    render() {
+      return (
+        <ConfirmButtons
           isSaving={ this.state.isSaving }
           onSave={ this.handleSave }
           onCancel={ this.handleCancel }
         />
-    );
-  }
+      );
+    }
 
-});
+  });
+}
