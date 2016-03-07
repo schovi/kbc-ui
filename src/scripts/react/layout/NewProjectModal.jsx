@@ -20,7 +20,7 @@ export default React.createClass({
     return {
       name: '',
       organizationId: this.props.selectedOrganizationId,
-      type: 'demo',
+      type: 'poc',
       isSaving: false
     };
   },
