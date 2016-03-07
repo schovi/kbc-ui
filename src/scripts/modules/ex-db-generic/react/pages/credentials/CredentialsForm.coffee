@@ -1,6 +1,7 @@
 React = require 'react'
 {Map} = require 'immutable'
 _ = require 'underscore'
+Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
@@ -63,12 +64,19 @@ module.exports = React.createClass
       ,
         React.createElement Protected, null,
           @props.credentials.get propName
+        if @props.credentials.get propName
+          Clipboard
+            text: @props.credentials.get propName
     else
       StaticText
         label: labelValue
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
-      , @props.credentials.get propName
+      ,
+        @props.credentials.get propName
+        if @props.credentials.get propName
+          Clipboard
+            text: @props.credentials.get propName
 
   _createSelect: (labelValue, propName, options) ->
     if @props.enabled

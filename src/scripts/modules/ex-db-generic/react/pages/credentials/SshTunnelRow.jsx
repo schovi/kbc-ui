@@ -1,15 +1,23 @@
 import React, {PropTypes} from 'react';
+import {fromJS} from 'immutable';
+import KeygenApi from '../../../../components/KeygenApi';
 import Textarea from 'react-textarea-autosize';
 import {Input, FormControls} from 'react-bootstrap';
 import {Protected} from 'kbc-react-components';
-
+import Clipboard from '../../../../../react/common/Clipboard';
+import {Loader} from 'kbc-react-components';
 const StaticText = FormControls.Static;
+
 
 export default React.createClass({
   propTypes: {
     onChange: PropTypes.func,
     data: PropTypes.object,
     isEditing: PropTypes.bool
+  },
+
+  getInitialState() {
+    return {isGenerating: false};
   },
 
   render() {
@@ -24,18 +32,21 @@ export default React.createClass({
   },
 
   renderPublicKey() {
+    const publicKey = this.props.data.getIn(['keys', 'public']);
     return (
       <div className="form-group">
         <label className="control-label col-sm-4">
           SSH Public Key
+          {(this.props.isEditing ? this.renderKeyGen(publicKey) :
+           this.renderClipboard(publicKey))}
+
         </label>
 
       <Textarea
         disabled={true}
         label="SSH Key"
         type="textarea"
-        value={this.props.data.getIn(['keys', 'public'])}
-        onChange={this.handleChange.bind(this, ['keys', 'public'])}
+        value={publicKey}
         minRows={4}
         className="form-control"
       />
@@ -43,11 +54,42 @@ export default React.createClass({
     );
   },
 
+  renderKeyGen(publicKey) {
+    return (
+      <span>
+        {' '}
+        {this.state.isGenerating ? <Loader /> : null}
+        <button
+          type="button"
+          disabled={this.state.isGenerating}
+          onClick={this.generateKeys}
+          className="btn btn-link btn-sm">
+        {publicKey ? 'Regenerate' : 'Generate'}
+        </button>
+      </span>
+    );
+  },
+
+  generateKeys() {
+    this.setState({isGenerating: true});
+    KeygenApi.generateKeys().then((keys) => {
+      const newKeys = {
+        'public': keys.public,
+        '#private': keys.private
+      };
+      this.props.onChange(this.props.data.setIn(['keys'], fromJS(newKeys)));
+      this.setState({
+        isGenerating: false
+      });
+    });
+  },
+
   handleChange(propName, event) {
     this.props.onChange(this.props.data.setIn([].concat(propName), event.target.value));
   },
 
   createInput(labelValue, propName, type = 'text', isProtected = false) {
+    const value = this.props.data.get(propName);
     if (this.props.isEditing) {
       return (
         <Input
@@ -66,6 +108,7 @@ export default React.createClass({
           <Protected>
             {this.props.data.get(propName)}
           </Protected>
+          {this.renderClipboard(value)}
         </StaticText>);
     } else {
       return (
@@ -74,7 +117,14 @@ export default React.createClass({
           labelClassName="col-xs-4"
           wrapperClassName="col-xs-8">
           {this.props.data.get(propName)}
+          {this.renderClipboard(value)}
         </StaticText>);
+    }
+  },
+
+  renderClipboard(value) {
+    if (value) {
+      return (<Clipboard text={value} />);
     }
   }
 });
