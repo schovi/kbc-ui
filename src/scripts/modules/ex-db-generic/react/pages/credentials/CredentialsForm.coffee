@@ -2,6 +2,7 @@ React = require 'react'
 {Map} = require 'immutable'
 _ = require 'underscore'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
+hasSshTunnel = require('../../../templates/hasSshTunnel').default
 
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
@@ -30,15 +31,15 @@ module.exports = React.createClass
         CredentialsTemplate.getFields(@props.componentId).map((field) =>
           @_createInput(field[0], field[1], field[2], field[3])
           )
-      SshTunnelRow
-        isEditing: @props.enabled
-        data: @props.credentials.get('ssh') or Map()
-        onChange: (sshObject) =>
-          @props.onChange(@props.credentials.set('ssh', sshObject))
-
-        TestCredentialsButtonGroup
-          credentials: @props.credentials
-          componentId: @props.componentId
+      if hasSshTunnel(this.props.componentId)
+        SshTunnelRow
+          isEditing: @props.enabled
+          data: @props.credentials.get('ssh') or Map()
+          onChange: (sshObject) =>
+            @props.onChange(@props.credentials.set('ssh', sshObject))
+      TestCredentialsButtonGroup
+        credentials: @props.credentials
+        componentId: @props.componentId
 
   _handleChange: (propName, event) ->
     if ['port'].indexOf(propName) >= 0
