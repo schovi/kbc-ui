@@ -22,8 +22,8 @@ module.exports = (componentId) ->
     displayName: 'ExDbQueryDetail'
     mixins: [createStoreMixin(storeProvisioning.componentsStore, StorageTablesStore)]
 
-    # componentWillReceiveProps: ->
-    #   @setState(@getStateFromStores())
+    componentWillReceiveProps: ->
+      @setState(@getStateFromStores())
 
     getStateFromStores: ->
       configId = RoutesStore.getCurrentRouteParam 'config'

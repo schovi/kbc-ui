@@ -29,8 +29,8 @@ module.exports = (componentId) ->
     displayName: 'ExDbIndex'
     mixins: [createStoreMixin(LatestJobsStore, storeProvisioning.componentsStore)]
 
-    # componentWillReceiveProps: ->
-    #   @setState(@getStateFromStores())
+    componentWillReceiveProps: ->
+      @setState(@getStateFromStores())
 
     getStateFromStores: ->
       config = RoutesStore.getRouterState().getIn ['params', 'config']
