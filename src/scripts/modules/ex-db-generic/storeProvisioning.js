@@ -110,6 +110,7 @@ export function createStore(componentId, configId) {
     getNewQuery() {
       const ids = this.getQueries().map((q) => q.get('id')).toJS();
       const defaultNewQuery = fromJS({
+        enabled: true,
         incremental: false,
         outputTable: '',
         primaryKey: '',
