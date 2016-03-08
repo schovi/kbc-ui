@@ -44,13 +44,9 @@ export function createStore(componentId, configId) {
       const fields = templateFields.getFields(componentId);
       const validGeneralCreds = _.reduce(fields, (memo, field) => {
         const propName = field[1];
-        const type = field[2];
-        const value = credentials.get(propName);
-        if (type === 'number') {
-          return memo && _.isNumber(value);
-        } else {
-          return memo && !_.isEmpty(value);
-        }
+        // const type = field[2];
+        const value = credentials.get(propName, '').toString();
+        return memo && !_.isEmpty(value);
       }, true);
       const ssh = credentials.get('ssh', Map());
       const sshFields = [
