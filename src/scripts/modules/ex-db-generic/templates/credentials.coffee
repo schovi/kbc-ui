@@ -8,9 +8,16 @@ defaultFields = [
   ['Database', 'database', 'text', false]
 ]
 
+firebirdFields = [
+  ['Database', 'dbname', 'text', false]
+  ['Username', 'user', 'text', false]
+  ['Password', 'password', 'password', true]
+]
 
 fields =
   'keboola.ex-db-pgsql': defaultFields
+  'keboola.ex-db-db2': defaultFields
+  'keboola.ex-db-firebird': firebirdFields
 
 
 module.exports =
