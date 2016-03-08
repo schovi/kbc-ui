@@ -36,12 +36,13 @@ module.exports = (componentId) ->
       config = RoutesStore.getRouterState().getIn ['params', 'config']
       ExDbStore = storeProvisioning.createStore(componentId, config)
       queries = ExDbStore.getQueries()
+      credentials = ExDbStore.getCredentials()
 
       #state
       configId: config
       pendingActions: ExDbStore.getQueriesPendingActions()
       latestJobs: LatestJobsStore.getJobs componentId, config
-      hasCredentials: !!ExDbStore.getCredentials().get('host')
+      hasCredentials: ExDbStore.hasValidCredentials(credentials)
       queries: queries
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()

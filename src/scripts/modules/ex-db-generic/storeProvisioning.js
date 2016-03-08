@@ -1,6 +1,9 @@
 import store from '../components/stores/InstalledComponentsStore';
 import {List, Map, fromJS} from 'immutable';
 import fuzzy from 'fuzzy';
+import templateFields from './templates/credentials';
+import hasSshTunnel from './templates/hasSshTunnel';
+import _ from 'underscore';
 
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
@@ -33,6 +36,41 @@ export function createStore(componentId, configId) {
   const data = fetch(componentId, configId);
 
   return {
+    hasValidCredentials(credentials) {
+      if (!credentials) {
+        return false;
+      }
+      const hasSSH = hasSshTunnel(componentId);
+      const fields = templateFields.getFields(componentId);
+      const validGeneralCreds = _.reduce(fields, (memo, field) => {
+        const propName = field[1];
+        const type = field[2];
+        const value = credentials.get(propName);
+        if (type === 'number') {
+          return memo && _.isNumber(value);
+        } else {
+          return memo && !_.isEmpty(value);
+        }
+      }, true);
+      const ssh = credentials.get('ssh', Map());
+      const sshFields = [
+        ['sshHost', 'text'],
+        ['user', 'text'],
+        ['sshPort', 'number']
+      ];
+      const isValidSSH = _.reduce(sshFields, (memo, field) => {
+        const propName = field[0];
+        const value = ssh.get(propName, '').toString();
+        return memo && !_.isEmpty(value);
+      }, true);
+      const hasKeys = ssh.getIn(['keys', 'public']) && ssh.getIn(['keys', '#private']);
+      let sshValid = true;
+      if (hasSSH && ssh.get('enabled')) {
+        sshValid = hasKeys && isValidSSH;
+      }
+      return validGeneralCreds && sshValid;
+    },
+
     // -------- LOCAL STATE manipulation -----------------
     getQueriesPendingActions() {
       return data.localState.getIn(['pending'], Map());

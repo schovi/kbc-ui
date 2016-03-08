@@ -20,9 +20,11 @@ module.exports = (componentId) ->
     getStateFromStores: ->
       configId = RoutesStore.getCurrentRouteParam 'config'
       ExDbStore = storeProvisioning.createStore(componentId, configId)
+      creds = ExDbStore.getEditingCredentials(configId)
       currentConfigId: configId
       isEditing: ExDbStore.isEditingCredentials()
       isSaving: ExDbStore.isSavingCredentials()
+      isValid: ExDbStore.hasValidCredentials(creds)
 
     _handleEditStart: ->
       ExDbActionCreators.editCredentials @state.currentConfigId
@@ -47,7 +49,7 @@ module.exports = (componentId) ->
             'Cancel'
           button
             className: 'btn btn-success'
-            disabled: @state.isSaving
+            disabled: @state.isSaving or !@state.isValid
             onClick: @_handleCreate
           ,
             'Save'

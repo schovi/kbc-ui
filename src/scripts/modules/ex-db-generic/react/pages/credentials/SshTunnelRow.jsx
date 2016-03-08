@@ -120,7 +120,8 @@ export default React.createClass({
   },
 
   handleChange(propName, event) {
-    this.props.onChange(this.props.data.setIn([].concat(propName), event.target.value));
+    const value = event.target.value;
+    this.props.onChange(this.props.data.setIn([].concat(propName), value));
   },
 
   createInput(labelValue, propName, type = 'text', isProtected = false) {

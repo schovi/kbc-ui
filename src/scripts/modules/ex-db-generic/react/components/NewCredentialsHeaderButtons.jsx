@@ -16,9 +16,11 @@ export default function(componentId) {
     getStateFromStores() {
       const config = routesStore.getCurrentRouteParam('config');
       const dbStore = storeProvisioning.createStore(componentId, config);
+      const isValid = dbStore.hasValidCredentials(dbStore.getNewCredentials(config));
       return {
         configId: config,
-        isSaving: dbStore.isSavingCredentials()
+        isSaving: dbStore.isSavingCredentials(),
+        isValid: isValid
       };
     },
 
@@ -45,6 +47,7 @@ export default function(componentId) {
           isSaving={ this.state.isSaving }
           onSave={ this.handleSave }
           onCancel={ this.handleCancel }
+          isDisabled= {!this.state.isValid}
         />
       );
     }
