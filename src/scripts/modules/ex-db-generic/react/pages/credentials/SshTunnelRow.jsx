@@ -72,10 +72,11 @@ export default React.createClass({
       <div className="form-group">
         <label className="control-label col-sm-4">
           SSH Public Key
+        </label>
+        <label className="control-label col-sm-8">
           {(this.props.isEditing ? this.renderKeyGen(publicKey) :
             this.renderClipboard(publicKey))}
         </label>
-
         <Textarea
           disabled={true}
           label="SSH Key"
@@ -91,15 +92,15 @@ export default React.createClass({
   renderKeyGen(publicKey) {
     return (
       <span>
-        {' '}
-        {this.state.isGenerating ? <Loader /> : null}
         <button
           type="button"
           disabled={this.state.isGenerating}
           onClick={this.generateKeys}
+          style={{'padding-left': 0}}
           className="btn btn-link btn-sm">
         {publicKey ? 'Regenerate' : 'Generate'}
         </button>
+        {this.state.isGenerating ? <Loader /> : null}
       </span>
     );
   },
