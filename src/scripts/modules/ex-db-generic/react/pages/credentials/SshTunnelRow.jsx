@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {fromJS} from 'immutable';
 import KeygenApi from '../../../../components/KeygenApi';
 import Textarea from 'react-textarea-autosize';
+import {Check} from 'kbc-react-components';
 import {Input, FormControls} from 'react-bootstrap';
 import {Protected} from 'kbc-react-components';
 import Clipboard from '../../../../../react/common/Clipboard';
@@ -23,12 +24,46 @@ export default React.createClass({
   render() {
     return (
       <div className="row">
+      {this.renderEnableCheckbox()}
+      {this.isEnabled() ?
+       <span>
         {this.createInput('SSH host', 'sshHost', 'text', false)}
         {this.createInput('SSH user', 'user', 'text', false)}
         {this.createInput('SSH port', 'sshPort', 'number', false)}
-        {this.renderPublicKey()}
+         {this.renderPublicKey()}
+       </span>
+       : null
+      }
       </div>
     );
+  },
+
+  isEnabled() {
+    return this.props.data.get('enabled');
+  },
+
+  renderEnableCheckbox() {
+    if (this.props.isEditing) {
+      return (
+        <Input
+          disabled={!this.props.isEditing}
+          type="checkbox"
+          label="Enable SSH Tunnel"
+          wrapperClassName="col-xs-8"
+          checked={this.isEnabled()}
+          onChange={() => this.props.onChange(this.props.data.set('enabled', !this.isEnabled()))}
+        />
+      );
+    } else {
+      return (
+        <StaticText
+          label="SSH Tunnel"
+          labelClassName="col-xs-4"
+          wrapperClassName="col-xs-8">
+          <Check isChecked={this.isEnabled()} />
+        </StaticText>
+      );
+    }
   },
 
   renderPublicKey() {
@@ -38,18 +73,17 @@ export default React.createClass({
         <label className="control-label col-sm-4">
           SSH Public Key
           {(this.props.isEditing ? this.renderKeyGen(publicKey) :
-           this.renderClipboard(publicKey))}
-
+            this.renderClipboard(publicKey))}
         </label>
 
-      <Textarea
-        disabled={true}
-        label="SSH Key"
-        type="textarea"
-        value={publicKey}
-        minRows={4}
-        className="form-control"
-      />
+        <Textarea
+          disabled={true}
+          label="SSH Key"
+          type="textarea"
+          value={publicKey}
+          minRows={4}
+          className="form-control"
+        />
       </div>
     );
   },
