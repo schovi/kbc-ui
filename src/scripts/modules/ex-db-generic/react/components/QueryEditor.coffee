@@ -1,6 +1,6 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
-
+string = require '../../../../utils/string'
 CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
 
@@ -47,7 +47,13 @@ module.exports = React.createClass
     @props.onChange(@props.query.set 'name', event.target.value)
 
   _tableNamePlaceholder: ->
-    "in.c-ex-db-" + @props.configId + "." + @props.query.get('name', '')
+    bucketName = "in.c-#{@sanitizeString(@props.componentId)}-#{@props.configId}"
+    tableName = @sanitizeString(@props.query.get('name', ''))
+    return "#{bucketName}.#{tableName}"
+
+  sanitizeString: (str) ->
+    return str.replace(/[^a-zA-Z0-9-]/g, '-')
+
 
   render: ->
     div className: 'row',
@@ -60,7 +66,7 @@ module.exports = React.createClass
               type: 'text'
               value: @props.query.get 'name'
               ref: 'queryName'
-              placeholder: 'Untitled Query'
+              placeholder: 'e.g. Untitled Query'
               onChange: @_handleNameChange
           label className: 'col-md-2 control-label', 'Primary key'
           div className: 'col-md-4',
@@ -72,7 +78,7 @@ module.exports = React.createClass
             onChange: @_handlePrimaryKeyChange
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Output table'
-          div className: 'col-md-4',
+          div className: 'col-md-6',
             Autosuggest
               suggestions: createGetSuggestions(@_tableSelectOptions)
               inputAttributes:
@@ -80,7 +86,7 @@ module.exports = React.createClass
                 placeholder: @_tableNamePlaceholder()
                 value: @props.query.get 'outputTable'
                 onChange: @_handleOutputTableChange
-          div className: 'col-md-4 col-md-offset-2 checkbox',
+          div className: 'col-md-4 checkbox',
             label null,
               input
                 type: 'checkbox'
@@ -92,7 +98,7 @@ module.exports = React.createClass
           div className: 'col-md-12',
             CodeEditor
               readOnly: false
-              placeholder: 'SELECT `id`, `name` FROM `myTable`'
+              placeholder: 'e.g. SELECT `id`, `name` FROM `myTable`'
               value: @props.query.get 'query'
               mode: editorMode(@props.componentId)
               onChange: @_handleQueryChange
