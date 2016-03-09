@@ -24,7 +24,10 @@ function generateId(existingIds) {
 }
 
 function isValidQuery(query) {
-  return query.get('name', '').trim().length > 0;
+  const nameValid = query.get('name', '').trim().length > 0;
+  const tableNameValid = query.get('outputTable', '').trim().length > 0;
+  const queryValid = query.get('query', '').trim().length > 0;
+  return nameValid && tableNameValid && queryValid;
 }
 
 export function getLocalState(componentId, configId) {
