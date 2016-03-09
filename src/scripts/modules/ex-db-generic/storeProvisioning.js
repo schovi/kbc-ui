@@ -4,6 +4,7 @@ import fuzzy from 'fuzzy';
 import templateFields from './templates/credentials';
 import hasSshTunnel from './templates/hasSshTunnel';
 import _ from 'underscore';
+import string from '../../utils/string';
 
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
@@ -36,6 +37,7 @@ export function getLocalState(componentId, configId) {
 export const componentsStore = store;
 export function createStore(componentId, configId) {
   const data = fetch(componentId, configId);
+
 
   return {
     hasValidCredentials(credentials) {
@@ -70,6 +72,12 @@ export function createStore(componentId, configId) {
     },
 
     // -------- LOCAL STATE manipulation -----------------
+    getDefaultOutputTableId(query) {
+      if (!query) {return ''; }
+      const qname = string.sanitizeKbcTableIdString(query.get('name', ''));
+      const bucketName = string.sanitizeKbcTableIdString(componentId);
+      return `in.c-${bucketName}.${qname}`;
+    },
     getQueriesPendingActions() {
       return data.localState.getIn(['pending'], Map());
     },

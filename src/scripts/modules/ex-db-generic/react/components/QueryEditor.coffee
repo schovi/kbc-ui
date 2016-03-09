@@ -26,7 +26,7 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     showOutputTable: React.PropTypes.bool
     configId: React.PropTypes.string.isRequired
-    componentId: React.PropTypes.string.isRequired
+    defaultOutputTable: React.PropTypes.string.isRequired
 
   componentDidMount: ->
     React.findDOMNode(this.refs.queryName).focus()
@@ -47,13 +47,7 @@ module.exports = React.createClass
     @props.onChange(@props.query.set 'name', event.target.value)
 
   _tableNamePlaceholder: ->
-    bucketName = "in.c-#{@sanitizeString(@props.componentId)}-#{@props.configId}"
-    tableName = @sanitizeString(@props.query.get('name', ''))
-    return "#{bucketName}.#{tableName}"
-
-  sanitizeString: (str) ->
-    return str.replace(/[^a-zA-Z0-9-]/g, '-')
-
+    return 'default: ' + @props.defaultOutputTable
 
   render: ->
     div className: 'row',
@@ -86,6 +80,8 @@ module.exports = React.createClass
                 placeholder: @_tableNamePlaceholder()
                 value: @props.query.get 'outputTable'
                 onChange: @_handleOutputTableChange
+            div className: 'help-block',
+              "if empty then default will be used"
           div className: 'col-md-4 checkbox',
             label null,
               input

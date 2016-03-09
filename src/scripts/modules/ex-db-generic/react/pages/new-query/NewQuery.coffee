@@ -19,10 +19,12 @@ module.exports = (componentId) ->
     getStateFromStores: ->
       configId = RoutesStore.getRouterState().getIn ['params', 'config']
       ExDbStore = storeProvisioning.createStore(componentId, configId)
+      newQuery = ExDbStore.getNewQuery()
 
       configId: configId
-      newQuery: ExDbStore.getNewQuery()
+      newQuery: newQuery
       tables: StorageTablesStore.getAll()
+      defaultOutputTable: ExDbStore.getDefaultOutputTableId(newQuery)
 
     _handleQueryChange: (newQuery) ->
       ExDbActionCreators.updateNewQuery @state.configId, newQuery
@@ -34,4 +36,4 @@ module.exports = (componentId) ->
           tables: @state.tables
           onChange: @_handleQueryChange
           configId: @state.configId
-          componentId: componentId
+          defaultOutputTable: @state.defaultOutputTable

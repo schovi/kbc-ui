@@ -30,16 +30,19 @@ module.exports = (componentId) ->
       queryId = RoutesStore.getCurrentRouteIntParam 'query'
       ExDbStore = storeProvisioning.createStore(componentId, configId)
       isEditing = ExDbStore.isEditingQuery(queryId)
+      query = ExDbStore.getConfigQuery(queryId)
+      editingQuery = ExDbStore.getEditingQuery(queryId)
 
       configId: configId
-      query: ExDbStore.getConfigQuery(queryId)
-      editingQuery: ExDbStore.getEditingQuery(queryId)
+      query: query
+      editingQuery: editingQuery
       isEditing: isEditing
       isSaving: ExDbStore.isSavingQuery()
       isValid: ExDbStore.isEditingQueryValid(queryId)
       tables: StorageTablesStore.getAll()
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()
+      defaultOutputTable: ExDbStore.getDefaultOutputTableId(editingQuery)
 
     _handleQueryChange: (newQuery) ->
       ExDbActionCreators.updateEditingQuery @state.configId, newQuery
@@ -78,7 +81,7 @@ module.exports = (componentId) ->
               tables: @state.tables
               onChange: @_handleQueryChange
               configId: @state.configId
-              componentId: componentId
+              defaultOutputTable: @state.defaultOutputTable
           else
             QueryDetailStatic
               query: @state.query

@@ -83,10 +83,18 @@ export function createActions(componentId) {
       return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
 
+    checkTableName(query, store) {
+      const defaultTableName = store.getDefaultOutputTableId(query);
+      if (query.get('outputTable', '').trim().length > 0) {
+        return query;
+      } else {
+        return query.set('outputTable', defaultTableName);
+      }
+    },
 
     createQuery(configId) {
       const store = getStore(configId);
-      const newQuery = store.getNewQuery();
+      const newQuery = this.checkTableName(store.getNewQuery(), store);
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
       return saveConfigData(configId, newData, ['newQueries', 'isSaving']);
@@ -123,6 +131,7 @@ export function createActions(componentId) {
     saveQueryEdit(configId, queryId) {
       const store = getStore(configId);
       let newQuery = store.getEditingQuery(queryId);
+      newQuery = this.checkTableName(newQuery, store);
       if (newQuery.get('primaryKey') === '') {
         newQuery = newQuery.set('primaryKey', null);
       }
