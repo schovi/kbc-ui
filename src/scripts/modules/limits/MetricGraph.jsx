@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import Keen from 'keen-js';
 import {fromJS} from 'immutable';
-import numeral from 'numeral';
-
 
 function format(unit) {
   switch (unit) {
