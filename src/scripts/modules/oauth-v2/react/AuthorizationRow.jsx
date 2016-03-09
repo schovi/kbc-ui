@@ -16,7 +16,6 @@ export default React.createClass({
   },
 
   getInitialState() {
-    console.log(this.props.credentials.toJS());
     return {
       showModal: false
     };
