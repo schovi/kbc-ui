@@ -14,6 +14,9 @@ function convert(value, unit) {
 }
 
 export function numericMetricFormatted(value, unit = null) {
+  if (unit == 'millions' && value < 1000000) {
+    unit = 'number';
+  }
   const formatted = numeral(convert(value, unit)).format('0,00');
   if (unit === 'millions') {
     return formatted + ' M';

@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Keen from 'keen-js';
+import {fromJS} from 'immutable';
 
 
 function format(unit) {
@@ -30,6 +31,61 @@ function getConversion(unit) {
   }
 }
 
+function createChartOptions(options) {
+  return fromJS({
+    colors: [
+      /* teal      red        yellow     purple     orange     mint       blue       green      lavender */
+      '#0bbcfa', '#fb4f61', '#eeb058', '#8a8ad6', '#ff855c', '#00cfbb', '#5a9eed', '#73d483', '#c879bb',
+      '#0099b6', '#d74d58', '#cb9141', '#6b6bb6', '#d86945', '#00aa99', '#4281c9', '#57b566', '#ac5c9e',
+      '#27cceb', '#ff818b', '#f6bf71', '#9b9be1', '#ff9b79', '#26dfcd', '#73aff4', '#87e096', '#d88bcb'
+    ],
+    legend: {
+      position: 'none'
+    },
+    hAxis: {
+      gridlines: {
+        color: 'none'
+      },
+      textStyle: {
+        color: '#98a2b5'
+      },
+      format: 'd.M.'
+    },
+    vAxis: {
+      gridlines: {
+        count: 4,
+        color: '#e8e8ef'
+      },
+      baseline: 0,
+      baselineColor: '#CCC',
+      minValue: 0,
+      textPosition: 'in',
+      textStyle: {
+        color: '#98a2b5'
+      },
+      viewWindow: {
+        min: 0
+      },
+      format: options.vAxisFormat
+    },
+    chartArea: {
+      left: 10,
+      top: 0,
+      width: options.elementWidth - 20,
+      height: 0.5 * options.elementWidth - 20
+    },
+    lineWidth: 3,
+    areaOpacity: 0.1,
+    seriesType: 'area',
+    series: {
+      1: {
+        type: 'line',
+        lineWidth: 1
+      }
+    }
+  });
+}
+
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
@@ -43,73 +99,33 @@ export default React.createClass({
     var el = React.findDOMNode(this.refs.metric);
     var query = new Keen.Query('average', this.props.query);
 
-    var chartOptions = {
-      colors: [
-        /* teal      red        yellow     purple     orange     mint       blue       green      lavender */
-        '#0bbcfa', '#fb4f61', '#eeb058', '#8a8ad6', '#ff855c', '#00cfbb', '#5a9eed', '#73d483', '#c879bb',
-        '#0099b6', '#d74d58', '#cb9141', '#6b6bb6', '#d86945', '#00aa99', '#4281c9', '#57b566', '#ac5c9e',
-        '#27cceb', '#ff818b', '#f6bf71', '#9b9be1', '#ff9b79', '#26dfcd', '#73aff4', '#87e096', '#d88bcb'
-      ],
-      legend: {
-        position: 'none'
-      },
-      hAxis: {
-        gridlines: {
-          color: 'none'
-        },
-        textStyle: {
-          color: '#98a2b5'
-        },
-        format: 'd.M.'
-      },
-      vAxis: {
-        gridlines: {
-          count: 4,
-          color: '#e8e8ef'
-        },
-        baseline: 0,
-        baselineColor: '#CCC',
-        minValue: 0,
-        format: format(this.props.unit),
-        textPosition: 'in',
-        textStyle: {
-          color: '#98a2b5'
-        },
-        viewWindow: {
-          min: 0
-        }
-      },
-      chartArea: {
-        left: 10,
-        top: 0,
-        width: el.offsetWidth - 20,
-        height: 0.5 * el.offsetWidth - 20
-      },
-      lineWidth: 3,
-      areaOpacity: 0.1,
-      seriesType: 'area',
-      series: {
-        1: {
-          type: 'line',
-          lineWidth: 1
-        }
-      }
-    };
+
     var chart = new Keen.Dataviz()
       .chartType('areachart')
       .width(el.offsetWidth)
       .height(0.5 * el.offsetWidth)
       .el(el)
-      .chartOptions(chartOptions)
       .prepare();
 
     var limitValue = this.props.limitValue,
+      unit = this.props.unit,
       conversion = getConversion(this.props.unit);
 
     this.props.client.run([query], function() {
       chart
         .parseRequest(this)
         .call(function() {
+          // in case thand maximum number is less than 1M don't conver to millions
+          if (unit === 'millions' && !limitValue) {
+            var greater = this.data().filter((row) => {
+              return row[1] > 1000000;
+            });
+            if (greater.length === 0) {
+              conversion = getConversion('number');
+              unit = 'number';
+            }
+          }
+
           var converted = this.data().map(function(row, i, data) {
             const style = (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
             if (i === 0) {
@@ -144,11 +160,16 @@ export default React.createClass({
               }
             }
           });
+          var chartOptions = createChartOptions({
+            elementWidth: el.offsetWidth,
+            vAxisFormat: format(unit)
+          });
+
 
           /* global google */
           var ds = new google.visualization.arrayToDataTable(converted);
           var combo = new google.visualization.ComboChart(this.el());
-          combo.draw(ds, chartOptions);
+          combo.draw(ds, chartOptions.toJS());
         });
     });
   },
