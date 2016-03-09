@@ -69,9 +69,9 @@ function createChartOptions(options) {
     },
     chartArea: {
       left: 10,
-      top: 0,
+      top: 10,
       width: options.elementWidth - 20,
-      height: 0.5 * options.elementWidth - 20
+      height: (0.5 * options.elementWidth - 20) - 10
     },
     lineWidth: 3,
     areaOpacity: 0.1,
