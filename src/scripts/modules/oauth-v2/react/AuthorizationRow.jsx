@@ -3,7 +3,8 @@ import AuthorizationModal from './AuthorizationModal';
 import Confirm from '../../../react/common/Confirm';
 import {Loader} from 'kbc-react-components';
 import EmptyState from '../../components/react/components/ComponentEmptyState';
-
+import Tooltip from '../../../react/common/Tooltip';
+import moment from 'moment';
 export default React.createClass({
 
   propTypes: {
@@ -15,6 +16,7 @@ export default React.createClass({
   },
 
   getInitialState() {
+    console.log(this.props.credentials.toJS());
     return {
       showModal: false
     };
@@ -47,6 +49,15 @@ export default React.createClass({
   },
 
   renderAuthorizedInfo() {
+    const created = this.props.credentials.get('created');
+    const createdInfo = (
+      <Tooltip tooltip={created} placement="top">
+        <span>
+        {moment(created).fromNow()}
+        </span>
+      </Tooltip>
+    );
+    const creator = this.props.credentials.getIn(['creator', 'description']);
     return (
       <div>
         Account authorized for <strong>{this.props.credentials.get('authorizedFor')}</strong>
@@ -68,6 +79,9 @@ export default React.createClass({
            </span>
          )
         }
+           <div className="small">
+              {createdInfo} by {creator}
+           </div>
 
       </div>
     );
