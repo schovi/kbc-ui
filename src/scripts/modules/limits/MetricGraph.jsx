@@ -126,7 +126,7 @@ export default React.createClass({
           }
 
           var converted = this.data().map(function(row, i, data) {
-            const style = (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
+            const style =  (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
             if (i === 0) {
               if (limitValue) {
                 return [
@@ -146,14 +146,14 @@ export default React.createClass({
               if (limitValue) {
                 return [
                   row[0],
-                  conversion(row[1] === null ? 0 : row[1]),
+                  row[1] === null ? null : conversion(row[1]),
                   style,
                   conversion(limitValue)
                 ];
               } else {
                 return [
                   row[0],
-                  conversion(row[1] === null ? 0 : row[1]),
+                  row[1] === null ? null : conversion(row[1]),
                   style
                 ];
               }
