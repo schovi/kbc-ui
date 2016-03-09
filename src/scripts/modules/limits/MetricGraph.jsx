@@ -133,43 +133,42 @@ export default React.createClass({
             .map(row => {
               return [
                 row[0],
-                nonNullValues.length === 0 ? (row[1] === null ? 0 : row[1]) : row[1]
-              ]
+                row[1] === null && nonNullValues.length === 0 ? 0 : row[1]
+              ];
             })
             .map(function(row, i, data) {
-            const style =  (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
-            if (i === 0) {
-              if (limitValue) {
-                return [
-                  'Date',
-                  'Value',
-                  {'type': 'string', 'role': 'style'},
-                  'Limit'
-                ];
+              const style =  (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
+              if (i === 0) {
+                if (limitValue) {
+                  return [
+                    'Date',
+                    'Value',
+                    {'type': 'string', 'role': 'style'},
+                    'Limit'
+                  ];
+                } else {
+                  return [
+                    'Date',
+                    'Value',
+                    {'type': 'string', 'role': 'style'}
+                  ];
+                }
               } else {
-                return [
-                  'Date',
-                  'Value',
-                  {'type': 'string', 'role': 'style'}
-                ];
-              }
-            } else {
-              if (limitValue) {
-                return [
-                  row[0],
-                  row[1] === null ? null : conversion(row[1]),
-                  style,
-                  conversion(limitValue)
-                ];
-              } else {
-                return [
-                  row[0],
-                  row[1] === null ? null : conversion(row[1]),
-                  style
-                ];
-              }
-            }
-          });
+                if (limitValue) {
+                  return [
+                    row[0],
+                    row[1] === null ? null : conversion(row[1]),
+                    style,
+                    conversion(limitValue)
+                  ];
+                } else {
+                  return [
+                    row[0],
+                    row[1] === null ? null : conversion(row[1]),
+                    style
+                  ];
+                }
+              }});
           var chartOptions = createChartOptions({
             elementWidth: el.offsetWidth,
             vAxisFormat: format(unit)
