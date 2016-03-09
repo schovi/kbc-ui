@@ -125,7 +125,18 @@ export default React.createClass({
             }
           }
 
-          var converted = this.data().map(function(row, i, data) {
+          // graph throws error if all values are null - switch all nulls to zeros
+          const nonNullValues = this.data().filter( (row, i) => row[1] !== null && i !== 0);
+
+          var converted = this
+            .data()
+            .map(row => {
+              return [
+                row[0],
+                nonNullValues.length === 0 ? (row[1] === null ? 0 : row[1]) : row[1]
+              ]
+            })
+            .map(function(row, i, data) {
             const style =  (i === data.length - 1) ? 'point {visible: true; size: 5;}' : null;
             if (i === 0) {
               if (limitValue) {
@@ -163,7 +174,6 @@ export default React.createClass({
             elementWidth: el.offsetWidth,
             vAxisFormat: format(unit)
           });
-
 
           /* global google */
           var ds = new google.visualization.arrayToDataTable(converted);
