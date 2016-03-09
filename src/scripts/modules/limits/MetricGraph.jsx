@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Keen from 'keen-js';
 import {fromJS} from 'immutable';
+import numeral from 'numeral';
 
 
 function format(unit) {
@@ -18,11 +19,11 @@ function getConversion(unit) {
   switch (unit) {
     case 'millions':
       return function(val) {
-        return val / (1000 * 1000);
+        return Number((val / (1000 * 1000)).toFixed(2));
       };
     case 'bytes':
       return function(val) {
-        return val / (1000 * 1000 * 1000);
+        return Number((val / (1000 * 1000 * 1000)).toFixed(2));
       };
     default:
       return function(val) {
