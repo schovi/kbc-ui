@@ -27,6 +27,7 @@ module.exports = React.createClass
     showOutputTable: React.PropTypes.bool
     configId: React.PropTypes.string.isRequired
     defaultOutputTable: React.PropTypes.string.isRequired
+    componentId: React.PropTypes.string.isRequired
 
   componentDidMount: ->
     React.findDOMNode(this.refs.queryName).focus()

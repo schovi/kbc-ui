@@ -37,3 +37,4 @@ module.exports = (componentId) ->
           onChange: @_handleQueryChange
           configId: @state.configId
           defaultOutputTable: @state.defaultOutputTable
+          componentId: componentId
