@@ -11,7 +11,6 @@ export default React.createClass({
     urlTemplates: PropTypes.object.isRequired,
     projectTemplates: PropTypes.object.isRequired,
     isOpen: PropTypes.bool,
-    showPlans: PropTypes.bool,
     showOrganizationsSelect: PropTypes.bool,
     onHide: PropTypes.func.isRequired
   },
@@ -115,10 +114,6 @@ export default React.createClass({
   },
 
   typesGroup() {
-    if (!this.props.showPlans) {
-      return null;
-    }
-
     return (
       <div>
         <div className="form-group">
