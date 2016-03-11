@@ -25,14 +25,8 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        {ApplicationStore.hasCurrentAdminFeature('kbc-project-templates') ?
-          <Expiration expires={this.state.expires} /> :
-          null
-        }
-        {ApplicationStore.hasCurrentAdminFeature('kbc-limits') ?
-          <LimitsOverQuota limits={this.state.limitsOverQuota}/> :
-          null
-        }
+        <Expiration expires={this.state.expires} />
+        <LimitsOverQuota limits={this.state.limitsOverQuota}/>
         <div className="table kbc-table-border-vertical kbc-layout-table kbc-overview">
           <div className="tbody">
             <div className="tr">

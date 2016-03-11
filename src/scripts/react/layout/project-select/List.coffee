@@ -16,13 +16,9 @@ module.exports = React.createClass
     currentProjectId: React.PropTypes.number.isRequired
     urlTemplates: React.PropTypes.object.isRequired
     projectTemplates: React.PropTypes.object.isRequired
-    showPlans: React.PropTypes.bool
     focus: React.PropTypes.bool.isRequired
     canCreateProject: React.PropTypes.bool.isRequired
     xsrf: React.PropTypes.string.isRequired
-
-  getDefaultProps: ->
-    showPlans: false
 
   getInitialState: ->
     query: ''
@@ -216,7 +212,6 @@ module.exports = React.createClass
         React.createElement NewProjectModal,
           urlTemplates: @props.urlTemplates
           projectTemplates: @props.projectTemplates
-          showPlans: @props.showPlans
           xsrf: @props.xsrf
           isOpen: @state.isNewProjectModalOpen
           onHide: @closeModal

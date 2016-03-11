@@ -34,7 +34,6 @@ App = React.createClass
     canCreateProject: ApplicationStore.getCanCreateProject()
     canManageApps: ApplicationStore.getKbcVars().get 'canManageApps'
     homeUrl: ApplicationStore.getUrlTemplates().get 'home'
-    showPlans: ApplicationStore.hasCurrentAdminFeature('kbc-project-templates')
   render: ->
     div null,
       PageTitle()
@@ -52,7 +51,6 @@ App = React.createClass
               xsrf: @state.xsrf
               canCreateProject: @state.canCreateProject
               projectTemplates: @state.projectTemplates
-              showPlans: @state.showPlans
             SidebarNavigation()
             div className: 'kbc-sidebar-footer',
               CurrentUser
