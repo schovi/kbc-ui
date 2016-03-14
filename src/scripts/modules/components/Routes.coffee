@@ -136,6 +136,8 @@ routes =
     ,
       createComponentRoute 'wr-db-redshift', [createDbWriterRoutes('wr-db-redshift', 'redshift', true)]
     ,
+      createComponentRoute 'keboola.wr-looker', [createDbWriterRoutes('keboola.wr-looker', 'redshift', true)]
+    ,
       createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
       createComponentRoute 'wr-db-mssql', [createDbWriterRoutes('wr-db-mssql', 'mssql', false)]
