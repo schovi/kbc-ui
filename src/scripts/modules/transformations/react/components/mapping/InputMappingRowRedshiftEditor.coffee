@@ -3,8 +3,9 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 RedshiftDataTypesContainer = React.createFactory(require("./input/RedshiftDataTypesContainer"))
+
 
 module.exports = React.createClass
   displayName: 'InputMappingRowRedshiftEditor'
@@ -82,11 +83,11 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
-  _handleChangeColumns: (string, array) ->
+  _handleChangeColumns: (newValue) ->
     component = @
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
-      if array.length
+      mapping = mapping.set("columns", newValue)
+      if newValue.count()
 
         columns = mapping.get("columns").toJS()
         if !_.contains(columns, mapping.get("whereColumn"))
@@ -101,7 +102,10 @@ module.exports = React.createClass
           mapping = mapping.set("distKey", "")
           mapping = mapping.set("distStyle", "")
 
-        mapping = mapping.set("sortKey", _.intersection(columns, component._getSortKeyValues()).join(","))
+        mapping = mapping.set("sortKey", _.intersection(
+          columns,
+          component.props.value.get("sortKey").split(",")
+        ).join(","))
 
     @props.onChange(immutable)
 
@@ -113,18 +117,15 @@ module.exports = React.createClass
     value = @props.value.set("whereOperator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
+  _handleChangeWhereValues: (newValue) ->
+    value = @props.value.set("whereValues", newValue)
     @props.onChange(value)
 
   _handleChangeDataTypes: (datatypes) ->
     value = @props.value.set("datatypes", datatypes)
     @props.onChange(value)
 
-  _handleChangeSortKey: (string) ->
+  _handleChangeSortKey: (immutable, string) ->
     value = @props.value.set("sortKey", string)
     @props.onChange(value)
 
@@ -139,14 +140,6 @@ module.exports = React.createClass
   _handleChangeCopyOptions: (e) ->
     value = @props.value.set("copyOptions", e.target.value)
     @props.onChange(value)
-
-  _getWhereValues: ->
-    @props.value.get("whereValues", Immutable.List()).join(",")
-
-  _getSortKeyValues: ->
-    _.filter(_.invoke(@props.value.get("sortKey", "").split(","), "trim"), (item) ->
-      item != ""
-    )
 
   _getTables: ->
     props = @props
@@ -350,15 +343,17 @@ module.exports = React.createClass
                 React.DOM.option {value: "eq"}, "= (IN)"
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
-              Input
-                bsSize: 'small'
-                type: 'text'
+              Select
                 name: 'whereValues'
-                value: @_getWhereValues()
+                value: @props.value.get('whereValues')
+                multi: true
                 disabled: @props.disabled
+                allowCreate: true
+                delimiter: ','
+                placeholder: 'Add a value...'
+                emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-                placeholder: "Comma separated values"
-      if @state.showDetails
+      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
@@ -368,7 +363,7 @@ module.exports = React.createClass
                 disabled: @props.disabled || !@props.value.get("source")
                 onChange: @_handleChangeDataTypes
                 columnsOptions: @_getFilteredColumnsOptions()
-      if @state.showDetails
+      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Sort Key'
@@ -376,7 +371,7 @@ module.exports = React.createClass
               Select
                 multi: true
                 name: 'sortKey'
-                value: @_getSortKeyValues()
+                value: @props.value.get("sortKey")
                 disabled: @props.disabled || !@props.value.get("source")
                 placeholder: "No sortkey"
                 onChange: @_handleChangeSortKey
@@ -385,7 +380,7 @@ module.exports = React.createClass
                 React.DOM.small {},
                   "SORTKEY option for creating table in Redshift DB.
                     You can create a compound sort key."
-      if @state.showDetails
+      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Dist Key'

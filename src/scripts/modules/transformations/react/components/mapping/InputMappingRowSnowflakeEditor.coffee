@@ -3,7 +3,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 SnowflakeDataTypesContainer = React.createFactory(require("./input/SnowflakeDataTypesContainer"))
 
 module.exports = React.createClass
@@ -33,17 +33,6 @@ module.exports = React.createClass
       showDetails: e.target.checked
     )
 
-  distStyleOptions: [
-      label: "EVEN"
-      value: "EVEN"
-    ,
-      label: "KEY"
-      value: "KEY"
-    ,
-      label: "ALL"
-      value: "ALL"
-  ]
-
   _handleChangeSource: (value) ->
     # use only table name from the table identifier
     destination = value.substr(value.lastIndexOf(".") + 1)
@@ -65,11 +54,11 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
-  _handleChangeColumns: (string, array) ->
+  _handleChangeColumns: (newValue) ->
     component = @
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
-      if array.length
+      mapping = mapping.set("columns", newValue)
+      if newValue.count()
 
         columns = mapping.get("columns").toJS()
         if !_.contains(columns, mapping.get("whereColumn"))
@@ -90,19 +79,13 @@ module.exports = React.createClass
     value = @props.value.set("whereOperator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
+  _handleChangeWhereValues: (newValue) ->
+    value = @props.value.set("whereValues", newValue)
     @props.onChange(value)
 
   _handleChangeDataTypes: (datatypes) ->
     value = @props.value.set("datatypes", datatypes)
     @props.onChange(value)
-
-  _getWhereValues: ->
-    @props.value.get("whereValues", Immutable.List()).join(",")
 
   _getTables: ->
     props = @props
@@ -259,14 +242,16 @@ module.exports = React.createClass
                 React.DOM.option {value: "eq"}, "= (IN)"
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
-              Input
-                bsSize: 'small'
-                type: 'text'
+              Select
                 name: 'whereValues'
-                value: @_getWhereValues()
+                value: @props.value.get('whereValues')
+                multi: true
                 disabled: @props.disabled
+                allowCreate: true
+                delimiter: ','
+                placeholder: 'Add a value...'
+                emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-                placeholder: "Comma separated values"
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',

@@ -60,10 +60,6 @@ function redshift(mapping) {
     return true;
   }
 
-  if (mapping.has('indexes') && mapping.get('indexes').size > 0) {
-    return true;
-  }
-
   if (mapping.get('optional')) {
     return true;
   }
@@ -73,6 +69,35 @@ function redshift(mapping) {
   }
 
   if (mapping.get('sortKey')) {
+    return true;
+  }
+
+  if (mapping.get('whereColumn')) {
+    return true;
+  }
+
+  if (mapping.has('whereValues') && mapping.get('whereValues').size > 0) {
+    return true;
+  }
+  return false;
+}
+
+
+/**
+ * Redshift advanced columns
+ * @param {Object} mapping Map mapping
+ * @return {boolean} Show details
+ */
+function snowflake(mapping) {
+  if (mapping.has('columns') && mapping.get('columns').count() > 0) {
+    return true;
+  }
+
+  if (mapping.has('datatypes') && mapping.get('datatypes').size > 0) {
+    return true;
+  }
+
+  if (mapping.get('days') > 0) {
     return true;
   }
 
@@ -102,6 +127,8 @@ export default function(backend, type, mapping) {
     return redshift(mapping);
   } else if (backend === 'docker') {
     return docker(mapping);
+  } else if (backend === 'snowflake') {
+    return snowflake(mapping);
   } else {
     return false;
   }

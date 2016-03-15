@@ -3,7 +3,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 
 module.exports = React.createClass
   displayName: 'InputMappingRowDockjerEditor'
@@ -52,9 +52,9 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
-  _handleChangeColumns: (string, array) ->
+  _handleChangeColumns: (newValue) ->
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
+      mapping = mapping.set("columns", newValue)
       if !_.contains(mapping.get("columns").toJS(), mapping.get("whereColumn"))
         mapping = mapping.set("whereColumn", "")
         mapping = mapping.set("whereValues", Immutable.List())
@@ -69,18 +69,9 @@ module.exports = React.createClass
     value = @props.value.set("whereOperator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    if parsedValues.count() == 0
-      value = @props.value.set("whereValues", Immutable.List())
-    else
-      value = @props.value.set("whereValues", Immutable.fromJS(parsedValues))
+  _handleChangeWhereValues: (newValue) ->
+    value = @props.value.set("whereValues", newValue)
     @props.onChange(value)
-
-  _getWhereValues: ->
-    @props.value.get("whereValues", Immutable.List()).join(",")
 
   _getTables: ->
     props = @props
@@ -234,10 +225,14 @@ module.exports = React.createClass
                 React.DOM.option {value: "eq"}, "= (IN)"
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
-              Input
-                type: 'text'
+              Select
                 name: 'whereValues'
-                value: @_getWhereValues()
+                value: @props.value.get('whereValues')
+                multi: true
                 disabled: @props.disabled
+                allowCreate: true
+                delimiter: ','
+                placeholder: 'Add a value...'
+                emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-                placeholder: "Comma separated values"
+
