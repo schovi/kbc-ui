@@ -3,7 +3,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 
 module.exports = React.createClass
   displayName: 'TableInputMappingEditor'
@@ -13,9 +13,10 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+    initialShowDetails: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    showDetails: false
+    showDetails: @props.initialShowDetails
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -65,18 +66,9 @@ module.exports = React.createClass
     value = @props.value.set("where_operator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    if parsedValues.length == 0
-      value = @props.value.set("where_values", Immutable.List())
-    else
-      value = @props.value.set("where_values", Immutable.fromJS(parsedValues))
+  _handleChangeWhereValues: (newValue) ->
+    value = @props.value.set("where_values", newValue)
     @props.onChange(value)
-
-  _getWhereValues: ->
-    @props.value.get("where_values", Immutable.List()).join(",")
 
   _getTables: ->
     props = @props
@@ -226,10 +218,13 @@ module.exports = React.createClass
                 React.DOM.option {value: "eq"}, "= (IN)"
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
-              Input
-                type: 'text'
-                name: 'where_values'
-                value: @_getWhereValues()
+              Select
+                name: 'whereValues'
+                value: @props.value.get('where_values')
+                multi: true
                 disabled: @props.disabled
+                allowCreate: true
+                delimiter: ','
+                placeholder: 'Add a value...'
+                emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-                placeholder: "Comma separated values"

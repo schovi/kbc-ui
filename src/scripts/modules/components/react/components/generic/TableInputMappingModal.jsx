@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Editor from './TableInputMappingEditor';
+import resolveInputShowDetails from './resolveInputShowDetails';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -50,7 +51,8 @@ export default React.createClass({
       value: this.props.mapping,
       tables: this.props.tables,
       disabled: this.state.isSaving,
-      onChange: this.props.onChange
+      onChange: this.props.onChange,
+      initialShowDetails: resolveInputShowDetails(this.props.mapping)
     };
     return React.createElement(Editor, props);
   },

@@ -57,7 +57,13 @@ TableInputMappingDetail = React.createClass(
               @props.value.get('where_operator')
               ' '
               strong {},
-                @props.value.get('where_values', Immutable.List()).join(', ')
+                @props.value.get('where_values', Immutable.List()).map((value) ->
+                  if value == ''
+                    return '[empty string]'
+                  if value == ' '
+                    return '[space character]'
+                  return value
+                ).join(', ')
           if @props.value.get('days', 0) != 0 && @props.value.get('where_column')
             ' and '
           if @props.value.get('days', 0) != 0

@@ -159,7 +159,7 @@ module.exports = React.createClass
                     Uses incremental write to Storage API."
         if @state.showDetails
           React.DOM.div {className: "row col-md-12"},
-            React.DOM.div {className: "form-group"},
+            React.DOM.div {className: "form-group form-group-sm"},
               React.DOM.label {className: "control-label col-xs-2"},
                 React.DOM.span null,
                   "Primary key"
@@ -174,8 +174,7 @@ module.exports = React.createClass
                   placeholder: 'Add a column to primary key...'
                   emptyStrings: false,
                   help: React.DOM.small {},
-                    "Primary key of the table in Storage API. If the table already exists, primary key must match.
-                    Parts of a composite primary key are separated with a comma."
+                    "Primary key of the table in Storage API. If the table already exists, primary key must match."
                   onChange: @_handleChangePrimaryKey
 
         if @state.showDetails
