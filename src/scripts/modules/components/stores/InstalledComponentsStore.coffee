@@ -564,7 +564,8 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_START
-      editingData = new Map()
+      configData = InstalledComponentsStore.getConfigData(action.componentId, action.configId) or Map()
+      editingData = configData
       editingData = editingData.setIn(
         ['parameters', 'api'],
         SchemasStore.getApiTemplate(action.componentId)
