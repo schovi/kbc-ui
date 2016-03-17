@@ -118,7 +118,7 @@ export default React.createClass({
   },
 
   mapValues(values) {
-    if (this.props.multi) {
+    if (this.props.multi && values) {
       return values.map(function(value) {
         if (value === '') {
           return '%_EMPTY_STRING_%';
