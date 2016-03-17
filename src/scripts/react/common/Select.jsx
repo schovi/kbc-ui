@@ -33,10 +33,10 @@ export default React.createClass({
 
   valueRenderer(value) {
     if (this.props.emptyStrings) {
-      if (value[this.props.valueKey] === '') {
+      if (value[this.props.valueKey] === '%_EMPTY_STRING_%') {
         return (<small><code>[empty string]</code></small>);
       }
-      if (value[this.props.valueKey] === ' ') {
+      if (value[this.props.valueKey] === '%_SPACE_CHARACTER_%') {
         return (<small><code>[space character]</code></small>);
       }
     }
@@ -54,12 +54,12 @@ export default React.createClass({
     }
     if (this.props.emptyStrings) {
       var emptyString = {};
-      emptyString[this.props.valueKey] = '';
+      emptyString[this.props.valueKey] = '%_EMPTY_STRING_%';
       emptyString[this.props.labelKey] = (<code>[empty string]</code>);
       opts.push(emptyString);
 
       var spaceCharacter = {};
-      spaceCharacter[this.props.valueKey] = ' ';
+      spaceCharacter[this.props.valueKey] = '%_SPACE_CHARACTER_%';
       spaceCharacter[this.props.labelKey] = (<code>[space character]</code>);
       opts.push(spaceCharacter);
     }
@@ -91,7 +91,7 @@ export default React.createClass({
       <span>
         <Select
           {...this.props}
-          value={this.props.value.toJS ? this.props.value.toJS() : this.props.value}
+          value={this.props.value.toJS ? this.mapValues(this.props.value.toJS()) : this.mapValues(this.props.value)}
           valueRenderer={this.valueRenderer}
           filterOptions={this.filterOptions}
           onChange={this.onChange}
@@ -104,10 +104,32 @@ export default React.createClass({
   onChange(string, array) {
     if (this.props.multi) {
       this.props.onChange(Immutable.fromJS(array.map(function(value) {
+        if (value.value === '%_EMPTY_STRING_%') {
+          return '';
+        }
+        if (value.value === '%_SPACE_CHARACTER_%') {
+          return ' ';
+        }
         return value.value;
       })), string);
     } else {
       this.props.onChange(string);
+    }
+  },
+
+  mapValues(values) {
+    if (this.props.multi) {
+      return values.map(function(value) {
+        if (value === '') {
+          return '%_EMPTY_STRING_%';
+        }
+        if (value === ' ') {
+          return '%_SPACE_CHARACTER_%';
+        }
+        return value;
+      });
+    } else {
+      return values;
     }
   }
 
