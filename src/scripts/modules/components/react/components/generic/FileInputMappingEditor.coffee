@@ -100,7 +100,7 @@ module.exports = React.createClass
             help: React.DOM.small
               className: "help-block"
             ,
-              "Specify a Elastic query to refine search"
+              "Specify an Elastic query to refine search"
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
