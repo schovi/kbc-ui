@@ -4,5 +4,5 @@ const componentsNotWithSsh = [
 ];
 
 export default function(componentId) {
-  !(componentsNotWithSsh.indexOf(componentId) >= 0);
+  return !(componentsNotWithSsh.indexOf(componentId) >= 0);
 }
