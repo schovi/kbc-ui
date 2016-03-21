@@ -1,9 +1,8 @@
-const componentsWithSsh = [
-  'keboola.ex-db-pgsql',
-  'keboola.ex-db-db2',
-  'keboola.ex-db-firebird'
+// by default all components have ssh tunnel, if some component dont
+// put it here:
+const componentsNotWithSsh = [
 ];
 
 export default function(componentId) {
-  return componentsWithSsh.indexOf(componentId) >= 0;
+  !(componentsNotWithSsh.indexOf(componentId) >= 0);
 }
