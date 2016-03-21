@@ -103,6 +103,8 @@ routes =
       createComponentRoute 'keboola.ex-db-firebird', [exDbGenericRoutes('keboola.ex-db-firebird')]
       createComponentRoute 'keboola.ex-db-db2', [exDbGenericRoutes('keboola.ex-db-db2')]
     ,
+      createComponentRoute 'keboola.ex-db-impala', [exDbGenericRoutes('keboola.ex-db-impala')]
+    ,
       createGenericDetailRoute 'extractor'
 
     ]
