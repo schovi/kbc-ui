@@ -49,9 +49,9 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
-  _handleChangeColumns: (string, array) ->
+  _handleChangeColumns: (newValue) ->
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
+      mapping = mapping.set("columns", newValue)
       if !_.contains(mapping.get("columns").toJS(), mapping.get("where_column"))
         mapping = mapping.set("where_column", "")
         mapping = mapping.set("where_values", Immutable.List())
