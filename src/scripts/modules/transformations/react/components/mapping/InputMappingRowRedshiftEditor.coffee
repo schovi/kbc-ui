@@ -202,6 +202,12 @@ module.exports = React.createClass
     else
       return table.getIn(["bucket", "backend"]) == "redshift"
 
+  _getSortKeyImmutable: ->
+    if @props.value.get("sortKey")
+      Immutable.fromJS(@props.value.get("sortKey").split(","))
+    else
+      Immutable.List()
+
   render: ->
     component = @
     React.DOM.div {className: 'form-horizontal clearfix'},
@@ -371,7 +377,7 @@ module.exports = React.createClass
               Select
                 multi: true
                 name: 'sortKey'
-                value: @props.value.get("sortKey")
+                value: @_getSortKeyImmutable()
                 disabled: @props.disabled || !@props.value.get("source")
                 placeholder: "No sortkey"
                 onChange: @_handleChangeSortKey
