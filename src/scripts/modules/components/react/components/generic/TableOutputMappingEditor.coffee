@@ -9,7 +9,7 @@ AutosuggestWrapper = require('../../../../transformations/react/components/mappi
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
     suggestions = getOptions()
-    .filter (value) -> value.toLowerCase().search(input.toLowerCase()) >= 0
+    .filter (value) -> value.toLowerCase().indexOf(input.toLowerCase()) >= 0
     .sortBy( (item) ->
       item
     )
