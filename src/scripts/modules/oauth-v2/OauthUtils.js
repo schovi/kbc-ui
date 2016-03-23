@@ -1,12 +1,13 @@
 import {fromJS, Map} from 'immutable';
 import OauthActions from './ActionCreators';
+import ApplicationStore from '../../stores/ApplicationStore';
 import OauthStore from './Store';
-// import ComponentsStore from '../components/stores/ComponentsStore';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
+import ComponentsStore from '../components/stores/ComponentsStore';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
 import RouterStore from '../../stores/RoutesStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
-
+import StorageApi from '../components/StorageApi';
 const configOauthPath = ['authorization', 'oauth_api', 'id'];
 
 function processRedirectData(componentId, configId, id) {
@@ -97,4 +98,20 @@ export function getCredentialsId(configData) {
 
 export function getCredentials(componentId, configId) {
   return OauthStore.getCredentials(componentId, configId);
+}
+
+export function generateLink(componentId, configId) {
+  const description = ApplicationStore.getSapiToken().get('description');
+  const tokenParams = {
+    canManageBuckets: false,
+    canReadAllFileUploads: false,
+    componentAccess: [componentId],
+    description: `${description} external oauth link`,
+    expiresIn: (48 * 3600) // 48 hours in seconds
+  };
+  const externalAppUrl = ComponentsStore.getComponent('keboola.ui-oauth-external').get('uri');
+  return StorageApi.createToken(tokenParams)
+    .then((token) => {
+      return `${externalAppUrl}?token=${token.token}#/${componentId}/${configId}`;
+    });
 }
