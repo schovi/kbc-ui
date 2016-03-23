@@ -9,7 +9,7 @@ Modal = require('./FileOutputMappingModal').default
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
 module.exports = React.createClass(
-  displayName: 'FileInputMappingHeader'
+  displayName: 'FileOutputMappingHeader'
   mixins: [ImmutableRenderMixin]
 
   propTypes:
