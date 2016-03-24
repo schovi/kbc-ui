@@ -51,7 +51,8 @@ const searchTemplate = {
     'quoted_status',
     'retweeted_status',
     'place.bounding_box.coordinates',
-    'coordinates'
+    'coordinates',
+    'geo'
   ]
 };
 
@@ -65,6 +66,7 @@ const userTimelineTemplate = {
     'entities.hashtags[].indices',
     'entities.urls[].indices',
     'entities.symbols',
+    'geo',
     'coordinates',
     'extended_entities.media',
     'quoted_status',
@@ -89,6 +91,7 @@ const mentionsTemplate = {
     'entities.hashtags[].indices',
     'entities.urls[].indices',
     'entities.symbols',
+    'geo',
     'coordinates',
     'extended_entities.media',
     'quoted_status',
@@ -107,7 +110,9 @@ const mentionsTemplate = {
 const followersTemplate = {
   'endpoint': 'followers\/list.json',
   'scroller': 'param_next_cursor',
-  'responseFilter': ['status.place.bounding_box.coordinates'],
+  'responseFilter': [
+    'status'
+  ],
   'dataType': 'users',
   'userData': {'source': 'followers'},
   'params': {

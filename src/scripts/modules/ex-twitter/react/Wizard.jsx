@@ -109,7 +109,7 @@ export default React.createClass({
                 value={this.props.settings.get('followersScreenName')}
                 onChange={this.onFollowersChange}
                 label="Screen name"
-                help="User timeline will be fetched."
+                help="Account's followers will be fetched."
                 disabled={this.props.isStatic}
                 />
             </div>
@@ -148,7 +148,7 @@ export default React.createClass({
                 type="text"
                 value={this.props.settings.getIn(['search', 'query'])}
                 onChange={this.onSearchQueryChange}
-                label="Screen name"
+                label="Query"
                 disabled={this.props.isStatic}
                 />
             </div>
