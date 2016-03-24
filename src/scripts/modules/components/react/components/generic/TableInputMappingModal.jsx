@@ -14,17 +14,28 @@ export default React.createClass({
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onRequestHide: PropTypes.func.isRequired
+    onRequestHide: PropTypes.func.isRequired,
+    otherDestinations: PropTypes.object.isRequired
   },
 
   isValid() {
-    return !!this.props.mapping.get('source');
+    return !!this.props.mapping.get('source')
+      && !!this.props.mapping.get('destination')
+      && !this.isDestinationDuplicate();
   },
 
   getInitialState() {
     return {
       isSaving: false
     };
+  },
+
+  isDestinationDuplicate() {
+    if (this.props.otherDestinations) {
+      return this.props.otherDestinations.contains(this.props.mapping.get('destination', '').toLowerCase());
+    } else {
+      return false;
+    }
   },
 
   render() {
@@ -52,7 +63,8 @@ export default React.createClass({
       tables: this.props.tables,
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
-      initialShowDetails: resolveInputShowDetails(this.props.mapping)
+      initialShowDetails: resolveInputShowDetails(this.props.mapping),
+      isDestinationDuplicate: this.isDestinationDuplicate()
     };
     return React.createElement(Editor, props);
   },
