@@ -14,7 +14,7 @@ export default {
       return installedComponentsActions
         .loadComponentConfigData(COMPONENT_ID, params.config)
         .then(() => {
-          OauthUtils.loadCredentialsFromConfig(COMPONENT_ID, params.config);
+          return OauthUtils.loadCredentialsFromConfig(COMPONENT_ID, params.config);
         });
     }
   ],
