@@ -4,7 +4,8 @@ import {TabbedArea} from 'react-bootstrap';
 export default React.createClass({
   propTypes: {
     activeStep: PropTypes.string.isRequired,
-    goToStep: PropTypes.func.isRequired
+    goToStep: PropTypes.func.isRequired,
+    children: PropTypes.node
   },
   render() {
     return (
@@ -24,7 +25,7 @@ export default React.createClass({
         eventKey: child.props.step,
         tab: child.props.title,
         goToStep: goToStep
-      })
+      });
     });
   }
 });

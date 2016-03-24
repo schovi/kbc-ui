@@ -4,25 +4,25 @@ const common = {
   'api': {
     'authentication': {'type': 'oauth10'},
     'baseUrl': 'https:\/\/api.twitter.com\/1.1\/',
-      'pagination': {
+    'pagination': {
       'method': 'multiple',
-        'scrollers': {
+      'scrollers': {
         'param_next_cursor': {
           'method': 'response.param',
-            'responseParam': 'next_cursor',
-            'queryParam': 'cursor'
+          'responseParam': 'next_cursor',
+          'queryParam': 'cursor'
         },
         'url_next_results': {
           'method': 'response.url',
-            'urlKey': 'search_metadata.next_results',
-            'paramIsQuery': true
+          'urlKey': 'search_metadata.next_results',
+          'paramIsQuery': true
         },
         'cursor_timeline': {
           'method': 'cursor',
-            'idKey': 'id',
-            'param': 'max_id',
-            'reverse': true,
-            'increment': -1
+          'idKey': 'id',
+          'param': 'max_id',
+          'reverse': true,
+          'increment': -1
         }
       }
     },
@@ -33,7 +33,7 @@ const common = {
   }
 };
 
-const search = {
+const searchTemplate = {
   'endpoint': 'search\/tweets.json',
   'params': {
     'q': '@CSCAustralia',
@@ -81,7 +81,7 @@ const userTimelineTemplate = {
   }
 };
 
-const mentions = {
+const mentionsTemplate = {
   'endpoint': 'statuses\/mentions_timeline.json',
   'scroller': 'cursor_timeline',
   'responseFilter': [
@@ -107,15 +107,16 @@ const mentions = {
   }
 };
 
-const jobsTemplate = {
+const followersTemplate = {
   'endpoint': 'followers\/list.json',
-    'scroller': 'param_next_cursor',
-    'responseFilter': ['status.place.bounding_box.coordinates'],
-    'dataType': 'users',
-    'userData': {'source': 'followers'},
+  'scroller': 'param_next_cursor',
+  'responseFilter': ['status.place.bounding_box.coordinates'],
+  'dataType': 'users',
+  'userData': {'source': 'followers'},
   'params': {
     'skip_status': true,
-      'include_user_entities': false
+    'include_user_entities': false,
+    'screen_name': ''
   }
 };
 
@@ -126,20 +127,26 @@ export function createConfigurationFromSettings(settings) {
     jobs = jobs.push(fromJS(userTimelineTemplate).setIn(['params', 'screen_name'], settings.get('userTimelineScreenName')));
   }
 
+  if (settings.getIn(['search', 'query'])) {
+    jobs = jobs.push(fromJS(searchTemplate).setIn(['params', 'q'], settings.getIn(['search', 'query'])));
+  }
+
+  jobs = jobs.push(fromJS(mentionsTemplate));
+  jobs = jobs.push(fromJS(followersTemplate));
   return fromJS(common).setIn(['config', 'jobs'], jobs);
 }
 
 export function getSettingsFromConfiguration(configuration) {
-  console.log('config', configuration.toJS());
-  const userTimeline = configuration
-    .getIn(['config', 'jobs'], List())
-    .find((job) => job.get('endpoint') === 'statuses/user_timeline.json', this, Map());
+  const jobs = configuration.getIn(['config', 'jobs'], List());
+  const userTimeline = jobs.find((job) => job.get('endpoint') === 'statuses/user_timeline.json', this, Map()),
+    followers = jobs.find((job) => job.get('endpoint') === 'followers/list.json', this, Map()),
+    search = jobs.find((job) => job.get('endpoint') === 'search/tweets.json', this, Map());
 
- return Map({
-    userTimelineScreenName: userTimeline.getIn(['params', 'screen_name']),
-    followersScreenName: '',
+  return Map({
+    userTimelineScreenName: userTimeline.getIn(['params', 'screen_name'], ''),
+    followersScreenName: followers.getIn(['params', 'screen_name'], ''),
     search: Map({
-      query: ''
+      query: search.getIn(['params', 'q'], '')
     })
   });
 }

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {TabbedArea, Button, Input} from 'react-bootstrap';
+import {Button, Input} from 'react-bootstrap';
 import {Steps, COMPONENT_ID} from '../constants';
 import AuthorizationRow from '../../oauth-v2/react/AuthorizationRow';
 import WizardCommon from './wizard/WizardCommon';
@@ -48,7 +48,7 @@ export default React.createClass({
               &nbsp;
               <DeleteConfigurationButton
                 componentId={this.props.componentId}
-                configId={this.props.configurationId}
+                configId={this.props.configId}
                 />
               <Button
                 bsStyle="link"
@@ -81,7 +81,7 @@ export default React.createClass({
               &nbsp;
               <DeleteConfigurationButton
                 componentId={this.props.componentId}
-                configId={this.props.configurationId}
+                configId={this.props.configId}
                 />
               <Button
                 bsStyle="link"
@@ -121,7 +121,7 @@ export default React.createClass({
               &nbsp;
               <DeleteConfigurationButton
                 componentId={this.props.componentId}
-                configId={this.props.configurationId}
+                configId={this.props.configId}
                 />
               <Button
                 bsStyle="link"
@@ -160,7 +160,7 @@ export default React.createClass({
               &nbsp;
               <DeleteConfigurationButton
                 componentId={this.props.componentId}
-                configId={this.props.configurationId}
+                configId={this.props.configId}
                 />
               <Button
                 bsStyle="link"
@@ -208,7 +208,7 @@ export default React.createClass({
             &nbsp;
             <DeleteConfigurationButton
               componentId={this.props.componentId}
-              configId={this.props.configurationId}
+              configId={this.props.configId}
               />
             <Button
               bsStyle="primary"

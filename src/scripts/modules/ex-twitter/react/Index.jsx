@@ -121,6 +121,12 @@ export default React.createClass({
         <div className="col-md-3 kbc-main-sidebar">
           <ul className="nav nav-stacked">
             <li>
+              <ComponentMetadata
+                componentId={this.state.component.get('id')}
+                configId={this.state.config.get('id')}
+                />
+            </li>
+            <li>
               <RunComponentButton
                 title="Run"
                 component={this.state.component.get('id')}
@@ -157,6 +163,6 @@ export default React.createClass({
   },
   runParams() {
     return () => ({config: this.state.config.get('id')});
-  },
+  }
 
 });

@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
-import {TabPane, Button} from 'react-bootstrap';
+import {TabPane} from 'react-bootstrap';
 
 export default React.createClass({
 
   propTypes: {
     step: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    children: PropTypes.node
   },
 
   render() {
