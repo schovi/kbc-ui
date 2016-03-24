@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import _ from 'underscore';
-import {TabbedArea, TabPane, ButtonToolbar, Button, Modal, Input} from 'react-bootstrap';
+import {TabbedArea, TabPane, ButtonToolbar, Button, Modal} from 'react-bootstrap';
 import Clipboard from '../../../react/common/Clipboard';
 import AuthorizationForm from './AuthorizationForm';
 import * as oauthUtils from '../OauthUtils';
@@ -22,7 +22,6 @@ export default React.createClass({
       generatingLink: false
     };
   },
-
 
   render() {
     return (
@@ -73,27 +72,34 @@ export default React.createClass({
   renderExternal() {
     const externalLink = (
       this.state.externalLink ?
-      <div>
+      <pre>
         <a href={this.state.externalLink} target="_blank">
         {this.state.externalLink}
         </a>
         <Clipboard text={this.state.externalLink} />
-      </div>
+      </pre>
     : null
     );
     return (
-      <div>
-        <p>To authorize an account from non kbc user, generate a link to the external authorization app and send it to the user you want to have authorized account for. The generated link is valid for <strong>48</strong> hours and will not be stored anywhere.
-        </p>
-        {(this.state.generatingLink ? <Loader /> : null)}
-        {externalLink}
-        <button
-          type="button"
-          disabled={this.state.generatingLink}
-          className="btn btn-link"
-          onClick={this.onGetExternalLink}>
+      <div className="form-group">
+        <div>
+          <p className="form-control-static">
+            <span>
+             To authorize an account from non kbc user, generate a link to the external authorization app and send it to the user you want to have authorized account for. The generated link is valid for <strong>48</strong> hours and will not be stored anywhere.
+            </span>
+            {externalLink}
+            <div>
+              <button
+                type="button"
+                disabled={this.state.generatingLink}
+                className="btn btn-primary"
+                onClick={this.onGetExternalLink}>
           {(this.state.externalLink ? 'Regenerate Link' : 'Generate Link')}
-        </button>
+              </button>
+            {(this.state.generatingLink ? <Loader /> : null)}
+            </div>
+          </p>
+        </div>
       </div>
     );
   },
@@ -110,18 +116,30 @@ export default React.createClass({
 
   renderInstant() {
     return (
-      <Input
-        label="Authorize For"
-        type="text"
-        name="authorizedFor"
-        help="Used afterwards as a description of the authorized account"
-        labelClassName="col-xs-3"
-        wrapperClassName="col-xs-9"
-        defaultValue={this.state.authorizedFor}
-        onChange={this.changeAuthorizedFor}
-        autoFocus={true}
-      />
+      <div style={{'padding-top': '10px'}} className="form-group">
+        <div className="col-xs-12">
+          <label className="control-label col-xs-3">
+      Authorize For
+          </label>
+          <div className="col-xs-9">
+            <input
+              className="form-control"
+              type="text"
+              name="authorizedFor"
+              help="Used afterwards as a description of the authorized account"
+              defaultValue={this.state.authorizedFor}
+              onChange={this.changeAuthorizedFor}
+              autoFocus={true}
+            />
+            <div className="help-text">
+              Used afterwards as a description of the authorized account
+            </div>
+          </div>
+        </div>
+      </div>
     );
+    // labelClassName="col-xs-3"
+    // wrapperClassName="col-xs-11"
   },
   changeAuthorizedFor(e) {
     this.setState({
