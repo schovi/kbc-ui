@@ -30,6 +30,7 @@ createComponentRoute = require('./createComponentRoute').default
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
+twitterRoutes = require('../ex-twitter/routes').default
 geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
 customScienceRoutes = require('../custom-science/Routes').default
 
@@ -96,6 +97,8 @@ routes =
       createComponentRoute 'ex-google-analytics', [exGanalRoutes]
     ,
       createComponentRoute 'ex-adform', [adformRoutes]
+    ,
+      createComponentRoute 'keboola.ex-twitter', [twitterRoutes]
     ,
       createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
     ,
