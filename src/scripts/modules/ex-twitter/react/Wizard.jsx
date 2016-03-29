@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Button, Input} from 'react-bootstrap';
-import AutoFocus from './Wizard/AutoFocus';
+import AutoFocus from './wizard/AutoFocus';
 import {Steps, COMPONENT_ID} from '../constants';
 import AuthorizationRow from '../../oauth-v2/react/AuthorizationRow';
 import WizardCommon from './wizard/WizardCommon';
@@ -197,7 +197,7 @@ export default React.createClass({
     return (
       <WizardStep step={Steps.STEP_AUTHORIZATION} title="Authorization" nextStep={Steps.STEP_USER_TIMELINE}>
         <div className="row" style={this.rowStyle()}>
-          <div className="col-md-8">
+          <div className="col-md-12">
             <AuthorizationRow
               id={this.props.oauthCredentialsId}
               componentId={COMPONENT_ID}
