@@ -5,8 +5,10 @@ import {Steps, COMPONENT_ID} from '../constants';
 import AuthorizationRow from '../../oauth-v2/react/AuthorizationRow';
 import WizardCommon from './wizard/WizardCommon';
 import WizardStep from './wizard/WizardStep';
+import WizardButtons from './wizard/WizardButtons';
 import {Loader} from 'kbc-react-components';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
+import {Map} from 'immutable';
 
 const InputAutoFocused = AutoFocus(Input);
 
@@ -26,86 +28,47 @@ export default React.createClass({
   },
 
   render() {
-    console.log('render', this.props.step);
+    const userTimelineButtons = this.createButtons({
+      previousAction: this.goToAuthorization,
+      nextAction: this.goToMentions,
+      nextActionEnabled: true
+    });
+    const mentionsButtons = this.createButtons({
+      previousAction: this.goToUserTimeline,
+      nextAction: this.goToFollowers,
+      nextActionEnabled: true
+    });
+    const followersButtons = this.createButtons({
+      previousAction: this.goToMentions,
+      nextAction: this.goToSearch,
+      nextActionEnabled: true
+    });
+    const searchButtons = this.createButtons({
+      previousAction: this.goToFollowers,
+      saveAction: this.props.onSave
+    });
     return (
       <WizardCommon activeStep={this.props.step} goToStep={this.goToStep}>
         {this.authorizationStep()}
-        <WizardStep step={Steps.STEP_USER_TIMELINE} title="User Timeline">
-          <div className="row" style={this.rowStyle()}>
-            <div className="col-md-8">
-              <InputAutoFocused
-                currentStep={this.props.step}
-                type="text"
-                value={this.props.settings.get('userTimelineScreenName')}
-                onChange={this.onUserTimelineChange}
-                label="Screen name"
-                help="User timeline will be fetched."
-                disabled={this.props.isStatic}
-                />
-            </div>
-          </div>
-          <div className="kbc-row clearfix">
-            <div className="pull-right">
-              {this.props.isSaving ? <Loader/> : null}
-              &nbsp;
-              &nbsp;
-              <DeleteConfigurationButton
-                componentId={this.props.componentId}
-                configId={this.props.configId}
-                />
-              <Button
-                bsStyle="link"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToAuthorization}
-                >
-                Previous
-              </Button>
-              <Button
-                bsStyle="primary"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToMentions}
-                disabled={!this.props.oauthCredentials}
-                >
-                Continue
-              </Button>
-            </div>
+        <WizardStep step={Steps.STEP_USER_TIMELINE} title="User Timeline" buttons={userTimelineButtons}>
+          <div className="col-md-8">
+            <InputAutoFocused
+              currentStep={this.props.step}
+              type="text"
+              value={this.props.settings.get('userTimelineScreenName')}
+              onChange={this.onUserTimelineChange}
+              label="Screen name"
+              help="User timeline will be fetched."
+              disabled={this.props.isStatic}
+              />
           </div>
         </WizardStep>
-        <WizardStep step={Steps.STEP_MENTIONS} title="Mentions">
-          <div className="row" style={this.rowStyle()}>
-            <div className="col-md-8">
-              <p>Mentions of authorized user will be fetched.</p>
-            </div>
-          </div>
-          <div className="kbc-row clearfix">
-            <div className="pull-right">
-              {this.props.isSaving ? <Loader/> : null}
-              &nbsp;
-              &nbsp;
-              <DeleteConfigurationButton
-                componentId={this.props.componentId}
-                configId={this.props.configId}
-                />
-              <Button
-                bsStyle="link"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToUserTimeline}
-                >
-                Previous
-              </Button>
-              <Button
-                bsStyle="primary"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToFollowers}
-                disabled={!this.props.oauthCredentials}
-                >
-                Continue
-              </Button>
-            </div>
+        <WizardStep step={Steps.STEP_MENTIONS} title="Mentions" buttons={mentionsButtons}>
+          <div className="col-md-8">
+            <p>Mentions of authorized user will be fetched.</p>
           </div>
         </WizardStep>
-        <WizardStep step={Steps.STEP_FOLLOWERS} title="Followers List">
-          <div className="row" style={this.rowStyle()}>
+        <WizardStep step={Steps.STEP_FOLLOWERS} title="Followers List" buttons={followersButtons}>
             <div className="col-md-8">
               <InputAutoFocused
                 type="text"
@@ -118,72 +81,18 @@ export default React.createClass({
                 disabled={this.props.isStatic}
                 />
             </div>
-          </div>
-          <div className="kbc-row clearfix">
-            <div className="pull-right">
-              {this.props.isSaving ? <Loader/> : null}
-              &nbsp;
-              &nbsp;
-              <DeleteConfigurationButton
-                componentId={this.props.componentId}
-                configId={this.props.configId}
-                />
-              <Button
-                bsStyle="link"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToMentions}
-                >
-                Previous
-              </Button>
-              <Button
-                bsStyle="primary"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToSearch}
-                disabled={!this.props.oauthCredentials}
-                >
-                Continue
-              </Button>
-            </div>
-          </div>
         </WizardStep>
-        <WizardStep step={Steps.STEP_SEARCH} title="Search Tweets">
-          <div className="row" style={this.rowStyle()}>
-            <div className="col-md-8">
-              <InputAutoFocused
-                type="text"
-                currentStep={this.props.step}
-                value={this.props.settings.getIn(['search', 'query'])}
-                onChange={this.onSearchQueryChange}
-                label="Query"
-                autoFocus={true}
-                disabled={this.props.isStatic}
-                />
-            </div>
-          </div>
-          <div className="kbc-row clearfix">
-            <div className="pull-right">
-              {this.props.isSaving ? <Loader/> : null}
-              &nbsp;
-              &nbsp;
-              <DeleteConfigurationButton
-                componentId={this.props.componentId}
-                configId={this.props.configId}
-                />
-              <Button
-                bsStyle="link"
-                style={{marginLeft: '10px'}}
-                onClick={this.goToFollowers}
-                >
-                Previous
-              </Button>
-              <Button
-                bsStyle="success"
-                style={{marginLeft: '10px'}}
-                onClick={this.props.onSave}
-                >
-                Save
-              </Button>
-            </div>
+        <WizardStep step={Steps.STEP_SEARCH} title="Search Tweets" buttons={searchButtons}>
+          <div className="col-md-8">
+            <InputAutoFocused
+              type="text"
+              currentStep={this.props.step}
+              value={this.props.settings.getIn(['search', 'query'])}
+              onChange={this.onSearchQueryChange}
+              label="Query"
+              autoFocus={true}
+              disabled={this.props.isStatic}
+              />
           </div>
         </WizardStep>
       </WizardCommon>
@@ -194,9 +103,15 @@ export default React.createClass({
     if (this.props.isStatic) {
       return null;
     }
+    const buttons = React.createElement(WizardButtons, {
+      isSaving: this.props.isSaving,
+      componentId: this.props.componentId,
+      configId: this.props.configId,
+      nextAction: this.goToUserTimeline,
+      nextActionEnabled: this.props.oauthCredentials
+    });
     return (
-      <WizardStep step={Steps.STEP_AUTHORIZATION} title="Authorization" nextStep={Steps.STEP_USER_TIMELINE}>
-        <div className="row" style={this.rowStyle()}>
+      <WizardStep step={Steps.STEP_AUTHORIZATION} title="Authorization" buttons={buttons}>
           <div className="col-md-12">
             <AuthorizationRow
               id={this.props.oauthCredentialsId}
@@ -207,34 +122,20 @@ export default React.createClass({
               showHeader={false}
               />
           </div>
-        </div>
-        <div className="kbc-row clearfix">
-          <div className="pull-right">
-            {this.props.isSaving ? <Loader/> : null}
-            &nbsp;
-            &nbsp;
-            <DeleteConfigurationButton
-              componentId={this.props.componentId}
-              configId={this.props.configId}
-              />
-            <Button
-              bsStyle="primary"
-              style={{marginLeft: '10px'}}
-              onClick={this.goToUserTimeline}
-              disabled={!this.props.oauthCredentials}
-              >
-              Continue
-            </Button>
-          </div>
-        </div>
       </WizardStep>
     );
   },
 
-  rowStyle() {
-    return {
-      minHeight: '120px'
-    };
+  createButtons(options) {
+    const defaults = Map({
+      isSaving: this.props.isSaving,
+      componentId: this.props.componentId,
+      configId: this.props.configId
+    });
+    if (this.props.isStatic) {
+      return null;
+    }
+    return React.createElement(WizardButtons, defaults.merge(Map(options)).toJS());
   },
 
   goToAuthorization() {
