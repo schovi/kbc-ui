@@ -66,7 +66,7 @@ export default React.createClass({
   renderWizard() {
     return (
       <div className="container-fluid">
-        <div className="col-md-12 kbc-main-content">
+        <div className="col-md-9 kbc-main-content">
           <Wizard
             step={this.state.wizardStep}
             oauthCredentials={this.state.oauthCredentials}

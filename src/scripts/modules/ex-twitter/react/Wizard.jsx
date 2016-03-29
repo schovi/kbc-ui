@@ -204,7 +204,7 @@ export default React.createClass({
               credentials={this.props.oauthCredentials}
               isResetingCredentials={false}
               onResetCredentials={this.deleteCredentials}
-
+              showHeader={false}
               />
           </div>
         </div>
