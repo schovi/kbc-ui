@@ -9,6 +9,7 @@ import WizardButtons from './wizard/WizardButtons';
 import {Loader} from 'kbc-react-components';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import {Map} from 'immutable';
+import EditButtons from '../../../react/common/EditButtons';
 
 const InputAutoFocused = AutoFocus(Input);
 
@@ -20,11 +21,14 @@ export default React.createClass({
     oauthCredentialsId: PropTypes.string,
     isSaving: PropTypes.bool,
     onSave: PropTypes.func.isRequired,
+    onEditStart: PropTypes.func,
+    onEditCancel: PropTypes.func,
     componentId: PropTypes.string.isRequired,
     configId: PropTypes.string.isRequired,
     settings: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    isStatic: PropTypes.bool
+    isConfigured: PropTypes.bool,
+    isEditing: PropTypes.bool
   },
 
   render() {
@@ -59,7 +63,7 @@ export default React.createClass({
               onChange={this.onUserTimelineChange}
               label="Screen name"
               help="User timeline will be fetched."
-              disabled={this.props.isStatic}
+              disabled={this.isStatic()}
               />
           </div>
         </WizardStep>
@@ -78,7 +82,7 @@ export default React.createClass({
                 label="Screen name"
                 autoFocus={true}
                 help="Account's followers will be fetched."
-                disabled={this.props.isStatic}
+                disabled={this.isStatic()}
                 />
             </div>
         </WizardStep>
@@ -91,7 +95,7 @@ export default React.createClass({
               onChange={this.onSearchQueryChange}
               label="Query"
               autoFocus={true}
-              disabled={this.props.isStatic}
+              disabled={this.isStatic()}
               />
           </div>
         </WizardStep>
@@ -100,7 +104,7 @@ export default React.createClass({
   },
 
   authorizationStep() {
-    if (this.props.isStatic) {
+    if (this.props.isConfigured) {
       return null;
     }
     const buttons = React.createElement(WizardButtons, {
@@ -132,10 +136,18 @@ export default React.createClass({
       componentId: this.props.componentId,
       configId: this.props.configId
     });
-    if (this.props.isStatic) {
-      return null;
+    if (this.props.isConfigured) {
+      return React.createElement(EditButtons, {
+        isEditing: this.props.isEditing,
+        isSaving: this.props.isSaving,
+        editLabel: 'Edit Settings',
+        onCancel: this.props.onEditCancel,
+        onSave: this.props.onSave,
+        onEditStart: this.props.onEditStart
+      });
+    } else {
+      return React.createElement(WizardButtons, defaults.merge(Map(options)).toJS());
     }
-    return React.createElement(WizardButtons, defaults.merge(Map(options)).toJS());
   },
 
   goToAuthorization() {
@@ -159,7 +171,6 @@ export default React.createClass({
   },
 
   goToStep(step) {
-    console.log('go to step', step);
     this.props.onStepChange(step);
   },
 
@@ -173,5 +184,9 @@ export default React.createClass({
 
   onSearchQueryChange(e) {
     this.props.onChange(this.props.settings.setIn(['search', 'query'], e.target.value));
+  },
+
+  isStatic() {
+    return this.props.isConfigured && !this.props.isEditing;
   }
 });

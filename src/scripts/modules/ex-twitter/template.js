@@ -133,8 +133,11 @@ export function createConfigurationFromSettings(settings) {
     jobs = jobs.push(fromJS(searchTemplate).setIn(['params', 'q'], settings.getIn(['search', 'query'])));
   }
 
+  if (settings.get('followersScreenName')) {
+    jobs = jobs.push(fromJS(followersTemplate).setIn(['params', 'screen_name'], settings.get('followersScreenName')));
+  }
+
   jobs = jobs.push(fromJS(mentionsTemplate));
-  jobs = jobs.push(fromJS(followersTemplate));
   return fromJS(common).setIn(['config', 'jobs'], jobs);
 }
 

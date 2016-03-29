@@ -24,7 +24,9 @@ import LatestJobs from '../../components/react/components/SidebarJobs';
 import {
   changeWizardStep,
   changeSettings,
-  saveSettings
+  saveSettings,
+  editSettingsStart,
+  editSettingsCancel
 } from '../actions';
 
 const COMPONENT_ID = 'keboola.ex-twitter';
@@ -40,7 +42,8 @@ export default React.createClass({
       oauthCredentials = OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
       settings = getSettingsFromConfiguration(configData.get('parameters', Map())),
       settingsEditing = localState.get('settings', settings),
-      isConfigured = configData.has('parameters');
+      isConfigured = configData.has('parameters'),
+      isEditing = localState.has('settings');
 
     return {
       component: ComponentStore.getComponent(COMPONENT_ID),
@@ -54,7 +57,8 @@ export default React.createClass({
       wizardStep: localState.get('wizardStep', isConfigured ? Steps.STEP_USER_TIMELINE : Steps.STEP_AUTHORIZATION),
       settingsEditing: settingsEditing,
       settings: settings,
-      isConfigured: isConfigured
+      isConfigured: isConfigured,
+      isEditing: isEditing
     };
   },
 
@@ -111,11 +115,14 @@ export default React.createClass({
             onStepChange={this.changeWizardStep}
             componentId={this.state.component.get('id')}
             configId={this.state.config.get('id')}
-            settings={this.state.settingsEditing}
+            settings={this.state.isEditing ? this.state.settingsEditing : this.state.settings}
             onChange={this.onSettingsChange}
             isSaving={this.state.isSaving}
             onSave={this.onSave}
-            isStatic={true}
+            onEditStart={this.onEditStart}
+            onEditCancel={this.onEditCancel}
+            isConfigured={true}
+            isEditing={this.state.isEditing}
             />
         </div>
         <div className="col-md-3 kbc-main-sidebar">
@@ -152,6 +159,14 @@ export default React.createClass({
 
   onSave() {
     saveSettings(this.state.config.get('id'));
+  },
+
+  onEditStart() {
+    editSettingsStart(this.state.config.get('id'));
+  },
+
+  onEditCancel() {
+    editSettingsCancel(this.state.config.get('id'));
   },
 
   changeWizardStep(newStep) {
