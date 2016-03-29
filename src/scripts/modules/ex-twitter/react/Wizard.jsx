@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Button, Input} from 'react-bootstrap';
+import AutoFocus from './Wizard/AutoFocus';
 import {Steps, COMPONENT_ID} from '../constants';
 import AuthorizationRow from '../../oauth-v2/react/AuthorizationRow';
 import WizardCommon from './wizard/WizardCommon';
@@ -7,6 +8,7 @@ import WizardStep from './wizard/WizardStep';
 import {Loader} from 'kbc-react-components';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 
+const InputAutoFocused = AutoFocus(Input);
 
 export default React.createClass({
   propTypes: {
@@ -31,7 +33,8 @@ export default React.createClass({
         <WizardStep step={Steps.STEP_USER_TIMELINE} title="User Timeline">
           <div className="row">
             <div className="col-md-8">
-              <Input
+              <InputAutoFocused
+                currentStep={this.props.step}
                 type="text"
                 value={this.props.settings.get('userTimelineScreenName')}
                 onChange={this.onUserTimelineChange}
@@ -104,11 +107,13 @@ export default React.createClass({
         <WizardStep step={Steps.STEP_FOLLOWERS} title="Followers List">
           <div className="row">
             <div className="col-md-8">
-              <Input
+              <InputAutoFocused
                 type="text"
+                currentStep={this.props.step}
                 value={this.props.settings.get('followersScreenName')}
                 onChange={this.onFollowersChange}
                 label="Screen name"
+                autoFocus={true}
                 help="Account's followers will be fetched."
                 disabled={this.props.isStatic}
                 />
@@ -144,11 +149,13 @@ export default React.createClass({
         <WizardStep step={Steps.STEP_SEARCH} title="Search Tweets">
           <div className="row">
             <div className="col-md-8">
-              <Input
+              <InputAutoFocused
                 type="text"
+                currentStep={this.props.step}
                 value={this.props.settings.getIn(['search', 'query'])}
                 onChange={this.onSearchQueryChange}
                 label="Query"
+                autoFocus={true}
                 disabled={this.props.isStatic}
                 />
             </div>
