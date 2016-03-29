@@ -28,7 +28,7 @@ export default React.createClass({
   style() {
     return {
       minHeight: '120px'
-    }
+    };
   }
 
 });

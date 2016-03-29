@@ -14,7 +14,7 @@ export function saveSettings(configId) {
     actions.updateLocalState(COMPONENT_ID, configId,
       localState.remove('settings')
     );
-  })
+  });
 }
 
 export function changeSettings(configId, newSettings) {

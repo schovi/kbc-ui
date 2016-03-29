@@ -1,13 +1,11 @@
 import React, {PropTypes} from 'react';
-import {Button, Input} from 'react-bootstrap';
+import {Input} from 'react-bootstrap';
 import AutoFocus from './wizard/AutoFocus';
 import {Steps, COMPONENT_ID} from '../constants';
 import AuthorizationRow from '../../oauth-v2/react/AuthorizationRow';
 import WizardCommon from './wizard/WizardCommon';
 import WizardStep from './wizard/WizardStep';
 import WizardButtons from './wizard/WizardButtons';
-import {Loader} from 'kbc-react-components';
-import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import {Map} from 'immutable';
 import EditButtons from '../../../react/common/EditButtons';
 
