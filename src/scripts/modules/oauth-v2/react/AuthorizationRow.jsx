@@ -25,7 +25,7 @@ export default React.createClass({
   getDefaultProps() {
     return {
       showHeader: true
-    }
+    };
   },
 
   render() {
@@ -39,7 +39,7 @@ export default React.createClass({
   },
 
   renderHeader() {
-    if (!this.props.showHeader){
+    if (!this.props.showHeader) {
       return null;
     }
     return (

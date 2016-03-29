@@ -31,7 +31,7 @@ export default React.createClass({
       <WizardCommon activeStep={this.props.step} goToStep={this.goToStep}>
         {this.authorizationStep()}
         <WizardStep step={Steps.STEP_USER_TIMELINE} title="User Timeline">
-          <div className="row">
+          <div className="row" style={this.rowStyle()}>
             <div className="col-md-8">
               <InputAutoFocused
                 currentStep={this.props.step}
@@ -44,7 +44,7 @@ export default React.createClass({
                 />
             </div>
           </div>
-          <div className="row">
+          <div className="kbc-row clearfix">
             <div className="pull-right">
               {this.props.isSaving ? <Loader/> : null}
               &nbsp;
@@ -72,12 +72,12 @@ export default React.createClass({
           </div>
         </WizardStep>
         <WizardStep step={Steps.STEP_MENTIONS} title="Mentions">
-          <div className="row">
+          <div className="row" style={this.rowStyle()}>
             <div className="col-md-8">
               <p>Mentions of authorized user will be fetched.</p>
             </div>
           </div>
-          <div className="row">
+          <div className="kbc-row clearfix">
             <div className="pull-right">
               {this.props.isSaving ? <Loader/> : null}
               &nbsp;
@@ -105,7 +105,7 @@ export default React.createClass({
           </div>
         </WizardStep>
         <WizardStep step={Steps.STEP_FOLLOWERS} title="Followers List">
-          <div className="row">
+          <div className="row" style={this.rowStyle()}>
             <div className="col-md-8">
               <InputAutoFocused
                 type="text"
@@ -119,7 +119,7 @@ export default React.createClass({
                 />
             </div>
           </div>
-          <div className="row">
+          <div className="kbc-row clearfix">
             <div className="pull-right">
               {this.props.isSaving ? <Loader/> : null}
               &nbsp;
@@ -147,7 +147,7 @@ export default React.createClass({
           </div>
         </WizardStep>
         <WizardStep step={Steps.STEP_SEARCH} title="Search Tweets">
-          <div className="row">
+          <div className="row" style={this.rowStyle()}>
             <div className="col-md-8">
               <InputAutoFocused
                 type="text"
@@ -160,7 +160,7 @@ export default React.createClass({
                 />
             </div>
           </div>
-          <div className="row">
+          <div className="kbc-row clearfix">
             <div className="pull-right">
               {this.props.isSaving ? <Loader/> : null}
               &nbsp;
@@ -196,7 +196,7 @@ export default React.createClass({
     }
     return (
       <WizardStep step={Steps.STEP_AUTHORIZATION} title="Authorization" nextStep={Steps.STEP_USER_TIMELINE}>
-        <div className="row">
+        <div className="row" style={this.rowStyle()}>
           <div className="col-md-8">
             <AuthorizationRow
               id={this.props.oauthCredentialsId}
@@ -208,7 +208,7 @@ export default React.createClass({
               />
           </div>
         </div>
-        <div className="row">
+        <div className="kbc-row clearfix">
           <div className="pull-right">
             {this.props.isSaving ? <Loader/> : null}
             &nbsp;
@@ -229,6 +229,12 @@ export default React.createClass({
         </div>
       </WizardStep>
     );
+  },
+
+  rowStyle() {
+    return {
+      minHeight: '120px'
+    };
   },
 
   goToAuthorization() {

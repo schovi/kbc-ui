@@ -101,7 +101,7 @@ export default React.createClass({
               credentials={this.state.oauthCredentials}
               isResetingCredentials={false}
               onResetCredentials={this.deleteCredentials}
-
+              showHeader={false}
               />
           </div>
           <Wizard
