@@ -8,7 +8,7 @@ RoutesStore = require '../../stores/RoutesStore'
 Promise = require 'bluebird'
 _ = require 'underscore'
 parseQueries = require('./utils/parseQueries').default
-
+VersionActionCreators = require('../components/VersionsActionCreators')
 
 module.exports =
 
@@ -146,6 +146,7 @@ module.exports =
         transformationId: transformationId
         bucketId: bucketId
       )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
       return
     )
     .catch((error) ->
@@ -304,6 +305,7 @@ module.exports =
           pendingAction: pendingAction
           data: transformation.set(fieldId, value).toJS()
         )
+        VersionActionCreators.loadVersionsForce('transformation', bucketId)
       .catch (error) ->
         dispatcher.handleViewAction(
           type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
@@ -332,6 +334,7 @@ module.exports =
           pendingAction: pendingAction
           data: response
         )
+        VersionActionCreators.loadVersionsForce('transformation', bucketId)
       .catch (error) ->
         dispatcher.handleViewAction(
           type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
@@ -366,6 +369,7 @@ module.exports =
         editingId: editingId
         data: response
       )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
     .catch (error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
@@ -399,6 +403,7 @@ module.exports =
         data: response
         pendingAction: pendingAction
       )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
     .catch (error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
@@ -427,6 +432,7 @@ module.exports =
         editingId: "snowflake"
         data: response
       )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
     .catch (error) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR

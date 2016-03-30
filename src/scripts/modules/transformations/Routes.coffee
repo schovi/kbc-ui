@@ -7,6 +7,7 @@ TransformationGraph = require('./react/pages/transformation-graph/Transformation
 Sandbox = require('./react/pages/sandbox/Sandbox')
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
+VersionsActionCreators = require('../components/VersionsActionCreators')
 ProvisioningActionCreators = require('../provisioning/ActionCreators')
 StorageActionCreators = require('../components/StorageActionCreators')
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
@@ -14,6 +15,7 @@ TransformationBucketButtons = require './react/components/TransformationBucketBu
 TransformationListButtons = require('./react/components/TransformationsListButtons').default
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
+Versions = require('../../modules/components/react/pages/Versions').default
 
 routes =
       name: 'transformations'
@@ -40,8 +42,15 @@ routes =
         requireData: [
           (params) ->
             TransformationsActionCreators.loadTransformations(params.bucketId)
+            VersionsActionCreators.loadVersions('transformation', params.bucketId)
         ]
         childRoutes: [
+          name: 'transformationVersions'
+          path: 'versions'
+          title: ->
+            "Versions"
+          defaultRouteHandler: Versions
+        ,
           name: 'transformationDetail'
           path: 'transformation/:transformationId'
           title: (routerState) ->
