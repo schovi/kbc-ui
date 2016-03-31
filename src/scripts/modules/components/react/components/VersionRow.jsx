@@ -23,6 +23,19 @@ export default React.createClass({
     VersionsActionCreators.changeNewVersionName(this.props.componentId, this.props.configId, this.props.version.get('version'), name);
   },
 
+  renderRollbackButton() {
+    if (this.props.hideRollback) {
+      return null;
+    }
+    return (
+      <RollbackVersionButton
+        version={this.props.version}
+        onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, this.props.version.get('version'))}
+        isPending={this.props.isPending}
+        />
+    );
+  },
+
   render() {
     return (
       <tr>
@@ -41,11 +54,7 @@ export default React.createClass({
           {this.props.version.getIn(['creatorToken', 'description']) ? this.props.version.getIn(['creatorToken', 'description']) : (<small><em>Unknown</em></small>)}
         </td>
         <td className="text-right">
-          <RollbackVersionButton
-            version={this.props.version}
-            onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, this.props.version.get('version'))}
-            isPending={this.props.isPending}
-            />
+          {this.renderRollbackButton()}
           <CopyVersionButton
             version={this.props.version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}

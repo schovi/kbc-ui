@@ -48,7 +48,7 @@ export default React.createClass({
   },
 
   renderVersionRows() {
-    return this.state.filteredVersions.map(function(version) {
+    return this.state.filteredVersions.map(function(version, i) {
       return (
         <VersionRow
           key={version.get('version')}
@@ -57,6 +57,7 @@ export default React.createClass({
           configId={this.state.configId}
           newVersionName={this.state.newVersionNames.get(version.get('version'))}
           isPending={this.state.isPending}
+          hideRollback={(i === 0)}
         />
       );
     }, this).toArray();
