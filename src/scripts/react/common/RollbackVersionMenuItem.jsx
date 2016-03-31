@@ -1,12 +1,14 @@
 import React from 'react';
 import {MenuItem} from 'react-bootstrap';
 import RollbackVersionModal from './RollbackVersionModal';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
 
   propTypes: {
     version: React.PropTypes.object.isRequired,
-    onRollback: React.PropTypes.func.isRequired
+    onRollback: React.PropTypes.func.isRequired,
+    isPending: React.PropTypes.string
   },
 
   getInitialState() {
@@ -29,20 +31,34 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <MenuItem
-        eventKey={this.props.version.get('version') + '-rollback'}
-        onSelect={this.openModal}
-      >
-        <em className="fa fa-undo fa-fw"> </em>
-        Rollback
-        <RollbackVersionModal
-          version={this.props.version}
-          show={this.state.showModal}
-          onClose={this.closeModal}
-          onRollback={this.onRollback}
-        />
-      </MenuItem>
-    );
+    if (this.props.isPending) {
+      return (
+        <MenuItem
+          eventKey={this.props.version.get('version') + '-rollback'}
+          disabled
+        >
+          <em className="fa fa-fw">
+            <Loader/>
+          </em>
+          Rollback
+        </MenuItem>
+      );
+    } else {
+      return (
+        <MenuItem
+          eventKey={this.props.version.get('version') + '-rollback'}
+          onSelect={this.openModal}
+        >
+          <em className="fa fa-undo fa-fw"> </em>
+          Rollback
+          <RollbackVersionModal
+            version={this.props.version}
+            show={this.state.showModal}
+            onClose={this.closeModal}
+            onRollback={this.onRollback}
+          />
+        </MenuItem>
+      );
+    }
   }
 });

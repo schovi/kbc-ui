@@ -21,7 +21,8 @@ export default React.createClass({
   getStateFromStores() {
     return {
       versions: VersionsStore.getVersions(this.props.componentId, this.props.configId),
-      newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, this.props.configId)
+      newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, this.props.configId),
+      isPending: VersionsStore.isPending(this.props.componentId, this.props.configId)
     };
   },
 
@@ -56,6 +57,7 @@ export default React.createClass({
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
             onChangeName={this.createOnChangeName(this.props.componentId, this.props.configId, version.get('version'))}
             newVersionname={this.state.newVersionNames.get(version.get('version'))}
+            isPending={this.state.isPending}
           />
         )
       );
@@ -64,6 +66,7 @@ export default React.createClass({
         (<RollbackVersionMenuItem
           version={version}
           onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, version.get('version'))}
+          isPending={this.state.isPending}
         />)
       );
     }

@@ -15,7 +15,8 @@ export default React.createClass({
     configId: React.PropTypes.string.isRequired,
     hideRollback: React.PropTypes.bool,
     version: React.PropTypes.object.isRequired,
-    newVersionName: React.PropTypes.string
+    newVersionName: React.PropTypes.string,
+    isPending: React.PropTypes.bool
   },
 
   onChangeName(name) {
@@ -43,12 +44,14 @@ export default React.createClass({
           <RollbackVersionButton
             version={this.props.version}
             onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, this.props.version.get('version'))}
+            isPending={this.props.isPending}
             />
           <CopyVersionButton
             version={this.props.version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}
             onChangeName={this.onChangeName}
             newVersionname={this.props.newVersionName}
+            isPending={this.props.isPending}
             />
         </td>
       </tr>

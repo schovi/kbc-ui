@@ -41,6 +41,8 @@ module.exports = {
 
   rollbackVersion: function(componentId, configId, version, reloadCallback) {
     var self = this;
+    // start spinners
+    this.pendingStart(componentId, configId);
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,
@@ -59,8 +61,10 @@ module.exports = {
       promises.push(self.loadVersionsForce(componentId, configId));
       // reload configs!
       promises.push(...reloadCallback(componentId, configId));
-      // send notification
       Promise.all(promises).then(function() {
+        // stop spinners
+        self.pendingStop(componentId, configId);
+        // notification
         ApplicationActionCreators.sendNotification({
           message: 'Configuration rollback successful'
         });
@@ -81,6 +85,8 @@ module.exports = {
 
   copyVersion: function(componentId, configId, version, name, reloadCallback) {
     var self = this;
+    // start spinners
+    this.pendingStart(componentId, configId);
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,
@@ -105,6 +111,8 @@ module.exports = {
       promises.push(...reloadCallback(componentId));
 
       Promise.all(promises).then(function() {
+        // stop spinners
+        self.pendingStop(componentId, configId);
         // send notification
         if (componentId === 'transformation') {
           ApplicationActionCreators.sendNotification({
@@ -169,6 +177,22 @@ module.exports = {
       configId: configId,
       query: query,
       type: Constants.ActionTypes.VERSIONS_FILTER_CHANGE
+    });
+  },
+
+  pendingStart: function(componentId, configId) {
+    dispatcher.handleViewAction({
+      componentId: componentId,
+      configId: configId,
+      type: Constants.ActionTypes.VERSIONS_PENDING_START
+    });
+  },
+
+  pendingStop: function(componentId, configId) {
+    dispatcher.handleViewAction({
+      componentId: componentId,
+      configId: configId,
+      type: Constants.ActionTypes.VERSIONS_PENDING_STOP
     });
   }
 };

@@ -7,10 +7,10 @@ Constants = require '../VersionsConstants'
 
 _store = Map
   loadingVersions: Map()
-  rollbackVersions: Map()
   versions: Map()
   newVersionNames: Map()
   searchFilters: Map()
+  pending: Map()
 
 VersionsStore = StoreUtils.createStore
   hasVersions: (componentId, configId) ->
@@ -37,6 +37,9 @@ VersionsStore = StoreUtils.createStore
   getSearchFilter: (componentId, configId) ->
     _store.getIn ['searchFilters', componentId, configId], ''
 
+  isPending: (componentId, configId) ->
+    _store.getIn ['pending', componentId, configId], false
+
 dispatcher.register (payload) ->
   action = payload.action
 
@@ -55,28 +58,22 @@ dispatcher.register (payload) ->
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_ROLLBACK_START
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], true)
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_ROLLBACK_SUCCESS
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false)
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_ROLLBACK_ERROR
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false)
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_COPY_START
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], true)
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_COPY_SUCCESS
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false)
       _store = _store.deleteIn(['newVersionNames', action.componentId, action.configId])
       VersionsStore.emitChange()
 
     when Constants.ActionTypes.VERSIONS_COPY_ERROR
-      _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false)
       _store = _store.deleteIn(['newVersionNames', action.componentId, action.configId])
       VersionsStore.emitChange()
 
@@ -87,5 +84,14 @@ dispatcher.register (payload) ->
     when Constants.ActionTypes.VERSIONS_FILTER_CHANGE
       _store = _store.setIn(['searchFilters', action.componentId, action.configId], action.query)
       VersionsStore.emitChange()
+
+    when Constants.ActionTypes.VERSIONS_PENDING_START
+      _store = _store.setIn(['pending', action.componentId, action.configId], true)
+      VersionsStore.emitChange()
+
+    when Constants.ActionTypes.VERSIONS_PENDING_STOP
+      _store = _store.deleteIn(['pending', action.componentId, action.configId])
+      VersionsStore.emitChange()
+
 
 module.exports = VersionsStore

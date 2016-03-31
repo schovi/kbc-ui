@@ -1,6 +1,7 @@
 import React from 'react';
 import {Tooltip} from '../../react/common/common';
 import CopyVersionModal from './CopyVersionModal';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
 
@@ -8,7 +9,8 @@ export default React.createClass({
     version: React.PropTypes.object.isRequired,
     onCopy: React.PropTypes.func.isRequired,
     newVersionName: React.PropTypes.string,
-    onChangeName: React.PropTypes.func.isRequired
+    onChangeName: React.PropTypes.func.isRequired,
+    isPending: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -31,20 +33,28 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <Tooltip tooltip="Copy version to new" placement="top">
-        <button className="btn btn-link" onClick={this.openModal}>
-          <em className="fa fa-files-o fa-fw"> </em>
-          <CopyVersionModal
-            version={this.props.version}
-            show={this.state.showModal}
-            onClose={this.closeModal}
-            onCopy={this.onCopy}
-            onChangeName={this.props.onChangeName}
-            newVersionName={this.props.newVersionName}
-          />
-        </button>
-      </Tooltip>
-    );
+    if (this.props.isPending) {
+      return (
+        <span className="btn btn-link">
+          <Loader/>
+        </span>
+      );
+    } else {
+      return (
+        <Tooltip tooltip="Copy version to new" placement="top">
+          <button className="btn btn-link" onClick={this.openModal}>
+            <em className="fa fa-files-o fa-fw"> </em>
+            <CopyVersionModal
+              version={this.props.version}
+              show={this.state.showModal}
+              onClose={this.closeModal}
+              onCopy={this.onCopy}
+              onChangeName={this.props.onChangeName}
+              newVersionName={this.props.newVersionName}
+            />
+          </button>
+        </Tooltip>
+      );
+    }
   }
 });

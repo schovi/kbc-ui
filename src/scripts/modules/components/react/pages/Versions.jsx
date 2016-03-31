@@ -42,7 +42,8 @@ export default React.createClass({
       versions: versions,
       filteredVersions: filteredVersions,
       newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
-      query: VersionsStore.getSearchFilter(componentId, configId)
+      query: VersionsStore.getSearchFilter(componentId, configId),
+      isPending: VersionsStore.isPending(componentId, configId)
     };
   },
 
@@ -55,6 +56,7 @@ export default React.createClass({
           componentId={this.state.componentId}
           configId={this.state.configId}
           newVersionName={this.state.newVersionNames.get(version.get('version'))}
+          isPending={this.state.isPending}
         />
       );
     }, this).toArray();
