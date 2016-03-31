@@ -59,7 +59,7 @@ export default React.createClass({
             version={this.props.version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}
             onChangeName={this.onChangeName}
-            newVersionname={this.props.newVersionName}
+            newVersionName={this.props.newVersionName}
             isPending={this.props.isPending}
             />
         </td>

@@ -27,14 +27,14 @@ export default React.createClass({
         </Modal.Header>
         <Modal.Body>
           <p>
-            You are goint to copy version #{this.props.version.get('version')} created {moment(this.props.version.get('created')).fromNow()} by {this.props.version.getIn(['creatorToken', 'description'], 'unknown')} to a new configuration.
+            This will copy version #{this.props.version.get('version')} created {moment(this.props.version.get('created')).fromNow()} by {this.props.version.getIn(['creatorToken', 'description'], 'unknown')} to a new configuration.
           </p>
           <form className="form-horizontal">
             <Input
               type="text"
-              label="New name"
-              labelClassName="col-xs-4"
-              wrapperClassName="col-xs-8"
+              label="New configuration name"
+              labelClassName="col-xs-5"
+              wrapperClassName="col-xs-7"
               value={this.props.newVersionName}
               onChange={this.onChange}
             />
@@ -42,7 +42,11 @@ export default React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.onClose}>Close</Button>
-          <Button onClick={this.props.onCopy} bsStyle="success">Copy</Button>
+          <Button
+            onClick={this.props.onCopy}
+            bsStyle="success"
+            disabled={this.props.newVersionName === '' || !this.props.newVersionName}
+          >Copy</Button>
         </Modal.Footer>
       </Modal>
     );

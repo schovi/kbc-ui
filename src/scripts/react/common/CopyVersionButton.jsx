@@ -2,8 +2,10 @@ import React from 'react';
 import {Tooltip} from '../../react/common/common';
 import CopyVersionModal from './CopyVersionModal';
 import {Loader} from 'kbc-react-components';
+import ImmutableRenderMixin from '../mixins/ImmutableRendererMixin';
 
 export default React.createClass({
+  mixins: [ImmutableRenderMixin],
 
   propTypes: {
     version: React.PropTypes.object.isRequired,

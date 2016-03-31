@@ -22,7 +22,7 @@ export default React.createClass({
             Are you sure you want to rollback version #{this.props.version.get('version')} created {moment(this.props.version.get('created')).fromNow()} by {this.props.version.getIn(['creatorToken', 'description'], 'unknown')}?
           </p>
           <p>
-            Rollback copies the older version into a new version, so the current version won't be lost.
+            Rollback copies the older version into a new version, so no versions will be lost.
           </p>
         </Modal.Body>
         <Modal.Footer>
