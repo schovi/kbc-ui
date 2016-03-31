@@ -3,6 +3,7 @@ import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import VersionsStore from '../../stores/VersionsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import VersionRow from '../components/VersionRow';
+import {Table} from 'react-bootstrap';
 
 export default React.createClass({
   mixins: [createStoreMixin(VersionsStore, RoutesStore)],
@@ -41,11 +42,20 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid kbc-main-content">
-        <div className="table table-hover">
-          <div className="tbody">
+        <Table striped hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Description</th>
+              <th>Changed</th>
+              <th>Created by</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
             {this.renderVersionRows()}
-          </div>
-        </div>
+          </tbody>
+        </Table>
       </div>
     );
   }

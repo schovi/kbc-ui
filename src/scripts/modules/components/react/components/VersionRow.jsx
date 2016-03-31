@@ -27,24 +27,22 @@ export default React.createClass({
 
   render() {
     return (
-      <span className="tr">
-        <span className="td">
+      <tr>
+        <td>
           #{this.props.version.get('version')}
-        </span>
-        <span className="td">
+        </td>
+        <td >
           {this.props.version.get('changeDescription') ? this.props.version.get('changeDescription') : (<small><em>No description</em></small>)}
-        </span>
-        <span className="td">
+        </td>
+        <td>
           <CreatedWithIcon
             createdTime={this.props.version.get('created')}
           />
-        </span>
-        <span className="td text-right">
-          <small>
-            Created by {this.props.version.getIn(['creatorToken', 'description']) ? this.props.version.getIn(['creatorToken', 'description']) : (<small><em>Unknown</em></small>)}
-          </small>
-        </span>
-        <span className="td text-right">
+        </td>
+        <td>
+          {this.props.version.getIn(['creatorToken', 'description']) ? this.props.version.getIn(['creatorToken', 'description']) : (<small><em>Unknown</em></small>)}
+        </td>
+        <td className="text-right">
           <RollbackVersionButton
             version={this.props.version}
             onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, this.props.version.get('version'))}
@@ -55,8 +53,8 @@ export default React.createClass({
             onChangeName={this.onChangeName}
             newVersionname={this.props.newVersionName}
             />
-        </span>
-      </span>
+        </td>
+      </tr>
     );
   }
 });
