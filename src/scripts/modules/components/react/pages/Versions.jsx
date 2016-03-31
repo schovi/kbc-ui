@@ -6,12 +6,14 @@ import VersionRow from '../components/VersionRow';
 import {Table} from 'react-bootstrap';
 import SearchRow from '../../../../react/common/SearchRow';
 import VersionsActionCreators from '../../VersionsActionCreators';
+import fuzzy from 'fuzzy';
+import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
 
 export default React.createClass({
-  mixins: [createStoreMixin(VersionsStore, RoutesStore)],
+  mixins: [createStoreMixin(VersionsStore, RoutesStore), ImmutableRenderMixin],
 
   getStateFromStores() {
-    var componentId, configId;
+    var componentId, configId, versions, filteredVersions, query;
     if (RoutesStore.getCurrentRouteParam('bucketId')) {
       componentId = 'transformation';
       configId = RoutesStore.getCurrentRouteParam('bucketId');
@@ -19,17 +21,33 @@ export default React.createClass({
       componentId = RoutesStore.getCurrentRouteParam('componentId');
       configId = RoutesStore.getCurrentRouteParam('configId');
     }
+
+    versions = VersionsStore.getVersions(componentId, configId);
+    query = VersionsStore.getSearchFilter(componentId, configId);
+    filteredVersions = versions;
+    if (query && query !== '') {
+      filteredVersions = versions.filter(function(version) {
+        return (
+          fuzzy.match(query, (String(version.get('version')) || '')) ||
+          fuzzy.match(query, (version.get('changeDescription') || '')) ||
+          fuzzy.match(query, (version.getIn(['creatorToken', 'description']) || '')) ||
+          fuzzy.match(query, (String(version.get('created')) || ''))
+        );
+      });
+    }
+
     return {
       componentId: componentId,
       configId: configId,
-      versions: VersionsStore.getFilteredVersions(componentId, configId),
+      versions: versions,
+      filteredVersions: filteredVersions,
       newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
       query: VersionsStore.getSearchFilter(componentId, configId)
     };
   },
 
   renderVersionRows() {
-    return this.state.versions.map(function(version) {
+    return this.state.filteredVersions.map(function(version) {
       return (
         <VersionRow
           key={version.get('version')}
@@ -47,6 +65,14 @@ export default React.createClass({
   },
 
   render() {
+    if (this.state.filteredVersions.count() === 0 && this.state.versions.count() > 0) {
+      return (
+        <div className="container-fluid kbc-main-content">
+          <SearchRow className="row kbc-search-row" onChange={this.onSearchChange} query={this.state.query}/>
+          <p className="row text-center">No results found.</p>
+        </div>
+      );
+    }
     return (
       <div className="container-fluid kbc-main-content">
         <SearchRow className="row kbc-search-row" onChange={this.onSearchChange} query={this.state.query}/>
@@ -67,5 +93,4 @@ export default React.createClass({
       </div>
     );
   }
-
 });

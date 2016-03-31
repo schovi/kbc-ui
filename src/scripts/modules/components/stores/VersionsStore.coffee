@@ -2,7 +2,6 @@ StoreUtils = require '../../../utils/StoreUtils'
 Immutable = require 'immutable'
 dispatcher = require '../../../Dispatcher'
 Constants = require '../VersionsConstants'
-fuzzy = require 'fuzzy'
 
 {Map, List} = Immutable
 
@@ -25,19 +24,6 @@ VersionsStore = StoreUtils.createStore
 
   getVersions: (componentId, configId) ->
     _store.getIn ['versions', componentId, configId], List()
-
-  getFilteredVersions: (componentId, configId) ->
-    versions = @getVersions(componentId, configId)
-    query = @getSearchFilter(componentId, configId)
-    if (!query || query == '')
-      return versions
-    else
-      return versions.filter((version) ->
-        fuzzy.match(query, (String(version.get('version')) || '')) ||
-        fuzzy.match(query, (version.get('changeDescription') || '')) ||
-        fuzzy.match(query, (version.getIn(['creatorToken', 'description']) || '')) ||
-        fuzzy.match(query, (String(version.get('created')) || ''))
-      )
 
   getVersion: (componentId, configId, versionId) ->
     _store.getIn ['versions', componentId, configId, versionId], Map()
