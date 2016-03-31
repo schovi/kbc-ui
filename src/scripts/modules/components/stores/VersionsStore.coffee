@@ -11,6 +11,7 @@ _store = Map
   rollbackVersions: Map()
   versions: Map()
   newVersionNames: Map()
+  searchFilters: Map()
 
 VersionsStore = StoreUtils.createStore
   hasVersions: (componentId, configId) ->
@@ -25,6 +26,19 @@ VersionsStore = StoreUtils.createStore
   getVersions: (componentId, configId) ->
     _store.getIn ['versions', componentId, configId], List()
 
+  getFilteredVersions: (componentId, configId) ->
+    versions = @getVersions(componentId, configId)
+    query = @getSearchFilter(componentId, configId)
+    if (!query || query == '')
+      return versions
+    else
+      return versions.filter((version) ->
+        fuzzy.match(query, (String(version.get('version')) || '')) ||
+        fuzzy.match(query, (version.get('changeDescription') || '')) ||
+        fuzzy.match(query, (version.getIn(['creatorToken', 'description']) || '')) ||
+        fuzzy.match(query, (String(version.get('created')) || ''))
+      )
+
   getVersion: (componentId, configId, versionId) ->
     _store.getIn ['versions', componentId, configId, versionId], Map()
 
@@ -34,6 +48,8 @@ VersionsStore = StoreUtils.createStore
   getNewVersionName: (componentId, configId, version) ->
     _store.getIn ['newVersionNames', componentId, configId, version]
 
+  getSearchFilter: (componentId, configId) ->
+    _store.getIn ['searchFilters', componentId, configId], ''
 
 dispatcher.register (payload) ->
   action = payload.action
@@ -80,6 +96,10 @@ dispatcher.register (payload) ->
 
     when Constants.ActionTypes.VERSIONS_NEW_NAME_CHANGE
       _store = _store.setIn(['newVersionNames', action.componentId, action.configId, action.version], action.name)
+      VersionsStore.emitChange()
+
+    when Constants.ActionTypes.VERSIONS_FILTER_CHANGE
+      _store = _store.setIn(['searchFilters', action.componentId, action.configId], action.query)
       VersionsStore.emitChange()
 
 module.exports = VersionsStore

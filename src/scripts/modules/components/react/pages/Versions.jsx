@@ -4,6 +4,8 @@ import VersionsStore from '../../stores/VersionsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import VersionRow from '../components/VersionRow';
 import {Table} from 'react-bootstrap';
+import SearchRow from '../../../../react/common/SearchRow';
+import VersionsActionCreators from '../../VersionsActionCreators';
 
 export default React.createClass({
   mixins: [createStoreMixin(VersionsStore, RoutesStore)],
@@ -20,8 +22,9 @@ export default React.createClass({
     return {
       componentId: componentId,
       configId: configId,
-      versions: VersionsStore.getVersions(componentId, configId),
-      newVersionNames: VersionsStore.getNewVersionNames(componentId, configId)
+      versions: VersionsStore.getFilteredVersions(componentId, configId),
+      newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
+      query: VersionsStore.getSearchFilter(componentId, configId)
     };
   },
 
@@ -39,9 +42,14 @@ export default React.createClass({
     }, this).toArray();
   },
 
+  onSearchChange(query) {
+    VersionsActionCreators.changeFilter(this.state.componentId, this.state.configId, query);
+  },
+
   render() {
     return (
       <div className="container-fluid kbc-main-content">
+        <SearchRow className="row kbc-search-row" onChange={this.onSearchChange} query={this.state.query}/>
         <Table striped hover>
           <thead>
             <tr>

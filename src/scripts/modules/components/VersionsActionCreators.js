@@ -149,5 +149,14 @@ module.exports = {
       name: name,
       type: Constants.ActionTypes.VERSIONS_NEW_NAME_CHANGE
     });
+  },
+
+  changeFilter: function(componentId, configId, query) {
+    dispatcher.handleViewAction({
+      componentId: componentId,
+      configId: configId,
+      query: query,
+      type: Constants.ActionTypes.VERSIONS_FILTER_CHANGE
+    });
   }
 };

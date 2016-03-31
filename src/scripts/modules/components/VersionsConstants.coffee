@@ -14,6 +14,8 @@ module.exports =
     VERSIONS_COPY_SUCCESS: null,
     VERSIONS_COPY_ERROR: null,
 
-    VERSIONS_NEW_NAME_CHANGE: null
+    VERSIONS_NEW_NAME_CHANGE: null,
+  
+    VERSIONS_FILTER_CHANGE: null
 
   )
