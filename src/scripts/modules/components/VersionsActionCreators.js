@@ -55,12 +55,17 @@ module.exports = {
         type: Constants.ActionTypes.VERSIONS_ROLLBACK_SUCCESS
       });
       // reload versions, not required after sapi update
-      self.loadVersionsForce(componentId, configId);
+      var promises = [];
+      promises.push(self.loadVersionsForce(componentId, configId));
       // reload configs!
-      reloadCallback(componentId, configId);
+      promises.push(...reloadCallback(componentId, configId));
       // send notification
-      ApplicationActionCreators.sendNotification({
-        message: 'Configuration rollback successful'
+      Promise.all(promises).then(function() {
+        ApplicationActionCreators.sendNotification({
+          message: 'Configuration rollback successful'
+        });
+      }).catch(function(error) {
+        throw error;
       });
       return result;
     }).catch(function(error) {
@@ -91,43 +96,50 @@ module.exports = {
         name: name,
         type: Constants.ActionTypes.VERSIONS_COPY_SUCCESS
       });
-      // reload versions, not required after sapi update
-      self.loadVersionsForce(componentId, configId);
-      // reload configs!
-      reloadCallback(componentId);
 
-      // send notification, TODO after the callback!!!!!
-      if (componentId === 'transformation') {
-        ApplicationActionCreators.sendNotification({
-          message: React.createClass({
-            render() {
-              return (
-                <span>
-                  Configuration copied successfully,&nbsp;
-                  <Link
-                    to="transformationBucket"
-                    params={{bucketId: result.id}}
-                  >
-                    go to the new configuration
-                  </Link>.
-                </span>
-              );
-            }
-          })
-        });
-      } else {
-        ApplicationActionCreators.sendNotification({
-          message: React.createClass({
-            render() {
-              return (
-                <span>
-                  Configuration copied successfully.
-                </span>
-              );
-            }
-          })
-        });
-      }
+      var promises = [];
+      // reload versions, not required after sapi update
+      promises.push(self.loadVersionsForce(componentId, configId));
+
+      // reload configs!
+      promises.push(...reloadCallback(componentId));
+
+      Promise.all(promises).then(function() {
+        // send notification
+        if (componentId === 'transformation') {
+          ApplicationActionCreators.sendNotification({
+            message: React.createClass({
+              render() {
+                return (
+                  <span>
+                    Configuration copied,&nbsp;
+                    <Link
+                      to="transformationBucket"
+                      params={{bucketId: result.id}}
+                    >
+                      go to the new configuration
+                    </Link>.
+                  </span>
+                );
+              }
+            })
+          });
+        } else {
+          ApplicationActionCreators.sendNotification({
+            message: React.createClass({
+              render() {
+                return (
+                  <span>
+                    Configuration copied successfully.
+                  </span>
+                );
+              }
+            })
+          });
+        }
+      }).catch(function(error) {
+        throw error;
+      });
       return result;
     }).catch(function(error) {
       dispatcher.handleViewAction({

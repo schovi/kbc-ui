@@ -5,10 +5,12 @@ import TransformationActionCreators from '../modules/transformations/ActionCreat
 export default function(componentId, configId, version, name) {
   return function() {
     var reloadCallback = function(component) {
+      var promises = [];
       if (component === 'transformation') {
-        TransformationActionCreators.loadTransformationBucketsForce();
+        promises.push(TransformationActionCreators.loadTransformationBucketsForce());
       }
-      InstalledComponentsActionCreators.loadComponentsForce();
+      promises.push(InstalledComponentsActionCreators.loadComponentsForce());
+      return promises;
     };
     VersionsActionCreators.copyVersion(componentId, configId, version, name, reloadCallback);
   };

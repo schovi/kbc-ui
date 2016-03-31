@@ -3,6 +3,7 @@ import CreatedWithIcon from '../../../../react/common/CreatedWithIcon';
 import RollbackVersionButton from '../../../../react/common/RollbackVersionButton';
 import CopyVersionButton from '../../../../react/common/CopyVersionButton';
 import createVersionOnRollback from '../../../../utils/createVersionOnRollback';
+import createVersionOnCopy from '../../../../utils/createVersionOnCopy';
 import VersionsActionCreators from '../../VersionsActionCreators';
 import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
 
@@ -19,10 +20,6 @@ export default React.createClass({
 
   onChangeName(name) {
     VersionsActionCreators.changeNewVersionName(this.props.componentId, this.props.configId, this.props.version.get('version'), name);
-  },
-
-  onCopy() {
-    VersionsActionCreators.copyVersion(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName);
   },
 
   render() {
@@ -49,7 +46,7 @@ export default React.createClass({
             />
           <CopyVersionButton
             version={this.props.version}
-            onCopy={this.onCopy}
+            onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}
             onChangeName={this.onChangeName}
             newVersionname={this.props.newVersionName}
             />
