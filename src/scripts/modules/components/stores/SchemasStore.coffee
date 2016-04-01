@@ -15,8 +15,6 @@ SchemasStore = StoreUtils.createStore
     _store.hasIn ['schemas', componentId]
 
   isLoadingSchema: (componentId) ->
-    if (@isLoadingManifest())
-      return true
     _store.getIn ['loadingSchemas', componentId], false
 
   getParamsSchema: (componentId) ->

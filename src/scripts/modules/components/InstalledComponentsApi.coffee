@@ -58,4 +58,34 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
+  getComponentConfigVersions: (componentId, configId) ->
+    url = "components/#{componentId}/configs/#{configId}/versions"
+    createRequest('GET', url)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  rollbackVersion: (componentId, configId, version) ->
+    url = "components/#{componentId}/configs/#{configId}/versions/#{version}/rollback"
+    createRequest('POST', url)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+  createConfigCopy: (componentId, configId, version, name) ->
+    url = "components/#{componentId}/configs/#{configId}/versions/#{version}/create"
+    data =
+      name: name
+      description: "Created from #{configId} version \##{version}"
+    createRequest('POST', url)
+    .type 'form'
+    .send data
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
+
 module.exports = installedComponentsApi
