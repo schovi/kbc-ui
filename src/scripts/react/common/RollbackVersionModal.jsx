@@ -1,6 +1,7 @@
 import React from 'react';
-import {Modal, Button} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import moment from 'moment';
+import ConfirmButtons from './ConfirmButtons';
 
 export default React.createClass({
 
@@ -26,8 +27,17 @@ export default React.createClass({
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onClose}>Close</Button>
-          <Button onClick={this.props.onRollback} bsStyle="danger">Rollback</Button>
+          <ConfirmButtons
+            isSaving={false}
+            isDisabled={false}
+            cancelLabel="Cancel"
+            saveLabel="Rollback"
+            saveStyle="danger"
+            onCancel={this.props.onClose}
+            onSave={this.props.onRollback}
+            placement="right"
+            showSave={true}
+          />
         </Modal.Footer>
       </Modal>
     );

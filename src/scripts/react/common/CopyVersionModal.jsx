@@ -1,7 +1,8 @@
 import React from 'react';
-import {Modal, Button, Input} from 'react-bootstrap';
+import {Modal, Input} from 'react-bootstrap';
 import moment from 'moment';
 import ImmutableRenderMixin from '../mixins/ImmutableRendererMixin';
+import ConfirmButtons from './ConfirmButtons';
 
 export default React.createClass({
   mixins: [ImmutableRenderMixin],
@@ -41,12 +42,17 @@ export default React.createClass({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onClose}>Close</Button>
-          <Button
-            onClick={this.props.onCopy}
-            bsStyle="success"
-            disabled={this.props.newVersionName === '' || !this.props.newVersionName}
-          >Copy</Button>
+          <ConfirmButtons
+            isSaving={false}
+            isDisabled={this.props.newVersionName === '' || !this.props.newVersionName}
+            cancelLabel="Cancel"
+            saveLabel="Copy"
+            saveStyle="success"
+            onCancel={this.props.onClose}
+            onSave={this.props.onCopy}
+            placement="right"
+            showSave={true}
+          />
         </Modal.Footer>
       </Modal>
     );
