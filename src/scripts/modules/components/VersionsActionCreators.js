@@ -4,8 +4,8 @@ import Store from './stores/VersionsStore';
 import Api from './InstalledComponentsApi';
 import Constants from './VersionsConstants';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
-import {Link} from 'react-router';
 import React from 'react';
+import ConfigurationCopiedNotification from './react/components/ConfigurationCopiedNotification';
 
 module.exports = {
   loadVersions: function(componentId, configId) {
@@ -114,37 +114,16 @@ module.exports = {
         // stop spinners
         self.pendingStop(componentId, configId);
         // send notification
-        if (componentId === 'transformation') {
-          ApplicationActionCreators.sendNotification({
-            message: React.createClass({
-              render() {
-                return (
-                  <span>
-                    Configuration copied,&nbsp;
-                    <Link
-                      to="transformationBucket"
-                      params={{bucketId: result.id}}
-                    >
-                      go to the new configuration
-                    </Link>.
-                  </span>
-                );
-              }
-            })
-          });
-        } else {
-          ApplicationActionCreators.sendNotification({
-            message: React.createClass({
-              render() {
-                return (
-                  <span>
-                    Configuration copied successfully.
-                  </span>
-                );
-              }
-            })
-          });
-        }
+        ApplicationActionCreators.sendNotification({
+          message: React.createClass({
+            render() {
+              return React.createElement(ConfigurationCopiedNotification, {
+                componentId: componentId,
+                configId: configId
+              });
+            }
+          })
+        });
       }).catch(function(error) {
         throw error;
       });
@@ -180,9 +159,12 @@ module.exports = {
     });
   },
 
+  pendingStart: function(componentId, configId, version, action) {
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,
+      version: version,
+      action: action,
       type: Constants.ActionTypes.VERSIONS_PENDING_START
     });
   },

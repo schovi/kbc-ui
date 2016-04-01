@@ -43,6 +43,8 @@ export default React.createClass({
       filteredVersions: filteredVersions,
       newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
       query: VersionsStore.getSearchFilter(componentId, configId),
+      isPending: VersionsStore.isPendingConfig(componentId, configId),
+      pendingActions: VersionsStore.getPendingVersions(componentId, configId)
     };
   },
 
@@ -55,6 +57,10 @@ export default React.createClass({
           componentId={this.state.componentId}
           configId={this.state.configId}
           newVersionName={this.state.newVersionNames.get(version.get('version'))}
+          isCopyPending={this.state.pendingActions.getIn([version.get('version'), 'copy'], false)}
+          isCopyDisabled={this.state.isPending}
+          isRollbackPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'], false)}
+          isRollbackDisabled={this.state.isPending}
           hideRollback={(i === 0)}
         />
       );
