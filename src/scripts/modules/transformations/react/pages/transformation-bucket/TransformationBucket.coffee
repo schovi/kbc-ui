@@ -10,7 +10,6 @@ TransformationRow = React.createFactory(require '../../components/Transformation
 ComponentDescription = React.createFactory(require '../../../../components/react/components/ComponentDescription')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 
-
 {div, span, input, strong, form, button, h4, i, button, small} = React.DOM
 
 TransformationBucket = React.createClass
@@ -22,6 +21,9 @@ TransformationBucket = React.createClass
     transformations: TransformationsStore.getTransformations(bucketId)
     bucket: TransformationBucketsStore.get(bucketId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
+
+  componentWillReceiveProps: ->
+    @setState(@getStateFromStores())
 
   render: ->
     div className: 'container-fluid kbc-main-content',
