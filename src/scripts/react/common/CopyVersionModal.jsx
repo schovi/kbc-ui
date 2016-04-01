@@ -38,6 +38,7 @@ export default React.createClass({
               wrapperClassName="col-xs-7"
               value={this.props.newVersionName}
               onChange={this.onChange}
+              autoFocus={true}
             />
           </form>
         </Modal.Body>
