@@ -56,7 +56,7 @@ export default React.createClass({
             version={version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
             onChangeName={this.createOnChangeName(this.props.componentId, this.props.configId, version.get('version'))}
-            newVersionname={this.state.newVersionNames.get(version.get('version'))}
+            newVersionName={this.state.newVersionNames.get(version.get('version'))}
             isPending={this.state.isPending}
           />
         )
