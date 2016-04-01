@@ -46,9 +46,15 @@ var VersionsStore = StoreUtils.createStore({
     return _store.getIn(['searchFilters', componentId, configId], '');
   },
 
-  isPending: function(componentId, configId) {
-    return _store.getIn(['pending', componentId, configId], false);
+  isPendingConfig: function(componentId, configId) {
+    return _store.hasIn(['pending', componentId, configId], false);
+  },
+
+  getPendingVersions: function(componentId, configId) {
+    return _store.getIn(['pending', componentId, configId], Map());
   }
+
+
 });
 
 dispatcher.register(function(payload) {
@@ -99,7 +105,7 @@ dispatcher.register(function(payload) {
       return VersionsStore.emitChange();
 
     case Constants.ActionTypes.VERSIONS_PENDING_START:
-      _store = _store.setIn(['pending', action.componentId, action.configId], true);
+      _store = _store.setIn(['pending', action.componentId, action.configId, action.version, action.action], true);
       return VersionsStore.emitChange();
 
     case Constants.ActionTypes.VERSIONS_PENDING_STOP:

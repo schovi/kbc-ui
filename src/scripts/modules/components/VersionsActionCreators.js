@@ -42,7 +42,7 @@ module.exports = {
   rollbackVersion: function(componentId, configId, version, reloadCallback) {
     var self = this;
     // start spinners
-    this.pendingStart(componentId, configId);
+    this.pendingStart(componentId, configId, version, 'rollback');
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,
@@ -86,7 +86,7 @@ module.exports = {
   copyVersion: function(componentId, configId, version, name, reloadCallback) {
     var self = this;
     // start spinners
-    this.pendingStart(componentId, configId);
+    this.pendingStart(componentId, configId, version, 'copy');
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,
@@ -180,7 +180,6 @@ module.exports = {
     });
   },
 
-  pendingStart: function(componentId, configId) {
     dispatcher.handleViewAction({
       componentId: componentId,
       configId: configId,

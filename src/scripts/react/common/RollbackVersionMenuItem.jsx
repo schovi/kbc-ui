@@ -8,7 +8,8 @@ export default React.createClass({
   propTypes: {
     version: React.PropTypes.object.isRequired,
     onRollback: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.bool
+    isPending: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -48,6 +49,7 @@ export default React.createClass({
         <MenuItem
           eventKey={this.props.version.get('version') + '-rollback'}
           onSelect={this.openModal}
+          disabled={this.props.isDisabled}
         >
           <em className="fa fa-undo fa-fw"> </em>
           Rollback

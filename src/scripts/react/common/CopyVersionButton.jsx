@@ -12,7 +12,8 @@ export default React.createClass({
     onCopy: React.PropTypes.func.isRequired,
     newVersionName: React.PropTypes.string,
     onChangeName: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.bool
+    isPending: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -45,7 +46,7 @@ export default React.createClass({
     } else {
       return (
         <Tooltip tooltip="Copy version to new" placement="top">
-          <button className="btn btn-link" onClick={this.openModal}>
+          <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
             <em className="fa fa-files-o fa-fw"> </em>
             <CopyVersionModal
               version={this.props.version}

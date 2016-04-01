@@ -10,7 +10,8 @@ export default React.createClass({
     onCopy: React.PropTypes.func.isRequired,
     newVersionName: React.PropTypes.string,
     onChangeName: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.bool
+    isPending: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -51,6 +52,7 @@ export default React.createClass({
         <MenuItem
           eventKey={this.props.version.get('version') + '-copy'}
           onSelect={this.openModal}
+          disabled={this.props.isDisabled}
         >
           <em className="fa fa-files-o fa-fw"> </em>
           Copy to new

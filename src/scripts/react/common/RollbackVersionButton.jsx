@@ -8,7 +8,8 @@ export default React.createClass({
   propTypes: {
     version: React.PropTypes.object.isRequired,
     onRollback: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.bool
+    isPending: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -40,7 +41,7 @@ export default React.createClass({
     } else {
       return (
         <Tooltip tooltip="Rollback this version" placement="top">
-          <button className="btn btn-link" onClick={this.openModal}>
+          <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
             <em className="fa fa-undo fa-fw"> </em>
             <RollbackVersionModal
               version={this.props.version}
