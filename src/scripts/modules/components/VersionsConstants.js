@@ -1,7 +1,8 @@
-keyMirror = require('react/lib/keyMirror')
+import keyMirror from 'react/lib/keyMirror';
 
-module.exports =
-  ActionTypes: keyMirror(
+module.exports = {
+  ActionTypes: keyMirror({
+
     VERSIONS_LOAD_START: null,
     VERSIONS_LOAD_SUCCESS: null,
     VERSIONS_LOAD_ERROR: null,
@@ -21,4 +22,5 @@ module.exports =
     VERSIONS_PENDING_START: null,
     VERSIONS_PENDING_STOP: null
 
-  )
+  })
+};
