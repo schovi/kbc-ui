@@ -119,7 +119,7 @@ module.exports = {
             render() {
               return React.createElement(ConfigurationCopiedNotification, {
                 componentId: componentId,
-                configId: configId
+                configId: result.id
               });
             }
           })
