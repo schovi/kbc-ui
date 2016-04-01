@@ -44,7 +44,7 @@ module.exports = function (options) {
     if (isDevelopment) {
         entry = {
           bundle: [
-            'webpack-dev-server/client?http://localhost:3000',
+            'webpack-dev-server/client?http://0.0.0.0:3000',
             'webpack/hot/only-dev-server',
             './src/styles/kbc.less',
             './node_modules/intl/Intl.js',

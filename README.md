@@ -13,6 +13,18 @@ User interface for Keboola Connection
 
 Application will be opened in your browser and will be hot reloaded after each change in source files.
 
+### Running in Docker
+
+```bash
+docker-compose run --rm --service-ports dev # npm install && npm start
+```
+
+If you don't have `docker-compose` installed, just run:
+
+```bash
+docker run -i -t --rm -v "$PWD:/code" -w /code -p 3000:3000 node:5 sh -c 'npm install && npm start'
+```
+
 ### Build dist package
 
 * `npm run build` (It is executed by Travis after each push)
