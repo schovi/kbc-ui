@@ -8,7 +8,7 @@ export default React.createClass({
   propTypes: {
     version: React.PropTypes.object.isRequired,
     onRollback: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.string
+    isPending: React.PropTypes.bool
   },
 
   getInitialState() {

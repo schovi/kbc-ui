@@ -10,7 +10,7 @@ export default React.createClass({
     onCopy: React.PropTypes.func.isRequired,
     newVersionName: React.PropTypes.string,
     onChangeName: React.PropTypes.func.isRequired,
-    isPending: React.PropTypes.string
+    isPending: React.PropTypes.bool
   },
 
   getInitialState() {
