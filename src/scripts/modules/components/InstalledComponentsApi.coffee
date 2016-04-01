@@ -1,5 +1,7 @@
 request = require '../../utils/request'
 ApplicationStore = require '../../stores/ApplicationStore'
+TransformationBucketsStore = require '../transformations/stores/TransformationBucketsStore'
+InstalledComponentsStore = require './stores/InstalledComponentsStore'
 
 createUrl = (path) ->
   baseUrl = ApplicationStore.getSapiUrl()
@@ -75,10 +77,20 @@ installedComponentsApi =
     )
 
   createConfigCopy: (componentId, configId, version, name) ->
+    if (componentId == 'transformation')
+      config = TransformationBucketsStore.get(configId)
+    else
+      config = InstalledComponentsStore.getConfig(componentId, configId)
+
+    description = "Created from #{config.get('name')} version \##{version}"
+
+    if (config.get('description'))
+      description += "\n\n#{config.get('description')}"
+
     url = "components/#{componentId}/configs/#{configId}/versions/#{version}/create"
     data =
       name: name
-      description: "Created from #{configId} version \##{version}"
+      description: description
     createRequest('POST', url)
     .type 'form'
     .send data
