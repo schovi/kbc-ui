@@ -9,6 +9,7 @@ import createVersionOnRollback from '../../utils/createVersionOnRollback';
 import createVersionOnCopy from '../../utils/createVersionOnCopy';
 import VersionsActionCreators from '../../../scripts/modules/components/VersionsActionCreators';
 import {Link} from 'react-router';
+import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
   mixins: [createStoreMixin(VersionsStore)],
@@ -79,10 +80,25 @@ export default React.createClass({
     return items;
   },
 
+  dropdownTitle() {
+    if (this.state.isPending) {
+      return (
+        <span>
+          <Loader />&nbsp;
+          Versions
+        </span>
+      );
+    } else {
+      return (
+        'Versions'
+      );
+    }
+  },
+
   render() {
     return (
       <span>
-        <DropdownButton title="Versions" pullRight className="kbcVersionsButton">
+        <DropdownButton title={this.dropdownTitle()} pullRight className="kbcVersionsButton">
           {this.getVersions().map(function(version, i) {
             return this.renderMenuItems(version, i);
           }, this).toArray()}
