@@ -22,6 +22,7 @@ export default React.createClass({
   },
 
   closeModal() {
+    this.props.onChangeName();
     this.setState({'showModal': false});
   },
 
