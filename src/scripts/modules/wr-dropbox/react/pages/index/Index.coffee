@@ -99,6 +99,7 @@ module.exports = React.createClass
 
 
   _renderMainContent: ->
+    inputTablesIds = @_getInputTables().map((c) -> c.get('source'))
     div {className: 'col-md-9 kbc-main-content'},
       div className: 'row',
         div className: 'col-sm-8',
@@ -123,6 +124,7 @@ module.exports = React.createClass
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
           showAllTables: false
+          configuredTables: inputTablesIds.toJS()
       else
         React.createElement ComponentEmptyState, null,
           if not @state.hasCredentials
