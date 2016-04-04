@@ -13,7 +13,8 @@ export default React.createClass({
     onResetCredentials: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     configId: PropTypes.string.isRequired,
-    isResetingCredentials: PropTypes.bool
+    isResetingCredentials: PropTypes.bool,
+    showHeader: PropTypes.bool
   },
 
   getInitialState() {
@@ -22,15 +23,28 @@ export default React.createClass({
     };
   },
 
+  getDefaultProps() {
+    return {
+      showHeader: true
+    };
+  },
+
   render() {
     return (
       <div>
         {this.renderAuthorizationModal()}
-        <h2> Authorization
-        </h2>
+        {this.renderHeader()}
         {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
-
       </div>
+    );
+  },
+
+  renderHeader() {
+    if (!this.props.showHeader) {
+      return null;
+    }
+    return (
+      <h2>Authorization</h2>
     );
   },
 

@@ -1,0 +1,64 @@
+import React from 'react';
+import {Tooltip} from '../../react/common/common';
+import CopyVersionModal from './CopyVersionModal';
+import {Loader} from 'kbc-react-components';
+import ImmutableRenderMixin from '../mixins/ImmutableRendererMixin';
+
+export default React.createClass({
+  mixins: [ImmutableRenderMixin],
+
+  propTypes: {
+    version: React.PropTypes.object.isRequired,
+    onCopy: React.PropTypes.func.isRequired,
+    newVersionName: React.PropTypes.string,
+    onChangeName: React.PropTypes.func.isRequired,
+    isPending: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool
+  },
+
+  getInitialState() {
+    return {
+      showModal: false
+    };
+  },
+
+  closeModal() {
+    this.props.onChangeName();
+    this.setState({'showModal': false});
+  },
+
+  openModal() {
+    this.setState({'showModal': true});
+  },
+
+  onCopy() {
+    this.props.onCopy();
+    this.closeModal();
+  },
+
+  render() {
+    if (this.props.isPending) {
+      return (
+        <span className="btn btn-link">
+          <Loader/>
+        </span>
+      );
+    } else {
+      return (
+        <Tooltip tooltip="Copy version to new" placement="top">
+          <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
+            <em className="fa fa-files-o fa-fw"> </em>
+            <CopyVersionModal
+              version={this.props.version}
+              show={this.state.showModal}
+              onClose={this.closeModal}
+              onCopy={this.onCopy}
+              onChangeName={this.props.onChangeName}
+              newVersionName={this.props.newVersionName}
+            />
+          </button>
+        </Tooltip>
+      );
+    }
+  }
+});

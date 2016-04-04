@@ -14,6 +14,7 @@ InstalledComponentsStore = require './stores/InstalledComponentsStore'
 installedComponentsApi = require './InstalledComponentsApi'
 RoutesStore = require '../../stores/RoutesStore'
 ComponentsStore = require './stores/ComponentsStore'
+#VersionActionCreators = require '../components/VersionsActionCreators'
 
 deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 removeEmptyEncryptAttributes = require './utils/removeEmptyEncryptAttributes'
