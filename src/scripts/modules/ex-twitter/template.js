@@ -217,6 +217,8 @@ const userTimelineTemplate = {
   }
 };
 
+
+/**
 const mentionsTemplate = {
   'endpoint': 'statuses\/mentions_timeline.json',
   'scroller': 'cursor_timeline',
@@ -242,6 +244,7 @@ const mentionsTemplate = {
     'include_rts': false
   }
 };
+ **/
 
 const followersTemplate = {
   'endpoint': 'followers\/list.json',
