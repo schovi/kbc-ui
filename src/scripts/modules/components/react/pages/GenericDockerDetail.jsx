@@ -6,14 +6,20 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 
+import * as oauthUtils from '../../../oauth-v2/OauthUtils';
+import OauthStore from '../../../oauth-v2/Store';
+
+
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
 import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
+import TemplatedConfiguration from '../components/TemplatedConfiguration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
+import AuthorizationRow from '../../../oauth-v2/react/AuthorizationRow.jsx';
 import TableOutputMapping from '../components/generic/TableOutputMapping';
 import FileOutputMapping from '../components/generic/FileOutputMapping';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
@@ -21,20 +27,24 @@ import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
+import Immutable from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing']));
+      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
+      configData = InstalledComponentStore.getConfigData(componentId, configId),
+      credentialsId = oauthUtils.getCredentialsId(configData) || configId;
 
     return {
       componentId: componentId,
+      configId: configId,
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
-      configData: InstalledComponentStore.getConfigData(componentId, configId),
+      configData: configData,
       editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
@@ -48,7 +58,9 @@ export default React.createClass({
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
       openMappings: InstalledComponentStore.getOpenMappings(componentId, configId),
       component: ComponentStore.getComponent(componentId),
-      localState: localState
+      localState: localState,
+      credentialsId: credentialsId,
+      oauthCredentials: oauthUtils.getCredentials(componentId, credentialsId)
     };
   },
 
@@ -160,6 +172,36 @@ export default React.createClass({
     }
   },
 
+  hasAuthorizeFlag() {
+    return this.state.component.get('flags').includes('genericDockerUI-authorization');
+  },
+
+  accountAuthorization() {
+    if (this.hasAuthorizeFlag()) {
+      return (
+        <AuthorizationRow
+          id={this.state.credentialsId}
+          componentId={this.state.componentId}
+          credentials={this.state.oauthCredentials}
+          isResetingCredentials={this.state.localState.get('deletingCredentials', false)}
+          onResetCredentials={this.deleteCredentials}
+
+        />
+      );
+    } else {
+      return null;
+    }
+  },
+
+  deleteCredentials() {
+    this.updateLocalState(['deletingCredentials'], true);
+    const componentId = this.state.componentId;
+    const configId = this.state.config.get('id');
+    oauthUtils.deleteCredentialsAndConfigAuth(componentId, configId).then( () => {
+      this.updateLocalState(['deletingCredentials'], false);
+    });
+  },
+
   render() {
     return (
       <div className="container-fluid">
@@ -173,25 +215,35 @@ export default React.createClass({
           <div className="row">
             <div classNmae="col-xs-4">
               <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
+              {this.accountAuthorization()}
               {this.tableInputMapping()}
               {this.fileInputMapping()}
               {this.tableOutputMapping()}
               {this.fileOutputMapping()}
-              <Configuration
-                data={this.getConfigDataParameters()}
-                isEditing={this.state.isParametersEditing}
-                isSaving={this.state.isParametersSaving}
-                onEditStart={this.onEditParametersStart}
-                onEditCancel={this.onEditParametersCancel}
-                onEditChange={this.onEditParametersChange}
-                onEditSubmit={this.onEditParametersSubmit}
-                isValid={this.state.isValidEditingConfigDataParameters}
-                headerText="Parameters"
-                editLabel="Edit parameters"
-                saveLabel="Save parameters"
-                supportsEncryption={this.state.component.get('flags').includes('encrypt')}
-                useJsonSchema={this.state.component.get('flags').includes('genericTemplatesUI')}
-                />
+              {this.isTemplatedComponent() ? (
+                <TemplatedConfiguration
+                  headerText="Configuration"
+                  editLabel="Edit configuration"
+                  saveLabel="Save configuration"
+                  />
+              ) : (
+                <span>
+                  <Configuration
+                    data={this.getConfigDataParameters()}
+                    isEditing={this.state.isParametersEditing}
+                    isSaving={this.state.isParametersSaving}
+                    onEditStart={this.onEditParametersStart}
+                    onEditCancel={this.onEditParametersCancel}
+                    onEditChange={this.onEditParametersChange}
+                    onEditSubmit={this.onEditParametersSubmit}
+                    isValid={this.state.isValidEditingConfigDataParameters}
+                    headerText="Parameters"
+                    editLabel="Edit parameters"
+                    saveLabel="Save parameters"
+                    supportsEncryption={this.state.component.get('flags').includes('encrypt')}
+                    />
+                </span>
+              )}
               {this.runtimeConfiguration()}
             </div>
 
@@ -205,8 +257,10 @@ export default React.createClass({
               />
           </div>
           <ul className="nav nav-stacked">
-            <li>
+            <li className={!!this.isRunDisabledReason() ? 'disabled' : ''}>
               <RunComponentButton
+                disabled={!!this.isRunDisabledReason()}
+                disabledReason={this.isRunDisabledReason()}
                 title="Run"
                 component={this.state.componentId}
                 mode="link"
@@ -300,6 +354,17 @@ export default React.createClass({
     InstalledComponentsActionCreators.saveComponentRawConfigDataParameters(this.state.componentId, this.state.config.get('id'));
   },
 
+  isAuthorized() {
+    const creds = this.state.oauthCredentials;
+    return  creds && creds.has('id');
+  },
+
+  isRunDisabledReason() {
+    if (this.hasAuthorizeFlag() && !this.isAuthorized()) {
+      return 'No account authorized';
+    }
+    return null;
+  },
 
   isStringValidJson(stringObject) {
     try {
@@ -316,6 +381,9 @@ export default React.createClass({
     const componentId = this.state.componentId;
     const newState = this.state.localState.setIn(path, data);
     InstalledComponentsActionCreators.updateLocalState(componentId, configId, newState);
-  }
+  },
 
+  isTemplatedComponent() {
+    return this.state.component.get('flags', Immutable.List()).includes('genericTemplatesUI');
+  }
 });

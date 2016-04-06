@@ -15,6 +15,8 @@ ComponentsStore = require './stores/ComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
 
+OauthUtils = require '../oauth-v2/OauthUtils'
+
 module.exports = (componentType) ->
   name: GENERIC_DETAIL_PREFIX + componentType
   title: (routerState) ->
@@ -40,7 +42,9 @@ module.exports = (componentType) ->
     isComponent: true
     requireData: [
       (params) ->
-        InstalledComponentsActions.loadComponentConfigData params.component, params.config
+        InstalledComponentsActions.loadComponentConfigData(params.component, params.config).then ->
+          if ComponentsStore.getComponent(params.component).get('flags').includes('genericDockerUI-authorization')
+            OauthUtils.loadCredentialsFromConfig(params.component, params.config)
     ,
       ->
         StorageActions.loadTables()
@@ -55,4 +59,11 @@ module.exports = (componentType) ->
       interval: 10
       action: (params) ->
         JobsActionCreators.loadComponentConfigurationLatestJobs(params.component, params.config)
+    childRoutes: [
+      OauthUtils.createRedirectRoute(
+        'generic-' + componentType + '-oauth-redirect'
+      , 'generic-detail-' + componentType + '-config'
+      , (params) -> {component: params.component, config: params.config}
+      )
+    ]
   ]

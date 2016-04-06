@@ -70,7 +70,13 @@ OutputMappingDetail = React.createClass(
               @props.outputMapping.get('deleteWhereOperator')
               ' '
               strong {},
-                @props.outputMapping.get('deleteWhereValues').join(', ')
+                @props.outputMapping.get('deleteWhereValues').map((value) ->
+                  if value == ''
+                    return '[empty string]'
+                  if value == ' '
+                    return '[space character]'
+                  return value
+                ).join(', ')
           else
             'N/A'
     ]

@@ -22,6 +22,10 @@
     console.log('hide')
   };
 
+  var ga = function() {
+    console.log('ga', arguments);
+  };
+
   (function (kbcApp) {
     var organizations = [
       {
@@ -124,14 +128,16 @@
                 "stringId": "poc",
                 "name": "POC",
                 "description": "Proof of concept",
-                "expirationDays": 0
+                "expirationDays": 0,
+                "billedMonthlyPrice": null
               },
               {
                 "id": 1,
                 "stringId": "production",
                 "name": "Production",
-                "description": "Production project billed monthly",
-                "expirationDays": 0
+                "description": "Production project billed monthly.",
+                "expirationDays": 0,
+                "billedMonthlyPrice": 1200
               }
              ],
             "notifications": {
@@ -147,6 +153,8 @@
               "canCreateProject": true,
               "canManageApps": true,
               "canDoSupport": true,
+              "canEditProjectLimits": true,
+              "canEditProjectTypeAndBilling": true,
               "xsrfToken": "hovno",
               "urlTemplates": {
                 "createProject": "/admin/projects-new/create-project",
@@ -160,7 +168,8 @@
                 "legacyWriterDetail": "/admin/projects/<%= projectId %>/writer/?app=<%= appId %>#/?config=<%= configId %>",
                 "organization": "/admin/organizations/<%= organizationId %>",
                 "maintainer": "/admin/maintainers/<%= maintainerId %>",
-                "notifications": "/admin/account/notifications"
+                "notifications": "/admin/account/notifications",
+                "editProjectLimit": "/admin/projects/edit-limit"
               },
               "zendesk": {
                 "project": {
@@ -181,7 +190,7 @@
                 "id": 1,
                 "name": "Some Developer",
                 "email": "example@example.com",
-                "features": ["ui-devel-preview", "kbc-notifications", "kbc-project-templates"],
+                "features": ["ui-devel-preview", "kbc-notifications", "kbc-project-templates", "kbc-limits"],
                 "profileImageUrl": "https://secure.gravatar.com/avatar/hovno?s=40"
 
               }

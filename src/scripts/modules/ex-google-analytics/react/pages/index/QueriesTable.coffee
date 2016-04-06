@@ -36,7 +36,7 @@ module.exports = React.createClass
           name: queryName
         div className: 'td', row.get('metrics').join(', ')
         div className: 'td', row.get('dimensions').join(', ')
-        div className: 'td', _.first(row.toJS()?.filters) or 'n/a'
+        div className: 'td kbc-break-all', _.first(row.toJS()?.filters) or 'n/a'
         div className: 'td', row.get('segment') or 'n/a'
         div className: 'td kbc-break-all', @_getProfileName(row.get('profile'))
         div className: 'td',

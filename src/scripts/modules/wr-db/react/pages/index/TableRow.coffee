@@ -19,6 +19,7 @@ module.exports = React.createClass
   mixins: [ImmutableRenderMixin]
 
   propTypes:
+    tableExists: React.PropTypes.bool.isRequired
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
     onExportChangeFn: React.PropTypes.func.isRequired
@@ -50,25 +51,26 @@ module.exports = React.createClass
           isPending: @props.isPending
           onChange: @props.onExportChangeFn
         @_renderDeleteButton()
-        React.createElement Tooltip,
-          tooltip: 'Upload table to Dropbox'
-        ,
-          RunButtonModal
-            title: "Upload #{@props.table.get('id')}"
-            tooltip: "Upload #{@props.table.get('id')}"
-            mode: 'button'
-            icon: 'fa fa-upload fa-fw'
-            component: @props.componentId
-            runParams: =>
-              tableId = @props.table.get('id')
-              configId = @props.configId
-              params =
-                table: tableId
-                writer: configId
-              api = dockerProxyApi(@props.componentId)
-              return api?.getTableRunParams(configId, tableId) or params
+        if @props.tableExists
+          React.createElement Tooltip,
+            tooltip: 'Upload table to Dropbox'
           ,
-           "You are about to run upload of #{@props.table.get('id')} to the database."
+            RunButtonModal
+              title: "Upload #{@props.table.get('id')}"
+              tooltip: "Upload #{@props.table.get('id')}"
+              mode: 'button'
+              icon: 'fa fa-upload fa-fw'
+              component: @props.componentId
+              runParams: =>
+                tableId = @props.table.get('id')
+                configId = @props.configId
+                params =
+                  table: tableId
+                  writer: configId
+                api = dockerProxyApi(@props.componentId)
+                return api?.getTableRunParams(configId, tableId) or params
+            ,
+             "You are about to run upload of #{@props.table.get('id')} to the database."
 
   _renderDeleteButton: ->
     if @props.isDeleting

@@ -109,7 +109,7 @@ module.exports = React.createClass
               onChange: @_handleChangeIsPublic
               disabled: @props.disabled
               help: React.DOM.small {},
-                "File will be stored permanently (otherwise will be deleted after 180 days)"
+                "File will be public (accessible outside Keboola Connection)"
 
       if @state.showDetails
         React.DOM.div className: 'form-group form-group-sm',
@@ -122,6 +122,6 @@ module.exports = React.createClass
               onChange: @_handleChangeIsPermanent
               disabled: @props.disabled
               help: React.DOM.small {},
-                "File will be public (accessible outside Keboola Connection)"
+                "File will be stored permanently (otherwise will be deleted after 180 days)"
 
 

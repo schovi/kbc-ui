@@ -1,61 +1,118 @@
 import React, {PropTypes} from 'react';
 import MetricGraph from './MetricGraph';
-import AlarmIndicator from './AlarmIndicator';
-import {Check} from 'kbc-react-components';
-import classnames from 'classnames';
+import {Button} from 'react-bootstrap';
 import {bytesToGBFormatted, numericMetricFormatted} from '../../utils/numbers';
+import EditLimitButton from './EditLimitButton';
+import LimitProgress from './LimitProgress';
+import classnames from 'classnames';
+import contactSupport from '../../utils/contactSupport';
+import SwitchButton from './SwitchButton';
 
 export default React.createClass({
   propTypes: {
     limit: PropTypes.object.isRequired,
     isKeenReady: PropTypes.bool.isRequired,
+    canEdit: PropTypes.bool.isRequired,
     keenClient: PropTypes.object.isRequired
+  },
+
+  getInitialState() {
+    return {
+      elWidth: null
+    };
+  },
+
+  componentDidMount() {
+    /* eslint-disable react/no-did-mount-set-state */
+    this.setState({
+      elWidth: React.findDOMNode(this.refs.limit).offsetWidth
+    });
+    /* eslint-enable react/no-did-mount-set-state */
   },
 
   render() {
     const {limit} = this.props;
     return (
-      <div className={classnames('tr', {'danger': limit.get('isAlarm')})}>
-        <span className="td">
+      <div className="td kbc-limit" ref="limit">
+        <div className={classnames('kbc-limit-inner', {'kbc-limit-alarm': limit.get('isAlarm')})}>
+          <div style={{height: `${0.5 * this.state.elWidth}px`, position: 'relative'}}>
+            {this.renderVizualization()}
+          </div>
+          <div>
           <h3>
-            {limit.get('name')} {limit.get('isAlarm') ? <AlarmIndicator isAlarm={true} /> : null}
+            {limit.get('name')}
           </h3>
-        </span>
-        <span className="td">
-          {this.limit()}
-        </span>
-        <span className="td" style={{width: '50%'}}>
-          {this.renderGraph()}
-        </span>
+          </div>
+          <div className="kbc-limit-values">
+            <h4>{this.limit()}</h4>
+          </div>
+          <div className="kbc-limit-action">
+            {this.renderActionButton()}
+          </div>
+        </div>
       </div>
     );
   },
 
   limit() {
     const {limit}  = this.props;
-    console.log('limit', limit.toJS());
     if (limit.get('unit') === 'bytes') {
-      return `${bytesToGBFormatted(limit.get('metricValue'))} GB of ${bytesToGBFormatted(limit.get('limitValue'))} GB used`;
-    } else if (limit.get('unit') === 'flag') {
       return (
-        <Check isChecked={!!limit.get('metricValue')} />
+        <span>
+          <strong>{bytesToGBFormatted(limit.get('metricValue'))} GB</strong>
+          <span className="kbc-limit-values-minor"> of </span>
+          <span>{bytesToGBFormatted(limit.get('limitValue'))} GB</span>
+          <span className="kbc-limit-values-minor"> used</span>
+        </span>
       );
+    } else if (limit.get('unit') === 'flag') {
+      return limit.get('limitValue') > 0 ? <strong>ENABLED</strong> : <strong>DISABLED</strong>;
     } else if (!limit.get('limitValue')) {
-      return numericMetricFormatted(limit.get('metricValue'));
+      return (
+        <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
+      );
     } else {
-      return `${numericMetricFormatted(limit.get('metricValue'))} / ${numericMetricFormatted(limit.get('limitValue'))}`;
+      return (
+        <span>
+          <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
+          <span className="kbc-limit-values-minor"> of </span>
+          <span>{numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}</span>
+        </span>
+      );
     }
+  },
+
+  renderVizualization() {
+    const {limit, canEdit} = this.props;
+    if (limit.get('graph')) {
+      return this.renderGraph();
+    }
+    if (limit.get('limitValue') && limit.get('metricValue')) {
+      return this.renderProgress();
+    }
+    if (limit.get('unit') === 'flag') {
+      return (
+        <SwitchButton
+          limit={limit}
+          canEdit={canEdit}
+          />
+      );
+    }
+    return null;
+  },
+
+  renderProgress() {
+    const {limit} = this.props;
+    return React.createElement(LimitProgress, {
+      valueMax: limit.get('limitValue'),
+      valueCurrent: limit.get('metricValue')
+    });
   },
 
   renderGraph() {
     const graph = this.props.limit.get('graph');
-    if (!graph) {
-      return null;
-    }
     if (!this.props.isKeenReady) {
-      return (
-        <span>Loading ... </span>
-      );
+      return null;
     }
     return React.createElement(MetricGraph, {
       query: {
@@ -69,6 +126,30 @@ export default React.createClass({
       unit: this.props.limit.get('unit'),
       client: this.props.keenClient
     });
+  },
+
+  renderActionButton() {
+    const {limit} = this.props;
+
+    if (!limit.get('limitValue')) {
+      return <span/>;
+    }
+
+    if (limit.get('unit') === 'flag') {
+      return <span/>;
+    }
+
+    if (this.props.canEdit) {
+      return (
+        <EditLimitButton limit={this.props.limit}/>
+      );
+    }
+
+    return (
+      <Button bsStyle="success" onClick={contactSupport}>
+        <span className="fa fa-plus"/> Request More
+      </Button>
+    );
   }
 
 });

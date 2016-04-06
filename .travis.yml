@@ -11,6 +11,7 @@ install:
 - export KBC_REVISION=`git describe --tags`
 script:
  - npm run lint
+ - npm run test
  - npm run build
 sudo: false
 cache:

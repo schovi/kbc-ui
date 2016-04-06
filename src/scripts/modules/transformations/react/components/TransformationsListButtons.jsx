@@ -3,6 +3,7 @@ import {ModalTrigger} from 'react-bootstrap';
 import NewTransformationModal from '../modals/NewTransformation';
 import RoutesStore from '../../../../stores/RoutesStore';
 import TransformationBucketsStore from '../../stores/TransformationBucketsStore';
+import VersionsDropdown from '../../../../react/common/VersionsDropdown';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
 export default React.createClass({
@@ -10,6 +11,7 @@ export default React.createClass({
 
   getStateFromStores() {
     return {
+      configId: RoutesStore.getCurrentRouteParam('bucketId'),
       bucket: TransformationBucketsStore.get(RoutesStore.getCurrentRouteParam('bucketId'))
     };
   },
@@ -17,11 +19,13 @@ export default React.createClass({
   render() {
     return (
       <span>
+        <VersionsDropdown componentId="transformation" configId={this.state.configId} />
         <ModalTrigger modal={<NewTransformationModal bucket={this.state.bucket}/>}>
           <button className="btn btn-success">
             <span className="kbc-icon-plus"></span> Add Transformation
           </button>
         </ModalTrigger>
+
       </span>
     );
   }

@@ -8,7 +8,6 @@ Link = React.createFactory(require('react-router').Link)
 date = require '../../../../../utils/date'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 SapiTableLinkEx = require('../../../../components/react/components/StorageApiTableLinkEx').default
-UploadButton = React.createFactory require './UploadButton'
 
 module.exports = React.createClass
   displayName: 'tablerowtde'
@@ -32,7 +31,6 @@ module.exports = React.createClass
 
       if @props.tdeFile
         span className: 'td',
-          @_renderUploadIcon()
           React.createElement OverlayTrigger,
             overlay: React.createElement Tooltip,
               null
@@ -79,16 +77,6 @@ module.exports = React.createClass
               i className: 'kbc-icon-cup'
         if not @props.isDeleted
           @_renderRunButton()
-
-  _renderUploadIcon: ->
-    UploadButton
-      tdeFile: @props.tdeFile
-      configData: @props.configData
-      uploadComponentId: @props.uploadComponentId
-      uploadComponentIdSetFn: @props.uploadComponentIdSetFn
-      configId: @props.configId
-
-
 
 
   _renderRunButton: ->

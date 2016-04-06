@@ -10,3 +10,4 @@ global.kbcApp =
     ProjectSelect: require './react/layout/project-select/ProjectSelect'
     CurrentUser: require './react/layout/CurrentUser'
     ProjectsList: require './react/layout/project-select/List'
+    NewProjectModal: require './react/layout/NewProjectModal'

@@ -1,25 +1,34 @@
 import React, {PropTypes} from 'react';
-import {Modal, Input, ButtonToolbar, Button} from 'react-bootstrap';
+import {Modal, Input} from 'react-bootstrap';
+import ConfirmButtons from '../common/ConfirmButtons';
+import numeral from 'numeral';
 
 export default React.createClass({
   propTypes: {
     xsrf: PropTypes.string.isRequired,
     organizations: PropTypes.object.isRequired,
+    selectedOrganizationId: PropTypes.number,
     urlTemplates: PropTypes.object.isRequired,
     projectTemplates: PropTypes.object.isRequired,
     isOpen: PropTypes.bool,
-    showPlans: PropTypes.bool,
+    showOrganizationsSelect: PropTypes.bool,
     onHide: PropTypes.func.isRequired
   },
 
   getInitialState() {
     return {
       name: '',
-      type: 'demo',
+      organizationId: this.props.selectedOrganizationId,
+      type: 'poc',
       isSaving: false
     };
   },
 
+  getDefaultProps() {
+    return {
+      showOrganizationsSelect: true
+    };
+  },
 
   render() {
     return (
@@ -46,14 +55,7 @@ export default React.createClass({
                 labelClassName="col-sm-4"
                 wrapperClassName="col-sm-6"
                 />
-            <Input
-              label="Organization"
-              name="organizationId"
-              type="select"
-              labelClassName="col-sm-4"
-              wrapperClassName="col-sm-6">
-              {this.organizationOptions()}
-              </Input>
+            {this.organization()}
             <Input
               type="hidden"
               name="xsrf"
@@ -63,17 +65,42 @@ export default React.createClass({
             </form>
         </Modal.Body>
         <Modal.Footer>
-          <ButtonToolbar>
-            <Button onClick={this.props.onHide} bsStyle="link">
-              Cancel
-            </Button>
-            <Button bsStyle="primary" onClick={this.handleCreate} disabled={!this.isValid() || this.state.isSaving}>
-              Create Project
-            </Button>
-          </ButtonToolbar>
+          <ConfirmButtons
+            isDisabled={!this.isValid()}
+            isSaving={this.state.isSaving}
+            saveLabel="Create Project"
+            saveStyle="primary"
+            onCancel={this.props.onHide}
+            onSave={this.handleCreate}
+            />
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  organization() {
+    if (!this.props.showOrganizationsSelect) {
+      return (
+        <input
+          type="hidden"
+          name="organizationId"
+          value={this.props.selectedOrganizationId}
+          />
+      );
+    } else {
+      return (
+        <Input
+          label="Organization"
+          name="organizationId"
+          type="select"
+          value={this.state.organizationId}
+          onChange={this.handleOrganizationChange}
+          labelClassName="col-sm-4"
+          wrapperClassName="col-sm-6">
+          {this.organizationOptions()}
+        </Input>
+      );
+    }
   },
 
   organizationOptions() {
@@ -87,10 +114,6 @@ export default React.createClass({
   },
 
   typesGroup() {
-    if (!this.props.showPlans) {
-      return null;
-    }
-
     return (
       <div>
         <div className="form-group">
@@ -118,7 +141,7 @@ export default React.createClass({
           label={template.get('name')}
           name="type"
           checked={template.get('stringId') === this.state.type}
-          help={template.get('description')}
+          help={this.help(template)}
           value={template.get('stringId')}
           onChange={this.handleTypeChange}
           wrapperClassName="col-xs-offset-4 col-xs-6"
@@ -127,9 +150,27 @@ export default React.createClass({
     });
   },
 
+  help(template) {
+    const price = template.get('billedMonthlyPrice') ?
+      <span><br/>{`$${numeral(template.get('billedMonthlyPrice')).format('0,0')} / month`}</span> : null;
+    return (
+      <span>
+        {template.get('description')}
+
+        {price}
+      </span>
+    );
+  },
+
   handleNameChange(e) {
     this.setState({
       name: e.target.value
+    });
+  },
+
+  handleOrganizationChange(e) {
+    this.setState({
+      organizationId: e.target.value
     });
   },
 

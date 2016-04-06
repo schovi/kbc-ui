@@ -35,14 +35,14 @@ export default React.createClass({
             onChange={this.handleInputChange.bind(this, 'name')}
             labelClassName="col-sm-3"
             wrapperClassName="col-sm-9"
-            />
+          />
           <Input
             type="checkbox"
             label="Include time"
             checked={dimension.get('includeTime')}
             onChange={this.handleCheckboxChange.bind(this, 'includeTime')}
             wrapperClassName="col-sm-offset-3 col-sm-9"
-            />
+          />
           <Input
             type="text"
             label="Identifier"
@@ -52,7 +52,7 @@ export default React.createClass({
             labelClassName="col-sm-3"
             wrapperClassName="col-sm-9"
             bsSize="small"
-            />
+          />
           <div className="form-group form-group-sm">
             <div className="control-label col-sm-3">
               Template
@@ -66,12 +66,14 @@ export default React.createClass({
                     name="template"
                     onChange={this.handleInputChange.bind(this, 'template')}
                     checked={this.props.dimension.get('template') === DateDimensionTemplates.GOOD_DATA}
-                    />
+                  />
                   <span>GoodData</span>
                 </label>
               </div>
               <span className="help-block">
-                Default date dimension provided by GoodData
+                <small>
+                  Default date dimension provided by GoodData
+                </small>
               </span>
             </div>
           </div>
@@ -79,24 +81,24 @@ export default React.createClass({
             type="radio"
             label="Keboola"
             value={DateDimensionTemplates.KEBOOLA}
-            help="Default date dimension provided by Keboola"
+            help={this.renderKeboolaDimHelp()}
             name="template"
             onChange={this.handleInputChange.bind(this, 'template')}
             checked={this.props.dimension.get('template') === DateDimensionTemplates.KEBOOLA}
             wrapperClassName="col-sm-offset-3 col-sm-9"
             bsSize="small"
-            />
+          />
           <Input
             type="radio"
             label="Custom"
             value={DateDimensionTemplates.CUSTOM}
-            help="Provide your own template"
+            help={this.renderCustomDimHelp()}
             name="template"
             onChange={this.handleInputChange.bind(this, 'template')}
             checked={this.props.dimension.get('template') === DateDimensionTemplates.CUSTOM}
             wrapperClassName="col-sm-offset-3 col-sm-9"
             bsSize="small"
-            />
+          />
           {this.customTemplateInput()}
           <div className="form-group">
             <div className="col-sm-offset-3 col-sm-10">
@@ -104,13 +106,33 @@ export default React.createClass({
                 bsStyle="success"
                 disabled={this.props.isPending || !this.isValid()}
                 onClick={this.props.onSubmit}
-                >
+              >
                 {this.props.buttonLabel}
               </Button> {isPending ? <Loader/> : null}
             </div>
           </div>
         </div>
       </div>
+    );
+  },
+
+  renderKeboolaDimHelp() {
+    return (
+      <small>
+        Default date dimension provided by Keboola. Added all week setups: Mon-Sun, Tue-Mon, Wed-Tue, Thu-Wed, Fri-Thu, Sat-Fri, Sun-Sat + Boolean value whether its weekend or working day
+      </small>
+    );
+  },
+
+  renderCustomDimHelp() {
+    return (
+      <small>
+        Provide your own template. You can generate the csv file containing all necessary details and provide it to GoodData.
+        More info:{' '}
+        <a href="http://wiki.keboola.com/pure-gooddata-hints/custom-date-dimensions" target="_blank">
+           Custom date dimmensions
+        </a>
+      </small>
     );
   },
 
@@ -134,7 +156,7 @@ export default React.createClass({
     }
 
     if (this.props.dimension.get('template') === DateDimensionTemplates.CUSTOM &&
-      !this.props.dimension.get('customTemplate').trim().length) {
+        !this.props.dimension.get('customTemplate').trim().length) {
       return false;
     }
 

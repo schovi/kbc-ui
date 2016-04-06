@@ -11,7 +11,7 @@ numeral = require 'numeral'
 Immutable = require 'immutable'
 
 FileOutputMappingDetail = React.createClass(
-  displayName: 'FileInputMappingDetail'
+  displayName: 'FileOutputMappingDetail'
   mixins: [ImmutableRenderMixin]
 
   propTypes:

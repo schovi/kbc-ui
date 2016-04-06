@@ -64,7 +64,14 @@ TableInputMappingDetail = React.createClass(
               @props.value.get('delete_where_operator')
               ' '
               strong {},
-                @props.value.get('delete_where_values').join(', ')
+                if @props.value.get('delete_where_values')
+                  @props.value.get('delete_where_values').map((value) ->
+                    if value == ''
+                      return '[empty string]'
+                    if value == ' '
+                      return '[space character]'
+                    return value
+                  ).join(', ')
           else
             'N/A'
 

@@ -3,7 +3,7 @@ import {fromJS} from 'immutable';
 
 const LIMITS_METADATA = fromJS({
   'goodData.prodTokenEnabled': {
-    name: 'Production project enabled'
+    name: 'Production project'
   },
   'goodData.dataSizeBytes': {
     name: 'Project size'
@@ -43,6 +43,7 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
       limitValue: limits.getIn(['storage.rowsCount', 'value']),
       metricValue: metrics.getIn(['storage.rowsCount', 'value'], 0),
       name: limitsMetadata.getIn(['storage.rowsCount', 'name']),
+      unit: 'millions',
       graph: {
         eventCollection: 'sapi-project-snapshots',
         targetProperty: 'rowsCount'

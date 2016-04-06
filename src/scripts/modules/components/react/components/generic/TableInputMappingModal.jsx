@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Editor from './TableInputMappingEditor';
+import resolveInputShowDetails from './resolveInputShowDetails';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -13,17 +14,28 @@ export default React.createClass({
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onRequestHide: PropTypes.func.isRequired
+    onRequestHide: PropTypes.func.isRequired,
+    otherDestinations: PropTypes.object.isRequired
   },
 
   isValid() {
-    return !!this.props.mapping.get('source');
+    return !!this.props.mapping.get('source')
+      && !!this.props.mapping.get('destination')
+      && !this.isDestinationDuplicate();
   },
 
   getInitialState() {
     return {
       isSaving: false
     };
+  },
+
+  isDestinationDuplicate() {
+    if (this.props.otherDestinations) {
+      return this.props.otherDestinations.contains(this.props.mapping.get('destination', '').toLowerCase());
+    } else {
+      return false;
+    }
   },
 
   render() {
@@ -50,7 +62,9 @@ export default React.createClass({
       value: this.props.mapping,
       tables: this.props.tables,
       disabled: this.state.isSaving,
-      onChange: this.props.onChange
+      onChange: this.props.onChange,
+      initialShowDetails: resolveInputShowDetails(this.props.mapping),
+      isDestinationDuplicate: this.isDestinationDuplicate()
     };
     return React.createElement(Editor, props);
   },

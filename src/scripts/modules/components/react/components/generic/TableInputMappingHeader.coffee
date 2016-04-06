@@ -24,6 +24,7 @@ module.exports = React.createClass(
     onDelete: React.PropTypes.func.isRequired
     pendingActions: React.PropTypes.object.isRequired
     onEditStart: React.PropTypes.func.isRequired
+    otherDestinations: React.PropTypes.object.isRequired
 
   render: ->
     component = @
@@ -64,6 +65,7 @@ module.exports = React.createClass(
                   onChange: @props.onChange
                   onCancel: @props.onCancel
                   onSave: @props.onSave
+                  otherDestinations: @props.otherDestinations
               ,
                 React.DOM.button
                   className: "btn btn-link"

@@ -66,7 +66,7 @@ export default React.createClass({
   imageIcon(url) {
     return (
       <span className={classNames('kb-sapi-component-icon', this.props.className)}>
-        <img src={ url } />
+        <img src={ url } width={this.props.size} height={this.props.size}/>
         { this.get3rdPartyLabel() }
       </span>
     );

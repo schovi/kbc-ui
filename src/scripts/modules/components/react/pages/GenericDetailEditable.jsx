@@ -15,6 +15,7 @@ import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
+import Immutable from 'immutable';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
@@ -62,7 +63,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
-              <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
+              {this.renderConfigurationHint()}
               <Configuration
                 data={this.getConfigData()}
                 isEditing={this.state.isEditing}
@@ -161,5 +162,17 @@ export default React.createClass({
 
   onEditSubmit() {
     InstalledComponentsActionCreators.saveComponentRawConfigData(this.state.componentId, this.state.config.get('id'));
+  },
+
+  isTemplatedComponent() {
+    return this.state.component.get('flags', Immutable.List()).includes('genericTemplatesUI');
+  },
+
+  renderConfigurationHint() {
+    if (!this.isTemplatedComponent()) {
+      return (<p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>);
+    }
+    return null;
   }
+
 });

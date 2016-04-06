@@ -1,5 +1,3 @@
-
-
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 
@@ -10,6 +8,8 @@ transitionToComponentConfiguration = require './utils/componentConfigurationTran
 
 RoutesStore = require '../../stores/RoutesStore'
 ComponentsStore = require './stores/ComponentsStore'
+
+InstalledComponentsActionCreators = require './InstalledComponentsActionCreators'
 
 module.exports =
 
@@ -34,11 +34,17 @@ module.exports =
 
     createComponentConfiguration componentId, configuration
     .then (response) ->
+      component = ComponentsStore.getComponent(componentId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.COMPONENTS_NEW_CONFIGURATION_SAVE_SUCCESS
         componentId: componentId
-        component: ComponentsStore.getComponent(componentId)
+        component: component
         configuration: response
+
+      # open editing
+      if (component.get("flags").includes("genericTemplatesUI"))
+        InstalledComponentsActionCreators.startEditTemplatedComponentConfigData(componentId, response.id)
+
       transitionToComponentConfiguration(componentId, response.id)
     .catch (e) ->
       dispatcher.handleViewAction

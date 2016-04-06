@@ -25,7 +25,7 @@ module.exports = React.createClass
             span className: 'kbc-icon kbc-icon-comment'
             ' Support '
         li null,
-          a href: ApplicationStore.getProjectPageUrl('settings'),
+          a href: ApplicationStore.getProjectPageUrl('settings-users'),
             span className: 'kbc-icon kbc-icon-user'
             ' Users & Settings '
 

@@ -106,7 +106,7 @@ export default React.createClass({
           </Popover>);
       default:
         return (
-          <Popover title="Snowflake queries" className="popover-wide">
+          <Popover title="Mysql queries" className="popover-wide">
             <ul>
               <li>Comments after the last query will fail execution.</li>
               <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>

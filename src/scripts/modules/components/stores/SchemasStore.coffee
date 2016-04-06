@@ -15,8 +15,6 @@ SchemasStore = StoreUtils.createStore
     _store.hasIn ['schemas', componentId]
 
   isLoadingSchema: (componentId) ->
-    if (@isLoadingManifest())
-      return true
     _store.getIn ['loadingSchemas', componentId], false
 
   getParamsSchema: (componentId) ->
@@ -34,12 +32,20 @@ SchemasStore = StoreUtils.createStore
   getJobsTemplates: (componentId) ->
     _store.getIn ['schemas', componentId, 'templates', 'jobs'], Map()
 
-
   getApiSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'api'], Map()
 
   getApiTemplate: (componentId) ->
     _store.getIn ['schemas', componentId, 'templates', 'api'], Map()
+
+  isJobsTemplate: (componentId, jobs) ->
+    templates = _store.getIn ['schemas', componentId, 'templates', 'jobs'], Map()
+    templates.filter((template) ->
+      if (!template.has("jobs"))
+        return false
+      template.get("jobs").hashCode() == jobs.hashCode()
+    ).count() == 1
+
 
 dispatcher.register (payload) ->
   action = payload.action

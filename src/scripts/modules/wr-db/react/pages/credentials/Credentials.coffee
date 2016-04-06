@@ -2,6 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 {fromJS} = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
+ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 {States} = require './StateConstants'
 WrDbActions = require '../../../actionCreators'
@@ -12,7 +13,7 @@ provisioningTemplates = require '../../../templates/provisioning'
 WrDbStore = require '../../../store'
 RoutesStore = require '../../../../../stores/RoutesStore'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
-
+MissingRedshiftModal = require('./MissingRedshiftModal').default
 CredentialsForm = require './CredentialsForm'
 {div} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)
@@ -96,6 +97,12 @@ templateFn = (componentId, driver, isProvisioning) ->
     else
       @renderNoProvisioning()
 
+  renderMissingRedshiftModal: ->
+    React.createElement MissingRedshiftModal,
+      show: @state.localState.get('showMissingRedshift', false)
+      onHideFn: =>
+        @_updateLocalState('showMissingRedshift', false)
+
   renderNoProvisioning: ->
     credentials = @state.credentials
     state = @state.localState.get 'credentialsState'
@@ -104,12 +111,14 @@ templateFn = (componentId, driver, isProvisioning) ->
       isEditing = true
       credentials = @state.editingCredentials
     div {className: 'container-fluid kbc-main-content'},
+      @renderMissingRedshiftModal()
       @_renderCredentialsForm(credentials, isEditing)
 
   renderWithProvisioning: ->
     credentials = @state.credentials
     state = @state.localState.get 'credentialsState'
     div {className: 'container-fluid kbc-main-content'},
+      @renderMissingRedshiftModal()
       switch state
         when States.INIT
           @_renderInit()
@@ -169,6 +178,9 @@ templateFn = (componentId, driver, isProvisioning) ->
 
 
   _toggleCreateProvWriteCredentials: ->
+    hasRedshift = ApplicationStore.getSapiToken().getIn ['owner', 'hasRedshift']
+    if not hasRedshift and driver == 'redshift'
+      return  @_updateLocalState('showMissingRedshift', true)
     @_updateLocalState('credentialsState', States.PREPARING_PROV_WRITE)
     isReadOnly = false
     WrDbActions.loadProvisioningCredentials(componentId, @state.configId, isReadOnly, driver).then =>

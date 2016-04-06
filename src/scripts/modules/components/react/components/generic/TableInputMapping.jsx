@@ -17,6 +17,16 @@ export default React.createClass({
     openMappings: PropTypes.object.isRequired
   },
 
+  inputMappingDestinations(exclude) {
+    return this.props.value.map(function(mapping, key) {
+      if (key !== exclude) {
+        return mapping.get('destination').toLowerCase();
+      }
+    }).filter(function(destination) {
+      return destination !== undefined;
+    });
+  },
+
   render() {
     var addButton;
     if (this.props.value.count() >= 1) {
@@ -27,7 +37,8 @@ export default React.createClass({
             componentId={this.props.componentId}
             configId={this.props.configId}
             mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}
-            />
+            otherDestinations={this.inputMappingDestinations()}
+          />
         </span>
       );
     }
@@ -88,6 +99,7 @@ export default React.createClass({
                   tables: component.props.tables,
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
+                  otherDestinations: component.inputMappingDestinations(key),
                   onEditStart: function() {
                     return component.onEditStart(key);
                   },
@@ -128,6 +140,7 @@ export default React.createClass({
             componentId={this.props.componentId}
             configId={this.props.configId}
             mapping={this.props.editingValue.toMap().get('new-mapping', Immutable.Map())}
+            otherDestinations={this.inputMappingDestinations()}
             />
         </div>
       );

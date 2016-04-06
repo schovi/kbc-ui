@@ -14,6 +14,7 @@ ComponentsActionCreators = require './ComponentsActionCreators'
 
 
 exDbRoutes = require '../ex-db/exDbRoutes'
+exDbGenericRoutes = require '../ex-db-generic/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
@@ -29,6 +30,7 @@ createComponentRoute = require('./createComponentRoute').default
 googleDriveWriterRoutes = require '../wr-google-drive/wrGdriveRoutes'
 tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
+twitterRoutes = require('../ex-twitter/routes').default
 geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
 customScienceRoutes = require('../custom-science/Routes').default
 
@@ -96,7 +98,15 @@ routes =
     ,
       createComponentRoute 'ex-adform', [adformRoutes]
     ,
+      createComponentRoute 'keboola.ex-twitter', [twitterRoutes]
+    ,
       createComponentRoute 'ex-dropbox', [dropoxExtractorRoutes]
+    ,
+      createComponentRoute 'keboola.ex-db-pgsql', [exDbGenericRoutes('keboola.ex-db-pgsql')]
+      createComponentRoute 'keboola.ex-db-firebird', [exDbGenericRoutes('keboola.ex-db-firebird')]
+      createComponentRoute 'keboola.ex-db-db2', [exDbGenericRoutes('keboola.ex-db-db2')]
+    ,
+      createComponentRoute 'keboola.ex-db-impala', [exDbGenericRoutes('keboola.ex-db-impala')]
     ,
       createGenericDetailRoute 'extractor'
 
@@ -130,6 +140,10 @@ routes =
       createComponentRoute 'wr-db-oracle', [createDbWriterRoutes('wr-db-oracle', 'oracle', false)]
     ,
       createComponentRoute 'wr-db-redshift', [createDbWriterRoutes('wr-db-redshift', 'redshift', true)]
+    ,
+      createComponentRoute 'keboola.wr-looker', [createDbWriterRoutes('keboola.wr-looker', 'redshift', true)]
+    ,
+      createComponentRoute 'keboola.wr-qlik', [createDbWriterRoutes('keboola.wr-qlik', 'redshift', true)]
     ,
       createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,

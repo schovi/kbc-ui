@@ -8,7 +8,8 @@ export default React.createClass({
     tables: React.PropTypes.object.isRequired,
     mapping: React.PropTypes.object.isRequired,
     componentId: React.PropTypes.string.isRequired,
-    configId: React.PropTypes.string.isRequired
+    configId: React.PropTypes.string.isRequired,
+    otherDestinations: React.PropTypes.object.isRequired
   },
 
   render() {
@@ -28,7 +29,8 @@ export default React.createClass({
       tables: this.props.tables,
       onChange: this.handleChange,
       onCancel: this.handleCancel,
-      onSave: this.handleSave
+      onSave: this.handleSave,
+      otherDestinations: this.props.otherDestinations
     });
   },
 

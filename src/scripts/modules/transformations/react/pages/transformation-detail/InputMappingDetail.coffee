@@ -83,7 +83,13 @@ InputMappingDetail = React.createClass(
               @props.inputMapping.get('whereOperator')
               ' '
               strong {},
-                @props.inputMapping.get('whereValues').join(', ')
+                @props.inputMapping.get('whereValues').map((value) ->
+                  if value == ''
+                    return '[empty string]'
+                  if value == ' '
+                    return '[space character]'
+                  return value
+                ).join(', ')
           if @props.inputMapping.get('days') != 0 && @props.inputMapping.get('whereColumn')
             ' and '
           if @props.inputMapping.get('days') != 0

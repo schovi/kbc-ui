@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Editor from './TableOutputMappingEditor';
-
+import resolveOutputShowDetails from './resolveOutputShowDetails';
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
 export default React.createClass({
@@ -53,7 +53,8 @@ export default React.createClass({
       buckets: this.props.buckets,
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
-      backend: 'docker'
+      backend: 'docker',
+      initialShowDetails: resolveOutputShowDetails(this.props.mapping)
     };
     return React.createElement(Editor, props);
   },

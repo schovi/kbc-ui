@@ -3,7 +3,7 @@ _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 
 module.exports = React.createClass
   displayName: 'TableInputMappingEditor'
@@ -13,9 +13,11 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
+    initialShowDetails: React.PropTypes.bool.isRequired
+    isDestinationDuplicate: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    showDetails: false
+    showDetails: @props.initialShowDetails
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -33,7 +35,9 @@ module.exports = React.createClass
   _handleChangeSource: (value) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
-      mapping = mapping.set("destination", value + ".csv")
+      # use only table name from the table identifier
+      destination = value.substr(value.lastIndexOf(".") + 1) + ".csv"
+      mapping = mapping.set("destination", destination)
       mapping = mapping.set("where_column", "")
       mapping = mapping.set("where_values", Immutable.List())
       mapping = mapping.set("where_operator", "eq")
@@ -48,9 +52,9 @@ module.exports = React.createClass
     value = @props.value.set("days", parseInt(e.target.value))
     @props.onChange(value)
 
-  _handleChangeColumns: (string, array) ->
+  _handleChangeColumns: (newValue) ->
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", Immutable.fromJS(_.pluck(array, "value")))
+      mapping = mapping.set("columns", newValue)
       if !_.contains(mapping.get("columns").toJS(), mapping.get("where_column"))
         mapping = mapping.set("where_column", "")
         mapping = mapping.set("where_values", Immutable.List())
@@ -65,18 +69,9 @@ module.exports = React.createClass
     value = @props.value.set("where_operator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    if parsedValues.length == 0
-      value = @props.value.set("where_values", Immutable.List())
-    else
-      value = @props.value.set("where_values", Immutable.fromJS(parsedValues))
+  _handleChangeWhereValues: (newValue) ->
+    value = @props.value.set("where_values", newValue)
     @props.onChange(value)
-
-  _getWhereValues: ->
-    @props.value.get("where_values", Immutable.List()).join(",")
 
   _getTables: ->
     props = @props
@@ -158,14 +153,8 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-            React.DOM.span {className: "help-block"},
-              "File will be available at"
-              React.DOM.code {}, "/data/in/tables/" + @_getFileName()
-
-      if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           Input
-            bsSize: 'small'
             type: 'text'
             label: 'File name'
             value: @props.value.get("destination")
@@ -174,6 +163,16 @@ module.exports = React.createClass
             onChange: @_handleChangeDestination
             labelClassName: 'col-xs-2'
             wrapperClassName: 'col-xs-10'
+            bsStyle: if @props.isDestinationDuplicate then 'error' else null
+            help: if @props.isDestinationDuplicate then React.DOM.small {'className': 'error'},
+                'Duplicate destination '
+                React.DOM.code {}, @props.value.get("destination")
+                '.'
+              else React.DOM.span {className: "help-block"},
+                "File will be available at"
+                React.DOM.code {}, "/data/in/tables/" + @_getFileName()
+
+
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
@@ -226,10 +225,13 @@ module.exports = React.createClass
                 React.DOM.option {value: "eq"}, "= (IN)"
                 React.DOM.option {value: "ne"}, "!= (NOT IN)"
             React.DOM.div className: 'col-xs-4',
-              Input
-                type: 'text'
-                name: 'where_values'
-                value: @_getWhereValues()
+              Select
+                name: 'whereValues'
+                value: @props.value.get('where_values')
+                multi: true
                 disabled: @props.disabled
+                allowCreate: true
+                delimiter: ','
+                placeholder: 'Add a value...'
+                emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-                placeholder: "Comma separated values"

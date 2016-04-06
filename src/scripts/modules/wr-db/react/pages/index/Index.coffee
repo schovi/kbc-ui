@@ -144,7 +144,10 @@ templateFn = (componentId) ->
           query: @state.localState.get('searchQuery') or ''
       if @_hasValidCredentials() and @_hasConfigTables()
         TablesByBucketsPanel
-          renderTableRowFn: @_renderTableRow
+          renderTableRowFn: (table) =>
+            @_renderTableRow(table, true)
+          renderDeletedTableRowFn: (table) =>
+            @_renderTableRow(table, false)
           renderHeaderRowFn: @_renderHeaderRow
           filterFn: @_filterBuckets
           searchQuery: @state.localState.get('searchQuery')
@@ -152,7 +155,7 @@ templateFn = (componentId) ->
           isTableShownFn: @_isTableInConfig
           onToggleBucketFn: @_handleToggleBucket
           isBucketToggledFn: @_isBucketToggled
-          configuredTableIds: configuredIds
+          configuredTables: configuredIds
           showAllTables: false
       else
         React.createElement ComponentEmptyState, null,
@@ -219,9 +222,10 @@ templateFn = (componentId) ->
         jobs: @state.latestJobs
 
 
-  _renderTableRow: (table) ->
+  _renderTableRow: (table, tableExists = true) ->
     #div null, table.get('id')
     TableRow
+      tableExists: tableExists
       configId: @state.configId
       tableDbName: @_getConfigTable(table.get('id')).get('name')
       isTableExported: @_isTableExported(table.get('id'))

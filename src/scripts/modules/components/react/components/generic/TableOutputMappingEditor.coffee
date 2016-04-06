@@ -3,13 +3,13 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 _ = require('underscore')
 Immutable = require('immutable')
 Input = React.createFactory require('react-bootstrap').Input
-Select = React.createFactory(require('react-select'))
+Select = React.createFactory require('../../../../../react/common/Select').default
 AutosuggestWrapper = require('../../../../transformations/react/components/mapping/AutoSuggestWrapper').default
 
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
     suggestions = getOptions()
-    .filter (value) -> value.toLowerCase().search(input.toLowerCase()) >= 0
+    .filter (value) -> value.toLowerCase().indexOf(input.toLowerCase()) >= 0
     .sortBy( (item) ->
       item
     )
@@ -28,9 +28,10 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     backend: React.PropTypes.string.isRequired
+    initialShowDetails: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    showDetails: false
+    showDetails: @props.initialShowDetails
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -50,11 +51,8 @@ module.exports = React.createClass
     value = @props.value.set("incremental", e.target.checked)
     @props.onChange(value)
 
-  _handleChangePrimaryKey: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    value = @props.value.set("primary_key", Immutable.fromJS(parsedValues))
+  _handleChangePrimaryKey: (newValue) ->
+    value = @props.value.set("primary_key", newValue)
     @props.onChange(value)
 
   _handleChangeDeleteWhereColumn: (newValue) ->
@@ -66,21 +64,9 @@ module.exports = React.createClass
     value = @props.value.set("delete_where_operator", e.target.value)
     @props.onChange(value)
 
-  _handleChangeDeleteWhereValues: (e) ->
-    parsedValues = _.filter(_.invoke(e.target.value.split(","), "trim"), (value) ->
-      value != ''
-    )
-    if parsedValues.length == 0
-      value = @props.value.set("delete_where_values", Immutable.List())
-    else
-      value = @props.value.set("delete_where_values", Immutable.fromJS(parsedValues))
+  _handleChangeDeleteWhereValues: (newValue) ->
+    value = @props.value.set("delete_where_values", newValue)
     @props.onChange(value)
-
-  _getPrimaryKeyValue: ->
-    @props.value.get("primary_key", Immutable.List()).join(",")
-
-  _getDeleteWhereValues: ->
-    @props.value.get("delete_where_values", Immutable.List()).join(",")
 
   _getTablesAndBuckets: ->
     tablesAndBuckets = @props.tables.merge(@props.buckets)
@@ -161,20 +147,23 @@ module.exports = React.createClass
                     Uses incremental write to Storage API."
         if @state.showDetails
           React.DOM.div {className: "row col-md-12"},
-            Input
-              bsSize: 'small'
-              name: 'primaryKey'
-              type: 'text'
-              label: 'Primary key'
-              value: @_getPrimaryKeyValue()
-              disabled: @props.disabled
-              placeholder: "Column name(s)"
-              onChange: @_handleChangePrimaryKey
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
-              help: React.DOM.small {},
-                "Primary key of the table in Storage API. If the table already exists, primary key must match.
-                Parts of a composite primary key are separated with a comma."
+            React.DOM.div {className: "form-group form-group-sm"},
+              React.DOM.label {className: "control-label col-xs-2"},
+                React.DOM.span null,
+                  "Primary key"
+              React.DOM.div {className: "col-xs-10"},
+                Select
+                  name: 'primary_key'
+                  value: @props.value.get('primary_key')
+                  multi: true
+                  disabled: @props.disabled
+                  allowCreate: true
+                  delimiter: ','
+                  placeholder: 'Add a column to primary key...'
+                  emptyStrings: false,
+                  help: React.DOM.small {},
+                    "Primary key of the table in Storage API. If the table already exists, primary key must match."
+                  onChange: @_handleChangePrimaryKey
         if @state.showDetails
           React.DOM.div {className: "row col-md-12"},
             React.DOM.div className: 'form-group form-group-sm',
@@ -200,15 +189,16 @@ module.exports = React.createClass
                   React.DOM.option {value: "eq"}, "= (IN)"
                   React.DOM.option {value: "ne"}, "!= (NOT IN)"
               React.DOM.div className: 'col-xs-4',
-                Input
-                  bsSize: 'small'
-                  type: 'text'
+                Select
                   name: 'deleteWhereValues'
-                  value: @_getDeleteWhereValues()
+                  value: @props.value.get('delete_where_values')
+                  multi: true
                   disabled: @props.disabled
+                  allowCreate: true
+                  delimiter: ','
+                  placeholder: 'Add a value...'
+                  emptyStrings: true,
                   onChange: @_handleChangeDeleteWhereValues
-                  placeholder: "Comma separated values"
-                  groupClassName: "no-bottom-margin"
               React.DOM.div className: 'col-xs-10 col-xs-offset-2 small help-block bottom-margin',
                 "Delete matching rows in the destination table before importing the result"
 
