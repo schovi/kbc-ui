@@ -7,3 +7,4 @@ npm-debug.log
 **/.tern-port
 /.tern-project
 /src/scripts/modules/ex-google-drive/api-mocks/
+/stats.json

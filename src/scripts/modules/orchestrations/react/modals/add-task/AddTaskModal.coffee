@@ -25,6 +25,9 @@ AddTaskModal = React.createClass
   mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationStore)]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
+    onHide: React.PropTypes.func
+    show: React.PropTypes.bool
+    phaseId: React.PropTypes.string
 
   getInitialState: ->
     selectedComponent: null
@@ -42,7 +45,10 @@ AddTaskModal = React.createClass
     }
 
   render: ->
-    Modal title: @_modalTitle(), onRequestHide: @props.onRequestHide,
+    Modal
+      title: @_modalTitle()
+      onRequestHide: @props.onHide
+      show: @props.show
 
       div className: 'modal-body',
         switch @state.currentStep
@@ -70,13 +76,13 @@ AddTaskModal = React.createClass
         ButtonToolbar null,
           Button
             bsStyle: 'link'
-            onClick: @props.onRequestHide
+            onClick: @props.onHide
           ,
             'Cancel'
 
   _modalTitle: ->
     React.DOM.h4 className: 'modal-title',
-      "Add task "
+      "Add task to #{@props.phaseId} "
       React.createElement ComponentsReloaderButton
 
   _handleComponentSelect: (component) ->
@@ -98,8 +104,9 @@ AddTaskModal = React.createClass
     close modal with selected configuration
   ###
   _handleConfigurationSelect: (configuration) ->
-    @props.onRequestHide() # hide modal
-    @props.onConfigurationSelect(@state.selectedComponent, configuration)
+    #@props.onRequestHide() # hide modal
+    @props.onConfigurationSelect(@state.selectedComponent, configuration, @props.phaseId)
+    @props.onHide()
 
 
 

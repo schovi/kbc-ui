@@ -1,5 +1,5 @@
-
-
+_ = require 'underscore'
+{List} = require 'immutable'
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 orchestrationsApi = require './OrchestrationsApi'
@@ -12,8 +12,45 @@ React = require 'react'
 {Link} = require 'react-router'
 RoutesStore = require '../../stores/RoutesStore'
 
-module.exports =
+rephaseTasks = (tasks) ->
+  isNullPhase = (phase) ->
+    return phase == null or phase == 0 or phase == undefined
+  nullPhaseIdx = 1
+  currentPhase =
+    id: null
+  result = []
+  for task in tasks
+    phase = task.phase
+    if isNullPhase(phase) or phase.toString() != currentPhase.id
+      newPhaseId = phase
+      if isNullPhase(phase)
+        newPhaseId = "Phase #{nullPhaseIdx}"
+        nullPhaseIdx++
+      #create new phase
+      newPhase =
+        id: "#{newPhaseId}"
+        tasks: [task]
+      currentPhase = newPhase
+      result.push(newPhase)
+    else
+      currentPhase.tasks.push(task)
+  console.log 'REPHASED', tasks, result
+  #return tasks
+  return result
 
+dephaseTasks = (tasks) ->
+  result = List()
+  tasks.forEach (phase) ->
+    phaseId = phase.get('id')
+    phase.get('tasks').forEach (task) ->
+      result = result.push(task.set('phase', phaseId))
+  return result
+
+module.exports =
+  rephaseTasks: (tasks) ->
+    rephaseTasks(tasks)
+  dephaseTasks: (tasks) ->
+    dephaseTasks(tasks)
   ###
     Request orchestrations reload from server
   ###
@@ -75,6 +112,7 @@ module.exports =
     )
 
   receiveOrchestration: (orchestration) ->
+    orchestration.tasks = rephaseTasks(orchestration.tasks)
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_LOAD_SUCCESS
       orchestration: orchestration
@@ -287,7 +325,7 @@ module.exports =
 
   saveOrchestrationTasks: (orchestrationId) ->
     tasks = OrchestrationStore.getEditingValue(orchestrationId, 'tasks')
-
+    tasks = dephaseTasks(tasks)
     dispatcher.handleViewAction(
       type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_START
       orchestrationId: orchestrationId
@@ -297,6 +335,7 @@ module.exports =
     .saveOrchestrationTasks(orchestrationId, tasks.toJS())
     .then((tasks) ->
       # update tasks from server
+      tasks = rephaseTasks(tasks)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.ORCHESTRATION_TASKS_SAVE_SUCCESS
         orchestrationId: orchestrationId
@@ -393,7 +432,7 @@ module.exports =
   runOrchestration: (id, tasks, notify = false) ->
     data = {}
     if tasks
-      data = {tasks: tasks}
+      data = {tasks: dephaseTasks(tasks)}
 
     orchestrationsApi
     .runOrchestration(

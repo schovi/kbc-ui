@@ -5,66 +5,92 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
   propTypes: {
-    task: PropTypes.object.isRequired,
+    phaseId: PropTypes.object.isRequired,
+    existingIds: PropTypes.object.isRequired,
     onPhaseUpdate: React.PropTypes.func.isRequired,
-    onRequestHide: React.PropTypes.func.isRequired
+    onHide: React.PropTypes.func.isRequired,
+    show: React.PropTypes.bool.isRequired
   },
 
   getInitialState() {
     return {
-      phase: this.props.task.get('phase')
+      value: null
     };
   },
 
+  alreadyExist() {
+    const val = this.state.value;
+    return this.props.existingIds.find((eid) => eid === val);
+  },
+
+  isValid() {
+    const val = this.state.value;
+    return val && val !== this.props.phaseId && !this.alreadyExist();
+  },
+
   render() {
+    const value = this.state.value === null ? this.props.phaseId : this.state.value;
+
+    let formDivClass = 'form-group';
+    let helpText = 'Phase name is a unique string and helps to describe the phase. Typical name could be extract, transform, load etc.';
+    if (this.alreadyExist()) {
+      formDivClass = 'form-group has-error';
+      helpText = `Phase with name ${value} already exists.`;
+    }
+    const helpBlock = (<span className="help-block">{helpText}</span>);
+
     return (
-      <Modal {...this.props} title="Task Phase">
+      <Modal
+        show={this.props.show}
+        onHide={this.props.onHide}
+        title={`Rename Phase`}>
         <div className="modal-body">
-          <div className="form-horizontal">
-            <div className="form-group">
-              <div className="col-sm-offset-1 col-sm-9">
-                <p>
-                  Phase is a set of orchestration tasks.
-                </p>
-                <p className="help-block">
-                  Adjacent tasks with the same phase number are run in parallel. Tasks with phase `null` will run isolated.
-                </p>
-                <p>
-                  Phase # <input
-                    type="number"
-                    className="form-control"
-                    value={parseInt(this.state.phase, 10)}
-                    onChange={this.handlePhaseChange}
-                    style={{width: '50px', display: 'inline-block'}}
-                    />
-                </p>
+          <div className="form form-horizontal">
+            <div className={formDivClass}>
+              <div className="col-sm-12">
+                <input
+                  id="title"
+                  type="text"
+                  className="form-control"
+                  value={value}
+                  onChange={this.handlePhaseChange}
+                />
+                {helpBlock}
               </div>
             </div>
           </div>
         </div>
         <div className="modal-footer">
           <ConfirmButtons
-            saveLabel="Ok"
-            onCancel={this.props.onRequestHide}
+            saveLabel="Rename"
+            isDisabled={!this.isValid()}
+            onCancel={this.closeModal}
             onSave={this.handleSave}
-            />
+          />
         </div>
       </Modal>
     );
   },
 
-  handlePhaseChange(e) {
-    if (e.target.value < 0) {
-      return;
-    }
+  closeModal() {
     this.setState({
-      phase: e.target.value
+      value: null
     });
+    this.props.onHide();
   },
 
   handleSave() {
-    this.props.onRequestHide();
-    return this.props.onPhaseUpdate(this.props.task.set('phase', this.state.phase));
+    this.props.onPhaseUpdate(this.state.value);
+    this.setState({
+      value: null
+    });
+  },
+
+  handlePhaseChange(e) {
+    this.setState({
+      value: e.target.value
+    });
   }
+
 
 });

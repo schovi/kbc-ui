@@ -3,50 +3,42 @@ Immutable = require 'immutable'
 common = require '../../../../../react/common/common'
 _ = require 'underscore'
 
-DragDropMixin = require('react-dnd').DragDropMixin
-
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
 ComponentConfigurationLink = require '../../../../components/react/components/ComponentConfigurationLink'
-
 
 TaskParametersEditModal = React.createFactory(require '../../modals/TaskParametersEdit')
 ComponentIcon = React.createFactory(common.ComponentIcon)
 ComponentName = React.createFactory(common.ComponentName)
 Tree = React.createFactory(require('kbc-react-components').Tree)
 Check = React.createFactory(common.Check)
+Tooltip = React.createFactory(require('../../../../../react/common/Tooltip').default)
 
-{tr, td, span, div, i, input} = React.DOM
+{small, button, tr, td, span, div, i, input} = React.DOM
 
 TasksEditTableRow = React.createClass
   displayName: 'TasksEditTableRow'
-  mixins: [DragDropMixin]
   propTypes:
     task: React.PropTypes.object.isRequired
     component: React.PropTypes.object
     disabled: React.PropTypes.bool.isRequired
     onTaskDelete: React.PropTypes.func.isRequired
     onTaskUpdate: React.PropTypes.func.isRequired
-    onTaskMove: React.PropTypes.func.isRequired
-
-  statics:
-    configureDragDrop: (register) ->
-      register 'task',
-        dragSource:
-          beginDrag: (component) ->
-            item: component.props.task
-        dropTarget:
-          over: (component, task) ->
-            component.props.onTaskMove task.get('id'), component.props.task.get('id')
+    toggleMarkTask: React.PropTypes.func.isRequired
+    isDraggingPhase: React.PropTypes.bool.isRequired
+    isMarked: React.PropTypes.bool.isRequired
+    onAddNewTask: React.PropTypes.func.isRequired
+    color: React.PropTypes.string
 
   render: ->
-    isDragging = @getDragState('task').isDragging
-    style =
-      cursor: 'move'
-      opacity: if isDragging then 0.5 else 1
-
-    tr _.extend({style: style}, @dragSourceFor('task'), @dropTargetFor('task')),
-      td null,
-        i className: 'fa fa-bars'
+    tr {style: {'background-color': @props.color}},
+      td className: 'kb-orchestrator-task-drasg',
+        Tooltip
+          tooltip: 'Select task to move to between phases'
+          input
+            type: 'checkbox'
+            checked: @props.isMarked
+            onClick: =>
+              @props.toggleMarkTask(@props.task.get('id'))
       td null,
         span className: 'kbc-component-icon',
           if @props.component
@@ -65,21 +57,19 @@ TasksEditTableRow = React.createClass
             configId: @props.task.getIn ['config', 'id']
           ,
             @props.task.getIn ['config', 'name']
+            div className: 'help-block',
+              small null, @props.task.getIn ['config', 'description']
+
         else
           'N/A'
       td null,
-        input
-          className: 'form-control'
-          type: 'text'
-          defaultValue: @props.task.get('action')
-          disabled: @props.disabled
-          onChange: @_handleActionChange
-      td className: 'kbc-cursor-pointer',
-        ModalTrigger
-          modal: TaskParametersEditModal(
-            onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
-        ,
-          Tree data: @props.task.get('actionParameters')
+        div className: 'form-group form-group-sm',
+          input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.task.get('action')
+            disabled: @props.disabled
+            onChange: @_handleActionChange
       td null,
         input
           type: 'checkbox'
@@ -92,9 +82,38 @@ TasksEditTableRow = React.createClass
           disabled: @props.disabled
           checked: @props.task.get('continueOnFailure')
           onChange: @_handleContinueOnFailureChange
-      td className: 'kbc-cursor-pointer',
-        div className: 'pull-right',
-          i className: 'kbc-icon-cup', onClick: @_handleDelete
+      @_renderActionButtons()
+
+
+  _renderActionButtons: ->
+    moreStyle =
+      padding: '2px'
+      position: 'relative'
+      top: '+2px'
+    td className: 'text-right kbc-no-wrap',
+      div className: '',
+        ModalTrigger
+          modal: TaskParametersEditModal(
+            onSet: @_handleParametersChange, parameters: @props.task.get('actionParameters').toJS())
+        ,
+
+          button
+            style: moreStyle
+            className: 'btn btn-link'
+          ,
+            Tooltip
+              placement: 'top'
+              tooltip: 'Task parameters'
+              span className: 'fa fa-fw fa-ellipsis-h fa-lg'
+        button
+          style: {padding: '2px'}
+          onClick: @_handleDelete
+          className: 'btn btn-link'
+        ,
+          Tooltip
+            placement: 'top'
+            tooltip: 'Remove task'
+            span className: 'kbc-icon-cup'
 
   _handleParametersChange: (parameters) ->
     @props.onTaskUpdate @props.task.set('actionParameters', Immutable.fromJS(parameters))

@@ -1,4 +1,3 @@
-
 Dispatcher = require '../../../Dispatcher'
 Immutable = require('immutable')
 Map = Immutable.Map
@@ -19,6 +18,19 @@ _store = Map(
   isLoaded: false
   loadingOrchestrations: List()
 )
+
+addEmptyPhase = (tasks) ->
+  phaseIds = tasks.map((phase) -> phase.get('id')).toJS()
+  newId = 'new phase'
+  idx = 1
+  while newId in phaseIds
+    newId = "new phase #{idx++}"
+  newPhase = Map({
+    id: newId
+    tasks: List()
+  })
+  return tasks.push(newPhase)
+
 
 updateOrchestration = (store, id, payload) ->
   store.updateIn(['orchestrationsById', id], (orchestration) ->
@@ -260,13 +272,15 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_RUN_TASK_EDIT_UPDATE
-      _store = _store.setIn ['tasksToRun', action.orchestrationId], action.tasks
+      tasks = action.tasks
+      _store = _store.setIn ['tasksToRun', action.orchestrationId], tasks
       OrchestrationStore.emitChange()
 
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_START
-      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'],
-        OrchestrationStore.getOrchestrationTasks(action.orchestrationId)
+      tasks = addEmptyPhase(OrchestrationStore.getOrchestrationTasks(action.orchestrationId))
+      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'], tasks
+
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_CANCEL
@@ -274,7 +288,10 @@ Dispatcher.register (payload) ->
       OrchestrationStore.emitChange()
 
     when Constants.ActionTypes.ORCHESTRATION_TASKS_EDIT_UPDATE
-      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'], action.tasks
+      tasks = action.tasks
+      if not tasks.find((phase) -> phase.get('tasks').count() == 0)
+        tasks = addEmptyPhase(tasks)
+      _store = _store.setIn ['editing', action.orchestrationId, 'tasks'], tasks
       OrchestrationStore.emitChange()
 
 

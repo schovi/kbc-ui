@@ -1,5 +1,5 @@
 React = require 'react'
-
+{List} = require 'immutable'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
@@ -28,9 +28,13 @@ OrchestrationDetail = React.createClass
   getStateFromStores: ->
     orchestrationId = RoutesStore.getCurrentRouteIntParam 'orchestrationId'
     jobs = OrchestrationJobsStore.getOrchestrationJobs orchestrationId
+    phases = OrchestrationStore.getOrchestrationTasks orchestrationId
+    tasks = List()
+    phases.forEach (phase) ->
+      tasks = tasks.concat(phase.get('tasks'))
     return {
       orchestration: OrchestrationStore.get orchestrationId
-      tasks: OrchestrationStore.getOrchestrationTasks orchestrationId
+      tasks: tasks
       isLoading: OrchestrationStore.getIsOrchestrationLoading orchestrationId
       filteredOrchestrations: OrchestrationStore.getFiltered()
       filter: OrchestrationStore.getFilter()

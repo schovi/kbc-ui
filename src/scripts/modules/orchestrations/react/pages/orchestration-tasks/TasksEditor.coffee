@@ -1,13 +1,13 @@
 React = require 'react'
 _ = require 'underscore'
 Immutable = require 'immutable'
+List = Immutable.List
 
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 
 TasksEditTable = React.createFactory(require './TasksEditTable')
 ModalTrigger = React.createFactory(require('react-bootstrap').ModalTrigger)
-AddTaskModal = React.createFactory(require './../../modals/add-task/AddTaskModal')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {div, button, span} = React.DOM
@@ -19,49 +19,65 @@ TasksEditor = React.createClass
     components: React.PropTypes.object.isRequired
     isSaving: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func.isRequired
+    updateLocalState: React.PropTypes.func.isRequired
+    localState: React.PropTypes.object.isRequired
 
   render: ->
-    div null,
-      TasksEditTable
-        tasks: @props.tasks
-        components: @props.components
-        disabled: @props.isSaving
-        onTaskDelete: @_handleTaskDelete
-        onTaskUpdate: @_handleTaskUpdate
-        onTaskMove: @_handleTaskMove
-      div className: 'kbc-block-with-padding',
-        ModalTrigger modal: AddTaskModal(onConfigurationSelect: @_handleTaskAdd),
-          Button
-            bsStyle: 'primary'
-            disabled: @props.isSaving
-          ,
-            'Add task'
+    TasksEditTable
+      tasks: @props.tasks
+      components: @props.components
+      disabled: @props.isSaving
+      onTaskDelete: @_handleTaskDelete
+      onTaskUpdate: @_handleTaskUpdate
+      updateLocalState: @props.updateLocalState
+      localState: @props.localState
+      handlePhaseMove: @_handlePhaseMove
+      handlePhaseUpdate: @_handlePhaseUpdate
+      handlePhasesSet: @_handlePhasesSet
+      handleAddTask: @_handleTaskAdd
 
   _handleTaskDelete: (configurationId) ->
     @props.onChange(
-      @props.tasks.remove(@props.tasks.findIndex((task) -> task.get('id') == configurationId))
-    )
-
-  _handleTaskUpdate: (updatedTask) ->
-    @props.onChange(
-      @props.tasks.set(
-        @props.tasks.findIndex((task) -> task.get('id') == updatedTask.get('id')),
-        updatedTask
+      @props.tasks.map((phase) ->
+        tasks = phase.get('tasks')
+        tasks = tasks.filter((task) -> task.get('id') != configurationId)
+        phase.set('tasks', tasks)
       )
     )
 
-  _handleTaskMove: (id, afterId) ->
-    task = @props.tasks.find((task) -> task.get('id') == id)
-    currentIndex = @props.tasks.findIndex((task) -> task.get('id') == id)
-    afterIndex = @props.tasks.findIndex((task) -> task.get('id') == afterId)
+  _handlePhaseUpdate: (phaseId, newPhase) ->
+    phaseIdx = @props.tasks.findIndex((phase) -> phase.get('id') == phaseId)
+    newTasks = @props.tasks.set(phaseIdx, newPhase)
+    @props.onChange(newTasks)
+
+  _handlePhasesSet: (phases) ->
+    @props.onChange(phases)
+
+  _handleTaskUpdate: (updatedTask) ->
+    taskId = updatedTask.get('id')
+    newTasks = @props.tasks.map (phase) ->
+      tasks = phase.get('tasks').map (task) ->
+        if task.get('id') == taskId
+          return updatedTask
+        else
+          return task
+      phase.set('tasks', tasks)
+    @props.onChange(newTasks)
+
+  _handlePhaseMove: (id, afterId) ->
+    phase = @props.tasks.find((phase) -> phase.get('id') == id)
+    currentIndex = @props.tasks.findIndex((phase) -> phase.get('id') == id)
+    afterIndex = @props.tasks.findIndex((phase) -> phase.get('id') == afterId)
     @props.onChange(
-      @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, task)
+      @props.tasks.splice(currentIndex, 1).splice(afterIndex, 0, phase)
     )
 
-  _handleTaskAdd: (component, configuration) ->
+
+  _handleTaskAdd: (component, configuration, phaseId) ->
     # prepare task
     task =
       id: _.uniqueId() # temporary id
+      phase: phaseId
       component: component.get('id')
       action: "run"
       actionParameters:
@@ -79,9 +95,12 @@ TasksEditor = React.createClass
 
     if _.contains ['ex-recurly', 'ex-youtube'], component.get('id')
       task.actionParameters = {}
-
     @props.onChange(
-      @props.tasks.push(Immutable.fromJS(task))
+      @props.tasks.map (phase) ->
+        if phase.get('id') == phaseId
+          return phase.set('tasks', phase.get('tasks', List()).push(Immutable.fromJS(task)))
+        else
+          return phase
     )
 
 

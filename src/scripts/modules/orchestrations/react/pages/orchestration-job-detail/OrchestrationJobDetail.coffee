@@ -1,9 +1,11 @@
 React = require 'react'
-List = require('immutable').List
+{fromJS, List} = require('immutable')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 # actions and stores
 OrchestrationsActionCreators = require '../../../ActionCreators'
+{dephaseTasks, rephaseTasks} = OrchestrationsActionCreators
+
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 OrchestrationJobsStore = require '../../../stores/OrchestrationJobsStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
@@ -30,8 +32,12 @@ OrchestrationJobDetail = React.createClass
     jobId = RoutesStore.getCurrentRouteIntParam 'jobId'
     job = OrchestrationJobsStore.getJob(jobId)
     if job.hasIn ['results', 'tasks']
-      job = job.setIn(['results', 'tasks'],
-        mergeTasksWithConfigurations(job.getIn(['results', 'tasks'], List()), InstalledComponentsStore.getAll()))
+      phasedTasks = rephaseTasks(job.getIn(['results', 'tasks'], List()).toJS())
+      merged = mergeTasksWithConfigurations( fromJS(phasedTasks),
+        InstalledComponentsStore.getAll())
+
+      job = job.setIn(['results', 'tasks'], dephaseTasks(merged))
+
     return {
       orchestrationId: orchestrationId
       job: job
