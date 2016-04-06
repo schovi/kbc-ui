@@ -49,6 +49,6 @@ module.exports = React.createClass
               'There are no tasks assigned yet.'
 
   renderPhaseRow: (phaseId) ->
-    tr null,
+    tr className: 'text-center',
       td colSpan: 4,
         strong null, phaseId
