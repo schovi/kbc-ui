@@ -15,6 +15,11 @@ _store = Map(
 
 ComponentsStore = StoreUtils.createStore
 
+  getComponentsTypes: ->
+    components = _store.get 'componentsById'
+    components.groupBy((val) ->
+      val.get('type')).keySeq().toJS()
+
   getAll: ->
     _store.get 'componentsById'
 

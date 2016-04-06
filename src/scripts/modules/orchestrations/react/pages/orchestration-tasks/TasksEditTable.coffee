@@ -1,5 +1,5 @@
 React = require 'react'
-{Map, List} = require 'immutable'
+{Map, List, fromJS} = require 'immutable'
 TasksEditTableRow = React.createFactory(require './TasksEditTableRow')
 PhaseEditRow = React.createFactory(require('./PhaseEditRow').default)
 PhaseModal = require('../../modals/Phase').default
@@ -11,6 +11,7 @@ AddTaskModal = require('../../modals/add-task/AddTaskModal')
 EmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 DropdownButton = React.createFactory(require('react-bootstrap').DropdownButton)
 AboutPhases = require('../../components/AboutPhases').default
+ComponentsStore = require '../../../../components/stores/ComponentsStore'
 
 TasksEditTable = React.createClass
   displayName: 'TasksEditTable'
@@ -78,6 +79,36 @@ TasksEditTable = React.createClass
           a
             onClick: @onToggleCollapsePhases
             small null, ' Collapse/Expand phases'
+        li null,
+          a
+            onClick: @onGroupTasksETL
+            small null, ' Group tasks into phases by component type'
+
+  onGroupTasksETL: ->
+    tasksTypes = ['application', 'extractor', 'transformation', 'writer', 'other']
+    allTypes = ComponentsStore.getComponentsTypes()
+    for type in allTypes
+      if type not in tasksTypes
+        tasksTypes.push(type)
+    groupedPhases = fromJS(tasksTypes).map (type) ->
+      return Map({id: "#{type} phase", tasks: List(), type: type})
+    phases = @props.localState.get('phases', Map())
+    @props.tasks.map (p) ->
+      p.get('tasks').map (task) ->
+        taskType = ComponentsStore.getComponent(task.get('component')).get('type')
+        groupedPhases = groupedPhases.map (gp) ->
+          if gp.get('type') == taskType
+            return gp.set('tasks', gp.get('tasks').push(task))
+          else
+            return gp
+        return task
+    groupedPhases = groupedPhases.map (gp) ->
+      gp.delete('type')
+    groupedPhases = groupedPhases.filter (gp) ->
+      gp.get('tasks').count() > 0
+    @props.handlePhasesSet(groupedPhases)
+
+
 
   onToggleCollapsePhases: ->
     phases = @props.localState.get('phases', Map())
