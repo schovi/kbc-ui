@@ -29,31 +29,167 @@ const common = {
     'http': {'defaultOptions': {'params': {'count': 200}}}
   },
   'config': {
+    'incrementalOutput': true,
     'jobs': []
   }
 };
 
 const searchTemplate = {
-  'endpoint': 'search\/tweets.json',
+  'endpoint': 'search/tweets.json',
+  'dataType': 'tweets',
   'params': {
-    'q': '@CSCAustralia',
-    'include_entities': true
+    'q': '',
+    'result_type': 'recent'
   },
   'scroller': 'cursor_timeline',
-  'dataType': 'tweets',
-  'userData': {'api_source': 'search'},
-  'responseFilter': [
-    'user.entities',
-    'entities.media',
-    'entities.user_mentions[].indices',
-    'entities.hashtags[].indices',
-    'entities.urls[].indices',
-    'quoted_status',
-    'retweeted_status',
-    'place.bounding_box.coordinates',
-    'coordinates',
-    'geo'
-  ]
+  'userData': {
+    'q': 'pinkbike',
+    'keboola_source': 'search'
+  },
+  'dataMapping': {
+    'id': {
+      'mapping': {
+        'destination': 'id',
+        'primaryKey': true
+      }
+    },
+    'entities.hashtags': {
+      'type': 'table',
+      'destination': 'tweets-hashtags',
+      'tableMapping': {
+        'text': {
+          'mapping': {
+            'destination': 'text',
+            'primaryKey': true
+          }
+        }
+      },
+      'parentKey': {
+        'primaryKey': true
+      }
+    },
+    'entities.user_mentions': {
+      'type': 'table',
+      'destination': 'tweets-user-mentions',
+      'tableMapping': {
+        'name': {
+          'mapping': {
+            'destination': 'name'
+          }
+        },
+        'screen_name': {
+          'mapping': {
+            'destination': 'screen_name'
+          }
+        },
+        'id': {
+          'mapping': {
+            'destination': 'user_id',
+            'primaryKey': true
+          }
+        }
+      },
+      'parentKey': {
+        'primaryKey': true
+      }
+    },
+    'entities.urls': {
+      'type': 'table',
+      'destination': 'tweets-urls',
+      'tableMapping': {
+        'url': {
+          'mapping': {
+            'destination': 'url',
+            'primaryKey': true
+          }
+        },
+        'expanded_url': {
+          'mapping': {
+            'destination': 'expanded_url'
+          }
+        },
+        'display_url': {
+          'mapping': {
+            'destination': 'display_url'
+          }
+        }
+      },
+      'parentKey': {
+        'primaryKey': true
+      }
+    },
+    'created_at': {
+      'mapping': {
+        'destination': 'created_at'
+      }
+    },
+    'favorite_count': {
+      'mapping': {
+        'destination': 'favorite_count'
+      }
+    },
+    'in_reply_to_screen_name': {
+      'mapping': {
+        'destination': 'in_reply_to_screen_name'
+      }
+    },
+    'in_reply_to_status_id': {
+      'mapping': {
+        'destination': 'in_reply_to_status_id'
+      }
+    },
+    'in_reply_to_user_id': {
+      'mapping': {
+        'destination': 'in_reply_to_user_id'
+      }
+    },
+    'lang': {
+      'mapping': {
+        'destination': 'lang'
+      }
+    },
+    'quoted_status_id': {
+      'mapping': {
+        'destination': 'quoted_status_id'
+      }
+    },
+    'retweet_count': {
+      'mapping': {
+        'destination': 'retweet_count'
+      }
+    },
+    'source': {
+      'mapping': {
+        'destination': 'source'
+      }
+    },
+    'text': {
+      'mapping': {
+        'destination': 'text'
+      }
+    },
+    'truncated': {
+      'mapping': {
+        'destination': 'truncated'
+      }
+    },
+    'withheld_copyright': {
+      'mapping': {
+        'destination': 'withheld_copyright'
+      }
+    },
+    'user.id': {
+      'mapping': {
+        'destination': 'user_id'
+      }
+    },
+    'keboola_source': {
+      'type': 'user',
+      'mapping': {
+        'destination': 'keboola_source'
+      }
+    }
+  }
 };
 
 const userTimelineTemplate = {
@@ -137,7 +273,7 @@ export function createConfigurationFromSettings(settings) {
     jobs = jobs.push(fromJS(followersTemplate).setIn(['params', 'screen_name'], settings.get('followersScreenName')));
   }
 
-  jobs = jobs.push(fromJS(mentionsTemplate));
+  // jobs = jobs.push(fromJS(mentionsTemplate));
   return fromJS(common).setIn(['config', 'jobs'], jobs);
 }
 
