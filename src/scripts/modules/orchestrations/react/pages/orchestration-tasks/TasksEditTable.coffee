@@ -95,7 +95,7 @@ TasksEditTable = React.createClass
     phases = @props.localState.get('phases', Map())
     @props.tasks.map (p) ->
       p.get('tasks').map (task) ->
-        taskType = ComponentsStore.getComponent(task.get('component')).get('type')
+        taskType = ComponentsStore.getComponent(task.get('component'))?.get('type') or 'other'
         groupedPhases = groupedPhases.map (gp) ->
           if gp.get('type') == taskType
             return gp.set('tasks', gp.get('tasks').push(task))
