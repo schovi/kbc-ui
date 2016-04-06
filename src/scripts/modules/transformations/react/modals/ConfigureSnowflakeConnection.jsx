@@ -107,9 +107,9 @@ export default React.createClass({
             <Input
               bsSize="small"
               type="password"
-              label="Password"
-              value={this.props.value.get('password', '')}
-              placeholder="Snowflake login password"
+              label="Encrypted password"
+              value={this.props.value.get('#password', this.props.value.get('password', ''))}
+              placeholder="Encrypted Snowflake login password"
               onChange={this.handleChangePassword}
               disabled={this.state.isSaving}
               labelClassName="col-xs-3"
@@ -186,7 +186,10 @@ export default React.createClass({
 
   handleChangePassword(e) {
     var value;
-    value = this.props.value.set('password', e.target.value);
+    value = this.props.value.set('#password', e.target.value);
+    if (value.get('password')) {
+      value = value.delete('password');
+    }
     this.props.onChange(value);
   },
 
