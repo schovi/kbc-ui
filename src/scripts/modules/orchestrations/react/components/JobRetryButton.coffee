@@ -1,7 +1,10 @@
 React = require 'react'
+{List, fromJS} = require 'immutable'
 createStoreMixin = require('../../../../react/mixins/createStoreMixin')
 JobsStore = require('../../stores/OrchestrationJobsStore')
 ActionCreators = require('../../ActionCreators')
+{dephaseTasks, rephaseTasks} = ActionCreators
+
 RoutesStore = require('../../../../stores/RoutesStore')
 TaskSelectTable = React.createFactory(require './TaskSelectTable')
 Confirm = React.createFactory(require '../../../../react/common/Confirm')
@@ -62,10 +65,12 @@ module.exports = React.createClass
   render: ->
     tasks = @state.job.get('tasks')
     if @_canBeRetried() && tasks
+      editingTasks = OrchestrationJobStore.getEditingValue(@props.job.get('id'), 'tasks') or List()
+
       ModalTrigger
         modal: TaskSelectModal
           job: @props.job
-          tasks: OrchestrationJobStore.getEditingValue @props.job.get('id'), 'tasks'
+          tasks: fromJS(rephaseTasks(editingTasks.toJS()))
           onChange: @_handleTaskChange
           onRun: @_handleRun
       ,
