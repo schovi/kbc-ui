@@ -10,6 +10,7 @@ import OauthStore from '../../oauth-v2/Store';
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import {getSettingsFromConfiguration} from '../template';
 
+import {deleteCredentialsAndConfigAuth} from '../../oauth-v2/OauthUtils';
 
 import Wizard from './Wizard';
 import {Steps} from '../constants';
@@ -179,6 +180,9 @@ export default React.createClass({
   },
   runParams() {
     return () => ({config: this.state.config.get('id')});
+  },
+  deleteCredentials() {
+    deleteCredentialsAndConfigAuth(COMPONENT_ID, this.state.config.get('id'));
   }
 
 });

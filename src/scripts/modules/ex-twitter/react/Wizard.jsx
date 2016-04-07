@@ -8,6 +8,7 @@ import WizardStep from './wizard/WizardStep';
 import WizardButtons from './wizard/WizardButtons';
 import {Map} from 'immutable';
 import EditButtons from '../../../react/common/EditButtons';
+import {deleteCredentialsAndConfigAuth} from '../../oauth-v2/OauthUtils';
 
 const InputAutoFocused = AutoFocus(Input);
 
@@ -187,5 +188,10 @@ export default React.createClass({
 
   isStatic() {
     return this.props.isConfigured && !this.props.isEditing;
+  },
+
+  deleteCredentials() {
+    deleteCredentialsAndConfigAuth(this.props.componentId, this.props.configId);
   }
+
 });
