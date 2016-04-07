@@ -297,7 +297,8 @@ const mentionsTemplate = {
     'contributor_details': false,
     'trim_user': true,
     'include_rts': false
-  }
+  },
+  'dataMapping': tweetDataMapping
 };
 
 
