@@ -146,16 +146,16 @@ const tweetDataMapping = {
       'destination': 'retweet_count'
     }
   },
-  "retweeted_status.id": {
-    "mapping": {
-      "destination": "retweeted_status_id"
+  'retweeted_status.id': {
+    'mapping': {
+      'destination': 'retweeted_status_id'
     }
   },
-  "retweeted_status": {
-    "type": "table",
-    "destination": "tweets",
-    "parentKey": {
-      "disable": true
+  'retweeted_status': {
+    'type': 'table',
+    'destination': 'tweets',
+    'parentKey': {
+      'disable': true
     }
   },
   'source': {
@@ -183,69 +183,69 @@ const tweetDataMapping = {
       'destination': 'user_id'
     }
   },
-  "user": {
-    "type": "table",
-    "destination": "users",
-    "tableMapping": {
-      "id": {
-        "mapping": {
-          "destination": "id",
-          "primaryKey": true
+  'user': {
+    'type': 'table',
+    'destination': 'users',
+    'tableMapping': {
+      'id': {
+        'mapping': {
+          'destination': 'id',
+          'primaryKey': true
         }
       },
-      "name": {
-        "mapping": {
-          "destination": "name"
+      'name': {
+        'mapping': {
+          'destination': 'name'
         }
       },
-      "screen_name": {
-        "mapping": {
-          "destination": "screen_name"
+      'screen_name': {
+        'mapping': {
+          'destination': 'screen_name'
         }
       },
-      "created_at": {
-        "mapping": {
-          "destination": "created_at"
+      'created_at': {
+        'mapping': {
+          'destination': 'created_at'
         }
       },
-      "description": {
-        "mapping": {
-          "destination": "description"
+      'description': {
+        'mapping': {
+          'destination': 'description'
         }
       },
-      "favourites_count": {
-        "mapping": {
-          "destination": "favourites_count"
+      'favourites_count': {
+        'mapping': {
+          'destination': 'favourites_count'
         }
       },
-      "followers_count": {
-        "mapping": {
-          "destination": "followers_count"
+      'followers_count': {
+        'mapping': {
+          'destination': 'followers_count'
         }
       },
-      "friends_count": {
-        "mapping": {
-          "destination": "friends_count"
+      'friends_count': {
+        'mapping': {
+          'destination': 'friends_count'
         }
       },
-      "lang": {
-        "mapping": {
-          "destination": "lang"
+      'lang': {
+        'mapping': {
+          'destination': 'lang'
         }
       },
-      "location": {
-        "mapping": {
-          "destination": "location"
+      'location': {
+        'mapping': {
+          'destination': 'location'
         }
       },
-      "statuses_count": {
-        "mapping": {
-          "destination": "statuses_count"
+      'statuses_count': {
+        'mapping': {
+          'destination': 'statuses_count'
         }
       }
     },
-    "parentKey": {
-      "disable": true
+    'parentKey': {
+      'disable': true
     }
   },
   'keboola_source': {
@@ -282,8 +282,6 @@ const userTimelineTemplate = {
   },
   'dataMapping': tweetDataMapping
 };
-
-
 
 const mentionsTemplate = {
   'endpoint': 'statuses\/mentions_timeline.json',
