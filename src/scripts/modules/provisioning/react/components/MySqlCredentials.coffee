@@ -4,7 +4,7 @@ Protected = React.createFactory(require('kbc-react-components').Protected)
 Clipboard = React.createFactory(require('../../../../react/common/Clipboard').default)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
-{span, div, strong} = React.DOM
+{span, div, strong, small, a} = React.DOM
 
 MySqlCredentials = React.createClass
   displayName: 'MySqlCredentials'
@@ -27,6 +27,14 @@ MySqlCredentials = React.createClass
 
   _renderCredentials: ->
     span {},
+      div {className: 'row'},
+        div className: 'col-md-12',
+          small className: 'help-text',
+            'Use these credentials to connect to the sandbox with your \
+            favourite SQL client (we like '
+            a {href: 'http://www.sequelpro.com/download', target: '_blank'},
+              'Sequel Pro'
+            '). Or just use Keboola-provided Adminer(click on Connect).'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
         strong {className: 'col-md-9'},

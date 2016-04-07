@@ -5,7 +5,7 @@ Clipboard = React.createFactory(require('../../../../react/common/Clipboard').de
 Loader = React.createFactory(require('kbc-react-components').Loader)
 Input = React.createFactory(require('react-bootstrap').Input)
 
-{span, div, strong, small} = React.DOM
+{a, span, div, strong, small} = React.DOM
 
 RedshiftCredentials = React.createClass
   displayName: 'RedshiftCredentials'
@@ -33,6 +33,14 @@ RedshiftCredentials = React.createClass
     jdbcRedshift = 'jdbc:redshift://' + @props.credentials.get("hostname") + ':5439/' + @props.credentials.get("db")
     jdbcPgSql = 'jdbc:postgresql://' + @props.credentials.get("hostname") + ':5439/' + @props.credentials.get("db")
     span {},
+      div {className: 'row'},
+        div className: 'col-md-12',
+          small className: 'help-text',
+            'Use these credentials to connect to the sandbox with your \
+            favourite Redshift client (we like '
+            a {href: 'http://dbeaver.jkiss.org/download/', target: '_blank'},
+              'DBeaver'
+            ').'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
         strong {className: 'col-md-9'},
