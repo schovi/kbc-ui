@@ -35,68 +35,68 @@ const common = {
 };
 
 const userDataMapping = {
-    'id': {
-        'mapping': {
-            'destination': 'id',
-            'primaryKey': true
-        }
-    },
-    'name': {
-        'mapping': {
-            'destination': 'name'
-        }
-    },
-    'screen_name': {
-        'mapping': {
-            'destination': 'screen_name'
-        }
-    },
-    'created_at': {
-        'mapping': {
-            'destination': 'created_at'
-        }
-    },
-    'description': {
-        'mapping': {
-            'destination': 'description'
-        }
-    },
-    'favourites_count': {
-        'mapping': {
-            'destination': 'favourites_count'
-        }
-    },
-    'followers_count': {
-        'mapping': {
-            'destination': 'followers_count'
-        }
-    },
-    'friends_count': {
-        'mapping': {
-            'destination': 'friends_count'
-        }
-    },
-    'lang': {
-        'mapping': {
-            'destination': 'lang'
-        }
-    },
-    'location': {
-        'mapping': {
-            'destination': 'location'
-        }
-    },
-    'statuses_count': {
-        'mapping': {
-            'destination': 'statuses_count'
-        }
-    },
-    'keboola_source': {
-        'type': 'user',
-        'mapping': {
-            'destination': 'keboola_source'
-        }
+  'id': {
+    'mapping': {
+      'destination': 'id',
+      'primaryKey': true
     }
+  },
+  'name': {
+    'mapping': {
+      'destination': 'name'
+    }
+  },
+  'screen_name': {
+    'mapping': {
+      'destination': 'screen_name'
+    }
+  },
+  'created_at': {
+    'mapping': {
+      'destination': 'created_at'
+    }
+  },
+  'description': {
+    'mapping': {
+      'destination': 'description'
+    }
+  },
+  'favourites_count': {
+    'mapping': {
+      'destination': 'favourites_count'
+    }
+  },
+  'followers_count': {
+    'mapping': {
+      'destination': 'followers_count'
+    }
+  },
+  'friends_count': {
+    'mapping': {
+      'destination': 'friends_count'
+    }
+  },
+  'lang': {
+    'mapping': {
+      'destination': 'lang'
+    }
+  },
+  'location': {
+    'mapping': {
+      'destination': 'location'
+    }
+  },
+  'statuses_count': {
+    'mapping': {
+      'destination': 'statuses_count'
+    }
+  },
+  'keboola_source': {
+    'type': 'user',
+    'mapping': {
+      'destination': 'keboola_source'
+    }
+  }
 };
 
 const tweetDataMapping = {
