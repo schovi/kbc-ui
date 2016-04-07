@@ -101,6 +101,7 @@ export default React.createClass({
           <div className="row">
             <AuthorizationRow
               id={this.state.oauthCredentialsId}
+              configId={this.state.config.get('id')}
               componentId={this.state.component.get('id')}
               credentials={this.state.oauthCredentials}
               isResetingCredentials={false}

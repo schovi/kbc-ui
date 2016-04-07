@@ -12,6 +12,7 @@ export default React.createClass({
     credentials: PropTypes.object,
     onResetCredentials: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
+    configId: PropTypes.string.isRequired,
     isResetingCredentials: PropTypes.bool,
     showHeader: PropTypes.bool
   },
@@ -105,6 +106,7 @@ export default React.createClass({
       <AuthorizationModal
         componentId={this.props.componentId}
         id={this.props.id}
+        configId={this.props.configId}
         show={this.state.showModal}
         onHideFn={this.hideModal}
       />
