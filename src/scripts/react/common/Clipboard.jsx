@@ -4,7 +4,8 @@ import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 
 export default React.createClass({
   propTypes: {
-    text: React.PropTypes.string.isRequired
+    text: React.PropTypes.string.isRequired,
+    label: React.PropTypes.string
   },
 
   getInitialState() {
@@ -19,7 +20,7 @@ export default React.createClass({
       <OverlayTrigger overlay={this.tooltip()} ref="overlay">
         <span>
           <ClipboardButton style={{cursor: 'pointer'}} component="span" data-clipboard-text={this.props.text} onError={this.handleError} onSuccess={this.handleAfterCopy}>
-            <span className="fa fa-fw fa-copy" />
+            <span className="fa fa-fw fa-copy" /> {this.props.label}
           </ClipboardButton>
         </span>
       </OverlayTrigger>
