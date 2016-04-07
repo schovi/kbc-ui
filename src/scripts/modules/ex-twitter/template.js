@@ -34,6 +34,71 @@ const common = {
   }
 };
 
+const userDataMapping = {
+    'id': {
+        'mapping': {
+            'destination': 'id',
+            'primaryKey': true
+        }
+    },
+    'name': {
+        'mapping': {
+            'destination': 'name'
+        }
+    },
+    'screen_name': {
+        'mapping': {
+            'destination': 'screen_name'
+        }
+    },
+    'created_at': {
+        'mapping': {
+            'destination': 'created_at'
+        }
+    },
+    'description': {
+        'mapping': {
+            'destination': 'description'
+        }
+    },
+    'favourites_count': {
+        'mapping': {
+            'destination': 'favourites_count'
+        }
+    },
+    'followers_count': {
+        'mapping': {
+            'destination': 'followers_count'
+        }
+    },
+    'friends_count': {
+        'mapping': {
+            'destination': 'friends_count'
+        }
+    },
+    'lang': {
+        'mapping': {
+            'destination': 'lang'
+        }
+    },
+    'location': {
+        'mapping': {
+            'destination': 'location'
+        }
+    },
+    'statuses_count': {
+        'mapping': {
+            'destination': 'statuses_count'
+        }
+    },
+    'keboola_source': {
+        'type': 'user',
+        'mapping': {
+            'destination': 'keboola_source'
+        }
+    }
+};
+
 const tweetDataMapping = {
   'id': {
     'mapping': {
@@ -186,64 +251,7 @@ const tweetDataMapping = {
   'user': {
     'type': 'table',
     'destination': 'users',
-    'tableMapping': {
-      'id': {
-        'mapping': {
-          'destination': 'id',
-          'primaryKey': true
-        }
-      },
-      'name': {
-        'mapping': {
-          'destination': 'name'
-        }
-      },
-      'screen_name': {
-        'mapping': {
-          'destination': 'screen_name'
-        }
-      },
-      'created_at': {
-        'mapping': {
-          'destination': 'created_at'
-        }
-      },
-      'description': {
-        'mapping': {
-          'destination': 'description'
-        }
-      },
-      'favourites_count': {
-        'mapping': {
-          'destination': 'favourites_count'
-        }
-      },
-      'followers_count': {
-        'mapping': {
-          'destination': 'followers_count'
-        }
-      },
-      'friends_count': {
-        'mapping': {
-          'destination': 'friends_count'
-        }
-      },
-      'lang': {
-        'mapping': {
-          'destination': 'lang'
-        }
-      },
-      'location': {
-        'mapping': {
-          'destination': 'location'
-        }
-      },
-      'statuses_count': {
-        'mapping': {
-          'destination': 'statuses_count'
-        }
-      }
-    },
+    'tableMapping': userDataMapping,
     'parentKey': {
       'disable': true
     }
@@ -303,16 +311,16 @@ const mentionsTemplate = {
 const followersTemplate = {
   'endpoint': 'followers\/list.json',
   'scroller': 'param_next_cursor',
-  'responseFilter': [
-    'status'
-  ],
   'dataType': 'users',
-  'userData': {'source': 'followers'},
+  'userData': {
+    'keboola_source': 'followersList'
+  },
   'params': {
     'skip_status': true,
     'include_user_entities': false,
     'screen_name': ''
-  }
+  },
+  'dataMapping': userDataMapping
 };
 
 export function createConfigurationFromSettings(settings) {
