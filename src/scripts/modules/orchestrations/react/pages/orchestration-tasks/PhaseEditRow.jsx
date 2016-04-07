@@ -74,15 +74,13 @@ export default React.createClass({
         </td>
         <td>
           <div className="pull-right">
-            <Tooltip tooltip={`Add New Task to ${this.props.phase.get('id')}`} placement="top">
               <button
                 className="btn btn-link"
-                style={{padding: '0'}}
+                style={{padding: '2px'}}
                 onClick={this.toggleTaskAdd}>
                 <span className="fa fa-fw fa-plus"/>
                 Add task
               </button>
-            </Tooltip>
           </div>
         </td>
 
