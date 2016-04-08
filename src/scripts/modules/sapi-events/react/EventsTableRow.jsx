@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import _ from 'underscore';
 import classnames from 'classnames';
 import {format} from '../../../utils/date';
+import {NewLineToBr} from 'kbc-react-components';
 
 export default React.createClass({
   propTypes: {
@@ -23,7 +24,7 @@ export default React.createClass({
             {format(this.props.event.get('created'))}
           </div>
           <div className={rowClass}>
-            {this.props.event.get('message')}
+            <NewLineToBr text={this.props.event.get('message')} />
           </div>
         </Link>
     );

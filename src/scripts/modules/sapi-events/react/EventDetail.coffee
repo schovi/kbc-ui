@@ -3,7 +3,7 @@ date = require '../../../utils/date'
 filesize = require('../../../utils/utils').filesize
 PureRendererMixin = require '../../../react/mixins/ImmutableRendererMixin'
 {Link} = require 'react-router'
-
+{NewLineToBr} = require 'kbc-react-components'
 Tree = React.createFactory(require('kbc-react-components').Tree)
 {div, span, a, h2, h3, p, ul, li} = React.DOM
 
@@ -28,7 +28,8 @@ module.exports = React.createClass
       h2 null,
         "Event #{@props.event.get('id')}"
       div className: "#{@_eventClass()}",
-        @props.event.get('message')
+        React.createElement NewLineToBr,
+          text: @props.event.get('message')
       p className: 'well', @props.event.get('description') if @props.event.get('description')
       div className: 'row',
         div className: 'col-md-3',
