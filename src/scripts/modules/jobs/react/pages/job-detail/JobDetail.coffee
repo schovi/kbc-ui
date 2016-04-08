@@ -270,7 +270,7 @@ module.exports = React.createClass
             q: @state.query
         params:
           runId: job.get('runId')
-        autoReload: job.get('status') == 'waiting' || job.get('status') == 'processing'
+        autoReload: true
 
   _isGoodDataWriter: ->
     getComponentId(@state.job) == 'gooddata-writer'
