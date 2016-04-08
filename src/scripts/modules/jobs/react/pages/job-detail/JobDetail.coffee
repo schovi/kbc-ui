@@ -26,7 +26,7 @@ ErrorNote = require('./ErrorNote').default
 contactSupport = require('../../../../../utils/contactSupport').default
 
 date = require '../../../../../utils/date'
-{Tree} = require 'kbc-react-components'
+{Tree, NewLineToBr} = require 'kbc-react-components'
 {strong,div, h2, span, h4, section, p} = React.DOM
 
 APPLICATION_ERROR = 'application'
@@ -102,7 +102,9 @@ module.exports = React.createClass
     div {className: 'row row-alert'},
       div {className: 'alert alert-danger'},
         p null,
-          React.DOM.strong null, message
+          React.DOM.strong null,
+            React.createElement NewLineToBr,
+              text: message
         if job.get('error') == job.get('error') == APPLICATION_ERROR
           p null,
             'Something is broken. Our developers were notified about this error and will let you know what went wrong.'
