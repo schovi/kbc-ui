@@ -23,7 +23,7 @@ module.exports = React.createClass
   render: ->
     div null,
       React.createElement Link, @props.link,
-        span className: 'fa fa-chevron-left', null,
+        span className: 'fa fa-chevron-left', null
         ' Back'
       h2 null,
         "Event #{@props.event.get('id')}"

@@ -18,8 +18,8 @@ ConfigurationSelect = React.createClass
         ' '
         ComponentName component: @props.component
         a className: 'pull-right', onClick: @_handleBack,
-          span className: 'fa fa-chevron-left', null,
-            ' Back'
+          span className: 'fa fa-chevron-left', null
+          ' Back'
       div className: 'list-group',
         @props.component.get('configurations').map((configuration) ->
           a

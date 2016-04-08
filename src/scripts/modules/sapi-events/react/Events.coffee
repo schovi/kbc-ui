@@ -97,8 +97,8 @@ Events = React.createClass
           else
             div className: 'well',
               React.createElement Link, @props.link,
-                span className: 'fa fa-chevron-left', null,
-                  ' Back'
+                span className: 'fa fa-chevron-left', null
+                ' Back'
               p null,
                 "Event #{@props.currentEventId} not found."
         else if @state.events.count()
