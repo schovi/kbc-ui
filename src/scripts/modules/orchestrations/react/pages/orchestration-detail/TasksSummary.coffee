@@ -34,6 +34,6 @@ module.exports = React.createClass
                     task.get('component')
               ,
               ' and ' if index == tasks.size - 2 && !hasMoreTasks
-              ' , ' if index < tasks.size - 2 || (index == tasks.size - 2 && hasMoreTasks)
+              ', ' if index < tasks.size - 2 || (index == tasks.size - 2 && hasMoreTasks)
           , @).toArray()
-          " and #{@props.tasks.size - @props.tasksCount} more" if hasMoreTasks
+          " and #{@props.tasks.size - @props.tasksCount}" + String.fromCharCode(160) + "more" if hasMoreTasks
