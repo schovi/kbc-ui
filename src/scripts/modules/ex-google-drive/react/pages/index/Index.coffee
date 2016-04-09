@@ -107,13 +107,14 @@ module.exports = React.createClass
   _renderSideBar: ->
     div {className: 'col-md-3 kbc-main-sidebar'},
       div className: 'kbc-buttons kbc-text-light',
-        span null,
-          'Authorized for '
-        strong null,
-          if @_isAuthorized()
-            @state.configuration.get 'email'
-          else
-            'not authorized'
+        if @_isAuthorized()
+          span null,
+            'Authorized for ',
+              strong null,
+                @state.configuration.get 'email'
+        else
+          span null,
+            'Not authorized'
 
         React.createElement ComponentMetadata,
           componentId: 'ex-google-drive'
