@@ -46,7 +46,7 @@ export default React.createClass({
             <RadioGroup name="mode" value={this.props.mode} onChange={this.props.onModeChange}>
               <div className="form-horizontal">
                 <Input type="radio" label="Load input tables only" wrapperClassName="col-sm-offset-1 col-sm-8" value="input" />
-                <Input type="radio" label="Prepare transformation" help="Load input tables AND perform required transformations" wrapperClassName="col-sm-offset-1 col-sm-8" value="prepare" />
+                <Input type="radio" label="Prepare transformation" help="Load input tables AND execute required transformations" wrapperClassName="col-sm-offset-1 col-sm-8" value="prepare" />
                 <Input type="radio" label="Execute transformation without writing to Storage API" wrapperClassName="col-sm-offset-1 col-sm-8" value="dry-run" />
               </div>
               <div className="help-block">
