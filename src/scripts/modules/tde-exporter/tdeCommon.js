@@ -1,5 +1,5 @@
 export function getTdeFileName(configData, tableId) {
-  const name = configData.getIn(['parameters', 'tables', tableId, 'tdeName']);
+  const name = configData.getIn(['parameters', 'tables', tableId, 'tdename']);
   return name || `${tableId}.tde`;
 }
 

@@ -3,7 +3,7 @@ _ = require 'underscore'
 {Map, fromJS} = require 'immutable'
 moment = require 'moment'
 classnames = require 'classnames'
-
+tdeCommon = require '../../../tdeCommon'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 
@@ -54,6 +54,7 @@ module.exports = React.createClass
     localState: localState
     typedefs: typedefs
     isSaving: isSaving
+
 
   render: ->
     #console.log @state.configData.toJS()
@@ -140,10 +141,12 @@ module.exports = React.createClass
 
   _renderTableRow: (table, isDeleted = false) ->
     tableId = table.get 'id'
+    tdeFileName = tdeCommon.getTdeFileName(@state.configData, tableId)
     React.createElement TableRow,
       table: table
       configId: @state.configId
-      tdeFile: @_getLastTdeFile(tableId)
+      tdeFile: @_getLastTdeFile(tdeFileName)
+      tdeFileName: tdeFileName
       prepareRunDataFn: =>
         @_prepareRunTableData(tableId)
       deleteRowFn: =>
@@ -209,9 +212,9 @@ module.exports = React.createClass
     params = "q": _.map(tags, (t) -> "+tags:#{t}").join(' ')
     storageActionCreators.loadFilesForce(params)
 
-  _getLastTdeFile: (tableId) ->
-    idReplaced = tableId.replace(/-/g,"_")
-    filename = "#{idReplaced}.tde".toLowerCase()
+  _getLastTdeFile: (tdeFileName) ->
+    idReplaced = tdeFileName.replace(/-/g,"_")
+    filename = "#{idReplaced}".toLowerCase()
 
     files = @state.files.filter (file) ->
       fname = file.get('name').toLowerCase()

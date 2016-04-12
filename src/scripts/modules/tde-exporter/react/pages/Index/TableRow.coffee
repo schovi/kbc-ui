@@ -20,6 +20,7 @@ module.exports = React.createClass
     prepareRunDataFn: React.PropTypes.func
     configData: React.PropTypes.object
     uploadComponentId: React.PropTypes.string
+    tdeFileName: React.PropTypes.string
     uploadComponentIdSetFn: React.PropTypes.func
 
   render: ->
@@ -44,7 +45,7 @@ module.exports = React.createClass
             a href: @props.tdeFile.get('url'),
               @props.tdeFile.get('name')
       else
-        span className: 'td', 'N/A'
+        span className: 'td', @props.tdeFileName
 
       # ACTION BUTTONS
       span className: 'td text-right kbc-no-wrap',

@@ -92,7 +92,7 @@ module.exports = React.createClass
     configData = configData.setIn ['parameters', 'typedefs'], typedefs
 
     #save custom tde fileNames
-    configData = configData.setIn(['parameters', 'tables', tableId, 'tdeName'], @state.tdeFileName)
+    configData = configData.setIn(['parameters', 'tables', tableId, 'tdename'], @state.tdeFileName)
     console.log 'SAVE CONFIG', configData.toJS()
     updateFn(componentId, @state.configId, configData).then =>
       @_cancel()
