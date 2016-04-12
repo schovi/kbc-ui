@@ -1,5 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
+tdeCommon = require '../../tdeCommon'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 {fromJS, List, Map} = require 'immutable'
@@ -34,6 +35,8 @@ module.exports = React.createClass
     isOneColumnType = editingData?.reduce( (memo, value) ->
       memo or value?.get('type') != 'IGNORE'
     , false)
+    tdeFileName = tdeCommon.getEditingTdeFileName(configData, localState, tableId)
+    fileNameValid = tdeCommon.assertTdeFileName(tdeFileName) == null
     #state
     isSaving: isSaving
     table: table
@@ -44,8 +47,8 @@ module.exports = React.createClass
     configData: configData
     isEditing: !! localState.getIn(['editing',tableId])
     editingData: editingData
-    isValid: isValid and isOneColumnType
-
+    isValid: isValid and isOneColumnType and fileNameValid
+    tdeFileName: tdeFileName
 
   render: ->
     React.createElement EditButtons,
@@ -87,6 +90,9 @@ module.exports = React.createClass
       typedefs = Map()
     typedefs = typedefs.set(tableId, editingData)
     configData = configData.setIn ['parameters', 'typedefs'], typedefs
+
+    #save custom tde fileNames
+    configData = configData.setIn(['parameters', 'tables', tableId, 'tdeName'], @state.tdeFileName)
     console.log 'SAVE CONFIG', configData.toJS()
     updateFn(componentId, @state.configId, configData).then =>
       @_cancel()
