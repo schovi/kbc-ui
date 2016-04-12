@@ -68,7 +68,7 @@ RedshiftSandbox = React.createClass
       div {},
         div {},
           RunComponentButton(
-            title: "Load Tables in Redshift Sandbox"
+            title: "Load tables into Redshift sandbox"
             component: 'transformation'
             method: 'create-sandbox'
             mode: 'button'

@@ -47,7 +47,7 @@ MySqlSandbox = React.createClass
       div {},
         div {},
           RunComponentButton(
-            title: "Load Tables into MySQL sandbox"
+            title: "Load tables into MySQL sandbox"
             component: 'transformation'
             method: 'create-sandbox'
             mode: 'button'

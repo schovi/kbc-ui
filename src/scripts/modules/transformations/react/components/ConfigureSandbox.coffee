@@ -1,7 +1,4 @@
 React = require 'react'
-Modal = React.createFactory(require('react-bootstrap').Modal)
-ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
-Button = React.createFactory(require('react-bootstrap').Button)
 Select = React.createFactory(require('react-select'))
 _ = require('underscore')
 InstalledComponentsActionCreators = require '../../../components/InstalledComponentsActionCreators'
@@ -31,7 +28,7 @@ ConfigureSandbox = React.createClass
         div className: 'col-sm-6',
           p className: 'form-control-static', @state.backend
       div className: 'form-group',
-        label className: 'col-sm-4 control-label', 'Include'
+        label className: 'col-sm-4 control-label', 'Data'
         div className: 'col-sm-6',
           Select
             name: 'include'
@@ -42,18 +39,7 @@ ConfigureSandbox = React.createClass
             onChange: @_setInclude
             placeholder: 'Select buckets and tables...'
       div className: 'form-group',
-        label className: 'col-sm-4 control-label', 'Exclude'
-        div className: 'col-sm-6',
-          Select
-            name: 'exclude'
-            value: @state.exclude
-            multi: true
-            options: @_bucketsAndTables()
-            delimiter: ','
-            onChange: @_setExclude
-            placeholder: 'Select buckets and tables...'
-      div className: 'form-group',
-        label className: 'col-sm-4 control-label', 'Rows'
+        label className: 'col-sm-4 control-label', 'Sample rows'
         div className: 'col-sm-6',
           input
             type: 'number'
@@ -70,7 +56,7 @@ ConfigureSandbox = React.createClass
               type: 'checkbox'
               onChange: @_setPreserve
               ref: 'preserve'
-            'Preserve'
+            ' Preserve'
 
   _setInclude: (string, array) ->
     values = _.map(array, (item) ->
@@ -78,16 +64,6 @@ ConfigureSandbox = React.createClass
     )
     @setState
       include: values
-    ,
-      ->
-        @props.onChange(@state)
-
-  _setExclude: (string, array) ->
-    values = _.map(array, (item) ->
-      item.value
-    )
-    @setState
-      exclude: values
     ,
       ->
         @props.onChange(@state)
