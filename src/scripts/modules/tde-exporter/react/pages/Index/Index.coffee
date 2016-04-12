@@ -194,7 +194,7 @@ module.exports = React.createClass
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
-        strong null, 'Last TDE File '
+        strong null, 'TDE File '
         React.createElement Tooltip,
           tooltip: 'Refresh TDE files list'
           placement: 'top'
