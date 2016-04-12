@@ -1,7 +1,7 @@
 React = require 'react'
 {fromJS, Map} = require 'immutable'
 _ = require 'underscore'
-
+tdeCommon = require '../../../tdeCommon'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 StorageStore = require '../../../../components/stores/StorageTablesStore'
@@ -64,6 +64,10 @@ module.exports = React.createClass
     if _.isEmpty(columnsTypes?.toJS())
       columnsTypes = Map()
 
+    #tde filename
+    tdeFileName = tdeCommon.getTdeFileName(configData || Map(), tableId)
+    editingTdeFileName = tdeCommon.getEditingTdeFileName(configData, localState, tableId)
+
     #state
     isSaving: isSaving
     configId: configId
@@ -71,6 +75,8 @@ module.exports = React.createClass
     columnsTypes: columnsTypes
     localState: localState
     tableId: tableId
+    tdeFileName: tdeFileName
+    editingTdeFileName: editingTdeFileName
 
   render: ->
     isEditing = !!@state.localState.getIn(['editing', @state.tableId])
@@ -92,21 +98,29 @@ module.exports = React.createClass
         isSaving: @state.isSaving
         hideIgnored: !! @state.localState.getIn ['hideIgnored', @state.tableId]
 
-  _renderOutNameEditor: (isEditing, value) ->
+  _renderOutNameEditor: (isEditing) ->
     tlabel = 'Output file name:'
     if not isEditing
       React.createElement StaticText,
         label: tlabel
+        bsSize: 'small'
         wrapperClassName: 'wrapper'
       ,
-        value
+        @state.tdeFileName
     else
+      errorMsg = tdeCommon.assertTdeFileName(@state.editingTdeFileName)
       React.createElement Input,
-        value: value
+        value: @state.editingTdeFileName
         bsSize: 'small'
+        bsStyle: if errorMsg then 'error' else ''
+        help: errorMsg
         type: 'text'
         label: tlabel
         wrapperClassName: 'wrapper'
+        onChange: (e) =>
+          value = e.target.value
+          path = ['editingTdeNames', @state.tableId]
+          @_updateLocalState(path, value)
 
 
 

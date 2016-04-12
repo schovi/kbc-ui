@@ -61,7 +61,9 @@ module.exports = React.createClass
 
   _cancel: ->
     path = ['editing', @state.tableId]
-    @_updateLocalState(path, null)
+    newState = @state.localState.setIn(path, null)
+    newState = newState.setIn(['editingTdeNames', @state.tableId], null)
+    @setLocalState(newState)
 
   _save: ->
     updateFn = InstalledComponentsActions.saveComponentConfigData
@@ -107,4 +109,7 @@ module.exports = React.createClass
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
+    @setLocalState(newLocalState)
+
+  setLocalState: (newLocalState) ->
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
