@@ -7,9 +7,11 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 StorageStore = require '../../../../components/stores/StorageTablesStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
 ColumnsTable = require './ColumnsTable'
 storageApi = require '../../../../components/StorageApi'
-
+{Input, FormControls} = require 'react-bootstrap'
+StaticText = FormControls.Static
 {label, input, select, option, button, i, strong, span, div, p, ul, li} = React.DOM
 
 columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
@@ -73,8 +75,9 @@ module.exports = React.createClass
   render: ->
     isEditing = !!@state.localState.getIn(['editing', @state.tableId])
     div className: 'container-fluid kbc-main-content',
-      div className: 'row kbc-table-editor-header',
-        div className: 'col-sm-2', @_renderHideIngored()
+      div className: 'row kbc-header',
+        div className: 'col-sm-3', @_renderHideIngored()
+        div className: 'col-sm-4', @_renderOutNameEditor(isEditing)
         div className: 'col-sm-3',
           if isEditing
             @_renderSetColumnsType()
@@ -89,19 +92,34 @@ module.exports = React.createClass
         isSaving: @state.isSaving
         hideIgnored: !! @state.localState.getIn ['hideIgnored', @state.tableId]
 
+  _renderOutNameEditor: (isEditing, value) ->
+    tlabel = 'Output file name:'
+    if not isEditing
+      React.createElement StaticText,
+        label: tlabel
+        wrapperClassName: 'wrapper'
+      ,
+        value
+    else
+      React.createElement Input,
+        value: value
+        bsSize: 'small'
+        type: 'text'
+        label: tlabel
+        wrapperClassName: 'wrapper'
+
+
 
   _renderHideIngored: ->
-    div className: 'checkbox',
-      label className: '',
-        input
-          type: 'checkbox'
-          label: 'Hide IGNORED'
-          onChange: (e) =>
-            path = ['hideIgnored', @state.tableId]
-            @_updateLocalState(path, e.target.checked)
-
-        ' Hide Ignored'
-
+    React.createElement Input,
+      style: {padding: '0'}
+      type: 'checkbox'
+      label: 'Hide IGNORED'
+      #labelClassName: 'col-xs-10'
+      #wrapperClassName: 'col-xs-12'
+      onChange: (e) =>
+        path = ['hideIgnored', @state.tableId]
+        @_updateLocalState(path, e.target.checked)
 
   _renderSetColumnsType: ->
     options = _.map columnTdeTypes.concat('IGNORE').concat(''), (opKey, opValue) ->
@@ -111,16 +129,18 @@ module.exports = React.createClass
       ,
         opKey
 
-    span null,
-      span null, 'Set All Columns To '
-      select
-        defaultValue: ''
-        onChange: (e) =>
-          value = e.target.value
-          if _.isEmpty(value)
-            return
-          @_prefillSelectedType(value)
-        options
+    React.createElement Input,
+      type: 'select'
+      label: 'Set All Columns To '
+      bsSize: 'small'
+      placeholder: 'select TDE data type'
+      defaultValue: ''
+      onChange: (e) =>
+        value = e.target.value
+        if _.isEmpty(value)
+          return
+        @_prefillSelectedType(value)
+      options
 
   _prefillSelectedType: (value) ->
     editingColumns = @_geteditingColumns()
