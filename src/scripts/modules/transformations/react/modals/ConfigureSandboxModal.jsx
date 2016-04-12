@@ -38,7 +38,7 @@ export default React.createClass({
     return (
       <Modal show={this.props.show} bsSize="large" onHide={this.props.onHide}>
         <Modal.Header closeButton={true}>
-          <Modal.Title>Create Sandbox</Modal.Title>
+          <Modal.Title>Create sandbox</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>
