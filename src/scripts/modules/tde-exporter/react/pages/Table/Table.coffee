@@ -109,11 +109,16 @@ module.exports = React.createClass
         @state.tdeFileName
     else
       errorMsg = tdeCommon.assertTdeFileName(@state.editingTdeFileName)
+      webalized = tdeCommon.webalizeTdeFileName(@state.editingTdeFileName)
+      msg = null
+      if (webalized != @state.editingTdeFileName)
+        msg = "Will be saved as #{webalized}"
+
       React.createElement Input,
         value: @state.editingTdeFileName
         bsSize: 'small'
         bsStyle: if errorMsg then 'error' else ''
-        help: errorMsg
+        help: errorMsg || msg
         type: 'text'
         label: tlabel
         wrapperClassName: 'wrapper'

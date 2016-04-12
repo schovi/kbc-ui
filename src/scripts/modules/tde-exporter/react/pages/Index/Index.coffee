@@ -213,8 +213,8 @@ module.exports = React.createClass
     storageActionCreators.loadFilesForce(params)
 
   _getLastTdeFile: (tdeFileName) ->
-    idReplaced = tdeFileName.replace(/-/g,"_")
-    filename = "#{idReplaced}".toLowerCase()
+    # idReplaced = tdeFileName.replace(/-/g,"_")
+    filename = tdeFileName.toLowerCase()
 
     files = @state.files.filter (file) ->
       fname = file.get('name').toLowerCase()

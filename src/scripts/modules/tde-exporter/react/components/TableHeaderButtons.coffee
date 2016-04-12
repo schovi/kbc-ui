@@ -48,7 +48,7 @@ module.exports = React.createClass
     isEditing: !! localState.getIn(['editing',tableId])
     editingData: editingData
     isValid: isValid and isOneColumnType and fileNameValid
-    tdeFileName: tdeFileName
+    tdeFileName: tdeCommon.webalizeTdeFileName(tdeFileName)
 
   render: ->
     React.createElement EditButtons,
