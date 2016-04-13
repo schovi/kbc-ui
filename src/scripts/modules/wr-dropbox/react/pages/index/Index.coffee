@@ -72,36 +72,19 @@ module.exports = React.createClass
       t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
     )
     isAllConfigured = tables.count() == 0
-
-    updateStateFn = (path, newData) =>
-      @_updateLocalState(['newTable'].concat(path), newData)
-
     isSaving = @_isPendingTable(selectedTableId)
-
 
     span null,
       React.createElement Button,
         disabled: isAllConfigured or isSaving
-        onClick: ->
-          updateStateFn(['show'], true)
+        onClick: =>
+          @_updateLocalState(['newTable', 'show'], true)
         bsStyle: 'success'
       ,
         '+ Add New Table'
         if isSaving
           React.createElement Loader
       @_renderInputMappingModal()
-      # React.createElement AddNewTableModal,
-      #   show: data.get('show', false)
-      #   onHideFn: ->
-      #     updateStateFn([], Map())
-      #   selectedTableId: selectedTableId
-      #   onSetTableIdFn: (tableId) ->
-      #     updateStateFn(['tableId'], tableId)
-      #   configuredTables: inputTables
-      #   onSaveFn: (tableId) =>
-      #     @_addTableExport(tableId).then ->
-      #       updateStateFn([], Map())
-      #   isSaving: @_isPendingTable(selectedTableId)
 
   _renderInputMappingModal: ->
     data = @state.localState.get('newTable', Map())
@@ -115,7 +98,8 @@ module.exports = React.createClass
       editTable = @_getInputTables().find((t) -> t.get('source') == data.get('oldTableId'))
       destinations = destinations.filter((d) -> d != editTable?.get('destination'))
     tables = @state.allTables.filter( (t) ->
-      t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
+      isCurrentTable = t.get('id') == mapping.get('source')
+      (t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))) or isCurrentTable
     )
 
     console.log data.toJS(), mode
@@ -135,7 +119,8 @@ module.exports = React.createClass
       otherDestinations: destinations
       title: if mode != 'create' then 'Edit table' else 'New Table'
       showFileHint: false
-      onRequestHide: ->
+      onRequestHide: =>
+        @_updateLocalState(['newTable'], Map())
     )
 
 
