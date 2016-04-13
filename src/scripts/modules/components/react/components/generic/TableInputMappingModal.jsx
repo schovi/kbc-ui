@@ -14,8 +14,17 @@ export default React.createClass({
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
+    title: PropTypes.string,
     onRequestHide: PropTypes.func.isRequired,
-    otherDestinations: PropTypes.object.isRequired
+    otherDestinations: PropTypes.object.isRequired,
+    showFileHint: PropTypes.bool
+  },
+
+  getDefaultProps() {
+    return {
+      title: 'Input Mapping',
+      showFileHint: true
+    };
   },
 
   isValid() {
@@ -40,7 +49,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal {...this.props} title="Input Mapping" bsSize="large" onChange={() => null}>
+      <Modal {...this.props} title={this.props.title} bsSize="large" onChange={() => null}>
         <div className="modal-body">
           {this.editor()}
         </div>
@@ -64,7 +73,8 @@ export default React.createClass({
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
       initialShowDetails: resolveInputShowDetails(this.props.mapping),
-      isDestinationDuplicate: this.isDestinationDuplicate()
+      isDestinationDuplicate: this.isDestinationDuplicate(),
+      showFileHint: this.props.showFileHint
     };
     return React.createElement(Editor, props);
   },

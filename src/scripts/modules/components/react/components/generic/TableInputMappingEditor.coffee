@@ -14,10 +14,14 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     initialShowDetails: React.PropTypes.bool.isRequired
+    showFileHint: React.PropTypes.bool
     isDestinationDuplicate: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
+
+  getDefaultProps: ->
+    showFileHint: true
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -169,8 +173,10 @@ module.exports = React.createClass
                 React.DOM.code {}, @props.value.get("destination")
                 '.'
               else React.DOM.span {className: "help-block"},
-                "File will be available at"
-                React.DOM.code {}, "/data/in/tables/" + @_getFileName()
+                if @props.showFileHint
+                  React.DOM.span null,
+                    "File will be available at"
+                    React.DOM.code {}, "/data/in/tables/" + @_getFileName()
 
 
       if @state.showDetails
