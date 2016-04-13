@@ -26,6 +26,7 @@ OptionsModal = React.createFactory require('./OptionsModal')
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
+InputMappigModal = require('../../../../components/react/components/generic/TableInputMappingModal').default
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
 {p, ul, li, span, button, strong, div, i} = React.DOM
@@ -67,35 +68,75 @@ module.exports = React.createClass
     data = @state.localState.get('newTable', Map())
     selectedTableId = data.get('tableId')
     inputTables = @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
-    isAllConfigured = @state.allTables.filter( (t) ->
+    tables = @state.allTables.filter( (t) ->
       t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
-    ).count() == 0
+    )
+    isAllConfigured = tables.count() == 0
 
     updateStateFn = (path, newData) =>
       @_updateLocalState(['newTable'].concat(path), newData)
 
+    isSaving = @_isPendingTable(selectedTableId)
+
+
     span null,
       React.createElement Button,
-        disabled: isAllConfigured
+        disabled: isAllConfigured or isSaving
         onClick: ->
           updateStateFn(['show'], true)
         bsStyle: 'success'
       ,
         '+ Add New Table'
-      React.createElement AddNewTableModal,
+        if isSaving
+          React.createElement Loader
+      @_renderInputMappingModal()
+      # React.createElement AddNewTableModal,
+      #   show: data.get('show', false)
+      #   onHideFn: ->
+      #     updateStateFn([], Map())
+      #   selectedTableId: selectedTableId
+      #   onSetTableIdFn: (tableId) ->
+      #     updateStateFn(['tableId'], tableId)
+      #   configuredTables: inputTables
+      #   onSaveFn: (tableId) =>
+      #     @_addTableExport(tableId).then ->
+      #       updateStateFn([], Map())
+      #   isSaving: @_isPendingTable(selectedTableId)
 
-        show: data.get('show', false)
-        onHideFn: ->
-          updateStateFn([], Map())
-        selectedTableId: selectedTableId
-        onSetTableIdFn: (tableId) ->
-          updateStateFn(['tableId'], tableId)
-        configuredTables: inputTables
-        onSaveFn: (tableId) =>
-          @_addTableExport(tableId).then ->
-            updateStateFn([], Map())
-        isSaving: @_isPendingTable(selectedTableId)
+  _renderInputMappingModal: ->
+    data = @state.localState.get('newTable', Map())
+    if data.get('show', false) == false
+      return ''
+    mode = data.get('mode', 'create')
+    inputTables = @_getInputTables().toMap().mapKeys((key, c) -> c.get('source'))
+    destinations = @_getInputTables().map((c) -> c.get('destination'))
+    mapping = @state.localState.getIn(['newTable', 'mapping'], Map())
+    if mode == 'edit'
+      editTable = @_getInputTables().find((t) -> t.get('source') == data.get('oldTableId'))
+      destinations = destinations.filter((d) -> d != editTable?.get('destination'))
+    tables = @state.allTables.filter( (t) ->
+      t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))
+    )
 
+    console.log data.toJS(), mode
+    return React.createElement(InputMappigModal,
+      mode: mode
+      mapping: mapping
+      tables: tables
+      onChange: (newMapping) =>
+        @_updateLocalState(['newTable', 'mapping'], newMapping)
+      onCancel: =>
+        @_updateLocalState(['newTable'], Map())
+      onSave: =>
+        table = mapping
+        oldTableId = data.get('oldTableId')
+        @_addTableExport(table, oldTableId).then =>
+          @_updateLocalState(['newTable'], Map())
+      otherDestinations: destinations
+      title: if mode != 'create' then 'Edit table' else 'New Table'
+      showFileHint: false
+      onRequestHide: ->
+    )
 
 
   _renderMainContent: ->
@@ -141,18 +182,27 @@ module.exports = React.createClass
             @_renderNoTables()
 
   _renderTableRow: (table) ->
+    mapping = @_getInputTables().find (t) ->
+      t.get('source') == table.get('id')
     TableRow
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
       table: table
       prepareSingleUploadDataFn: @_prepareTableUploadData
       deleteTableFn: @_removeTableExport
+      mapping: mapping
+      onEditTable: =>
+        editTable = Map({show: true, mode: 'edit', oldTableId: mapping.get('source')})
+        editTable = editTable.set('mapping', mapping)
+        @_updateLocalState(['newTable'], editTable)
 
   _prepareTableUploadData: (table) ->
     tableId = table.get('id')
+    inTable = @_getInputTables().filter (t) ->
+      t.get('source') == tableId
     storage:
       input:
-        tables: [source: tableId, destination: "#{tableId}.csv"]
+        tables: inTable.toJS()
     parameters: @state.configData.get('parameters', Map()).toJS()
 
   _isPendingTable: (tableId) ->
@@ -175,7 +225,9 @@ module.exports = React.createClass
     div className: 'tr',
       span className: 'th',
         strong null, 'Table name'
-    return null
+      span className: 'th',''
+      span className: 'th',
+        strong null, 'Destination'
 
   _canRunUpload: ->
     (@_getInputTables().count() > 0) and @state.hasCredentials
@@ -293,17 +345,22 @@ module.exports = React.createClass
       table.get('source') != tableId
     @_updateAndSaveConfigData(['storage', 'input', 'tables'], intables)
 
-  _addTableExport: (tableId) ->
+  _addTableExport: (mapping, oldTableId) ->
+    tableId = mapping.get('source')
     intables = @_getInputTables()
-    jstable =
-      source: tableId
-      destination: "#{tableId}.csv"
-    table = intables.find((table) ->
-      table.get('source') == tableId)
-    if not table
-      table = fromJS(jstable)
-      intables = intables.push table
-      @_updateAndSaveConfigData(['storage', 'input', 'tables'], intables)
+    found = false
+    if oldTableId != tableId
+      intables = intables.filter( (t) -> t.get('source') != oldTableId)
+    intables = intables.map((table) ->
+      if table.get('source') == tableId
+        found = true
+        return mapping
+      else
+        return table
+    )
+    if not found
+      intables = intables.push mapping
+    @_updateAndSaveConfigData(['storage', 'input', 'tables'], intables)
 
 
   _filterBuckets: (buckets) ->
