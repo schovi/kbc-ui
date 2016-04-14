@@ -4,6 +4,10 @@ Immutable = require('immutable')
 {Input} = require('react-bootstrap')
 Input = React.createFactory Input
 Select = React.createFactory require('../../../../../react/common/Select').default
+DaysFilterInput = require('./DaysFilterInput').default
+DataFilterRow = require('./DataFilterRow').default
+
+
 
 module.exports = React.createClass
   displayName: 'TableInputMappingEditor'
@@ -52,10 +56,6 @@ module.exports = React.createClass
     value = @props.value.set("destination", e.target.value)
     @props.onChange(value)
 
-  _handleChangeDays: (e) ->
-    value = @props.value.set("days", parseInt(e.target.value))
-    @props.onChange(value)
-
   _handleChangeColumns: (newValue) ->
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("columns", newValue)
@@ -64,18 +64,6 @@ module.exports = React.createClass
         mapping = mapping.set("where_values", Immutable.List())
         mapping = mapping.set("where_operator", "eq")
     @props.onChange(immutable)
-
-  _handleChangeWhereColumn: (string) ->
-    value = @props.value.set("where_column", string)
-    @props.onChange(value)
-
-  _handleChangeWhereOperator: (e) ->
-    value = @props.value.set("where_operator", e.target.value)
-    @props.onChange(value)
-
-  _handleChangeWhereValues: (newValue) ->
-    value = @props.value.set("where_values", newValue)
-    @props.onChange(value)
 
   _getTables: ->
     props = @props
@@ -197,47 +185,13 @@ module.exports = React.createClass
               ,
                 "Import only specified columns"
       if @state.showDetails
-        Input
-          bsSize: 'small'
-          type: 'number'
-          label: 'Days'
-          value: @props.value.get("days")
+        React.createElement DaysFilterInput,
+          mapping: @props.value
           disabled: @props.disabled
-          placeholder: 0
-          help: React.DOM.small {}, "Data updated in the given period"
-          onChange: @_handleChangeDays
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-5'
+          onChange: @props.onChange
       if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Data filter'
-            React.DOM.div className: 'col-xs-4',
-              Select
-                name: 'where_column'
-                value: @props.value.get("where_column")
-                disabled: @props.disabled || !@props.value.get("source")
-                placeholder: "Select column"
-                onChange: @_handleChangeWhereColumn
-                options: @_getColumnsOptions()
-            React.DOM.div className: 'col-xs-2',
-              Input
-                type: 'select'
-                name: 'where_operator'
-                value: @props.value.get("where_operator")
-                disabled: @props.disabled
-                onChange: @_handleChangeWhereOperator
-              ,
-                React.DOM.option {value: "eq"}, "= (IN)"
-                React.DOM.option {value: "ne"}, "!= (NOT IN)"
-            React.DOM.div className: 'col-xs-4',
-              Select
-                name: 'whereValues'
-                value: @props.value.get('where_values')
-                multi: true
-                disabled: @props.disabled
-                allowCreate: true
-                delimiter: ','
-                placeholder: 'Add a value...'
-                emptyStrings: true,
-                onChange: @_handleChangeWhereValues
+        React.createElement DataFilterRow,
+          value: @props.value
+          disabled: @props.disabled
+          onChange: @props.onChange
+          allTables: @props.tables
