@@ -24,7 +24,7 @@ export default React.createClass({
               componentId={this.props.componentId}
             />
           </TabPane>
-          {/* {this.renderSSLForm()} */}
+          {this.renderSSLForm()}
           <TabPane eventKey="fixedIp" tab="Fixed IP">
             <FixedIP
               credentials={this.props.credentials}
@@ -36,16 +36,18 @@ export default React.createClass({
   },
 
   renderSSLForm() {
-    return (
-      <TabPane eventKey="ssl" tab="SSL">
-        <SSLForm
-          credentials={this.props.credentials}
-          enabled={this.props.isEditing}
-          onChange={this.props.onChange}
-          componentId={this.props.componentId}
-        />
-      </TabPane>
-    );
+    if (this.props.componentId === 'keboola.ex-db-mysql') {
+      return (
+          <TabPane eventKey="ssl" tab="SSL">
+            <SSLForm
+                credentials={this.props.credentials}
+                enabled={this.props.isEditing}
+                onChange={this.props.onChange}
+                componentId={this.props.componentId}
+                />
+          </TabPane>
+      );
+    }
   }
 
 });
