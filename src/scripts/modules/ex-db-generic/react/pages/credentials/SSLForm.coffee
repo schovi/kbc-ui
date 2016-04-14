@@ -26,7 +26,7 @@ module.exports = React.createClass
   _handleToggle: (propName, event) ->
     @props.onChange(@props.credentials.setIn ['ssl', propName], event.target.checked)
 
-  _isEnabled: ->
+  _isSSLEnabled: ->
     @props.credentials.getIn ['ssl', 'enabled']
 
   render: ->
@@ -40,16 +40,19 @@ module.exports = React.createClass
             "How to Configure MySQL server - DB Admin's article."
       div className: 'row',
         @_createEnableSSLCheckbox 'enabled'
-        @_createInput 'SSL Client Certificate (client-cert.pem)', 'cert'
-        @_createInput 'SSL Client Key (client-key.pem)', 'key'
-        @_createInput 'SSL CA Certificate (ca-cert.pem)', 'ca'
-        @_createInput 'SSL Cipher',
-          'cipher',
-          'You can optionally provide a list of permissible ciphers to use for SSL encryption.'
-        React.createElement TestCredentials,
-          credentials: @props.credentials
-          hasOffset: false
-          componentId: @props.componentId
+      if @_isSSLEnabled()
+        div className: 'row',
+          @_createInput 'SSL Client Certificate (client-cert.pem)', 'cert'
+          @_createInput 'SSL Client Key (client-key.pem)', 'key'
+          @_createInput 'SSL CA Certificate (ca-cert.pem)', 'ca'
+          @_createInput 'SSL Cipher',
+            'cipher',
+            'You can optionally provide a list of permissible ciphers to use for SSL encryption.'
+          React.createElement TestCredentials,
+            credentials: @props.credentials
+            hasOffset: false
+            componentId: @props.componentId
+
 
   _createEnableSSLCheckbox: (propName) ->
     if @props.enabled
@@ -58,15 +61,16 @@ module.exports = React.createClass
           label: 'Enable encrypted connection'
           type: 'checkbox'
           onChange: @_handleToggle.bind @, propName
-          checked: @_isEnabled()
+          checked: @_isSSLEnabled()
     else
-      div className: 'form-group',
-        label className: 'control-label',
-          'Encrypted connection'
-        div null,
-          p className: 'form-control-static',
-            React.createElement Check,
-              isChecked: @_isEnabled()
+      div className: 'form-horizontal',
+        div className: 'form-group',
+          label className: 'control-label col-xs-4',
+            'Encrypted connection'
+          div null,
+            p className: 'form-control-static col-xs-8',
+              React.createElement Check,
+                isChecked: @_isSSLEnabled()
 
   _createInput: (labelValue, propName, help = null) ->
     if @props.enabled
