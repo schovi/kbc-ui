@@ -66,14 +66,16 @@ OrchestrationTasks = React.createClass
 
   _handleTaskRun: (task) ->
     if @state.tasks.count()
-      tasks = @state.tasks.map((item) ->
-        if item.get('id') is task.get('id')
-          item.set('active', true)
-        else
-          item.set('active', false)
-      ).toJS()
+      tasks = @state.tasks.map((phase) ->
+        phase.set('tasks', phase.get('tasks').map((item) ->
+          if item.get('id') == task.get('id')
+            item.set('active', true)
+          else
+            item.set('active', false)
+        ))
+      )
     else
-      tasks = {}
+      tasks = Immutable.List()
 
     OrchestrationsActionCreators.runOrchestration(@state.orchestration.get('id'), tasks, true)
 
