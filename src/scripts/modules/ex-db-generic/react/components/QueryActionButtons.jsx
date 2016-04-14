@@ -53,7 +53,7 @@ export default function(componentId) {
           />
           <RunExtractionButton
             title="Run Extraction"
-            component="ex-db"
+            component={componentId}
             runParams={this.runParams}
             config={this.state.configId}
             tooltipPlacement="bottom"
@@ -67,7 +67,7 @@ export default function(componentId) {
     runParams() {
       return {
         config: this.state.configId,
-        query: this.state.query.get('id')
+        configData: actionCreators.prepareSingleQueryRunData(this.state.configId, this.state.query)
       };
     },
 
