@@ -70,7 +70,7 @@ module.exports = React.createClass
         setLocalState: (key, value ) =>
           @_updateLocalState(['writersModal'].concat(key), value)
         onChangeWriterFn: (newTask) =>
-          params = @state.configData.get('parameters')
+          params = @state.configData.get('parameters') or Map()
           params = params.set('stageUploadTask', newTask)
           params = params.set('uploadTasks', List())
           @_saveConfigData(['parameters'], params).then( =>
