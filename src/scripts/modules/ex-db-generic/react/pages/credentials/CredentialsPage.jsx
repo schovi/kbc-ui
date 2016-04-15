@@ -26,6 +26,7 @@ export default function(componentId) {
     render() {
       return (
         <Credentials
+          configId={this.state.configId}
           credentials={ this.getCredentials() }
           isEditing={ this.state.isEditing && !this.state.isSaving }
           onChange={ this.handleChange }

@@ -9,6 +9,7 @@ export default React.createClass({
     credentials: PropTypes.object.isRequired,
     isEditing: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
+    configId: PropTypes.string.isRequired,
     componentId: PropTypes.string.isRequired
   },
 
@@ -22,6 +23,7 @@ export default React.createClass({
               enabled={this.props.isEditing}
               onChange={this.props.onChange}
               componentId={this.props.componentId}
+              configId={this.props.configId}
             />
           </TabPane>
           {this.renderSSLForm()}

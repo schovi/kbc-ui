@@ -1,7 +1,10 @@
 import * as storeProvisioning from './storeProvisioning';
+import jobPoller from '../../utils/jobPoller';
 import {List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
-import exDbApi from '../ex-db/exDbApi';
+import InstalledComponentsActions from '../components/InstalledComponentsActionCreators';
+import ApplicationStore from '../../stores/ApplicationStore';
+
 import getDefaultPort from './templates/defaultPorts';
 
 export function loadConfiguration(componentId, configId) {
@@ -144,8 +147,23 @@ export function createActions(componentId) {
       saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
     },
 
-    testCredentials(credentials) {
-      return exDbApi.testAndWaitForCredentials(credentials.toJS());
+    testCredentials(configId, credentials) {
+      const store = getStore(configId);
+      let runData = store.configData.setIn(['parameters', 'tables'], List([]));
+      runData = store.configData.setIn(['parameters', 'db'], credentials);
+      const params = {
+        component: componentId,
+        data: {
+          config: configId,
+          configData: runData.toJS()
+        },
+        notify: false
+      };
+      params.data.configData.parameters.tables = [];
+      // return exDbApi.testAndWaitForCredentials(credentials.toJS());
+      return InstalledComponentsActions.runComponent(params).then((response) => {
+        return jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url);
+      });
     },
 
     prepareSingleQueryRunData(configId, query) {

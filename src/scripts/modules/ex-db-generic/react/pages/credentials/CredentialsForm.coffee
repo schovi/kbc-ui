@@ -21,6 +21,7 @@ module.exports = React.createClass
     enabled: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func
     componentId: React.PropTypes.string.isRequired
+    configId: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -40,6 +41,7 @@ module.exports = React.createClass
       TestCredentialsButtonGroup
         credentials: @props.credentials
         componentId: @props.componentId
+        configId: @props.configId
 
   _handleChange: (propName, event) ->
     if ['port'].indexOf(propName) >= 0

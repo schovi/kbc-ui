@@ -15,6 +15,7 @@ module.exports = React.createClass
     credentials: React.PropTypes.object.isRequired
     hasOffset: React.PropTypes.bool.isRequired
     componentId: React.PropTypes.string.isRequired
+    configId: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     hasOffset: true
@@ -30,7 +31,7 @@ module.exports = React.createClass
       job: null
 
     ExDbActionCreators
-    .testCredentials @props.credentials
+    .testCredentials @props.configId, @props.credentials
     .then @_onTestingDone
 
   _onTestingDone: (job) ->
