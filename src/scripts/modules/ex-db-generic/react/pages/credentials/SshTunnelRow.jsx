@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {fromJS} from 'immutable';
 import KeygenApi from '../../../../components/KeygenApi';
-import Textarea from 'react-textarea-autosize';
 import {Check} from 'kbc-react-components';
 import {Input, FormControls} from 'react-bootstrap';
 import {Protected} from 'kbc-react-components';
@@ -24,16 +23,16 @@ export default React.createClass({
   render() {
     return (
       <div className="row">
-      {this.renderEnableCheckbox()}
-      {this.isEnabled() ?
-       <span>
-        {this.createInput('SSH host', 'sshHost', 'text', false)}
-        {this.createInput('SSH user', 'user', 'text', false)}
-        {this.createInput('SSH port', 'sshPort', 'number', false)}
-         {this.renderPublicKey()}
-       </span>
-       : null
-      }
+        {this.renderEnableCheckbox()}
+        {this.isEnabled() ?
+         <span>
+           {this.createInput('SSH host', 'sshHost', 'text', false)}
+           {this.createInput('SSH user', 'user', 'text', false)}
+           {this.createInput('SSH port', 'sshPort', 'number', false)}
+           {this.renderPublicKey()}
+         </span>
+         : null
+        }
       </div>
     );
   },
@@ -73,18 +72,15 @@ export default React.createClass({
         <label className="control-label col-sm-4">
           SSH Public Key
         </label>
-        <label className="control-label col-sm-8">
-          {(this.props.isEditing ? this.renderKeyGen(publicKey) :
-            this.renderClipboard(publicKey))}
-        </label>
-        <Textarea
-          disabled={true}
-          label="SSH Key"
-          type="textarea"
-          value={publicKey}
-          minRows={4}
-          className="form-control"
-        />
+        <div className="col-sm-8">
+          {(publicKey ?
+          <pre>
+            {publicKey}
+            {this.renderClipboard(publicKey)}
+          </pre> : null
+          )}
+          {(this.props.isEditing ? this.renderKeyGen(publicKey) : null)}
+        </div>
       </div>
     );
   },
@@ -97,8 +93,8 @@ export default React.createClass({
           disabled={this.state.isGenerating}
           onClick={this.generateKeys}
           style={{'padding-left': 0}}
-          className="btn btn-link btn-sm">
-        {publicKey ? 'Regenerate' : 'Generate'}
+          className="btn btn-link">
+          {publicKey ? 'Regenerate' : 'Generate'}
         </button>
         {this.state.isGenerating ? <Loader /> : null}
       </span>
