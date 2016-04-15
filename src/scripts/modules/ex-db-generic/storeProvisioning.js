@@ -5,6 +5,7 @@ import templateFields from './templates/credentials';
 import hasSshTunnel from './templates/hasSshTunnel';
 import _ from 'underscore';
 import string from '../../utils/string';
+import getDefaultPort from './templates/defaultPorts';
 
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
@@ -49,7 +50,10 @@ export function createStore(componentId, configId) {
       const validGeneralCreds = _.reduce(fields, (memo, field) => {
         const propName = field[1];
         // const type = field[2];
-        const value = credentials.get(propName, '').toString();
+        let value = credentials.get(propName, '');
+        if (value) {
+          value = value.toString();
+        }
         return memo && !_.isEmpty(value);
       }, true);
       const ssh = credentials.get('ssh', Map());
@@ -60,7 +64,10 @@ export function createStore(componentId, configId) {
       ];
       const isValidSSH = _.reduce(sshFields, (memo, field) => {
         const propName = field[0];
-        const value = ssh.get(propName, '').toString();
+        let value = ssh.get(propName, '');
+        if (value) {
+          value = value.toString();
+        }
         return memo && !_.isEmpty(value);
       }, true);
       const hasKeys = ssh.getIn(['keys', 'public']) && ssh.getIn(['keys', '#private']);
@@ -108,7 +115,10 @@ export function createStore(componentId, configId) {
     },
 
     getNewCredentials() {
-      const defaultNewCredentials = data.parameters.get('db', Map());
+      var defaultNewCredentials = data.parameters.get('db', Map());
+      if (!defaultNewCredentials.get('port')) {
+        defaultNewCredentials = defaultNewCredentials.set('port', getDefaultPort(componentId));
+      }
       const result = data.localState.get('newCredentials', defaultNewCredentials);
       if (result) {
         return result;

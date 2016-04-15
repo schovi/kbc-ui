@@ -2,6 +2,7 @@ import * as storeProvisioning from './storeProvisioning';
 import {List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import exDbApi from '../ex-db/exDbApi';
+import getDefaultPort from './templates/defaultPorts';
 
 export function loadConfiguration(componentId, configId) {
   return componentsActions.loadComponentConfigData(componentId, configId);
@@ -35,7 +36,10 @@ export function createActions(componentId) {
 
     editCredentials(configId) {
       const store = getStore(configId);
-      const credentials = store.getCredentials();
+      let credentials = store.getCredentials();
+      if (!credentials.get('port')) {
+        credentials = credentials.set('port', getDefaultPort(componentId));
+      }
       updateLocalState(configId, 'editingCredentials', credentials);
     },
 
