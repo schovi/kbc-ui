@@ -1,4 +1,5 @@
 React = require 'react'
+ColumnsSelectRow = require('./ColumnsSelectRow').default
 _ = require('underscore')
 Immutable = require('immutable')
 {Input} = require('react-bootstrap')
@@ -56,15 +57,6 @@ module.exports = React.createClass
     value = @props.value.set("destination", e.target.value)
     @props.onChange(value)
 
-  _handleChangeColumns: (newValue) ->
-    immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("columns", newValue)
-      if !_.contains(mapping.get("columns").toJS(), mapping.get("where_column"))
-        mapping = mapping.set("where_column", "")
-        mapping = mapping.set("where_values", Immutable.List())
-        mapping = mapping.set("where_operator", "eq")
-    @props.onChange(immutable)
-
   _getTables: ->
     props = @props
     inOutTables = @props.tables.filter((table) ->
@@ -81,38 +73,6 @@ module.exports = React.createClass
       return -1 if valA.label < valB.label
       return 0
     ).toJS()
-
-  _getColumns: ->
-    if !@props.value.get("source")
-      return []
-    props = @props
-    table = @props.tables.find((table) ->
-      table.get("id") == props.value.get("source")
-    )
-    table.get("columns").toJS()
-
-  _getColumnsOptions: ->
-    columns = @_getColumns()
-    map = _.map(
-      columns, (column) ->
-        {
-          label: column
-          value: column
-        }
-    )
-
-  _getFilteredColumnsOptions: ->
-    if @props.value.get("columns").count()
-      columns = @props.value.get("columns").toJS()
-    else
-      columns = @_getColumns()
-    _.map(
-      columns, (column) ->
-        {
-          label: column
-          value: column
-        }
-    )
 
   _getFileName: ->
     if @props.value.get("destination") && @props.value.get("destination") != ''
@@ -166,24 +126,13 @@ module.exports = React.createClass
                     "File will be available at"
                     React.DOM.code {}, "/data/in/tables/" + @_getFileName()
 
-
       if @state.showDetails
-        React.DOM.div {className: "row col-md-12"},
-          React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Columns'
-            React.DOM.div className: 'col-xs-10',
-              Select
-                multi: true
-                name: 'columns'
-                value: @props.value.get("columns", Immutable.List()).toJS()
-                disabled: @props.disabled || !@props.value.get("source")
-                placeholder: "All columns will be imported"
-                onChange: @_handleChangeColumns
-                options: @_getColumnsOptions()
-              React.DOM.small
-                className: "help-block"
-              ,
-                "Import only specified columns"
+        React.createElement ColumnsSelectRow,
+          value: @props.value
+          disabled: @props.disabled
+          onChange: @props.onChange
+          allTables: @props.tables
+
       if @state.showDetails
         React.createElement DaysFilterInput,
           mapping: @props.value
