@@ -23,11 +23,20 @@ firebirdFields = [
   ['Password', 'password', 'password', true]
 ]
 
+oracleFields = [
+  ['Host Name', 'host', 'text', false]
+  ['Port', 'port', 'number', false]
+  ['Username', 'user', 'text', false]
+  ['Password', 'password', 'password', true]
+  ['Service Name/SID', 'database', 'text', false]
+]
+
 fields =
   'keboola.ex-db-pgsql': defaultFields
   'keboola.ex-db-db2': defaultFields
   'keboola.ex-db-firebird': firebirdFields
   'keboola.ex-db-impala': defaultFields
+  'keboola.ex-db-oracle': oracleFields
 
 
 module.exports =
