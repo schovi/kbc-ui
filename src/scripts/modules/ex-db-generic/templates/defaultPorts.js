@@ -4,6 +4,7 @@ const ports = {
   'keboola.ex-db-firebird': 3050,
   'keboola.ex-db-impala': 21050,
   'keboola.ex-db-mysql': 3306,
+  'keboola.ex-db-oracle': 1521,
   'keboola.ex-db-mssql': 1433
 };
 
