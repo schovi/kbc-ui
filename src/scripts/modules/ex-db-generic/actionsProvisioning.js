@@ -1,6 +1,6 @@
 import * as storeProvisioning from './storeProvisioning';
 import jobPoller from '../../utils/jobPoller';
-import {List} from 'immutable';
+import {Map, List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import InstalledComponentsActions from '../components/InstalledComponentsActionCreators';
 import ApplicationStore from '../../stores/ApplicationStore';
@@ -55,7 +55,7 @@ export function createActions(componentId) {
     },
 
     resetNewQuery(configId) {
-      updateLocalState(configId, ['newQueries'], null);
+      updateLocalState(configId, ['newQueries'], Map());
     },
 
     changeQueryEnabledState(configId, qid, newValue) {
@@ -104,7 +104,7 @@ export function createActions(componentId) {
       const newQuery = this.checkTableName(store.getNewQuery(), store);
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      return saveConfigData(configId, newData, ['newQueries', 'isSaving']);
+      return saveConfigData(configId, newData, ['newQueries', 'isSaving']).then(() => this.resetNewQuery(configId));
     },
 
     saveCredentialsEdit(configId) {
