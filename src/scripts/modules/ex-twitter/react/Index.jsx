@@ -85,6 +85,19 @@ export default React.createClass({
             onSave={this.onSave}
             />
         </div>
+        <div className="col-md-3 kbc-main-sidebar">
+          <ComponentMetadata
+            componentId={this.state.component.get('id')}
+            configId={this.state.config.get('id')}
+          />
+          <ul className="nav nav-stacked">
+            <li>
+              <a href={this.state.component.get('documentationUrl')} target="_blank">
+                <i className="fa fa-question-circle fa-fw" /> Documentation
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     );
   },
@@ -128,13 +141,11 @@ export default React.createClass({
             />
         </div>
         <div className="col-md-3 kbc-main-sidebar">
+          <ComponentMetadata
+            componentId={this.state.component.get('id')}
+            configId={this.state.config.get('id')}
+          />
           <ul className="nav nav-stacked">
-            <li>
-              <ComponentMetadata
-                componentId={this.state.component.get('id')}
-                configId={this.state.config.get('id')}
-                />
-            </li>
             <li>
               <RunComponentButton
                 title="Run"
@@ -145,6 +156,11 @@ export default React.createClass({
                 >
                 You are about to run component.
               </RunComponentButton>
+            </li>
+            <li>
+              <a href={this.state.component.get('documentationUrl')} target="_blank">
+                <i className="fa fa-question-circle fa-fw" /> Documentation
+              </a>
             </li>
             <li>
               <DeleteConfigurationButton
