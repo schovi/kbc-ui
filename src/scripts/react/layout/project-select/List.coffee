@@ -5,7 +5,7 @@ Tooltip = require('../../common/Tooltip').default
 _ = require 'underscore'
 
 NewProjectModal = require('../NewProjectModal').default
-Emptylist = require './EmptyList'
+Emptylist = require('./EmptyList').default
 
 {div, ul, li, a, span, input} = React.DOM
 
