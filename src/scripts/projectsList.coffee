@@ -26,6 +26,7 @@ App = React.createClass
         React.createElement ProjectsList,
           organizations: @props.organizations
           urlTemplates: @props.urlTemplates
+          projectTemplates: @props.projectTemplates
           focus: true
           canCreateProject: @props.canCreateProject
 
@@ -37,6 +38,7 @@ global.kbcApp =
     React.render(React.createElement(App,
       user: Immutable.fromJS(appOptions.data.kbc.admin)
       urlTemplates: Immutable.fromJS(appOptions.data.kbc.urlTemplates)
+      projectTemplates: Immutable.fromJS(appOptions.data.projectTemplates),
       maintainers: Immutable.fromJS(appOptions.data.maintainers)
       organizations: Immutable.fromJS(appOptions.data.organizations)
       canCreateProject: appOptions.data.kbc.canCreateProject
