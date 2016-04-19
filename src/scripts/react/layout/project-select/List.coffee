@@ -27,11 +27,11 @@ module.exports = React.createClass
     isNewProjectModalOpen: false
 
   componentDidMount: ->
-    if @props.focus
+    if @props.focus &&  @refs.searchInput
       @refs.searchInput.getDOMNode().focus()
 
   componentDidUpdate: (prevProps) ->
-    if @props.focus && @props.focus != prevProps.focus
+    if @refs.searchInput && @props.focus && @props.focus != prevProps.focus
       @refs.searchInput.getDOMNode().focus()
 
   render: ->
