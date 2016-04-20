@@ -160,7 +160,13 @@ export default React.createClass({
         const rowToRender = rows.find((row) => {
           return row.get(varNameIndex).toUpperCase() === columnName.toUpperCase();
         });
-
+        if (!rowToRender) {
+          return (
+            <td>
+              -
+            </td>
+          );
+        }
         const rowValuesMap = header.map(h => {
           h.value = rowToRender.get(h.idx);
           return h;
