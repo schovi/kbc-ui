@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import ConfigureSandboxModal from './ConfigureSandboxModal';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import MySqlSandboxCredentialsStore from '../../../provisioning/stores/MySqlSandboxCredentialsStore';
+import RedshiftSandboxCredentialsStore from '../../../provisioning/stores/RedshiftSandboxCredentialsStore';
 import jobsApi from '../../../jobs/JobsApi';
 import actionCreators from '../../../components/InstalledComponentsActionCreators';
 
@@ -14,11 +15,12 @@ export default React.createClass({
     backend: PropTypes.string.isRequired,
     runParams: PropTypes.object.isRequired
   },
-  mixins: [createStoreMixin(MySqlSandboxCredentialsStore)],
+  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, RedshiftSandboxCredentialsStore)],
 
   getStateFromStores() {
     return {
-      mysqlCredentials: MySqlSandboxCredentialsStore.getCredentials()
+      mysqlCredentials: MySqlSandboxCredentialsStore.getCredentials(),
+      redshiftCredentials: RedshiftSandboxCredentialsStore.getCredentials()
     };
   },
 
@@ -36,6 +38,7 @@ export default React.createClass({
   render() {
     return React.createElement(ConfigureSandboxModal, {
       mysqlCredentials: this.state.mysqlCredentials,
+      redshiftCredentials: this.state.redshiftCredentials,
       onHide: this.handleModalClose,
       show: this.props.show,
       backend: this.props.backend,

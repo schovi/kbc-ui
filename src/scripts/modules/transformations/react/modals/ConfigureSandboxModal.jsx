@@ -30,6 +30,7 @@ export default React.createClass({
     isCreated: PropTypes.bool,
     jobId: PropTypes.string.isRequired,
     mysqlCredentials: PropTypes.object.isRequired,
+    redshiftCredentials: PropTypes.object.isRequired,
     onModeChange: PropTypes.func.isRequired,
     onCreateStart: PropTypes.func.isRequired
   },
@@ -70,10 +71,21 @@ export default React.createClass({
             cancelLabel={'Close'}
             isSaving={this.props.isRunning}
             showSave={!this.props.isCreated}
+            isDisabled={!this.hasCredentials()}
             />
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  hasCredentials() {
+    if (this.props.backend === 'mysql') {
+      return this.props.mysqlCredentials.has('id');
+    } else if (this.props.backend === 'redshift') {
+      return this.props.redshiftCredentials.has('id');
+    } else {
+      return true;
+    }
   },
 
   renderCredentials() {
