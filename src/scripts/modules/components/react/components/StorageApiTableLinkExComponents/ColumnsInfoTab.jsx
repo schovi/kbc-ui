@@ -47,7 +47,7 @@ export default React.createClass({
     return (
       <div>
         <Table responsive className="table table-striped">
-            {headerRow}
+          {headerRow}
           <tbody>
             {columnsRows}
           </tbody>
@@ -94,8 +94,8 @@ export default React.createClass({
         <th>
           {header.label}
           <Tooltip
-             tooltip={header.desc}
-             placement="top">
+            tooltip={header.desc}
+            placement="top">
             <i className="fa fa-fw fa-question-circle"></i>
           </Tooltip>
         </th>
@@ -109,11 +109,11 @@ export default React.createClass({
           <th></th>
           <td colSpan="4">
             <EnhancedAnalysisRunControl
-                enhancedAnalysis={this.props.enhancedAnalysis}
-                table={this.props.table}
-                onRunAnalysis={this.props.onRunAnalysis}
-                isCallingRunAnalysis={this.props.isCallingRunAnalysis}
-                loadingProfilerData={this.props.loadingProfilerData}
+              enhancedAnalysis={this.props.enhancedAnalysis}
+              table={this.props.table}
+              onRunAnalysis={this.props.onRunAnalysis}
+              isCallingRunAnalysis={this.props.isCallingRunAnalysis}
+              loadingProfilerData={this.props.loadingProfilerData}
             />
 
           </td>
@@ -162,9 +162,14 @@ export default React.createClass({
         });
         if (!rowToRender) {
           return (
-            <td>
-              -
-            </td>
+            <tr>
+              <td>
+                {columnNameCell}
+              </td>
+              <td>
+                {value}
+              </td>
+            </tr>
           );
         }
         const rowValuesMap = header.map(h => {
@@ -225,7 +230,7 @@ export default React.createClass({
 
   hasEnhancedAnalysis() {
     return this.props.enhancedAnalysis &&
-    !_.isEmpty(this.props.enhancedAnalysis.toJS());
+           !_.isEmpty(this.props.enhancedAnalysis.toJS());
   },
 
   hasEnhancedData() {
