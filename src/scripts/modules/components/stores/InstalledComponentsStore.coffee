@@ -5,6 +5,7 @@ Map = Immutable.Map
 StoreUtils = require '../../../utils/StoreUtils'
 propagateApiAttributes = require('../react/components/jsoneditor/propagateApiAttributes').default
 SchemasStore = require './SchemasStore'
+fromJSOrdered = require('../../../utils/fromJSOrdered').default
 
 _store = Map(
   configData: Map() #componentId #configId
@@ -252,7 +253,7 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_SUCCESS
       _store = _store.deleteIn ['configDataLoading', action.componentId, action.configId]
       storePath = ['configData', action.componentId, action.configId]
-      _store = _store.setIn storePath, Immutable.fromJS(action.configData)
+      _store = _store.setIn storePath, fromJSOrdered(action.configData)
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_LOAD_ERROR
@@ -263,14 +264,16 @@ Dispatcher.register (payload) ->
       componentId = action.componentId
       configId = action.configId
       editingDataJson = JSON.parse(InstalledComponentsStore.getEditingRawConfigData(componentId, configId))
-      editingData = Immutable.fromJS(editingDataJson)
+
+      editingData = fromJSOrdered editingDataJson
+
       dataToSave = editingData
       _store = _store.setIn ['configDataSaving', componentId, configId], dataToSave
 
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_SUCCESS
-      configDataObject = Immutable.fromJS(action.configData)
+      configDataObject = fromJSOrdered(action.configData)
       _store = _store.setIn ['configData', action.componentId, action.configId], configDataObject
       _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       _store = _store.deleteIn ['rawConfigDataEditing', action.componentId, action.configId]
@@ -284,14 +287,14 @@ Dispatcher.register (payload) ->
       componentId = action.componentId
       configId = action.configId
       editingDataJson = JSON.parse(InstalledComponentsStore.getEditingRawConfigDataParameters(componentId, configId))
-      editingData = Immutable.fromJS(editingDataJson)
+      editingData = fromJSOrdered(editingDataJson)
       dataToSave = editingData
       _store = _store.setIn ['configDataParametersSaving', componentId, configId], dataToSave
 
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_SUCCESS
-      configDataObject = Immutable.fromJS(action.configData).get 'parameters'
+      configDataObject = fromJSOrdered(action.configData).get 'parameters'
       path = ['configData', action.componentId, action.configId, 'parameters']
       _store = _store.setIn path, configDataObject
       _store = _store.deleteIn ['configDataParametersSaving', action.componentId, action.configId]
@@ -313,7 +316,7 @@ Dispatcher.register (payload) ->
       InstalledComponentsStore.emitChange()
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
-      _store = _store.setIn ['configData', action.componentId, action.configId], Immutable.fromJS(action.configData)
+      _store = _store.setIn ['configData', action.componentId, action.configId], fromJSOrdered(action.configData)
       _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
       _store = _store.deleteIn ['configDataEditing', action.componentId, action.configId]
       InstalledComponentsStore.emitChange()
@@ -380,7 +383,7 @@ Dispatcher.register (payload) ->
       _store = _store.withMutations (store) ->
         store
           .mergeIn ['components', action.componentId, 'configurations', action.configurationId],
-            Immutable.fromJS(action.data)
+          fromJSOrdered(action.data)
           .deleteIn ['savingConfigurations', action.componentId, action.configurationId, action.field]
           .deleteIn ['editingConfigurations', action.componentId, action.configurationId, action.field]
       InstalledComponentsStore.emitChange()
@@ -392,7 +395,7 @@ Dispatcher.register (payload) ->
           .set('isLoaded', true)
           .set('components',
             ## convert to by key structure
-            Immutable.fromJS(action.components)
+            fromJSOrdered(action.components)
             .toMap()
             .map((component) ->
               component.set 'configurations', component.get('configurations').toMap().mapKeys((key, config) ->
@@ -411,7 +414,7 @@ Dispatcher.register (payload) ->
           store = store.setIn(['components', action.componentId], action.component.set('configurations', Map()))
 
         store.setIn ['components', action.componentId, 'configurations', action.configuration.id],
-          Immutable.fromJS action.configuration
+          fromJSOrdered action.configuration
 
       InstalledComponentsStore.emitChange()
 
@@ -473,7 +476,7 @@ Dispatcher.register (payload) ->
         store = store.deleteIn(path)
 
         storePath = ['configData', action.componentId, action.configId]
-        store.setIn storePath, Immutable.fromJS(action.data.configuration)
+        store.setIn storePath, fromJSOrdered(action.data.configuration)
 
       InstalledComponentsStore.emitChange()
 
@@ -510,7 +513,7 @@ Dispatcher.register (payload) ->
         store = store.deleteIn(path)
 
         storePath = ['configData', action.componentId, action.configId]
-        store.setIn storePath, Immutable.fromJS(action.data.configuration)
+        store.setIn storePath, fromJSOrdered(action.data.configuration)
 
       InstalledComponentsStore.emitChange()
 
@@ -583,7 +586,7 @@ Dispatcher.register (payload) ->
       else if _store.getIn(['templatedConfigValuesEditing', action.componentId, action.configId, 'jobsString'])
         editingData = editingData.setIn(
           ['parameters', 'config', 'jobs'],
-          Immutable.fromJS(
+          fromJSOrdered(
             JSON.parse(
               _store.getIn(
                 ['templatedConfigValuesEditing', action.componentId, action.configId, 'jobsString']
@@ -600,7 +603,7 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_SUCCESS
       _store = _store.setIn(
         ['configData', action.componentId, action.configId],
-        Immutable.fromJS(action.configData)
+        fromJSOrdered(action.configData)
       )
       _store = _store.deleteIn(['templatedConfigValuesEditing', action.componentId, action.configId])
       _store = _store.deleteIn ['configDataSaving', action.componentId, action.configId]
