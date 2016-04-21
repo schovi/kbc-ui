@@ -1,11 +1,11 @@
 import {fromJS, List, Map, Iterable} from 'immutable';
 
 function fromJsOrdered(json) {
-  return fromJS(json, function (key, value) {
+  return fromJS(json, function(key, value) {
     var isIndexed = Iterable.isIndexed(value);
     return isIndexed ? value.toList() : value.toOrderedMap();
   });
-};
+}
 
 const common = {
   'api': {
