@@ -1,4 +1,11 @@
-import {fromJS, List, Map} from 'immutable';
+import {fromJS, List, Map, Iterable} from 'immutable';
+
+function fromJsOrdered(json) {
+  return fromJS(json, function (key, value) {
+    var isIndexed = Iterable.isIndexed(value);
+    return isIndexed ? value.toList() : value.toOrderedMap();
+  });
+};
 
 const common = {
   'api': {
@@ -327,19 +334,19 @@ export function createConfigurationFromSettings(settings) {
   let jobs = List();
 
   if (settings.get('userTimelineScreenName')) {
-    jobs = jobs.push(fromJS(userTimelineTemplate).setIn(['params', 'screen_name'], settings.get('userTimelineScreenName')));
+    jobs = jobs.push(fromJsOrdered(userTimelineTemplate).setIn(['params', 'screen_name'], settings.get('userTimelineScreenName')));
   }
 
   if (settings.getIn(['search', 'query'])) {
-    jobs = jobs.push(fromJS(searchTemplate).setIn(['params', 'q'], settings.getIn(['search', 'query'])));
+    jobs = jobs.push(fromJsOrdered(searchTemplate).setIn(['params', 'q'], settings.getIn(['search', 'query'])));
   }
 
   if (settings.get('followersScreenName')) {
-    jobs = jobs.push(fromJS(followersTemplate).setIn(['params', 'screen_name'], settings.get('followersScreenName')));
+    jobs = jobs.push(fromJsOrdered(followersTemplate).setIn(['params', 'screen_name'], settings.get('followersScreenName')));
   }
 
-  jobs = jobs.push(fromJS(mentionsTemplate));
-  return fromJS(common).setIn(['config', 'jobs'], jobs);
+  jobs = jobs.push(fromJsOrdered(mentionsTemplate));
+  return fromJsOrdered(common).setIn(['config', 'jobs'], jobs);
 }
 
 export function getSettingsFromConfiguration(configuration) {
