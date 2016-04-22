@@ -371,7 +371,7 @@ module.exports = React.createClass
       if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Sort Key'
+            React.DOM.label className: 'col-xs-2 control-label', 'Sort key'
             React.DOM.div className: 'col-xs-10',
               Select
                 multi: true
@@ -388,7 +388,7 @@ module.exports = React.createClass
       if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Dist Key'
+            React.DOM.label className: 'col-xs-2 control-label', 'Dist key'
             React.DOM.div className: 'col-xs-7',
               Select
                 name: 'distKey'
