@@ -276,7 +276,7 @@ module.exports = React.createClass
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Data Types'
+            React.DOM.label className: 'col-xs-2 control-label', 'Data types'
             React.DOM.div className: 'col-xs-10',
               MySqlDataTypesContainer
                 value: @props.value.get("datatypes", Immutable.Map())
