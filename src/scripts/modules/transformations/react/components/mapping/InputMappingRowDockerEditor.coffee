@@ -97,7 +97,8 @@ module.exports = React.createClass
     table = @props.tables.find((table) ->
       table.get("id") == props.value.get("source")
     )
-    table.get("columns").toJS()
+    return [] if !table
+    table.get("columns", Immutable.List()).toJS()
 
   _getColumnsOptions: ->
     columns = @_getColumns()
