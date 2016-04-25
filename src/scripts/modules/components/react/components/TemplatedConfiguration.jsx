@@ -31,7 +31,6 @@ export default React.createClass({
       pureParamsSchema: SchemasStore.getPureParamsSchema(componentId),
       jobsTemplates: SchemasStore.getJobsTemplates(componentId),
       supportsEncryption: component.get('flags').includes('encrypt'),
-      isJobsString: InstalledComponentsStore.isTemplatedConfigJobsString(componentId, configId),
 
       isEditing: InstalledComponentsStore.isEditingTemplatedConfig(componentId, configId),
       isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId),

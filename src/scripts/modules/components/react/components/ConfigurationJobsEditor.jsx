@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
 import Markdown from 'react-markdown';
+import fromJSOrdered from '../../../../utils/fromJSOrdered';
 
 /* global require */
 require('./configuration-json.less');
@@ -50,7 +51,7 @@ export default React.createClass({
   getTemplate(hashCode) {
     return this.props.templates.filter(
       function(template) {
-        return template.get('jobs').hashCode() === parseInt(hashCode, 10);
+        return fromJSOrdered(template.get('jobs').toJS()).hashCode() === parseInt(hashCode, 10);
       }
     ).first();
   },
@@ -58,7 +59,7 @@ export default React.createClass({
   jobsEditorOptions() {
     return this.props.templates.map(
       function(option) {
-        var jobsHash = option.get('jobs').hashCode();
+        var jobsHash = fromJSOrdered(option.get('jobs').toJS()).hashCode();
         return (
           <option
             value={jobsHash}

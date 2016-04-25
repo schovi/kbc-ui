@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import Markdown from 'react-markdown';
 import CodeMirror from 'react-code-mirror';
+import fromJSOrdered from '../../../../utils/fromJSOrdered';
+
 
 /* global require */
 require('./configuration-json.less');
@@ -55,7 +57,7 @@ export default React.createClass({
   getTemplate(hashCode) {
     return this.props.jobsTemplates.filter(
       function(template) {
-        return template.get('jobs').hashCode() === parseInt(hashCode, 10);
+        return fromJSOrdered(template.get('jobs').toJS()).hashCode() === parseInt(hashCode, 10);
       }
     ).first();
   },

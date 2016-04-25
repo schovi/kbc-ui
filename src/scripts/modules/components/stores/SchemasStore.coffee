@@ -3,6 +3,7 @@ Immutable = require 'immutable'
 dispatcher = require '../../../Dispatcher'
 Constants = require '../SchemasConstants'
 fuzzy = require 'fuzzy'
+fromJSOrdered = require('../../../utils/fromJSOrdered').default
 
 {Map, List} = Immutable
 
@@ -43,7 +44,7 @@ SchemasStore = StoreUtils.createStore
     templates.filter((template) ->
       if (!template.has("jobs"))
         return false
-      template.get("jobs").hashCode() == jobs.hashCode()
+      return fromJSOrdered(template.get("jobs").toJS()).hashCode() == fromJSOrdered(jobs.toJS()).hashCode()
     ).count() == 1
 
 
