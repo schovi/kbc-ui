@@ -161,16 +161,6 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
-            if @state.showDetails
-              Input
-                standalone: true
-                type: 'checkbox'
-                label: React.DOM.small {}, 'Optional'
-                value: @props.value.get("optional")
-                disabled: @props.disabled
-                onChange: @_handleChangeOptional
-                help: React.DOM.small {},
-                  "If this table does not exist in Storage, the transformation won't show an error."
       React.DOM.div {className: "row col-md-12"},
         Input
           type: 'text'

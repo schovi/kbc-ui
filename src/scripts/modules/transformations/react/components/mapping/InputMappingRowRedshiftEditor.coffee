@@ -68,11 +68,11 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeOptional: (e) ->
-    value = @props.value.set("optional", e.target.value)
+    value = @props.value.set("optional", e.target.checked)
     @props.onChange(value)
 
   _handleChangePersistent: (e) ->
-    value = @props.value.set("persistent", e.target.value)
+    value = @props.value.set("persistent", e.target.checked)
     @props.onChange(value)
 
   _handleChangeType: (e) ->
