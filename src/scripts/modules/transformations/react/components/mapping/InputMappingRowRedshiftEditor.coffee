@@ -236,7 +236,7 @@ module.exports = React.createClass
                 standalone: true
                 type: 'checkbox'
                 label: React.DOM.small {}, 'Optional'
-                value: @props.value.get("optional")
+                checked: @props.value.get("optional")
                 disabled: @props.disabled
                 onChange: @_handleChangeOptional
                 help: React.DOM.small {},
@@ -287,7 +287,7 @@ module.exports = React.createClass
             bsSize: 'small'
             type: 'checkbox'
             label: React.DOM.small {}, 'Persistent'
-            value: @props.value.get("persistent")
+            checked: @props.value.get("persistent")
             disabled: @props.disabled
             onChange: @_handleChangePersistent
             wrapperClassName: 'col-xs-offset-2 col-xs-10'
