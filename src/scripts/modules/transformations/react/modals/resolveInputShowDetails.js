@@ -20,10 +20,6 @@ function mysql(mapping) {
     return true;
   }
 
-  if (mapping.get('persistent')) {
-    return true;
-  }
-
   if (mapping.get('whereColumn')) {
     return true;
   }
@@ -61,10 +57,6 @@ function redshift(mapping) {
   }
 
   if (mapping.get('optional')) {
-    return true;
-  }
-
-  if (mapping.get('persistent')) {
     return true;
   }
 

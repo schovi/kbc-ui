@@ -51,7 +51,6 @@ module.exports = React.createClass
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", destination)
-      mapping = mapping.set("persistent", false)
       mapping = mapping.set("type", "table")
       mapping = mapping.set("datatypes", Immutable.Map())
       mapping = mapping.set("whereColumn", "")
@@ -69,10 +68,6 @@ module.exports = React.createClass
 
   _handleChangeOptional: (e) ->
     value = @props.value.set("optional", e.target.checked)
-    @props.onChange(value)
-
-  _handleChangePersistent: (e) ->
-    value = @props.value.set("persistent", e.target.checked)
     @props.onChange(value)
 
   _handleChangeType: (e) ->
@@ -281,19 +276,6 @@ module.exports = React.createClass
           ,
             React.DOM.option {value: "table"}, "Table"
             React.DOM.option {value: "view"}, "View"
-      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            type: 'checkbox'
-            label: React.DOM.small {}, 'Persistent'
-            checked: @props.value.get("persistent")
-            disabled: @props.disabled
-            onChange: @_handleChangePersistent
-            wrapperClassName: 'col-xs-offset-2 col-xs-10'
-            help: React.DOM.small {},
-              "Try to keep the table in Redshift DB. STATUPDATE and COMPUPDATE
-              will be processed only in the first run."
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',

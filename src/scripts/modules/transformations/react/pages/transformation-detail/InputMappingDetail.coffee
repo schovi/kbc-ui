@@ -51,16 +51,6 @@ InputMappingDetail = React.createClass(
           span {className: "col-md-6"},
             @props.inputMapping.get('type')
 
-
-      if @props.transformationBackend == 'redshift' and
-      (@props.inputMapping.get('type') != 'view' || !@_isSourceTableInRedshift())
-        ListGroupItem {key: 'persistent'},
-          strong {className: "col-md-4"},
-            'Persistent'
-          span {className: "col-md-6"},
-            Check
-              isChecked: @props.inputMapping.get('persistent')
-
       ListGroupItem {key: 'columns'},
         strong {className: "col-md-4"},
           'Columns'
