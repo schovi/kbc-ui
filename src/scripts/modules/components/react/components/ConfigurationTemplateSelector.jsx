@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
 import Markdown from 'react-markdown';
-import fromJSOrdered from '../../../../utils/fromJSOrdered';
+import getTemplatedConfigHashCode from '../../utils/getTemplatedConfigHashCode';
 
 /* global require */
 require('./configuration-json.less');
@@ -25,12 +25,12 @@ export default React.createClass({
       <div>
         <Input
           type="select"
-          value={this.props.value.hashCode()}
-          ref="jobs"
+          value={getTemplatedConfigHashCode(this.props.value)}
+          ref="config"
           onChange={this.handleSelectorChange}
           disabled={this.props.readOnly}>
           <option value={Immutable.List().hashCode()} disabled>Select template...</option>
-          {this.jobsEditorOptions()}
+          {this.templatesSelectorOptions()}
         </Input>
         {this.templateDescription()}
       </div>
@@ -38,32 +38,31 @@ export default React.createClass({
   },
 
   templateDescription() {
-    if (this.getTemplate(this.props.value.hashCode())) {
+    if (this.getTemplate(getTemplatedConfigHashCode(this.props.value))) {
       return (
         <Markdown
-          source={this.getTemplate(this.props.value.hashCode()).get('description')}
+          source={this.getTemplate(getTemplatedConfigHashCode(this.props.value)).get('description')}
           />
       );
     }
     return null;
   },
 
-  getTemplate(hashCode) {
+  getTemplate(configHashCode) {
     return this.props.templates.filter(
       function(template) {
-        return fromJSOrdered(template.get('jobs').toJS()).hashCode() === parseInt(hashCode, 10);
+        return getTemplatedConfigHashCode(template) === parseInt(configHashCode, 10);
       }
     ).first();
   },
 
-  jobsEditorOptions() {
+  templatesSelectorOptions() {
     return this.props.templates.map(
       function(option) {
-        var jobsHash = fromJSOrdered(option.get('jobs').toJS()).hashCode();
         return (
           <option
-            value={jobsHash}
-            key={jobsHash}>
+            value={getTemplatedConfigHashCode(option)}
+            key={getTemplatedConfigHashCode(option)}>
             {option.get('name')}
           </option>
         );
@@ -72,11 +71,11 @@ export default React.createClass({
   },
 
   handleSelectorChange() {
-    var selectedTemplate = this.getTemplate(this.refs.jobs.getValue());
+    var selectedTemplate = this.getTemplate(this.refs.config.getValue());
     if (selectedTemplate) {
-      this.props.onChange(selectedTemplate.get('jobs'));
+      this.props.onChange(selectedTemplate);
     } else {
-      this.props.onChange(Immutable.List());
+      this.props.onChange(Immutable.Map());
     }
   }
 

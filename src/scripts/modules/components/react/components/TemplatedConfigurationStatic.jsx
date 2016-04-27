@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import Markdown from 'react-markdown';
 import CodeMirror from 'react-code-mirror';
-import fromJSOrdered from '../../../../utils/fromJSOrdered';
-
+import getTemplatedConfigHashCode from '../../utils/getTemplatedConfigHashCode';
+import Immutable from 'immutable';
 
 /* global require */
 require('./configuration-json.less');
@@ -11,10 +11,10 @@ require('./configuration-json.less');
 export default React.createClass({
 
   propTypes: {
-    jobs: PropTypes.object.isRequired,
+    config: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     paramsSchema: PropTypes.object.isRequired,
-    jobsTemplates: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
     onEditStart: PropTypes.func,
     editLabel: PropTypes.string
   },
@@ -26,7 +26,9 @@ export default React.createClass({
   },
 
   render() {
-    return !this.props.params.isEmpty() || !this.props.jobs.isEmpty() ? this.static() : this.emptyState();
+    return !this.props.params.isEmpty() ||
+      !this.props.config.get('jobs', Immutable.List()) ||
+      !this.props.config.get('mappings', Immutable.Map()).isEmpty() ? this.static() : this.emptyState();
   },
 
   static() {
@@ -40,7 +42,7 @@ export default React.createClass({
             onChange={this.handleChange}
             readOnly={true}
           />
-          {this.renderJobs()}
+          {this.renderConfig()}
         </div>
       </div>
     );
@@ -55,20 +57,21 @@ export default React.createClass({
   },
 
   getTemplate(hashCode) {
-    return this.props.jobsTemplates.filter(
+    return this.props.templates.filter(
       function(template) {
-        return fromJSOrdered(template.get('jobs').toJS()).hashCode() === parseInt(hashCode, 10);
+        return getTemplatedConfigHashCode(template) === parseInt(hashCode, 10);
       }
     ).first();
   },
 
-  renderJobs() {
-    var template = this.getTemplate(this.props.jobs.hashCode());
-    if (!template && this.props.jobs.count() === 0) {
+  renderConfig() {
+    var template = this.getTemplate(getTemplatedConfigHashCode(this.props.config));
+    if (!template && this.props.config.get('jobs', Immutable.List()).count() === 0 && this.props.config.get('mappings', Immutable.Map()).count() === 0) {
       return (
         <span>
-          <h3>Jobs</h3>
+          <h3>Configuration</h3>
           <div><em>No template selected</em></div>
+
         </span>
       );
     } else if (!template) {
@@ -77,7 +80,7 @@ export default React.createClass({
           <h3>Endpoints</h3>
           <CodeMirror
             ref="CodeMirror"
-            value={JSON.stringify(this.props.jobs.toJS(), null, 2)}
+            value={JSON.stringify(this.props.config.get('jobs', Immutable.List()).toJS(), null, 2)}
             theme="solarized"
             lineNumbers={false}
             mode="application/json"
@@ -87,6 +90,20 @@ export default React.createClass({
             lint={true}
             gutters={['CodeMirror-lint-markers']}
             placeholder="[]"
+            />
+          <h3>Mappings</h3>
+          <CodeMirror
+            ref="CodeMirror"
+            value={JSON.stringify(this.props.config.get('mappings', Immutable.Map()).toJS(), null, 2)}
+            theme="solarized"
+            lineNumbers={false}
+            mode="application/json"
+            lineWrapping={true}
+            autofocus={false}
+            readOnly="nocursor"
+            lint={true}
+            gutters={['CodeMirror-lint-markers']}
+            placeholder="{}"
             />
         </span>
       );

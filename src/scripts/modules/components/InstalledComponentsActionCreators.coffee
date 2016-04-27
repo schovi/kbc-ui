@@ -506,12 +506,12 @@ module.exports =
     )
 
 
-  updateEditTemplatedComponentConfigDataJobs: (componentId, configId, value) ->
+  updateEditTemplatedComponentConfigData: (componentId, configId, template) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_FROM_TEMPLATE
       componentId: componentId
       configId: configId
-      value: value
+      template: template
     )
 
 
@@ -523,6 +523,14 @@ module.exports =
       value: value
     )
 
+  updateEditTemplatedComponentConfigDataMappingsString: (componentId, configId, value) ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_MAPPINGS_STRING
+      componentId: componentId
+      configId: configId
+      value: value
+    )
+    
 
   updateEditTemplatedComponentConfigDataParams: (componentId, configId, value) ->
     dispatcher.handleViewAction(
@@ -556,9 +564,9 @@ module.exports =
       )
       throw error
 
-  toggleEditTemplatedComponentConfigDataJobsString: (componentId, configId) ->
+  toggleEditTemplatedComponentConfigDataString: (componentId, configId) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_JOBS_STRING_TOGGLE
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_STRING_TOGGLE
       componentId: componentId
       configId: configId
     )

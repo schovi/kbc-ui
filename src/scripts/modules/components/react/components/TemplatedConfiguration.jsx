@@ -25,19 +25,22 @@ export default React.createClass({
       componentId: componentId,
       configId: configId,
 
-      jobs: InstalledComponentsStore.getTemplatedConfigValueJobs(componentId, configId),
+      config: InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId),
       params: InstalledComponentsStore.getTemplatedConfigValueParams(componentId, configId),
       paramsSchema: SchemasStore.getParamsSchema(componentId),
       pureParamsSchema: SchemasStore.getPureParamsSchema(componentId),
-      jobsTemplates: SchemasStore.getJobsTemplates(componentId),
+      configTemplates: SchemasStore.getConfigTemplates(componentId),
       supportsEncryption: component.get('flags').includes('encrypt'),
 
       isEditing: InstalledComponentsStore.isEditingTemplatedConfig(componentId, configId),
       isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId),
-      isEditingJobsString: InstalledComponentsStore.isTemplatedConfigEditingJobsString(componentId, configId),
+      isEditingString: InstalledComponentsStore.isTemplatedConfigEditingString(componentId, configId),
 
+      editingConfig: InstalledComponentsStore.getTemplatedConfigEditingValue(componentId, configId),
       editingJobs: InstalledComponentsStore.getTemplatedConfigEditingValueJobs(componentId, configId),
+      editingMappings: InstalledComponentsStore.getTemplatedConfigEditingValueJobs(componentId, configId),
       editingJobsString: InstalledComponentsStore.getTemplatedConfigEditingValueJobsString(componentId, configId),
+      editingMappingsString: InstalledComponentsStore.getTemplatedConfigEditingValueMappingsString(componentId, configId),
       editingParams: InstalledComponentsStore.getTemplatedConfigEditingValueParams(componentId, configId)
 
     };
@@ -75,10 +78,10 @@ export default React.createClass({
     } else {
       return (
         <Static
-          jobs={this.state.jobs}
+          config={this.state.config}
           params={this.state.params}
           paramsSchema={this.state.paramsSchema}
-          jobsTemplates={this.state.jobsTemplates}
+          templates={this.state.configTemplates}
           onEditStart={this.onEditStart}
           editLabel={this.props.editLabel}
           />
@@ -89,18 +92,20 @@ export default React.createClass({
   renderEditor() {
     return (
       <Edit
-        jobs={this.state.editingJobs}
+        config={this.state.editingConfig}
         jobsString={this.state.editingJobsString}
-        jobsTemplates={this.state.jobsTemplates}
+        mappingsString={this.state.editingMappingsString}
+        templates={this.state.configTemplates}
         params={this.state.editingParams}
         paramsSchema={this.state.pureParamsSchema}
-        isEditingJobsString={this.state.isEditingJobsString}
+        isEditingString={this.state.isEditingString}
         isSaving={this.state.isSaving}
         onSave={this.onEditSubmit}
-        onChangeJobs={this.onEditChangeJobs}
+        onChangeTemplate={this.onEditChangeTemplate}
         onChangeJobsString={this.onEditChangeJobsString}
+        onChangeMappingsString={this.onEditChangeMappingsString}
         onChangeParams={this.onEditChangeParams}
-        onChangeJobsEditingMode={this.onEditChangeJobsEditingMode}
+        onChangeEditingMode={this.onEditChangeEditingMode}
         onCancel={this.onEditCancel}
         isValid={this.isValid()}
         saveLabel={this.props.saveLabel}
@@ -120,26 +125,47 @@ export default React.createClass({
     InstalledComponentsActionCreators.saveEditTemplatedComponentConfigData(this.state.componentId, this.state.configId);
   },
 
-  onEditChangeJobs(value) {
-    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataJobs(this.state.componentId, this.state.configId, value);
+  onEditChangeTemplate(value) {
+    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigData(this.state.componentId, this.state.configId, value);
   },
 
   onEditChangeJobsString(value) {
     InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataJobsString(this.state.componentId, this.state.configId, value);
   },
 
+  onEditChangeMappingsString(value) {
+    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataMappingsString(this.state.componentId, this.state.configId, value);
+  },
+
+
   onEditChangeParams(value) {
     InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataParams(this.state.componentId, this.state.configId, value);
   },
 
-  onEditChangeJobsEditingMode() {
-    InstalledComponentsActionCreators.toggleEditTemplatedComponentConfigDataJobsString(this.state.componentId, this.state.configId);
+  onEditChangeEditingMode() {
+    InstalledComponentsActionCreators.toggleEditTemplatedComponentConfigDataString(this.state.componentId, this.state.configId);
   },
 
   isValid() {
+    return this.isValidJobsString() && this.isValidMappingsString();
+  },
+
+  isValidJobsString() {
     if (this.state.editingJobsString) {
       try {
         JSON.parse(this.state.editingJobsString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  isValidMappingsString() {
+    if (this.state.editingMappingsString) {
+      try {
+        JSON.parse(this.state.editingMappingsString);
         return true;
       } catch (e) {
         return false;
