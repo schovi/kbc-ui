@@ -31,17 +31,27 @@ export default React.createClass({
       !this.props.config.get('mappings', Immutable.Map()).isEmpty() ? this.static() : this.emptyState();
   },
 
+  renderJSONSchemaEditor() {
+    // empty json schema does not render
+    if (!this.props.paramsSchema.get('properties') || this.props.paramsSchema.get('properties').count() === 0) {
+      return null;
+    }
+    return (
+      <JSONSchemaEditor
+        schema={this.props.paramsSchema}
+        value={this.props.params}
+        onChange={this.handleChange}
+        readOnly={true}
+      />
+    );
+  },
+
   static() {
     return (
       <div>
         <div className="edit kbc-configuration-editor">
           <div className="text-right">{this.startEditButton()}</div>
-          <JSONSchemaEditor
-            schema={this.props.paramsSchema}
-            value={this.props.params}
-            onChange={this.handleChange}
-            readOnly={true}
-          />
+          {this.renderJSONSchemaEditor()}
           {this.renderConfig()}
         </div>
       </div>
@@ -71,7 +81,6 @@ export default React.createClass({
         <span>
           <h3>Configuration</h3>
           <div><em>No template selected</em></div>
-
         </span>
       );
     } else if (!template) {

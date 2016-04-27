@@ -39,6 +39,22 @@ export default React.createClass({
     };
   },
 
+  renderJSONSchemaEditor() {
+    // empty json schema does not render
+    if (!this.props.paramsSchema.get('properties') || this.props.paramsSchema.get('properties').count() === 0) {
+      return null;
+    }
+    return (
+      <JSONSchemaEditor
+        ref="paramsEditor"
+        schema={this.props.paramsSchema}
+        value={this.props.params}
+        onChange={this.handleParamsChange}
+        readOnly={this.props.isSaving}
+      />
+    );
+  },
+
   render() {
     return (
       <div className="kbc-templated-configuration-edit">
@@ -54,13 +70,7 @@ export default React.createClass({
                 isDisabled={!this.props.isValid}
                 />
             </Sticky>
-            <JSONSchemaEditor
-              ref="paramsEditor"
-              schema={this.props.paramsSchema}
-              value={this.props.params}
-              onChange={this.handleParamsChange}
-              readOnly={this.props.isSaving}
-            />
+            {this.renderJSONSchemaEditor()}
             {!this.props.isEditingString ? (
               <h3>Template
                 <a className="pull-right" onClick={this.switchToJsonEditor}><small>Switch to JSON editor</small></a>
@@ -136,9 +146,11 @@ export default React.createClass({
   },
 
   handleSave() {
-    // json-editor doesn't trigger onChange handler on each key stroke
-    // so sometimes not actualized data were saved https://github.com/keboola/kbc-ui/issues/501
-    this.handleParamsChange(this.refs.paramsEditor.getCurrentValue());
+    if (this.refs.paramsEditor) {
+      // json-editor doesn't trigger onChange handler on each key stroke
+      // so sometimes not actualized data were saved https://github.com/keboola/kbc-ui/issues/501
+      this.handleParamsChange(this.refs.paramsEditor.getCurrentValue());
+    }
     this.props.onSave();
   }
 });
