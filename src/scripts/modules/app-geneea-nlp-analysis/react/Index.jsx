@@ -10,13 +10,18 @@ import Tooltip from '../../../react/common/Tooltip';
 import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
 
+import FiltersDescription from '../../components/react/components/generic/FiltersDescription';
+
 const StaticText = FormControls.Static;
 import {params,
   getInTable,
   updateLocalState,
   isOutputValid,
   updateEditingValue,
+  // updateEditingMapping,
+  getInputMapping,
   startEditing,
+  resetEditingMapping,
   getEditingValue} from '../actions';
 
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
@@ -46,6 +51,8 @@ export default React.createClass({
 
     const intable = getInTable(configId);
     const parameters = configData.get('parameters', Map());
+    const allSapiTables = storageTablesStore.getAll();
+    // console.log(allSapiTables.toJS());
 
     return {
       configId: configId,
@@ -54,7 +61,8 @@ export default React.createClass({
       intable: intable,
       parameters: parameters,
       editing: !!localState.get('editing'),
-      latestJobs: LatestJobsStore.getJobs(componentId, configId)
+      latestJobs: LatestJobsStore.getJobs(componentId, configId),
+      allTables: allSapiTables
 
     };
   },
@@ -126,6 +134,7 @@ export default React.createClass({
   renderEditing() {
     const intableChange = (value) => {
       this.updateEditingValue('intable', value);
+      resetEditingMapping(this.state.configId, value);
       this.updateEditingValue(params.DATACOLUMN, '');
       this.updateEditingValue(params.PRIMARYKEY, '');
     };
@@ -139,6 +148,7 @@ export default React.createClass({
             onSelectTableFn= {intableChange}
             excludeTableFn= { () => false}/>)
         }
+        {this.renderFormElement('Data Filter', this.renderDataFilter())}
         {this.renderColumnSelect('Data Column', params.DATACOLUMN, 'Column of the input table containing text to analyze.')}
         {this.renderColumnSelect('Primary Key', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row in the table.')}
         {this.renderFormElement('Output Table Prefix',
@@ -160,6 +170,27 @@ export default React.createClass({
         }
         {this.renderAnalysisTypesSelect()}
       </div>
+    );
+  },
+
+  renderDataFilter() {
+    const isEditing = this.state.editing;
+    const mapping = getInputMapping(this.state.configId, isEditing);
+    const modalButton = (
+      <button
+        className="btn btn-link"
+        type="button"
+        onClick={() => updateEditingValue('showFilterModal', true)}>
+        <span className="kbc-icon-pencil"/>
+    </button>);
+
+    return (
+      <span>
+        {(isEditing ? modalButton : null)}
+        <FiltersDescription
+          value={mapping}
+          rootClassName=""/>
+      </span>
     );
   },
 
@@ -230,6 +261,7 @@ export default React.createClass({
     return (
       <div className="row">
         {this.renderIntableStatic()}
+        {this.RenderStaticInput('Data Filter', this.renderDataFilter() )}
         {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN) )}
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}

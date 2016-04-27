@@ -112,6 +112,29 @@ function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
   return result;
 }
 
+export function updateEditingMapping(configId, newMapping) {
+  updateEditingValue(configId, 'inputMapping', newMapping);
+}
+
+export function resetEditingMapping(configId, newIntableId) {
+  updateEditingValue(configId, 'inputMapping', fromJS({source: newIntableId}));
+}
+
+export function getInputMapping(configId, isEditing) {
+  const configData = getConfigData(configId);
+  const ls = getLocalState(configId, ['editing']) || Map();
+  const defaultMapping = fromJS({
+    source: ''
+  });
+  const configMapping = configData.getIn(['storage', 'input', 'tables', 0], defaultMapping);
+  const editingMapping = ls.get('inputMapping', configMapping);
+  if (isEditing) {
+    return editingMapping;
+  } else {
+    return configMapping;
+  }
+}
+
 export function save(configId, allTables) {
   const data = getLocalState(configId, ['editing']).toJS();
   const primaryKey = data[params.PRIMARYKEY];
