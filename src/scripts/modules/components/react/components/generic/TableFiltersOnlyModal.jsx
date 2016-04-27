@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Modal} from 'react-bootstrap';
-import DaysFilterInput from '../../../../components/react/components/generic/DaysFilterInput';
-import DataFilterRow from '../../../../components/react/components/generic/DataFilterRow';
+import DaysFilterInput from './DaysFilterInput';
+import DataFilterRow from './DataFilterRow';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 
 export default React.createClass({

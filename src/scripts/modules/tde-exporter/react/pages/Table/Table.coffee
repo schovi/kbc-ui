@@ -7,7 +7,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 StorageStore = require '../../../../components/stores/StorageTablesStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
-FilterTableModal = require('./FilterTableModal').default
+FilterTableModal = require('../../../../components/react/components/generic/TableFiltersOnlyModal').default
 FiltersDescription = require '../../../../components/react/components/generic/FiltersDescription'
 
 InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
