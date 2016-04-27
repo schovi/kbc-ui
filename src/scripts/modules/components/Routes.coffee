@@ -105,6 +105,7 @@ routes =
       createComponentRoute 'keboola.ex-db-pgsql', [exDbGenericRoutes('keboola.ex-db-pgsql')]
       createComponentRoute 'keboola.ex-db-firebird', [exDbGenericRoutes('keboola.ex-db-firebird')]
       createComponentRoute 'keboola.ex-db-db2', [exDbGenericRoutes('keboola.ex-db-db2')]
+      createComponentRoute 'keboola.ex-db-db2-bata', [exDbGenericRoutes('keboola.ex-db-db2-bata')]
       createComponentRoute 'keboola.ex-db-mssql', [exDbGenericRoutes('keboola.ex-db-mssql')]
       createComponentRoute 'keboola.ex-db-mysql', [exDbGenericRoutes('keboola.ex-db-mysql')]
       createComponentRoute 'keboola.ex-db-oracle', [exDbGenericRoutes('keboola.ex-db-oracle')]
