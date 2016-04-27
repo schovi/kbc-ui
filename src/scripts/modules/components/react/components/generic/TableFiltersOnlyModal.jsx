@@ -7,8 +7,9 @@ import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 export default React.createClass({
   propTypes: {
     show: PropTypes.bool,
-    onHide: PropTypes.func,
+    onOk: PropTypes.func,
     onSetMapping: PropTypes.func,
+    onResetAndHide: PropTypes.func,
     value: PropTypes.object.isRequired,
     allTables: PropTypes.object
   },
@@ -27,7 +28,7 @@ export default React.createClass({
     return (
       <Modal
         show={this.props.show}
-        onHide={this.props.onHide}
+        onHide={this.props.onResetAndHide}
         bsSize="large"
       >
         <Modal.Header closeButton>
@@ -39,12 +40,12 @@ export default React.createClass({
         <Modal.Body>
           <div className="className: 'form-horizontal clearfix">
             <DaysFilterInput
-              mapping={this.state.mapping}
+              mapping={this.props.value}
               disabled={false}
               onChange={this.onChangeMapping}
             />
             <DataFilterRow
-              value={this.state.mapping}
+              value={this.props.value}
               allTables={this.props.allTables}
               disabled={false}
               onChange={this.onChangeMapping}
@@ -57,20 +58,19 @@ export default React.createClass({
             saveStyle="primary"
             saveLabel="Set"
             onSave={this.handleSave}
-            onCancel={this.props.onHide}
+            onCancel={this.props.onResetAndHide}
             />
         </Modal.Footer>
       </Modal>
     );
   },
 
-  onChangeMapping(newMapping) {
-    this.setState({mapping: newMapping});
+  handleSave() {
+    this.props.onOk();
   },
 
-  handleSave() {
-    this.props.onSetMapping(this.state.mapping);
-    this.clearState();
+  onChangeMapping(newMapping) {
+    this.props.onSetMapping(newMapping);
   }
 
 
