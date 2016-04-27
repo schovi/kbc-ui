@@ -7,12 +7,15 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 StorageStore = require '../../../../components/stores/StorageTablesStore'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+FilterTableModal = require('./FilterTableModal').default
+FiltersDescription = require '../../../../components/react/components/generic/FiltersDescription'
+
 InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
 ColumnsTable = require './ColumnsTable'
 storageApi = require '../../../../components/StorageApi'
 {Input, FormControls} = require 'react-bootstrap'
 StaticText = FormControls.Static
-{label, input, select, option, button, i, strong, span, div, p, ul, li} = React.DOM
+{form, small, label, input, select, option, button, i, strong, span, div, p, ul, li} = React.DOM
 
 columnTdeTypes = ['string','boolean', 'number', 'decimal','date', 'datetime']
 defaults =
@@ -67,8 +70,10 @@ module.exports = React.createClass
     #tde filename
     tdeFileName = tdeCommon.getTdeFileName(configData || Map(), tableId)
     editingTdeFileName = tdeCommon.getEditingTdeFileName(configData, localState, tableId)
+    mapping = tdeCommon.getTableMapping(configData or Map(), tableId)
 
     #state
+    allTables: StorageStore.getAll()
     isSaving: isSaving
     configId: configId
     table: table
@@ -77,18 +82,23 @@ module.exports = React.createClass
     tableId: tableId
     tdeFileName: tdeFileName
     editingTdeFileName: editingTdeFileName
+    mapping: mapping
+    editingMapping: tdeCommon.getEditingTableMapping(configData, localState, tableId)
+
 
   render: ->
     isEditing = !!@state.localState.getIn(['editing', @state.tableId])
     div className: 'container-fluid kbc-main-content',
+      @_renderFilterModal()
       div className: 'row kbc-header',
-        div className: 'col-sm-3', @_renderHideIngored()
-        div className: 'col-sm-4', @_renderOutNameEditor(isEditing)
-        div className: 'col-sm-3',
+        div className: 'col-sm-2',
+          @_renderHideIngored()
           if isEditing
             @_renderSetColumnsType()
           else
             ' '
+        div className: 'col-sm-4', @_renderOutNameEditor(isEditing)
+        div className: 'col-sm-5', @_renderTableFiltersRow(isEditing)
       React.createElement ColumnsTable,
         table: @state.table
         columnsTypes: @state.columnsTypes
@@ -97,6 +107,41 @@ module.exports = React.createClass
         onChange: @_handleEditChange
         isSaving: @state.isSaving
         hideIgnored: !! @state.localState.getIn ['hideIgnored', @state.tableId]
+
+  _renderTableFiltersRow: (isEditing) ->
+    tlabel = 'Table data filter: '
+    if isEditing
+      tlabel =
+        span null,
+          tlabel
+          button
+            style: {padding: '0px 10px 0px 10px'}
+            className: 'btn btn-link'
+            type: 'button'
+            onClick: =>
+              @_updateLocalState(['filterModal', 'show'], true)
+            span className: 'kbc-icon-pencil'
+    React.createElement StaticText,
+      label: tlabel
+      bsSize: 'small'
+      wrapperClassName: 'wrapper'
+    ,
+      React.createElement FiltersDescription,
+        value: if isEditing then @state.editingMapping else @state.mapping
+        rootClassName: ''
+
+  _renderFilterModal: ->
+    React.createElement FilterTableModal,
+      value: @state.editingMapping
+      allTables: @state.allTables
+      show: @state.localState.getIn(['filterModal', 'show'], false)
+      onHide: =>
+        @_updateLocalState(['filterModal'], Map())
+      onSetMapping: (newMapping) =>
+        ls = @state.localState.setIn(['filterModal'], Map())
+        ls = ls.setIn(['editingMappings', @state.tableId], newMapping)
+        @_updateLocalStateDirectly(ls)
+
 
   _renderOutNameEditor: (isEditing) ->
     tlabel = 'Output file name:'
@@ -118,7 +163,7 @@ module.exports = React.createClass
         value: @state.editingTdeFileName
         bsSize: 'small'
         bsStyle: if errorMsg then 'error' else ''
-        help: errorMsg || msg
+        help: small(null, errorMsg || msg)
         type: 'text'
         label: tlabel
         wrapperClassName: 'wrapper'
@@ -128,31 +173,28 @@ module.exports = React.createClass
           @_updateLocalState(path, value)
 
 
-
   _renderHideIngored: ->
-    React.createElement Input,
-      style: {padding: '0'}
-      type: 'checkbox'
-      label: 'Hide IGNORED'
-      #labelClassName: 'col-xs-10'
-      #wrapperClassName: 'col-xs-12'
-      onChange: (e) =>
-        path = ['hideIgnored', @state.tableId]
-        @_updateLocalState(path, e.target.checked)
+    label null,
+      input
+        style: {padding: '0'}
+        type: 'checkbox'
+        onChange: (e) =>
+          path = ['hideIgnored', @state.tableId]
+          @_updateLocalState(path, e.target.checked)
+      small null, ' Hide IGNORED'
 
   _renderSetColumnsType: ->
     options = _.map columnTdeTypes.concat('IGNORE').concat(''), (opKey, opValue) ->
       option
+        disabled: opKey == ''
         value: opKey
         key: opKey
       ,
-        opKey
+        opKey or small null, 'Set All Types to:'
 
     React.createElement Input,
       type: 'select'
-      label: 'Set All Columns To '
       bsSize: 'small'
-      placeholder: 'select TDE data type'
       defaultValue: ''
       onChange: (e) =>
         value = e.target.value
@@ -180,4 +222,6 @@ module.exports = React.createClass
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
+    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+  _updateLocalStateDirectly: (newLocalState) ->
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)

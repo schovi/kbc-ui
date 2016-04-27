@@ -2,7 +2,7 @@ React = require 'react'
 {Map} = require 'immutable'
 {table, tr, th, tbody, thead, div, td} = React.DOM
 ColumnRow = require './ColumnRow'
-ComponentEmptyState = require '../../../../components/react/components/ComponentEmptyState'
+ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 
 module.exports = React.createClass
   displayName: 'ColumnsEditor'

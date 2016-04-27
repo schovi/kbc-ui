@@ -36,6 +36,7 @@ module.exports = React.createClass
       memo or value?.get('type') != 'IGNORE'
     , false)
     tdeFileName = tdeCommon.getEditingTdeFileName(configData, localState, tableId)
+    mapping = tdeCommon.getEditingTableMapping(configData, localState,tableId)
     fileNameValid = tdeCommon.assertTdeFileName(tdeFileName) == null
     #state
     isSaving: isSaving
@@ -49,6 +50,7 @@ module.exports = React.createClass
     editingData: editingData
     isValid: isValid and isOneColumnType and fileNameValid
     tdeFileName: tdeCommon.webalizeTdeFileName(tdeFileName)
+    mapping: mapping
 
   render: ->
     React.createElement EditButtons,
@@ -66,6 +68,7 @@ module.exports = React.createClass
     path = ['editing', @state.tableId]
     newState = @state.localState.setIn(path, null)
     newState = newState.setIn(['editingTdeNames', @state.tableId], null)
+    newState = newState.setIn(['editingMappings', @state.tableId], null)
     @setLocalState(newState)
 
   _save: ->
@@ -77,6 +80,9 @@ module.exports = React.createClass
     tableToSave = fromJS
       source: tableId
       columns: editingData.keySeq().toJS()
+    tableToSave = @state.mapping
+      .set('source', tableId)
+      .set('columns', editingData.keySeq())
 
     inputTables = @state.configData.getIn(['storage', 'input', 'tables'], List())
     inputTables = inputTables.filter (table) ->
