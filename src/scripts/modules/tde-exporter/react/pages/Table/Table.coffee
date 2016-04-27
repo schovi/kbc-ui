@@ -119,7 +119,9 @@ module.exports = React.createClass
             className: 'btn btn-link'
             type: 'button'
             onClick: =>
-              @_updateLocalState(['filterModal', 'show'], true)
+              ls = @state.localState.setIn(['filterModal'], Map({show: true}))
+              ls = ls.set('mappingBackup', @state.editingMapping)
+              @_updateLocalStateDirectly(ls)
             span className: 'kbc-icon-pencil'
     React.createElement StaticText,
       label: tlabel
@@ -135,13 +137,15 @@ module.exports = React.createClass
       value: @state.editingMapping
       allTables: @state.allTables
       show: @state.localState.getIn(['filterModal', 'show'], false)
-      onHide: =>
+      onResetAndHide: =>
+        ls = @state.localState
+        ls = ls.setIn(['editingMappings', @state.tableId], ls.get('mappingBackup'))
+        ls = ls.set('filterModal', Map())
+        @_updateLocalStateDirectly(ls)
+      onOk: =>
         @_updateLocalState(['filterModal'], Map())
       onSetMapping: (newMapping) =>
-        ls = @state.localState.setIn(['filterModal'], Map())
-        ls = ls.setIn(['editingMappings', @state.tableId], newMapping)
-        @_updateLocalStateDirectly(ls)
-
+        @_updateLocalState(['editingMappings', @state.tableId], newMapping)
 
   _renderOutNameEditor: (isEditing) ->
     tlabel = 'Output file name:'
