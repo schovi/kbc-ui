@@ -101,21 +101,21 @@ export default React.createClass({
     return (
       <div style={{'padding-top': '20px'}} className="form-group">
         <div className="col-xs-12">
-          <label className="control-label col-xs-3">
-      Authorize For
+          <label className="control-label col-xs-2">
+      Description
           </label>
-          <div className="col-xs-8">
+          <div className="col-xs-9">
             <input
               className="form-control"
               type="text"
               name="authorizedFor"
-              help="Used afterwards as a description of the authorized account"
+              help="Describe this authorization, e.g by account name."
               defaultValue={this.state.authorizedFor}
               onChange={this.changeAuthorizedFor}
               autoFocus={true}
             />
             <span className="help-text">
-              Used afterwards as a description of the authorized account
+              Describe this authorization, e.g. by account name.
             </span>
           </div>
         </div>
