@@ -133,7 +133,7 @@ export function createStore(componentId, configId) {
         enabled: true,
         incremental: false,
         outputTable: '',
-        primaryKey: '',
+        primaryKey: [],
         query: '',
         id: generateId(ids)
       });
