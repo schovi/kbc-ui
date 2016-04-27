@@ -41,7 +41,7 @@ function setEditingData(configId, data) {
 }
 
 export function updateEditingValue(configId, prop, value) {
-  const data = getLocalState(configId, ['editing']);
+  const data = getLocalState(configId, ['editing']) || Map();
   setEditingData(configId, data.set(prop, value));
 }
 
@@ -139,14 +139,11 @@ export function save(configId, allTables) {
   const data = getLocalState(configId, ['editing']).toJS();
   const primaryKey = data[params.PRIMARYKEY];
   console.log('EDITING DATA TO SAVE', data, allTables);
+  const inputMapping = getInputMapping(configId, true);
+  const columns = [data[params.DATACOLUMN], primaryKey];
   const storage = {
     input: {
-      tables: [
-        {
-          source: data.intable,
-          columns: [data[params.DATACOLUMN], primaryKey]
-        }
-      ]
+      tables: [ fromJS(inputMapping.set('columns', columns))]
     },
     output: {
       tables: prepareOutTables(data[params.ANALYSIS], data[params.OUTPUT], primaryKey, allTables)

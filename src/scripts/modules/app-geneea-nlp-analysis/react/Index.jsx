@@ -12,13 +12,15 @@ import SapiTableSelector from '../../components/react/components/SapiTableSelect
 
 import FiltersDescription from '../../components/react/components/generic/FiltersDescription';
 
+import TablesFilterModal from '../../components/react/components/generic/TableFiltersOnlyModal';
+
 const StaticText = FormControls.Static;
 import {params,
   getInTable,
   updateLocalState,
   isOutputValid,
   updateEditingValue,
-  // updateEditingMapping,
+  updateEditingMapping,
   getInputMapping,
   startEditing,
   resetEditingMapping,
@@ -85,6 +87,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid">
+        {this.renderTableFiltersModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <ComponentDescription
@@ -148,7 +151,7 @@ export default React.createClass({
             onSelectTableFn= {intableChange}
             excludeTableFn= { () => false}/>)
         }
-        {this.renderFormElement('Data Filter', this.renderDataFilter())}
+        {this.renderFormElement(this.renderFilterLabel(), this.renderDataFilter(), 'Input table data filtered by specified rules, the filtered columns must be indexed.')}
         {this.renderColumnSelect('Data Column', params.DATACOLUMN, 'Column of the input table containing text to analyze.')}
         {this.renderColumnSelect('Primary Key', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row in the table.')}
         {this.renderFormElement('Output Table Prefix',
@@ -173,20 +176,53 @@ export default React.createClass({
     );
   },
 
-  renderDataFilter() {
+
+  renderTableFiltersModal() {
+    return (
+      <TablesFilterModal
+        show={!!this.getEditingValue('showFilterModal')}
+        onOk={() => this.updateEditingValue('showFilterModal', false)}
+        value={getInputMapping(this.state.configId, this.state.editing)}
+        allTables={this.state.allTables}
+        onSetMapping={(newMapping) =>  updateEditingMapping(this.state.configId, newMapping)}
+        onResetAndHide={() => {
+          const savedMapping = this.getEditingValue('backupedMapping');
+          updateEditingMapping(this.state.configId, savedMapping);
+          this.updateEditingValue('showFilterModal', false);
+        }}
+      />
+    );
+  },
+
+  renderFilterLabel() {
     const isEditing = this.state.editing;
     const mapping = getInputMapping(this.state.configId, isEditing);
     const modalButton = (
       <button
+        style={{padding: '0px 10px 0px 10px'}}
         className="btn btn-link"
         type="button"
-        onClick={() => updateEditingValue('showFilterModal', true)}>
+        onClick={() => {
+          this.updateEditingValue('showFilterModal', true);
+          this.updateEditingValue('backupedMapping', mapping);
+        }}
+      >
         <span className="kbc-icon-pencil"/>
     </button>);
+    return (
+      <span>
+        Data Filter
+        {(isEditing ? modalButton : null)}
+      </span>
+    );
+  },
+
+  renderDataFilter() {
+    const isEditing = this.state.editing;
+    const mapping = getInputMapping(this.state.configId, isEditing);
 
     return (
       <span>
-        {(isEditing ? modalButton : null)}
         <FiltersDescription
           value={mapping}
           rootClassName=""/>
