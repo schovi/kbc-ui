@@ -1,6 +1,6 @@
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
-import {Map, fromJS} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 import _ from 'underscore';
 
 const componentId = 'geneea-nlp-analysis';
@@ -92,18 +92,45 @@ export function cancel(configId) {
   setEditingData(configId, null);
 }
 
-export function save(configId) {
+function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
+  let result = [];
+  const isPKEqual = (key) => key === primaryKey;
+  for (let task of tasks) {
+    const tableId = `${outBucket}${task}`;
+    const table = allTables.get(tableId, Map());
+    const tableExists = !!(allTables.get(tableId, false));
+    const tablePks = table.get('primaryKey', List());
+    // if there is exactly one PK and equals to primaryKey param
+    const hasPrimaryKey = tablePks.count() === 1 && !!(tablePks.find(isPKEqual));
+    result.push({
+      'source': `${tableId}.csv`,
+      'destination': tableId,
+      'primary_key': [primaryKey],
+      'incremental': !tableExists || hasPrimaryKey
+    });
+  }
+  return result;
+}
+
+export function save(configId, allTables) {
   const data = getLocalState(configId, ['editing']).toJS();
+  const primaryKey = data[params.PRIMARYKEY];
+  console.log('EDITING DATA TO SAVE', data, allTables);
   const storage = {
     input: {
       tables: [
         {
           source: data.intable,
-          columns: [data[params.DATACOLUMN], data[params.PRIMARYKEY]]
+          columns: [data[params.DATACOLUMN], primaryKey]
         }
       ]
+    },
+    output: {
+      tables: prepareOutTables(data[params.ANALYSIS], data[params.OUTPUT], primaryKey, allTables)
+
     }
   };
+
   const parameters = _.reduce(_.values(params), (memo, key) => {
     memo[key] = data[key];
     return memo;
