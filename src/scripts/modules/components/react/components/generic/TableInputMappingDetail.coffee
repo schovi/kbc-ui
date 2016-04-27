@@ -12,6 +12,7 @@ ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
 TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
+FiltersDescription = require './FiltersDescription'
 
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
@@ -47,36 +48,8 @@ TableInputMappingDetail = React.createClass(
       ListGroupItem {key: 'where_column'},
         strong {className: "col-md-4"},
           'Filters'
-        span {className: "col-md-6"},
-          if @props.value.get('where_column')
-            span {},
-              'Where '
-              strong {},
-                @props.value.get('where_column')
-              ' '
-              @props.value.get('where_operator')
-              ' '
-              strong {},
-                @props.value.get('where_values', Immutable.List()).map((value) ->
-                  if value == ''
-                    return '[empty string]'
-                  if value == ' '
-                    return '[space character]'
-                  return value
-                ).join(', ')
-          if @props.value.get('days', 0) != 0 && @props.value.get('where_column')
-            ' and '
-          if @props.value.get('days', 0) != 0
-            span {},
-              if @props.value.get('where_column')
-                'changed in last '
-              else
-                'Changed in last '
-              @props.value.get('days', 0)
-              ' days'
-          if @props.value.get('days', 0) == 0 && !@props.value.get('where_column')
-            'N/A'
-
+        React.createElement FiltersDescription,
+          value: @props.value
     ]
     ListGroup {className: "clearfix"}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
