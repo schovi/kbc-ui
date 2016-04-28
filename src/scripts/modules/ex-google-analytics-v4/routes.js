@@ -14,7 +14,9 @@ export default {
   defaultRouteHandler: Index,
   // headerButtonsHandler: HeaderButtons,
   requireData: [
-    (params) => installedComponentsActions.loadComponentConfigData(COMPONENT_ID, params.config),
+    (params) => installedComponentsActions.loadComponentConfigData(COMPONENT_ID, params.config).then(() => {
+      return oauthUtils.loadCredentialsFromConfig(COMPONENT_ID, params.config);
+    }),
     () => storageActions.loadTables()
   ],
   childRoutes: [
