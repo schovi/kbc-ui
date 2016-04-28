@@ -70,6 +70,22 @@ export function createRedirectRoute(routeName, redirectPathName, redirectParamsF
   };
 }
 
+// simplified wrapper of createRedirectRoute(^^) that takes only componentId
+// the route must accept config param - :config path in the parent route
+export function createRedirectRouteSimple(componentId) {
+  return createRedirectRoute(
+    componentId + '-oauth-redirect',
+    componentId,
+    (params) => {
+      return {
+        component: componentId,
+        config: params.config
+      };
+    },
+    componentId
+  );
+}
+
 // get credentials id from configData and load credentials
 export function loadCredentialsFromConfig(componentId, configId) {
   const configuration = installedComponentsStore.getConfigData(componentId, configId);
