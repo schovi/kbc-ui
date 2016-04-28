@@ -31,7 +31,7 @@ module.exports = React.createClass
           input
             className: 'form-control'
             type: 'text'
-            value: @props.query.get 'primaryKey'
+            value: @props.query.get('primaryKey', []).join(', ')
             placeholder: 'No primary key'
             disabled: true
         div className: 'form-group',

@@ -3,6 +3,7 @@ fuzzy = require 'fuzzy'
 string = require '../../../../utils/string'
 CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
+Select = React.createFactory require('../../../../react/common/Select').default
 
 Autosuggest = React.createFactory(require 'react-autosuggest')
 editorMode = require('../../templates/editorMode').default
@@ -35,8 +36,8 @@ module.exports = React.createClass
   _handleOutputTableChange: (newValue) ->
     @props.onChange(@props.query.set 'outputTable', newValue)
 
-  _handlePrimaryKeyChange: (event) ->
-    @props.onChange(@props.query.set 'primaryKey', event.target.value)
+  _handlePrimaryKeyChange: (newValue) ->
+    @props.onChange(@props.query.set 'primaryKey', newValue)
 
   _handleIncrementalChange: (event) ->
     @props.onChange(@props.query.set 'incremental', event.target.checked)
@@ -65,11 +66,15 @@ module.exports = React.createClass
               onChange: @_handleNameChange
           label className: 'col-md-2 control-label', 'Primary key'
           div className: 'col-md-4',
-          input
-            className: 'form-control'
-            type: 'text'
+          Select
+            name: 'primaryKey'
             value: @props.query.get 'primaryKey'
+            multi: true
+            disabled: false
+            allowCreate: true
+            delimiter: ','
             placeholder: 'No primary key'
+            emptyStrings: false
             onChange: @_handlePrimaryKeyChange
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Output table'
@@ -92,6 +97,10 @@ module.exports = React.createClass
               'Incremental'
         div className: 'form-group',
           label className: 'col-md-12 control-label', 'SQL query'
+          if @props.componentId is 'keboola.ex-db-oracle'
+            div className: 'col-md-12',
+              div className: 'help-block',
+                "Do not leave semicolon at the end of the query."
           div className: 'col-md-12',
             CodeEditor
               readOnly: false
@@ -99,7 +108,6 @@ module.exports = React.createClass
               value: @props.query.get 'query'
               mode: editorMode(@props.componentId)
               onChange: @_handleQueryChange
-
 
   _tableSelectOptions: ->
     @props.tables
