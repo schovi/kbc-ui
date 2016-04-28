@@ -46,8 +46,8 @@ SchemasStore = StoreUtils.createStore
   isConfigTemplate: (componentId, configuration) ->
     templates = _store.getIn ['schemas', componentId, 'templates', 'config'], Map()
     templates.filter((template) ->
-      return deepEqual(template.get("jobs").toJS(), configuration.get("jobs").toJS()) &&
-          deepEqual(template.get("mappings").toJS(), configuration.get("mappings").toJS())
+      return deepEqual(template.get("jobs").toJS(), configuration.get("jobs", Immutable.List()).toJS()) &&
+          deepEqual(template.get("mappings").toJS(), configuration.get("mappings", Immutable.Map()).toJS())
     ).count() == 1
 
 dispatcher.register (payload) ->
