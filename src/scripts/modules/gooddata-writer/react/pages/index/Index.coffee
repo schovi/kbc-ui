@@ -52,7 +52,7 @@ module.exports = React.createClass
 
   _renderAddNewTable: ->
     remainingTables = @state.storageTables.filter (table) =>
-      table.getIn(['bucket', 'stage']) == 'out' and not @state.tablesByBucket.has(table.get('id'))
+      table.getIn(['bucket', 'stage']) in ['out', 'in'] and not @state.tablesByBucket.has(table.get('id'))
 
     React.createElement AddNewTableButton,
       isDisabled: remainingTables.count() == 0
@@ -333,7 +333,7 @@ module.exports = React.createClass
 
   _filterBuckets: (buckets) ->
     buckets = buckets.filter (bucket) ->
-      bucket.get('stage') == 'out'
+      bucket.get('stage') in ['out', 'in']
     return buckets
 
   _isTableExported: (tableId) ->

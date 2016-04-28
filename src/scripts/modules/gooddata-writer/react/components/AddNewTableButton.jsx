@@ -69,7 +69,7 @@ export default React.createClass({
           }
           }
           value={this.props.localState.get('value')}
-          allowedBuckets={['out']}
+          allowedBuckets={['out', 'in']}
           excludeTableFn={this.isTableConfigured}
           placeholder="out.c-main.data" />
     );
