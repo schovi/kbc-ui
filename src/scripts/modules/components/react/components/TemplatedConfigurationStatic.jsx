@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
 import Markdown from 'react-markdown';
 import CodeMirror from 'react-code-mirror';
-import getTemplatedConfigHashCode from '../../utils/getTemplatedConfigHashCode';
 import Immutable from 'immutable';
+import deepEqual from 'deep-equal';
 
 /* global require */
 require('./configuration-json.less');
@@ -66,16 +66,17 @@ export default React.createClass({
     );
   },
 
-  getTemplate(hashCode) {
+  getTemplate(value) {
     return this.props.templates.filter(
       function(template) {
-        return getTemplatedConfigHashCode(template) === parseInt(hashCode, 10);
+        return deepEqual(template.get('jobs').toJS(), value.get('jobs').toJS()) &&
+          deepEqual(template.get('mappings').toJS(), value.get('mappings').toJS());
       }
     ).first();
   },
 
   renderConfig() {
-    var template = this.getTemplate(getTemplatedConfigHashCode(this.props.config));
+    var template = this.getTemplate(this.props.config);
     if (!template && this.props.config.get('jobs', Immutable.List()).count() === 0 && this.props.config.get('mappings', Immutable.Map()).count() === 0) {
       return (
         <span>

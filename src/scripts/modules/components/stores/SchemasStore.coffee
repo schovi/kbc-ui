@@ -4,9 +4,9 @@ dispatcher = require '../../../Dispatcher'
 Constants = require '../SchemasConstants'
 fuzzy = require 'fuzzy'
 fromJSOrdered = require('../../../utils/fromJSOrdered').default
-getTemplatedConfigHashCode = require('../utils/getTemplatedConfigHashCode').default
+deepEqual = require 'deep-equal'
 
-{Map, List} = Immutable
+{Map} = Immutable
 
 _store = Map
   loadingSchemas: Map()
@@ -33,10 +33,6 @@ SchemasStore = StoreUtils.createStore
   getJobsSchema: (componentId) ->
     _store.getIn ['schemas', componentId, 'schemas', 'params', 'jobs'], Map()
 
-  # DEPRECATED
-  getJobsTemplates: (componentId) ->
-    _store.getIn ['schemas', componentId, 'templates', 'jobs'], Map()
-
   # new
   getConfigTemplates: (componentId) ->
     _store.getIn ['schemas', componentId, 'templates', 'config'], Map()
@@ -49,12 +45,9 @@ SchemasStore = StoreUtils.createStore
 
   isConfigTemplate: (componentId, configuration) ->
     templates = _store.getIn ['schemas', componentId, 'templates', 'config'], Map()
-    configHashCode = getTemplatedConfigHashCode(configuration)
-    console.log("configHashCode", configHashCode)
     templates.filter((template) ->
-      templateHashCode = getTemplatedConfigHashCode(template)
-      console.log("templateHashCode", templateHashCode)
-      return templateHashCode == configHashCode
+      return deepEqual(template.get("jobs").toJS(), configuration.get("jobs").toJS()) &&
+          deepEqual(template.get("mappings").toJS(), configuration.get("mappings").toJS())
     ).count() == 1
 
 dispatcher.register (payload) ->
@@ -62,7 +55,7 @@ dispatcher.register (payload) ->
 
   switch action.type
     when Constants.ActionTypes.SCHEMA_LOAD_SUCCESS
-      _store = _store.setIn ['schemas', action.componentId], Immutable.fromJS(action.schema)
+      _store = _store.setIn ['schemas', action.componentId], fromJSOrdered(action.schema)
       SchemasStore.emitChange()
 
     when Constants.ActionTypes.SCHEMA_LOAD_START
