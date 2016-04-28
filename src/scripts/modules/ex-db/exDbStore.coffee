@@ -1,4 +1,3 @@
-
 Dispatcher = require('../../Dispatcher')
 constants = require './exDbConstants'
 Immutable = require('immutable')
@@ -70,7 +69,7 @@ ExDbStore = StoreUtils.createStore
     _store.getIn ['newQueries', configId, 'query'], Map(
       incremental: false
       outputTable: ''
-      primaryKey: []
+      primaryKey: ''
       query: ''
     )
 
