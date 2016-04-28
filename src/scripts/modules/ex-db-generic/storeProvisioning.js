@@ -163,7 +163,13 @@ export function createStore(componentId, configId) {
     configData: data.config,
 
     getQueries() {
-      return data.parameters.get('tables', List());
+      return data.parameters.get('tables', List()).map((q) => {
+        let pk = q.get('primaryKey', null);
+        if (_.isEmpty(pk) || _.isString(pk)) {
+          pk = List();
+        }
+        return q.set('primaryKey', pk);
+      });
     },
 
     getQueriesFiltered() {
