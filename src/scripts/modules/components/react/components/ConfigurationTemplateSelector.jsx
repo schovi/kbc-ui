@@ -21,6 +21,10 @@ export default React.createClass({
   },
 
   jobsSelector() {
+    var selectedDefault = false;
+    if (!this.getTemplate(this.props.value)) {
+      selectedDefault = true;
+    }
     return (
       <div>
         <Input
@@ -28,7 +32,11 @@ export default React.createClass({
           ref="config"
           onChange={this.handleSelectorChange}
           disabled={this.props.readOnly}>
-          <option value={Immutable.List().hashCode()} disabled>Select template...</option>
+          <option
+            value={Immutable.List().hashCode()}
+            disabled
+            selected={selectedDefault}
+          >Select template...</option>
           {this.templatesSelectorOptions(this.props.value)}
         </Input>
         {this.templateDescription()}
