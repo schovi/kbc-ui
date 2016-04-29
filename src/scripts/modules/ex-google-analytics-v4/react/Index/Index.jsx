@@ -1,14 +1,15 @@
 import React from 'react';
 // stores
-import InstalledComponentStore from '../../../components/stores/InstalledComponentsStore';
+import storeProvisioning, {storeMixins} from '../../storeProvisioning';
 import ComponentStore from '../../../components/stores/ComponentsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
-import OauthStore from '../../../oauth-v2/Store';
+
 // import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 
 // actions
 import {deleteCredentialsAndConfigAuth} from '../../../oauth-v2/OauthUtils';
+import actionsProvisioning from '../../actionsProvisioning';
 
 // ui components
 import AuthorizationRow from '../../../oauth-v2/react/AuthorizationRow';
@@ -17,24 +18,30 @@ import ComponentMetadata from '../../../components/react/components/ComponentMet
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 
+// index components
+import QueriesTable from './QueriesTable';
+
+// CONSTS
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
+console.log(storeMixins);
+
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, OauthStore)],
+  mixins: [createStoreMixin(...storeMixins)],
+
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
-    const localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId);
-    const configData =  InstalledComponentStore.getConfigData(COMPONENT_ID, configId);
+    const store = storeProvisioning(configId);
+    const actions = actionsProvisioning(configId);
     const component = ComponentStore.getComponent(COMPONENT_ID);
-    const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
-
+    console.log('RENDER');
     return {
+      store: store,
+      actions: actions,
       component: component,
       configId: configId,
-      configData: configData,
-      localState: localState,
-      oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
-      oauthCredentialsId: oauthCredentialsId
+      oauthCredentials: store.oauthCredentials,
+      oauthCredentialsId: store.oauthCredentialsId
     };
   },
 
@@ -58,6 +65,12 @@ export default React.createClass({
               onResetCredentials={this.deleteCredentials}
               showHeader={false}
               />
+          </div>
+          <div className="row">
+            <QueriesTable
+              queries={this.state.store.queries}
+              {...this.state.actions.prepareLocalState('QueriesTable')}
+            />
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
