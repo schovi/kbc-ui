@@ -20,13 +20,13 @@ export default function(componentId) {
       const configId = RoutesStore.getCurrentRouteParam('config'),
         ExDbStore = storeProvisioning.createStore(componentId, configId),
         queryId = RoutesStore.getCurrentRouteParam('query'),
-        query = ExDbStore.getConfigQuery(queryId);
-
+        query = ExDbStore.getConfigQuery(queryId) || Map(),
+        outputTable = query.get('outputTable');
       return {
         configId: configId,
         queryId: queryId,
         query: query,
-        pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('outputTable'), Map())
+        pendingActions: ExDbStore.getQueriesPendingActions().get(outputTable, Map())
       };
     },
 

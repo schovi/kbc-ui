@@ -54,7 +54,11 @@ module.exports = (componentId) ->
       ExDbActionCreators.cancelQueryEdit @state.configId, @state.query.get('outputTable')
 
     _handleSave: ->
-      ExDbActionCreators.saveQueryEdit @state.configId, @state.query.get('outputTable')
+      newOutTable = @state.editingQuery.get('newOutputTable')
+      ExDbActionCreators.saveQueryEdit(@state.configId, @state.query.get('outputTable')).then =>
+        RoutesStore.getRouter().transitionTo(
+          "ex-db-generic-#{componentId}-query",
+          {config: @state.configId, query: newOutTable})
 
     render: ->
       div className: 'container-fluid kbc-main-content',
@@ -65,26 +69,27 @@ module.exports = (componentId) ->
               configurationId: @state.configId
               filter: @state.queriesFilter
               componentId: componentId
-        div className: 'col-md-9 kbc-main-content-with-nav',
-          div className: 'row kbc-header',
-            div className: 'kbc-buttons',
-              React.createElement EditButtons,
-                isEditing: @state.isEditing
-                isSaving: @state.isSaving
-                isDisabled: !@state.isValid
-                onCancel: @_handleCancel
-                onSave: @_handleSave
-                onEditStart: @_handleEditStart
-          if @state.isEditing
-            QueryEditor
-              outTableExist: @state.outTableExist
-              query: @state.editingQuery
-              tables: @state.tables
-              onChange: @_handleQueryChange
-              configId: @state.configId
-              componentId: componentId
-              defaultOutputTable: @state.defaultOutputTable
-          else
-            QueryDetailStatic
-              query: @state.query
-              componentId: componentId
+        if @state.query
+          div className: 'col-md-9 kbc-main-content-with-nav',
+            div className: 'row kbc-header',
+              div className: 'kbc-buttons',
+                React.createElement EditButtons,
+                  isEditing: @state.isEditing
+                  isSaving: @state.isSaving
+                  isDisabled: !@state.isValid
+                  onCancel: @_handleCancel
+                  onSave: @_handleSave
+                  onEditStart: @_handleEditStart
+            if @state.isEditing
+              QueryEditor
+                outTableExist: @state.outTableExist
+                query: @state.editingQuery
+                tables: @state.tables
+                onChange: @_handleQueryChange
+                configId: @state.configId
+                componentId: componentId
+                defaultOutputTable: @state.defaultOutputTable
+            else
+              QueryDetailStatic
+                query: @state.query
+                componentId: componentId

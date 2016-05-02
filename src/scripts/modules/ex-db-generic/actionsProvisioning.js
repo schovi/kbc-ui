@@ -90,16 +90,18 @@ export function createActions(componentId) {
 
     checkTableName(query, store) {
       const defaultTableName = store.getDefaultOutputTableId(query);
-      if (query.get('outputTable', '').trim().length > 0) {
+      if (query.get('newOutputTable', '').trim().length > 0) {
         return query;
       } else {
-        return query.set('outputTable', defaultTableName);
+        return query.set('newOutputTable', defaultTableName);
       }
     },
 
     createQuery(configId) {
       const store = getStore(configId);
-      const newQuery = this.checkTableName(store.getNewQuery(), store);
+      let newQuery = this.checkTableName(store.getNewQuery(), store);
+      newQuery = newQuery.set('outputTable', newQuery.get('newOutputTable'));
+      newQuery = newQuery.delete('newOutputTable');
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
       return saveConfigData(configId, newData, ['newQueries', 'isSaving']).then(() => this.resetNewQuery(configId));
@@ -138,9 +140,14 @@ export function createActions(componentId) {
       const store = getStore(configId);
       let newQuery = store.getEditingQuery(queryId);
       newQuery = this.checkTableName(newQuery, store);
-      const newQueries = store.getQueries().map((q) => q.get('outputTable') === queryId ? newQuery : q);
+      // remove old query
+      let newQueries = store.getQueries().filter( (q) => q.get('outputTable') !== newQuery.get('outputTable'));
+      // copy new outputTable
+      newQuery = newQuery.set('outputTable', newQuery.get('newOutputTable'));
+      newQuery = newQuery.delete('newOutputTable');
+      newQueries = newQueries.push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
+      return saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
     },
 
     testCredentials(configId, credentials) {
