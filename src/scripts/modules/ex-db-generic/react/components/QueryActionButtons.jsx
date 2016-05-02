@@ -38,6 +38,7 @@ export default function(componentId) {
       return (
         <div>
           <QueryDeleteButton
+            componentId={componentId}
             query={this.state.query}
             configurationId={this.state.configId}
             isPending={this.state.pendingActions.get('deleteQuery')}
