@@ -43,7 +43,7 @@ module.exports = (componentId) ->
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()
       defaultOutputTable: ExDbStore.getDefaultOutputTableId(editingQuery)
-
+      outTableExist: ExDbStore.outTableExist(editingQuery)
     _handleQueryChange: (newQuery) ->
       ExDbActionCreators.updateEditingQuery @state.configId, newQuery
 
@@ -77,6 +77,7 @@ module.exports = (componentId) ->
                 onEditStart: @_handleEditStart
           if @state.isEditing
             QueryEditor
+              outTableExist: @state.outTableExist
               query: @state.editingQuery
               tables: @state.tables
               onChange: @_handleQueryChange

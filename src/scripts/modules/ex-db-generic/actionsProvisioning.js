@@ -125,7 +125,8 @@ export function createActions(componentId) {
     },
 
     editQuery(configId, queryId) {
-      const query = getStore(configId).getConfigQuery(queryId);
+      let query = getStore(configId).getConfigQuery(queryId);
+      query = query.set('newOutputTable', query.get('outputTable'));
       updateLocalState(configId, ['editingQueries', queryId], query);
     },
 

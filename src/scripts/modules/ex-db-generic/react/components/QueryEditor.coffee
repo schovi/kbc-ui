@@ -26,6 +26,7 @@ module.exports = React.createClass
     tables: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
     showOutputTable: React.PropTypes.bool
+    outTableExist: React.PropTypes.bool
     configId: React.PropTypes.string.isRequired
     defaultOutputTable: React.PropTypes.string.isRequired
     componentId: React.PropTypes.string.isRequired
@@ -34,7 +35,7 @@ module.exports = React.createClass
     React.findDOMNode(this.refs.queryName).focus()
 
   _handleOutputTableChange: (newValue) ->
-    @props.onChange(@props.query.set 'outputTable', newValue)
+    @props.onChange(@props.query.set 'newOutputTable', newValue)
 
   _handlePrimaryKeyChange: (newValue) ->
     @props.onChange(@props.query.set 'primaryKey', newValue)
@@ -76,7 +77,7 @@ module.exports = React.createClass
             placeholder: 'No primary key'
             emptyStrings: false
             onChange: @_handlePrimaryKeyChange
-        div className: 'form-group',
+        div className: (if @props.outTableExist then 'form-group has-error' else 'form-group'),
           label className: 'col-md-2 control-label', 'Output table'
           div className: 'col-md-6',
             Autosuggest
@@ -84,10 +85,13 @@ module.exports = React.createClass
               inputAttributes:
                 className: 'form-control'
                 placeholder: @_tableNamePlaceholder()
-                value: @props.query.get 'outputTable'
+                value: @props.query.get 'newOutputTable'
                 onChange: @_handleOutputTableChange
             div className: 'help-block',
-              "if empty then default will be used"
+              if @props.outTableExist
+                "Table with such name already exists."
+              else
+                "if empty then default will be used"
           div className: 'col-md-4 checkbox',
             label null,
               input

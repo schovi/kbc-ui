@@ -151,13 +151,26 @@ export function createStore(componentId, configId) {
     isSavingQuery() {
       return data.localState.get('savingQueries');
     },
+    outTableExist(query) {
+      if (!query) {
+        return false;
+      }
+      const currentOutputTable = query.get('outputTable');
+      const editingOutpuTable = query.get('newOutputTable');
+      const found = this.getQueries().find((q) => {
+        const outTable = q.get('outputTable');
+        return outTable === editingOutpuTable && outTable !== currentOutputTable;
+      });
+      return !!found;
+    },
 
     isEditingQueryValid(queryId) {
       const query = this.getEditingQuery(queryId);
       if (!query) {
         return false;
       }
-      return isValidQuery(query);
+
+      return !this.outTableExist(query) && isValidQuery(query);
     },
     // -------- CONFIGDATA manipulation -----------------
     configData: data.config,
