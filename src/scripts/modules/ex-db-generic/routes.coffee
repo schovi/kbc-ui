@@ -45,7 +45,7 @@ module.exports = (componentId) ->
     nameEdit: (params) ->
       React.createElement ExDbQueryName(componentId),
         configId: params.config
-        queryId: parseInt params.query
+        queryId: params.query
     requireData: [
       ->
         StorageActionCreators.loadTables()
