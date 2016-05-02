@@ -16,15 +16,6 @@ function fetch(componentId, configId) {
   };
 }
 
-function generateId(existingIds) {
-  const randomNumber = () => Math.floor((Math.random() * 100000) + 1);
-  let newId = randomNumber();
-  while (existingIds.indexOf(newId) >= 0) {
-    newId = randomNumber();
-  }
-  return newId;
-}
-
 function isValidQuery(query) {
   const nameValid = query.get('name', '').trim().length > 0;
   const queryValid = query.get('query', '').trim().length > 0;
@@ -128,14 +119,12 @@ export function createStore(componentId, configId) {
     },
 
     getNewQuery() {
-      const ids = this.getQueries().map((q) => q.get('outputTable')).toJS();
       const defaultNewQuery = fromJS({
         enabled: true,
         incremental: false,
         outputTable: '',
         primaryKey: [],
-        query: '',
-        id: generateId(ids)
+        query: ''
       });
       return data.localState.getIn(['newQueries', 'query'], defaultNewQuery);
     },
