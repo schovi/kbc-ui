@@ -27,7 +27,7 @@ module.exports = (componentId) ->
 
     getStateFromStores: ->
       configId = RoutesStore.getCurrentRouteParam 'config'
-      queryId = RoutesStore.getCurrentRouteIntParam 'query'
+      queryId = RoutesStore.getCurrentRouteParam 'query'
       ExDbStore = storeProvisioning.createStore(componentId, configId)
       isEditing = ExDbStore.isEditingQuery(queryId)
       query = ExDbStore.getConfigQuery(queryId)
@@ -48,13 +48,13 @@ module.exports = (componentId) ->
       ExDbActionCreators.updateEditingQuery @state.configId, newQuery
 
     _handleEditStart: ->
-      ExDbActionCreators.editQuery @state.configId, @state.query.get('id')
+      ExDbActionCreators.editQuery @state.configId, @state.query.get('outputTable')
 
     _handleCancel: ->
-      ExDbActionCreators.cancelQueryEdit @state.configId, @state.query.get('id')
+      ExDbActionCreators.cancelQueryEdit @state.configId, @state.query.get('outputTable')
 
     _handleSave: ->
-      ExDbActionCreators.saveQueryEdit @state.configId, @state.query.get('id')
+      ExDbActionCreators.saveQueryEdit @state.configId, @state.query.get('outputTable')
 
     render: ->
       div className: 'container-fluid kbc-main-content',

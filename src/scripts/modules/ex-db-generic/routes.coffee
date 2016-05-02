@@ -41,7 +41,7 @@ module.exports = (componentId) ->
       configId = routerState.getIn ['params', 'config']
       queryId = routerState.getIn ['params', 'query']
       ExDbStore = storeProvisioning.createStore(componentId, configId)
-      'Query ' + ExDbStore.getConfigQuery(parseInt(queryId)).get 'name'
+      'Query ' + ExDbStore.getConfigQuery(queryId).get 'name'
     nameEdit: (params) ->
       React.createElement ExDbQueryName(componentId),
         configId: params.config

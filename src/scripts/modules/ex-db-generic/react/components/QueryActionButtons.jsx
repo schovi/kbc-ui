@@ -19,14 +19,14 @@ export default function(componentId) {
     getStateFromStores() {
       const configId = RoutesStore.getCurrentRouteParam('config'),
         ExDbStore = storeProvisioning.createStore(componentId, configId),
-        queryId = RoutesStore.getCurrentRouteIntParam('query'),
+        queryId = RoutesStore.getCurrentRouteParam('query'),
         query = ExDbStore.getConfigQuery(queryId);
 
       return {
         configId: configId,
         queryId: queryId,
         query: query,
-        pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('id'), Map())
+        pendingActions: ExDbStore.getQueriesPendingActions().get(query.get('outputTable'), Map())
       };
     },
 
@@ -73,7 +73,7 @@ export default function(componentId) {
     },
 
     handleActiveChange(newValue) {
-      actionCreators.changeQueryEnabledState(this.state.configId, this.state.query.get('id'), newValue);
+      actionCreators.changeQueryEnabledState(this.state.configId, this.state.query.get('outputTable'), newValue);
     }
 
   });

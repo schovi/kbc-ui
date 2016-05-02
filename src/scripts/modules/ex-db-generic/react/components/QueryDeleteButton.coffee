@@ -51,7 +51,7 @@ module.exports = React.createClass
       config: @props.configurationId
 
     # if query is deleted immediatelly view is rendered with missing orchestration because of store changed
-    id = @props.query.get('id')
+    id = @props.query.get('outputTable')
     config = @props.configurationId
     ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
     setTimeout ->

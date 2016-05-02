@@ -23,7 +23,7 @@ module.exports = React.createClass
 
   _handleActiveChange: (newValue) ->
     actionCreators = actionsProvisioning.createActions(@props.componentId)
-    actionCreators.changeQueryEnabledState(@props.configurationId, @props.query.get('id'), newValue)
+    actionCreators.changeQueryEnabledState(@props.configurationId, @props.query.get('outputTable'), newValue)
 
   render: ->
     actionCreators = actionsProvisioning.createActions(@props.componentId)
@@ -33,7 +33,7 @@ module.exports = React.createClass
       to: "ex-db-generic-#{@props.componentId}-query"
       params:
         config: @props.configurationId
-        query: @props.query.get 'id'
+        query: @props.query.get 'outputTable'
     ,
       span className: 'td kbc-break-all',
         if @props.query.get 'name'

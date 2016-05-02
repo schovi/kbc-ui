@@ -22,9 +22,9 @@ module.exports = React.createClass
       QueryRow
         query: query
         componentId: @props.componentId
-        pendingActions: @props.pendingActions.get query.get('id'), Map()
+        pendingActions: @props.pendingActions.get query.get('outputTable'), Map()
         configurationId: @props.configurationId
-        key: query.get('id')
+        key: query.get('outputTable')
     , @).toArray()
 
     div className: 'table table-striped table-hover',

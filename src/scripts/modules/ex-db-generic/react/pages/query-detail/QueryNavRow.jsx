@@ -22,7 +22,7 @@ export default React.createClass({
   linkParams() {
     return {
       config: this.props.configurationId,
-      query: this.props.query.get('id')
+      query: this.props.query.get('outputTable')
     };
   }
 });
