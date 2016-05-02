@@ -140,15 +140,18 @@ export function createStore(componentId, configId) {
     isSavingQuery() {
       return data.localState.get('savingQueries');
     },
+
     outTableExist(query) {
       if (!query) {
         return false;
       }
       const currentOutputTable = query.get('outputTable');
-      const editingOutpuTable = query.get('newOutputTable');
+      const editingOutpuTable = query.get('newOutputTable') || '';
+      const defaultOutputTable = this.getDefaultOutputTableId(query);
       const found = this.getQueries().find((q) => {
         const outTable = q.get('outputTable');
-        return outTable === editingOutpuTable && outTable !== currentOutputTable;
+        const isDefaultBad = editingOutpuTable.trim().length === 0 && defaultOutputTable === outTable;
+        return isDefaultBad || (outTable === editingOutpuTable && outTable !== currentOutputTable);
       });
       return !!found;
     },

@@ -25,6 +25,7 @@ module.exports = (componentId) ->
       newQuery: newQuery
       tables: StorageTablesStore.getAll()
       defaultOutputTable: ExDbStore.getDefaultOutputTableId(newQuery)
+      outTableExist: ExDbStore.outTableExist(newQuery)
 
     _handleQueryChange: (newQuery) ->
       ExDbActionCreators.updateNewQuery @state.configId, newQuery
@@ -38,3 +39,4 @@ module.exports = (componentId) ->
           configId: @state.configId
           defaultOutputTable: @state.defaultOutputTable
           componentId: componentId
+          outTableExist: @state.outTableExist
