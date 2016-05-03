@@ -17,6 +17,7 @@ import ComponentDescription from '../../../components/react/components/Component
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
+import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
 // index components
 import QueriesTable from './QueriesTable';
@@ -46,6 +47,7 @@ export default React.createClass({
   },
 
   render() {
+    const queries = this.state.store.queries;
     return (
       <div className="container-fluid">
         <div className="col-md-9 kbc-main-content">
@@ -53,7 +55,7 @@ export default React.createClass({
             <ComponentDescription
               componentId={COMPONENT_ID}
               configId={this.state.configId}
-              />
+            />
           </div>
           <div className="row">
             <AuthorizationRow
@@ -64,13 +66,13 @@ export default React.createClass({
               isResetingCredentials={false}
               onResetCredentials={this.deleteCredentials}
               showHeader={false}
-              />
+            />
           </div>
           <div className="row">
-            <QueriesTable
-              queries={this.state.store.queries}
-              {...this.state.actions.prepareLocalState('QueriesTable')}
-            />
+            {(queries && queries.count() > 0)
+             ? this.renderQueriesTable()
+             : this.renderEmptyQueries()
+            }
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
@@ -86,7 +88,7 @@ export default React.createClass({
                 mode="link"
                 runParams={this.runParams()}
                 disabledReason="Component is not configured yet"
-                >
+              >
                 You are about to run component.
               </RunComponentButton>
             </li>
@@ -99,13 +101,36 @@ export default React.createClass({
               <DeleteConfigurationButton
                 componentId={COMPONENT_ID}
                 configId={this.state.configId}
-                />
+              />
             </li>
           </ul>
           {/* <LatestJobs jobs={this.state.latestJobs} /> */}
         </div>
       </div>
 
+    );
+  },
+
+  renderQueriesTable() {
+    return (
+      <QueriesTable
+      queries={this.state.store.queries}
+      allProfiles={this.state.store.profiles}
+      {...this.state.actions.prepareLocalState('QueriesTable')}
+      />
+    );
+  },
+
+  renderEmptyQueries() {
+    return (
+      <EmptyState>
+        <p>No Queries Configured</p>
+        <button
+          type="button"
+          className="btn btn-success">
+          Add Query
+        </button>
+      </EmptyState>
     );
   },
 

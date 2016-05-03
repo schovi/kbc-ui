@@ -27,6 +27,7 @@ export default function(configId) {
     },
 
     // config data stuff
-    queries: parameters.getIn(['queries'])
+    queries: parameters.getIn(['queries']),
+    profiles: parameters.getIn(['profiles'])
   };
 }
