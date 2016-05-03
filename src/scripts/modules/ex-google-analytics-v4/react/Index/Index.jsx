@@ -18,6 +18,8 @@ import ComponentMetadata from '../../../components/react/components/ComponentMet
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
+/* import {FormControls} from 'react-bootstrap';
+ *const StaticText = FormControls.Static;*/
 
 // index components
 import QueriesTable from './QueriesTable';
@@ -59,6 +61,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <AuthorizationRow
+              className="col-xs-6"
               id={this.state.oauthCredentialsId}
               configId={this.state.configId}
               componentId={COMPONENT_ID}
@@ -67,6 +70,7 @@ export default React.createClass({
               onResetCredentials={this.deleteCredentials}
               showHeader={false}
             />
+            {this.renderProfiles('col-xs-6')}
           </div>
           <div className="row">
             {(queries && queries.count() > 0)
@@ -111,12 +115,42 @@ export default React.createClass({
     );
   },
 
+  renderProfiles(clName) {
+    /* return (
+     *  <div className={clName}>
+     *    <StaticText
+     *      wrapperClassName="wrapper"
+     *      label="Profiles"
+     *      bsSize="small">
+     *      <div>asdasd</div>
+     *      <div>asdasd</div>
+     *      <div>asdasd</div>
+     *    </StaticText>
+     *  </div>
+     *);*/
+
+    return (
+      <div className={clName}>
+        <div className="form-group form-group-sm">
+          <label> Profiles </label>
+          <div>
+            <div className="form-control-static">
+              <div>Keboola Website/ Keboola Website/ All Web Site Data</div>
+              <div>Keboola Website/ Keboola Website/ All Web Site Data</div>
+              <div>and 5 more</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
   renderQueriesTable() {
     return (
       <QueriesTable
-      queries={this.state.store.queries}
-      allProfiles={this.state.store.profiles}
-      {...this.state.actions.prepareLocalState('QueriesTable')}
+        queries={this.state.store.queries}
+        allProfiles={this.state.store.profiles}
+        {...this.state.actions.prepareLocalState('QueriesTable')}
       />
     );
   },
