@@ -2,44 +2,21 @@ React = require('react')
 _ = require('underscore')
 {Button} = require('react-bootstrap')
 {div, span} = React.DOM
-
+InitGoogleApis = require('./InitGoogleApis')
+{apiKey, authorize, injectGapiScript} = InitGoogleApis
 templates = require './PickerViewTemplates'
+{GapiStore} = require './GapiFlux'
+createStoreMixin = require '../../../react/mixins/createStoreMixin'
 
-apiUrl = 'https://apis.google.com/js/client.js?onload=handleGoogleClientLoad'
 scope = 'https://www.googleapis.com/auth/drive.readonly'
-clientId = '682649748090-hdan66m2vvudud332s99aud36fs15idj.apps.googleusercontent.com'
-apiKey = 'AIzaSyBYjYUY81-DWMZBuNYRWOTSLt9NZqWG0cc'
-
 
 setZIndex = ->
   elements = document.getElementsByClassName("picker")
   for el in elements
     el.style.zIndex = '1500'
 
-window.handleGoogleClientLoad = ->
-
-  console.log  "GAPI LOADED", window.gapi
-  gapi.load('picker', -> )
-  gapi.load('auth', -> )
-
-
-injectGoogleApiScript = ->
-  scripts = document.body.getElementsByTagName('script')
-  apiScript = _.find scripts, (s) ->
-    s.src == apiUrl
-  if not apiScript and _.isUndefined(window.gapi)
-    script = document.createElement('script')
-    script.src = apiUrl
-    document.body.appendChild script
-
-
 authorizePicker = (userEmail, callbackFn) ->
-  gapi.auth.authorize(
-    'client_id': clientId
-    'scope': scope
-    'immediate': false
-    'user_id': userEmail if userEmail
-  , callbackFn)
+  authorize(scope, callbackFn, userEmail)
 
 createGdrivePicker = (views, viewGroups) ->
   picker = new google.picker.PickerBuilder()
@@ -54,7 +31,6 @@ createGdrivePicker = (views, viewGroups) ->
 
   for view in views
     picker = picker.addView(view())
-  console.log picker
   #picker.A.style.zIndex = 2000
   return picker
 
@@ -62,6 +38,7 @@ createGdrivePicker = (views, viewGroups) ->
 module.exports = React.createClass
 
   displayName: "googlePicker"
+  mixins: [createStoreMixin(GapiStore)]
   propTypes:
     dialogTitle: React.PropTypes.string.isRequired
     buttonLabel: React.PropTypes.string.isRequired
@@ -71,8 +48,11 @@ module.exports = React.createClass
     email: React.PropTypes.string
     buttonProps: React.PropTypes.object
 
+  getStateFromStores: ->
+    isInitialized: GapiStore.isInitialized()
+
   componentDidMount: ->
-    injectGoogleApiScript()
+    injectGapiScript()
 
   render: ->
     buttonProps =
@@ -80,6 +60,7 @@ module.exports = React.createClass
     if @props.buttonProps
       buttonProps = @props.buttonProps
     buttonProps['onClick'] = @_ButtonClick
+    buttonProps['disabled'] = not @state.isInitialized
 
     React.createElement Button,
       buttonProps

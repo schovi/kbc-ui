@@ -54,6 +54,7 @@ Dispatcher.register (payload) ->
           store = store.setIn ['buckets', bObj.get 'id'], bObj
         )
         store.set 'isLoading', false
+        store.set 'isLoaded', true
       StorageBucketsStore.emitChange()
 
     when constants.ActionTypes.STORAGE_BUCKETS_LOAD_ERROR
