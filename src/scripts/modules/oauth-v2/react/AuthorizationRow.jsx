@@ -82,10 +82,12 @@ export default React.createClass({
              title="Reset Authorization"
              buttonLabel="Reset"
              onConfirm={this.props.onResetCredentials}>
+             <Tooltip tooltip="Reset Authorization" placement="top">
              <a
                className="btn btn-link">
-               Reset Authorization
+                 Reset
              </a>
+             </Tooltip>
            </Confirm>
          ) : (
            <span>
