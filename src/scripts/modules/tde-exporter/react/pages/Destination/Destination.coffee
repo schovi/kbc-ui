@@ -50,7 +50,7 @@ module.exports = React.createClass
   render: ->
     destinationRow =
       React.createElement ComponentEmptyState, null,
-        p null, 'No Upload Destination Choosed'
+        p null, 'Upload destination is not chosen'
         button
           type: 'button'
           className: 'btn btn-success'
