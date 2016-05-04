@@ -353,25 +353,6 @@ dispatcher.register (payload) ->
       columns = Immutable.OrderedMap(action.table.columns)
         .map (value) ->
           Map(value)
-          .filter((value, key) ->
-            key in [
-              'gdName'
-              'type'
-              'name'
-              'dataType',
-              'dataTypeSize',
-              'reference',
-              'schemaReference',
-              'format',
-              'dateDimension',
-              'sortLabel',
-              'sortOrder'
-              'identifier',
-              'identifierLabel',
-              'identifierTime',
-              'title'
-            ]
-          )
         .map (column) ->
           if !column.get('title')
             column = column.set('title', column.get('gdName'))
