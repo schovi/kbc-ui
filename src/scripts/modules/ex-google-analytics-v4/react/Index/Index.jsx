@@ -38,7 +38,7 @@ export default React.createClass({
     const store = storeProvisioning(configId);
     const actions = actionsProvisioning(configId);
     const component = ComponentStore.getComponent(COMPONENT_ID);
-    console.log('RENDER');
+    console.log('RENDER', store.profiles.toJS());
     return {
       store: store,
       actions: actions,
