@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
+// import {List} from 'immutable';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
-import ProfileInfo from '../ProfileInfo';
+import SelectedProfilesList from './SelectedProfilesList';
 
 export default React.createClass({
   propTypes: {
@@ -18,13 +19,13 @@ export default React.createClass({
         <div className="thead">
           <div className="tr">
             <div className="th">
-              <strong> Query Name </strong>
+              <strong>Name </strong>
             </div>
             <div className="th">
               <strong> Date Range(s) </strong>
             </div>
             <div className="th">
-              <strong> Profile(s) </strong>
+              <strong> Selected Profile(s) </strong>
             </div>
             <div className="th">
               {/* right arrow */}
@@ -46,6 +47,8 @@ export default React.createClass({
 
   renderQueryRow(query) {
     const propValue = (propName) => query.getIn([].concat(propName));
+    const queryProfiles = [propValue(['query', 'viewId'])];
+
     console.log(query.toJS());
     return (
       <div className="tr">
@@ -56,9 +59,9 @@ export default React.createClass({
           {this.renderDateRanges(propValue(['query', 'dateRanges']))}
         </div>
         <div className="td">
-          <ProfileInfo
+          <SelectedProfilesList
             allProfiles={this.props.allProfiles}
-            selectedProfiles={propValue(['query', 'viewId'])} />
+            profileIds={queryProfiles} />
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />

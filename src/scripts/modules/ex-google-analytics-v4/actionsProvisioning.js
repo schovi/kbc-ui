@@ -37,6 +37,7 @@ export default function(configId) {
   }
 
   return {
-    prepareLocalState: prepareLocalState
+    prepareLocalState: prepareLocalState,
+    updateLocalState: updateLocalState
   };
 }

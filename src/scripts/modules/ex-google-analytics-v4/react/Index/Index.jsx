@@ -23,6 +23,7 @@ import EmptyState from '../../../components/react/components/ComponentEmptyState
 
 // index components
 import QueriesTable from './QueriesTable';
+import ProfilesManagerModal from './ProfilesManagerModal';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
@@ -44,7 +45,8 @@ export default React.createClass({
       component: component,
       configId: configId,
       oauthCredentials: store.oauthCredentials,
-      oauthCredentialsId: store.oauthCredentialsId
+      oauthCredentialsId: store.oauthCredentialsId,
+      localState: store.getLocalState()
     };
   },
 
@@ -52,6 +54,12 @@ export default React.createClass({
     const queries = this.state.store.queries;
     return (
       <div className="container-fluid">
+        <ProfilesManagerModal
+          show={this.state.localState.get('showprofilesmanagerModal', false)}
+          onHideFn={() => this.state.actions.updateLocalState('showprofilesmanagerModal', false)}
+          profiles={this.state.store.profiles}
+          {...this.state.actions.prepareLocalState('ProfilesManagerModal')}
+        />
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <ComponentDescription
@@ -61,7 +69,7 @@ export default React.createClass({
           </div>
           <div className="row">
             <AuthorizationRow
-              className="col-xs-6"
+              className="col-xs-5"
               id={this.state.oauthCredentialsId}
               configId={this.state.configId}
               componentId={COMPONENT_ID}
@@ -70,7 +78,7 @@ export default React.createClass({
               onResetCredentials={this.deleteCredentials}
               showHeader={false}
             />
-            {this.renderProfiles('col-xs-6')}
+            {this.renderProfiles('col-xs-7')}
           </div>
           <div className="row">
             {(queries && queries.count() > 0)
@@ -99,6 +107,12 @@ export default React.createClass({
             <li>
               <a href={this.state.component.get('documentationUrl')} target="_blank">
                 <i className="fa fa-question-circle fa-fw" /> Documentation
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={() => this.state.actions.updateLocalState('showprofilesmanagerModal', true)}>
+                 Setup Profiles
               </a>
             </li>
             <li>
