@@ -40,12 +40,10 @@ module.exports = function(templates, configuration) {
           valid = false;
           return;
         }
-      } else {
+      } else if (configValue !== templateValue) {
         // nonequal scalars
-        if (configValue !== templateValue) {
-          valid = false;
-          return;
-        }
+        valid = false;
+        return;
       }
     });
     return valid;
