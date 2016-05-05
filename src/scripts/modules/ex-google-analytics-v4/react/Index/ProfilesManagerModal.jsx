@@ -8,6 +8,8 @@ import ProfilesLoader from '../../../google-utils/react/ProfilesPicker';
 import ApplicationActionCreators from '../../../../actions/ApplicationActionCreators';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
+import './ProfilesManagerModal.less';
+
 export default React.createClass({
 
   propTypes: {
@@ -132,16 +134,8 @@ export default React.createClass({
 
   renderProfileGroup(profileGroup, profileGroupName) {
     const header = (
-    <span>
-      <span className="table" style={{margin: '0'}}>
-        <span className="tbody">
-          <span className="tr">
-            <span className="td">
+      <span>
               {profileGroupName}
-            </span>
-          </span>
-        </span>
-      </span>
     </span>);
 
     return (
@@ -149,7 +143,7 @@ export default React.createClass({
         header={header}
         key={profileGroupName}
         collapsible={true}
-        className="profile-name">
+        className="profile-panel">
         {profileGroup.map((p, pname) => this.renderProfilePanel(p, pname))}
       </Panel>
     );
@@ -157,19 +151,10 @@ export default React.createClass({
 
   renderProfilePanel(profile, profileName) {
     const header = (
-    <span>
-      <span className="table" style={{margin: '0'}}>
-        <span className="tbody">
-          <span className="tr">
-            <span className="td">
+      <span>
               {profileName}
-            </span>
-          </span>
-        </span>
-      </span>
     </span>);
     return (
-      <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table">
         <Panel
           header={header}
           key={profileName}
@@ -184,7 +169,6 @@ export default React.createClass({
             </ListGroup>
           </div>
         </Panel>
-      </div>
     );
   },
 
