@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Map, fromJS} from 'immutable';
-import {Modal, Alert} from 'react-bootstrap';
+import {Modal, Alert, Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ProfileInfo from '../ProfileInfo';
 // import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
@@ -91,7 +91,7 @@ export default React.createClass({
          <span>
            <h2>2. Select Profiles of {email} </h2>
            {this.renderWarning(email)}
-           {this.renderProfilesPanel(profiles)}
+           {this.renderLoadedProfiles(profiles)}
          </span>
          :
          <EmptyState>
@@ -117,10 +117,73 @@ export default React.createClass({
     }
   },
 
-  renderProfilesPanel(profiles) {
+  renderLoadedProfiles(profiles) {
     return (
       <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'">
-        TODO render {profiles}
+        { profiles && profiles.count() > 0 ?
+          profiles.map((p, pname) => this.renderProfileGroup(p, pname))
+          :
+          <EmptyState>The account has no profiles</EmptyState>
+        }
+      </div>
+    );
+  },
+
+
+  renderProfileGroup(profileGroup, profileGroupName) {
+    const header = (
+    <span>
+      <span className="table" style={{margin: '0'}}>
+        <span className="tbody">
+          <span className="tr">
+            <span className="td">
+              {profileGroupName}
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>);
+
+    return (
+      <Panel
+        header={header}
+        key={profileGroupName}
+        collapsible={true}
+        className="profile-name">
+        {profileGroup.map((p, pname) => this.renderProfilePanel(p, pname))}
+      </Panel>
+    );
+  },
+
+  renderProfilePanel(profile, profileName) {
+    const header = (
+    <span>
+      <span className="table" style={{margin: '0'}}>
+        <span className="tbody">
+          <span className="tr">
+            <span className="td">
+              {profileName}
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>);
+    return (
+      <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table">
+        <Panel
+          header={header}
+          key={profileName}
+          eventKey={profileName}
+          collapsible={true}>
+          <div className="row">
+            <ListGroup props={{}}>
+              {profile.map((pItem) =>
+                <ListGroupItem>
+                  {pItem.get('name')}
+                </ListGroupItem>).toArray()}
+            </ListGroup>
+          </div>
+        </Panel>
       </div>
     );
   },
