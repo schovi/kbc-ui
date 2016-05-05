@@ -11,13 +11,17 @@ export default React.createClass({
     value: PropTypes.object.isRequired,
     schema: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool.isRequired
+    readOnly: PropTypes.bool.isRequired,
+    disableProperties: PropTypes.bool,
+    disableCollapse: PropTypes.bool
   },
 
   getDefaultProps() {
     return {
       readOnly: false,
-      schema: Immutable.Map()
+      schema: Immutable.Map(),
+      disableProperties: false,
+      disableCollapse: false
     };
   },
 
@@ -43,9 +47,9 @@ export default React.createClass({
       disable_array_add: false,
       disable_array_delete: false,
       disable_array_reorder: false,
-      disable_collapse: false,
+      disable_collapse: this.props.disableCollapse,
       disable_edit_json: true,
-      disable_properties: false,
+      disable_properties: this.props.disableProperties,
       no_additional_properties: false,
       object_layout: 'normal',
       required_by_default: false,

@@ -6,7 +6,7 @@ import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
-import SchemasStore from '../../stores/SchemasStore';
+import TemplatesStore from '../../stores/TemplatesStore';
 
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
@@ -14,7 +14,7 @@ import InstalledComponentsActionCreators from '../../InstalledComponentsActionCr
 require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, SchemasStore)],
+  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, TemplatesStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -26,22 +26,27 @@ export default React.createClass({
       configId: configId,
 
       config: InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId),
-      params: InstalledComponentsStore.getTemplatedConfigValueParams(componentId, configId),
-      paramsSchema: SchemasStore.getParamsSchema(componentId),
-      pureParamsSchema: SchemasStore.getPureParamsSchema(componentId),
-      configTemplates: SchemasStore.getConfigTemplates(componentId),
+      configSchema: component.get('configurationSchema'),
+      configTemplates: TemplatesStore.getConfigTemplates(componentId),
+      isTemplate: TemplatesStore.isConfigTemplate(
+        componentId,
+        InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId)
+      ) || InstalledComponentsStore.getTemplatedConfigValueWithoutUserParams(componentId, configId).isEmpty(),
+      selectedTemplate: TemplatesStore.getMatchingTemplate(
+        componentId,
+        InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId)
+      ),
+      params: InstalledComponentsStore.getTemplatedConfigValueUserParams(componentId, configId),
+
       supportsEncryption: component.get('flags').includes('encrypt'),
 
       isEditing: InstalledComponentsStore.isEditingTemplatedConfig(componentId, configId),
       isSaving: InstalledComponentsStore.isSavingConfigData(componentId, configId),
       isEditingString: InstalledComponentsStore.isTemplatedConfigEditingString(componentId, configId),
 
-      editingConfig: InstalledComponentsStore.getTemplatedConfigEditingValue(componentId, configId),
-      editingJobs: InstalledComponentsStore.getTemplatedConfigEditingValueJobs(componentId, configId),
-      editingMappings: InstalledComponentsStore.getTemplatedConfigEditingValueJobs(componentId, configId),
-      editingJobsString: InstalledComponentsStore.getTemplatedConfigEditingValueJobsString(componentId, configId),
-      editingMappingsString: InstalledComponentsStore.getTemplatedConfigEditingValueMappingsString(componentId, configId),
-      editingParams: InstalledComponentsStore.getTemplatedConfigEditingValueParams(componentId, configId)
+      editingParams: InstalledComponentsStore.getTemplatedConfigEditingValueParams(componentId, configId),
+      editingTemplate: InstalledComponentsStore.getTemplatedConfigEditingValueTemplate(componentId, configId),
+      editingString: InstalledComponentsStore.getTemplatedConfigEditingValueString(componentId, configId)
 
     };
   },
@@ -79,9 +84,10 @@ export default React.createClass({
       return (
         <Static
           config={this.state.config}
+          isTemplate={this.state.isTemplate}
+          template={this.state.selectedTemplate}
           params={this.state.params}
-          paramsSchema={this.state.paramsSchema}
-          templates={this.state.configTemplates}
+          paramsSchema={this.state.configSchema}
           onEditStart={this.onEditStart}
           editLabel={this.props.editLabel}
           />
@@ -92,22 +98,23 @@ export default React.createClass({
   renderEditor() {
     return (
       <Edit
-        config={this.state.editingConfig}
-        jobsString={this.state.editingJobsString}
-        mappingsString={this.state.editingMappingsString}
+        editingTemplate={this.state.editingTemplate}
+        editingParams={this.state.editingParams}
+        editingString={this.state.editingString}
+
         templates={this.state.configTemplates}
-        params={this.state.editingParams}
-        paramsSchema={this.state.pureParamsSchema}
+        paramsSchema={this.state.configSchema}
         isEditingString={this.state.isEditingString}
+
+        isValid={this.isValid()}
         isSaving={this.state.isSaving}
+
         onSave={this.onEditSubmit}
         onChangeTemplate={this.onEditChangeTemplate}
-        onChangeJobsString={this.onEditChangeJobsString}
-        onChangeMappingsString={this.onEditChangeMappingsString}
+        onChangeString={this.onEditChangeString}
         onChangeParams={this.onEditChangeParams}
         onChangeEditingMode={this.onEditChangeEditingMode}
         onCancel={this.onEditCancel}
-        isValid={this.isValid()}
         saveLabel={this.props.saveLabel}
         />
     );
@@ -126,15 +133,11 @@ export default React.createClass({
   },
 
   onEditChangeTemplate(value) {
-    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigData(this.state.componentId, this.state.configId, value);
+    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataTemplate(this.state.componentId, this.state.configId, value);
   },
 
-  onEditChangeJobsString(value) {
-    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataJobsString(this.state.componentId, this.state.configId, value);
-  },
-
-  onEditChangeMappingsString(value) {
-    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataMappingsString(this.state.componentId, this.state.configId, value);
+  onEditChangeString(value) {
+    InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataString(this.state.componentId, this.state.configId, value);
   },
 
 
@@ -142,30 +145,14 @@ export default React.createClass({
     InstalledComponentsActionCreators.updateEditTemplatedComponentConfigDataParams(this.state.componentId, this.state.configId, value);
   },
 
-  onEditChangeEditingMode() {
-    InstalledComponentsActionCreators.toggleEditTemplatedComponentConfigDataString(this.state.componentId, this.state.configId);
+  onEditChangeEditingMode(isStringEditingMode) {
+    InstalledComponentsActionCreators.toggleEditTemplatedComponentConfigDataString(this.state.componentId, this.state.configId, isStringEditingMode);
   },
 
   isValid() {
-    return this.isValidJobsString() && this.isValidMappingsString();
-  },
-
-  isValidJobsString() {
-    if (this.state.editingJobsString) {
+    if (this.state.editingString) {
       try {
-        JSON.parse(this.state.editingJobsString);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-    return true;
-  },
-
-  isValidMappingsString() {
-    if (this.state.editingMappingsString) {
-      try {
-        JSON.parse(this.state.editingMappingsString);
+        JSON.parse(this.state.editingString);
         return true;
       } catch (e) {
         return false;

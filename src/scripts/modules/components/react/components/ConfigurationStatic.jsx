@@ -1,16 +1,20 @@
 import React, {PropTypes} from 'react';
 import CodeMirror from 'react-code-mirror';
+import JSONSchemaEditor from './JSONSchemaEditor';
+import Immutable from 'immutable';
 
 export default React.createClass({
   propTypes: {
     data: PropTypes.string.isRequired,
+    schema: PropTypes.object,
     onEditStart: PropTypes.func.isRequired,
     editLabel: PropTypes.string
   },
 
   getDefaultProps() {
     return {
-      editLabel: 'Edit configuration'
+      editLabel: 'Edit configuration',
+      schema: Immutable.Map()
     };
   },
 
@@ -20,22 +24,42 @@ export default React.createClass({
 
   script() {
     return (
-      <div className="kbc-configuration-edit">
-        <div className="edit kbc-configuration-editor">
-          <div className="kbc-sticky-buttons">
-            {this.startEditButton()}
-          </div>
-          <CodeMirror
-            theme="solarized"
-            lineNumbers={true}
-            defaultValue={this.props.data}
-            readOnly={true}
-            cursorHeight={0}
-            mode="application/json"
-            lineWrapping={true}
-            />
-        </div>
+      <div className="edit kbc-configuration-editor">
+        <div className="text-right">{this.startEditButton()}</div>
+        {this.renderJSONSchemaEditor()}
+        {this.renderCodeMirror()}
       </div>
+    );
+  },
+
+  renderJSONSchemaEditor() {
+    if (this.props.schema.isEmpty()) {
+      return null;
+    }
+    return (
+      <JSONSchemaEditor
+        schema={this.props.schema}
+        value={Immutable.fromJS(JSON.parse(this.props.data))}
+        onChange={this.handleChange}
+        readOnly={true}
+      />
+    );
+  },
+
+  renderCodeMirror() {
+    if (!this.props.schema.isEmpty()) {
+      return null;
+    }
+    return (
+      <CodeMirror
+        theme="solarized"
+        lineNumbers={true}
+        defaultValue={this.props.data}
+        readOnly={true}
+        cursorHeight={0}
+        mode="application/json"
+        lineWrapping={true}
+        />
     );
   },
 
@@ -53,5 +77,9 @@ export default React.createClass({
         <span className="kbc-icon-pencil"></span> {this.props.editLabel}
       </button>
     );
+  },
+
+  handleChange() {
+    // nothing
   }
 });

@@ -1,7 +1,7 @@
 React = require 'react'
 
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
-SchemasActionsCreators = require './SchemasActionCreators'
+SchemasActionsCreators = require './TemplatesActionCreators'
 InstalledComponentsActions = require './InstalledComponentsActionCreators'
 StorageActions = require './StorageActionCreators'
 GenericDetail = require('./react/pages/GenericDetail').default

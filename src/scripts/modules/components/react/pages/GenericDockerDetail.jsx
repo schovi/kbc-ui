@@ -30,7 +30,7 @@ import contactSupport from '../../../../utils/contactSupport';
 import Immutable from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore, ComponentStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -215,7 +215,6 @@ export default React.createClass({
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
-              <p className="help-block">This component has to be configured manually. {this.documentationLink()} </p>
               {this.accountAuthorization()}
               {this.tableInputMapping()}
               {this.fileInputMapping()}
@@ -238,10 +237,11 @@ export default React.createClass({
                     onEditChange={this.onEditParametersChange}
                     onEditSubmit={this.onEditParametersSubmit}
                     isValid={this.state.isValidEditingConfigDataParameters}
-                    headerText="Parameters"
-                    editLabel="Edit parameters"
-                    saveLabel="Save parameters"
+                    headerText="Configuration"
+                    editLabel="Edit configuration"
+                    saveLabel="Save configuration"
                     supportsEncryption={this.state.component.get('flags').includes('encrypt')}
+                    schema={this.state.component.get('configurationSchema', Map())}
                     />
                 </span>
               )}

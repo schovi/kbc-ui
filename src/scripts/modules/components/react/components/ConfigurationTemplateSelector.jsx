@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
 import Markdown from 'react-markdown';
+import templateFinder from '../../../components/utils/templateFinder';
 import deepEqual from 'deep-equal';
 
 /* global require */
@@ -22,7 +23,7 @@ export default React.createClass({
 
   jobsSelector() {
     var selectedDefault = false;
-    if (!this.getTemplate(this.props.value)) {
+    if (!this.props.value || this.props.value.isEmpty()) {
       selectedDefault = true;
     }
     return (
@@ -37,7 +38,7 @@ export default React.createClass({
             disabled
             selected={selectedDefault}
           >Select template...</option>
-          {this.templatesSelectorOptions(this.props.value)}
+          {this.templatesSelectorOptions()}
         </Input>
         {this.templateDescription()}
       </div>
@@ -45,10 +46,10 @@ export default React.createClass({
   },
 
   templateDescription() {
-    if (this.getTemplate(this.props.value)) {
+    if (this.props.value) {
       return (
         <Markdown
-          source={this.getTemplate(this.props.value).get('description')}
+          source={this.props.value.get('description', '')}
           />
       );
     }
@@ -56,19 +57,13 @@ export default React.createClass({
   },
 
   getTemplate(value) {
-    return this.props.templates.filter(
-      function(template) {
-        return deepEqual(template.get('jobs').toJS(), value.get('jobs').toJS()) &&
-          deepEqual(template.get('mappings').toJS(), value.get('mappings').toJS());
-      }
-    ).first();
+    return templateFinder(this.props.templates, value.get('data')).first();
   },
 
-  templatesSelectorOptions(value) {
+  templatesSelectorOptions() {
     return this.props.templates.map(
       function(option) {
-        var selected = deepEqual(option.get('jobs').toJS(), value.get('jobs').toJS()) &&
-          deepEqual(option.get('mappings').toJS(), value.get('mappings').toJS());
+        var selected = deepEqual(option.toJS(), this.props.value.toJS());
         return (
           <option
             value={JSON.stringify(option.toJS())}
@@ -79,11 +74,11 @@ export default React.createClass({
           </option>
         );
       }
-    );
+    , this);
   },
 
   handleSelectorChange() {
-    var selectedTemplate = this.getTemplate(Immutable.fromJS(JSON.parse(this.refs.config.getValue())));
+    var selectedTemplate = Immutable.fromJS(JSON.parse(this.refs.config.getValue()));
     if (selectedTemplate) {
       this.props.onChange(selectedTemplate);
     } else {

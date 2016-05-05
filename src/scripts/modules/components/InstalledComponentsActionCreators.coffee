@@ -506,31 +506,22 @@ module.exports =
     )
 
 
-  updateEditTemplatedComponentConfigData: (componentId, configId, template) ->
+  updateEditTemplatedComponentConfigDataTemplate: (componentId, configId, template) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_FROM_TEMPLATE
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_TEMPLATE
       componentId: componentId
       configId: configId
       template: template
     )
 
 
-  updateEditTemplatedComponentConfigDataJobsString: (componentId, configId, value) ->
+  updateEditTemplatedComponentConfigDataString: (componentId, configId, value) ->
     dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_JOBS_STRING
+      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_STRING
       componentId: componentId
       configId: configId
       value: value
     )
-
-  updateEditTemplatedComponentConfigDataMappingsString: (componentId, configId, value) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_UPDATE_MAPPINGS_STRING
-      componentId: componentId
-      configId: configId
-      value: value
-    )
-    
 
   updateEditTemplatedComponentConfigDataParams: (componentId, configId, value) ->
     dispatcher.handleViewAction(
@@ -564,11 +555,12 @@ module.exports =
       )
       throw error
 
-  toggleEditTemplatedComponentConfigDataString: (componentId, configId) ->
+  toggleEditTemplatedComponentConfigDataString: (componentId, configId, isStringEditingMode) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_STRING_TOGGLE
       componentId: componentId
       configId: configId
+      isStringEditingMode: isStringEditingMode
     )
 
   ###

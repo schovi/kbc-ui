@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
+import Immutable from 'immutable';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -19,15 +20,17 @@ export default React.createClass({
     headerText: PropTypes.string,
     editLabel: PropTypes.string,
     saveLabel: PropTypes.string,
-    help: PropTypes.node
+    help: PropTypes.node,
+    schema: PropTypes.object
   },
 
   getDefaultProps() {
     return {
-      headerText: 'Configuration Data',
+      headerText: 'Configuration',
       help: null,
       editLabel: 'Edit configuration',
-      saveLabel: 'Save configuration'
+      saveLabel: 'Save configuration',
+      schema: Immutable.Map()
     };
   },
 
@@ -43,20 +46,12 @@ export default React.createClass({
 
   scripts() {
     if (this.props.isEditing) {
-      return (
-        <span>
-          {
-            this.props.supportsEncryption ?
-              <p className="help-block small">Properties prefixed with <code>#</code> sign will be encrypted on save. Already encrypted strings will persist.</p>
-              : null
-          }
-          { this.renderEditor() }
-        </span>
-      );
+      return this.renderEditor();
     } else {
       return (
         <Static
           data={this.props.data}
+          schema={this.props.schema}
           onEditStart={this.props.onEditStart}
           editLabel={this.props.editLabel}
           />
@@ -68,13 +63,15 @@ export default React.createClass({
     return (
       <Edit
         data={this.props.data}
+        schema={this.props.schema}
         isSaving={this.props.isSaving}
         onSave={this.props.onEditSubmit}
         onChange={this.props.onEditChange}
         onCancel={this.props.onEditCancel}
         isValid={this.props.isValid}
         saveLabel={this.props.saveLabel}
-        />
+        supportsEncryption={this.props.supportsEncryption}
+      />
     );
   }
 });
