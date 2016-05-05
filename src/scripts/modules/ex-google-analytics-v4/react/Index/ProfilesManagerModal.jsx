@@ -1,17 +1,24 @@
 import React, {PropTypes} from 'react';
-import {Modal} from 'react-bootstrap';
+import {Map, fromJS} from 'immutable';
+import {Modal, Alert} from 'react-bootstrap';
 import ProfileInfo from '../ProfileInfo';
 // import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
 import ProfilesLoader from '../../../google-utils/react/ProfilesPicker';
 import ApplicationActionCreators from '../../../../actions/ApplicationActionCreators';
+import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
 export default React.createClass({
 
   propTypes: {
     profiles: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
-    onHideFn: PropTypes.func
+    onHideFn: PropTypes.func,
+    authorizedEmail: PropTypes.string,
+    localState: PropTypes.object.isRequired,
+    updateLocalState: PropTypes.func.isRequired,
+    prepareLocalState: PropTypes.func.isRequired
+
   },
 
   render() {
@@ -27,8 +34,18 @@ export default React.createClass({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.renderProfiles()}
-          {this.renderProfilesLoader()}
+          <div className="row">
+            <div className="table kbc-table-border-vertical kbc-detail-table">
+              <div className="tr">
+                <div className="td">
+                  {this.renderProfilesSelector()}
+                </div>
+                <div className="td">
+                  {this.renderProjectProfiles()}
+                </div>
+              </div>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           {/* <ConfirmButtons
@@ -45,32 +62,90 @@ export default React.createClass({
     );
   },
 
-  renderProfilesLoader() {
+  renderProjectProfiles() {
+    return (
+      <div>
+        <h2> Selected Profiles To Extract Data from {this.props.authorizedEmail}</h2>
+
+        {this.props.profiles.count() > 0 ?
+         this.props.profiles.map( (profile) =>
+           <ProfileInfo profile={profile} />
+         ) :
+         <EmptyState>
+           No profiles selected.
+         </EmptyState>
+        }
+      </div>
+    );
+  },
+
+  renderProfilesSelector() {
+    const gaData = this.props.localState.get('gaPickerData', Map());
+    const profiles = gaData.get('profiles');
+    const email = gaData.get('email');
     return (
       <div className="text-center">
-        <ProfilesLoader
-          email={null}
-          onProfilesLoadError={(err) => {
+        <h2> 1. Load Google Account Profiles</h2>
+        {this.renderProfilesPicker()}
+        {profiles ?
+         <span>
+           <h2>2. Select Profiles of {email} </h2>
+           {this.renderWarning(email)}
+           {this.renderProfilesPanel(profiles)}
+         </span>
+         :
+         <EmptyState>
+           No Profiles Loaded
+         </EmptyState>
+        }
+      </div>
+    );
+  },
+
+
+  renderWarning(profilesEmail) {
+    const {authorizedEmail} = this.props;
+    if (authorizedEmail && profilesEmail && profilesEmail !== authorizedEmail) {
+      return (
+        <Alert bsStyle="warning">
+          <strong>Warning:</strong>
+          Selected account {profilesEmail} does not match account authorized for data extraction <strong>{authorizedEmail}</strong>.
+        </Alert>
+      );
+    } else {
+      return null;
+    }
+  },
+
+  renderProfilesPanel(profiles) {
+    return (
+      <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table'">
+        TODO render {profiles}
+      </div>
+    );
+  },
+
+  renderProfilesPicker() {
+    return (
+      <ProfilesLoader
+        email={null}
+        onProfilesLoadError={
+          (err) => {
             ApplicationActionCreators.sendNotification({
               message: err.message,
               type: 'error'
             });
           }}
-          onProfilesLoad={(profiles, email) => {
+        onProfilesLoad={
+          (profiles, email) => {
+            const pickerData = fromJS({
+              profiles: profiles,
+              email: email
+            });
+            this.props.updateLocalState('gaPickerData', pickerData);
             console.log('loaded profiles', profiles, email);
           }}
-        />
-      </div>
-    );
-  },
-
-  renderProfiles() {
-    return (
-      <div>
-        {this.props.profiles.map( (profile) =>
-          <ProfileInfo profile={profile} />
-         )}
-      </div>
+      />
     );
   }
 });
