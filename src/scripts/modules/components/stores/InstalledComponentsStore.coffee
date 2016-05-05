@@ -6,6 +6,7 @@ List = Immutable.List
 StoreUtils = require '../../../utils/StoreUtils'
 propagateApiAttributes = require('../react/components/jsoneditor/propagateApiAttributes').default
 TemplatesStore = require './TemplatesStore'
+ComponentsStore = require './ComponentsStore'
 fromJSOrdered = require('../../../utils/fromJSOrdered').default
 
 _store = Map(
@@ -167,6 +168,18 @@ InstalledComponentsStore = StoreUtils.createStore
       )
     return config
 
+  getTemplatedConfigValueWithoutUserParams: (componentId, configId) ->
+    config = _store.getIn(['configData', componentId, configId, 'parameters', 'config'], Immutable.Map())
+    # delete schema keys from config
+    ComponentsStore.getComponent(componentId)
+    .get('configurationSchema', Immutable.Map())
+    .getIn(['properties'], Immutable.Map())
+    .keySeq()
+    .forEach((key) ->
+      config = config.delete(key)
+    )
+    return config
+
   getTemplatedConfigEditingValueParams: (componentId, configId) ->
     _store.getIn(['templatedConfigValuesEditingValues', componentId, configId, 'params'], Immutable.Map())
 
@@ -177,8 +190,7 @@ InstalledComponentsStore = StoreUtils.createStore
     _store.getIn(['templatedConfigValuesEditingString', componentId, configId], '{}')
 
   isTemplatedConfigEditingString: (componentId, configId) ->
-    _store.getIn(['templatedConfigEditingString', componentId, configId], false)
-
+    _store.getIn(['templatedConfigEditingString', componentId, configId]) || false
 
 
 Dispatcher.register (payload) ->
@@ -527,7 +539,10 @@ Dispatcher.register (payload) ->
         store = store.setIn(["templatedConfigEditing", action.componentId, action.configId], true)
         config = InstalledComponentsStore.getTemplatedConfigValueConfig(action.componentId, action.configId)
         # compare with templates
-        if TemplatesStore.isConfigTemplate(action.componentId, config)
+        if TemplatesStore.isConfigTemplate(action.componentId, config) ||
+            InstalledComponentsStore.
+            getTemplatedConfigValueWithoutUserParams(action.componentId, action.configId).
+            isEmpty()
           store = store.setIn(
             ["templatedConfigValuesEditingValues", action.componentId, action.configId, "template"],
             TemplatesStore.getMatchingTemplate(action.componentId, config)
@@ -540,7 +555,7 @@ Dispatcher.register (payload) ->
           )
         # string edit
         else
-          store = store.setIn(["templatedConfigEditingString", action.componentId, action.configId])
+          store = store.setIn(["templatedConfigEditingString", action.componentId, action.configId], true)
           store = store.setIn(
             ["templatedConfigValuesEditingString", action.componentId, action.configId],
             JSON.stringify(config.toJS(), null, 2)
@@ -584,7 +599,7 @@ Dispatcher.register (payload) ->
         TemplatesStore.getApiTemplate(action.componentId)
       )
 
-      if (_store.getIn(['templatedConfigValuesEditingString', action.componentId, action.configId]))
+      if (_store.getIn(['templatedConfigEditingString', action.componentId, action.configId], false))
         editingData = editingData.setIn(
           ['parameters', 'config'],
           fromJSOrdered(
@@ -599,15 +614,16 @@ Dispatcher.register (payload) ->
         # params on the first place
         editingData = editingData.setIn(
           ['parameters', 'config'],
-          _store.getIn(['templatedConfigValuesEditingValues', action.componentId, action.configId, 'params'])
+          _store.getIn(['templatedConfigValuesEditingValues', action.componentId, action.configId, 'params'], Map())
         )
 
         # merge the template
         editingData = editingData.setIn(
           ['parameters', 'config'],
-          editingData.getIn(['parameters', 'config']).merge(
+          editingData.getIn(['parameters', 'config'], Map()).merge(
             _store.getIn(
-              ['templatedConfigValuesEditingValues', action.componentId, action.configId, 'template', 'data']
+              ['templatedConfigValuesEditingValues', action.componentId, action.configId, 'template', 'data'],
+              Map()
             )
           )
         )

@@ -31,7 +31,7 @@ export default React.createClass({
       isTemplate: TemplatesStore.isConfigTemplate(
         componentId,
         InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId)
-      ),
+      ) || InstalledComponentsStore.getTemplatedConfigValueWithoutUserParams(componentId, configId).isEmpty(),
       selectedTemplate: TemplatesStore.getMatchingTemplate(
         componentId,
         InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId)

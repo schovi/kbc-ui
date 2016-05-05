@@ -49,7 +49,7 @@ export default React.createClass({
     if (this.props.value) {
       return (
         <Markdown
-          source={this.props.value.get('description')}
+          source={this.props.value.get('description', '')}
           />
       );
     }
