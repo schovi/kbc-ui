@@ -64,7 +64,7 @@ OrchestrationRow = React.createClass(
         @props.orchestration.get('name')
       ),
       (span {className: 'td'},
-        (FinishedWithIcon endTime: lastExecutedJob?.get('endTime')) if lastExecutedJob?.get('endTime')
+        (FinishedWithIcon endTime: lastExecutedJob?.get('startTime')) if lastExecutedJob?.get('startTime')
       ),
       (span {className: 'td'},
         duration
