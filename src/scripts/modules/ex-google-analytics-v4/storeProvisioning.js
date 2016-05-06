@@ -14,6 +14,9 @@ export default function(configId) {
 
   const parameters = configData.get('parameters', Map());
 
+  const tempPath = ['_'];
+  const savingPath = tempPath.concat('saving');
+
   return {
     oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
     oauthCredentialsId: oauthCredentialsId,
@@ -28,6 +31,13 @@ export default function(configId) {
 
     // config data stuff
     queries: parameters.getIn(['queries']),
-    profiles: parameters.getIn(['profiles'])
+    profiles: parameters.getIn(['profiles']),
+    configData: configData,
+    isSaving(what) {
+      return localState.getIn(savingPath.concat(what), false);
+    },
+    getSavingPath(what) {
+      return savingPath.concat(what);
+    }
   };
 }

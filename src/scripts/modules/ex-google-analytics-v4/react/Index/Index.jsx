@@ -1,4 +1,5 @@
 import React from 'react';
+import {Map} from 'immutable';
 // stores
 import storeProvisioning, {storeMixins} from '../../storeProvisioning';
 import ComponentStore from '../../../components/stores/ComponentsStore';
@@ -55,9 +56,11 @@ export default React.createClass({
     return (
       <div className="container-fluid">
         <ProfilesManagerModal
-          show={this.state.localState.get('showprofilesmanagerModal', false)}
-          onHideFn={() => this.state.actions.updateLocalState('showprofilesmanagerModal', false)}
+          show={this.state.localState.getIn(['ProfilesManagerModal', 'profiles'], false)}
+          onHideFn={() => this.state.actions.updateLocalState('ProfilesManagerModal', Map())}
           profiles={this.state.store.profiles}
+          isSaving={this.state.store.isSaving('profiles')}
+          onSaveProfiles={(newProfiles) => this.state.actions.saveProfiles(newProfiles)}
           {...this.state.actions.prepareLocalState('ProfilesManagerModal')}
         />
         <div className="col-md-9 kbc-main-content">
@@ -111,7 +114,7 @@ export default React.createClass({
             </li>
             <li>
               <a
-                onClick={() => this.state.actions.updateLocalState('showprofilesmanagerModal', true)}>
+                onClick={() => this.state.actions.updateLocalState(['ProfilesManagerModal', 'profiles'], this.state.store.profiles)}>
                  Setup Profiles
               </a>
             </li>

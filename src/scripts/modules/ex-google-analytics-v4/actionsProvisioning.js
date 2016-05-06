@@ -18,6 +18,13 @@ export default function(configId) {
     componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
   }
 
+  function saveConfigData(data, waitingPath) {
+    updateLocalState(waitingPath, true);
+    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, data)
+      .then(() => updateLocalState(waitingPath, false));
+  }
+
+
   // returns localState for @path and function to update local state
   // on @path+@subPath
   function prepareLocalState(path) {
@@ -38,6 +45,11 @@ export default function(configId) {
 
   return {
     prepareLocalState: prepareLocalState,
-    updateLocalState: updateLocalState
+    updateLocalState: updateLocalState,
+    saveProfiles(newProfiles) {
+      const waitingPath = store.getSavingPath('profiles');
+      const newData = store.configData.setIn(['parameters', 'profiles'], newProfiles);
+      return saveConfigData(newData, waitingPath);
+    }
   };
 }

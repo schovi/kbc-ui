@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
-import {Map, fromJS} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 import {Modal, Alert, Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ProfileInfo from '../ProfileInfo';
-// import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
 import ProfilesLoader from '../../../google-utils/react/ProfilesPicker';
 import ApplicationActionCreators from '../../../../actions/ApplicationActionCreators';
@@ -15,11 +15,13 @@ export default React.createClass({
   propTypes: {
     profiles: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
+    isSaving: PropTypes.bool.isRequired,
     onHideFn: PropTypes.func,
     authorizedEmail: PropTypes.string,
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
-    prepareLocalState: PropTypes.func.isRequired
+    prepareLocalState: PropTypes.func.isRequired,
+    onSaveProfiles: PropTypes.func.isRequired
 
   },
 
@@ -50,29 +52,49 @@ export default React.createClass({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          {/* <ConfirmButtons
-          isSaving={this.props.isSaving}
-          onSave={this.handleSave}
-          onCancel={this.props.onCancel}
-          placement="right"
-          saveLabel={this.props.saveLabel}
-          isDisabled={!this.props.isValid}
-          /> */}
+          <ConfirmButtons
+            isSaving={this.props.isSaving}
+            onSave={this.handleSave}
+            onCancel={this.props.onHideFn}
+            placement="right"
+            saveLabel="Save Changes"
+            isDisabled={!this.isProfilesChanged()}
+          />
 
         </Modal.Footer>
       </Modal>
     );
   },
 
+  handleSave() {
+    this.props.onSaveProfiles(this.getLocalProfiles()).then(
+      () => this.props.onHideFn()
+    );
+  },
+
+  isProfilesChanged() {
+    const oldSet = this.props.profiles.map((p) => (p.get('id').toString())).toSet();
+    const newSet = this.getLocalProfiles().map((p) => (p.get('id').toString())).toSet();
+    return newSet.count() > 0 && oldSet.hashCode() !== newSet.hashCode();
+  },
+
   renderProjectProfiles() {
+    const profiles = this.getLocalProfiles();
     return (
       <div>
-        <h2> Selected Profiles To Extract Data from {this.props.authorizedEmail}</h2>
+        <h3> Selected Profiles To Extract Data from {this.props.authorizedEmail}</h3>
 
-        {this.props.profiles.count() > 0 ?
-         this.props.profiles.map( (profile) =>
-           <ProfileInfo profile={profile} />
-         ) :
+        {profiles.count() > 0 ?
+         <ul>
+           {profiles.map( (profile) =>
+             <li>
+               <ProfileInfo profile={profile} />
+               <span onClick={() => this.deselectProfile(profile.get('id'))}className="kbc-icon-cup kbc-cursor-pointer" />
+
+             </li>
+            )}
+         </ul>
+         :
          <EmptyState>
            No profiles selected.
          </EmptyState>
@@ -87,11 +109,11 @@ export default React.createClass({
     const email = gaData.get('email');
     return (
       <div className="text-center">
-        <h2> 1. Load Google Account Profiles</h2>
+        <h3> 1. Load Google Account Profiles</h3>
         {this.renderProfilesPicker()}
         {profiles ?
          <span>
-           <h2>2. Select Profiles of {email} </h2>
+           <h3>2. Select Profiles of {email} </h3>
            {this.renderWarning(email)}
            {this.renderLoadedProfiles(profiles)}
          </span>
@@ -135,8 +157,8 @@ export default React.createClass({
   renderProfileGroup(profileGroup, profileGroupName) {
     const header = (
       <span>
-              {profileGroupName}
-    </span>);
+        {profileGroupName}
+      </span>);
 
     return (
       <Panel
@@ -152,24 +174,52 @@ export default React.createClass({
   renderProfilePanel(profile, profileName) {
     const header = (
       <span>
-              {profileName}
-    </span>);
+        {profileName}
+      </span>);
     return (
-        <Panel
-          header={header}
-          key={profileName}
-          eventKey={profileName}
-          collapsible={true}>
-          <div className="row">
-            <ListGroup props={{}}>
-              {profile.map((pItem) =>
-                <ListGroupItem>
+      <Panel
+        header={header}
+        key={profileName}
+        eventKey={profileName}
+        collapsible={true}>
+        <div className="row">
+          <ListGroup>
+            {profile.map((pItem) =>
+              <ListGroupItem
+                active={this.isSelected(pItem)}
+                onClick={() => this.onProfileClick(pItem)}>
+                <div className="text-center">
                   {pItem.get('name')}
-                </ListGroupItem>).toArray()}
-            </ListGroup>
-          </div>
-        </Panel>
+                </div>
+              </ListGroupItem>).toArray()}
+          </ListGroup>
+        </div>
+      </Panel>
     );
+  },
+
+  getLocalProfiles() {
+    return this.props.localState.get('profiles', List());
+  },
+
+  onProfileClick(profile) {
+    const profiles = this.getLocalProfiles();
+    if (!this.isSelected(profile)) {
+      this.props.updateLocalState('profiles', profiles.push(profile));
+    } else {
+      this.deselectProfile(profile.get('id'));
+    }
+  },
+
+  isSelected(profile) {
+    const profiles = this.props.localState.get('profiles', List());
+    return profiles.find((p) => p.get('id').toString() === profile.get('id').toString());
+  },
+
+  deselectProfile(profileId) {
+    const profiles = this.getLocalProfiles();
+    const newProfiles = profiles.filter((p) => p.get('id') !== profileId);
+    this.props.updateLocalState('profiles', newProfiles);
   },
 
   renderProfilesPicker() {
