@@ -32,7 +32,9 @@ export default React.createClass({
       );
     } else {
       return (
-        <ProfileInfo profile={profile} />
+        <small>
+          <ProfileInfo profile={profile} />
+        </small>
       );
     }
   }

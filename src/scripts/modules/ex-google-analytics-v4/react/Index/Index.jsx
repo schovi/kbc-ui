@@ -21,6 +21,7 @@ import DeleteConfigurationButton from '../../../components/react/components/Dele
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 /* import {FormControls} from 'react-bootstrap';
  *const StaticText = FormControls.Static;*/
+import ProfileInfo from '../ProfileInfo';
 
 // index components
 import QueriesTable from './QueriesTable';
@@ -45,6 +46,7 @@ export default React.createClass({
       actions: actions,
       component: component,
       configId: configId,
+      authorizedEmail: store.oauthCredentials.get('authorizedFor'),
       oauthCredentials: store.oauthCredentials,
       oauthCredentialsId: store.oauthCredentialsId,
       localState: store.getLocalState()
@@ -60,6 +62,7 @@ export default React.createClass({
           onHideFn={() => this.state.actions.updateLocalState('ProfilesManagerModal', Map())}
           profiles={this.state.store.profiles}
           isSaving={this.state.store.isSaving('profiles')}
+          authorizedEmail={this.state.authorizedEmail}
           onSaveProfiles={(newProfiles) => this.state.actions.saveProfiles(newProfiles)}
           {...this.state.actions.prepareLocalState('ProfilesManagerModal')}
         />
@@ -152,9 +155,9 @@ export default React.createClass({
           <label> Profiles </label>
           <div>
             <div className="form-control-static">
-              <div>Keboola Website/ Keboola Website/ All Web Site Data</div>
-              <div>Keboola Website/ Keboola Website/ All Web Site Data</div>
-              <div>and 5 more</div>
+              {this.state.store.profiles.map(
+                 (p) => <ProfileInfo profile={p} />
+               )}
             </div>
           </div>
         </div>
