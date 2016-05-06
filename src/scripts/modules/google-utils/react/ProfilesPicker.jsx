@@ -23,14 +23,21 @@ function reparseProfiles(profiles) {
   let result = {};
   _.each(profiles.items, (item) => {
     const accountId = item.id;
+    const accountName = item.name;
     let props = {};
     _.each(item.webProperties, (property) => {
       const webPropertyId = property.id;
-      _.each(property.profiles, (p) => {
-        p.accountId = accountId;
-        p.webPropertyId = webPropertyId;
+      const webPropertyName = property.name;
+      props[property.name] = _.map(property.profiles, (p) => {
+        let profile = {};
+        profile.accountId = accountId;
+        profile.webPropertyId = webPropertyId;
+        profile.webPropertyName = webPropertyName;
+        profile.accountName = accountName;
+        profile.name = p.name;
+        profile.id = p.id;
+        return profile;
       });
-      props[property.name] = property.profiles;
     });
     result[item.name] = props;
   });
@@ -91,7 +98,7 @@ export default React.createClass({
         if (resp.error) {
           return this.props.onProfilesLoadError(resp);
         } else {
-          this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
+          return this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
         }
       }
     );
