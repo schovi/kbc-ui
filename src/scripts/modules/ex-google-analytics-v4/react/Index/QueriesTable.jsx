@@ -1,8 +1,11 @@
 import React, {PropTypes} from 'react';
 // import {List} from 'immutable';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
+import {Link} from 'react-router';
 
 import SelectedProfilesList from './SelectedProfilesList';
+
+const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
 export default React.createClass({
   propTypes: {
@@ -10,7 +13,8 @@ export default React.createClass({
     allProfiles: PropTypes.object.isRequired,
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
-    prepareLocalState: PropTypes.func.isRequired
+    prepareLocalState: PropTypes.func.isRequired,
+    configId: PropTypes.string.isRequired
   },
 
   render() {
@@ -51,7 +55,13 @@ export default React.createClass({
 
     console.log(query.toJS());
     return (
-      <div className="tr">
+      <Link
+        to={COMPONENT_ID + '-query-detail'}
+        params={{
+          config: this.props.configId,
+          queryId: query.get('id')
+        }}
+        className="tr">
         <div className="td">
           {propValue('name')}
         </div>
@@ -72,7 +82,7 @@ export default React.createClass({
         <div className="td">
           {/* action buttons */}
         </div>
-      </div>
+      </Link>
     );
   },
 

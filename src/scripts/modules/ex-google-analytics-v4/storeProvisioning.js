@@ -13,9 +13,11 @@ export default function(configId) {
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
 
   const parameters = configData.get('parameters', Map());
+  const queries = parameters.getIn(['queries']);
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
+
 
   return {
     oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
@@ -30,7 +32,7 @@ export default function(configId) {
     },
 
     // config data stuff
-    queries: parameters.getIn(['queries']),
+    queries: queries,
     profiles: parameters.getIn(['profiles']),
     configData: configData,
     isSaving(what) {
@@ -38,6 +40,9 @@ export default function(configId) {
     },
     getSavingPath(what) {
       return savingPath.concat(what);
+    },
+    getConfigQuery(queryId) {
+      return queries.find((q) => q.get('id').toString() === queryId.toString());
     }
   };
 }

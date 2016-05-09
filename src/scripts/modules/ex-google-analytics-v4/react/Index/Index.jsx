@@ -170,6 +170,7 @@ export default React.createClass({
       <QueriesTable
         queries={this.state.store.queries}
         allProfiles={this.state.store.profiles}
+        configId={this.state.configId}
         {...this.state.actions.prepareLocalState('QueriesTable')}
       />
     );
