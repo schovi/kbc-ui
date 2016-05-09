@@ -1,4 +1,5 @@
 import {Map} from 'immutable';
+import {getDefaultBucket} from './common';
 import _ from 'underscore';
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
 import OauthStore from '../oauth-v2/Store';
@@ -17,7 +18,10 @@ export default function(configId) {
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
+  const editingQueriesPath = tempPath.concat('editingQueries');
 
+  const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
+  const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
 
   return {
     oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
@@ -35,6 +39,7 @@ export default function(configId) {
     queries: queries,
     profiles: parameters.getIn(['profiles']),
     configData: configData,
+    outputBucket: outputBucket,
     isSaving(what) {
       return localState.getIn(savingPath.concat(what), false);
     },
@@ -43,6 +48,14 @@ export default function(configId) {
     },
     getConfigQuery(queryId) {
       return queries.find((q) => q.get('id').toString() === queryId.toString());
+    },
+
+    getEditingQueryPath(queryId) {
+      return editingQueriesPath.concat(queryId);
+    },
+
+    getEditingQuery(queryId) {
+      return localState.getIn(this.getEditingQueryPath(queryId), null);
     }
   };
 }

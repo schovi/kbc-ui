@@ -1,4 +1,5 @@
 import storeProvisioning from './storeProvisioning';
+import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import _ from 'underscore';
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
@@ -19,8 +20,15 @@ export default function(configId) {
   }
 
   function saveConfigData(data, waitingPath) {
+    let dataToSave = data;
+    // check default output bucket and save default if non set
+    const ob = dataToSave.getIn(['parameters', 'outputBucket']);
+    if (!ob) {
+      dataToSave = dataToSave.setIn(['parameters', 'outputBucket'], common.getDefaultBucket(COMPONENT_ID, configId));
+    }
+
     updateLocalState(waitingPath, true);
-    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, data)
+    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, dataToSave)
       .then(() => updateLocalState(waitingPath, false));
   }
 
@@ -50,6 +58,30 @@ export default function(configId) {
       const waitingPath = store.getSavingPath('profiles');
       const newData = store.configData.setIn(['parameters', 'profiles'], newProfiles);
       return saveConfigData(newData, waitingPath);
+    },
+
+    onChangeEditingQueryFn(queryId) {
+      const path = store.getEditingQueryPath(queryId);
+      return (newQuery) => updateLocalState(path, newQuery);
+    },
+
+    startEditingQuery(queryId) {
+      const path = store.getEditingQueryPath(queryId);
+      const query = store.getConfigQuery(queryId);
+      updateLocalState(path, query);
+    },
+
+    saveEditingQuery(queryId) {
+      let query = store.getEditingQuery(queryId);
+      if (!query.get('outputTable')) {
+        const name = query.get('name');
+        query = query.set('outputTable', common.sanitizeTableName(name));
+      }
+      const queries = store.queries.map((q) => q.get('id') === queryId ? query : q);
+      const data = store.configData.setIn(['parameters', 'queries'], queries);
+      const savingPath = store.getSavingPath(['queries', queryId]);
+      return saveConfigData(data, savingPath);
     }
+
   };
 }
