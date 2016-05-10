@@ -25,7 +25,7 @@ export default React.createClass({
 
   componentDidMount() {
     var height = this.refs.container.getDOMNode().offsetHeight;
-    if (this.props.height === 'normal' && height < 150) {
+    if (this.props.height === 'normal' && height < 150 || this.props.height === 'small' && height < 100) {
       this.setState({showExpandButton: false});
     } else {
       this.setState({showExpandButton: true});
