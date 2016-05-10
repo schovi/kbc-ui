@@ -15,7 +15,7 @@ require('./configuration.less');
 export default React.createClass({
   propTypes: {
     data: PropTypes.string.isRequired,
-    schema: PropTypes.string,
+    schema: PropTypes.object,
     isSaving: PropTypes.bool.isRequired,
     isValid: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -111,5 +111,4 @@ export default React.createClass({
     }
     this.props.onSave();
   }
-
 });

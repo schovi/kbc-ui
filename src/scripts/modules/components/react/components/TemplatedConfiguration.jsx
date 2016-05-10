@@ -5,25 +5,29 @@ import Static from './TemplatedConfigurationStatic';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
-import ComponentStore from '../../stores/ComponentsStore';
+import ComponentsStore from '../../stores/ComponentsStore';
 import TemplatesStore from '../../stores/TemplatesStore';
 
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
+
+import Markdown from 'react-markdown';
+import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentsStore, ComponentStore, TemplatesStore)],
+  mixins: [createStoreMixin(InstalledComponentsStore, ComponentsStore, TemplatesStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
-      component = ComponentStore.getComponent(componentId);
+      component = ComponentsStore.getComponent(componentId);
 
     return {
       componentId: componentId,
       configId: configId,
+      component: ComponentsStore.getComponent(componentId),
 
       config: InstalledComponentsStore.getTemplatedConfigValueConfig(componentId, configId),
       configSchema: component.get('configurationSchema'),
@@ -72,6 +76,7 @@ export default React.createClass({
       <div>
         <h2>{this.props.headerText}</h2>
         {this.props.help}
+        {this.renderHelp()}
         {this.scripts()}
       </div>
     );
@@ -116,6 +121,7 @@ export default React.createClass({
         onChangeEditingMode={this.onEditChangeEditingMode}
         onCancel={this.onEditCancel}
         saveLabel={this.props.saveLabel}
+
         />
     );
   },
@@ -159,5 +165,18 @@ export default React.createClass({
       }
     }
     return true;
+  },
+
+  renderHelp() {
+    if (!this.state.component.get('configurationDescription')) {
+      return null;
+    }
+    return (
+      <ReadMore height="small">
+        <Markdown
+          source={this.state.component.get('configurationDescription')}
+          />
+      </ReadMore>
+    );
   }
 });

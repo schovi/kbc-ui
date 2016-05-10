@@ -242,6 +242,7 @@ export default React.createClass({
                     saveLabel="Save configuration"
                     supportsEncryption={this.state.component.get('flags').includes('encrypt')}
                     schema={this.state.component.get('configurationSchema', Map())}
+                    editHelp={this.state.component.get('configurationDescription')}
                     />
                 </span>
               )}
