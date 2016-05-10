@@ -4,9 +4,11 @@ import React from 'react';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import storeProvisioning, {storeMixins} from '../../storeProvisioning';
 import RoutesStore from '../../../../stores/RoutesStore';
+import {GapiStore} from '../../../google-utils/react/GapiFlux';
 
 // actions
 import actionsProvisioning from '../../actionsProvisioning';
+import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
 
 // ui components
 import QueryEditor from '../QueryEditor';
@@ -17,7 +19,7 @@ import QueryEditor from '../QueryEditor';
 
 export default React.createClass({
 
-  mixins: [createStoreMixin(...storeMixins)],
+  mixins: [createStoreMixin(...storeMixins, GapiStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
@@ -26,8 +28,10 @@ export default React.createClass({
     const actions = actionsProvisioning(configId);
     const query = store.getConfigQuery(queryId);
     const editingQuery = store.getEditingQuery(queryId);
+    const isGaInitialized = GapiStore.isInitialized();
 
     return {
+      isGaInitialized: isGaInitialized,
       query: query,
       queryId: queryId,
       editingQuery: editingQuery,
@@ -39,6 +43,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
+    injectGapiScript();
     this.state.actions.startEditingQuery(this.state.queryId);
   },
 
@@ -53,12 +58,7 @@ export default React.createClass({
           </div>
         </div>
         {(isEditing ?
-          <QueryEditor divClassName={contentClassName}
-            outputBucket={this.state.store.outputBucket}
-            onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
-
-            query={this.state.editingQuery}
-            {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>
+          this.renderQueryEditor(contentClassName)
          :
           <div className={contentClassName}>
             Query Static Detail TODO
@@ -67,5 +67,19 @@ export default React.createClass({
       </div>
 
     );
+  },
+
+  renderQueryEditor(contentClassName) {
+    if (this.state.isGaInitialized) {
+      return (
+        <QueryEditor divClassName={contentClassName}
+          outputBucket={this.state.store.outputBucket}
+          onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
+
+          query={this.state.editingQuery}
+          {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>); } else {
+      return (<span>please wait...</span>);
+    }
   }
+
 });

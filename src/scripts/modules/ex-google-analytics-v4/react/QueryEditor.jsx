@@ -1,5 +1,8 @@
 import React, {PropTypes} from 'react';
+import Select from 'react-select';
 import {sanitizeTableName} from '../common';
+import {loadMetadata} from '../../google-utils/AnalyticsMetadata';
+
 export default React.createClass({
   propTypes: {
     query: PropTypes.object.isRequired,
@@ -10,6 +13,9 @@ export default React.createClass({
     prepareLocalState: PropTypes.func.isRequired,
     onChangeQuery: PropTypes.func.isRequired
 
+  },
+
+  componentDidMount() {
   },
 
   render() {
@@ -60,8 +66,45 @@ export default React.createClass({
         </div>
         <div className="row">
           Query editor: metrics, dimensions, filtersExporession, profile, dateranges
+          {this.renderGAFields()}
         </div>
       </div>
+    );
+  },
+
+  renderGaOption(op) {
+    // console.log(op);
+    return op;
+  },
+
+  loadAsyncMetadata(input, callback) {
+    return loadMetadata().then( (data) => {
+      return callback( null, {
+        options: data.map((d) => {return {value: d.id, label: d.id};})
+      }
+      );
+    });
+  },
+
+  renderGaMultiSelect(name) {
+    return (
+      <Select
+        multi={true}
+        value=""
+        optionRenderer={this.renderGaOption}
+        valueRenderer={(v) => v.value}
+        asyncOptions={this.loadAsyncMetadata}
+        name={name} />
+    );
+  },
+
+  // render google analytics specific feilds: metrics, dimmensions,
+  renderGAFields() {
+    return (
+      <div className="form form-horizontal">
+        {this.renderGaMultiSelect('metrics')}
+      </div>
+
     );
   },
 
