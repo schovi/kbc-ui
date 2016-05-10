@@ -21,7 +21,7 @@ export default React.createClass({
     editLabel: PropTypes.string,
     saveLabel: PropTypes.string,
     help: PropTypes.node,
-    schema: PropTypes.object
+    schema: PropTypes.object,
   },
 
   getDefaultProps() {
