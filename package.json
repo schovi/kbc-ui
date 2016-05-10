@@ -21,6 +21,7 @@
     "csv-parse": "0.0.9",
     "d3": "~3.5.6",
     "dagre-d3": "git+https://git@github.com/keboola/dagre-d3.git#6b444d10ddb5276789b4b2bc1eafcd22a767968a",
+    "deep-equal": "^1.0.1",
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "eslint": "^1.8.0",
     "eslint-loader": "~1.1.1",
@@ -33,6 +34,7 @@
     "immutable": "~3.7.3",
     "intl": "^0.1.4",
     "intl-messageformat": "^1.1.0",
+    "javascript-api-utils": "github:googleanalytics/javascript-api-utils",
     "json-editor": "^0.7.23",
     "json-loader": "^0.5.4",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",
@@ -70,8 +72,7 @@
     "underscore.string": "~3.0.3",
     "url-loader": "~0.5.5",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.12.1",
-    "deep-equal": "^1.0.1"
+    "webpack-dev-server": "^1.12.1"
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --host 0.0.0.0 --port 3000 --inline",
