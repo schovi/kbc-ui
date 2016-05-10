@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
 import Immutable from 'immutable';
+import Markdown from 'react-markdown';
+import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -22,6 +24,7 @@ export default React.createClass({
     saveLabel: PropTypes.string,
     help: PropTypes.node,
     schema: PropTypes.object,
+    editHelp: PropTypes.string
   },
 
   getDefaultProps() {
@@ -39,8 +42,22 @@ export default React.createClass({
       <div>
         <h2>{this.props.headerText}</h2>
         {this.props.help}
+        {this.renderHelp()}
         {this.scripts()}
       </div>
+    );
+  },
+
+  renderHelp() {
+    if (!this.props.editHelp) {
+      return null;
+    }
+    return (
+      <ReadMore height="small">
+        <Markdown
+          source={this.props.editHelp}
+          />
+      </ReadMore>
     );
   },
 
@@ -71,6 +88,7 @@ export default React.createClass({
         isValid={this.props.isValid}
         saveLabel={this.props.saveLabel}
         supportsEncryption={this.props.supportsEncryption}
+        help={this.props.editHelp}
       />
     );
   }
