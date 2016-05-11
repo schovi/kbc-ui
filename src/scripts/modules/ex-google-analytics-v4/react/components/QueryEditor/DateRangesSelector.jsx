@@ -4,7 +4,8 @@ import {fromJS} from 'immutable';
 export default React.createClass({
   propTypes: {
     ranges: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    isEditing: PropTypes.bool.isRequired
   },
 
   render() {
@@ -24,8 +25,11 @@ export default React.createClass({
                   <strong>Until </strong>
                 </div>
                 <div className="th">
+                  {this.props.isEditing ?
                   <span onClick={this.addRange}
                     className="fa fa-fw fa-plus kbc-cursor-pointer" />
+                   : ''
+                  }
                 </div>
               </div>
             </div>
@@ -42,22 +46,28 @@ export default React.createClass({
     return (
       <div className="tr">
         <div className="td" >
+          {this.props.isEditing ?
           <input
             type="text"
             className="form-control input-sm"
             value={range.get('startDate')}
             onChange={this.createUpdateFn('startDate', idx)}
           />
+           : range.get('startDate')
+          }
         </div>
         <div className="td">
+          {this.props.isEditing ?
           <input
             className="form-control input-sm"
             value={range.get('endDate')}
             onChange={this.createUpdateFn('endDate', idx)}
           />
+            : range.get('endDate')
+          }
         </div>
         <div className="td">
-          { idx === 0 ?
+          { (idx === 0 || !this.props.isEditing) ?
             null
             :
             <span onClick={() => this.deleteRange(idx)}

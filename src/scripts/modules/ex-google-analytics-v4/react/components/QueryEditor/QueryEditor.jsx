@@ -8,6 +8,7 @@ import {GapiActions} from '../../../../google-utils/react/GapiFlux';
 import ProfileSelector from './ProfileSelector';
 import GaMultiSelect from './GaMultiSelect';
 import DateRangesSelector from './DateRangesSelector';
+import SapiTableLinkEx from '../../../../components/react/components/StorageApiTableLinkEx';
 
 export default React.createClass({
   propTypes: {
@@ -21,6 +22,7 @@ export default React.createClass({
     onChangeQuery: PropTypes.func.isRequired,
     isGaInitialized: PropTypes.bool.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
+    isEditing: PropTypes.bool.isRequired,
     metadata: PropTypes.object.isRequired
 
   },
@@ -31,6 +33,8 @@ export default React.createClass({
 
   render() {
     const {query} = this.props;
+    const isEditing = false;
+    const outTableId = this.props.outputBucket + '.' + query.get('outputTable');
     return (
       <div className={this.props.divClassName}>
         <div className="row kbc-header">
@@ -40,16 +44,23 @@ export default React.createClass({
                 Name
               </label>
               <div className="col-md-6">
+                {isEditing ?
                 <input
                   type="text"
                   className="form-control"
                   value={query.get('name')}
                   placeholder="e.g. Untitled Query"
                   onChange={this.onChangeTextPropFn('name')}/>
+                :
+                <p className="form-control-static">
+                  {query.get('name')}
+                </p>
+                }
               </div>
               <div className="col-md-4 checkbox">
                 <label>
                   <input type="checkbox" checked={query.get('enabled')}
+                    disabled={!isEditing}
                     onChange={this.onChangePropertyFn('enabled', (e) => e.target.checked)}/>
                   Enabled
                 </label>
@@ -60,6 +71,7 @@ export default React.createClass({
                 Output Table
               </label>
               <div className="col-md-8">
+                {isEditing ?
                 <div className="input-group">
                   <div className="input-group-addon">
                     <small>{this.props.outputBucket}</small>.
@@ -71,6 +83,11 @@ export default React.createClass({
                     placeholder={sanitizeTableName(query.get('name'))}
                     onChange={this.onChangeTextPropFn('outputTable')}/>
                 </div>
+                 :
+                 <p className="form-control-static">
+                   <SapiTableLinkEx tableId={outTableId} />
+                 </p>
+                }
               </div>
             </div>
           </div>
@@ -78,6 +95,7 @@ export default React.createClass({
         <div className="row">
           <div className="form form-horizontal">
             <ProfileSelector
+              isEditing={isEditing}
               allProfiles={this.props.allProfiles}
               selectedProfile={query.getIn(['query', 'viewId'])}
               onSelectProfile={this.onChangePropertyFn(['query', 'viewId']) }
@@ -86,6 +104,7 @@ export default React.createClass({
               isLoadingMetadata={this.props.isLoadingMetadata}
               metadata={this.props.metadata.get('metrics', List()).toJS()}
               isGaInitialized={this.props.isGaInitialized}
+              isEditing={isEditing}
               name="Metrics"
               onSelectValue={this.onSelectMetric}
               selectedValues={this.getSelectedMetrics()}
@@ -97,20 +116,29 @@ export default React.createClass({
               name="Dimensions"
               onSelectValue={this.onSelectDimension}
               selectedValues={this.getSelectedDimensions()}
+              isEditing={isEditing}
             />
             <div className="form-group">
               <label className="col-md-4 control-label">
-               Filters Expressions
+                Filters Expressions
               </label>
               <div className="col-md-10">
-                <input
-                  type="text"
-                  className="form-control"
-                  value={query.getIn(['query', 'filtersExpression'])}
-                  onChange={this.onChangeTextPropFn(['query', 'filtersExpression'])}/>
+                {isEditing ?
+                 <input
+                   type="text"
+                   className="form-control"
+                   value={query.getIn(['query', 'filtersExpression'])}
+                   onChange={this.onChangeTextPropFn(['query', 'filtersExpression'])}/>
+                 :
+                 <p className="form-control-static">
+                   {query.getIn(['query', 'filtersExpression']) || 'N/A'}
+                 </p>
+                }
+
               </div>
             </div>
             <DateRangesSelector
+              isEditing={isEditing}
               ranges={query.getIn(['query', 'dateRanges'], List())}
               onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
             />

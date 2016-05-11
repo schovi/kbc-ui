@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Loader} from 'kbc-react-components';
 import fuzzy from 'fuzzy';
 import Select from 'react-select';
+import Tooltip from '../../../../../react/common/Tooltip';
 
 import './GaMultiSelect.less';
 
@@ -11,6 +12,7 @@ export default React.createClass({
     onSelectValue: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     isGaInitialized: PropTypes.bool.isRequired,
+    isEditing: PropTypes.bool.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
     metadata: PropTypes.array.isRequired,
 
@@ -94,6 +96,11 @@ export default React.createClass({
     if (!this.props.isGaInitialized) {
       return <Loader />;
     }
+
+    if (!this.props.isEditing) {
+      return this.renderStatic();
+    }
+
     return (
       <div className="form-group">
         <label className={this.props.labelClassName}>
@@ -114,6 +121,38 @@ export default React.createClass({
             name={name} />
         </div>
       </div>
+    );
+  },
+
+  renderStatic() {
+    return (
+      <div className="form-group">
+        <label className={'control-label ' + this.props.labelClassName}>
+          {this.props.name}
+        </label>
+        <div className={this.props.wrapperClassName}>
+          <p className="form-control-static">
+            {this.props.selectedValues.map((val, idx) => this.renderStaticOption(val, idx))}
+          </p>
+        </div>
+      </div>
+    );
+  },
+
+  renderStaticOption(optionId, idx) {
+    const option = this.props.metadata.find((op) => op.id === optionId);
+    const desc = option ? option.attributes.description : '';
+    const name = option ? option.attributes.uiName : '';
+    const isLast = idx === this.props.selectedValues.length - 1;
+    return (
+      <span>
+        <Tooltip tooltip={desc} placement="top">
+          <span>
+            {optionId}({name})
+          </span>
+        </Tooltip>
+        {isLast ? '' : ', '}
+      </span>
     );
   }
 });

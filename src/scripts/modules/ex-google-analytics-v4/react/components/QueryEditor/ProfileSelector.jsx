@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Input} from 'react-bootstrap';
+import ProfileInfo from '../../ProfileInfo';
 
 export default React.createClass({
   propTypes: {
@@ -8,6 +9,7 @@ export default React.createClass({
     labelClassName: PropTypes.string,
     wrapperClassName: PropTypes.string,
     label: PropTypes.string,
+    isEditing: PropTypes.bool,
     onSelectProfile: PropTypes.func.isRequired
   },
 
@@ -15,27 +17,54 @@ export default React.createClass({
     return {
       labelClassName: 'col-xs-2',
       wrapperClassName: 'col-xs-8',
-      label: 'Profiles'
+      label: 'Profile'
     };
   },
 
   render() {
-    return (
-      <Input
-        type="select"
-        value={this.props.selectedProfile}
-        label={this.props.label}
-        labelClassName={this.props.labelClassName}
-        wrapperClassName={this.props.wrapperClassName}
-        onChange={this.onSelect}>
+    if (this.props.isEditing) {
+      return (
+        <Input
+          type="select"
+          value={this.props.selectedProfile}
+          label={this.props.label}
+          labelClassName={this.props.labelClassName}
+          wrapperClassName={this.props.wrapperClassName}
+          onChange={this.onSelect}>
 
-        <option value="">
-          --all--
-        </option>
+          <option value="">
+            --all profiles--
+          </option>
 
-        {this.renderOptionsArray()}
-      </Input>
-    );
+          {this.renderOptionsArray()}
+        </Input>
+      );
+    } else {
+      return (
+        <div className="form-group">
+          <label className={'control-label ' + this.props.labelClassName}>
+            {this.props.label}
+          </label>
+          <div className={this.props.wrapperClassName}>
+            <p className="form-control-static">
+              {this.renderStaticProfile()}
+            </p>
+          </div>
+        </div>
+      );
+    }
+  },
+
+  renderStaticProfile() {
+    if (!this.props.selectedProfile) {
+      return '-- all profiles --';
+    }
+    const found = this.props.allProfiles.find((p) => p.get('id') === this.props.selectedProfile);
+    if (found) {
+      return (<ProfileInfo profile={found}/>);
+    } else {
+      return 'Unknown profile(' + this.props.selectedProfile.toString() + ')';
+    }
   },
 
   renderOptionsArray() {
