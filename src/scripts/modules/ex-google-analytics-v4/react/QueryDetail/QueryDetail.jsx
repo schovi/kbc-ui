@@ -29,8 +29,12 @@ export default React.createClass({
     const query = store.getConfigQuery(queryId);
     const editingQuery = store.getEditingQuery(queryId);
     const isGaInitialized = GapiStore.isInitialized();
+    const isLoadingMetadata = GapiStore.isLoadingMetadata();
+    const metadata = GapiStore.getMetadata();
 
     return {
+      isLoadingMetadata: isLoadingMetadata,
+      metadata: metadata,
       isGaInitialized: isGaInitialized,
       query: query,
       queryId: queryId,
@@ -40,6 +44,10 @@ export default React.createClass({
       configId: configId,
       localState: store.getLocalState()
     };
+  },
+
+  componentWillReceiveProps() {
+    this.setState(this.getStateFromStores());
   },
 
   componentDidMount() {
@@ -70,17 +78,18 @@ export default React.createClass({
   },
 
   renderQueryEditor(contentClassName) {
-    if (this.state.isGaInitialized) {
-      return (
-        <QueryEditor divClassName={contentClassName}
-          allProfiles={this.state.store.profiles}
-          outputBucket={this.state.store.outputBucket}
-          onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
+    return (this.state.isGaInitialized ?
+      <QueryEditor divClassName={contentClassName}
+        isLoadingMetadata={this.state.isLoadingMetadata}
+        metadata={this.state.metadata}
+        isGaInitialized={this.state.isGaInitialized}
+        allProfiles={this.state.store.profiles}
+        outputBucket={this.state.store.outputBucket}
+        onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
 
-          query={this.state.editingQuery}
-          {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>); } else {
-      return (<span>please wait...</span>);
-    }
+        query={this.state.editingQuery}
+        {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>
+    : null );
   }
 
 });

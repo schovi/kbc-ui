@@ -1,9 +1,12 @@
 import React, {PropTypes} from 'react';
-import Select from 'react-select';
+import {fromJS, List} from 'immutable';
+
+
 import {sanitizeTableName} from '../../../common';
-import {loadMetadata} from '../../../../google-utils/AnalyticsMetadata';
+import {GapiActions} from '../../../../google-utils/react/GapiFlux';
 
 import ProfileSelector from './ProfileSelector';
+import GaMultiSelect from './GaMultiSelect';
 
 export default React.createClass({
   propTypes: {
@@ -14,11 +17,15 @@ export default React.createClass({
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
-    onChangeQuery: PropTypes.func.isRequired
+    onChangeQuery: PropTypes.func.isRequired,
+    isGaInitialized: PropTypes.bool.isRequired,
+    isLoadingMetadata: PropTypes.bool.isRequired,
+    metadata: PropTypes.object.isRequired
 
   },
 
   componentDidMount() {
+    GapiActions.loadAnalyticsMetadata();
   },
 
   render() {
@@ -74,10 +81,22 @@ export default React.createClass({
               selectedProfile={query.get('viewId')}
               onSelectProfile={this.onChangePropertyFn('viewId') }
             />
-            metrics
-            {this.renderGAFields()}
-            dimensions
-            {this.renderGAFields()}
+            <GaMultiSelect
+              isLoadingMetadata={this.props.isLoadingMetadata}
+              metadata={this.props.metadata.get('metrics', List()).toJS()}
+              isGaInitialized={this.props.isGaInitialized}
+              name="Metrics"
+              onSelectValue={this.onSelectMetric}
+              selectedValues={this.getSelectedMetrics()}
+            />
+            <GaMultiSelect
+              isLoadingMetadata={this.props.isLoadingMetadata}
+              metadata={this.props.metadata.get('dimensions', List()).toJS()}
+              isGaInitialized={this.props.isGaInitialized}
+              name="Dimensions"
+              onSelectValue={this.onSelectDimension}
+              selectedValues={this.getSelectedDimensions()}
+            />
             filtersExporession
             dateranges
           </div>
@@ -86,36 +105,40 @@ export default React.createClass({
     );
   },
 
-  renderGaOption(op) {
-    // console.log(op);
-    return op;
-  },
-
-  loadAsyncMetadata(input, callback) {
-    return loadMetadata().then( (data) => {
-      return callback( null, {
-        options: data.map((d) => {return {value: d.id, label: d.id};})
+  onSelectMetric(strMetrics) {
+    let metricsArray = [];
+    for ( let metric of strMetrics.split(',')) {
+      if (metricsArray.indexOf(metric) < 0) {
+        metricsArray.push(metric);
       }
-      );
-    });
+    }
+    const newMetrics = fromJS(metricsArray.map((m) => {return {expression: m};}));
+    const newQuery = this.props.query.setIn(['query', 'metrics'], newMetrics);
+    this.props.onChangeQuery(newQuery);
   },
 
-  renderGaMultiSelect(name) {
-    return (
-      <Select
-        multi={true}
-        value=""
-        optionRenderer={this.renderGaOption}
-        valueRenderer={(v) => v.value}
-        asyncOptions={this.loadAsyncMetadata}
-        name={name} />
-    );
+  getSelectedMetrics() {
+    const metrics = this.props.query.getIn(['query', 'metrics'], List());
+    return metrics.map((m) => m.get('expression')).toArray();
   },
 
-  // render google analytics specific feilds: metrics, dimmensions,
-  renderGAFields() {
-    return this.renderGaMultiSelect('metrics');
+  onSelectDimension(strDimensions) {
+    let dimensionsArray = [];
+    for ( let dimension of strDimensions.split(',')) {
+      if (dimensionsArray.indexOf(dimension) < 0) {
+        dimensionsArray.push(dimension);
+      }
+    }
+    const newDimensions = fromJS(dimensionsArray.map((m) => {return {name: m};}));
+    const newQuery = this.props.query.setIn(['query', 'dimensions'], newDimensions);
+    this.props.onChangeQuery(newQuery);
   },
+
+  getSelectedDimensions() {
+    const dimensions = this.props.query.getIn(['query', 'dimensions'], List());
+    return dimensions.map((m) => m.get('name')).toArray();
+  },
+
 
   onChangePropertyFn(propName, getValueFnParam) {
     let getValueFn = getValueFnParam;
