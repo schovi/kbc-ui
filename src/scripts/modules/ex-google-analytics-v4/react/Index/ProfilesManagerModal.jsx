@@ -89,7 +89,7 @@ export default React.createClass({
            {profiles.map( (profile) =>
              <li>
                <ProfileInfo profile={profile} />
-               <span onClick={() => this.deselectProfile(profile.get('id'))}className="kbc-icon-cup kbc-cursor-pointer" />
+               <span onClick={() => this.deselectProfile(profile.get('id'))} className="kbc-icon-cup kbc-cursor-pointer" />
 
              </li>
             )}

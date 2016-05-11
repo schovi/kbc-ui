@@ -39,7 +39,7 @@ export default React.createClass({
     return !!fuzzy.match(filter, data.group) ||
            !!fuzzy.match(filter, data.name) ||
            !!fuzzy.match(filter, data.id) ||
-           !!fuzzy.match(filter, data.desc);
+           data.desc.search(filter) >= 0;
   },
 
   createNewOption(input) {
@@ -68,8 +68,8 @@ export default React.createClass({
     return (
       <div className="SearchSuggestMatch" key={data.id}>
         <span className="SearchSuggestMatch-category">{data.group}</span>
-        <div className="SearchSuggestMatch-content">{data.name}</div>
-        <div className="SearchSuggestMatch-extra"><strong>{data.id}</strong> {data.desc}</div>
+        <div className="SearchSuggestMatch-content">{data.id} ({data.name})</div>
+        <div className="SearchSuggestMatch-extra">{data.desc}</div>
       </div>
     );
   },

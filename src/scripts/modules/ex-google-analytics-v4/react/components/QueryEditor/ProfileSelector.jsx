@@ -23,6 +23,7 @@ export default React.createClass({
     return (
       <Input
         type="select"
+        value={this.props.selectedProfile}
         label={this.props.label}
         labelClassName={this.props.labelClassName}
         wrapperClassName={this.props.wrapperClassName}

@@ -7,6 +7,7 @@ import {GapiActions} from '../../../../google-utils/react/GapiFlux';
 
 import ProfileSelector from './ProfileSelector';
 import GaMultiSelect from './GaMultiSelect';
+import DateRangesSelector from './DateRangesSelector';
 
 export default React.createClass({
   propTypes: {
@@ -78,8 +79,8 @@ export default React.createClass({
           <div className="form form-horizontal">
             <ProfileSelector
               allProfiles={this.props.allProfiles}
-              selectedProfile={query.get('viewId')}
-              onSelectProfile={this.onChangePropertyFn('viewId') }
+              selectedProfile={query.getIn(['query', 'viewId'])}
+              onSelectProfile={this.onChangePropertyFn(['query', 'viewId']) }
             />
             <GaMultiSelect
               isLoadingMetadata={this.props.isLoadingMetadata}
@@ -97,8 +98,23 @@ export default React.createClass({
               onSelectValue={this.onSelectDimension}
               selectedValues={this.getSelectedDimensions()}
             />
-            filtersExporession
-            dateranges
+            <div className="form-group">
+              <label className="col-md-4 control-label">
+               Filters Expressions
+              </label>
+              <div className="col-md-10">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={query.getIn(['query', 'filtersExpression'])}
+                  onChange={this.onChangeTextPropFn(['query', 'filtersExpression'])}/>
+              </div>
+            </div>
+            <DateRangesSelector
+              ranges={query.getIn(['query', 'dateRanges'], List())}
+              onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
+            />
+
           </div>
         </div>
       </div>
@@ -139,7 +155,6 @@ export default React.createClass({
     return dimensions.map((m) => m.get('name')).toArray();
   },
 
-
   onChangePropertyFn(propName, getValueFnParam) {
     let getValueFn = getValueFnParam;
     if (!getValueFn) {
@@ -147,7 +162,7 @@ export default React.createClass({
     }
     const changeFn = (event) => {
       const value = getValueFn(event);
-      const newQuery = this.props.query.set(propName, value);
+      const newQuery = this.props.query.setIn([].concat(propName), value);
       this.props.onChangeQuery(newQuery);
     };
     return changeFn;
@@ -156,7 +171,7 @@ export default React.createClass({
   onChangeTextPropFn(propName) {
     const changeFn = (ev) => {
       const value = ev.target.value;
-      const newQuery = this.props.query.set(propName, value);
+      const newQuery = this.props.query.setIn([].concat(propName), value);
       this.props.onChangeQuery(newQuery);
     };
     return changeFn;
