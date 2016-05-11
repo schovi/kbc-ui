@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react';
 import Select from 'react-select';
-import {sanitizeTableName} from '../common';
-import {loadMetadata} from '../../google-utils/AnalyticsMetadata';
+import {sanitizeTableName} from '../../../common';
+import {loadMetadata} from '../../../../google-utils/AnalyticsMetadata';
+
+import ProfileSelector from './ProfileSelector';
 
 export default React.createClass({
   propTypes: {
+    allProfiles: PropTypes.object.isRequired,
     query: PropTypes.object.isRequired,
     divClassName: PropTypes.string.isRequired,
     outputBucket: PropTypes.string.isRequired,
@@ -51,7 +54,7 @@ export default React.createClass({
               <div className="col-md-8">
                 <div className="input-group">
                   <div className="input-group-addon">
-                    {this.props.outputBucket}.
+                    <small>{this.props.outputBucket}</small>.
                   </div>
                   <input
                     type="text"
@@ -65,8 +68,19 @@ export default React.createClass({
           </div>
         </div>
         <div className="row">
-          Query editor: metrics, dimensions, filtersExporession, profile, dateranges
-          {this.renderGAFields()}
+          <div className="form form-horizontal">
+            <ProfileSelector
+              allProfiles={this.props.allProfiles}
+              selectedProfile={query.get('viewId')}
+              onSelectProfile={this.onChangePropertyFn('viewId') }
+            />
+            metrics
+            {this.renderGAFields()}
+            dimensions
+            {this.renderGAFields()}
+            filtersExporession
+            dateranges
+          </div>
         </div>
       </div>
     );
@@ -100,15 +114,14 @@ export default React.createClass({
 
   // render google analytics specific feilds: metrics, dimmensions,
   renderGAFields() {
-    return (
-      <div className="form form-horizontal">
-        {this.renderGaMultiSelect('metrics')}
-      </div>
-
-    );
+    return this.renderGaMultiSelect('metrics');
   },
 
-  onChangePropertyFn(propName, getValueFn) {
+  onChangePropertyFn(propName, getValueFnParam) {
+    let getValueFn = getValueFnParam;
+    if (!getValueFn) {
+      getValueFn = (value) => value;
+    }
     const changeFn = (event) => {
       const value = getValueFn(event);
       const newQuery = this.props.query.set(propName, value);

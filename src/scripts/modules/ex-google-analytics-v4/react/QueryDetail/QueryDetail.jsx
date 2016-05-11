@@ -11,7 +11,7 @@ import actionsProvisioning from '../../actionsProvisioning';
 import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
 
 // ui components
-import QueryEditor from '../QueryEditor';
+import QueryEditor from '../components/QueryEditor/QueryEditor';
 
 // CONSTS
 // const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
@@ -73,6 +73,7 @@ export default React.createClass({
     if (this.state.isGaInitialized) {
       return (
         <QueryEditor divClassName={contentClassName}
+          allProfiles={this.state.store.profiles}
           outputBucket={this.state.store.outputBucket}
           onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
 
