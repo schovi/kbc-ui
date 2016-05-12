@@ -1,6 +1,7 @@
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
 transformationsApi = require './TransformationsApi'
+transformationsApiAdapter = require './TransformationsApiAdapter'
 TransformationBucketsStore = require './stores/TransformationBucketsStore'
 TransformationsStore = require './stores/TransformationsStore'
 InstalledComponentsActionCreators = require '../components/InstalledComponentsActionCreators'

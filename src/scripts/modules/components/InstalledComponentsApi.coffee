@@ -29,6 +29,13 @@ installedComponentsApi =
       response.body
     )
 
+  getComponentConfigurations: (componentId) ->
+    createRequest('GET', 'components/#{componentId}/configs')
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   updateComponentConfiguration: (componentId, configurationId, data) ->
     createRequest 'PUT', "components/#{componentId}/configs/#{configurationId}"
     .type 'form'
