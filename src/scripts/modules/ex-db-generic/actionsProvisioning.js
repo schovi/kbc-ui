@@ -145,7 +145,7 @@ export function createActions(componentId) {
     testCredentials(configId, credentials) {
       const store = getStore(configId);
       let runData = store.configData.setIn(['parameters', 'tables'], List());
-      runData = store.configData.setIn(['parameters', 'db'], credentials);
+      runData = runData.setIn(['parameters', 'db'], credentials);
       const params = {
         configData: runData.toJS()
       };
