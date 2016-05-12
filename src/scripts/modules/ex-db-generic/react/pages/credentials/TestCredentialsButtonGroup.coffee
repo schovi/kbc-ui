@@ -22,21 +22,30 @@ module.exports = React.createClass
 
   getInitialState: ->
     isTesting: false
+    isError: false
     result: null
 
   _startTesting: ->
     ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
     @setState
       isTesting: true
+      isError: false
       result: null
 
     ExDbActionCreators
     .testCredentials @props.configId, @props.credentials
-    .then(@_onTestingDone, @_onTestingDone)
+    .then(@_onTestingDone, @_onTestingError)
 
   _onTestingDone: (result) ->
     @setState
       isTesting: false
+      isError: false
+      result: result
+
+  _onTestingError: (result) ->
+    @setState
+      isTesting: false
+      isError: true
       result: result
 
   render: ->
@@ -50,8 +59,8 @@ module.exports = React.createClass
           'Test Credentials'
         ' '
         Loader() if @state.isTesting
-        if @state.result
-          if @state.result.status == 'success'
+        if @state.result or @state.isError
+          if @state.result.status in ['success', 'ok'] and not @state.isError
             @_testSuccess @state.result
           else
             @_testError @state.result
