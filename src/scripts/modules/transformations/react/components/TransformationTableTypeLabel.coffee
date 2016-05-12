@@ -9,9 +9,7 @@ TransformationTableTypeLabel = React.createClass
     type: React.PropTypes.string
 
   render: ->
-    if (@props.backend == 'redshift' && @props.type == 'view')
-      span {className: 'fa fa-copy fa-fw', title: 'View'}
-    else if (@props.backend == 'docker')
+    if (@props.backend == 'docker')
       span {className: 'fa fa-file-text-o fa-fw', title: 'File'}
     else
       span {className: 'fa fa-table fa-fw', title: 'Table'}

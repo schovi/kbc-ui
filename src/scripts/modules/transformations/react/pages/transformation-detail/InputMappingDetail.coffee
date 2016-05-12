@@ -44,13 +44,6 @@ InputMappingDetail = React.createClass(
             Check
               isChecked: @props.inputMapping.get('optional')
 
-      if @props.transformationBackend == 'redshift' && @_isSourceTableInRedshift()
-        ListGroupItem {key: 'type'},
-          strong {className: "col-md-4"},
-            'Type'
-          span {className: "col-md-6"},
-            @props.inputMapping.get('type')
-
       ListGroupItem {key: 'columns'},
         strong {className: "col-md-4"},
           'Columns'
@@ -108,7 +101,8 @@ InputMappingDetail = React.createClass(
             else
               'N/A'
 
-      if (@props.transformationBackend == 'mysql' || @props.inputMapping.get('type') == 'table')
+      if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift' ||
+          @props.transformationBackend == 'snowflake')
         ListGroupItem {key: 'datatypes'},
           div className: 'clearfix',
             strong {className: "col-md-4"},
@@ -125,7 +119,7 @@ InputMappingDetail = React.createClass(
               else
                 'No data types set'
 
-      if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
+      if (@props.transformationBackend == 'redshift')
         ListGroupItem {key: 'sortKey'},
           strong {className: "col-md-4"},
             'Sort key'
@@ -135,7 +129,7 @@ InputMappingDetail = React.createClass(
             else
               'No sort key set'
 
-      if (@props.transformationBackend == 'redshift' && @props.inputMapping.get('type') == 'table')
+      if (@props.transformationBackend == 'redshift')
         ListGroupItem {key: 'distKey'},
           strong {className: "col-md-4"},
             'Dist key'

@@ -51,7 +51,6 @@ module.exports = React.createClass
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", destination)
-      mapping = mapping.set("type", "table")
       mapping = mapping.set("datatypes", Immutable.Map())
       mapping = mapping.set("whereColumn", "")
       mapping = mapping.set("whereValues", Immutable.List())
@@ -68,10 +67,6 @@ module.exports = React.createClass
 
   _handleChangeOptional: (e) ->
     value = @props.value.set("optional", e.target.checked)
-    @props.onChange(value)
-
-  _handleChangeType: (e) ->
-    value = @props.value.set("type", e.target.value)
     @props.onChange(value)
 
   _handleChangeDays: (e) ->
@@ -252,30 +247,6 @@ module.exports = React.createClass
               React.DOM.code {}, @props.value.get("destination")
               '.'
             else null
-      if @state.showDetails && @_isSourceTableRedshift()
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            type: 'select'
-            name: 'type'
-            label: 'Type'
-            value: @props.value.get("type", "table")
-            disabled: @props.disabled
-            onChange: @_handleChangeType
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-            help:
-              React.DOM.small {},
-                React.DOM.span {},
-                  React.DOM.div {},
-                   React.DOM.code {}, "table"
-                   "Input mapping is created as a physical table, takes longer to process"
-                  React.DOM.div {},
-                   React.DOM.code {}, "view"
-                   "Input mapping is created as a view, will consume more memory when materializing"
-          ,
-            React.DOM.option {value: "table"}, "Table"
-            React.DOM.option {value: "view"}, "View"
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
@@ -340,7 +311,7 @@ module.exports = React.createClass
                 placeholder: 'Add a value...'
                 emptyStrings: true,
                 onChange: @_handleChangeWhereValues
-      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
+      if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Data types'
@@ -350,7 +321,7 @@ module.exports = React.createClass
                 disabled: @props.disabled || !@props.value.get("source")
                 onChange: @_handleChangeDataTypes
                 columnsOptions: @_getFilteredColumnsOptions()
-      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
+      if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Sort key'
@@ -367,7 +338,7 @@ module.exports = React.createClass
                 React.DOM.small {},
                   "SORTKEY option for creating table in Redshift DB.
                     You can create a compound sort key."
-      if @state.showDetails && (!@_isSourceTableRedshift() || @props.value.get("type") == 'table')
+      if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
             React.DOM.label className: 'col-xs-2 control-label', 'Dist key'
