@@ -18,8 +18,7 @@ import ComponentMetadata from '../../../components/react/components/ComponentMet
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
-/* import {FormControls} from 'react-bootstrap';
- *const StaticText = FormControls.Static;*/
+import {Link} from 'react-router';
 import ProfileInfo from '../ProfileInfo';
 
 // index components
@@ -67,10 +66,23 @@ export default React.createClass({
         />
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
-            <ComponentDescription
-              componentId={COMPONENT_ID}
-              configId={this.state.configId}
-            />
+            <div className="col-sm-10">
+              <ComponentDescription
+                componentId={COMPONENT_ID}
+                configId={this.state.configId}
+              />
+            </div>
+            <div className="col-sm-2 kbc-buttons">
+              {queries.count() >= 1 ?
+               <Link
+                 to={COMPONENT_ID + '-new-query'}
+                 params={{config: this.state.configId}}
+                 className="btn btn-success">
+                 Add Query
+               </Link>
+               : null
+              }
+            </div>
           </div>
           <div className="row">
             <AuthorizationRow
@@ -117,7 +129,7 @@ export default React.createClass({
             <li>
               <a
                 onClick={() => this.state.actions.updateLocalState(['ProfilesManagerModal', 'profiles'], this.state.store.profiles)}>
-                 Setup Profiles
+                Setup Profiles
               </a>
             </li>
             <li>

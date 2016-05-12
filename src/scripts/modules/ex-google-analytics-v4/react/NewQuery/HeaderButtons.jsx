@@ -33,23 +33,26 @@ export default React.createClass({
   },
 
   render() {
-    const {actions} = this.state;
     return (
       <EditButtons
         isEditing={true}
         isSaving={this.state.store.isSaving('newQuery')}
         isDisabled={!this.state.store.isQueryValid(this.state.newQuery)}
-        onCancel={ () => actions.cancelEditingNewQuery()}
-        onSave={ () => this.save()}
+        onCancel={ this.redirectToIndex}
+        onSave={this.save}
         onEditStart={() => {}}
       />
     );
   },
 
+  redirectToIndex() {
+    this.transitionTo(COMPONENT_ID, {config: this.state.configId});
+    return this.state.actions.cancelEditingNewQuery();
+  },
+
   save() {
     return this.state.actions.saveNewQuery().then( () => {
-      this.transitionTo(COMPONENT_ID, {config: this.state.configId});
-      return this.state.actions.cancelEditingNewQuery();
+      return this.redirectToIndex();
     });
   }
 });

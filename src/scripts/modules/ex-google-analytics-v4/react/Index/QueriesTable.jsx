@@ -1,6 +1,12 @@
 import React, {PropTypes} from 'react';
 // import {List} from 'immutable';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
+
+import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
+import RunExtractionButton from '../../../components/react/components/RunComponentButton';
+
+import QueryDeleteButton from './QueryDeleteButton';
+
 import {Link} from 'react-router';
 
 import SelectedProfilesList from './SelectedProfilesList';
@@ -14,7 +20,8 @@ export default React.createClass({
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
-    configId: PropTypes.string.isRequired
+    configId: PropTypes.string.isRequired,
+    onDeleteQueryFn: PropTypes.func
   },
 
   render() {
@@ -79,8 +86,32 @@ export default React.createClass({
         <div className="td">
           <StorageTableLink tableId={propValue('outputTable')} />
         </div>
-        <div className="td">
-          {/* action buttons */}
+        <div className="td text-right kbc-no-wrap">
+          <QueryDeleteButton
+            query={query}
+            onDeleteFn={this.props.onDeleteQueryFn}
+            isPending={false}
+          />
+          <ActivateDeactivateButton
+            activateTooltip="Enable Query"
+            deactivateTooltip="Disable Query"
+            isActive={query.get('enabled')}
+            isPending={false}
+            onChange={this._handleActiveChange}
+          />
+          <RunExtractionButton
+            title="Run Extraction"
+            component={COMPONENT_ID}
+            runParams={ () => {
+              return {
+                config: this.props.configId,
+                configData: []
+              };
+            }}
+          >
+            You are about to run extraction.
+          </RunExtractionButton>
+
         </div>
       </Link>
     );
