@@ -5,7 +5,7 @@ Button = React.createFactory(require('react-bootstrap').Button)
 Loader = React.createFactory(require('kbc-react-components').Loader)
 Link = React.createFactory(require('react-router').Link)
 
-{div, span} = React.DOM
+{small, div, span} = React.DOM
 
 actionsProvisioning = require '../../../actionsProvisioning'
 # THIS REACT COMPONENT IS NOT USED!!! SEE render method!
@@ -22,26 +22,24 @@ module.exports = React.createClass
 
   getInitialState: ->
     isTesting: false
-    job: null
+    result: null
 
   _startTesting: ->
     ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
     @setState
       isTesting: true
-      job: null
+      result: null
 
     ExDbActionCreators
     .testCredentials @props.configId, @props.credentials
-    .then @_onTestingDone
+    .then(@_onTestingDone, @_onTestingDone)
 
-  _onTestingDone: (job) ->
+  _onTestingDone: (result) ->
     @setState
       isTesting: false
-      job: job
+      result: result
 
   render: ->
-    return null #TODO: remove when the backend has the test credentials feature
-
     div className: 'form-group',
       div className: classnames('col-xs-8', 'col-xs-offset-4': @props.hasOffset),
         Button
@@ -52,30 +50,21 @@ module.exports = React.createClass
           'Test Credentials'
         ' '
         Loader() if @state.isTesting
-        if @state.job
-          if @state.job.status == 'success'
-            @_testSuccess @state.job
+        if @state.result
+          if @state.result.status == 'success'
+            @_testSuccess @state.result
           else
-            @_testError @state.job
+            @_testError @state.result
 
-  _testSuccess: (job) ->
+  _testSuccess: (result) ->
     span className: 'text-success',
       span className: 'fa fa-fw fa-check'
       ' Connected! '
-      Link
-        to: 'jobDetail'
-        params:
-          jobId: job.id
-      ,
-        'details'
 
-  _testError: (job) ->
+  _testError: (result) ->
+    console.log(result)
     span className: 'text-danger',
       span className: 'fa fa-fw fa-meh-o'
       ' Failed to connect! '
-      Link
-        to: 'jobDetail'
-        params:
-          jobId: job.id
-      ,
-        'details'
+      div null,
+        small null, result?.message

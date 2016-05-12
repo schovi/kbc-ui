@@ -1,9 +1,7 @@
 import * as storeProvisioning from './storeProvisioning';
-import jobPoller from '../../utils/jobPoller';
 import {Map, List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
-import InstalledComponentsActions from '../components/InstalledComponentsActionCreators';
-import ApplicationStore from '../../stores/ApplicationStore';
+import callDockerAction from '../components/DockerActionsApi';
 
 import getDefaultPort from './templates/defaultPorts';
 
@@ -146,21 +144,12 @@ export function createActions(componentId) {
 
     testCredentials(configId, credentials) {
       const store = getStore(configId);
-      let runData = store.configData.setIn(['parameters', 'tables'], List([]));
+      let runData = store.configData.setIn(['parameters', 'tables'], List());
       runData = store.configData.setIn(['parameters', 'db'], credentials);
       const params = {
-        component: componentId,
-        data: {
-          config: configId,
-          configData: runData.toJS()
-        },
-        notify: false
+        configData: runData.toJS()
       };
-      params.data.configData.parameters.tables = [];
-      // return exDbApi.testAndWaitForCredentials(credentials.toJS());
-      return InstalledComponentsActions.runComponent(params).then((response) => {
-        return jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url);
-      });
+      return callDockerAction(componentId, 'testConnection', params);
     },
 
     prepareSingleQueryRunData(configId, query) {
