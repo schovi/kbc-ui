@@ -51,7 +51,7 @@ export default React.createClass({
 
   renderQueryRow(query) {
     const propValue = (propName) => query.getIn([].concat(propName));
-    const queryProfiles = [propValue(['query', 'viewId'])];
+    const queryProfiles = propValue(['query', 'viewId']);
 
     console.log(query.toJS());
     return (
@@ -71,7 +71,7 @@ export default React.createClass({
         <div className="td">
           <SelectedProfilesList
             allProfiles={this.props.allProfiles}
-            profileIds={queryProfiles} />
+            profileIds={queryProfiles ? [queryProfiles] : null} />
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />

@@ -52,7 +52,6 @@ export default React.createClass({
 
   componentDidMount() {
     injectGapiScript();
-    this.state.actions.startEditingQuery(this.state.queryId);
   },
 
   render() {

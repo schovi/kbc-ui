@@ -1,4 +1,5 @@
 import storeProvisioning from './storeProvisioning';
+import {Map} from 'immutable';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import _ from 'underscore';
@@ -88,23 +89,39 @@ export default function(configId) {
     },
 
     saveNewQuery() {
-      const newQuery = store.getNewQuery().set('id', generateId());
+      let newQuery = store.getNewQuery().set('id', generateId());
+      if (!newQuery.get('outputTable')) {
+        const name = newQuery.get('name');
+        const bucket = store.outputBucket;
+        newQuery = newQuery.set('outputTable', bucket + '.' + common.sanitizeTableName(name));
+      }
       const queries = store.queries.push(newQuery);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
       const savingPath = store.getSavingPath(['newQuery']);
       return saveConfigData(data, savingPath);
     },
 
+    cancelEditingNewQuery() {
+      const path = store.getNewQueryPath();
+      return updateLocalState(path, Map());
+    },
+
     saveEditingQuery(queryId) {
       let query = store.getEditingQuery(queryId);
       if (!query.get('outputTable')) {
         const name = query.get('name');
-        query = query.set('outputTable', common.sanitizeTableName(name));
+        const bucket = store.outputBucket;
+        query = query.set('outputTable', bucket + '.' + common.sanitizeTableName(name));
       }
-      const queries = store.queries.map((q) => q.get('id') === queryId ? query : q);
+      const queries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? query : q);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
       const savingPath = store.getSavingPath(['queries', queryId]);
-      return saveConfigData(data, savingPath);
+      return saveConfigData(data, savingPath).then(() => this.cancelEditingQuery(queryId));
+    },
+
+    cancelEditingQuery(queryId) {
+      const path = store.getEditingQueryPath(queryId);
+      updateLocalState(path, null);
     }
 
   };

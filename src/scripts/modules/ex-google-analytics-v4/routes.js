@@ -3,6 +3,8 @@ import QueryDetail from './react/QueryDetail/QueryDetail';
 import NewQuery from './react/NewQuery/NewQuery';
 import * as oauthUtils from '../oauth-v2/OauthUtils';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
+import QueryDetailHeaderButtons from './react/QueryDetail/HeaderButtons';
+import NewQueryHeaderButtons from './react/NewQuery/HeaderButtons';
 // import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
 // import jobsActionCreators from '../jobs/ActionCreators';
@@ -34,6 +36,7 @@ export default {
       name: COMPONENT_ID + '-query-detail',
       path: 'query/:queryId',
       handler: QueryDetail,
+      headerButtonsHandler: QueryDetailHeaderButtons,
       title: (routerState) => {
         const configId = routerState.getIn(['params', 'config']);
         const queryId = routerState.getIn(['params', 'queryId']);
@@ -44,6 +47,7 @@ export default {
       name: COMPONENT_ID + '-new-query',
       path: 'new-query',
       handler: NewQuery,
+      headerButtonsHandler: NewQueryHeaderButtons,
       title: () => 'New Query'
     }
   ]

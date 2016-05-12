@@ -37,7 +37,7 @@ export default function(configId) {
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
 
   return {
-    oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId),
+    oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId) || Map(),
     oauthCredentialsId: oauthCredentialsId,
 
     // local state stuff
@@ -56,6 +56,13 @@ export default function(configId) {
     isSaving(what) {
       return localState.getIn(savingPath.concat(what), false);
     },
+
+    isQueryValid(query) {
+      return query && query.getIn(['query', 'metrics'], List()).count() > 0 &&
+        query.getIn(['query', 'dimensions'], List()).count() > 0 &&
+        !!query.get('name');
+    },
+
     getSavingPath(what) {
       return savingPath.concat(what);
     },
