@@ -78,7 +78,7 @@ Dispatcher.register( (payload) => {
 export const GapiActions = {
   loadAnalyticsMetadata: () => {
     if (GapiStore.isLoadedMetadata()) {
-      return Promise.Resolve();
+      return Promise.resolve();
     }
     // Dispatcher.handleViewAction({
     //   type: ActionTypes.GAPI_METADATA_LOAD_START

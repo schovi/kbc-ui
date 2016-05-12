@@ -51,6 +51,17 @@ export default function(configId) {
     };
   }
 
+  function generateId() {
+    const existingIds = store.queries.map((q) => q.get('id'));
+    const randomNumber = () => Math.floor((Math.random() * 100000) + 1);
+    let newId = randomNumber();
+    while (existingIds.indexOf(newId) >= 0) {
+      newId = randomNumber();
+    }
+    return newId;
+  }
+
+
   return {
     prepareLocalState: prepareLocalState,
     updateLocalState: updateLocalState,
@@ -65,10 +76,23 @@ export default function(configId) {
       return (newQuery) => updateLocalState(path, newQuery);
     },
 
+    onUpdateNewQuery(newQuery) {
+      const path = store.getNewQueryPath();
+      return updateLocalState(path, newQuery);
+    },
+
     startEditingQuery(queryId) {
       const path = store.getEditingQueryPath(queryId);
       const query = store.getConfigQuery(queryId);
       updateLocalState(path, query);
+    },
+
+    saveNewQuery() {
+      const newQuery = store.getNewQuery().set('id', generateId());
+      const queries = store.queries.push(newQuery);
+      const data = store.configData.setIn(['parameters', 'queries'], queries);
+      const savingPath = store.getSavingPath(['newQuery']);
+      return saveConfigData(data, savingPath);
     },
 
     saveEditingQuery(queryId) {

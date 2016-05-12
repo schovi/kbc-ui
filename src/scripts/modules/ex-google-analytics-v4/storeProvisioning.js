@@ -1,10 +1,22 @@
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import {getDefaultBucket} from './common';
 import _ from 'underscore';
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
 import OauthStore from '../oauth-v2/Store';
 
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
+
+const defaultNewQuery = Map({
+  name: '',
+  enabled: true,
+  outputTable: null,
+  query: Map({
+    dateRanges: List([Map({
+      startDate: '-4 days',
+      endDate: 'now'
+    })])
+  })
+});
 
 export const storeMixins = [InstalledComponentStore, OauthStore];
 
@@ -14,11 +26,12 @@ export default function(configId) {
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
 
   const parameters = configData.get('parameters', Map());
-  const queries = parameters.getIn(['queries']);
+  const queries = parameters.getIn(['queries'], List());
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
   const editingQueriesPath = tempPath.concat('editingQueries');
+  const newQueryPath = tempPath.concat('newQuery');
 
   const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
@@ -48,6 +61,14 @@ export default function(configId) {
     },
     getConfigQuery(queryId) {
       return queries.find((q) => q.get('id').toString() === queryId.toString());
+    },
+
+    getNewQueryPath() {
+      return newQueryPath;
+    },
+
+    getNewQuery() {
+      return localState.getIn(newQueryPath, defaultNewQuery);
     },
 
     getEditingQueryPath(queryId) {

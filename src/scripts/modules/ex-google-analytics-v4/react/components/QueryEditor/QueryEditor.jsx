@@ -32,8 +32,7 @@ export default React.createClass({
   },
 
   render() {
-    const {query} = this.props;
-    const isEditing = false;
+    const {query, isEditing} = this.props;
     const outTableId = this.props.outputBucket + '.' + query.get('outputTable');
     return (
       <div className={this.props.divClassName}>

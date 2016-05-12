@@ -65,21 +65,17 @@ export default React.createClass({
 
           </div>
         </div>
-        {(isEditing ?
-          this.renderQueryEditor(contentClassName)
-         :
-          <div className={contentClassName}>
-            Query Static Detail TODO
-          </div>)}
-
+        {this.renderQueryEditor(contentClassName, isEditing)}
       </div>
 
     );
   },
 
-  renderQueryEditor(contentClassName) {
-    return (this.state.isGaInitialized ?
+  renderQueryEditor(contentClassName, isEditing) {
+    return (
+      this.state.isGaInitialized ?
       <QueryEditor divClassName={contentClassName}
+        isEditing={isEditing}
         isLoadingMetadata={this.state.isLoadingMetadata}
         metadata={this.state.metadata}
         isGaInitialized={this.state.isGaInitialized}
@@ -87,7 +83,7 @@ export default React.createClass({
         outputBucket={this.state.store.outputBucket}
         onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
 
-        query={this.state.editingQuery}
+        query={isEditing ? this.state.editingQuery : this.state.query}
         {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>
     : null );
   }
