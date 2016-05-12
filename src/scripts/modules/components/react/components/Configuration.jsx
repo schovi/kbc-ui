@@ -24,7 +24,8 @@ export default React.createClass({
     saveLabel: PropTypes.string,
     help: PropTypes.node,
     schema: PropTypes.object,
-    editHelp: PropTypes.string
+    editHelp: PropTypes.string,
+    documentationUrl: PropTypes.string
   },
 
   getDefaultProps() {
@@ -42,6 +43,7 @@ export default React.createClass({
       <div>
         <h2>{this.props.headerText}</h2>
         {this.props.help}
+        {this.renderDocumentationUrl()}
         {this.renderHelp()}
         {this.scripts()}
       </div>
@@ -58,6 +60,21 @@ export default React.createClass({
           source={this.props.editHelp}
           />
       </ReadMore>
+    );
+  },
+
+  renderDocumentationUrl() {
+    if (!this.props.documentationUrl) {
+      return null;
+    }
+    if (this.props.editHelp) {
+      return null;
+    }
+    if (this.props.schema.count()) {
+      return null;
+    }
+    return (
+      <p className="help-block">This component is configured manually. Read the <a href={this.props.documentationUrl}>configuration documentation</a> for more information.</p>
     );
   },
 

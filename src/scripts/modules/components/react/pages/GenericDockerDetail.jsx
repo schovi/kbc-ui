@@ -243,6 +243,7 @@ export default React.createClass({
                     supportsEncryption={this.state.component.get('flags').includes('encrypt')}
                     schema={this.state.component.get('configurationSchema', Map())}
                     editHelp={this.state.component.get('configurationDescription')}
+                    documentationUrl={this.state.component.get('documentationUrl')}
                     />
                 </span>
               )}
