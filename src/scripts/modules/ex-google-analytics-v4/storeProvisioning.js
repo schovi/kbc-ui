@@ -62,7 +62,7 @@ export default function(configId) {
 
     // config data stuff
     queries: queries,
-    profiles: parameters.getIn(['profiles']),
+    profiles: parameters.getIn(['profiles'], List()),
     configData: configData,
     outputBucket: outputBucket,
     defaultNewQuery: defaultNewQuery,

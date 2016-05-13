@@ -28,8 +28,6 @@ import ProfilesManagerModal from './ProfilesManagerModal';
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
-console.log(storeMixins);
-
 export default React.createClass({
   mixins: [createStoreMixin(...storeMixins)],
 
@@ -38,7 +36,6 @@ export default React.createClass({
     const store = storeProvisioning(configId);
     const actions = actionsProvisioning(configId);
     const component = ComponentStore.getComponent(COMPONENT_ID);
-    console.log('RENDER', store.profiles.toJS());
     return {
       store: store,
       actions: actions,
@@ -52,7 +49,6 @@ export default React.createClass({
   },
 
   render() {
-    const queries = this.state.store.queries;
     return (
       <div className="container-fluid">
         <ProfilesManagerModal
@@ -73,36 +69,17 @@ export default React.createClass({
               />
             </div>
             <div className="col-sm-2 kbc-buttons">
-              {queries.count() >= 1 ?
-               <Link
-                 to={COMPONENT_ID + '-new-query'}
-                 params={{config: this.state.configId}}
-                 className="btn btn-success">
-                 Add Query
-               </Link>
-               : null
-              }
+              {this.hasQueries() ? this.renderAddQueryLink() : null}
             </div>
           </div>
           <div className="row">
-            <AuthorizationRow
-              className="col-xs-5"
-              id={this.state.oauthCredentialsId}
-              configId={this.state.configId}
-              componentId={COMPONENT_ID}
-              credentials={this.state.oauthCredentials}
-              isResetingCredentials={false}
-              onResetCredentials={this.deleteCredentials}
-              showHeader={false}
-            />
+            {this.renderAuthorizedInfo('col-xs-5')}
             {this.renderProfiles('col-xs-7')}
           </div>
-          <div className="row">
-            {(queries && queries.count() > 0)
-             ? this.renderQueriesTable()
-             : this.renderEmptyQueries()
-            }
-          </div>
+          {(this.hasQueries() > 0)
+           ? this.renderQueriesTable()
+           : this.renderEmptyQueries()
+          }
         </div>
         <div className="col-md-3 kbc-main-sidebar">
           <ComponentMetadata
@@ -110,13 +87,14 @@ export default React.createClass({
             configId={this.state.configId}
           />
           <ul className="nav nav-stacked">
-            <li>
+            <li className={!!this.invalidToRun() ? 'disabled' : null}>
               <RunComponentButton
                 title="Run"
                 component={COMPONENT_ID}
                 mode="link"
                 runParams={this.runParams()}
-                disabledReason="Component is not configured yet"
+                disabled={!!this.invalidToRun()}
+                disabledReason={this.invalidToRun()}
               >
                 You are about to run component.
               </RunComponentButton>
@@ -126,13 +104,15 @@ export default React.createClass({
             <i className="fa fa-question-circle fa-fw" /> Documentation
             </a>
             </li> */}
+            {this.hasProfiles() ?
             <li>
               <a
-                onClick={() => this.state.actions.updateLocalState(['ProfilesManagerModal', 'profiles'], this.state.store.profiles)}>
+                onClick={this.showProfilesModal}>
                 <i className="fa fa-fw fa-globe" />
                 Setup Profiles
               </a>
             </li>
+            : null }
             <li>
               <DeleteConfigurationButton
                 componentId={COMPONENT_ID}
@@ -147,49 +127,120 @@ export default React.createClass({
     );
   },
 
-  renderProfiles(clName) {
+  showProfilesModal() {
+    return this.state.actions.updateLocalState(['ProfilesManagerModal', 'profiles'], this.state.store.profiles);
+  },
+
+  isAuthorized() {
+    const creds = this.state.oauthCredentials;
+    return  creds && creds.has('id');
+  },
+
+  hasProfiles() {
+    return this.state.store.profiles.count() > 0;
+  },
+
+  hasQueries() {
+    return this.state.store.queries && this.state.store.queries.count();
+  },
+
+  invalidToRun() {
+    if (!this.isAuthorized()) {
+      return 'No Google Analytics account authorized';
+    }
+
+    if (!this.hasProfiles()) {
+      return 'No Profiles Available';
+    }
+
+    if (!this.hasQueries()) {
+      return 'No queries configured';
+    }
+
+    return false;
+  },
+
+  renderAuthorizedInfo(clName) {
     return (
-      <div className={clName}>
-        <div className="form-group form-group-sm">
-          <label> Available Profiles </label>
-          <div>
-            <div className="form-control-static">
-              {this.state.store.profiles.map(
-                 (p) => <ProfileInfo profile={p} />
-               )}
+      <AuthorizationRow
+        className={this.isAuthorized() || this.hasProfiles() ? clName : 'col-xs-12'}
+        id={this.state.oauthCredentialsId}
+        configId={this.state.configId}
+        componentId={COMPONENT_ID}
+        credentials={this.state.oauthCredentials}
+        isResetingCredentials={false}
+        onResetCredentials={this.deleteCredentials}
+        showHeader={false}
+      />
+    );
+  },
+
+  renderProfiles(clName) {
+    return (this.isAuthorized() || this.hasProfiles() ?
+            <div className={clName}>
+              <div className="form-group form-group-sm">
+                <label> Available Profiles </label>
+                <div>
+                  {this.hasProfiles() ?
+                   <div className="form-control-static">
+                     {this.state.store.profiles.map(
+                        (p) => <ProfileInfo profile={p} />
+                      )}
+                   </div>
+                   :
+                   <EmptyState>
+                     <p> No profiles selected </p>
+                     <button type="button" className="btn btn-success"
+                       onClick={this.showProfilesModal}>
+                       Select Profiles
+                     </button>
+                   </EmptyState>
+                  }
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          : null
     );
   },
 
   renderQueriesTable() {
     return (
-      <QueriesTable
-        outputBucket={this.state.store.outputBucket}
-        deleteQueryFn={this.state.actions.deleteQuery}
-        toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
-        getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
-        isPendingFn={this.state.store.isPending}
-        queries={this.state.store.queries}
-        allProfiles={this.state.store.profiles}
-        configId={this.state.configId}
-        {...this.state.actions.prepareLocalState('QueriesTable')}
-      />
+      <div className="row">
+        <QueriesTable
+          outputBucket={this.state.store.outputBucket}
+          deleteQueryFn={this.state.actions.deleteQuery}
+          toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
+          getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
+          isPendingFn={this.state.store.isPending}
+          queries={this.state.store.queries}
+          allProfiles={this.state.store.profiles}
+          configId={this.state.configId}
+          {...this.state.actions.prepareLocalState('QueriesTable')}
+        />
+      </div>
+    );
+  },
+  renderAddQueryLink() {
+    return (
+      <Link
+        to={COMPONENT_ID + '-new-query'}
+        params={{config: this.state.configId}}
+        className="btn btn-success">
+        Add Query
+      </Link>
     );
   },
 
   renderEmptyQueries() {
     return (
-      <EmptyState>
-        <p>No Queries Configured</p>
-        <button
-          type="button"
-          className="btn btn-success">
-          Add Query
-        </button>
-      </EmptyState>
+      this.hasProfiles() && this.isAuthorized() ?
+      <div className="row">
+        <EmptyState>
+          <p>No Queries Configured</p>
+          {this.renderAddQueryLink()}
+        </EmptyState>
+      </div>
+    : null
     );
   },
 
