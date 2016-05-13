@@ -12,6 +12,7 @@ import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
 
 // ui components
 import QueryEditor from '../components/QueryEditor/QueryEditor';
+import QueryNav from './QueryNav';
 
 // CONSTS
 // const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
@@ -55,16 +56,27 @@ export default React.createClass({
   },
 
   render() {
-    const contentClassName = 'col-md-9 kbc-main-content-with-nav';
     const isEditing = !!this.state.editingQuery;
+    let contentClassName = 'col-md-9 kbc-main-content-with-nav';
+    if (isEditing) {
+      contentClassName = 'row';
+    }
     return (
       <div className="container-fluid kbc-main-content">
-        <div className="col-md-3 kbc-main-nav">
-          <div className="kbc-container">
+        {isEditing ? null :
+         <div className="col-md-3 kbc-main-nav">
+           <div className="kbc-container">
+             <QueryNav
+               configurationId={this.state.configId}
+               queries={this.state.store.queriesFiltered}
+               filter={this.state.store.filter}
+               setQueriesFilter={this.state.actions.setQueriesFilter}
+             />
 
-          </div>
-        </div>
-        {this.renderQueryEditor(contentClassName, isEditing)}
+           </div>
+         </div>
+        }
+         {this.renderQueryEditor(contentClassName, isEditing)}
       </div>
 
     );

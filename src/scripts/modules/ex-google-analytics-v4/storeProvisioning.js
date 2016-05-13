@@ -1,4 +1,6 @@
 import {List, Map} from 'immutable';
+import fuzzy from 'fuzzy';
+
 import {getDefaultBucket} from './common';
 import _ from 'underscore';
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
@@ -37,6 +39,15 @@ export default function(configId) {
   const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
 
+  const filter = localState.get('filter', '');
+  const queriesFiltered = queries.filter((q) => {
+    return fuzzy.match(filter, q.get('name'));
+  });
+
+  function getConfigQuery(queryId) {
+    return queries.find((q) => q.get('id').toString() === queryId.toString());
+  }
+
   return {
     oauthCredentials: OauthStore.getCredentials(COMPONENT_ID, oauthCredentialsId) || Map(),
     oauthCredentialsId: oauthCredentialsId,
@@ -55,6 +66,8 @@ export default function(configId) {
     configData: configData,
     outputBucket: outputBucket,
     defaultNewQuery: defaultNewQuery,
+    filter: filter,
+    queriesFiltered: queriesFiltered,
 
     isSaving(what) {
       return localState.getIn(savingPath.concat(what), false);
@@ -69,9 +82,7 @@ export default function(configId) {
     getSavingPath(what) {
       return savingPath.concat(what);
     },
-    getConfigQuery(queryId) {
-      return queries.find((q) => q.get('id').toString() === queryId.toString());
-    },
+    getConfigQuery: getConfigQuery,
 
     getNewQueryPath() {
       return newQueryPath;
@@ -98,9 +109,8 @@ export default function(configId) {
     },
 
     getRunSingleQueryData(queryId) {
-      const runQueries = queries.filter((q) => q.get('id').toString() === queryId.toString());
-      return configData.setIn(['parameters', 'queries'], runQueries).toJS();
+      const query = getConfigQuery(queryId).set('enabled', true);
+      return configData.setIn(['parameters', 'queries'], List().push(query)).toJS();
     }
-
   };
 }

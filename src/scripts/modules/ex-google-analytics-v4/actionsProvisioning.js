@@ -136,6 +136,10 @@ export default function(configId) {
       newQuery = newQuery.set('enabled', !newQuery.get('enabled'));
       const newQueries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? newQuery : q);
       return saveQueries(newQueries, store.getPendingPath(['toggle', queryId]));
+    },
+
+    setQueriesFilter(newFilter) {
+      return updateLocalState('filter', newFilter);
     }
 
 

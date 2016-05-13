@@ -16,6 +16,10 @@ export default React.createClass({
 
   mixins: [createStoreMixin(...storeMixins)],
 
+  componentWillReceiveProps() {
+    this.setState(this.getStateFromStores());
+  },
+
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
     const queryId = RoutesStore.getCurrentRouteParam('queryId');
