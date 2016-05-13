@@ -8,14 +8,11 @@ import {GapiStore} from '../../../google-utils/react/GapiFlux';
 
 // actions
 import actionsProvisioning from '../../actionsProvisioning';
-import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
+// import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
+import {GapiActions} from '../../../google-utils/react/GapiFlux';
 
 // ui components
 import QueryEditor from '../components/QueryEditor/QueryEditor';
-
-// CONSTS
-// const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
-
 
 export default React.createClass({
 
@@ -26,14 +23,12 @@ export default React.createClass({
     const store = storeProvisioning(configId);
     const actions = actionsProvisioning(configId);
     const newQuery = store.getNewQuery();
-    const isGaInitialized = GapiStore.isInitialized();
     const isLoadingMetadata = GapiStore.isLoadingMetadata();
     const metadata = GapiStore.getMetadata();
 
     return {
       isLoadingMetadata: isLoadingMetadata,
       metadata: metadata,
-      isGaInitialized: isGaInitialized,
       newQuery: newQuery,
       store: store,
       actions: actions,
@@ -47,7 +42,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    injectGapiScript();
+    GapiActions.loadAnalyticsMetadata();
   },
 
   render() {
@@ -62,18 +57,15 @@ export default React.createClass({
   renderQueryEditor() {
     const contentClassName = 'row';
     return (
-      this.state.isGaInitialized ?
       <QueryEditor divClassName={contentClassName}
         isEditing={true}
         isLoadingMetadata={this.state.isLoadingMetadata}
         metadata={this.state.metadata}
-        isGaInitialized={this.state.isGaInitialized}
         allProfiles={this.state.store.profiles}
         outputBucket={this.state.store.outputBucket}
         onChangeQuery={this.state.actions.onUpdateNewQuery}
-
         query={this.state.newQuery}
         {...this.state.actions.prepareLocalState('NewQuery')}/>
-    : null );
+    );
   }
 });

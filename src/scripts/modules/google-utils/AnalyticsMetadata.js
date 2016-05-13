@@ -1,16 +1,27 @@
-import metadata from 'javascript-api-utils/lib/metadata';
+// import metadata from 'javascript-api-utils/lib/metadata';
+import request from '../../utils/request';
+
+const getMetadataUrl = 'https://content.googleapis.com/analytics/v3/metadata/ga/columns?reportType=ga';
+
+function getMetadata() {
+  return request('GET', getMetadataUrl)
+    .promise()
+    .then((response) => response.body);
+}
+
+function prepareMetadata(data) {
+  return {
+    metrics: data.items.filter((i) => i.attributes.type === 'METRIC'),
+    dimensions: data.items.filter((i) => i.attributes.type === 'DIMENSIONS')
+  };
+}
 
 export function loadMetadata() {
-  return metadata.get().then((m) => {
-    return {
-      metrics: m.allMetrics(),
-      dimensions: m.allDimensions()
-    };
-    // if (type === 'metrics') {
-    //   // console.log('metrics', m.allMetrics());
-    //   return m.allMetrics();
-    // } else {
-    //   return m.allDimensions();
-    // }
+  return getMetadata().then((data) => {
+    return prepareMetadata(data);
+    // return {
+    //   metrics: m.allMetrics(),
+    //   dimensions: m.allDimensions()
+    // };
   });
 }

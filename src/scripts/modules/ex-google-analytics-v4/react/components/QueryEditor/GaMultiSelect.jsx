@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {Loader} from 'kbc-react-components';
 import fuzzy from 'fuzzy';
 import Select from 'react-select';
 import Tooltip from '../../../../../react/common/Tooltip';
@@ -11,7 +10,6 @@ export default React.createClass({
     selectedValues: PropTypes.object.isRequired,
     onSelectValue: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
-    isGaInitialized: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
     metadata: PropTypes.array.isRequired,
@@ -93,10 +91,6 @@ export default React.createClass({
 
 
   render() {
-    if (!this.props.isGaInitialized) {
-      return <Loader />;
-    }
-
     if (!this.props.isEditing) {
       return this.renderStatic();
     }

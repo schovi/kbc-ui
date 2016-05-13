@@ -80,9 +80,9 @@ export const GapiActions = {
     if (GapiStore.isLoadedMetadata()) {
       return Promise.resolve();
     }
-    // Dispatcher.handleViewAction({
-    //   type: ActionTypes.GAPI_METADATA_LOAD_START
-    // });
+    Dispatcher.handleViewAction({
+      type: ActionTypes.GAPI_METADATA_LOAD_START
+    });
     return loadMetadata().then((data) => {
       Dispatcher.handleViewAction({
         type: ActionTypes.GAPI_METADATA_LOAD_SUCCESS,

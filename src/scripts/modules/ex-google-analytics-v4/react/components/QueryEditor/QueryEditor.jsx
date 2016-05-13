@@ -3,7 +3,7 @@ import {fromJS, List} from 'immutable';
 
 
 import {sanitizeTableName} from '../../../common';
-import {GapiActions} from '../../../../google-utils/react/GapiFlux';
+
 
 import ProfileSelector from './ProfileSelector';
 import GaMultiSelect from './GaMultiSelect';
@@ -20,7 +20,6 @@ export default React.createClass({
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
     onChangeQuery: PropTypes.func.isRequired,
-    isGaInitialized: PropTypes.bool.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
     metadata: PropTypes.object.isRequired
@@ -28,7 +27,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    GapiActions.loadAnalyticsMetadata();
+
   },
 
   render() {
@@ -102,7 +101,6 @@ export default React.createClass({
             <GaMultiSelect
               isLoadingMetadata={this.props.isLoadingMetadata}
               metadata={this.props.metadata.get('metrics', List()).toJS()}
-              isGaInitialized={this.props.isGaInitialized}
               isEditing={isEditing}
               name="Metrics"
               onSelectValue={this.onSelectMetric}
@@ -111,7 +109,6 @@ export default React.createClass({
             <GaMultiSelect
               isLoadingMetadata={this.props.isLoadingMetadata}
               metadata={this.props.metadata.get('dimensions', List()).toJS()}
-              isGaInitialized={this.props.isGaInitialized}
               name="Dimensions"
               onSelectValue={this.onSelectDimension}
               selectedValues={this.getSelectedDimensions()}

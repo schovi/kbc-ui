@@ -8,14 +8,12 @@ import {GapiStore} from '../../../google-utils/react/GapiFlux';
 
 // actions
 import actionsProvisioning from '../../actionsProvisioning';
-import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
+import {GapiActions} from '../../../google-utils/react/GapiFlux';
+// import {injectGapiScript} from '../../../google-utils/react/InitGoogleApis';
 
 // ui components
 import QueryEditor from '../components/QueryEditor/QueryEditor';
 import QueryNav from './QueryNav';
-
-// CONSTS
-// const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
 
 export default React.createClass({
@@ -29,14 +27,12 @@ export default React.createClass({
     const actions = actionsProvisioning(configId);
     const query = store.getConfigQuery(queryId);
     const editingQuery = store.getEditingQuery(queryId);
-    const isGaInitialized = GapiStore.isInitialized();
     const isLoadingMetadata = GapiStore.isLoadingMetadata();
     const metadata = GapiStore.getMetadata();
 
     return {
       isLoadingMetadata: isLoadingMetadata,
       metadata: metadata,
-      isGaInitialized: isGaInitialized,
       query: query,
       queryId: queryId,
       editingQuery: editingQuery,
@@ -52,7 +48,7 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    injectGapiScript();
+    GapiActions.loadAnalyticsMetadata();
   },
 
   render() {
@@ -84,19 +80,17 @@ export default React.createClass({
 
   renderQueryEditor(contentClassName, isEditing) {
     return (
-      this.state.isGaInitialized ?
       <QueryEditor divClassName={contentClassName}
         isEditing={isEditing}
         isLoadingMetadata={this.state.isLoadingMetadata}
         metadata={this.state.metadata}
-        isGaInitialized={this.state.isGaInitialized}
         allProfiles={this.state.store.profiles}
         outputBucket={this.state.store.outputBucket}
         onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
 
         query={isEditing ? this.state.editingQuery : this.state.query}
         {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>
-    : null );
+    );
   }
 
 });
