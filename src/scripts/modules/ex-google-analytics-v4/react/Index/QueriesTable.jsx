@@ -21,7 +21,11 @@ export default React.createClass({
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
     configId: PropTypes.string.isRequired,
-    onDeleteQueryFn: PropTypes.func
+    deleteQueryFn: PropTypes.func.isRequired,
+    isPendingFn: PropTypes.func.isRequired,
+    toggleQueryEnabledFn: PropTypes.func.isRequired,
+    getRunSingleQueryDataFn: PropTypes.func.isRequired
+
   },
 
   render() {
@@ -89,15 +93,15 @@ export default React.createClass({
         <div className="td text-right kbc-no-wrap">
           <QueryDeleteButton
             query={query}
-            onDeleteFn={this.props.onDeleteQueryFn}
-            isPending={false}
+            onDeleteFn={() => this.props.deleteQueryFn(query.get('id'))}
+            isPending={this.props.isPendingFn(['delete', query.get('id')])}
           />
           <ActivateDeactivateButton
             activateTooltip="Enable Query"
             deactivateTooltip="Disable Query"
             isActive={query.get('enabled')}
-            isPending={false}
-            onChange={this._handleActiveChange}
+            isPending={this.props.isPendingFn(['toggle', query.get('id')])}
+            onChange={() => this.handleToggleQuery(query)}
           />
           <RunExtractionButton
             title="Run Extraction"
@@ -105,7 +109,7 @@ export default React.createClass({
             runParams={ () => {
               return {
                 config: this.props.configId,
-                configData: []
+                configData: this.props.getRunSingleQueryDataFn(query.get('id'))
               };
             }}
           >
@@ -115,6 +119,11 @@ export default React.createClass({
         </div>
       </Link>
     );
+  },
+
+
+  handleToggleQuery(query) {
+    this.props.toggleQueryEnabledFn(query.get('id'));
   },
 
   renderDateRanges(ranges) {

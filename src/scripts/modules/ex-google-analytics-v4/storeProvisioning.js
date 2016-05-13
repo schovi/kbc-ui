@@ -32,6 +32,7 @@ export default function(configId) {
   const savingPath = tempPath.concat('saving');
   const editingQueriesPath = tempPath.concat('editingQueries');
   const newQueryPath = tempPath.concat('newQuery');
+  const pendingPath = tempPath.concat('pending');
 
   const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
@@ -84,6 +85,20 @@ export default function(configId) {
 
     getEditingQuery(queryId) {
       return localState.getIn(this.getEditingQueryPath(queryId), null);
+    },
+
+    getPendingPath(what) {
+      return pendingPath.concat(what);
+    },
+
+    isPending(what) {
+      return localState.getIn(pendingPath.concat(what), null);
+    },
+
+    getRunSingleQueryData(queryId) {
+      const runQueries = queries.filter((q) => q.get('id').toString() === queryId.toString());
+      return configData.setIn(['parameters', 'queries'], runQueries).toJS();
     }
+
   };
 }

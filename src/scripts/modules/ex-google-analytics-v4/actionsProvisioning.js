@@ -62,6 +62,11 @@ export default function(configId) {
     return newId;
   }
 
+  function saveQueries(newQueries, savingPath) {
+    const data = store.configData.setIn(['parameters', 'queries'], newQueries);
+    return saveConfigData(data, savingPath);
+  }
+
 
   return {
     prepareLocalState: prepareLocalState,
@@ -122,7 +127,20 @@ export default function(configId) {
     cancelEditingQuery(queryId) {
       const path = store.getEditingQueryPath(queryId);
       updateLocalState(path, null);
+    },
+
+    deleteQuery(queryId) {
+      const newQueries = store.queries.filter((q) => q.get('id').toString() !== queryId.toString());
+      return saveQueries(newQueries, store.getPendingPath(['delete', queryId]));
+    },
+
+    toggleQueryEnabled(queryId) {
+      let newQuery = store.getConfigQuery(queryId);
+      newQuery = newQuery.set('enabled', !newQuery.get('enabled'));
+      const newQueries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? newQuery : q);
+      return saveQueries(newQueries, store.getPendingPath(['toggle', queryId]));
     }
+
 
   };
 }

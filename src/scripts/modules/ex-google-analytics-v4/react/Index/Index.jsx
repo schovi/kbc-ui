@@ -179,6 +179,10 @@ export default React.createClass({
   renderQueriesTable() {
     return (
       <QueriesTable
+        deleteQueryFn={this.state.actions.deleteQuery}
+        toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
+        getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
+        isPendingFn={this.state.store.isPending}
         queries={this.state.store.queries}
         allProfiles={this.state.store.profiles}
         configId={this.state.configId}
