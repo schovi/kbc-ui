@@ -34,7 +34,6 @@
     "immutable": "~3.7.3",
     "intl": "^0.1.4",
     "intl-messageformat": "^1.1.0",
-    "javascript-api-utils": "github:googleanalytics/javascript-api-utils",
     "json-editor": "^0.7.23",
     "json-loader": "^0.5.4",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",

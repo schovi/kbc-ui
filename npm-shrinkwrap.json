@@ -3335,11 +3335,6 @@
         }
       }
     },
-    "javascript-api-utils": {
-      "version": "0.5.0",
-      "from": "googleanalytics/javascript-api-utils",
-      "resolved": "git://github.com/googleanalytics/javascript-api-utils.git#a88f84455b9bad1beefa02d2cdf4bd2e0a8aa3dc"
-    },
     "js-base64": {
       "version": "2.1.9",
       "from": "js-base64@>=2.1.9 <3.0.0",
