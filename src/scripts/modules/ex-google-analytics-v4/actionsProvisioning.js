@@ -1,5 +1,4 @@
 import storeProvisioning from './storeProvisioning';
-import {Map} from 'immutable';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import _ from 'underscore';
@@ -97,8 +96,7 @@ export default function(configId) {
       let newQuery = store.getNewQuery().set('id', generateId());
       if (!newQuery.get('outputTable')) {
         const name = newQuery.get('name');
-        const bucket = store.outputBucket;
-        newQuery = newQuery.set('outputTable', bucket + '.' + common.sanitizeTableName(name));
+        newQuery = newQuery.set('outputTable', common.sanitizeTableName(name));
       }
       const queries = store.queries.push(newQuery);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
@@ -108,15 +106,14 @@ export default function(configId) {
 
     cancelEditingNewQuery() {
       const path = store.getNewQueryPath();
-      return updateLocalState(path, Map());
+      return updateLocalState(path, store.defaultNewQuery);
     },
 
     saveEditingQuery(queryId) {
       let query = store.getEditingQuery(queryId);
       if (!query.get('outputTable')) {
         const name = query.get('name');
-        const bucket = store.outputBucket;
-        query = query.set('outputTable', bucket + '.' + common.sanitizeTableName(name));
+        query = query.set('outputTable', common.sanitizeTableName(name));
       }
       const queries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? query : q);
       const data = store.configData.setIn(['parameters', 'queries'], queries);

@@ -21,6 +21,7 @@ export default React.createClass({
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
     configId: PropTypes.string.isRequired,
+    outputBucket: PropTypes.string.isRequired,
     deleteQueryFn: PropTypes.func.isRequired,
     isPendingFn: PropTypes.func.isRequired,
     toggleQueryEnabledFn: PropTypes.func.isRequired,
@@ -63,6 +64,7 @@ export default React.createClass({
   renderQueryRow(query) {
     const propValue = (propName) => query.getIn([].concat(propName));
     const queryProfiles = propValue(['query', 'viewId']);
+    const outTableId = this.props.outputBucket + '.' + propValue('outputTable');
 
     console.log(query.toJS());
     return (
@@ -88,7 +90,7 @@ export default React.createClass({
           <i className="kbc-icon-arrow-right" />
         </div>
         <div className="td">
-          <StorageTableLink tableId={propValue('outputTable')} />
+          <StorageTableLink tableId={outTableId} />
         </div>
         <div className="td text-right kbc-no-wrap">
           <QueryDeleteButton

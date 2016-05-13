@@ -54,6 +54,8 @@ export default function(configId) {
     profiles: parameters.getIn(['profiles']),
     configData: configData,
     outputBucket: outputBucket,
+    defaultNewQuery: defaultNewQuery,
+
     isSaving(what) {
       return localState.getIn(savingPath.concat(what), false);
     },

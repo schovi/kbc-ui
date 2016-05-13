@@ -121,14 +121,15 @@ export default React.createClass({
                 You are about to run component.
               </RunComponentButton>
             </li>
-            <li>
-              <a href={this.state.component.get('documentationUrl')} target="_blank">
-                <i className="fa fa-question-circle fa-fw" /> Documentation
-              </a>
-            </li>
+            {/* <li>
+            <a href={this.state.component.get('documentationUrl')} target="_blank">
+            <i className="fa fa-question-circle fa-fw" /> Documentation
+            </a>
+            </li> */}
             <li>
               <a
                 onClick={() => this.state.actions.updateLocalState(['ProfilesManagerModal', 'profiles'], this.state.store.profiles)}>
+                <i className="fa fa-fw fa-globe" />
                 Setup Profiles
               </a>
             </li>
@@ -147,23 +148,10 @@ export default React.createClass({
   },
 
   renderProfiles(clName) {
-    /* return (
-     *  <div className={clName}>
-     *    <StaticText
-     *      wrapperClassName="wrapper"
-     *      label="Profiles"
-     *      bsSize="small">
-     *      <div>asdasd</div>
-     *      <div>asdasd</div>
-     *      <div>asdasd</div>
-     *    </StaticText>
-     *  </div>
-     *);*/
-
     return (
       <div className={clName}>
         <div className="form-group form-group-sm">
-          <label> Profiles </label>
+          <label> Available Profiles </label>
           <div>
             <div className="form-control-static">
               {this.state.store.profiles.map(
@@ -179,6 +167,7 @@ export default React.createClass({
   renderQueriesTable() {
     return (
       <QueriesTable
+        outputBucket={this.state.store.outputBucket}
         deleteQueryFn={this.state.actions.deleteQuery}
         toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
         getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
