@@ -59,7 +59,7 @@ TransformationRow = React.createClass(
       activateTooltip: 'Enable Transformation'
       deactivateTooltip: 'Disable Transformation'
       isActive: !@props.transformation.get('disabled')
-      isPending: @props.pendingActions.has 'change-disabled'
+      isPending: @props.pendingActions.has 'save-disabled'
       onChange: @_handleActiveChange
 
     buttons

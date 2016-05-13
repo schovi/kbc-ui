@@ -1,7 +1,6 @@
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
-transformationsApi = require './TransformationsApi'
-transformationsApiAdapter = require './TransformationsApiAdapter'
+transformationsApi = require './TransformationsApiAdapter'
 TransformationBucketsStore = require './stores/TransformationBucketsStore'
 TransformationsStore = require './stores/TransformationsStore'
 InstalledComponentsActionCreators = require '../components/InstalledComponentsActionCreators'
@@ -47,9 +46,7 @@ module.exports =
   loadTransformationBuckets: ->
     # don't load if already loaded
     return Promise.resolve() if TransformationBucketsStore.getIsLoaded()
-
     @.loadTransformationBucketsForce()
-
 
   createTransformationBucket: (data) ->
     newBucket = {}
@@ -98,39 +95,6 @@ module.exports =
         type: constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_ERROR
         bucketId: bucketId
       throw e
-
-  ###
-    Request specified orchestration load from server
-    @return Promise
-  ###
-  loadTransformationsForce: (bucketId) ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.TRANSFORMATIONS_LOAD
-      bucketId: bucketId
-    )
-
-    transformationsApi
-    .getTransformations(bucketId)
-    .then((transformations) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATIONS_LOAD_SUCCESS
-        transformations: transformations
-        bucketId: bucketId
-      )
-      return
-    )
-    .catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATIONS_LOAD_ERROR
-        bucketId: bucketId
-      )
-      throw error
-    )
-
-  loadTransformations: (bucketId) ->
-    return Promise.resolve() if TransformationsStore.hasTransformations bucketId
-    @loadTransformationsForce(bucketId)
-
 
   deleteTransformation: (bucketId, transformationId) ->
     dispatcher.handleViewAction(
@@ -226,11 +190,51 @@ module.exports =
     )
 
   changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
+    pendingAction = "save-#{propertyName}"
+
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
+      transformationId: transformationId
+      bucketId: bucketId
+      pendingAction: pendingAction
+    )
+
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+    transformation = transformation.set(propertyName, newValue)
+
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        editingId: propertyName
+        pendingAction: pendingAction
+        data: response
+      )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        editingId: propertyName
+        pendingAction: pendingAction
+        error: error
+      )
+      throw error
+
+    ###
+
     dispatcher.handleViewAction
       type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
       bucketId: bucketId
       transformationId: transformationId
       propertyName: propertyName
+
+
+
 
     transformationsApi
     .updateTransformationProperty(bucketId, transformationId, propertyName, newValue)
@@ -249,6 +253,7 @@ module.exports =
         propertyName: propertyName
         error: e
       throw e
+      ###
 
   setTransformationBucketsFilter: (query) ->
     dispatcher.handleViewAction
@@ -293,59 +298,34 @@ module.exports =
       pendingAction: pendingAction
     )
 
-    if fieldId in ['description']
-      transformationsApi
-      .updateTransformationProperty(bucketId, transformationId, fieldId, value)
-      .then ->
-        transformation = TransformationsStore.getTransformation(bucketId, transformationId)
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-          transformationId: transformationId
-          bucketId: bucketId
-          editingId: fieldId
-          pendingAction: pendingAction
-          data: transformation.set(fieldId, value).toJS()
-        )
-        VersionActionCreators.loadVersionsForce('transformation', bucketId)
-      .catch (error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-          transformationId: transformationId
-          bucketId: bucketId
-          editingId: fieldId
-          pendingAction: pendingAction
-          error: error
-        )
-        throw error
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+    if fieldId == 'queriesString'
+      transformation = transformation.set 'queries', parseQueries(transformation, value)
     else
-      transformation = TransformationsStore.getTransformation(bucketId, transformationId)
-      if fieldId == 'queriesString'
-        transformation = transformation.set 'queries', parseQueries(transformation, value)
-      else
-        transformation = transformation.set fieldId, value
+      transformation = transformation.set fieldId, value
 
-      transformationsApi
-      .saveTransformation(bucketId, transformationId, transformation.toJS())
-      .then (response) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-          transformationId: transformationId
-          bucketId: bucketId
-          editingId: fieldId
-          pendingAction: pendingAction
-          data: response
-        )
-        VersionActionCreators.loadVersionsForce('transformation', bucketId)
-      .catch (error) ->
-        dispatcher.handleViewAction(
-          type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-          transformationId: transformationId
-          bucketId: bucketId
-          editingId: fieldId
-          pendingAction: pendingAction
-          error: error
-        )
-        throw error
+    transformationsApi
+    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .then (response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+        transformationId: transformationId
+        bucketId: bucketId
+        editingId: fieldId
+        pendingAction: pendingAction
+        data: response
+      )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
+    .catch (error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
+        transformationId: transformationId
+        bucketId: bucketId
+        editingId: fieldId
+        pendingAction: pendingAction
+        error: error
+      )
+      throw error
 
   ###
     Create new or update existing output mapping

@@ -125,7 +125,7 @@ TransformationsIndex = React.createClass
     filtered = filtered.sortBy((transformation) ->
       # phase with padding
       phase = ("0000" + transformation.get('phase')).slice(-4)
-      name = transformation.get('name')
+      name = transformation.get('name', '')
       phase + name.toLowerCase()
     )
     return filtered

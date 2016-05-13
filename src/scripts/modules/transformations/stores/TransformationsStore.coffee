@@ -50,8 +50,8 @@ TransformationsStore = StoreUtils.createStore
     _store
       .getIn(['transformationsByBucketId', bucketId], List())
       .sortBy((transformation) ->
-        phase = transformation.get('phase')
-        name = transformation.get('name')
+        phase = transformation.get('phase', 0)
+        name = transformation.get('name', '')
         phase + name.toLowerCase()
       )
   ###
@@ -176,26 +176,6 @@ Dispatcher.register (payload) ->
       _store = _store.removeIn ['pendingActions', action.bucketId, action.transformationId, 'delete']
       TransformationsStore.emitChange()
 
-
-    when Constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
-      pendingAction = "change-#{action.propertyName}"
-      _store = _store.setIn ['pendingActions', action.bucketId, action.transformationId, pendingAction], true
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_SUCCESS
-      pendingAction = "change-#{action.propertyName}"
-      _store = _store.withMutations (store) ->
-        store
-        .setIn ['transformationsByBucketId', action.bucketId, action.transformationId, action.propertyName],
-          action.newValue
-        .removeIn ['pendingActions', action.bucketId, action.transformationId, pendingAction]
-      TransformationsStore.emitChange()
-
-    when Constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_ERROR
-      pendingAction = "change-#{action.propertyName}"
-      _store = _store.removeIn ['pendingActions', action.bucketId, action.transformationId, pendingAction]
-      TransformationsStore.emitChange()
-
     when Constants.ActionTypes.TRANSFORMATION_INPUT_MAPPING_OPEN_TOGGLE
       if (_store.getIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false))
         _store = _store.setIn(['openInputMappings', action.bucketId, action.transformationId, action.index], false)
@@ -235,6 +215,7 @@ Dispatcher.register (payload) ->
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
+      console.log(action)
       _store = _store.withMutations((store) ->
         _.each(action.buckets, (bucket) ->
           _.each(bucket.transformations, (transformation) ->

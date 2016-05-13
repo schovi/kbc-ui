@@ -30,7 +30,7 @@ installedComponentsApi =
     )
 
   getComponentConfigurations: (componentId) ->
-    createRequest('GET', 'components/#{componentId}/configs')
+    createRequest('GET', "components/#{componentId}/configs")
     .promise()
     .then((response) ->
       response.body
@@ -106,5 +106,26 @@ installedComponentsApi =
       response.body
     )
 
+  createConfigurationRow: (componentId, configurationId, data) ->
+    createRequest 'POST', "components/#{componentId}/configs/#{configurationId}/rows"
+    .type 'form'
+    .send data
+    .promise()
+    .then (response) ->
+      response.body
+
+  deleteConfigurationRow: (componentId, configurationId, rowId) ->
+    createRequest 'DELETE', "components/#{componentId}/configs/#{configurationId}/rows/#{rowId}"
+    .promise()
+    .then (response) ->
+      response.body
+
+  updateConfigurationRow: (componentId, configurationId, rowId, data) ->
+    createRequest 'PUT', "components/#{componentId}/configs/#{configurationId}/rows/#{rowId}"
+    .type 'form'
+    .send data
+    .promise()
+    .then (response) ->
+      response.body
 
 module.exports = installedComponentsApi
