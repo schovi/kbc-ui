@@ -75,7 +75,7 @@ export default React.createClass({
   isProfilesChanged() {
     const oldSet = this.props.profiles.map((p) => (p.get('id').toString())).toSet();
     const newSet = this.getLocalProfiles().map((p) => (p.get('id').toString())).toSet();
-    return newSet.count() > 0 && oldSet.hashCode() !== newSet.hashCode();
+    return oldSet.hashCode() !== newSet.hashCode();
   },
 
   renderProjectProfiles() {

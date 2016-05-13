@@ -12,7 +12,7 @@ function getMetadata() {
 function prepareMetadata(data) {
   return {
     metrics: data.items.filter((i) => i.attributes.type === 'METRIC'),
-    dimensions: data.items.filter((i) => i.attributes.type === 'DIMENSIONS')
+    dimensions: data.items.filter((i) => i.attributes.type === 'DIMENSION')
   };
 }
 
