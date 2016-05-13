@@ -13,6 +13,7 @@ export default React.createClass({
     onResetCredentials: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     configId: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
     isResetingCredentials: PropTypes.bool,
     showHeader: PropTypes.bool
   },
@@ -31,10 +32,10 @@ export default React.createClass({
 
   render() {
     return (
-      <div>
-        {this.renderAuthorizationModal()}
-        {this.renderHeader()}
-        {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
+      <div className={this.props.className}>
+          {this.renderAuthorizationModal()}
+          {this.renderHeader()}
+          {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
       </div>
     );
   },
@@ -67,7 +68,7 @@ export default React.createClass({
     const createdInfo = (
       <Tooltip tooltip={created} placement="top">
         <span>
-        {moment(created).fromNow()}
+          {moment(created).fromNow()}
         </span>
       </Tooltip>
     );
@@ -81,10 +82,12 @@ export default React.createClass({
              title="Reset Authorization"
              buttonLabel="Reset"
              onConfirm={this.props.onResetCredentials}>
+             <Tooltip tooltip="Reset Authorization" placement="top">
              <a
                className="btn btn-link">
-               Reset Authorization
+                 Reset
              </a>
+             </Tooltip>
            </Confirm>
          ) : (
            <span>
@@ -94,7 +97,7 @@ export default React.createClass({
          )
         }
            <div className="small">
-              {createdInfo} by {creator}
+             {createdInfo} by {creator}
            </div>
 
       </div>

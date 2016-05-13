@@ -17,6 +17,7 @@ exDbRoutes = require '../ex-db/exDbRoutes'
 exDbGenericRoutes = require '../ex-db-generic/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
+exGaV4Routes = require('../ex-google-analytics-v4/routes').default
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxExtractorRoutes = require('../ex-dropbox/routes').default
@@ -95,6 +96,7 @@ routes =
       createComponentRoute 'ex-google-drive', [exGdriveGoogleRoutes]
     ,
       createComponentRoute 'ex-google-analytics', [exGanalRoutes]
+      createComponentRoute 'keboola.ex-google-analytics-v4', [exGaV4Routes]
     ,
       createComponentRoute 'ex-adform', [adformRoutes]
     ,
