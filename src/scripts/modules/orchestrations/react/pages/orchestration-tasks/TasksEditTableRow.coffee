@@ -33,7 +33,7 @@ TasksEditTableRow = React.createClass
     tr {style: {'background-color': @props.color}},
       td className: 'kb-orchestrator-task-drasg',
         Tooltip
-          tooltip: 'Select task to move to between phases'
+          tooltip: 'Select task to move between phases'
           input
             type: 'checkbox'
             checked: @props.isMarked
