@@ -41,7 +41,6 @@ routes =
         headerButtonsHandler: TransformationListButtons
         requireData: [
           (params) ->
-            TransformationsActionCreators.loadTransformations(params.bucketId)
             VersionsActionCreators.loadVersions('transformation', params.bucketId)
         ]
         childRoutes: [

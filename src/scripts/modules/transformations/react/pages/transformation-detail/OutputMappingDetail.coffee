@@ -12,6 +12,7 @@ ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
 TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
+Immutable = require('immutable')
 
 OutputMappingDetail = React.createClass(
   displayName: 'InputMappingDetail'
@@ -45,7 +46,7 @@ OutputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Primary key'
         span {className: "col-md-6"},
-          if @props.outputMapping.get('primaryKey').count()
+          if @props.outputMapping.get('primaryKey', Immutable.List()).count()
             @props.outputMapping.get('primaryKey').join(', ')
           else
             'N/A'

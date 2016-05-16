@@ -1,7 +1,7 @@
 React = require 'react'
 Immutable = require 'immutable'
 
-api = require '../../../TransformationsApi.coffee'
+api = require '../../../TransformationsApiAdapter'
 
 {Loader} = require 'kbc-react-components'
 Graph = React.createFactory (require './Graph')

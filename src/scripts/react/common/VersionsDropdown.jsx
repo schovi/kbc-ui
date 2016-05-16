@@ -8,8 +8,8 @@ import moment from 'moment';
 import createVersionOnRollback from '../../utils/createVersionOnRollback';
 import createVersionOnCopy from '../../utils/createVersionOnCopy';
 import VersionsActionCreators from '../../../scripts/modules/components/VersionsActionCreators';
-import {Link} from 'react-router';
 import {Loader} from 'kbc-react-components';
+import RoutesStore from '../../stores/RoutesStore';
 
 export default React.createClass({
   mixins: [createStoreMixin(VersionsStore)],
@@ -24,7 +24,8 @@ export default React.createClass({
       versions: VersionsStore.getVersions(this.props.componentId, this.props.configId),
       newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, this.props.configId),
       isPending: VersionsStore.isPendingConfig(this.props.componentId, this.props.configId),
-      pendingActions: VersionsStore.getPendingVersions(this.props.componentId, this.props.configId)
+      pendingActions: VersionsStore.getPendingVersions(this.props.componentId, this.props.configId),
+      router: RoutesStore.getRouter()
     };
   },
 
@@ -108,17 +109,12 @@ export default React.createClass({
     );
   },
 
-
   renderAllVersionsLink() {
     if (this.props.componentId === 'transformation') {
+      var href = this.state.router.makeHref('transformationVersions', {bucketId: this.props.configId});
       return (
-        <MenuItem>
-          <Link
-            to="transformationVersions"
-            params={{bucketId: this.props.configId}}
-          >
-            Show all versions
-          </Link>
+        <MenuItem href={href}>
+          Show all versions
         </MenuItem>
       );
     } else {

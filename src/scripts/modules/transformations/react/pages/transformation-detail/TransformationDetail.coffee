@@ -117,7 +117,7 @@ module.exports = React.createClass
               activateTooltip: 'Enable transformation'
               deactivateTooltip: 'Disable transformation'
               isActive: !@state.transformation.get('disabled')
-              isPending: @state.pendingActions.has 'change-disabled'
+              isPending: @state.pendingActions.has 'save-disabled'
               onChange: @_handleActiveChange
 
           if @state.transformation.get('backend') == 'redshift' or
