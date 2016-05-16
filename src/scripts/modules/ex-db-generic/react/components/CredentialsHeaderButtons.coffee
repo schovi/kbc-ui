@@ -24,7 +24,7 @@ module.exports = (componentId) ->
       currentConfigId: configId
       isEditing: ExDbStore.isEditingCredentials()
       isSaving: ExDbStore.isSavingCredentials()
-      isValid: ExDbStore.hasValidCredentials(creds)
+      isValid: ExDbStore.hasValidCredentials(creds, true)
 
     _handleEditStart: ->
       ExDbActionCreators.editCredentials @state.currentConfigId
