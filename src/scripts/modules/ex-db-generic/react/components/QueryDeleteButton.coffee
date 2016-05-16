@@ -1,7 +1,5 @@
 React = require 'react'
 
-actionsProvisioning = require '../../actionsProvisioning'
-
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require('../../../../react/common/Confirm').default)
@@ -28,18 +26,21 @@ module.exports = React.createClass
     tooltipPlacement: 'top'
 
   render: ->
+    deleteLabel = (if @props.componentId == 'keboola.ex-mongodb' then 'Delete Export' else 'Delete Query')
     if @props.isPending
       span className: 'btn btn-link',
         Loader()
     else
       OverlayTrigger
-        overlay: Tooltip null, 'Delete Query'
+        overlay: Tooltip null, deleteLabel
         key: 'delete'
         placement: @props.tooltipPlacement
       ,
         Confirm
-          title: 'Delete Query'
-          text: "Do you really want to delete query #{@props.query.get('name')}?"
+          title: deleteLabel
+          text: "Do you really want to delete " +
+            (if @props.componentId == 'keboola.ex-mongodb' then 'export' else 'query') +
+            " #{@props.query.get('name')}?"
           buttonLabel: 'Delete'
           onConfirm: @_deleteQuery
         ,

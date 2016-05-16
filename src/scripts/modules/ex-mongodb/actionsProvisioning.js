@@ -89,18 +89,9 @@ export function createActions(componentId) {
         .then(() => this.resetNewCredentials(configId));
     },
 
-    checkTableName(query, store) {
-      if (query.get('newName', '').trim().length > 0) {
-        return query;
-      }
-      else {
-        return query;
-      }
-    },
-
     createQuery(configId) {
       const store = getStore(configId);
-      let newQuery = this.checkTableName(store.getNewQuery(), store);
+      let newQuery = store.getNewQuery();
       newQuery = newQuery.set('name', newQuery.get('newName'));
       newQuery = newQuery.delete('newName');
       const newQueries = store.getQueries().push(newQuery);
@@ -142,7 +133,6 @@ export function createActions(componentId) {
     saveQueryEdit(configId, queryId) {
       const store = getStore(configId);
       let newQuery = store.getEditingQuery(queryId);
-      newQuery = this.checkTableName(newQuery, store);
       let newQueries = store.getQueries().filter( (q) => q.get('name') !== newQuery.get('name'));
       // copy new outputTable
       newQuery = newQuery.set('name', newQuery.get('newName'));

@@ -10,7 +10,9 @@ export default React.createClass({
     isEditing: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     configId: PropTypes.string.isRequired,
-    componentId: PropTypes.string.isRequired
+    componentId: PropTypes.string.isRequired,
+    credentialsTemplate: PropTypes.object.isRequired,
+    hasSshTunnel: PropTypes.func.isRequired
   },
 
   render() {
@@ -24,6 +26,8 @@ export default React.createClass({
               onChange={this.props.onChange}
               componentId={this.props.componentId}
               configId={this.props.configId}
+              credentialsTemplate={this.props.credentialsTemplate}
+              hasSshTunnel={this.props.hasSshTunnel}
             />
           </TabPane>
           {this.renderSSLForm()}

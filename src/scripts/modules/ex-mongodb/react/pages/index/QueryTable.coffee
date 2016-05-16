@@ -4,7 +4,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 
 QueryRow = React.createFactory(require './QueryRow')
 Link = React.createFactory(require('react-router').Link)
-QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
+QueryDeleteButton = React.createFactory(require('../../../../ex-db-generic/react/components/QueryDeleteButton'))
 
 {span, div, a, strong} = React.DOM
 

@@ -3,15 +3,12 @@ import {Map} from 'immutable';
 
 import RoutesStore from '../../../../stores/RoutesStore';
 
-import * as storeProvisioning from '../../storeProvisioning';
-import * as actionsProvisioning from '../../actionsProvisioning';
-
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import QueryDeleteButton from './QueryDeleteButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
 
-export default function(componentId) {
+export default function(componentId, actionsProvisioning, storeProvisioning) {
   const actionCreators = actionsProvisioning.createActions(componentId);
   return React.createClass({
     mixins: [createStoreMixin(storeProvisioning.componentsStore)],
@@ -45,8 +42,8 @@ export default function(componentId) {
             tooltipPlacement="bottom"
           />
           <ActivateDeactivateButton
-            activateTooltip="Enable Query"
-            deactivateTooltip="Disable Query"
+            activateTooltip={componentId === 'keboola.ex-mongodb' ? 'Enable Export' : 'Enable Query'}
+            deactivateTooltip={componentId === 'keboola.ex-mongodb' ? 'Disable Export' : 'Disable Query'}
             isActive={this.state.query.get('enabled')}
             isPending={this.state.pendingActions.get('enabled')}
             onChange={this.handleActiveChange}

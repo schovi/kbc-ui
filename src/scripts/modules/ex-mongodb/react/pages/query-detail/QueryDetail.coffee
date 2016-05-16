@@ -2,21 +2,18 @@ React = require 'react'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
-storeProvisioning = require '../../../storeProvisioning'
-actionsProvisioning = require '../../../actionsProvisioning'
-
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
-QueryNav = require('./QueryNav').default
+QueryNav = require('../../../../ex-db-generic/react/pages/query-detail/QueryNav').default
 EditButtons = require '../../../../../react/common/EditButtons'
 
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong} = React.DOM
 
-module.exports = (componentId) ->
+module.exports = (componentId, actionsProvisioning, storeProvisioning) ->
   ExDbActionCreators = actionsProvisioning.createActions(componentId)
   return React.createClass
     displayName: 'ExDbQueryDetail'
@@ -65,6 +62,7 @@ module.exports = (componentId) ->
               configurationId: @state.configId
               filter: @state.queriesFilter
               componentId: componentId
+              actionsProvisioning: actionsProvisioning
         div className: 'col-md-9 kbc-main-content-with-nav',
           div className: 'row kbc-header',
             div className: 'kbc-buttons',

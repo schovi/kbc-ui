@@ -2,7 +2,7 @@ import store from '../components/stores/InstalledComponentsStore';
 import {List, Map, fromJS} from 'immutable';
 import fuzzy from 'fuzzy';
 import templateFields from './templates/credentials';
-import hasSshTunnel from './templates/hasSshTunnel';
+import hasSshTunnel from '../ex-db-generic/templates/hasSshTunnel';
 import _ from 'underscore';
 import string from '../../utils/string';
 import getDefaultPort from './templates/defaultPorts';
@@ -158,9 +158,9 @@ export function createStore(componentId, configId) {
       const currentOutputTable = query.get('name');
       const editingOutpuTable = query.get('newName') || '';
       const found = this.getQueries().find((q) => {
-            var outTable = q.get('name');
+        var outTable = q.get('name');
         // const isDefaultBad = (editingOutpuTable.trim().length === 0);
-      return (outTable === editingOutpuTable && outTable !== currentOutputTable);
+        return (outTable === editingOutpuTable && outTable !== currentOutputTable);
       });
       return !!found;
     },
