@@ -31,7 +31,7 @@ TransformationBucketRow = React.createClass(
         title: 'Delete Transformation Bucket'
         text: "Do you really want to delete transformation bucket #{@props.bucket.get('name')}?"
         onConfirm: @_deleteTransformationBucket
-      isEnabled: @props.transformations.count() == 0
+      isEnabled: true
       key: 'delete-new'
     )
 

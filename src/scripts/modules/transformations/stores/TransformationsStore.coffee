@@ -258,4 +258,11 @@ Dispatcher.register (payload) ->
       ]
       TransformationsStore.emitChange()
 
+    when Constants.ActionTypes.TRANSFORMATION_BUCKET_DELETE_SUCCESS
+      _store = _store.withMutations (store) ->
+        store
+        .removeIn ['transformationsByBucketId', action.bucketId]
+      TransformationsStore.emitChange()
+
+
 module.exports = TransformationsStore
