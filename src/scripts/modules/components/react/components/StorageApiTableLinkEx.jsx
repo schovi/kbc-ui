@@ -29,10 +29,17 @@ export default React.createClass({
   },
 
   getStateFromStores() {
+    return this.prepareStateFromProps(this.props);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.prepareStateFromProps(nextProps));
+  },
+
+  prepareStateFromProps(props) {
     const isLoading = tablesStore.getIsLoading();
     const tables = tablesStore.getAll() || Map();
-    const table = tables.get(this.props.tableId, Map());
-
+    const table = tables.get(props.tableId, Map());
     return {
       table: table,
       isLoading: isLoading
