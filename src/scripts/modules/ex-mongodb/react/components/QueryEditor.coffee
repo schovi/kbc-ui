@@ -58,7 +58,6 @@ module.exports = React.createClass
       div className: 'form-horizontal',
 
         div className: (if @props.outTableExist then 'form-group has-error' else 'form-group'),
-#        div className: 'form-group',
           label className: 'col-md-2 control-label', 'Name'
           div className: 'col-md-4',
             input
@@ -109,14 +108,18 @@ module.exports = React.createClass
           div className: 'col-md-4',
             input
               className: 'form-control'
+              placeholder: 'e.g. 100'
               type: 'text'
               value: @props.query.get 'limit'
-              placeholder: 'e.g. 100'
               onChange: @_handleLimitChange
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Incremental'
-          div className: 'col-md-10',
+          div className: 'col-md-4',
+            div
+              style:
+                marginTop: '1em'
+                paddingLeft: '1em',
             label null,
               input
                 type: 'checkbox'
@@ -128,7 +131,8 @@ module.exports = React.createClass
           div className: 'col-md-10',
             textarea
               className: 'form-control'
-              placeholder: 'e.g. {isActive: 1, isDeleted: 0}'
+              placeholder: 'e.g.\n"_id.$oid": {\n  "type": "column",\n  "mapping": ' +
+                '{\n    "destination": "id",\n    "primaryKey": true\n  }\n}'
               value: @props.query.get 'mapping'
               onChange: @_handleMappingChange
               rows: 10

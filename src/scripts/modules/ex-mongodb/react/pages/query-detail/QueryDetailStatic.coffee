@@ -41,40 +41,48 @@ module.exports = React.createClass
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Query'
           div className: 'col-md-10',
-            if @props.query.get('query') and @props.query.get('query').length
-              p
-                value: @props.query.get 'query'
-            else
-              div className: 'row kbc-header',
-                p className: 'text-muted',
-                  'Query not set.'
+            textarea
+              className: 'form-control'
+              placeholder: 'Query not set'
+              style:
+                width: '100%'
+              disabled: true
+              value:
+                if @props.query.get('query') and @props.query.get('query').length
+                  @props.query.get 'query'
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Sort'
           div className: 'col-md-10',
-            if @props.query.get('sort') and @props.query.get('sort').length
-              p
-                value: @props.query.get 'sort'
-            else
-              div className: 'row kbc-header',
-                p className: 'text-muted',
-                  'Sort not set.'
+            textarea
+              className: 'form-control'
+              placeholder: 'Sort not set'
+              style:
+                width: '100%'
+              disabled: true
+              value:
+                if @props.query.get('sort') and @props.query.get('sort').length
+                  @props.query.get 'sort'
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Limit'
-          div className: 'col-md-10',
-            if @props.query.get('limit') and @props.query.get('limit').length
-              p
-                value: @props.query.get 'limit'
-            else
-              div className: 'row kbc-header',
-                p className: 'text-muted',
-                  'Limit not set.'
+          div className: 'col-md-4',
+            input
+              className: 'form-control'
+              placeholder: 'Limit not set'
+              type: 'text'
+              disabled: true
+              value:
+                if @props.query.get('limit')
+                  @props.query.get 'limit'
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Incremental'
           div className: 'col-md-4',
-            div className: 'row kbc-header',
+            div
+              style:
+                marginTop: '1em'
+                paddingLeft: '1em',
               input
                 type: 'checkbox'
                 checked: @props.query.get 'incremental'
