@@ -21,6 +21,7 @@ module.exports = React.createClass
     isPending: React.PropTypes.bool.isRequired
     tooltipPlacement: React.PropTypes.string
     componentId: React.PropTypes.string
+    actionsProvisioning: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
     tooltipPlacement: 'top'
@@ -54,6 +55,6 @@ module.exports = React.createClass
     # if query is deleted immediatelly view is rendered with missing orchestration because of store changed
     id = @props.query.get('id')
     config = @props.configurationId
-    ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
+    ExDbActionCreators = this.props.actionsProvisioning.createActions(@props.componentId)
     setTimeout ->
       ExDbActionCreators.deleteQuery config, id

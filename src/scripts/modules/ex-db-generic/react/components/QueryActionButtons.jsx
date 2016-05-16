@@ -40,6 +40,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning) {
             configurationId={this.state.configId}
             isPending={this.state.pendingActions.get('deleteQuery')}
             tooltipPlacement="bottom"
+            actionsProvisioning={actionsProvisioning}
           />
           <ActivateDeactivateButton
             activateTooltip={componentId === 'keboola.ex-mongodb' ? 'Enable Export' : 'Enable Query'}
