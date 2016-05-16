@@ -7,7 +7,7 @@ export default function(componentId, configId, versionId) {
     var reloadCallback = function(component, config) {
       var promises = [];
       if (component === 'transformation') {
-        promises.push(TransformationActionCreators.loadBucketsForce());
+        promises.push(TransformationActionCreators.loadTransformationBucketsForce());
       } else {
         promises.push(InstalledComponentsActionCreators.loadComponentConfigDataForce(component, config));
       }
