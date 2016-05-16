@@ -24,7 +24,6 @@ module.exports = React.createClass
               className: 'form-control'
               type: 'text'
               value: @props.query.get 'name'
-              placeholder: 'Untitled Query'
               disabled: true
 
         div className: 'form-group',
@@ -34,47 +33,53 @@ module.exports = React.createClass
               className: 'form-control'
               type: 'text'
               value: @props.query.get 'collection'
-              placeholder: 'e.g. Untitled Query'
               disabled: true
-
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Query'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
-              placeholder: 'Query not set'
-              style:
-                width: '100%'
-              disabled: true
+            CodeEditor
+              readOnly: true
+              placeholder: 'Not set'
               value:
                 if @props.query.get('query') and @props.query.get('query').length
                   @props.query.get 'query'
+                else
+                  ''
+              mode: 'application/json'
+              style: {
+                width: '100%'
+              }
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Sort'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
-              placeholder: 'Sort not set'
-              style:
-                width: '100%'
-              disabled: true
+            CodeEditor
+              readOnly: true
+              placeholder: 'Not set'
               value:
                 if @props.query.get('sort') and @props.query.get('sort').length
                   @props.query.get 'sort'
+                else
+                  ''
+              mode: 'application/json'
+              style: {
+                width: '100%'
+              }
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Limit'
           div className: 'col-md-4',
             input
               className: 'form-control'
-              placeholder: 'Limit not set'
+              placeholder: 'Not set'
               type: 'text'
               disabled: true
               value:
                 if @props.query.get('limit')
                   @props.query.get 'limit'
+                else
+                  ''
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Incremental'
@@ -90,10 +95,8 @@ module.exports = React.createClass
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Mapping'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
-              value: @props.query.get 'mapping'
-              rows: 10
-              style:
-                width: '100%'
-              disabled: true
+            CodeEditor
+              readOnly: true
+              value:
+                JSON.stringify(@props.query.get('mapping').toJS(), null, 2)
+              mode: 'application/json'
