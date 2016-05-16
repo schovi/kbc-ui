@@ -157,6 +157,8 @@ export default React.createClass({
   renderClipboard(value) {
     if (value) {
       return (<Clipboard text={value} />);
+    } else {
+      return null;
     }
   }
 });

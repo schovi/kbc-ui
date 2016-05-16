@@ -7,6 +7,8 @@ import _ from 'underscore';
 import string from '../../utils/string';
 import getDefaultPort from './templates/defaultPorts';
 
+const defaultSshPort = 22;
+
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
   return {
@@ -119,6 +121,10 @@ export function createStore(componentId, configId) {
       if (!defaultNewCredentials.get('port')) {
         defaultNewCredentials = defaultNewCredentials.set('port', getDefaultPort(componentId));
       }
+      if (!defaultNewCredentials.getIn(['ssh', 'sshPort'])) {
+        defaultNewCredentials = defaultNewCredentials.setIn(['ssh', 'sshPort'], defaultSshPort);
+      }
+
       const result = data.localState.get('newCredentials', defaultNewCredentials);
       if (result) {
         return result;
