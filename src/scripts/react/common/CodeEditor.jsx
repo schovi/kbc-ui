@@ -10,7 +10,8 @@ export default React.createClass({
     onChange: React.PropTypes.func,
     mode: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    lineNumbers: React.PropTypes.bool
+    lineNumbers: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   getDefaultProps() {
@@ -33,7 +34,7 @@ export default React.createClass({
         onChange={this.handleChange}
         readOnly={this.props.readOnly}
         cursorHeight={parseInt(this.props.readOnly, 10)}
-        style={this.style()}
+        style={this.props.style || this.style()}
         />
     );
   },
