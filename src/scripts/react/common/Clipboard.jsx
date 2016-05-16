@@ -16,15 +16,26 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <OverlayTrigger overlay={this.tooltip()} ref="overlay">
-        <span>
-          <ClipboardButton style={{cursor: 'pointer'}} component="span" data-clipboard-text={this.props.text} onError={this.handleError} onSuccess={this.handleAfterCopy}>
-            <span className="fa fa-fw fa-copy" /> {this.props.label}
-          </ClipboardButton>
-        </span>
-      </OverlayTrigger>
-    );
+    if (this.props.text && this.props.text !== '') {
+      return (
+        <OverlayTrigger overlay={this.tooltip()} ref="overlay">
+          <span>
+            <ClipboardButton style={{cursor: 'pointer'}} component="span" data-clipboard-text={this.props.text}
+                             onError={this.handleError} onSuccess={this.handleAfterCopy}>
+              <span className="fa fa-fw fa-copy"/> {this.props.label}
+            </ClipboardButton>
+          </span>
+        </OverlayTrigger>
+      );
+    } else {
+      return (
+        <OverlayTrigger overlay={this.tooltip()} ref="overlay">
+          <span>
+            <span className="fa fa-fw fa-copy"/> {this.props.label}
+          </span>
+        </OverlayTrigger>
+      );
+    }
   },
 
   tooltip() {
@@ -34,7 +45,10 @@ export default React.createClass({
   },
 
   okTooltip() {
-    return this.state.isCopied ? 'Copied!' : 'Copy to clipboard';
+    if (this.props.text && this.props.text !== '') {
+      return this.state.isCopied ? 'Copied!' : 'Copy to clipboard';
+    }
+    return 'Nothing to copy';
   },
 
   handleAfterCopy() {
