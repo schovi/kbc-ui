@@ -43,7 +43,7 @@ export function createStore(componentId, configId) {
 
 
   return {
-    hasValidCredentials(credentials, skipProtected) {
+    hasValidCredentials(credentials) {
       if (!credentials) {
         return false;
       }
@@ -56,8 +56,7 @@ export function createStore(componentId, configId) {
         if (value) {
           value = value.toString();
         }
-        const isProtected = templateFields.getProtectedProperties(componentId).indexOf(propName) > -1;
-        return memo && !_.isEmpty(value) || (isProtected && !skipProtected);
+        return memo && !_.isEmpty(value);
       }, true);
       const ssh = credentials.get('ssh', Map());
       const sshFields = [

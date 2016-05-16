@@ -16,7 +16,7 @@ export default function(componentId) {
     getStateFromStores() {
       const config = routesStore.getCurrentRouteParam('config');
       const dbStore = storeProvisioning.createStore(componentId, config);
-      const isValid = dbStore.hasValidCredentials(dbStore.getNewCredentials(config), true);
+      const isValid = dbStore.hasValidCredentials(dbStore.getNewCredentials(config));
       return {
         configId: config,
         isSaving: dbStore.isSavingCredentials(),
