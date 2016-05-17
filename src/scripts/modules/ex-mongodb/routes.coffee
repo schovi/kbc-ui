@@ -22,7 +22,7 @@ StorageActionCreators = require('../components/StorageActionCreators')
 
 storeProvisioning = require './storeProvisioning'
 
-credentialsTemplate = require './templates/credentials'
+credentialsTemplate = require '../ex-db-generic/templates/credentials'
 hasSshTunnel = require('../ex-db-generic/templates/hasSshTunnel').default
 
 module.exports = (componentId) ->

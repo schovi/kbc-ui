@@ -1,11 +1,11 @@
 import store from '../components/stores/InstalledComponentsStore';
 import {List, Map, fromJS} from 'immutable';
 import fuzzy from 'fuzzy';
-import templateFields from './templates/credentials';
+import templateFields from '../ex-db-generic/templates/credentials';
 import hasSshTunnel from '../ex-db-generic/templates/hasSshTunnel';
 import _ from 'underscore';
 import string from '../../utils/string';
-import getDefaultPort from './templates/defaultPorts';
+import getDefaultPort from '../ex-db-generic/templates/defaultPorts';
 
 const defaultSshPort = 22;
 

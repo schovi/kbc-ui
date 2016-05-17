@@ -3,8 +3,8 @@ import {Map, List} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import callDockerAction from '../components/DockerActionsApi';
 
-import getDefaultPort from './templates/defaultPorts';
-import {getProtectedProperties} from './templates/credentials';
+import getDefaultPort from '../ex-db-generic/templates/defaultPorts';
+import {getProtectedProperties} from '../ex-db-generic/templates/credentials';
 
 
 export function loadConfiguration(componentId, configId) {
