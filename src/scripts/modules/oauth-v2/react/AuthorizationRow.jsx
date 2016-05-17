@@ -33,9 +33,9 @@ export default React.createClass({
   render() {
     return (
       <div className={this.props.className}>
-          {this.renderAuthorizationModal()}
-          {this.renderHeader()}
-          {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
+        {this.renderAuthorizationModal()}
+        {this.renderHeader()}
+        {this.isAuthorized() ? this.renderAuthorizedInfo() : this.renderAuth()}
       </div>
     );
   },
@@ -82,12 +82,11 @@ export default React.createClass({
              title="Reset Authorization"
              buttonLabel="Reset"
              onConfirm={this.props.onResetCredentials}>
-             <Tooltip tooltip="Reset Authorization" placement="top">
-             <a
-               className="btn btn-link">
-                 Reset
+             <a className="btn btn-link">
+               <Tooltip tooltip="Reset Authorization" placement="top">
+                 <span>  Reset</span>
+               </Tooltip>
              </a>
-             </Tooltip>
            </Confirm>
          ) : (
            <span>
