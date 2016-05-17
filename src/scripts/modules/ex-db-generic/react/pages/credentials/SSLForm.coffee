@@ -16,6 +16,7 @@ module.exports = React.createClass
     enabled: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func
     componentId: React.PropTypes.string.isRequired
+    actionsProvisioning: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -52,6 +53,7 @@ module.exports = React.createClass
             credentials: @props.credentials
             hasOffset: false
             componentId: @props.componentId
+            actionsProvisioning: @props.actionsProvisioning
 
 
   _createEnableSSLCheckbox: (propName) ->

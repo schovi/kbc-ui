@@ -7,7 +7,6 @@ Link = React.createFactory(require('react-router').Link)
 
 {small, div, span} = React.DOM
 
-actionsProvisioning = require '../../../actionsProvisioning'
 # THIS REACT COMPONENT IS NOT USED!!! SEE render method!
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
@@ -16,6 +15,7 @@ module.exports = React.createClass
     hasOffset: React.PropTypes.bool.isRequired
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
+    actionsProvisioning: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
     hasOffset: true
@@ -26,7 +26,7 @@ module.exports = React.createClass
     result: null
 
   _startTesting: ->
-    ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
+    ExDbActionCreators = @props.actionsProvisioning.createActions(@props.componentId)
     @setState
       isTesting: true
       isError: false

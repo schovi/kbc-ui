@@ -30,6 +30,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning, cre
           componentId={componentId}
           credentialsTemplate={credentialsTemplate}
           hasSshTunnel={hasSshTunnel}
+          actionsProvisioning={actionsProvisioning}
         />
       );
     },

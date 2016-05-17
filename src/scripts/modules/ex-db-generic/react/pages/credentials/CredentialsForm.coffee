@@ -21,6 +21,7 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
     credentialsTemplate: React.PropTypes.object.isRequired
     hasSshTunnel: React.PropTypes.func.isRequired
+    actionsProvisioning: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -41,6 +42,7 @@ module.exports = React.createClass
         credentials: @props.credentials
         componentId: @props.componentId
         configId: @props.configId
+        actionsProvisioning: @props.actionsProvisioning
 
   _handleChange: (propName, event) ->
     if ['port'].indexOf(propName) >= 0
