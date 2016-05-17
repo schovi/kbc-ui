@@ -1,10 +1,8 @@
 export default function(rowConfig) {
   var transformationConfig = rowConfig.configuration;
 
-  // propagate id
-  if (!transformationConfig.id) {
-    transformationConfig.id = rowConfig.id;
-  }
+  // force propagate id
+  transformationConfig.id = rowConfig.id;
 
   // inject missing defaults
   if (!transformationConfig.phase) {
