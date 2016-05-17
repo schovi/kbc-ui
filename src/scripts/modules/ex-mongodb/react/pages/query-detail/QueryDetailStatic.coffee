@@ -4,8 +4,6 @@ Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input, textarea} = React.DOM
-editorMode = require('../../../templates/editorMode').default
-
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'

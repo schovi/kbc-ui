@@ -6,8 +6,6 @@ Select = React.createFactory require('../../../../react/common/Select').default
 
 CodeMirror = React.createFactory(require 'react-code-mirror')
 
-editorMode = require('../../templates/editorMode').default
-
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, textarea} = React.DOM
 
 module.exports = React.createClass
