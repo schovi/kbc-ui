@@ -5,6 +5,8 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input, textarea} = React.DOM
 
+ExportHelp = React.createFactory require('../../components/ExportHelp').default
+
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
   propTypes:
@@ -14,6 +16,8 @@ module.exports = React.createClass
 
   render: ->
     div className: 'row',
+      ExportHelp null
+
       div className: 'form-horizontal',
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Name'

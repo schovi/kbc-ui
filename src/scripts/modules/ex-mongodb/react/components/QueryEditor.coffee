@@ -4,6 +4,8 @@ string = require '../../../../utils/string'
 Check = React.createFactory(require('../../../../react/common/common').Check)
 Select = React.createFactory require('../../../../react/common/Select').default
 
+ExportHelp = React.createFactory require('./ExportHelp').default
+
 CodeMirror = React.createFactory(require 'react-code-mirror')
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, textarea} = React.DOM
@@ -44,6 +46,8 @@ module.exports = React.createClass
 
   render: ->
     div className: 'row',
+      ExportHelp null
+
       div className: 'form-horizontal',
 
         div className: (if @props.outTableExist then 'form-group has-error' else 'form-group'),
