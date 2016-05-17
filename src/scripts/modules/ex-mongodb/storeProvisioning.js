@@ -7,6 +7,8 @@ import _ from 'underscore';
 import string from '../../utils/string';
 import getDefaultPort from './templates/defaultPorts';
 
+const defaultSshPort = 22;
+
 function fetch(componentId, configId) {
   const config = store.getConfigData(componentId, configId) || Map();
   return {
@@ -57,7 +59,8 @@ export function createStore(componentId, configId) {
 
 
   return {
-    hasValidCredentials(credentials) {
+    hasValidCredentials(credentials, params) {
+      const skipProtected = params.skipProtected;
       if (!credentials) {
         return false;
       }
@@ -70,7 +73,8 @@ export function createStore(componentId, configId) {
         if (value) {
           value = value.toString();
         }
-        return memo && !_.isEmpty(value);
+        const isProtected = templateFields.getProtectedProperties(componentId).indexOf(propName) > -1;
+        return memo && !_.isEmpty(value) || (isProtected && !skipProtected);
       }, true);
       const ssh = credentials.get('ssh', Map());
       const sshFields = [
@@ -135,6 +139,10 @@ export function createStore(componentId, configId) {
       if (!defaultNewCredentials.get('port')) {
         defaultNewCredentials = defaultNewCredentials.set('port', getDefaultPort(componentId));
       }
+      if (!defaultNewCredentials.getIn(['ssh', 'sshPort'])) {
+        defaultNewCredentials = defaultNewCredentials.setIn(['ssh', 'sshPort'], defaultSshPort);
+      }
+
       const result = data.localState.get('newCredentials', defaultNewCredentials);
       if (result) {
         return result;

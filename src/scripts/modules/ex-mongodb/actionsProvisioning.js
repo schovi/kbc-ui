@@ -4,12 +4,35 @@ import componentsActions from '../components/InstalledComponentsActionCreators';
 import callDockerAction from '../components/DockerActionsApi';
 
 import getDefaultPort from './templates/defaultPorts';
+import {getProtectedProperties} from './templates/credentials';
+
 
 export function loadConfiguration(componentId, configId) {
   return componentsActions.loadComponentConfigData(componentId, configId);
 }
 
 export function createActions(componentId) {
+  function excludeProtectedProperties(credentials) {
+    let result = credentials;
+    const props = getProtectedProperties(componentId);
+    for (let prop of props) {
+      const protectedProp = `#${prop}`;
+      result = result.delete(protectedProp);
+    }
+    return result;
+  }
+
+  function encryptProtectedFields(credentials) {
+    let result = credentials;
+    const props = getProtectedProperties(componentId);
+    for (let prop of props) {
+      const protectedProp = `#${prop}`;
+      const protectedValue = credentials.get(prop);
+      result = result.set(protectedProp, protectedValue).delete(prop);
+    }
+    return result;
+  }
+
   function getStore(configId) {
     return storeProvisioning.createStore(componentId, configId);
   }
@@ -41,6 +64,7 @@ export function createActions(componentId) {
       if (!credentials.get('port')) {
         credentials = credentials.set('port', getDefaultPort(componentId));
       }
+      credentials = excludeProtectedProperties(credentials);
       updateLocalState(configId, 'editingCredentials', credentials);
     },
 
@@ -83,10 +107,10 @@ export function createActions(componentId) {
 
     saveNewCredentials(configId) {
       const store = getStore(configId);
-      const newCredentials = store.getNewCredentials();
+      let newCredentials = store.getNewCredentials();
+      newCredentials = encryptProtectedFields(newCredentials);
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
-      return saveConfigData(configId, newData, ['isSavingCredentials'])
-        .then(() => this.resetNewCredentials(configId));
+      return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
 
     createQuery(configId) {

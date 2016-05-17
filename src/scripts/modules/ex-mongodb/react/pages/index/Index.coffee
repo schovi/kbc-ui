@@ -42,11 +42,11 @@ module.exports = (componentId) ->
       configId: config
       pendingActions: ExDbStore.getQueriesPendingActions()
       latestJobs: LatestJobsStore.getJobs componentId, config
-      hasCredentials: ExDbStore.hasValidCredentials(credentials)
+      hasCredentials: ExDbStore.hasValidCredentials(credentials, {skipProtected: false})
       queries: queries
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()
-      hasEnabledQueries: queries.count() > 0
+      hasEnabledQueries: queries.filter((query) -> query.get('enabled')).count() > 0
 
     _handleFilterChange: (query) ->
       actionCreators.setQueriesFilter(@state.configId, query)
