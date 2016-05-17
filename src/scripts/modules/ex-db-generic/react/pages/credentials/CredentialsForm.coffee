@@ -7,12 +7,12 @@ hasSshTunnel = require('../../../templates/hasSshTunnel').default
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
-{Protected} = require 'kbc-react-components'
+Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
 
 CredentialsTemplate = require '../../../templates/credentials'
 
-{form, div, label, p, option} = React.DOM
+{span, form, div, label, p, option} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExDbCredentialsForm'
@@ -65,11 +65,9 @@ module.exports = React.createClass
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
       ,
-        React.createElement Protected, null,
-          @props.credentials.get propName
-        if @props.credentials.get propName
-          Clipboard
-            text: @props.credentials.get propName
+        React.createElement Tooltip,
+          tooltip: 'Encrypted password',
+          span className: 'fa fa-fw fa-lock', null
     else
       StaticText
         label: labelValue
