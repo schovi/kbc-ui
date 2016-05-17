@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Markdown from 'react-markdown';
+import Markdown from '../../../../react/common/Markdown';
 import sasTemplate  from './sasTemplate';
 
 export default React.createClass({

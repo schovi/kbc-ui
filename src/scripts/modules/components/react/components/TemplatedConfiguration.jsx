@@ -10,7 +10,7 @@ import TemplatesStore from '../../stores/TemplatesStore';
 
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
-import Markdown from 'react-markdown';
+import Markdown from '../../../../react/common/Markdown';
 import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */

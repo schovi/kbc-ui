@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import JSONSchemaEditor from './JSONSchemaEditor';
-import Markdown from 'react-markdown';
+import Markdown from '../../../../react/common/Markdown';
 import CodeMirror from 'react-code-mirror';
 
 /* global require */

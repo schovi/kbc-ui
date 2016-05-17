@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
-import Markdown from 'react-markdown';
+import Markdown from '../../../../react/common/Markdown';
 import templateFinder from '../../../components/utils/templateFinder';
 import deepEqual from 'deep-equal';
 

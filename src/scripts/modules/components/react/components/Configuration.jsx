@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
 import Immutable from 'immutable';
-import Markdown from 'react-markdown';
+import Markdown from '../../../../react/common/Markdown';
 import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */

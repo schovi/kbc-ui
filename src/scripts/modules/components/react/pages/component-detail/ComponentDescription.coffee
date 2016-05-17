@@ -1,5 +1,5 @@
 React = require 'react'
-Markdown = React.createFactory(require 'react-markdown')
+Markdown = React.createFactory(require('../../../../../react/common/Markdown').default)
 {div} = React.DOM
 
 module.exports = React.createClass
