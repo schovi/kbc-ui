@@ -42,7 +42,7 @@ module.exports = (componentId) ->
       configId: config
       pendingActions: ExDbStore.getQueriesPendingActions()
       latestJobs: LatestJobsStore.getJobs componentId, config
-      hasCredentials: ExDbStore.hasValidCredentials(credentials)
+      hasCredentials: ExDbStore.hasValidCredentials(credentials, {skipProtected: false})
       queries: queries
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()

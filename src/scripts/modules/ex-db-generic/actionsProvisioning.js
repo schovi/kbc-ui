@@ -12,12 +12,23 @@ export function loadConfiguration(componentId, configId) {
 }
 
 export function createActions(componentId) {
+  function excludeProtectedProperties(credentials) {
+    let result = credentials;
+    const props = getProtectedProperties(componentId);
+    for (let prop of props) {
+      const protectedProp = `#${prop}`;
+      result = result.delete(protectedProp);
+    }
+    return result;
+  }
+
   function encryptProtectedFields(credentials) {
     let result = credentials;
     const props = getProtectedProperties(componentId);
     for (let prop of props) {
       const protectedProp = `#${prop}`;
-      result = result.set(protectedProp, prop).delete(prop);
+      const protectedValue = credentials.get(prop);
+      result = result.set(protectedProp, protectedValue).delete(prop);
     }
     return result;
   }
@@ -53,6 +64,7 @@ export function createActions(componentId) {
       if (!credentials.get('port')) {
         credentials = credentials.set('port', getDefaultPort(componentId));
       }
+      credentials = excludeProtectedProperties(credentials);
       updateLocalState(configId, 'editingCredentials', credentials);
     },
 

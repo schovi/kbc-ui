@@ -43,7 +43,8 @@ export function createStore(componentId, configId) {
 
 
   return {
-    hasValidCredentials(credentials, skipProtected) {
+    hasValidCredentials(credentials, params) {
+      const skipProtected = params.skipProtected;
       if (!credentials) {
         return false;
       }
