@@ -37,7 +37,7 @@ module.exports = React.createClass
     @props.onChange(@props.query.set 'limit', event.target.value)
 
   _handleMappingChange: (event) ->
-    @props.onChange(@props.query.set 'mapping', event.target.value)
+    @props.onChange(@props.query.set 'newMapping', event.target.value)
 
   _handleCollectionChange: (event) ->
     @props.onChange(@props.query.set 'collection', event.target.value)
@@ -127,10 +127,8 @@ module.exports = React.createClass
           label className: 'col-md-2 control-label', 'Mapping'
           div className: 'col-md-10',
             CodeMirror
-              placeholder: '{}'
-              value:
-                if @props.query.get('mapping')
-                  @props.query.get('mapping').toString()
+              placeholder: ('e.g. {"_id.$oid": "id", "name": "name"}')
+              value: @props.query.get('newMapping')
               onChange: @_handleMappingChange
               mode: 'application/json'
               lint: true

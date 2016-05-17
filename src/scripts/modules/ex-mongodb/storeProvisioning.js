@@ -37,11 +37,14 @@ function isJsonValid(jsonString) {
 function isValidQuery(query) {
   return query.get('newName', '').trim().length > 0
     && query.get('collection', '').trim().length > 0
+
     && (query.get('query', '').toString().trim().length === 0
       || isJsonValid(query.get('query', '').toString()))
     && (query.get('sort', '').toString().trim().length === 0
       || isJsonValid(query.get('sort', '').toString()))
-    && isJsonValid(query.get('mapping', '').toString());
+
+    && query.get('newMapping', '').toString().trim().length > 0
+    && isJsonValid(query.get('newMapping', '').toString());
 }
 
 export function getLocalState(componentId, configId) {
@@ -146,6 +149,7 @@ export function createStore(componentId, configId) {
         enabled: true,
         incremental: false,
         newName: '',
+        newMapping: '',
         collection: '',
         id: generateId(ids)
       });

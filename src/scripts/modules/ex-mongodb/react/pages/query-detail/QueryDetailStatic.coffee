@@ -97,5 +97,8 @@ module.exports = React.createClass
             CodeEditor
               readOnly: true
               value:
-                @props.query.get('mapping')
+                if @props.query.get('mapping')
+                  JSON.stringify(@props.query.get('mapping'), null, 2)
+                else
+                  ''
               mode: 'application/json'

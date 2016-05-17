@@ -92,8 +92,12 @@ export function createActions(componentId) {
     createQuery(configId) {
       const store = getStore(configId);
       let newQuery = store.getNewQuery();
+
       newQuery = newQuery.set('name', newQuery.get('newName'));
       newQuery = newQuery.delete('newName');
+      newQuery = newQuery.set('mapping', JSON.parse(newQuery.get('newMapping')));
+      newQuery = newQuery.delete('newMapping');
+
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'exports'], newQueries);
       return saveConfigData(configId, newData, ['newQueries', 'isSaving'])
@@ -122,7 +126,10 @@ export function createActions(componentId) {
 
     editQuery(configId, queryId) {
       let query = getStore(configId).getConfigQuery(queryId);
+
       query = query.set('newName', query.get('name'));
+      query = query.set('newMapping', JSON.stringify(query.get('mapping'), null, 2));
+
       updateLocalState(configId, ['editingQueries', queryId], query);
     },
 
@@ -134,9 +141,12 @@ export function createActions(componentId) {
       const store = getStore(configId);
       let newQuery = store.getEditingQuery(queryId);
       let newQueries = store.getQueries().filter( (q) => q.get('name') !== newQuery.get('name'));
-      // copy new outputTable
+
       newQuery = newQuery.set('name', newQuery.get('newName'));
       newQuery = newQuery.delete('newName');
+      newQuery = newQuery.set('mapping', JSON.parse(newQuery.get('newMapping')));
+      newQuery = newQuery.delete('newMapping');
+
       newQueries = newQueries.push(newQuery);
       const newData = store.configData.setIn(['parameters', 'exports'], newQueries);
       return saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
