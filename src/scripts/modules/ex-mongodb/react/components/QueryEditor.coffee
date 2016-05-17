@@ -1,23 +1,14 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
 string = require '../../../../utils/string'
-CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
 Select = React.createFactory require('../../../../react/common/Select').default
 
-Autosuggest = React.createFactory(require 'react-autosuggest')
+CodeMirror = React.createFactory(require 'react-code-mirror')
+
 editorMode = require('../../templates/editorMode').default
 
 {div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, textarea} = React.DOM
-
-createGetSuggestions = (getOptions) ->
-  (input, callback) ->
-    suggestions = getOptions()
-      .filter (value) -> fuzzy.match(input, value)
-      .slice 0, 10
-      .toList()
-    callback(null, suggestions.toJS())
-
 
 module.exports = React.createClass
   displayName: 'ExDbQueryEditor'
@@ -84,24 +75,32 @@ module.exports = React.createClass
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Query'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
+            CodeMirror
               placeholder: 'e.g. {isActive: 1, isDeleted: 0}'
-              value: @props.query.get 'query'
+              value:
+                if @props.query.get('query')
+                  @props.query.get('query').toString()
               onChange: @_handleQueryChange
-              style:
-                width: '100%'
+              mode: 'application/json'
+              lint: true
+              lineWrapping: true
+              lineNumbers: true
+              theme: 'solarized'
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Sort'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
+            CodeMirror
               placeholder: 'e.g. {creationDate: -1}'
-              value: @props.query.get 'sort'
+              value:
+                if @props.query.get('sort')
+                  @props.query.get('sort').toString()
               onChange: @_handleSortChange
-              style:
-                width: '100%'
+              mode: 'application/json'
+              lint: true
+              lineWrapping: true
+              lineNumbers: true
+              theme: 'solarized'
 
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Limit'
@@ -129,12 +128,14 @@ module.exports = React.createClass
         div className: 'form-group',
           label className: 'col-md-2 control-label', 'Mapping'
           div className: 'col-md-10',
-            textarea
-              className: 'form-control'
-              placeholder: 'e.g.\n"_id.$oid": {\n  "type": "column",\n  "mapping": ' +
-                '{\n    "destination": "id",\n    "primaryKey": true\n  }\n}'
-              value: @props.query.get 'mapping'
+            CodeMirror
+              placeholder: '{}'
+              value:
+                if @props.query.get('mapping')
+                  @props.query.get('mapping').toString()
               onChange: @_handleMappingChange
-              rows: 10
-              style:
-                width: '100%'
+              mode: 'application/json'
+              lint: true
+              lineWrapping: true
+              lineNumbers: true
+              theme: 'solarized'

@@ -25,10 +25,23 @@ function generateId(existingIds) {
   return newId;
 }
 
+function isJsonValid(jsonString) {
+  try {
+    jsonString.trim().length > 0 && JSON.parse(jsonString);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 function isValidQuery(query) {
   return query.get('newName', '').trim().length > 0
-      && query.get('collection', '').trim().length > 0
-      && query.get('mapping', '').toString().trim().length > 0;
+    && query.get('collection', '').trim().length > 0
+    && (query.get('query', '').toString().trim().length === 0
+      || isJsonValid(query.get('query', '').toString()))
+    && (query.get('sort', '').toString().trim().length === 0
+      || isJsonValid(query.get('sort', '').toString()))
+    && isJsonValid(query.get('mapping', '').toString());
 }
 
 export function getLocalState(componentId, configId) {

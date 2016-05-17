@@ -89,6 +89,7 @@ module.exports = React.createClass
                 marginTop: '1em'
                 paddingLeft: '1em',
               input
+                readOnly: true
                 type: 'checkbox'
                 checked: @props.query.get 'incremental'
 
@@ -98,5 +99,5 @@ module.exports = React.createClass
             CodeEditor
               readOnly: true
               value:
-                JSON.stringify(@props.query.get('mapping').toJS(), null, 2)
+                @props.query.get('mapping')
               mode: 'application/json'
