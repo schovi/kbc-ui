@@ -42,4 +42,3 @@ module.exports = React.createClass
           dimension: @state.newDimension
           onChange: @_handleNewDimensionUpdate
           onSubmit: @_handleNewDimensionSave
-

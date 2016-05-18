@@ -10,7 +10,8 @@ import actionCreators from '../../../actionCreators';
 export default React.createClass({
   propTypes: {
     dimension: PropTypes.object.isRequired,
-    configurationId: PropTypes.string.isRequired
+    configurationId: PropTypes.string.isRequired,
+    pid: PropTypes.string.isRequired
   },
   mixins: [React.addons.PureRenderMixin],
 

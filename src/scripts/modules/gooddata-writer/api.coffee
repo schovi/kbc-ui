@@ -7,12 +7,12 @@ createRequest = (method, path) ->
 
 module.exports =
 
-  getWriters: ->
-    createRequest('GET', "writers")
-    .promise()
-    .then((response) ->
-      response.body
-    )
+  # getWriters: ->  NOT USED
+  #   createRequest('GET', "v2")
+  #   .promise()
+  #   .then((response) ->
+  #     response.body
+  #   )
 
   getWriter: (configurationId) ->
     createRequest('GET', "v2/" + configurationId + "?include=project,project.ssoLink")
@@ -22,8 +22,8 @@ module.exports =
     )
 
   getWriterModel: (configurationId) ->
-    createRequest('GET', 'model')
-    .query config: configurationId
+    createRequest('GET', "v2/#{configurationId}/model")
+    # .query config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -73,20 +73,17 @@ module.exports =
     .then (response) ->
       response.body
 
-  resetTable: (configurationId, tableId) ->
-    createRequest('POST', 'reset-table')
-    .send
-      tableId: tableId
-      config: configurationId
+  resetTable: (configurationId, tableId, pid) ->
+    createRequest('DELETE', "v2/#{configurationId}/projects/#{pid}/datasets/#{tableId}")
     .promise()
     .then (response) ->
       response.body
 
-  synchronizeTable: (configurationId, tableId) ->
-    createRequest('POST', 'sync-datasets')
-    .send
-      tables: [tableId]
-      config: configurationId
+  synchronizeTable: (configurationId, tableId, pid) ->
+    createRequest('POST', "v2/#{configurationId}/tables/#{tableId}/synchronize/#{pid}")
+    # .send
+    #   tables: [tableId]
+    #   config: configurationId
     .promise()
     .then (response) ->
       response.body
@@ -100,11 +97,11 @@ module.exports =
     .then (response) ->
       response.body
 
-  uploadDateDimension: (configurationId, dimensionName) ->
-    createRequest('POST', 'upload-date-dimension')
-    .send
-      name: dimensionName
-      config: configurationId
+  uploadDateDimension: (configurationId, dimensionName, pid) ->
+    createRequest('POST', "v2/#{configurationId}/date-dimensions/#{dimensionName}/upload/#{pid}")
+    # .send
+    #   name: dimensionName
+    #   config: configurationId
     .promise()
     .then (response) ->
       response.body

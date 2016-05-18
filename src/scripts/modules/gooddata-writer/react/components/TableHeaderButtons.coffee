@@ -25,7 +25,9 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('table')
     isEditingColumns = goodDataWriterStore.isEditingTableColumns(configId, tableId)
+    writer = goodDataWriterStore.getWriter(configId)
 
+    pid: writer.getIn ['config', 'project', 'id']
     table: goodDataWriterStore.getTable(configId, tableId)
     configurationId: configId
     columns: goodDataWriterStore.getTableColumns(configId,
@@ -49,10 +51,12 @@ module.exports = React.createClass
   _handleResetTable: ->
     actionCreators.resetTable @state.configurationId,
       @state.table.get 'id'
+      @state.pid
 
   _handleSynchronizeTable: ->
     actionCreators.synchronizeTable @state.configurationId,
       @state.table.get 'id'
+      @state.pid
 
   _handleUpload: ->
     actionCreators.uploadToGoodData @state.configurationId, @state.table.get('id')

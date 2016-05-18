@@ -279,14 +279,14 @@ module.exports =
         error: e
       throw e
 
-  uploadDateDimensionToGoodData: (configurationId, dimensionName) ->
+  uploadDateDimensionToGoodData: (configurationId, dimensionName, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_START
       configurationId: configurationId
       dimensionName: dimensionName
 
     goodDataWriterApi
-    .uploadDateDimension(configurationId, dimensionName)
+    .uploadDateDimension(configurationId, dimensionName, pid)
     .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_SUCCESS
@@ -375,14 +375,14 @@ module.exports =
         error: e
       throw e
 
-  resetTable: (configurationId, tableId) ->
+  resetTable: (configurationId, tableId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_START
       configurationId: configurationId
       tableId: tableId
 
     goodDataWriterApi
-    .resetTable configurationId, tableId
+    .resetTable configurationId, tableId, pid
     .then (job) ->
       jobPoller.poll applicationStore.getSapiTokenString(), job.url
     .then (job) ->
@@ -411,14 +411,14 @@ module.exports =
         error: e
       throw e
 
-  synchronizeTable: (configurationId, tableId) ->
+  synchronizeTable: (configurationId, tableId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_START
       configurationId: configurationId
       tableId: tableId
 
     goodDataWriterApi
-    .synchronizeTable configurationId, tableId
+    .synchronizeTable configurationId, tableId, pid
     .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_SUCCESS

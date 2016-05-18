@@ -4,7 +4,8 @@ import Row from './DateDimensionsRow';
 export default React.createClass({
   propTypes: {
     dimensions: PropTypes.object.isRequired,
-    configurationId: PropTypes.string.isRequired
+    configurationId: PropTypes.string.isRequired,
+    pid: PropTypes.string.isRequired
   },
   mixins: [React.addons.PureRenderMixin],
 
