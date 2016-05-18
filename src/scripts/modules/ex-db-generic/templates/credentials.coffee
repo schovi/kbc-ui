@@ -31,16 +31,17 @@ oracleFields = [
   ['Service Name/SID', 'database', 'text', false]
 ]
 
-fields =
+COMPONENTS_FIELDS = {
   'keboola.ex-db-pgsql': defaultFields
   'keboola.ex-db-db2': defaultFields
   'keboola.ex-db-firebird': firebirdFields
   'keboola.ex-db-impala': defaultFields
   'keboola.ex-db-oracle': oracleFields
+}
 
 
 getFields = (componentId) ->
-  return fields[componentId] or defaultFields
+  return COMPONENTS_FIELDS[componentId] or defaultFields
 
 module.exports =
   getFields: getFields
