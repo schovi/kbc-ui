@@ -23,5 +23,13 @@ export default function(rowConfig) {
   if (!transformationConfig.packages) {
     transformationConfig.packages = [];
   }
+  if (transformationConfig.input.length > 0) {
+    for (var key in transformationConfig.input) {
+      if (Array.isArray(transformationConfig.input[key].datatypes)) {
+        transformationConfig.input[key].datatypes = {};
+      }
+    }
+  }
+
   return transformationConfig;
 }
