@@ -3,9 +3,10 @@ CodeEditor  = React.createFactory(require('../../../../../react/common/common').
 Check = React.createFactory(require('kbc-react-components').Check)
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
-{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input, textarea} = React.DOM
+{div, small, table, tbody, tr, td, ul, li, a, span, h2, p, strong, label, input, textarea} = React.DOM
 
 ExportHelp = React.createFactory require('../../components/ExportHelp').default
+LinkToDocs = React.createFactory require('../../components/LinkToDocs').default
 
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
@@ -16,7 +17,7 @@ module.exports = React.createClass
 
   render: ->
     div className: 'row',
-      ExportHelp null
+      LinkToDocs null
 
       div className: 'form-horizontal',
         div className: 'form-group',

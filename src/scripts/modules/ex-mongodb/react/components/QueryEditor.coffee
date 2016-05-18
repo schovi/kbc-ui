@@ -5,10 +5,11 @@ Check = React.createFactory(require('../../../../react/common/common').Check)
 Select = React.createFactory require('../../../../react/common/Select').default
 
 ExportHelp = React.createFactory require('./ExportHelp').default
+LinkToDocs = React.createFactory require('./LinkToDocs').default
 
 CodeMirror = React.createFactory(require 'react-code-mirror')
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, textarea} = React.DOM
+{div, small, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, textarea} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExDbQueryEditor'
@@ -46,12 +47,15 @@ module.exports = React.createClass
 
   render: ->
     div className: 'row',
-      ExportHelp null
+      LinkToDocs null
 
       div className: 'form-horizontal',
 
         div className: (if @props.outTableExist then 'form-group has-error' else 'form-group'),
-          label className: 'col-md-2 control-label', 'Name'
+          label className: 'col-md-2 control-label',
+            'Name'
+            ExportHelp
+              message: 'Name has to be unique across all exports in current configuration'
           div className: 'col-md-4',
             input
               className: 'form-control'
@@ -75,10 +79,13 @@ module.exports = React.createClass
               onChange: @_handleCollectionChange
 
         div className: 'form-group',
-          label className: 'col-md-2 control-label', 'Query'
+          label className: 'col-md-2 control-label',
+            'Query'
+            ExportHelp
+              message: 'Query to filter documents. Has to be valid JSON.'
           div className: 'col-md-10',
             CodeMirror
-              placeholder: 'e.g. {isActive: 1, isDeleted: 0}'
+              placeholder: 'optional, e.g. {isActive: 1, isDeleted: 0}'
               value:
                 if @props.query.get('query')
                   @props.query.get('query').toString()
@@ -90,10 +97,13 @@ module.exports = React.createClass
               theme: 'solarized'
 
         div className: 'form-group',
-          label className: 'col-md-2 control-label', 'Sort'
+          label className: 'col-md-2 control-label',
+            'Sort'
+            ExportHelp
+              message: 'Sort results by specified keys. Has to be valid JSON.'
           div className: 'col-md-10',
             CodeMirror
-              placeholder: 'e.g. {creationDate: -1}'
+              placeholder: 'optional, e.g. {creationDate: -1}'
               value:
                 if @props.query.get('sort')
                   @props.query.get('sort').toString()
@@ -109,7 +119,7 @@ module.exports = React.createClass
           div className: 'col-md-4',
             input
               className: 'form-control'
-              placeholder: 'e.g. 100'
+              placeholder: 'optional, e.g. 100'
               type: 'text'
               value: @props.query.get 'limit'
               onChange: @_handleLimitChange
@@ -128,7 +138,10 @@ module.exports = React.createClass
                 onChange: @_handleIncrementalChange
 
         div className: 'form-group',
-          label className: 'col-md-2 control-label', 'Mapping'
+          label className: 'col-md-2 control-label',
+            'Mapping'
+            ExportHelp
+              message: 'Mapping to define structure of exported tables. Has to be valid JSON.'
           div className: 'col-md-10',
             CodeMirror
               placeholder: ('e.g. {"_id.$oid": "id", "name": "name"}')
