@@ -3,8 +3,9 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 {Map} = require 'immutable'
 
 QueryRow = React.createFactory(require './QueryRow')
+LinkToBucket = React.createFactory require('./../../components/LinkToBucket').default
 
-{span, div, a, strong} = React.DOM
+{span, div, a, strong, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'QueryTable'
@@ -25,13 +26,21 @@ module.exports = React.createClass
         key: query.get('id')
     , @).toArray()
 
-    div className: 'table table-striped table-hover',
-      div className: 'thead', key: 'table-header',
-        div className: 'tr',
-          span className: 'th',
-            strong null, 'Name'
-          span className: 'th',
-            strong null, 'Incremental'
-          span className: 'th'
-      div className: 'tbody',
-        childs
+    div null,
+
+      div className: 'kbc-header',
+        p null,
+          'Output bucket: '
+          LinkToBucket
+            configurationId: this.props.configurationId
+
+      div className: 'table table-striped table-hover',
+        div className: 'thead', key: 'table-header',
+          div className: 'tr',
+            span className: 'th',
+              strong null, 'Name'
+            span className: 'th',
+              strong null, 'Incremental'
+            span className: 'th'
+        div className: 'tbody',
+          childs
