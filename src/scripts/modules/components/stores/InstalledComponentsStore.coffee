@@ -88,8 +88,15 @@ InstalledComponentsStore = StoreUtils.createStore
   getConfig: (componentId, configId) ->
     _store.getIn ['components', componentId, 'configurations', configId]
 
+  getConfigRow: (componentId, configId, rowId) ->
+    console.log(_store.toJS())
+    _store.getIn ['components', componentId, 'configurations', configId, 'rows', rowId]
+
   isEditingConfig: (componentId, configId, field) ->
     _store.hasIn ['editingConfigurations', componentId, configId, field]
+
+  isEditingConfigRow: (componentId, configId, rowId, field) ->
+    _store.hasIn ['editingConfigurations', componentId, configId, 'rows', rowId, field]
 
   isEditingConfigData: (componentId, configId) ->
     _store.hasIn ['editingConfigData', componentId, configId]
@@ -106,8 +113,19 @@ InstalledComponentsStore = StoreUtils.createStore
   getEditingConfig: (componentId, configId, field) ->
     _store.getIn ['editingConfigurations', componentId, configId, field]
 
+  getEditingConfigRow: (componentId, configId, rowId, field) ->
+    _store.getIn ['editingConfigurations', componentId, configId, 'rows', rowId, field]
+
+
   isValidEditingConfig: (componentId, configId, field) ->
     value = @getEditingConfig(componentId, configId, field)
+    return true if value == undefined
+    switch field
+      when 'description' then true
+      when 'name' then value.trim().length > 0
+
+  isValidEditingConfigRow: (componentId, configId, rowId, field) ->
+    value = @getEditingConfig(componentId, configId, rowId, field)
     return true if value == undefined
     switch field
       when 'description' then true

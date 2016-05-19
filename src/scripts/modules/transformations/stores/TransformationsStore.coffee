@@ -69,6 +69,9 @@ TransformationsStore = StoreUtils.createStore
   getTransformationEditingFields: (bucketId, transformationId) ->
     _store.getIn ['editingTransformationsFields', bucketId, transformationId], Map()
 
+  isTransformationEditingName: (bucketId, transformationId) ->
+    _store.getIn ['editingTransformationsName', bucketId, transformationId], false
+
   hasTransformation: (bucketId, transformationId) ->
     _store.hasIn ['transformationsByBucketId', bucketId, transformationId]
 
@@ -195,6 +198,7 @@ Dispatcher.register (payload) ->
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
+      console.log(action)
       _store = _store.withMutations (store) ->
         tObj = enhanceTransformation(Immutable.fromJS(action.data))
         store = store
@@ -215,7 +219,6 @@ Dispatcher.register (payload) ->
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_BUCKETS_LOAD_SUCCESS
-      console.log(action)
       _store = _store.withMutations((store) ->
         _.each(action.buckets, (bucket) ->
           _.each(bucket.transformations, (transformation) ->

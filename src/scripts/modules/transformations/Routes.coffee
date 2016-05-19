@@ -16,6 +16,8 @@ TransformationListButtons = require('./react/components/TransformationsListButto
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
 Versions = require('../../modules/components/react/pages/Versions').default
+ComponentNameEdit = require '../components/react/components/ComponentName'
+TransformationNameEdit = require './react/components/TransformationNameEditField'
 
 routes =
       name: 'transformations'
@@ -37,6 +39,14 @@ routes =
           bucketId = routerState.getIn(['params', 'bucketId'])
           name = TransformationBucketsStore.get(bucketId).get 'name'
           name
+        nameEdit: (params) ->
+          if (parseInt(params.bucketId) > 0)
+            return React.DOM.span null,
+              React.createElement ComponentNameEdit,
+                componentId: 'transformation'
+                configId: params.bucketId
+          else
+            return TransformationBucketsStore.get(params.bucketId).get 'name'
         defaultRouteHandler: TransformationBucket
         headerButtonsHandler: TransformationListButtons
         requireData: [
@@ -57,6 +67,14 @@ routes =
             transformationId = routerState.getIn(['params', 'transformationId'])
             name = TransformationsStore.getTransformation(bucketId, transformationId).get 'name'
             name
+          nameEdit: (params) ->
+            if (parseInt(params.transformationId) > 0)
+              return React.DOM.span null,
+                React.createElement TransformationNameEdit,
+                  configId: params.bucketId
+                  rowId: params.transformationId
+            else
+              return TransformationsStore.getTransformation(params.bucketId, params.transformationId).get 'name'
           defaultRouteHandler: TransformationDetail
           requireData: [
             ->

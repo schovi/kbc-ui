@@ -4,6 +4,7 @@ Immutable = require('immutable')
 Map = Immutable.Map
 List = Immutable.List
 Constants = require '../Constants'
+InstalledComponentsConstants = require '../../components/Constants'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils'
 
@@ -109,5 +110,10 @@ Dispatcher.register (payload) ->
       ], !current
 
       TransformationBucketsStore.emitChange()
+
+    when InstalledComponentsConstants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_SUCCESS
+      # propagate bucket name change from installed components
+      if (action.componentId == 'transformation' && action.field == 'name')
+        _store = _store.setIn ['bucketsById', action.configurationId, action.field], action.data[action.field]
 
 module.exports = TransformationBucketsStore
