@@ -119,7 +119,8 @@ TransformationsIndex = React.createClass
       filtered = @state.transformationsInBuckets.getIn([bucketId], Immutable.Map()).filter((transformation) ->
         fuzzy.match(filter, transformation.get('name').toString()) or
           fuzzy.match(filter, transformation.get('description').toString()) or
-          fuzzy.match(filter, transformation.get('fullId').toString())
+          fuzzy.match(filter, transformation.get('fullId', '').toString()) or
+          fuzzy.match(filter, transformation.get('id', '').toString())
       )
 
     filtered = filtered.sortBy((transformation) ->
