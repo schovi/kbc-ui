@@ -136,7 +136,7 @@ module.exports =
     createRequest('GET', "v2/#{configurationId}/date-dimensions")
     .promise()
     .then (response) ->
-      response.body.dimensions
+      response.body
 
   deleteDateDimension: (configurationId, name) ->
     createRequest('DELETE', "v2/#{configurationId}/date-dimensions/#{name}")
