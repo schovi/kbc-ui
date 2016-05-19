@@ -99,6 +99,6 @@ export default React.createClass({
   },
 
   handleUpload() {
-    actionCreators.uploadDateDimensionToGoodData(this.props.configurationId, this.props.dimension.get('id'));
+    actionCreators.uploadDateDimensionToGoodData(this.props.configurationId, this.props.dimension.get('id'), this.props.pid);
   }
 });

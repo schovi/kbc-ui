@@ -32,7 +32,8 @@ export default React.createClass({
     return React.createElement(Row, {
       key: dimension.get('id'),
       dimension: dimension,
-      configurationId: this.props.configurationId
+      configurationId: this.props.configurationId,
+      pid: this.props.pid
     });
   }
 });

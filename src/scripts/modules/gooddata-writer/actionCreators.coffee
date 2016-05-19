@@ -131,13 +131,13 @@ module.exports =
     else
       return @loadReferencableTablesForce(configurationId)
 
-  optimizeSLIHash: (configurationId) ->
+  optimizeSLIHash: (configurationId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_START
       configurationId: configurationId
 
     goodDataWriterApi
-    .optimizeSLIHash configurationId
+    .optimizeSLIHash(configurationId, pid)
     .then (response) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
@@ -153,13 +153,13 @@ module.exports =
         error: e
       throw e
 
-  resetProject: (configurationId) ->
+  resetProject: (configurationId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_START
       configurationId: configurationId
 
     goodDataWriterApi
-    .resetProject configurationId
+    .resetProject configurationId, pid
     .then (response) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_SUCCESS

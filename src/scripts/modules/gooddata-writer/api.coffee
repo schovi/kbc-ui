@@ -114,50 +114,40 @@ module.exports =
     .then (response) ->
       response.body
 
-  optimizeSLIHash: (configurationId) ->
-    createRequest('POST', 'optimize-sli-hash')
-    .send
-      config: configurationId
+  optimizeSLIHash: (configurationId, pid) ->
+    createRequest('POST', "v2/#{configurationId}/projects/#{pid}/optimize-sli-hash")
     .promise()
     .then (response) ->
       response.body
 
-  resetProject: (configurationId) ->
-    createRequest('POST', 'reset-project')
-    .send
-      config: configurationId
+  resetProject: (configurationId, pid) ->
+    createRequest('DELETE', "v2/#{configurationId}/projects/#{pid}")
     .promise()
     .then (response) ->
       response.body
 
   deleteWriter: (configurationId) ->
-    createRequest('DELETE', 'writers')
-    .query config: configurationId
+    createRequest('DELETE', "v2/#{configurationId}")
     .promise()
     .then (response) ->
       response.body
 
   getDateDimensions: (configurationId) ->
-    createRequest('GET', 'date-dimensions')
-    .query config: configurationId
+    createRequest('GET', "v2/#{configurationId}/date-dimensions")
     .promise()
     .then (response) ->
       response.body.dimensions
 
   deleteDateDimension: (configurationId, name) ->
-    createRequest('DELETE', 'date-dimensions')
-    .query config: configurationId
-    .query name: name
+    createRequest('DELETE', "v2/#{configurationId}/date-dimensions/#{name}")
     .promise()
     .then (response) ->
       response.body
 
   createDateDimension: (configurationId, dateDimension) ->
     data = Immutable.fromJS(dateDimension)
-    .set 'config', configurationId
 
-    createRequest('POST', 'date-dimensions')
-    .query config: configurationId
+    createRequest('POST', "v2/#{configurationId}/date-dimensions")
     .send data.toJS()
     .promise()
     .then (response) ->

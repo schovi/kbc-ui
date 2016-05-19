@@ -38,9 +38,12 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentStore.getLocalState('gooddata-writer', config)
+    writer = goodDataWriterStore.getWriter(config)
+    console.log("writer detail", writer.toJS())
 
     configId: config
-    writer: goodDataWriterStore.getWriter(config)
+    writer: writer
+    pid: writer.getIn(['config', 'project', 'id'])
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
     deletingTables: goodDataWriterStore.getDeletingTables(config)
@@ -246,10 +249,10 @@ module.exports = React.createClass
     actionCreators.deleteWriter(@state.writer.getIn ['config', 'id'])
 
   _handleOptimizeSLI: ->
-    actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'])
+    actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'], @state.pid)
 
   _handleProjectReset: ->
-    actionCreators.resetProject(@state.writer.getIn ['config', 'id'])
+    actionCreators.resetProject(@state.writer.getIn ['config', 'id'], @state.pid)
 
   _handleProjectAccessEnable: ->
     actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']),

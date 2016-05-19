@@ -2,6 +2,7 @@ React = require 'react'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
+goodDataWriterStore = require '../../../store'
 
 dateDimensionsStore = require '../../../dateDimensionsStore'
 actionCreators = require '../../../actionCreators'
@@ -15,14 +16,18 @@ NewDimensionForm = require('./../../components/NewDimensionForm').default
 
 module.exports = React.createClass
   displayName: 'DateDimensions'
-  mixins: [createStoreMixin(dateDimensionsStore)]
+  mixins: [createStoreMixin(dateDimensionsStore, goodDataWriterStore)]
 
   getStateFromStores: ->
     configurationId = RoutesStore.getCurrentRouteParam('config')
+    writer = goodDataWriterStore.getWriter(configurationId)
+
     dimensions: dateDimensionsStore.getAll(configurationId)
     isCreatingNewDimension: dateDimensionsStore.isCreatingNewDimension(configurationId)
     configurationId: configurationId
     newDimension: dateDimensionsStore.getNewDimension(configurationId)
+    pid: writer.getIn(['config', 'project', 'id'])
+
 
   _handleNewDimensionSave: ->
     actionCreators.saveNewDateDimension(@state.configurationId)
@@ -34,6 +39,7 @@ module.exports = React.createClass
     div className: 'container-fluid kbc-main-content',
       div className: 'kbc-main-content-with-sidebar col-sm-8',
         React.createElement DateDimensionsTable,
+          pid: @state.pid
           dimensions: @state.dimensions
           configurationId: @state.configurationId
       div className: 'col-sm-4',
