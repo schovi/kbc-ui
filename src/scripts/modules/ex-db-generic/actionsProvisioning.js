@@ -61,7 +61,7 @@ export function createActions(componentId) {
     editCredentials(configId) {
       const store = getStore(configId);
       let credentials = store.getCredentials();
-      if (!credentials.get('port')) {
+      if (!credentials.get('port') &&  getDefaultPort(componentId)) {
         credentials = credentials.set('port', getDefaultPort(componentId));
       }
       credentials = excludeProtectedProperties(credentials);
