@@ -28,19 +28,7 @@ module.exports = React.createClass
           name: 'requires'
           value: @props.requires.toArray()
           multi: true
-          options: (->
-            _.sortBy(
-              _.map(
-                _.filter(props.transformations.toArray(), (transformation) ->
-                  transformation.get("phase") == props.transformation.get("phase") &&
-                    transformation.get("id") != props.transformation.get("id")
-                ), (transformation) -> {
-                  label: transformation.get("name")
-                  value: transformation.get("id")
-                }
-              ), (option) ->
-                option.label.toLowerCase()
-          ))()
+          options: (@getSelectOptions(@props.transformations, @props.transformation))
           delimiter: ','
           onChange: (string, array) ->
             props.onChange(Immutable.fromJS(_.pluck(array, 'value')))
@@ -51,3 +39,17 @@ module.exports = React.createClass
         onSave: @props.onSave
         onCancel: @props.onCancel
         placement: 'left'
+
+  getSelectOptions: (transformations, currentTransformation) ->
+    _.sortBy(
+      _.map(
+        _.filter(transformations.toArray(), (transformation) ->
+          parseInt(transformation.get("phase")) == parseInt(currentTransformation.get("phase")) &&
+            transformation.get("id") != currentTransformation.get("id")
+        ), (transformation) -> {
+          label: transformation.get("name")
+          value: transformation.get("id")
+        }
+      ), (option) ->
+        option.label.toLowerCase()
+    )
