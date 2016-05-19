@@ -24,8 +24,8 @@ var transformationsApi = {
     });
   },
 
-  createTransformationBucket: function(data) {
-    return InstalledComponentsApi.createConfiguration('transformation', data).then(function(response) {
+  createTransformationBucket: function(data, changeDescription) {
+    return InstalledComponentsApi.createConfiguration('transformation', data, changeDescription).then(function(response) {
       return parseBucket(response);
     });
   },
@@ -34,26 +34,27 @@ var transformationsApi = {
     return InstalledComponentsApi.deleteConfiguration('transformation', bucketId);
   },
 
-  deleteTransformation: function(bucketId, transformationId) {
-    return InstalledComponentsApi.deleteConfigurationRow('transformation', bucketId, transformationId);
+  deleteTransformation: function(bucketId, transformationId, changeDescription) {
+    return InstalledComponentsApi.deleteConfigurationRow('transformation', bucketId, transformationId, changeDescription);
   },
 
-  createTransformation: function(bucketId, data) {
+  createTransformation: function(bucketId, data, changeDescription) {
     var form = {
       name: data.name,
       configuration: JSON.stringify(data)
     };
-    return InstalledComponentsApi.createConfigurationRow('transformation', bucketId, form).then(function(response) {
+    return InstalledComponentsApi.createConfigurationRow('transformation', bucketId, form, changeDescription).then(function(response) {
       return parseTransformation(response);
     });
   },
 
-  saveTransformation: function(bucketId, transformationId, data) {
+  saveTransformation: function(bucketId, transformationId, data, changeDescription) {
     if (data.queriesString) {
       delete data.queriesString;
     }
     var form = {
-      configuration: JSON.stringify(data)
+      configuration: JSON.stringify(data),
+      changeDescription: changeDescription
     };
     return InstalledComponentsApi.updateConfigurationRow('transformation', bucketId, transformationId, form).then(function(response) {
       return parseTransformation(response);

@@ -295,8 +295,12 @@ module.exports = React.createClass
         TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
           @props.transformationId, 'queriesString', newValue)
       onEditSubmit: =>
+        if  @props.transformation.get('backend') == 'docker'
+          changeDescription = 'Change Script in ' + @props.transformation.get('name')
+        else
+          changeDescription = 'Change Queries in ' + @props.transformation.get('name')
         TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-          @props.transformationId, 'queriesString')
+          @props.transformationId, 'queriesString', changeDescription)
 
   render: ->
     div {},

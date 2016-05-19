@@ -138,3 +138,6 @@ module.exports =
     .replace(/\ /g, '-')
     .replace(/[^a-z0-9\-]/g, '')
     .replace(/-/g, separator)
+
+  capitalize: (string) ->
+    return string && string[0].toUpperCase() + string.slice(1)

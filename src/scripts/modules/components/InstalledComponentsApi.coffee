@@ -53,7 +53,9 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
-  createConfiguration: (componentId, data) ->
+  createConfiguration: (componentId, data, changeDescription) ->
+    if (changeDescription)
+      data.changeDescription = changeDescription
     createRequest 'POST', "components/#{componentId}/configs"
     .type 'form'
     .send data
@@ -106,7 +108,9 @@ installedComponentsApi =
       response.body
     )
 
-  createConfigurationRow: (componentId, configurationId, data) ->
+  createConfigurationRow: (componentId, configurationId, data, changeDescription) ->
+    if (changeDescription)
+      data.changeDescription = changeDescription
     createRequest 'POST', "components/#{componentId}/configs/#{configurationId}/rows"
     .type 'form'
     .send data
@@ -114,8 +118,12 @@ installedComponentsApi =
     .then (response) ->
       response.body
 
-  deleteConfigurationRow: (componentId, configurationId, rowId) ->
+  deleteConfigurationRow: (componentId, configurationId, rowId, changeDescription) ->
+    data =
+      changeDescription: changeDescription
     createRequest 'DELETE', "components/#{componentId}/configs/#{configurationId}/rows/#{rowId}"
+    .type 'form'
+    .send data
     .promise()
     .then (response) ->
       response.body

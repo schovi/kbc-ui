@@ -60,8 +60,17 @@ module.exports = React.createClass
       bucketId: bucketId
 
   _handleActiveChange: (newValue) ->
-    TransformationsActionCreators.changeTransformationProperty(@state.bucketId,
-      @state.transformationId, 'disabled', !newValue)
+    if (newValue)
+      changeDescription = "Transformation " + @state.transformation.get("name") + " enabled"
+    else
+      changeDescription = "Transformation " + @state.transformation.get("name") + " disabled"
+    TransformationsActionCreators.changeTransformationProperty(
+      @state.bucketId,
+      @state.transformationId,
+      'disabled',
+      !newValue,
+      changeDescription
+    )
 
   _showDetails: ->
     @state.transformation.get('backend') == 'mysql' and @state.transformation.get('type') == 'simple' or

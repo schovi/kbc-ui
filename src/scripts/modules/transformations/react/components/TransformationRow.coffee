@@ -96,7 +96,17 @@ TransformationRow = React.createClass(
   _handleActiveChange: (newValue) ->
     transformationId = @props.transformation.get('id')
     bucketId = @props.bucket.get('id')
-    TransformationsActionCreators.changeTransformationProperty(bucketId, transformationId, 'disabled', !newValue)
+    if (newValue)
+      changeDescription = 'Transformation ' + @props.transformation.get('name') + ' enabled'
+    else
+      changeDescription = 'Transformation ' + @props.transformation.get('name') + ' disabled'
+    TransformationsActionCreators.changeTransformationProperty(
+      bucketId,
+      transformationId,
+      'disabled',
+      !newValue,
+      changeDescription
+    )
 )
 
 module.exports = TransformationRow

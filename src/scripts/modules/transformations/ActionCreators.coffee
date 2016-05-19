@@ -9,6 +9,7 @@ Promise = require 'bluebird'
 _ = require 'underscore'
 parseQueries = require('./utils/parseQueries').default
 VersionActionCreators = require('../components/VersionsActionCreators')
+capitalize = require('../../utils/string').capitalize
 
 module.exports =
 
@@ -50,8 +51,9 @@ module.exports =
 
   createTransformationBucket: (data) ->
     newBucket = {}
+    changeDescription = "Create transformation bucket " + data.name
     transformationsApi
-    .createTransformationBucket(data)
+    .createTransformationBucket(data, changeDescription)
     .then((bucket) ->
       newBucket = bucket
       InstalledComponentsActionCreators.loadComponentsForce()
@@ -61,19 +63,22 @@ module.exports =
         type: constants.ActionTypes.TRANSFORMATION_BUCKET_CREATE_SUCCESS
         bucket: newBucket
       )
+      VersionActionCreators.loadVersionsForce('transformation', newBucket.id)
       RoutesStore.getRouter().transitionTo 'transformationBucket',
         bucketId: newBucket.id
     )
 
   createTransformation: (bucketId, data) ->
+    changeDescription = "Create transformation " + data.get("name")
     transformationsApi
-    .createTransformation bucketId, data.toJS()
+    .createTransformation bucketId, data.toJS(), changeDescription
     .then (transformation) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_CREATE_SUCCESS
         bucketId: bucketId
         transformation: transformation
       )
+      VersionActionCreators.loadVersionsForce('transformation', bucketId)
       RoutesStore.getRouter().transitionTo 'transformationDetail',
         transformationId: transformation.id
         bucketId: bucketId
@@ -103,8 +108,11 @@ module.exports =
       transformationId: transformationId
     )
 
+    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
+    changeDescription = "Delete transformation " + transformation.get("name")
+
     transformationsApi
-    .deleteTransformation(bucketId, transformationId)
+    .deleteTransformation(bucketId, transformationId, changeDescription)
     .then( ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_DELETE_SUCCESS
@@ -189,7 +197,7 @@ module.exports =
       index: index
     )
 
-  changeTransformationProperty: (bucketId, transformationId, propertyName, newValue) ->
+  changeTransformationProperty: (bucketId, transformationId, propertyName, newValue, changeDescription) ->
     pendingAction = "save-#{propertyName}"
 
     dispatcher.handleViewAction(
@@ -202,8 +210,11 @@ module.exports =
     transformation = TransformationsStore.getTransformation(bucketId, transformationId)
     transformation = transformation.set(propertyName, newValue)
 
+    if (!changeDescription)
+      changeDescription = 'Change ' + capitalize(propertyName) + ' in ' + transformation.get('name')
+
     transformationsApi
-    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .saveTransformation(bucketId, transformationId, transformation.toJS(), changeDescription)
     .then (response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
@@ -224,36 +235,6 @@ module.exports =
         error: error
       )
       throw error
-
-    ###
-
-    dispatcher.handleViewAction
-      type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_START
-      bucketId: bucketId
-      transformationId: transformationId
-      propertyName: propertyName
-
-
-
-
-    transformationsApi
-    .updateTransformationProperty(bucketId, transformationId, propertyName, newValue)
-    .then ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_SUCCESS
-        bucketId: bucketId
-        transformationId: transformationId
-        propertyName: propertyName
-        newValue: newValue
-    .catch (e) ->
-      dispatcher.handleViewAction
-        type: constants.ActionTypes.TRANSFORMATION_CHANGE_PROPERTY_ERROR
-        bucketId: bucketId
-        transformationId: transformationId
-        propertyName: propertyName
-        error: e
-      throw e
-      ###
 
   setTransformationBucketsFilter: (query) ->
     dispatcher.handleViewAction
@@ -287,7 +268,7 @@ module.exports =
       transformationId: transformationId
       fieldId: fieldId
 
-  saveTransformationEditingField: (bucketId, transformationId, fieldId) ->
+  saveTransformationEditingField: (bucketId, transformationId, fieldId, changeDescription) ->
     value = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(fieldId)
 
     pendingAction = "save-#{fieldId}"
@@ -304,8 +285,11 @@ module.exports =
     else
       transformation = transformation.set fieldId, value
 
+    if (!changeDescription)
+      changeDescription = 'Change ' + capitalize(fieldId) + ' in ' + transformation.get('name')
+
     transformationsApi
-    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .saveTransformation(bucketId, transformationId, transformation.toJS(), changeDescription)
     .then (response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
@@ -334,14 +318,20 @@ module.exports =
     mapping = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get(editingId)
     transformation = TransformationsStore.getTransformation(bucketId, transformationId)
 
+    if mappingIndex == null
+      changeDescription = 'Create ' + mappingType + ' mapping in ' + transformation.get('name')
+    else
+      changeDescription = 'Update ' + mappingType + ' mapping in ' + transformation.get('name')
+
     transformation = transformation.update mappingType, (mappings) ->
       if mappingIndex != null
         mappings.set mappingIndex, mapping
       else
         mappings.push mapping
     return Promise.resolve() if not mapping
+
     transformationsApi
-    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .saveTransformation(bucketId, transformationId, transformation.toJS(), changeDescription)
     .then (response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
@@ -366,6 +356,8 @@ module.exports =
     transformation = transformation.update mappingType, (mappings) ->
       mappings.delete(mappingIndex)
 
+    changeDescription = 'Delete ' + mappingType + ' mapping in ' + transformation.get('name')
+
     pendingAction = "delete-#{mappingType}-#{mappingIndex}"
     dispatcher.handleViewAction(
       type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_START
@@ -375,7 +367,7 @@ module.exports =
     )
 
     transformationsApi
-    .saveTransformation(bucketId, transformationId, transformation.toJS())
+    .saveTransformation(bucketId, transformationId, transformation.toJS(), changeDescription)
     .then (response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
