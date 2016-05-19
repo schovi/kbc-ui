@@ -70,7 +70,6 @@ module.exports =
       actions.recieveJobDetail(jobDetail)
 
   recieveJobs: (jobs, newOffset, resetJobs) ->
-    console.log jobs.length
     dispatcher.handleViewAction
       type: constants.ActionTypes.JOBS_LOAD_SUCCESS
       jobs: jobs
