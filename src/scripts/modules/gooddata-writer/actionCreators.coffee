@@ -304,7 +304,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'
@@ -350,7 +350,7 @@ module.exports =
                 React.createElement Link,
                   to: 'jobDetail'
                   params:
-                    jobId: job.job
+                    jobId: job.id
                   onClick: @props.onClick
                 ,
                   'here'
@@ -363,7 +363,7 @@ module.exports =
                 React.createElement Link,
                   to: 'jobDetail'
                   params:
-                    jobId: job.job
+                    jobId: job.id
                   onClick: @props.onClick
                 ,
                   'here'
@@ -399,7 +399,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'
@@ -433,7 +433,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'
