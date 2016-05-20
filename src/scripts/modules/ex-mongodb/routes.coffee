@@ -58,7 +58,12 @@ module.exports = (componentId) ->
         StorageActionCreators.loadTables()
     ]
     handler: ExDbQueryDetail(componentId, actionsProvisioning, storeProvisioning)
-    headerButtonsHandler: ExDbQueryHeaderButtons(componentId, actionsProvisioning, storeProvisioning)
+    headerButtonsHandler: ExDbQueryHeaderButtons(
+      componentId,
+      actionsProvisioning,
+      storeProvisioning,
+      'Export'
+    )
   ,
     name: "ex-db-generic-#{componentId}-new-query"
     path: 'new-query'

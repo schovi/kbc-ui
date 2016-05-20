@@ -8,7 +8,12 @@ import QueryDeleteButton from './QueryDeleteButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
 
-export default function(componentId, actionsProvisioning, storeProvisioning) {
+export default function(
+  componentId,
+  actionsProvisioning,
+  storeProvisioning,
+  entityName = 'Query'
+) {
   const actionCreators = actionsProvisioning.createActions(componentId);
   return React.createClass({
     mixins: [createStoreMixin(storeProvisioning.componentsStore)],
@@ -41,10 +46,11 @@ export default function(componentId, actionsProvisioning, storeProvisioning) {
             isPending={this.state.pendingActions.get('deleteQuery')}
             tooltipPlacement="bottom"
             actionsProvisioning={actionsProvisioning}
+            entityName={entityName}
           />
           <ActivateDeactivateButton
-            activateTooltip={componentId === 'keboola.ex-mongodb' ? 'Enable Export' : 'Enable Query'}
-            deactivateTooltip={componentId === 'keboola.ex-mongodb' ? 'Disable Export' : 'Disable Query'}
+            activateTooltip={'Enable ' + entityName}
+            deactivateTooltip={'Disable ' + entityName}
             isActive={this.state.query.get('enabled')}
             isPending={this.state.pendingActions.get('enabled')}
             onChange={this.handleActiveChange}

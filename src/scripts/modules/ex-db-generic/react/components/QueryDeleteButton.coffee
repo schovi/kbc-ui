@@ -22,12 +22,14 @@ module.exports = React.createClass
     tooltipPlacement: React.PropTypes.string
     componentId: React.PropTypes.string
     actionsProvisioning: React.PropTypes.object.isRequired
+    entityName: React.PropTypes.string
 
   getDefaultProps: ->
     tooltipPlacement: 'top'
+    entityName: 'Query'
 
   render: ->
-    deleteLabel = (if @props.componentId == 'keboola.ex-mongodb' then 'Delete Export' else 'Delete Query')
+    deleteLabel = 'Delete ' + this.props.entityName
     if @props.isPending
       span className: 'btn btn-link',
         Loader()
@@ -39,9 +41,7 @@ module.exports = React.createClass
       ,
         Confirm
           title: deleteLabel
-          text: "Do you really want to delete " +
-            (if @props.componentId == 'keboola.ex-mongodb' then 'export' else 'query') +
-            " #{@props.query.get('name')}?"
+          text: "Do you really want to delete " + this.props.entityName.toLowerCase() + " #{@props.query.get('name')}?"
           buttonLabel: 'Delete'
           onConfirm: @_deleteQuery
         ,

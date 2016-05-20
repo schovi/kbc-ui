@@ -50,6 +50,7 @@ module.exports = React.createClass
           isPending: @props.pendingActions.get 'deleteQuery'
           componentId: @props.componentId
           actionsProvisioning: actionsProvisioning
+          entityName: 'Export'
         ActivateDeactivateButton
           activateTooltip: 'Enable Export'
           deactivateTooltip: 'Disable Export'
