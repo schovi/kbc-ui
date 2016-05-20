@@ -4,18 +4,21 @@ actionCreators = require '../../actionCreators'
 
 {Modal, ModalTrigger, Input, Button, ButtonToolbar} = require 'react-bootstrap'
 
-{div, span} = React.DOM
+{small, option, select, label, input, div, span} = React.DOM
 Loader = React.createFactory(require('kbc-react-components').Loader)
 ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 
 
 FIELD = 'incrementalLoad'
+GRAIN = 'grain'
 
 LoadTypeModal = React.createClass
   displayName: 'LoadTypeModal'
   propTypes:
+    columns: React.PropTypes.object.isRequired
     table: React.PropTypes.object.isRequired
     onChange: React.PropTypes.func.isRequired
+    onChangeGrain: React.PropTypes.func.isRequired
     onSave: React.PropTypes.func.isRequired
 
   _handleModeRadioChange: (mode, e) ->
@@ -37,11 +40,14 @@ LoadTypeModal = React.createClass
       @props.onRequestHide()
 
   render: ->
+    console.log(@props.table?.toJS(), @props.columns?.toJS(), @props.grain)
     isSaving = @props.table.get('savingFields').contains FIELD
     if @props.table.hasIn(['editingFields', FIELD])
       incrementalLoad = @props.table.getIn ['editingFields', FIELD]
+      grain = @props.table.getIn ['editingFields', GRAIN]
     else
       incrementalLoad = @props.table.getIn ['data', FIELD]
+      grain = @props.table.getIn ['data', GRAIN]
 
     numberInput = React.DOM.input
       type: 'number'
@@ -53,8 +59,7 @@ LoadTypeModal = React.createClass
         display: 'inline-block'
 
     incrementalHelp = React.DOM.span null,
-      'Data will be apended to dataset.'
-      React.DOM.br
+      'Data will be apended to dataset. '
       'Only rows created or updated in last '
       numberInput
       ' '
@@ -68,6 +73,7 @@ LoadTypeModal = React.createClass
       div className: 'modal-body',
         div className: 'form-horizontal',
           React.createElement Input,
+            bsSize: 'small'
             type: 'radio'
             wrapperClassName: 'col-sm-offset-2 col-sm-8'
             help: 'All data in GoodData dataset will be replaced by current data in source Storage API table.'
@@ -75,15 +81,20 @@ LoadTypeModal = React.createClass
             checked: !incrementalLoad
             onChange: @_handleModeRadioChange.bind @, 'full'
             disabled: isSaving
-          React.createElement Input,
-            type: 'radio'
-            wrapperClassName: 'col-sm-offset-2 col-sm-8'
-            help: incrementalHelp
-            label: 'Incremental'
-            checked: incrementalLoad > 0
-            onChange: @_handleModeRadioChange.bind @, 'incremental'
-            disabled: isSaving
-
+          div className: 'form-group form-group-sm',
+            div className: 'col-sm-offset-2 col-sm-8',
+              div className: 'radio',
+                label null,
+                  input
+                    type: 'radio'
+                    label: 'Incremental'
+                    checked: incrementalLoad > 0
+                    onChange: @_handleModeRadioChange.bind @, 'incremental'
+                    disabled: isSaving
+                  span null, 'Incremental'
+              span className: 'help-block',
+                incrementalHelp
+              @_renderFactGrainSelector(grain or '')
       div className: 'modal-footer',
         React.createElement ConfirmButtons,
           isSaving: isSaving
@@ -92,10 +103,58 @@ LoadTypeModal = React.createClass
           onCancel: @props.onRequestHide
           onSave: @props.onSave
 
+  _renderFactGrainSelector: (grain) ->
+    if grain == ''
+      grainArray = []
+    else
+      grainArray = grain.split(',')
+    div null,
+      label null,
+        'Fact Grain:'
+      span className: 'col-sm-12',
+        grainArray.map( (g) =>
+          @_renderOneGrainFactSelect(g, grainArray)
+        )
+        @_renderOneGrainFactSelect('', grainArray)
+
+  _renderOneGrainFactSelect: (selectedColumn, grainArray) ->
+    columnsOptions = null
+    if @props.columns
+      columnsOptions = @props.columns.map((value, key) ->
+        option {key: key, value: key},
+          key
+
+        ).toArray()
+      columnsOptions = columnsOptions.concat(
+        option key: '', value: '', disabled: 'true',
+          small null, '- add -'
+      )
+    span { style: {'padding-left': 0}, className: 'col-sm-4'},
+      select
+        className: 'form-control'
+        type: 'select'
+        value: selectedColumn
+        onChange: (e) => @_onChangeGrainColumn(e.target.value, selectedColumn, grainArray)
+        columnsOptions
+      if selectedColumn != ''
+        span
+          className: 'fa fa-fw kbc-icon-cup kbc-icon-pointer'
+          onClick: => @_onRemoveGrainColumn(selectedColumn, grainArray)
+
+  _onRemoveGrainColumn: (col, grainArray) ->
+    grainArray = grainArray.filter((g) -> g != col)
+    @props.onChangeGrain(grainArray.join(','))
+
+  _onChangeGrainColumn: (newGrain, oldGrain, grainArray) ->
+    if oldGrain != ''
+      grainArray = grainArray.filter((g) -> g != oldGrain)
+    grainArray.push(newGrain)
+    @props.onChangeGrain(grainArray.join(','))
 
 module.exports = React.createClass
   displayName: 'TableGdName'
   propTypes:
+    columns: React.PropTypes.object.isRequired
     table: React.PropTypes.object.isRequired
     configurationId: React.PropTypes.string.isRequired
 
@@ -110,13 +169,17 @@ module.exports = React.createClass
       @props.table.getIn(['editingFields', FIELD])
     )
 
+  _handleGrainChange: (newGrain) ->
+    actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), GRAIN, newGrain)
 
   _handleEditChange: (data) ->
     actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD, data[FIELD])
 
   render: ->
     modal = React.createElement LoadTypeModal,
+      columns: @props.columns
       table: @props.table
+      onChangeGrain: @_handleGrainChange
       onChange: @_handleEditChange
       onSave: @_handleEditSave
 

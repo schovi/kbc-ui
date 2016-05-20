@@ -3,6 +3,7 @@ createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
 RoutesStore = require '../../../../stores/RoutesStore'
+{ColumnTypes} = require '../../constants'
 Loader = require('kbc-react-components').Loader
 TableLoadType = React.createFactory(require './TableLoadType')
 
@@ -61,7 +62,13 @@ module.exports = React.createClass
   _handleUpload: ->
     actionCreators.uploadToGoodData @state.configurationId, @state.table.get('id')
 
+  _isConnectionPoint: ->
+    @state.columns and @state.columns.find((c) -> c.get('type') == ColumnTypes.CONNECTION_POINT)
+
   render: ->
+    {ATTRIBUTE, REFERENCE, DATE} = ColumnTypes
+    filteredColumns = @state.columns.filter((c) -> c.get('type') in [ATTRIBUTE, REFERENCE, DATE])
+    grainColumns = if @_isConnectionPoint() then filteredColumns else null
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
       React.DOM.strong null, @state.table.getIn ['data', 'name']
@@ -92,6 +99,7 @@ module.exports = React.createClass
 
     div null,
       TableLoadType
+        columns: grainColumns
         table: @state.table
         configurationId: @state.configurationId
       ' '
