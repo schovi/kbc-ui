@@ -7,7 +7,7 @@ export default React.createClass({
       <p>
         <small>
           {'For more information about configuring MongoDb Extractor follow guide at '}
-           <a href="https://help.keboola.com">https://help.keboola.com</a>.
+           <a href="https://help.keboola.com/extractors/mongodb/">https://help.keboola.com</a>.
         </small>
       </p>
     );
