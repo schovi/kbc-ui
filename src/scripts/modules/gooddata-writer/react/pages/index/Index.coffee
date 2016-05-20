@@ -240,19 +240,19 @@ module.exports = React.createClass
 
 
   _handleBucketSelect: (bucketId, e) ->
-    actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId
+    actionCreators.toggleBucket(@state.writer.getIn(['config', 'id']), bucketId)
 
   _handleProjectUpload: ->
-    actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
+    actionCreators.uploadToGoodData(@state.writer.getIn(['config', 'id']))
 
   _handleProjectDelete: ->
     actionCreators.deleteWriter(@state.writer.getIn ['config', 'id'])
 
   _handleOptimizeSLI: ->
-    actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'], @state.pid)
+    actionCreators.optimizeSLIHash(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectReset: ->
-    actionCreators.resetProject(@state.writer.getIn ['config', 'id'], @state.pid)
+    actionCreators.resetProject(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectAccessEnable: ->
     actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']),
