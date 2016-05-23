@@ -255,8 +255,7 @@ module.exports = React.createClass
     actionCreators.resetProject(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectAccessEnable: ->
-    actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']),
-      @state.writer.getIn(['config', 'project', 'id']))
+    actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectAccessDisable: ->
     actionCreators.disableProjectAccess(@state.writer.getIn(['config', 'id']),

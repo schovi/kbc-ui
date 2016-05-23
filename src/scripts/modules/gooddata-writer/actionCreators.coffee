@@ -138,14 +138,22 @@ module.exports =
 
     goodDataWriterApi
     .optimizeSLIHash(configurationId, pid)
-    .then (response) ->
+    .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
         configurationId: configurationId
-
       applicationActionCreators.sendNotification
-        message: 'Optimalization of SLI hashes has been triggered!
-      You can see progress TODO'
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Optimalization of SLI hashes has been triggered! You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.id
+                onClick: @props.onClick
+              ,
+                'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_ERROR
@@ -160,13 +168,22 @@ module.exports =
 
     goodDataWriterApi
     .resetProject configurationId, pid
-    .then (response) ->
+    .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_SUCCESS
         configurationId: configurationId
-
-      applicationActionCreators.sendNotification 'Project has been scheduled to reset!
-      You can see progress TODO'
+      applicationActionCreators.sendNotification
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Project has been scheduled to reset! You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.id
+                onClick: @props.onClick
+              ,
+                'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_ERROR
