@@ -2,9 +2,7 @@ React = require 'react'
 Immutable = require 'immutable'
 classnames = require 'classnames'
 {Map} = Immutable
-
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
-
 ExDbStore = require '../../../exDbStore'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
@@ -20,7 +18,7 @@ RunExtractionButton = React.createFactory(require '../../../../components/react/
 Link = React.createFactory(require('react-router').Link)
 SearchRow = require('../../../../../react/common/SearchRow').default
 actionCreators = require '../../../exDbActionCreators'
-
+MigrationRow = require('../../../../components/react/components/MigrationRow').default
 
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
@@ -50,6 +48,8 @@ module.exports = React.createClass
     configurationId = @state.configuration.get('id')
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
+        React.createElement MigrationRow,
+          componentId: 'ex-db'
         div className: 'row kbc-header',
           div className: 'col-sm-8',
             React.createElement ComponentDescription,
