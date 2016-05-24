@@ -85,7 +85,7 @@ module.exports = React.createClass
               message: 'Query to filter documents. Has to be valid JSON.'
           div className: 'col-md-10',
             CodeMirror
-              placeholder: 'optional, e.g. {isActive: 1, isDeleted: 0}'
+              placeholder: 'optional, e.g. {"isActive": 1, "isDeleted": 0}'
               value:
                 if @props.query.get('query')
                   @props.query.get('query').toString()
@@ -103,7 +103,7 @@ module.exports = React.createClass
               message: 'Sort results by specified keys. Has to be valid JSON.'
           div className: 'col-md-10',
             CodeMirror
-              placeholder: 'optional, e.g. {creationDate: -1}'
+              placeholder: 'optional, e.g. {"creationDate": -1}'
               value:
                 if @props.query.get('sort')
                   @props.query.get('sort').toString()
