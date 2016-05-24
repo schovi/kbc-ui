@@ -14,6 +14,7 @@ SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
 module.exports = React.createClass
   displayName: 'ExDbCredentialsForm'
   propTypes:
+    savedCredentials: React.PropTypes.object.isRequired
     credentials: React.PropTypes.object.isRequired
     enabled: React.PropTypes.bool.isRequired
     onChange: React.PropTypes.func
@@ -53,13 +54,16 @@ module.exports = React.createClass
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     if @props.enabled
-      Input
-        label: labelValue
-        type: type
-        value: @props.credentials.get propName
-        labelClassName: 'col-xs-4'
-        wrapperClassName: 'col-xs-8'
-        onChange: @_handleChange.bind @, propName
+      if isProtected
+        @_createProtectedInput(labelValue, propName)
+      else
+        Input
+          label: labelValue
+          type: type
+          value: @props.credentials.get propName
+          labelClassName: 'col-xs-4'
+          wrapperClassName: 'col-xs-8'
+          onChange: @_handleChange.bind @, propName
     else if isProtected
       StaticText
         label: labelValue
@@ -79,6 +83,17 @@ module.exports = React.createClass
         if @props.credentials.get propName
           Clipboard
             text: @props.credentials.get propName
+
+  _createProtectedInput: (labelValue, propName) ->
+    savedValue = this.props.savedCredentials.get(propName)
+    Input
+      label: labelValue
+      type: 'password'
+      placeholder: savedValue
+      value: @props.credentials.get propName
+      labelClassName: 'col-xs-4'
+      wrapperClassName: 'col-xs-8'
+      onChange: @_handleChange.bind @, propName
 
   _createSelect: (labelValue, propName, options) ->
     if @props.enabled

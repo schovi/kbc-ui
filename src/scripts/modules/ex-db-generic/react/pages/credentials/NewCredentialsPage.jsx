@@ -1,4 +1,5 @@
 import React from 'react';
+import {Map} from 'immutable';
 import Credentials from './Credentials';
 import createStoreMixin from '../../../../../react/mixins/createStoreMixin';
 import routesStore from '../../../../../stores/RoutesStore';
@@ -21,6 +22,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning, cre
     render() {
       return (
         <Credentials
+          savedCredentials={Map()}
           credentials={ this.state.credentials }
           isEditing={ !this.state.isSaving }
           onChange={ this.handleChange }

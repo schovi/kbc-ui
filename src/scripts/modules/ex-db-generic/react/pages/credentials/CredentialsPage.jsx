@@ -31,6 +31,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning, cre
           credentialsTemplate={credentialsTemplate}
           hasSshTunnel={hasSshTunnel}
           actionsProvisioning={actionsProvisioning}
+          savedCredentials={this.state.credentials}
         />
       );
     },
