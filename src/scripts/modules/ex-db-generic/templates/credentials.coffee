@@ -37,6 +37,7 @@ COMPONENTS_FIELDS = {
   'keboola.ex-db-firebird': firebirdFields
   'keboola.ex-db-impala': defaultFields
   'keboola.ex-db-oracle': oracleFields
+  'keboola.ex-mongodb': defaultFields
 }
 
 

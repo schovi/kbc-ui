@@ -78,6 +78,9 @@ ApplicationStore = StoreUtils.createStore
   getSapiTableUrl: (tableId) ->
     @getProjectBaseUrl() + "/storage#/tables/#{tableId}"
 
+  getSapiBucketUrl: (bucketId) ->
+    @getProjectBaseUrl() + "/storage#/buckets/#{bucketId}"
+
   getUrlTemplates: ->
     _store.getIn ['kbc', 'urlTemplates']
 

@@ -2,15 +2,12 @@ React = require 'react'
 {Map} = require 'immutable'
 _ = require 'underscore'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
-hasSshTunnel = require('../../../templates/hasSshTunnel').default
 
 Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
-
-CredentialsTemplate = require '../../../templates/credentials'
 
 {span, form, div, label, p, option} = React.DOM
 
@@ -22,6 +19,9 @@ module.exports = React.createClass
     onChange: React.PropTypes.func
     componentId: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
+    credentialsTemplate: React.PropTypes.object.isRequired
+    hasSshTunnel: React.PropTypes.func.isRequired
+    actionsProvisioning: React.PropTypes.object.isRequired
 
   getDefaultProps: ->
     onChange: ->
@@ -29,10 +29,10 @@ module.exports = React.createClass
   render: ->
     form className: 'form-horizontal',
       div className: 'row',
-        CredentialsTemplate.getFields(@props.componentId).map((field) =>
+        this.props.credentialsTemplate.getFields(@props.componentId).map((field) =>
           @_createInput(field[0], field[1], field[2], field[3])
           )
-      if hasSshTunnel(this.props.componentId)
+      if this.props.hasSshTunnel(this.props.componentId)
         SshTunnelRow
           isEditing: @props.enabled
           data: @props.credentials.get('ssh') or Map()
@@ -42,6 +42,7 @@ module.exports = React.createClass
         credentials: @props.credentials
         componentId: @props.componentId
         configId: @props.configId
+        actionsProvisioning: @props.actionsProvisioning
 
   _handleChange: (propName, event) ->
     if ['port'].indexOf(propName) >= 0

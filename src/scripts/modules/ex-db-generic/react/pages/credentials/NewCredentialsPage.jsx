@@ -3,10 +3,7 @@ import Credentials from './Credentials';
 import createStoreMixin from '../../../../../react/mixins/createStoreMixin';
 import routesStore from '../../../../../stores/RoutesStore';
 
-import * as storeProvisioning from '../../../storeProvisioning';
-import * as actionsProvisioning from '../../../actionsProvisioning';
-
-export default function(componentId) {
+export default function(componentId, actionsProvisioning, storeProvisioning, credentialsTemplate, hasSshTunnel) {
   const actionCreators = actionsProvisioning.createActions(componentId);
   return React.createClass({
     mixins: [createStoreMixin(storeProvisioning.componentsStore)],
@@ -28,6 +25,9 @@ export default function(componentId) {
           isEditing={ !this.state.isSaving }
           onChange={ this.handleChange }
           componentId={componentId}
+          credentialsTemplate={credentialsTemplate}
+          hasSshTunnel={hasSshTunnel}
+          actionsProvisioning={actionsProvisioning}
         />
       );
     },

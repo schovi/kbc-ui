@@ -3,15 +3,17 @@ import {Map} from 'immutable';
 
 import RoutesStore from '../../../../stores/RoutesStore';
 
-import * as storeProvisioning from '../../storeProvisioning';
-import * as actionsProvisioning from '../../actionsProvisioning';
-
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import QueryDeleteButton from './QueryDeleteButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
 
-export default function(componentId) {
+export default function(
+  componentId,
+  actionsProvisioning,
+  storeProvisioning,
+  entityName = 'Query'
+) {
   const actionCreators = actionsProvisioning.createActions(componentId);
   return React.createClass({
     mixins: [createStoreMixin(storeProvisioning.componentsStore)],
@@ -43,10 +45,12 @@ export default function(componentId) {
             configurationId={this.state.configId}
             isPending={this.state.pendingActions.get('deleteQuery')}
             tooltipPlacement="bottom"
+            actionsProvisioning={actionsProvisioning}
+            entityName={entityName}
           />
           <ActivateDeactivateButton
-            activateTooltip="Enable Query"
-            deactivateTooltip="Disable Query"
+            activateTooltip={'Enable ' + entityName}
+            deactivateTooltip={'Disable ' + entityName}
             isActive={this.state.query.get('enabled')}
             isPending={this.state.pendingActions.get('enabled')}
             onChange={this.handleActiveChange}

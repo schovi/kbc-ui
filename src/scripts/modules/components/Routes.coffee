@@ -15,6 +15,7 @@ ComponentsActionCreators = require './ComponentsActionCreators'
 
 exDbRoutes = require '../ex-db/exDbRoutes'
 exDbGenericRoutes = require '../ex-db-generic/routes'
+exMongoDbRoutes = require '../ex-mongodb/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 exGaV4Routes = require('../ex-google-analytics-v4/routes').default
@@ -113,6 +114,8 @@ routes =
       createComponentRoute 'keboola.ex-db-oracle', [exDbGenericRoutes('keboola.ex-db-oracle')]
     ,
       createComponentRoute 'keboola.ex-db-impala', [exDbGenericRoutes('keboola.ex-db-impala')]
+    ,
+      createComponentRoute 'keboola.ex-mongodb', [exMongoDbRoutes('keboola.ex-mongodb')]
     ,
       createGenericDetailRoute 'extractor'
 

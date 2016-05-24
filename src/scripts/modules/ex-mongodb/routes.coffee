@@ -3,22 +3,26 @@ IntalledComponentsStore = require '../components/stores/InstalledComponentsStore
 actionsProvisioning = require './actionsProvisioning'
 
 ExDbIndex = require './react/pages/index/Index'
-ExDbCredentialsPage = require('./react/pages/credentials/CredentialsPage').default
-ExDbNewCredentialsPage = require('./react/pages/credentials/NewCredentialsPage').default
+
+ExDbCredentialsPage = require('../ex-db-generic/react/pages/credentials/CredentialsPage').default
+ExDbNewCredentialsPage = require('../ex-db-generic/react/pages/credentials/NewCredentialsPage').default
+
 ExDbQueryDetail = require './react/pages/query-detail/QueryDetail'
 ExDbNewQuery = require './react/pages/new-query/NewQuery'
-ExDbNewQueryHeaderButtons = require './react/components/NewQueryHeaderButtons'
-ExDbQueryHeaderButtons = require('./react/components/QueryActionButtons').default
-ExDbCredentialsHeaderButtons = require './react/components/CredentialsHeaderButtons'
-ExDbNewCredentialsHeaderButtons = require('./react/components/NewCredentialsHeaderButtons').default
-ExDbQueryName = require './react/components/QueryName'
+
+ExDbNewQueryHeaderButtons = require '../ex-db-generic/react/components/NewQueryHeaderButtons'
+ExDbQueryHeaderButtons = require('../ex-db-generic/react/components/QueryActionButtons').default
+ExDbCredentialsHeaderButtons = require '../ex-db-generic/react/components/CredentialsHeaderButtons'
+ExDbNewCredentialsHeaderButtons = require('../ex-db-generic/react/components/NewCredentialsHeaderButtons').default
+
+ExDbQueryName = require '../ex-db-generic/react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
 
 storeProvisioning = require './storeProvisioning'
 
-credentialsTemplate = require './templates/credentials'
+credentialsTemplate = require '../ex-db-generic/templates/credentials'
 hasSshTunnel = require('../ex-db-generic/templates/hasSshTunnel').default
 
 module.exports = (componentId) ->
@@ -54,12 +58,17 @@ module.exports = (componentId) ->
         StorageActionCreators.loadTables()
     ]
     handler: ExDbQueryDetail(componentId, actionsProvisioning, storeProvisioning)
-    headerButtonsHandler: ExDbQueryHeaderButtons(componentId, actionsProvisioning, storeProvisioning)
+    headerButtonsHandler: ExDbQueryHeaderButtons(
+      componentId,
+      actionsProvisioning,
+      storeProvisioning,
+      'Export'
+    )
   ,
     name: "ex-db-generic-#{componentId}-new-query"
     path: 'new-query'
     title: ->
-      'New query'
+      'New export'
     requireData: [
       ->
         StorageActionCreators.loadTables()

@@ -1,7 +1,5 @@
 React = require 'react'
 
-actionsProvisioning = require '../../actionsProvisioning'
-
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Confirm = React.createFactory(require('../../../../react/common/Confirm').default)
@@ -23,23 +21,27 @@ module.exports = React.createClass
     isPending: React.PropTypes.bool.isRequired
     tooltipPlacement: React.PropTypes.string
     componentId: React.PropTypes.string
+    actionsProvisioning: React.PropTypes.object.isRequired
+    entityName: React.PropTypes.string
 
   getDefaultProps: ->
     tooltipPlacement: 'top'
+    entityName: 'Query'
 
   render: ->
+    deleteLabel = 'Delete ' + this.props.entityName
     if @props.isPending
       span className: 'btn btn-link',
         Loader()
     else
       OverlayTrigger
-        overlay: Tooltip null, 'Delete Query'
+        overlay: Tooltip null, deleteLabel
         key: 'delete'
         placement: @props.tooltipPlacement
       ,
         Confirm
-          title: 'Delete Query'
-          text: "Do you really want to delete query #{@props.query.get('name')}?"
+          title: deleteLabel
+          text: "Do you really want to delete " + this.props.entityName.toLowerCase() + " #{@props.query.get('name')}?"
           buttonLabel: 'Delete'
           onConfirm: @_deleteQuery
         ,
@@ -53,6 +55,6 @@ module.exports = React.createClass
     # if query is deleted immediatelly view is rendered with missing orchestration because of store changed
     id = @props.query.get('id')
     config = @props.configurationId
-    ExDbActionCreators = actionsProvisioning.createActions(@props.componentId)
+    ExDbActionCreators = this.props.actionsProvisioning.createActions(@props.componentId)
     setTimeout ->
       ExDbActionCreators.deleteQuery config, id

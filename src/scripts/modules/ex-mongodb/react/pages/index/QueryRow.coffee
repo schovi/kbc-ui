@@ -3,7 +3,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 
 Link = React.createFactory(require('react-router').Link)
 Check = React.createFactory(require('kbc-react-components').Check)
-QueryDeleteButton = React.createFactory(require('../../components/QueryDeleteButton'))
+QueryDeleteButton = React.createFactory(require('../../../../ex-db-generic/react/components/QueryDeleteButton'))
 RunExtractionButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
 SapiTableLinkEx = require('../../../../components/react/components/StorageApiTableLinkEx').default
 ActivateDeactivateButton = React.createFactory(require('../../../../../react/common/ActivateDeactivateButton').default)
@@ -41,13 +41,8 @@ module.exports = React.createClass
         else
           span className: 'text-muted',
             'Untitled'
-      span className: 'td kbc-break-all',
-        React.createElement SapiTableLinkEx,
-          tableId: @props.query.get 'outputTable'
       span className: 'td',
         Check isChecked: @props.query.get 'incremental'
-      span className: 'td',
-        @props.query.get('primaryKey', []).join(', ')
       span className: 'td text-right kbc-no-wrap',
         QueryDeleteButton
           query: @props.query
@@ -55,9 +50,10 @@ module.exports = React.createClass
           isPending: @props.pendingActions.get 'deleteQuery'
           componentId: @props.componentId
           actionsProvisioning: actionsProvisioning
+          entityName: 'Export'
         ActivateDeactivateButton
-          activateTooltip: 'Enable Query'
-          deactivateTooltip: 'Disable Query'
+          activateTooltip: 'Enable Export'
+          deactivateTooltip: 'Disable Export'
           isActive: @props.query.get('enabled')
           isPending: @props.pendingActions.get 'enabled'
           onChange: @_handleActiveChange

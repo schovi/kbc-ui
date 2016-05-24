@@ -2,9 +2,8 @@ React = require 'react'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 immutableMixin = require '../../../../react/mixins/ImmutableRendererMixin'
-storeProvisioning = require '../../storeProvisioning'
 
-module.exports = (componentId) ->
+module.exports = (componentId, storeProvisioning) ->
   return React.createClass
     displayName: "ExDbQuerNameEdit"
     mixins: [createStoreMixin(storeProvisioning.componentsStore), immutableMixin]

@@ -1,7 +1,5 @@
 React = require 'react'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
-storeProvisioning = require '../../storeProvisioning'
-actionsProvisioning = require '../../actionsProvisioning'
 
 RoutesStore = require '../../../../stores/RoutesStore'
 
@@ -11,7 +9,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 
 {button, span} = React.DOM
 
-module.exports = (componentId) ->
+module.exports = (componentId, actionsProvisioning, storeProvisioning) ->
   ExDbActionCreators = actionsProvisioning.createActions(componentId)
   React.createClass
     displayName: 'CredentialsHeaderButtons'

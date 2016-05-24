@@ -7,7 +7,7 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 
 QueryEditor = React.createFactory(require '../../components/QueryEditor')
 QueryDetailStatic = React.createFactory(require './QueryDetailStatic')
-QueryNav = require('./QueryNav').default
+QueryNav = require('../../../../ex-db-generic/react/pages/query-detail/QueryNav').default
 EditButtons = require '../../../../../react/common/EditButtons'
 
 
@@ -36,10 +36,10 @@ module.exports = (componentId, actionsProvisioning, storeProvisioning) ->
       isEditing: isEditing
       isSaving: ExDbStore.isSavingQuery()
       isValid: ExDbStore.isEditingQueryValid(queryId)
-      tables: StorageTablesStore.getAll()
+      exports: StorageTablesStore.getAll()
       queriesFilter: ExDbStore.getQueriesFilter()
       queriesFiltered: ExDbStore.getQueriesFiltered()
-      defaultOutputTable: ExDbStore.getDefaultOutputTableId(editingQuery)
+      outTableExist: ExDbStore.outTableExist(editingQuery)
 
     _handleQueryChange: (newQuery) ->
       ExDbActionCreators.updateEditingQuery @state.configId, newQuery
@@ -76,11 +76,11 @@ module.exports = (componentId, actionsProvisioning, storeProvisioning) ->
           if @state.isEditing
             QueryEditor
               query: @state.editingQuery
-              tables: @state.tables
+              exports: @state.exports
               onChange: @_handleQueryChange
               configId: @state.configId
               componentId: componentId
-              defaultOutputTable: @state.defaultOutputTable
+              outTableExist: @state.outTableExist
           else
             QueryDetailStatic
               query: @state.query

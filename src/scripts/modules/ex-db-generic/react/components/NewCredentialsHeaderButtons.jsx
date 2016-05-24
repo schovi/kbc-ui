@@ -2,13 +2,10 @@ import React from 'react';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import routesStore from '../../../../stores/RoutesStore';
 
-import * as storeProvisioning from '../../storeProvisioning';
-import * as actionsProvisioning from '../../actionsProvisioning';
-
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import {Navigation} from 'react-router';
 
-export default function(componentId) {
+export default function(componentId, actionsProvisioning, storeProvisioning) {
   const actionCreators = actionsProvisioning.createActions(componentId);
   return React.createClass({
     mixins: [createStoreMixin(storeProvisioning.componentsStore), Navigation],
