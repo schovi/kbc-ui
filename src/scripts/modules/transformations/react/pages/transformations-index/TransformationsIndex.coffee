@@ -74,7 +74,7 @@ TransformationsIndex = React.createClass
         TransformationBucketRow
           bucket: bucket
           transformations: TransformationsStore.getTransformations(bucket.get('id'))
-          description: InstalledComponentsStore.getConfig('transformation', bucket.get('id')).get 'description'
+          description: TransformationBucketsStore.get(bucket.get('id')).get 'description'
           pendingActions: @state.pendingActions.get(bucket.get('id'), Immutable.Map())
           key: bucket.get 'id'
 
