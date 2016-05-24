@@ -235,7 +235,7 @@ module.exports = React.createClass
       ul className: 'nav nav-stacked',
         li {className: classnames(disabled: !@_canRunUpload())},
           RunButtonModal
-            title: 'Upload selected tables'
+            title: 'Upload tables'
             icon: 'fa fa-fw fa-upload'
             mode: 'link'
             component: 'wr-dropbox'
