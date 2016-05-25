@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Table} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
 import {fromJS} from 'immutable';
 import {Link} from 'react-router';
@@ -119,21 +119,25 @@ export default React.createClass({
     );
   },
 
+  getNewComponentId(row) {
+    const componentId = row.get('componentId');
+    return `ex-db-generic-${componentId}`;
+  },
+
   renderStatus() {
     if (!this.state.status) {return null;}
     return (
-      <table className="table table-stripped">
+      <Table responsive className="table table-stripped">
         <thead>
           <tr>
             <th>
-              Configuration name
+              Configuration
             </th>
             <th>
-              Configuration Id
+             Config Table
             </th>
-            <th>
-              Old Config Table
-            </th>
+            <th> </th>
+            <th>New Configuration</th>
             <th>
               Migration Status
             </th>
@@ -143,13 +147,16 @@ export default React.createClass({
           {this.state.status.map((row) =>
             <tr>
               <td>
-                {row.get('configName')}
-              </td>
-              <td>
-                {this.renderConfigLink(row.get('configId'))}
+                {this.renderConfigLink(row.get('configId'), 'ex-db', row.get('configName'))}
               </td>
               <td>
                 {this.renderTableLink(row.get('tableId'))}
+              </td>
+              <td>
+                <i className="kbc-icon-arrow-right" />
+              </td>
+              <td>
+                {this.renderConfigLink(row.get('configId'), this.getNewComponentId(row), `${row.get('componentId')}/${row.get('configId')}`)}
               </td>
               <td>
                 {row.get('status')}
@@ -157,14 +164,14 @@ export default React.createClass({
             </tr>
            )}
         </tbody>
-      </table>
+      </Table>
     );
   },
 
-  renderConfigLink(configId) {
+  renderConfigLink(configId, componentId, label) {
     return (
-      <Link to="ex-db" params={{config: configId}}>
-        {configId}
+      <Link to={componentId} params={{config: configId}}>
+        {label ? label : configId}
       </Link>
     );
   },
