@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
-import {fromJS} from 'immutable';
+import {fromJS, List} from 'immutable';
 import {Link} from 'react-router';
 import SapiTableLink from './StorageApiTableLink';
 import ApplicationStore from '../../../../stores/ApplicationStore';
@@ -10,8 +10,10 @@ import EmptyState from './ComponentEmptyState';
 import Confirm from '../../../../react/common/Confirm';
 import {Alert} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
+import jobsApi from '../../../jobs/JobsApi';
 import DockerActionFn from '../../DockerActionsApi';
-
+import date from '../../../../utils/date';
+import JobStatusLabel from '../../../../react/common/JobStatusLabel';
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
 
@@ -35,7 +37,7 @@ export default React.createClass({
   },
 
   loadStatus() {
-    this.setState({loadingStatus: true});
+    this.setState({loadingStatus: true, loadingJob: true});
     const params = {
       configData: {
         parameters: {
@@ -43,6 +45,7 @@ export default React.createClass({
         }
       }
     };
+    this.fetchLastMigrationJob(this.props.componentId).then((job) => this.setState({job: job, loadingJob: false}));
     return DockerActionFn(MIGRATION_COMPONENT_ID, 'status', params).then((status) => {
       return this.setState({
         status: fromJS(status),
@@ -69,21 +72,8 @@ export default React.createClass({
     const confirmText = (
       <span>
         <div>
-          This will initiate a migration procces which can be then tracked in the jobs section. Nothing will be removed and the current configurations will remain untouched.
-        </div>
-        <div>
-          <div>
-            TODO: LAST JOB STATUS, creator, link to job
-          </div>
-          Migration Info:{' '}
-          <RefreshIcon
-            isLoading={this.state.loadingStatus}
-            onClick={this.loadStatus}
-          />
-
-          <span>
-            {this.renderStatus()}
-          </span>
+          {this.renderJobInfo()}
+          {this.renderStatus()}
         </div>
       </span>
     );
@@ -92,9 +82,7 @@ export default React.createClass({
         <EmptyState>
           <Alert bsStyle="warning">
             <span>
-              This is a deprecated component, we have prepared new  components,
-              click on the button and initiate a migration process
-              of all configurations to the new component of database extractor
+              This extractor has been deprecated. By clicking the “migrate” button, your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, ...). This extractor will continue to work until August. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
             </span>
             <div>
               <Confirm
@@ -102,7 +90,7 @@ export default React.createClass({
                 buttonType="success"
                 buttonLabel="Migrate"
                 onConfirm={this.onMigrate}
-                title="Migration Configuration">
+                title={this.renderDialogTitle()}>
                 <button
                   type="button"
                   disabled={this.state.isLoading}
@@ -119,9 +107,25 @@ export default React.createClass({
     );
   },
 
-  getNewComponentId(row) {
-    const componentId = row.get('componentId');
-    return `ex-db-generic-${componentId}`;
+  renderDialogTitle() {
+    return (
+      <span>
+        Configuration Migration
+        <RefreshIcon
+          isLoading={this.state.loadingStatus}
+          onClick={this.loadStatus}
+        />
+      </span>
+    );
+  },
+
+  fetchLastMigrationJob(componentId) {
+    const jobQuery = `params.component:${MIGRATION_COMPONENT_ID}`;
+    return jobsApi.getJobsParametrized(jobQuery, 10, 0).then((result) => {
+      const jobs = result ? fromJS(result) : List();
+      return jobs.find((j) => j.getIn(['params', 'configData', 'parameters', 'component']) === componentId);
+    }
+    );
   },
 
   renderStatus() {
@@ -134,7 +138,7 @@ export default React.createClass({
               Configuration
             </th>
             <th>
-             Config Table
+              Config Table
             </th>
             <th> </th>
             <th>New Configuration</th>
@@ -156,7 +160,7 @@ export default React.createClass({
                 <i className="kbc-icon-arrow-right" />
               </td>
               <td>
-                {this.renderConfigLink(row.get('configId'), this.getNewComponentId(row), `${row.get('componentId')}/${row.get('configId')}`)}
+                {this.renderNewConfigLink(row)}
               </td>
               <td>
                 {row.get('status')}
@@ -166,6 +170,41 @@ export default React.createClass({
         </tbody>
       </Table>
     );
+  },
+
+  renderJobInfo() {
+    const {job} = this.state;
+    if (!job) {
+      return (
+        <div>
+          Last Job: N/A
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <strong>Last Job: {' '}</strong>
+        <small>
+          {date.format(job.get('createdTime'))} by {job.getIn(['token', 'description'])}
+        </small>
+        <Link to="jobDetail" params={{jobId: job.get('id')}}>
+          {job.get('id')}
+        </Link>
+        {' '}
+        <JobStatusLabel status={job.get('status')} />
+      </div>
+    );
+  },
+
+  renderNewConfigLink(row) {
+    const newComponentId = `ex-db-generic-${row.get('componentId')}`;
+    const newLabel = `${row.get('componentId')} / ${row.get('configId')}`;
+    if (row.get('status') === 'success') {
+      return this.renderConfigLink(row.get('configId'), newComponentId, newLabel);
+    } else {
+      return newLabel;
+    }
   },
 
   renderConfigLink(configId, componentId, label) {
