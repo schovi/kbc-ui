@@ -9,7 +9,7 @@ StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
 
-{span, form, div, label, p, option} = React.DOM
+{small, span, form, div, label, p, option} = React.DOM
 
 module.exports = React.createClass
   displayName: 'ExDbCredentialsForm'
@@ -86,14 +86,28 @@ module.exports = React.createClass
 
   _createProtectedInput: (labelValue, propName) ->
     savedValue = this.props.savedCredentials.get(propName)
+
     Input
-      label: labelValue
+      label: @_renderProtectedLabel(labelValue, !!savedValue)
       type: 'password'
-      placeholder: savedValue
+      placeholder: if savedValue then 'type new password to change it' else ''
       value: @props.credentials.get propName
       labelClassName: 'col-xs-4'
       wrapperClassName: 'col-xs-8'
       onChange: @_handleChange.bind @, propName
+
+  _renderProtectedLabel: (labelValue, alreadyEncrypted) ->
+    msg = "#{labelValue} will be stored securely encrypted."
+    if alreadyEncrypted
+      msg = msg + ' The most recently stored value will be used if left empty.'
+    span null,
+      labelValue
+      small null,
+        React.createElement Tooltip,
+          placement: 'top'
+          tooltip: msg,
+          span className: 'fa fa-fw fa-question-circle', null
+
 
   _createSelect: (labelValue, propName, options) ->
     if @props.enabled
