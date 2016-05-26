@@ -79,8 +79,9 @@ export default React.createClass({
             <TabPane key="general" eventKey="general" tab="Affected Configurations">
               {this.renderConfigStatus()}
             </TabPane>
-            {/* <TabPane key="datasample" eventKey="datasample" tab="">
-            </TabPane> */}
+            <TabPane key="datasample" eventKey="datasample" tab="Affected Orchestrations">
+              {this.renderOrhcestrationsStatus()}
+            </TabPane>
           </TabbedArea>
         </div>
       </span>
@@ -114,6 +115,46 @@ export default React.createClass({
           </Alert>
         </EmptyState>
       </div>
+    );
+  },
+
+  renderOrhcestrationsStatus() {
+    return (
+      <span>
+        <small>
+          List of orchestrations containing tasks of either old db extractor or new db extractors. After succesfull migration there should be only new db extractor tasks.
+        </small>
+        <Table responsive className="table table-stripped">
+          <thead>
+            <tr>
+              <th>
+                Orchestration
+              </th>
+              <th>
+                Contains old extractor task
+              </th>
+              <th>
+                New extractors tasks
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.status.get('orchestrations').map((row) =>
+              <tr>
+                <td>
+                  {this.renderOrchestrationLink(row.get('id'), row.get('name'))}
+                </td>
+                <td>
+                  TBA
+                </td>
+                <td>
+                  TBA
+                </td>
+              </tr>
+             )}
+          </tbody>
+        </Table>
+      </span>
     );
   },
 
@@ -214,6 +255,14 @@ export default React.createClass({
     } else {
       return newLabel;
     }
+  },
+
+  renderOrchestrationLink(orchestrationId, name) {
+    return (
+      <Link to={'orchestrationTasks'} params={{orchestrationId: orchestrationId}}>
+        {name ? name : orchestrationId}
+      </Link>
+    );
   },
 
   renderConfigLink(configId, componentId, label) {
