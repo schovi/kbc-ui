@@ -72,7 +72,7 @@ export default React.createClass({
     }
 
     const confirmText = (
-      this.state.status ?
+      (this.state.status && !this.state.loadingStatus) ?
       <span>
         {this.renderJobInfo()}
         <div>
