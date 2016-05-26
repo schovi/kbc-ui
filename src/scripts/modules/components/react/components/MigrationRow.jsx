@@ -14,6 +14,8 @@ import jobsApi from '../../../jobs/JobsApi';
 import DockerActionFn from '../../DockerActionsApi';
 import date from '../../../../utils/date';
 import JobStatusLabel from '../../../../react/common/JobStatusLabel';
+import {Check} from 'kbc-react-components';
+
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
 
@@ -131,10 +133,10 @@ export default React.createClass({
                 Orchestration
               </th>
               <th>
-                Contains old extractor task
+                Contains Old extractor tasks
               </th>
               <th>
-                New extractors tasks
+                Contains New extractors tasks
               </th>
             </tr>
           </thead>
@@ -145,10 +147,10 @@ export default React.createClass({
                   {this.renderOrchestrationLink(row.get('id'), row.get('name'))}
                 </td>
                 <td>
-                  TBA
+                  <Check isChecked={row.get('hasOld')} />
                 </td>
                 <td>
-                  TBA
+                  <Check isChecked={row.get('hasNew')} />
                 </td>
               </tr>
              )}
