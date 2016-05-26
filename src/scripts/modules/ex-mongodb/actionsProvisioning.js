@@ -12,23 +12,24 @@ export function loadConfiguration(componentId, configId) {
 }
 
 export function createActions(componentId) {
-  function excludeProtectedProperties(credentials) {
+  function resetProtectedProperties(credentials) {
     let result = credentials;
     const props = getProtectedProperties(componentId);
     for (let prop of props) {
-      const protectedProp = `#${prop}`;
-      result = result.delete(protectedProp);
+      result = result.set(prop, '');
     }
     return result;
   }
 
-  function encryptProtectedFields(credentials) {
-    let result = credentials;
+  function updateProtectedProperties(newCredentials, oldCredentials) {
     const props = getProtectedProperties(componentId);
+    let result = newCredentials;
     for (let prop of props) {
-      const protectedProp = `#${prop}`;
-      const protectedValue = credentials.get(prop);
-      result = result.set(protectedProp, protectedValue).delete(prop);
+      const newValue = newCredentials.get(prop);
+      const oldValue = oldCredentials.get(prop);
+      if (!newValue) {
+        result = result.set(prop, oldValue);
+      }
     }
     return result;
   }
@@ -64,7 +65,7 @@ export function createActions(componentId) {
       if (!credentials.get('port')) {
         credentials = credentials.set('port', getDefaultPort(componentId));
       }
-      credentials = excludeProtectedProperties(credentials);
+      credentials = resetProtectedProperties(credentials);
       updateLocalState(configId, 'editingCredentials', credentials);
     },
 
@@ -108,7 +109,7 @@ export function createActions(componentId) {
     saveNewCredentials(configId) {
       const store = getStore(configId);
       let newCredentials = store.getNewCredentials();
-      newCredentials = encryptProtectedFields(newCredentials);
+      newCredentials = updateProtectedProperties(newCredentials, store.getCredentials());
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
       return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
@@ -130,7 +131,8 @@ export function createActions(componentId) {
 
     saveCredentialsEdit(configId) {
       const store = getStore(configId);
-      const credentials = store.getEditingCredentials();
+      let credentials = store.getEditingCredentials();
+      credentials = updateProtectedProperties(credentials, store.getCredentials());
       const newConfigData = store.configData.setIn(['parameters', 'db'], credentials);
       return saveConfigData(configId, newConfigData, 'isSavingCredentials')
         .then(() => this.cancelCredentialsEdit(configId));
@@ -178,8 +180,9 @@ export function createActions(componentId) {
 
     testCredentials(configId, credentials) {
       const store = getStore(configId);
+      const testingCredentials = updateProtectedProperties(credentials, store.getCredentials());
       let runData = store.configData.setIn(['parameters', 'exports'], List());
-      runData = runData.setIn(['parameters', 'db'], credentials);
+      runData = runData.setIn(['parameters', 'db'], testingCredentials);
       const params = {
         configData: runData.toJS()
       };

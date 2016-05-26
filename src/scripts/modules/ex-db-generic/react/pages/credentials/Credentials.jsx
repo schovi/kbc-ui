@@ -6,6 +6,7 @@ import {TabbedArea, TabPane} from 'react-bootstrap';
 
 export default React.createClass({
   propTypes: {
+    savedCredentials: PropTypes.object.isRequired,
     credentials: PropTypes.object.isRequired,
     isEditing: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -22,6 +23,7 @@ export default React.createClass({
         <TabbedArea defaultActiveKey="db" animation={false}>
           <TabPane eventKey="db" tab="Database Credentials">
             <CredentialsForm
+              savedCredentials={this.props.savedCredentials}
               credentials={this.props.credentials}
               enabled={this.props.isEditing}
               onChange={this.props.onChange}

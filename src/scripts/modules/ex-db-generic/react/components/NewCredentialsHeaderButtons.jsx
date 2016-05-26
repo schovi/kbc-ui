@@ -13,7 +13,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning) {
     getStateFromStores() {
       const config = routesStore.getCurrentRouteParam('config');
       const dbStore = storeProvisioning.createStore(componentId, config);
-      const isValid = dbStore.hasValidCredentials(dbStore.getNewCredentials(config), {skipProtected: true});
+      const isValid = dbStore.hasValidCredentials(dbStore.getNewCredentials(config));
       return {
         configId: config,
         isSaving: dbStore.isSavingCredentials(),

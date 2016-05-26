@@ -4,7 +4,7 @@ defaultFields = [
   ['Host Name', 'host', 'text', false]
   ['Port', 'port', 'number', false]
   ['Username', 'user', 'text', false]
-  ['Password', 'password', 'password', true]
+  ['Password', '#password', 'password', true]
   ['Database', 'database', 'text', false]
 ]
 
@@ -20,14 +20,14 @@ defaultFields = [
 firebirdFields = [
   ['Database', 'dbname', 'text', false]
   ['Username', 'user', 'text', false]
-  ['Password', 'password', 'password', true]
+  ['Password', '#password', 'password', true]
 ]
 
 oracleFields = [
   ['Host Name', 'host', 'text', false]
   ['Port', 'port', 'number', false]
   ['Username', 'user', 'text', false]
-  ['Password', 'password', 'password', true]
+  ['Password', '#password', 'password', true]
   ['Service Name/SID', 'database', 'text', false]
 ]
 
