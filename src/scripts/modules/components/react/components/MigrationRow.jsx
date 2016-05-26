@@ -8,7 +8,7 @@ import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import EmptyState from './ComponentEmptyState';
 import Confirm from '../../../../react/common/Confirm';
-import {Alert} from 'react-bootstrap';
+import {TabbedArea, TabPane, Alert} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
 import jobsApi from '../../../jobs/JobsApi';
 import DockerActionFn from '../../DockerActionsApi';
@@ -70,19 +70,29 @@ export default React.createClass({
     }
 
     const confirmText = (
+      this.state.status ?
       <span>
+        {this.renderJobInfo()}
         <div>
-          {this.renderJobInfo()}
-          {this.renderStatus()}
+          <TabbedArea key="tabbedarea" animation={false}>
+
+            <TabPane key="general" eventKey="general" tab="Affected Configurations">
+              {this.renderConfigStatus()}
+            </TabPane>
+            {/* <TabPane key="datasample" eventKey="datasample" tab="">
+            </TabPane> */}
+          </TabbedArea>
         </div>
       </span>
+    : 'Loading migration status...'
     );
     return (
       <div className="row kbc-header">
         <EmptyState>
           <Alert bsStyle="warning">
             <span>
-              This extractor has been deprecated. By clicking the “migrate” button, your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, ...). This extractor will continue to work until August. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
+              <strong>Configuration Migration: </strong>
+              This extractor has been deprecated. Start migration job so your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
             </span>
             <div>
               <Confirm
@@ -95,7 +105,7 @@ export default React.createClass({
                   type="button"
                   disabled={this.state.isLoading}
                   type="sumbit" className="btn btn-success">
-                  Migrate
+                  Proceed to Migration
                   {this.state.isLoading ? <Loader/> : null}
                 </button>
 
@@ -128,8 +138,7 @@ export default React.createClass({
     );
   },
 
-  renderStatus() {
-    if (!this.state.status) {return null;}
+  renderConfigStatus() {
     return (
       <Table responsive className="table table-stripped">
         <thead>
@@ -148,7 +157,7 @@ export default React.createClass({
           </tr>
         </thead>
         <tbody>
-          {this.state.status.map((row) =>
+          {this.state.status.get('configurations').map((row) =>
             <tr>
               <td>
                 {this.renderConfigLink(row.get('configId'), 'ex-db', row.get('configName'))}
@@ -176,14 +185,14 @@ export default React.createClass({
     const {job} = this.state;
     if (!job) {
       return (
-        <div>
+        <div className="col-xs-12">
           Last Job: N/A
         </div>
       );
     }
 
     return (
-      <div>
+      <div className="col-xs-12">
         <strong>Last Job: {' '}</strong>
         <small>
           {date.format(job.get('createdTime'))} by {job.getIn(['token', 'description'])}
