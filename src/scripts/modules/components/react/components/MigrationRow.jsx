@@ -154,8 +154,12 @@ export default React.createClass({
     return (
       <Alert bsStyle="warning">
         <span>
-          <strong>Configuration Migration: </strong>
-          This extractor has been deprecated. Start migration job so your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
+          <h3 className="text-center">This extractor has been deprecated</h3>
+          <span>
+            Migrate your current configurations to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
+          </span>
+          <br/>
+          <br/>
         </span>
         <div className="row component-empty-state text-center">
           {this.renderMigrationButton()}
