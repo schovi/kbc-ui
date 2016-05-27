@@ -42,6 +42,7 @@ LoadTypeModal = React.createClass
   render: ->
     console.log(@props.table?.toJS(), @props.columns?.toJS(), @props.grain)
     isSaving = @props.table.get('savingFields').contains FIELD
+    grain = ''
     if @props.table.hasIn(['editingFields', FIELD])
       incrementalLoad = @props.table.getIn ['editingFields', FIELD]
       grain = @props.table.getIn ['editingFields', GRAIN]
@@ -108,6 +109,7 @@ LoadTypeModal = React.createClass
       grainArray = []
     else
       grainArray = grain.split(',')
+    console.log('CURRENT GRAIN', grain)
     div null,
       label null,
         'Fact Grain:'
@@ -115,12 +117,15 @@ LoadTypeModal = React.createClass
         grainArray.map( (g) =>
           @_renderOneGrainFactSelect(g, grainArray)
         )
-        @_renderOneGrainFactSelect('', grainArray)
+        if grainArray.length != @props.columns.count()
+          @_renderOneGrainFactSelect('', grainArray)
 
   _renderOneGrainFactSelect: (selectedColumn, grainArray) ->
     columnsOptions = null
     if @props.columns
-      columnsOptions = @props.columns.map((value, key) ->
+      columnsOptions = @props.columns
+      .filter((value, key) -> key not in grainArray or key == selectedColumn)
+      .map((value, key) ->
         option {key: key, value: key},
           key
 
@@ -160,14 +165,25 @@ module.exports = React.createClass
 
   _handleEditStart: ->
     actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), FIELD)
+    actionCreators.startTableFieldEdit(@props.configurationId, @props.table.get('id'), GRAIN)
 
   _handleEditSave: ->
-    actionCreators.saveTableField(
+    fields = {}
+    fields[FIELD] = @props.table.getIn(['editingFields', FIELD])
+    fields[GRAIN] = @props.table.getIn(['editingFields', GRAIN])
+
+    actionCreators.saveMultipleTableFields(
       @props.configurationId,
       @props.table.get('id'),
-      FIELD,
-      @props.table.getIn(['editingFields', FIELD])
+      fields
     )
+
+    # actionCreators.saveTableField(
+    #   @props.configurationId,
+    #   @props.table.get('id'),
+    #   FIELD,
+    #   @props.table.getIn(['editingFields', FIELD])
+    # )
 
   _handleGrainChange: (newGrain) ->
     actionCreators.updateTableFieldEdit(@props.configurationId, @props.table.get('id'), GRAIN, newGrain)

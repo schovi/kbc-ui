@@ -1,4 +1,5 @@
 Promise = require 'bluebird'
+_ = require 'underscore'
 React = require 'react'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
@@ -190,6 +191,40 @@ module.exports =
         configurationId: configurationId
         error: e
       throw e
+
+  saveMultipleTableFields: (configurationId, tableId, fields) ->
+    _.map(fields, (newValue, fieldName)  ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START
+        configurationId: configurationId
+        tableId: tableId
+        field: fieldName
+        value: newValue
+    )
+    goodDataWriterApi
+    .updateTable(configurationId, tableId, fields)
+    .then ->
+      _.map(fields, (newValue, fieldName)  ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_SUCCESS
+          configurationId: configurationId
+          tableId: tableId
+          field: fieldName
+          value: newValue
+      )
+    .catch (e) ->
+      _.map(fields, (newValue, fieldName)  ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_ERROR
+          configurationId: configurationId
+          tableId: tableId
+          field: fieldName
+          value: newValue
+          error: e
+      )
+      throw e
+
+
 
   saveTableField: (configurationId, tableId, fieldName, newValue) ->
     dispatcher.handleViewAction

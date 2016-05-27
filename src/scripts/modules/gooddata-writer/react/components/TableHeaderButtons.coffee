@@ -28,6 +28,7 @@ module.exports = React.createClass
     isEditingColumns = goodDataWriterStore.isEditingTableColumns(configId, tableId)
     writer = goodDataWriterStore.getWriter(configId)
 
+    projectExist: !!writer.getIn(['config', 'project'])
     pid: writer.getIn ['config', 'project', 'id']
     table: goodDataWriterStore.getTable(configId, tableId)
     configurationId: configId
