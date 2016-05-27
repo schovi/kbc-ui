@@ -116,32 +116,29 @@ export default React.createClass({
         onCancel={this.hideModal}
       />
     );
-
+    const dialogProps = {
+      show: this.state.showModal,
+      onHide: this.hideModal,
+      bsSize: 'large'
+    };
     return (
       <div className="row kbc-header">
         {this.renderInfoRow()}
-        <div>
-          <div>
-            {this.renderModal(
-              dialogTitle, body, footer,
-              {
-                show: this.state.showModal,
-                onHide: this.hideModal,
-                bsSize: 'large'
-              }
-             )}
-            <button
-              onClick={this.showModal}
-              type="button"
-              disabled={this.state.isLoading}
-              type="sumbit" className="btn btn-success">
-              Proceed to Migration
-              {this.state.isLoading ? <Loader/> : null}
-            </button>
-          </div>
-
-        </div>
+        {this.renderModal(dialogTitle, body, footer, dialogProps)}
       </div>
+    );
+  },
+
+  renderMigrationButton() {
+    return (
+      <button
+        onClick={this.showModal}
+        type="button"
+        disabled={this.state.isLoading}
+        type="sumbit" className="btn btn-success">
+        Proceed to Migration
+        {this.state.isLoading ? <Loader/> : null}
+      </button>
     );
   },
 
@@ -160,6 +157,9 @@ export default React.createClass({
           <strong>Configuration Migration: </strong>
           This extractor has been deprecated. Start migration job so your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
         </span>
+        <div className="row component-empty-state text-center">
+          {this.renderMigrationButton()}
+        </div>
       </Alert>
     );
   },
@@ -200,7 +200,7 @@ export default React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.state.status.get('orchestrations').map((row) =>
+            {this.state.status.get('orchestrations', List()).map((row) =>
               <tr>
                 <td>
                   {this.renderOrchestrationLink(row.get('id'), row.get('name'))}
@@ -260,7 +260,7 @@ export default React.createClass({
           </tr>
         </thead>
         <tbody>
-          {this.state.status.get('configurations').map((row) =>
+          {this.state.status.get('configurations', List()).map((row) =>
             <tr>
               <td>
                 {this.renderConfigLink(row.get('configId'), 'ex-db', row.get('configName'))}
