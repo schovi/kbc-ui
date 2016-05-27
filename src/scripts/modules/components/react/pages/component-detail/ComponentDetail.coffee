@@ -20,6 +20,7 @@ AppUsageInfo = require('../new-component-form/AppUsageInfo')
 ReadMore = require('../../../../../react/common/ReadMore').default
 ComponentDescription = require '../component-detail/ComponentDescription'
 contactSupport = require('../../../../../utils/contactSupport').default
+MigrationRow = require('../../components/MigrationRow').default
 
 {a, div, label, h3, h2, span, p} = React.DOM
 
@@ -61,12 +62,18 @@ module.exports = React.createClass
         div className: "col-md-6",
           React.createElement VendorInfo,
             component: @state.component
+      if @_isDeprecated()
+        React.createElement MigrationRow,
+          componentId: @state.component.get('id')
       div className: "row",
         div className: "col-md-12",
           React.createElement ReadMore, null,
             React.createElement ComponentDescription,
               component: @state.component
       @_renderConfigurations()
+
+  _isDeprecated: ->
+    return @state.component.get('flags').includes('deprecated')
 
   _renderConfigurations: ->
     hasRedshift = ApplicationStore.getSapiToken().getIn ['owner', 'hasRedshift']
@@ -89,6 +96,7 @@ module.exports = React.createClass
             h2 null, "Configurations"
             span className: "pull-right",
               AddComponentConfigurationButton
+                disabled: @_isDeprecated()
                 component: state.component
         div className: "table table-hover",
           div className: "tbody",
@@ -109,6 +117,7 @@ module.exports = React.createClass
         React.createElement ComponentEmptyState, null,
           p className: "text-center",
             AddComponentConfigurationButton
+              disabled: @_isDeprecated()
               label: "Create New Configuration"
               component: state.component
 

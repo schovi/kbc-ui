@@ -21,6 +21,7 @@ module.exports = React.createClass
   propTypes:
     component: React.PropTypes.object.isRequired
     label: React.PropTypes.string
+    disabled: React.PropTypes.bool
 
   getInitialState: ->
     showModal: false
@@ -40,6 +41,7 @@ module.exports = React.createClass
       button
         className: 'btn btn-success'
         onClick: @open
+        disabled: @props.disabled
       ,
         span className: 'kbc-icon-plus'
         @props.label
