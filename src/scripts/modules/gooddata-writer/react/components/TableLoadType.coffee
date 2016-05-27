@@ -67,7 +67,7 @@ LoadTypeModal = React.createClass
       ' will be uploaded to the dataset.'
 
     React.createElement Modal,
-      title: "Table #{@props.table.getIn ['data', 'name']} Load Type"
+      title: "Table #{@props.table.getIn ['data', 'title']} Load Type"
       onRequestHide: @props.onRequestHide
     ,
       div className: 'modal-body',

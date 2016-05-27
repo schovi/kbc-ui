@@ -71,19 +71,19 @@ module.exports = React.createClass
     grainColumns = if @_isConnectionPoint() then filteredColumns else null
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
-      React.DOM.strong null, @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' dataset?'
 
     resetTableText = React.DOM.span null,
       'You are about to remove dataset in the GoodData project belonging
       to the table and reset its export status.
       Are you sure you want to reset table '
-      React.DOM.strong null, @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' ?'
 
     uploadTableText = React.DOM.span null,
       'Are you sure you want to upload '
-      @state.table.getIn ['data', 'name']
+      @state.table.getIn ['data', 'title']
       ' to GoodData project?'
 
     synchronizeTableText = React.DOM.span null,
@@ -94,7 +94,7 @@ module.exports = React.createClass
       ,
         'synchronize'
       ' operation on '
-      @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' dataset?'
 
     div null,

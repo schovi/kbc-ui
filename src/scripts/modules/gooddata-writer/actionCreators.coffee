@@ -362,7 +362,7 @@ module.exports =
             render: ->
               React.DOM.span null,
                 "GoodData upload of table "
-                React.DOM.strong null, table.getIn ['data', 'name']
+                React.DOM.strong null, table.getIn ['data', 'title']
                 " has been initiated You can track the job progress "
                 React.createElement Link,
                   to: 'jobDetail'
