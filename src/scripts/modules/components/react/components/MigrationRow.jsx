@@ -289,7 +289,9 @@ export default React.createClass({
     if (!job) {
       return (
         <div className="col-xs-12">
-          Last Job: N/A
+          <small>
+            Last Job: N/A
+          </small>
         </div>
       );
     }
