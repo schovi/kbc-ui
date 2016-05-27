@@ -6,15 +6,17 @@ import {Link} from 'react-router';
 import SapiTableLink from './StorageApiTableLink';
 import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
-import EmptyState from './ComponentEmptyState';
-import Confirm from '../../../../react/common/Confirm';
-import {TabbedArea, TabPane, Alert} from 'react-bootstrap';
+// import EmptyState from './ComponentEmptyState';
+import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import {Modal, TabbedArea, TabPane, Alert} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
 import jobsApi from '../../../jobs/JobsApi';
 import DockerActionFn from '../../DockerActionsApi';
 import date from '../../../../utils/date';
 import JobStatusLabel from '../../../../react/common/JobStatusLabel';
 import {Check} from 'kbc-react-components';
+import Tooltip from '../../../../react/common/Tooltip';
+import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
@@ -28,7 +30,8 @@ export default React.createClass({
     return {
       loadingStatus: false,
       isLoading: false,
-      status: null
+      status: null,
+      showModal: false
     };
   },
 
@@ -66,22 +69,35 @@ export default React.createClass({
     return ApplicationStore.hasCurrentAdminFeature(MIGRATION_ALLOWED_FEATURE);
   },
 
+  renderTabTitle(title, helptext) {
+    return (
+      <span>
+        {title}
+        <Tooltip tooltip={helptext}>
+          <span className="fa fa-fw fa-question-circle" />
+        </Tooltip>
+      </span>
+    );
+  },
+
   render() {
     if (!this.canMigrate()) {
       return null;
     }
 
-    const confirmText = (
-      (this.state.status && !this.state.loadingStatus) ?
+    const configHelpText = 'List of all configurations that will be migrated and their new counterparts';
+    const orchHelpText = 'List of orchestrations containing tasks of either old db extractor or new db extractors. After succesfull migration there should be only new db extractor tasks.';
+
+    const body = (
+      this.state.status ?
       <span>
-        {this.renderJobInfo()}
         <div>
           <TabbedArea key="tabbedarea" animation={false}>
 
-            <TabPane key="general" eventKey="general" tab="Affected Configurations">
+            <TabPane key="general" eventKey="general" tab={this.renderTabTitle('Affected Configurations', configHelpText)}>
               {this.renderConfigStatus()}
             </TabPane>
-            <TabPane key="datasample" eventKey="datasample" tab="Affected Orchestrations">
+            <TabPane key="datasample" eventKey="datasample" tab={this.renderTabTitle('Affected Orchestrations', orchHelpText)}>
               {this.renderOrhcestrationsStatus()}
             </TabPane>
           </TabbedArea>
@@ -89,43 +105,86 @@ export default React.createClass({
       </span>
     : 'Loading migration status...'
     );
+    const dialogTitle = this.renderDialogTitle();
+    const footer = (
+      <ConfirmButtons
+        saveStyle="success"
+        saveLabel="Migrate"
+        isSaving={this.state.isLoading}
+        isDisabled={this.state.isLoading || this.state.loadingStatus}
+        onSave={this.onMigrate}
+        onCancel={this.hideModal}
+      />
+    );
+
     return (
       <div className="row kbc-header">
-        <EmptyState>
-          <Alert bsStyle="warning">
-            <span>
-              <strong>Configuration Migration: </strong>
-              This extractor has been deprecated. Start migration job so your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
-            </span>
-            <div>
-              <Confirm
-                text={confirmText}
-                buttonType="success"
-                buttonLabel="Migrate"
-                onConfirm={this.onMigrate}
-                title={this.renderDialogTitle()}>
-                <button
-                  type="button"
-                  disabled={this.state.isLoading}
-                  type="sumbit" className="btn btn-success">
-                  Proceed to Migration
-                  {this.state.isLoading ? <Loader/> : null}
-                </button>
+        {this.renderInfoRow()}
+        <div>
+          <div>
+            {this.renderModal(
+              dialogTitle, body, footer,
+              {
+                show: this.state.showModal,
+                onHide: this.hideModal,
+                bsSize: 'large'
+              }
+             )}
+            <button
+              onClick={this.showModal}
+              type="button"
+              disabled={this.state.isLoading}
+              type="sumbit" className="btn btn-success">
+              Proceed to Migration
+              {this.state.isLoading ? <Loader/> : null}
+            </button>
+          </div>
 
-              </Confirm>
-            </div>
-          </Alert>
-        </EmptyState>
+        </div>
       </div>
+    );
+  },
+
+  showModal() {
+    return this.setState({showModal: true});
+  },
+
+  hideModal() {
+    return this.setState({showModal: false});
+  },
+
+  renderInfoRow() {
+    return (
+      <Alert bsStyle="warning">
+        <span>
+          <strong>Configuration Migration: </strong>
+          This extractor has been deprecated. Start migration job so your current configurations will be transferred to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
+        </span>
+      </Alert>
+    );
+  },
+
+  renderModal(title, body, footer, props) {
+    return (
+      <Modal {...props}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {title}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {body}
+        </Modal.Body>
+        <Modal.Footer>
+          {footer}
+        </Modal.Footer>
+      </Modal>
     );
   },
 
   renderOrhcestrationsStatus() {
     return (
       <span>
-        <small>
-          List of orchestrations containing tasks of either old db extractor or new db extractors. After succesfull migration there should be only new db extractor tasks.
-        </small>
         <Table responsive className="table table-stripped">
           <thead>
             <tr>
@@ -163,11 +222,12 @@ export default React.createClass({
   renderDialogTitle() {
     return (
       <span>
-        Configuration Migration
+        Configuration Migration {' '}
         <RefreshIcon
           isLoading={this.state.loadingStatus}
           onClick={this.loadStatus}
         />
+        {this.renderJobInfo()}
       </span>
     );
   },
@@ -236,15 +296,17 @@ export default React.createClass({
 
     return (
       <div className="col-xs-12">
-        <strong>Last Job: {' '}</strong>
         <small>
+          <strong>Last Job: {' '}</strong>
+
           {date.format(job.get('createdTime'))} by {job.getIn(['token', 'description'])}
+          {' '}
+          <Link to="jobDetail" params={{jobId: job.get('id')}}>
+            {job.get('id')}
+          </Link>
+          {'  '}
+          <JobStatusLabel status={job.get('status')} />
         </small>
-        <Link to="jobDetail" params={{jobId: job.get('id')}}>
-          {job.get('id')}
-        </Link>
-        {' '}
-        <JobStatusLabel status={job.get('status')} />
       </div>
     );
   },
@@ -252,7 +314,8 @@ export default React.createClass({
   renderNewConfigLink(row) {
     const newComponentId = `ex-db-generic-${row.get('componentId')}`;
     const newLabel = `${row.get('componentId')} / ${row.get('configId')}`;
-    if (row.get('status') === 'success') {
+    const configExists = InstalledComponentsStore.getConfig(row.get('componentId'), row.get('configId'));
+    if (configExists) {
       return this.renderConfigLink(row.get('configId'), newComponentId, newLabel);
     } else {
       return newLabel;
@@ -299,12 +362,12 @@ export default React.createClass({
     };
 
     InstalledComponentsActionCreators
-    .runComponent(params)
-    .then(this.handleStarted)
-    .catch((error) => {
-      this.setState({isLoading: false});
-      throw error;
-    });
+      .runComponent(params)
+      .then(this.handleStarted)
+      .catch((error) => {
+        this.setState({isLoading: false});
+        throw error;
+      });
   },
 
   handleStarted() {
