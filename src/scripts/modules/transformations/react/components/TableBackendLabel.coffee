@@ -11,6 +11,9 @@ TableBackendLabel = React.createClass
     if (@props.backend == 'mysql')
       span {className: 'label label-default'},
         'mysql'
+    else if (@props.backend == 'snowflake')
+      span {className: 'label label-default'},
+        'snowflake'
     else if (@props.backend == 'redshift')
       span {className: 'label label-success'},
         'redshift'
