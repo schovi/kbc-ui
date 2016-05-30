@@ -1,4 +1,6 @@
 import React from 'react';
+import Promise from 'bluebird';
+import _ from 'underscore';
 import {Table} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
 import {fromJS, List} from 'immutable';
@@ -35,14 +37,15 @@ export default React.createClass({
     };
   },
 
-  componentDidMount() {
-    if (!this.state.status) {
-      this.loadStatus();
-    }
-  },
+  /* componentDidMount() {
+   *   if (!this.state.status) {
+   *     this.loadStatus();
+   *   }
+   * },*/
 
-  loadStatus() {
-    this.setState({loadingStatus: true, loadingJob: true});
+  loadStatus(additionalState) {
+    const newState = _.extend({}, additionalState, {loadingStatus: true});
+    this.setState(newState);
     const params = {
       configData: {
         parameters: {
@@ -50,10 +53,19 @@ export default React.createClass({
         }
       }
     };
-    this.fetchLastMigrationJob(this.props.componentId).then((job) => this.setState({job: job, loadingJob: false}));
-    return DockerActionFn(MIGRATION_COMPONENT_ID, 'status', params).then((status) => {
+    const componentsPromise = InstalledComponentsActionCreators.loadComponentsForce();
+    const lastJobPromise = this.fetchLastMigrationJob(this.props.componentId);
+    const statusPromise = DockerActionFn(MIGRATION_COMPONENT_ID, 'status', params);
+    return Promise.props(
+      {
+        components: componentsPromise,
+        job: lastJobPromise,
+        status: statusPromise
+      }
+    ).then((result) => {
       return this.setState({
-        status: fromJS(status),
+        job: result.job,
+        status: fromJS(result.status),
         loadingStatus: false
       });
     });
@@ -143,7 +155,7 @@ export default React.createClass({
   },
 
   showModal() {
-    return this.setState({showModal: true});
+    return this.loadStatus({showModal: true});
   },
 
   hideModal() {
@@ -292,7 +304,7 @@ export default React.createClass({
     const {job} = this.state;
     if (!job) {
       return (
-        <div className="col-xs-12">
+        <div>
           <small>
             Last Job: N/A
           </small>
@@ -301,10 +313,9 @@ export default React.createClass({
     }
 
     return (
-      <div className="col-xs-12">
+      <div>
         <small>
           <strong>Last Job: {' '}</strong>
-
           {date.format(job.get('createdTime'))} by {job.getIn(['token', 'description'])}
           {' '}
           <Link to="jobDetail" params={{jobId: job.get('id')}}>
