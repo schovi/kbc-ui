@@ -1,4 +1,5 @@
 React = require 'react'
+{Map} = require 'immutable'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
@@ -69,7 +70,7 @@ module.exports = React.createClass
   render: ->
     {ATTRIBUTE, REFERENCE, DATE} = ColumnTypes
     filteredColumns = @state.columns.filter((c) -> c.get('type') in [ATTRIBUTE, REFERENCE, DATE])
-    grainColumns = if @_isConnectionPoint() then filteredColumns else null
+    grainColumns = if @_isConnectionPoint() then filteredColumns else Map()
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
       React.DOM.strong null, @state.table.getIn ['data', 'title']
