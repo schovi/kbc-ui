@@ -122,10 +122,13 @@ module.exports =
     NEW: null
     EXISTING: null
 
-  GoodDataWriterTokenTypes: keyMirror
-    PRODUCTION: null
-    DEVELOPER: null
-    CUSTOM: null
+  GoodDataWriterTokenTypes:
+    PRODUCTION: 'keboola_production'
+    DEMO: 'keboola_demo'
+    CUSTOM: ''
+
+  isCustomAuthToken: (token) ->
+    token not in ['keboola_production', 'keboola_demo']
 
   Routes:
     GENERIC_DETAIL_PREFIX: 'generic-detail-'

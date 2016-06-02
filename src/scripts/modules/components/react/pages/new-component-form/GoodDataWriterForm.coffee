@@ -125,15 +125,15 @@ module.exports = React.createClass
   _renderNewForm: ->
     div className: 'row',
       div className: 'col-xs-offset-3 col-xs-9',
-        h3 null, 'GoodData access token'
+        h3 null, 'Auth token'
       Input
         type: 'radio'
         label: 'Production'
         help: @_renderProductionHelp()
         name: 'tokenType'
         value: GoodDataWriterTokenTypes.PRODUCTION
-        checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.PRODUCTION
-        onChange: @_handleChange.bind @, 'tokenType'
+        checked: @props.configuration.get('authToken') == GoodDataWriterTokenTypes.PRODUCTION
+        onChange: @_handleChange.bind @, 'authToken'
         wrapperClassName: 'col-xs-offset-3 col-xs-9'
         disabled: !@state.canCreateProdProject
       Input
@@ -141,26 +141,31 @@ module.exports = React.createClass
         label: 'Demo'
         help: 'max 1GB of data, expires in 1 month'
         name: 'tokenType'
-        value: GoodDataWriterTokenTypes.DEVELOPER
-        checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.DEVELOPER
-        onChange: @_handleChange.bind @, 'tokenType'
+        value: GoodDataWriterTokenTypes.DEMO
+        checked: @props.configuration.get('authToken') == GoodDataWriterTokenTypes.DEMO
+        onChange: @_handleChange.bind @, 'authToken'
         wrapperClassName: 'col-xs-offset-3 col-xs-9'
       Input
         type: 'radio'
         label: 'Custom'
         help: 'You have your own token'
         name: 'tokenType'
-        value: GoodDataWriterTokenTypes.CUSTOM
-        checked: @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
-        onChange: @_handleChange.bind @, 'tokenType'
+        value: ''
+        checked: @_isCustomToken()
+        onChange: @_handleChange.bind @, 'authToken'
         wrapperClassName: 'col-xs-offset-3 col-xs-9'
-      if @props.configuration.get('tokenType') == GoodDataWriterTokenTypes.CUSTOM
+      if @_isCustomToken()
         Input
           type: 'text'
           placeholder: 'Your token'
-          value: @props.configuration.get('accessToken')
-          onChange: @_handleChange.bind @, 'accessToken'
+          value: @props.configuration.get('authToken')
+          onChange: @_handleChange.bind @, 'authToken'
           wrapperClassName: 'col-xs-offset-3 col-xs-9'
+
+  _isCustomToken: ->
+    isDemo = @props.configuration.get('authToken') == GoodDataWriterTokenTypes.DEMO
+    isProduction = @props.configuration.get('authToken') == GoodDataWriterTokenTypes.PRODUCTION
+    return !isDemo  && !isProduction
 
   _renderProductionHelp: ->
     span null,
