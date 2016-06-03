@@ -46,6 +46,12 @@ module.exports = React.createClass
   _handleChangeDestination: (newValue) ->
     value = @props.value.set("destination", newValue.trim())
 
+    if @props.tables.get(value.get("destination"))
+      value = value.set(
+        "primary_key",
+        @props.tables.getIn([value.get("destination"), "primaryKey"], Immutable.List())
+      )
+
     @props.onChange(value)
 
   _handleChangeIncremental: (e) ->
@@ -165,6 +171,13 @@ module.exports = React.createClass
                   help: React.DOM.small {},
                     "Primary key of the table in Storage API. If the table already exists, primary key must match."
                   onChange: @_handleChangePrimaryKey
+                  options: @_getColumns().map((option) ->
+                    return {
+                      label: option
+                      value: option
+                    }
+                  ).toJS()
+
         if @state.showDetails
           React.DOM.div {className: "row col-md-12"},
             React.DOM.div className: 'form-group form-group-sm',
