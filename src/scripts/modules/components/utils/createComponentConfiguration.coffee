@@ -64,12 +64,16 @@ module.exports = (componentId, configuration) ->
       !(flags.includes 'genericDockerUI') and
       !(flags.includes 'genericTemplatesUI')
     promise = createConfigByApi(componentId, configuration)
+    promise.then (response) ->
+      installedComponentsApi
+      .createConfiguration componentId,
+        name: configuration.get 'name'
+        description: configuration.get 'description'
+        configurationId: response.id
   else
-    promise = createConfigManually(configuration)
-
-  promise.then (response) ->
     installedComponentsApi
     .createConfiguration componentId,
       name: configuration.get 'name'
       description: configuration.get 'description'
-      configurationId: response.id
+
+
