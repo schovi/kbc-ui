@@ -40,11 +40,12 @@ module.exports = React.createClass
 
   _handleChangeSource: (e) ->
     immutable = @props.value.withMutations (mapping) ->
-      mapping = mapping.set("source", e.target.value)
+      mapping = mapping.set("source", e.target.value.trim())
     @props.onChange(immutable)
 
   _handleChangeDestination: (newValue) ->
-    value = @props.value.set("destination", newValue)
+    value = @props.value.set("destination", newValue.trim())
+
     @props.onChange(value)
 
   _handleChangeIncremental: (e) ->
@@ -56,7 +57,7 @@ module.exports = React.createClass
     @props.onChange(value)
 
   _handleChangeDeleteWhereColumn: (newValue) ->
-    value = @props.value.set("delete_where_column", newValue)
+    value = @props.value.set("delete_where_column", newValue.trim())
     value = value.set("delete_where_operator", value.get("delete_where_operator", 'eq'))
     @props.onChange(value)
 

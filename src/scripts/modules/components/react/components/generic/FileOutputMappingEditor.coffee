@@ -29,7 +29,7 @@ module.exports = React.createClass
     should
 
   _handleChangeSource: (e) ->
-    value = @props.value.set("source", e.target.value)
+    value = @props.value.set("source", e.target.value.trim())
     @props.onChange(value)
 
   _handleChangeTags: (value) ->

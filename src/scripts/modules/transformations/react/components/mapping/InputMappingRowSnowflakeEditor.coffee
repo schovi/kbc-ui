@@ -47,7 +47,7 @@ module.exports = React.createClass
     @props.onChange(immutable)
 
   _handleChangeDestination: (e) ->
-    value = @props.value.set("destination", e.target.value)
+    value = @props.value.set("destination", e.target.value.trim())
     @props.onChange(value)
 
   _handleChangeDays: (e) ->
