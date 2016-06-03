@@ -55,7 +55,7 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Delete rows'
         span {className: "col-md-6"},
-          if @props.value.get('delete_where_column') && @props.value.get('delete_where_values')
+          if @props.value.get('delete_where_column') && @props.value.get('delete_where_values') 
             span {},
               'Where '
               strong {},
