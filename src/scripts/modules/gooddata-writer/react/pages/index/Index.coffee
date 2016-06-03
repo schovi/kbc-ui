@@ -210,7 +210,7 @@ module.exports = React.createClass
                   text: div null,
                     p null,
                       "You are about to create new GoodData project for the writer #{writer.get('id')}. "
-                      "The current GoodData project (#{writer.getIn(['gd', 'pid'])}) will be discarded. "
+                      "The current GoodData project (#{@state.pid}) will be discarded. "
                       "Are you sure you want to reset the project?"
                   buttonLabel: 'Reset'
                   onConfirm: @_handleProjectReset
