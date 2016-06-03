@@ -62,7 +62,7 @@ OutputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Delete rows'
         span {className: "col-md-6"},
-          if @props.outputMapping.get('deleteWhereColumn')
+          if @props.outputMapping.get('deleteWhereColumn') && @props.outputMapping.get('deleteWhereValues')
             span {},
               'Where '
               strong {},

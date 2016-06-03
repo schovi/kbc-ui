@@ -13,7 +13,7 @@ module.exports = React.createClass
 
   render: ->
     span {className: @props.rootClassName},
-      if @props.value.get('where_column')
+      if @props.value.get('where_column') && @props.value.get('where_column')
         span {},
           'Where '
           strong {},
@@ -29,7 +29,7 @@ module.exports = React.createClass
                 return '[space character]'
               return value
             ).join(', ')
-      if @props.value.get('days', 0) != 0 && @props.value.get('where_column')
+      if @props.value.get('days', 0) != 0 && @props.value.get('where_column') && @props.value.get('where_column')
         ' and '
       if @props.value.get('days', 0) != 0
         span {},

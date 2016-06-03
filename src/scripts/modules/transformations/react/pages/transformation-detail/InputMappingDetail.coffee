@@ -57,7 +57,7 @@ InputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Filters'
         span {className: "col-md-6"},
-          if @props.inputMapping.get('whereColumn')
+          if @props.inputMapping.get('whereColumn') && @props.inputMapping.get('whereValues')
             span {},
               'Where '
               strong {},
@@ -77,7 +77,7 @@ InputMappingDetail = React.createClass(
             ' and '
           if @props.inputMapping.get('days') != 0
             span {},
-              if @props.inputMapping.get('whereColumn')
+              if @props.inputMapping.get('whereColumn') && @props.inputMapping.get('whereValues')
                 'changed in last '
               else
                 'Changed in last '
