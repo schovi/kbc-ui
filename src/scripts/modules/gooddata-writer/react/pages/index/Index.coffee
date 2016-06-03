@@ -74,6 +74,7 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
+    console.log writer?.toJS()
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
@@ -139,6 +140,7 @@ module.exports = React.createClass
                 else
                   span className: 'fa fa-upload fa-fw'
                 ' Upload project'
+
           li null,
             React.createElement Link,
               to: 'gooddata-writer-model'
@@ -148,88 +150,88 @@ module.exports = React.createClass
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
 
-
-        ul className: 'nav nav-stacked',
-          if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-            li null,
-              a
-                href: writer.getIn(['project', 'ssoLink'])
-                target: '_blank'
-              ,
-                span className: 'fa fa-bar-chart-o fa-fw'
-                ' GoodData Project'
-          li null,
+        if writer.get('project')
+          ul className: 'nav nav-stacked',
             if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-              a
-                onClick: @_handleProjectAccessDisable
-              ,
-                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                  React.createElement Loader, className: 'fa-fw kbc-loader'
-                else
-                  span className: 'fa fa-unlink fa-fw'
-                ' Disable Access to Project'
-            if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-              a
-                onClick: @_handleProjectAccessEnable
-              ,
-                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                  React.createElement Loader, className: 'fa-fw kbc-loader'
-                else
-                  span className: 'fa fa-link fa-fw'
-                ' Enable Access to Project'
-
-        ul className: 'nav nav-stacked',
-          li null,
-            if @state.writer.get 'isOptimizingSLI'
-              span null,
-                ' '
-                React.createElement Loader
-            React.createElement DropdownButton,
-              title: span null,
-                span className: 'fa fa-cog fa-fw'
-                ' Advanced'
-              navItem: true
-            ,
               li null,
-                React.createElement Confirm,
-                  title: 'Optimize SLI hash'
-                  text: div null,
-                    p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
-                    process which might damage your GD project.
-                    We insist on consluting with us before taking any further step. '
-                    p null, 'Please contact us on: support@keboola.com'
-                  buttonLabel: 'Optimize'
-                  buttonType: 'primary'
-                  onConfirm: @_handleOptimizeSLI
+                a
+                  href: writer.getIn(['project', 'ssoLink'])
+                  target: '_blank'
                 ,
-                  a null,
-                    'Optimize SLI hash'
-              li null,
-                React.createElement Confirm,
-                  title: 'Reset Project'
-                  text: div null,
-                    p null,
-                      "You are about to create new GoodData project for the writer #{writer.get('id')}. "
-                      "The current GoodData project (#{@state.pid}) will be discarded. "
-                      "Are you sure you want to reset the project?"
-                  buttonLabel: 'Reset'
-                  onConfirm: @_handleProjectReset
+                  span className: 'fa fa-bar-chart-o fa-fw'
+                  ' GoodData Project'
+            li null,
+              if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+                a
+                  onClick: @_handleProjectAccessDisable
                 ,
-                  a null,
-                    'Reset Project'
-          li null,
-            React.createElement Confirm,
-              title: 'Delete Writer'
-              text: "Are you sure you want to delete writer with its GoodData project?"
-              buttonLabel: 'Delete'
-              onConfirm: @_handleProjectDelete
-            ,
-              a null,
-                if @state.writer.get 'isDeleting'
-                  React.createElement Loader, className: 'fa-fw'
-                else
-                  span className: 'kbc-icon-cup fa-fw'
-                ' Delete Writer'
+                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                    React.createElement Loader, className: 'fa-fw kbc-loader'
+                  else
+                    span className: 'fa fa-unlink fa-fw'
+                  ' Disable Access to Project'
+              if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+                a
+                  onClick: @_handleProjectAccessEnable
+                ,
+                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                    React.createElement Loader, className: 'fa-fw kbc-loader'
+                  else
+                    span className: 'fa fa-link fa-fw'
+                  ' Enable Access to Project'
+        if writer.get('project')
+          ul className: 'nav nav-stacked',
+            li null,
+              if @state.writer.get 'isOptimizingSLI'
+                span null,
+                  ' '
+                  React.createElement Loader
+              React.createElement DropdownButton,
+                title: span null,
+                  span className: 'fa fa-cog fa-fw'
+                  ' Advanced'
+                navItem: true
+              ,
+                li null,
+                  React.createElement Confirm,
+                    title: 'Optimize SLI hash'
+                    text: div null,
+                      p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
+                      process which might damage your GD project.
+                      We insist on consluting with us before taking any further step. '
+                      p null, 'Please contact us on: support@keboola.com'
+                    buttonLabel: 'Optimize'
+                    buttonType: 'primary'
+                    onConfirm: @_handleOptimizeSLI
+                  ,
+                    a null,
+                      'Optimize SLI hash'
+                li null,
+                  React.createElement Confirm,
+                    title: 'Reset Project'
+                    text: div null,
+                      p null,
+                        "You are about to create new GoodData project for the writer #{writer.get('id')}. "
+                        "The current GoodData project (#{@state.pid}) will be discarded. "
+                        "Are you sure you want to reset the project?"
+                    buttonLabel: 'Reset'
+                    onConfirm: @_handleProjectReset
+                  ,
+                    a null,
+                      'Reset Project'
+            li null,
+              React.createElement Confirm,
+                title: 'Delete Writer'
+                text: "Are you sure you want to delete writer with its GoodData project?"
+                buttonLabel: 'Delete'
+                onConfirm: @_handleProjectDelete
+              ,
+                a null,
+                  if @state.writer.get 'isDeleting'
+                    React.createElement Loader, className: 'fa-fw'
+                  else
+                    span className: 'kbc-icon-cup fa-fw'
+                  ' Delete Writer'
         React.createElement LatestJobs,
           jobs: @state.latestJobs
           limit: 3
