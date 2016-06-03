@@ -1,7 +1,7 @@
 React = require 'react'
 {Map, List} = require 'immutable'
 Promise = require('bluebird')
-
+{GoodDataWriterTokenTypes} = require '../../../../components/Constants'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -29,7 +29,7 @@ InstalledComponentStore = require '../../../../components/stores/InstalledCompon
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
 installedComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
-{strong, br, ul, li, div, span, i, a, button, p} = React.DOM
+{label, small, strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
@@ -92,6 +92,12 @@ module.exports = React.createClass
               bsStyle: 'warning'
             ,
               writer.get('info')
+        if not writer.get('project')
+          div className: 'row',
+            React.createElement Alert,
+              bsStyle: 'warning'
+            ,
+              'No GoodData project assigned with this configuration.'
         if @state.tablesByBucket.count()
           React.createElement SearchRow,
             className: 'row kbc-search-row'
@@ -109,6 +115,8 @@ module.exports = React.createClass
           React.createElement ComponentMetadata,
             componentId: 'gooddata-writer'
             configId: @state.configId
+        div null,
+          @_renderGoodDataTokenInfo()
         ul className: 'nav nav-stacked',
           li null,
             React.createElement Link,
@@ -262,6 +270,27 @@ module.exports = React.createClass
   _handleProjectAccessDisable: ->
     actionCreators.disableProjectAccess(@state.writer.getIn(['config', 'id']),
       @state.writer.getIn(['config', 'project', 'id']))
+
+  _renderGoodDataTokenInfo: ->
+    token = @state.writer.getIn(['config', 'project', 'authToken'])
+    labelCaption = 'None'
+    labelClass = 'default'
+    if token
+      switch token
+        when GoodDataWriterTokenTypes.DEMO
+          labelCaption = 'Keboola DEMO'
+          labelClass = 'warning'
+        when GoodDataWriterTokenTypes.PRODUCTION
+          labelCaption = 'Keboola Production'
+          labelClass = 'primary'
+        else
+          labelCaption = 'Custom'
+          labelClass = 'primary'
+    small null,
+      'GoodData Auth Token: '
+      span className: 'label label-' + labelClass,
+        labelCaption
+
 
   _renderNotFound: ->
     # div {className: 'table table-striped'},
