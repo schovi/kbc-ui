@@ -36,6 +36,15 @@ createGoodDataWriter = (configuration) ->
     params.pid = configuration.get 'pid'
     params.username = configuration.get 'username'
     params.password = configuration.get 'password'
+    params.readModel = configuration.get 'readModel'
+
+  if configuration.get('customDomain')
+    params.domain = configuration.get 'domain'
+    params.username = configuration.get 'username'
+    params.password = configuration.get 'password'
+    params.backendUrl = configuration.get 'backendUrl'
+    params.ssoProvider = configuration.get 'ssoProvider'
+    params.ssoKey = configuration.get 'ssoKey'
 
   syrupApi
   .createRequest('gooddata-writer', 'POST', 'v2')

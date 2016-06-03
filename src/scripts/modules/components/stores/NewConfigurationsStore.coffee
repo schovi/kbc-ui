@@ -11,6 +11,8 @@ _store = Map(
 
 _defaults = Immutable.fromJS
   'gooddata-writer':
+    domain: ''
+    customDomain: false
     name: ''
     description: ''
     pid: ''
@@ -18,6 +20,7 @@ _defaults = Immutable.fromJS
     password: ''
     authToken: constants.GoodDataWriterTokenTypes.DEMO
     mode: constants.GoodDataWriterModes.NEW
+    readModel: true
     #accessToken: '' DEPRECATED
     # tokenType: constants.GoodDataWriterTokenTypes.DEMO DEPRECATED
 
@@ -49,6 +52,10 @@ NewConfigurationsStore = StoreUtils.createStore
           return false if !configuration.get('pid').trim()
           return false if !configuration.get('password').trim()
           return false if !configuration.get('username').trim()
+      if configuration.get('customDomain')
+        return false if !configuration.get('domain').trim()
+        return false if !configuration.get('password').trim()
+        return false if !configuration.get('username').trim()
     true
 
   isSavingConfiguration: (componentId) ->
