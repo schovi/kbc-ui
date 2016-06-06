@@ -70,7 +70,7 @@ module.exports = React.createClass
   render: ->
     {ATTRIBUTE, REFERENCE, DATE} = ColumnTypes
     filteredColumns = @state.columns.filter((c) -> c.get('type') in [ATTRIBUTE, REFERENCE, DATE])
-    grainColumns = if @_isConnectionPoint() then filteredColumns else Map()
+    grainColumns = if !@_isConnectionPoint() then filteredColumns else Map()
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
       React.DOM.strong null, @state.table.getIn ['data', 'title']

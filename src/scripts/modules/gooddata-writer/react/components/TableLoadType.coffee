@@ -4,7 +4,7 @@ actionCreators = require '../../actionCreators'
 
 {Modal, ModalTrigger, Input, Button, ButtonToolbar} = require 'react-bootstrap'
 
-{a, small, option, select, label, input, div, span} = React.DOM
+{strong, a, small, option, select, label, input, div, span} = React.DOM
 Loader = React.createFactory(require('kbc-react-components').Loader)
 ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 
@@ -125,7 +125,11 @@ LoadTypeModal = React.createClass
         )
         if grainArray.length != @props.columns.count()
           @_renderOneGrainFactSelect('', grainArray, enabled)
-
+      if @props.columns.count() == 0
+        div className: 'text text-warning',
+          strong null, 'Warning: '
+          'Violated conditions for fact grain: \
+          There must be at least one column of attribute, reference or date type and no connection point.'
   _renderOneGrainFactSelect: (selectedColumn, grainArray, enabled) ->
     columnsOptions = null
     columns = @props.columns

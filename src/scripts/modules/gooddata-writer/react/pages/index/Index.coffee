@@ -287,7 +287,7 @@ module.exports = React.createClass
           labelCaption = 'Custom'
           labelClass = 'primary'
     small null,
-      'GoodData Auth Token: '
+      'Auth Token: '
       span className: 'label label-' + labelClass,
         labelCaption
 
