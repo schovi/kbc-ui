@@ -16,6 +16,7 @@ SearchRow = require('../../../../../react/common/SearchRow').default
 TablesList = require './BucketTablesList'
 TableRow = require './TableRow'
 TablesByBucketsPanel = require '../../../../components/react/components/TablesByBucketsPanel'
+{Protected} = require 'kbc-react-components'
 
 ActiveCountBadge = require './ActiveCountBadge'
 {Link} = require('react-router')
@@ -290,6 +291,8 @@ module.exports = React.createClass
       'Auth Token: '
       span className: 'label label-' + labelClass,
         labelCaption
+      if labelCaption == 'Custom'
+        React.createElement Protected, null, token
 
 
   _renderNotFound: ->
