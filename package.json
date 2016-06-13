@@ -34,7 +34,7 @@
     "immutable": "~3.7.3",
     "intl": "^0.1.4",
     "intl-messageformat": "^1.1.0",
-    "json-editor": "^0.7.23",
+    "json-editor": "^0.7.25",
     "json-loader": "^0.5.4",
     "kbc-bootstrap": "git+https://git@github.com/keboola/kbc-bootstrap.git",
     "kbc-react-components": "0.0.9",

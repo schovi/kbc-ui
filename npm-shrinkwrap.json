@@ -3398,9 +3398,9 @@
       "resolved": "https://registry.npmjs.org/jsesc/-/jsesc-0.5.0.tgz"
     },
     "json-editor": {
-      "version": "0.7.23",
-      "from": "json-editor@>=0.7.23 <0.8.0",
-      "resolved": "https://registry.npmjs.org/json-editor/-/json-editor-0.7.23.tgz"
+      "version": "0.7.25",
+      "from": "json-editor@>=0.7.25 <0.8.0",
+      "resolved": "https://registry.npmjs.org/json-editor/-/json-editor-0.7.25.tgz"
     },
     "json-loader": {
       "version": "0.5.4",
