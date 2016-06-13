@@ -20,6 +20,9 @@ import {Check} from 'kbc-react-components';
 import Tooltip from '../../../../react/common/Tooltip';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 
+const PERNANENT_MIGRATION_COMPONENTS = [
+  'ex-db'
+];
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
 
@@ -78,7 +81,8 @@ export default React.createClass({
    *},*/
 
   canMigrate() {
-    return ApplicationStore.hasCurrentAdminFeature(MIGRATION_ALLOWED_FEATURE);
+    const isPernament = PERNANENT_MIGRATION_COMPONENTS.indexOf(this.props.componentId) >= 0;
+    return isPernament || ApplicationStore.hasCurrentAdminFeature(MIGRATION_ALLOWED_FEATURE);
   },
 
   renderTabTitle(title, helptext) {
