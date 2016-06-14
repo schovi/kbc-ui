@@ -55,7 +55,6 @@ SnowflakeSandbox = React.createClass
         SnowflakeCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
-    console.log(@state.credentials.toJS)
     if !@state.hasSnowflake
       return null
     if @state.credentials.get "id"
