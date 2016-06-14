@@ -13,7 +13,6 @@ DeleteButton = React.createFactory(require '../../../../react/common/DeleteButto
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
-ApplicationStore = require('../../../../stores/ApplicationStore')
 contactSupport = require('../../../../utils/contactSupport').default
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
@@ -25,14 +24,12 @@ RedshiftSandbox = React.createClass
   mixins: [createStoreMixin(
     RedshiftSandboxCredentialsStore,
     StorageBucketsStore,
-    StorageTablesStore,
-    ApplicationStore
+    StorageTablesStore
   )]
 
   displayName: 'RedshiftSandbox'
 
   getStateFromStores: ->
-    hasRedshift: ApplicationStore.getSapiToken().getIn(["owner", "hasRedshift"], false)
     credentials: RedshiftSandboxCredentialsStore.getCredentials()
     pendingActions: RedshiftSandboxCredentialsStore.getPendingActions()
     isLoading: RedshiftSandboxCredentialsStore.getIsLoading()
@@ -49,20 +46,10 @@ RedshiftSandbox = React.createClass
     e.stopPropagation()
 
   _renderCredentials: ->
-    if (!@state.hasRedshift)
-      span {},
-        "Redshift is not enabled for this project, please "
-      ,
-        a {onClick: @_openSupportModal}, "contact us"
-      ,
-        " to get more info."
-    else
-      span {},
-        RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
+    span {},
+      RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
-    if !@state.hasRedshift
-      return null
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       div {},

@@ -13,7 +13,6 @@ DeleteButton = React.createFactory(require '../../../../react/common/DeleteButto
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
 StorageTablesStore = require '../../../components/stores/StorageTablesStore'
-ApplicationStore = require('../../../../stores/ApplicationStore')
 contactSupport = require('../../../../utils/contactSupport').default
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
@@ -22,14 +21,12 @@ SnowflakeSandbox = React.createClass
   mixins: [createStoreMixin(
     SnowflakeSandboxCredentialsStore,
     StorageBucketsStore,
-    StorageTablesStore,
-    ApplicationStore
+    StorageTablesStore
   )]
 
   displayName: 'SnowflakeSandbox'
 
   getStateFromStores: ->
-    hasSnowflake: ApplicationStore.getSapiToken().getIn(["owner", "hasSnowflake"], false)
     credentials: SnowflakeSandboxCredentialsStore.getCredentials()
     pendingActions: SnowflakeSandboxCredentialsStore.getPendingActions()
     isLoading: SnowflakeSandboxCredentialsStore.getIsLoading()
@@ -43,20 +40,10 @@ SnowflakeSandbox = React.createClass
     e.stopPropagation()
 
   _renderCredentials: ->
-    if (!@state.hasSnowflake)
-      span {},
-        "Snowflake is not enabled for this project, please "
-      ,
-        a {onClick: @_openSupportModal}, "contact us"
-      ,
-        " to get more info."
-    else
-      span {},
-        SnowflakeCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
+    span {},
+      SnowflakeCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
-    if !@state.hasSnowflake
-      return null
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       div {},
