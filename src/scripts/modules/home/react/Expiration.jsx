@@ -18,7 +18,7 @@ export default React.createClass({
   render() {
     const {expires} = this.props;
 
-    if (!expires) {
+    if (!expires || parseInt(this.days(), 10) > 30) {
       return null;
     }
 
