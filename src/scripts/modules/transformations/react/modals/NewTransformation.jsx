@@ -142,7 +142,7 @@ export default React.createClass({
 
 
   isValid() {
-    return this.state.data.get('name').length > 0 && this.state.data.get('backend') !== 'snowflake';
+    return this.state.data.get('name').length > 0;
   },
 
   handleChange(field, e) {
