@@ -43,13 +43,12 @@ export default React.createClass({
   },
 
   getInitialState() {
-    const backend = ApplicationStore.getCurrentProject().get('defaultBackend') === 'snowflake' ? 'mysql' : ApplicationStore.getCurrentProject().get('defaultBackend');
     return {
       data: Map({
         isSaving: false,
         name: '',
         description: '',
-        backend: backend
+        backend: ApplicationStore.getCurrentProject().get('defaultBackend')
       })
     };
   },
