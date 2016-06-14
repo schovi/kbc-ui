@@ -3,6 +3,7 @@ constants = require './Constants'
 provisioningApi = require './ProvisioningApi'
 mySqlSandboxCredentialsStore = require './stores/MySqlSandboxCredentialsStore'
 redshiftSandboxCredentialsStore = require './stores/RedshiftSandboxCredentialsStore'
+snowflakeSandboxCredentialsStore = require './stores/SnowflakeSandboxCredentialsStore'
 WrDbCredentialsStore = require './stores/WrDbCredentialsStore'
 Promise = require 'bluebird'
 HttpError = require '../../utils/HttpError'
@@ -292,6 +293,107 @@ module.exports =
         type: constants.ActionTypes.CREDENTIALS_WRDB_DROP_ERROR
         permission: permissionType
         token: token
+      )
+      throw error
+    )
+
+  ###
+  Request specified orchestration load from server
+  @return Promise
+  ###
+  loadSnowflakeSandboxCredentialsForce: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_LOAD
+    )
+
+    provisioningApi
+    .getCredentials('snowflake', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_LOAD_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch(HttpError, (error) ->
+      if error.response.status == 404
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_LOAD_SUCCESS
+          credentials:
+            id: null
+        )
+      else
+        dispatcher.handleViewAction(
+          type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_LOAD_ERROR
+        )
+        throw error
+    )
+    .catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_LOAD_ERROR
+      )
+      throw error
+    )
+
+  loadSnowflakeSandboxCredentials: ->
+    return Promise.resolve() if snowflakeSandboxCredentialsStore.getIsLoaded()
+    @loadSnowflakeSandboxCredentialsForce()
+
+
+  createSnowflakeSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_CREATE
+    )
+
+    provisioningApi
+    .createCredentials('snowflake', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_CREATE_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_CREATE_ERROR
+      )
+      throw error
+    )
+
+  dropSnowflakeSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_DROP
+    )
+
+    provisioningApi
+    .dropCredentials('snowflake', snowflakeSandboxCredentialsStore.getCredentials().get("id"))
+    .then( ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_DROP_SUCCESS
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_DROP_ERROR
+      )
+      throw error
+    )
+
+  refreshSnowflakeSandboxCredentials: ->
+    dispatcher.handleViewAction(
+      type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH
+    )
+
+    provisioningApi
+    .createCredentials('snowflake', 'sandbox')
+    .then((response) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH_SUCCESS
+        credentials: response.credentials
+      )
+      return
+    ).catch((error) ->
+      dispatcher.handleViewAction(
+        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH_ERROR
       )
       throw error
     )

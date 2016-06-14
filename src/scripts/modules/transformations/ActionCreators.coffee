@@ -386,31 +386,3 @@ module.exports =
         error: error
       )
       throw error
-
-  ###
-    Create new or update existing output mapping
-  ###
-  saveSnowflakeConnection: (bucketId, transformationId) ->
-    value = TransformationsStore.getTransformationEditingFields(bucketId, transformationId).get("snowflake")
-    transformation = TransformationsStore.getTransformation(bucketId, transformationId)
-
-    transformation = transformation.set "snowflake", value
-    transformationsApi
-    .saveTransformation(bucketId, transformationId, transformation.toJS())
-    .then (response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-        transformationId: transformationId
-        bucketId: bucketId
-        editingId: "snowflake"
-        data: response
-      )
-      VersionActionCreators.loadVersionsForce('transformation', bucketId)
-    .catch (error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_ERROR
-        transformationId: transformationId
-        bucketId: bucketId
-        error: error
-      )
-      throw error

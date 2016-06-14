@@ -3,6 +3,7 @@ import ConfigureSandboxModal from './ConfigureSandboxModal';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import MySqlSandboxCredentialsStore from '../../../provisioning/stores/MySqlSandboxCredentialsStore';
 import RedshiftSandboxCredentialsStore from '../../../provisioning/stores/RedshiftSandboxCredentialsStore';
+import SnowflakeSandboxCredentialsStore from '../../../provisioning/stores/SnowflakeSandboxCredentialsStore';
 import jobsApi from '../../../jobs/JobsApi';
 import actionCreators from '../../../components/InstalledComponentsActionCreators';
 
@@ -15,12 +16,13 @@ export default React.createClass({
     backend: PropTypes.string.isRequired,
     runParams: PropTypes.object.isRequired
   },
-  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, RedshiftSandboxCredentialsStore)],
+  mixins: [createStoreMixin(MySqlSandboxCredentialsStore, RedshiftSandboxCredentialsStore, SnowflakeSandboxCredentialsStore)],
 
   getStateFromStores() {
     return {
       mysqlCredentials: MySqlSandboxCredentialsStore.getCredentials(),
-      redshiftCredentials: RedshiftSandboxCredentialsStore.getCredentials()
+      redshiftCredentials: RedshiftSandboxCredentialsStore.getCredentials(),
+      snowflakeCredentials: SnowflakeSandboxCredentialsStore.getCredentials()
     };
   },
 
@@ -39,6 +41,7 @@ export default React.createClass({
     return React.createElement(ConfigureSandboxModal, {
       mysqlCredentials: this.state.mysqlCredentials,
       redshiftCredentials: this.state.redshiftCredentials,
+      snowflakeCredentials: this.state.snowflakeCredentials,
       onHide: this.handleModalClose,
       show: this.props.show,
       backend: this.props.backend,

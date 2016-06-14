@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import RadioGroup from 'react-radio-group';
 import MySqlCredentialsContainer from '../components/MySqlCredentialsContainer';
 import RedshiftCredentialsContainer from '../components/RedshiftCredentialsContainer';
+import SnowflakeCredentialsContainer from '../components/SnowflakeCredentialsContainer';
 import ConnectToMySqlSandbox from '../components/ConnectToMySqlSandbox';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
@@ -31,6 +32,7 @@ export default React.createClass({
     jobId: PropTypes.string.isRequired,
     mysqlCredentials: PropTypes.object.isRequired,
     redshiftCredentials: PropTypes.object.isRequired,
+    snowflakeCredentials: PropTypes.object.isRequired,
     onModeChange: PropTypes.func.isRequired,
     onCreateStart: PropTypes.func.isRequired
   },
@@ -83,18 +85,22 @@ export default React.createClass({
       return this.props.mysqlCredentials.has('id');
     } else if (this.props.backend === 'redshift') {
       return this.props.redshiftCredentials.has('id');
+    } else if (this.props.backend === 'snowflake') {
+      return this.props.snowflakeCredentials.has('id');
     } else {
       return true;
     }
   },
 
   renderCredentials() {
-    if (this.props.backend === 'mysql' || this.props.backend === 'redshift') {
+    if (this.props.backend === 'mysql' || this.props.backend === 'redshift' || this.props.backend === 'snowflake') {
       return (
         <div className="clearfix">
           <h3>Credentials</h3>
           <div className="col-sm-offset-1 col-sm-10">
-            {this.props.backend === 'redshift' ? this.renderRedshiftCredentials() : this.renderMysqlCredentials()}
+            {this.props.backend === 'redshift' ? this.renderRedshiftCredentials() : null}
+            {this.props.backend === 'mysql' ? this.renderMysqlCredentials() : null}
+            {this.props.backend === 'snowflake' ? this.renderSnowflakeCredentials() : null}
           </div>
         </div>
       );
@@ -105,6 +111,33 @@ export default React.createClass({
     return React.createElement(RedshiftCredentialsContainer, {
       isAutoLoad: true
     });
+  },
+
+  renderSnowflakeCredentials() {
+    return (
+      <div className="row">
+        <div className="col-md-9">
+          <SnowflakeCredentialsContainer isAutoLoad={true} />
+        </div>
+        <div className="col-md-3">
+          {this.renderSnowflakeConnect()}
+        </div>
+      </div>
+    );
+  },
+
+  renderSnowflakeConnect() {
+    if (!this.props.snowflakeCredentials.get('id')) {
+      return null;
+    }
+    return (
+      <div>
+        <a href={'https://' + this.props.snowflakeCredentials.get('hostname')} className="btn btn-link">
+          <span className="fa fa-fw fa-database" />
+          <span> Connect</span>
+        </a>
+      </div>
+    );
   },
 
   renderMysqlCredentials() {

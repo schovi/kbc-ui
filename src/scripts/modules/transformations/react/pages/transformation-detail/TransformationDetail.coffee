@@ -19,7 +19,6 @@ CreateSandboxButton = require('../../components/CreateSandboxButton').default
 
 SqlDepModalTrigger = React.createFactory(require '../../modals/SqlDepModalTrigger.coffee')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
-ConfigureSnowflakeConnection = React.createFactory(require('./ConfigureSnowflakeConnection').default)
 
 {div, span, ul, li, a, em} = React.DOM
 
@@ -103,12 +102,6 @@ module.exports = React.createClass
             ,
               span className: 'fa fa-search fa-fw'
               ' Overview'
-          if @state.transformation.get('backend') == 'snowflake'
-            li {},
-              ConfigureSnowflakeConnection
-                bucket: @state.bucket
-                transformation: @state.transformation
-                connection: @state.editingFields.get('snowflake', Immutable.Map())
           li {},
             RunComponentButton(
               title: "Run transformation"

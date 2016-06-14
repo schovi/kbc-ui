@@ -106,33 +106,25 @@ export default React.createClass({
           onChange={this.handleChange.bind(this, 'backend')}
           labelClassName="col-sm-4"
           wrapperClassName="col-sm-6"
-          help={this.snowflakeWarning()}>
+          >
           {this.backendOptions()}
         </Input>
       </form>
     );
   },
 
-  snowflakeWarning() {
-    if (this.state.data.get('backend') === 'snowflake') {
-      return (
-        <span>
-          Snowflake support is experimental. Contact <a href="mailto:support@keboola.com">support@keboola.com</a> for more details.
-        </span>
-      );
-    } else {
-      return (<span></span>);
-    }
-  },
-
   backendOptions() {
-    return [
-      {value: 'mysql', label: 'MySQL'},
-      {value: 'redshift', label: 'Redshift'},
-      {value: 'snowflake', label: 'Snowflake'},
-      {value: 'r', label: 'R'},
-      {value: 'python', label: 'Python'}
-    ].map(function(option) {
+    var options = [];
+    options.push({value: 'mysql', label: 'MySQL'});
+    if (ApplicationStore.getSapiToken().getIn(['owner', 'hasRedshift'], false)) {
+      options.push({value: 'redshift', label: 'Redshift'});
+    }
+    if (ApplicationStore.getSapiToken().getIn(['owner', 'hasSnowflake'], false)) {
+      options.push({value: 'snowflake', label: 'Snowflake'});
+    }
+    options.push({value: 'r', label: 'R'});
+    options.push({value: 'python', label: 'Python'});
+    return options.map(function(option) {
       return (
         <option value={option.value} key={option.value}>{option.label}</option>
       );

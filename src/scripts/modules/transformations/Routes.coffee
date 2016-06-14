@@ -4,7 +4,7 @@ TransformationsIndex = require('./react/pages/transformations-index/Transformati
 TransformationBucket = require('./react/pages/transformation-bucket/TransformationBucket')
 TransformationDetail = require('./react/pages/transformation-detail/TransformationDetail')
 TransformationGraph = require('./react/pages/transformation-graph/TransformationGraph')
-Sandbox = require('./react/pages/sandbox/Sandbox')
+Sandbox = require('./react/pages/sandbox/Sandbox').default
 InstalledComponentsActionCreators = require('./../components/InstalledComponentsActionCreators')
 TransformationsActionCreators = require('./ActionCreators')
 VersionsActionCreators = require('../components/VersionsActionCreators')
@@ -18,6 +18,7 @@ TransformationsStore = require  './stores/TransformationsStore'
 Versions = require('../../modules/components/react/pages/Versions').default
 ComponentNameEdit = require '../components/react/components/ComponentName'
 TransformationNameEdit = require './react/components/TransformationNameEditField'
+ApplicationsStore = require '../../stores/ApplicationStore'
 
 routes =
       name: 'transformations'
@@ -99,7 +100,12 @@ routes =
             ProvisioningActionCreators.loadMySqlSandboxCredentials()
         ,
           ->
-            ProvisioningActionCreators.loadRedshiftSandboxCredentials()
+            if (ApplicationsStore.getSapiToken().getIn(['owner', 'hasRedshift']))
+              ProvisioningActionCreators.loadRedshiftSandboxCredentials()
+        ,
+          ->
+            if (ApplicationsStore.getSapiToken().getIn(['owner', 'hasSnowflake']))
+              ProvisioningActionCreators.loadSnowflakeSandboxCredentials()
         ,
           ->
             StorageActionCreators.loadBuckets()
