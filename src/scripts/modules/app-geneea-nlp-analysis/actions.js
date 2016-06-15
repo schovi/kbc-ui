@@ -10,8 +10,10 @@ const OUTPUT = 'output';
 const PRIMARYKEY = 'id_column';
 const ANALYSIS = 'analysis_types';
 const DATACOLUMN = 'data_column';
+const DOMAIN = 'domain';
+const BETA = 'use_beta';
 
-export const params = {LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN};
+export const params = {LANGUAGE, OUTPUT, PRIMARYKEY, ANALYSIS, DATACOLUMN, DOMAIN, BETA};
 
 function getLocalState(configId, path) {
   const state = InstalledComponentStore.getLocalState(componentId, configId);
@@ -61,6 +63,9 @@ export function startEditing(configId) {
     }
     if (key === OUTPUT) {
       defaultVal = 'out.c-nlp.';
+    }
+    if (key === BETA) {
+      defaultVal = false;
     }
     const value = configData.getIn(['parameters', key], defaultVal);
     memo[key] = value;

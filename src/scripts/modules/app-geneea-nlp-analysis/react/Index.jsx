@@ -2,7 +2,7 @@ import React from 'react';
 import {List, Map} from 'immutable';
 import _ from 'underscore';
 import {FormControls} from 'react-bootstrap';
-
+import {Check} from 'kbc-react-components';
 import Select from 'react-select';
 import classnames from 'classnames';
 
@@ -162,6 +162,7 @@ export default React.createClass({
           placeholder="e.g. out.c-main.result"/>,
          'Prefix of the output table id, if is only a bucket id then it must end with dot \'.\'', !outputValid)
         }
+        {this.renderDomainSelect('The source domain from which the document originates.')}
         {this.renderFormElement('Language',
           <Select
             key="language"
@@ -172,10 +173,26 @@ export default React.createClass({
             options= {languageOptions}/>, 'Language of the text of the data column.')
         }
         {this.renderAnalysisTypesSelect()}
+        {this.renderUseBetaEdit()}
       </div>
     );
   },
 
+  renderUseBetaEdit() {
+    return (
+      <div className="form-group">
+        <div className="checkbox col-sm-3">
+          <label>
+            <input
+              type="checkbox"
+              checked={this.getEditingValue(params.BETA)}
+              onChange= {(event) => this.updateEditingValue(params.BETA, event.target.checked)}/>
+          Use BETA Version
+          </label>
+        </div>
+      </div>
+      );
+  },
 
   renderTableFiltersModal() {
     return (
@@ -279,6 +296,30 @@ export default React.createClass({
     );
   },
 
+  renderDomainSelect(description) {
+    const predefinedColumns = ['customer care', 'news'].map((c) => {
+      return {
+        'label': c,
+        'value': c
+      };
+    }
+    );
+    const prop = params.DOMAIN;
+    const result = this.renderFormElement('Domain',
+      <Select
+        placeholder="Select or type new..."
+        clearable={true}
+        allowCreate={true}
+        key="domain"
+        name="domain"
+        value={this.getEditingValue(prop)}
+        onChange= {(newValue) => this.updateEditingValue(prop, newValue)}
+        options= {predefinedColumns}
+      />
+    , description);
+    return result;
+  },
+
   renderColumnSelect(label, column, description) {
     const result = this.renderFormElement(label,
       <Select
@@ -299,11 +340,14 @@ export default React.createClass({
         {this.renderIntableStatic()}
         {this.RenderStaticInput('Data Filter', this.renderDataFilter() )}
         {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN) )}
+
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
+        {this.RenderStaticInput('Domain', this.parameter(params.DOMAIN) )}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
+        {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
   },
@@ -345,13 +389,14 @@ export default React.createClass({
     return this.renderFormElement((<span>Input Table</span>), link);
   },
 
-  RenderStaticInput(label, value) {
+  RenderStaticInput(label, value, isBetaCheckobx = false) {
     return (
       <StaticText
         label={label}
         labelClassName="col-sm-3"
         wrapperClassName="col-sm-9">
-        {value || 'n/a'}
+        {isBetaCheckobx ? <Check
+         isChecked={value}/> : value || 'n/a'}
       </StaticText>
     );
   },
