@@ -66,7 +66,7 @@ SnowflakeSandbox = React.createClass
           )
 
         div {},
-          a {href: 'https://' + @state.credentials.get('hostname'), className: 'btn btn-link'},
+          a {href: 'https://' + @state.credentials.get('hostname'), className: 'btn btn-link', target: '_blank'},
             span {className: 'fa fa-fw fa-database'}
             " Connect"
 
