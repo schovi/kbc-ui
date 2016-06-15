@@ -6,14 +6,24 @@ import {Table} from 'react-bootstrap';
 
 export default React.createClass({
   propTypes: {
-    dataPreview: PropTypes.object
+    dataPreview: PropTypes.object,
+    dataPreviewError: PropTypes.string
   },
 
   mixins: [immutableMixin],
 
   render() {
-    const data = this.props.dataPreview;
-    if (data.count() === 0) {
+    const {dataPreview, dataPreviewError} = this.props;
+
+    if (dataPreviewError) {
+      return (
+        <EmptyState>
+          {dataPreviewError}
+        </EmptyState>
+      );
+    }
+
+    if (dataPreview.count() === 0) {
       return (
         <EmptyState>
           No Data.
@@ -21,14 +31,14 @@ export default React.createClass({
       );
     }
 
-    const header = data.first().map( (c) => {
+    const header = dataPreview.first().map( (c) => {
       return (
         <th>
           {c}
         </th>
       );
     }).toArray();
-    const rows = data.rest().map( (row) => {
+    const rows = dataPreview.rest().map( (row) => {
       const cols = row.map( (c) => {
         return (<td> {c} </td>);
       });

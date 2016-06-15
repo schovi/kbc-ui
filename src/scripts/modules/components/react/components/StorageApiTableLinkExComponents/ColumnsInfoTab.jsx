@@ -15,6 +15,7 @@ export default React.createClass({
     tableExists: PropTypes.bool.isRequired,
     table: PropTypes.object,
     dataPreview: PropTypes.object,
+    dataPreviewError: PropTypes.string,
     enhancedAnalysis: PropTypes.object,
     isRedshift: PropTypes.bool,
     onRunAnalysis: PropTypes.func,
@@ -26,6 +27,14 @@ export default React.createClass({
   mixins: [immutableMixin],
 
   render() {
+    if (this.props.dataPreviewError) {
+      return (
+          <EmptyState>
+            {this.props.dataPreviewError}
+          </EmptyState>
+      );
+    }
+
     if (!this.props.tableExists || !this.isDataPreview()) {
       return (
         <EmptyState>

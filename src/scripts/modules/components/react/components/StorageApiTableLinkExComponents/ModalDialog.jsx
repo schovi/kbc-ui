@@ -26,6 +26,7 @@ export default React.createClass({
     loadingProfilerData: PropTypes.bool,
     table: PropTypes.object,
     dataPreview: PropTypes.object,
+    dataPreviewError: PropTypes.string,
     enhancedAnalysis: PropTypes.object,
     onOmitFetchesFn: PropTypes.func,
     onOmitExportsFn: PropTypes.func,
@@ -124,6 +125,7 @@ export default React.createClass({
     return (
       <DataSampleTab
         dataPreview={this.props.dataPreview}
+        dataPreviewError={this.props.dataPreviewError}
       />
     );
   },
@@ -134,6 +136,7 @@ export default React.createClass({
         tableExists={this.props.tableExists}
         table={this.props.table}
         dataPreview={this.props.dataPreview}
+        dataPreviewError={this.props.dataPreviewError}
         isRedshift={this.props.isRedshift}
         isCallingRunAnalysis={this.props.isCallingRunAnalysis}
         onRunAnalysis={this.props.onRunAnalysis}

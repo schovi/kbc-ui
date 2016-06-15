@@ -57,6 +57,7 @@ export default React.createClass({
       events: Immutable.List(),
       show: false,
       dataPreview: Immutable.List(),
+      dataPreviewError: null,
       loadingPreview: false,
       loadingProfilerData: false,
       omitFetches: omitFetches,
@@ -175,6 +176,7 @@ export default React.createClass({
          isLoading={this.isLoading()}
          table={this.state.table}
          dataPreview={this.state.dataPreview}
+         dataPreviewError={this.state.dataPreviewError}
          onOmitExportsFn={this.onOmitExports}
          onOmitFetchesFn={this.onOmitFetches}
          events={this.state.events}
@@ -286,6 +288,20 @@ export default React.createClass({
       component.setState({
         loadingPreview: false,
         dataPreview: Immutable.fromJS(csv)
+      });
+    })
+    .catch((error) => {
+      let dataPreviewError = null;
+      if (error.response.body) {
+        if (error.response.body.code === 'storage.maxNumberOfColumnsExceed') {
+          dataPreviewError = 'Data sample cannot be displayed. Too many columns.';
+        } else {
+          dataPreviewError = error.response.body.message;
+        }
+      }
+      component.setState({
+        loadingPreview: false,
+        dataPreviewError: dataPreviewError
       });
     });
   },
