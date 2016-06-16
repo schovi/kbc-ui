@@ -23,9 +23,12 @@ provisioningApi =
       response.body
     )
 
-  createCredentials: (backend, credentialsType, token) ->
+  createCredentials: (backend, credentialsType, token, data) ->
+    if !data
+      data = {}
+    data.type = credentialsType
     createRequest('POST', backend, token)
-    .send({'type': credentialsType})
+    .send(data)
     .promise()
     .then((response) ->
       response.body

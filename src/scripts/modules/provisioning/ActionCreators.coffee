@@ -140,7 +140,7 @@ module.exports =
     )
 
     provisioningApi
-    .createCredentials('redshift', 'sandbox')
+    .createCredentials('redshift', 'sandbox', null, {noRefresh: true, restrictTime: true})
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_CREATE_SUCCESS
