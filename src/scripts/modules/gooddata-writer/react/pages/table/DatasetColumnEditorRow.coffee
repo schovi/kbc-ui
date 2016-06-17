@@ -144,7 +144,7 @@ module.exports = React.createClass
 
   _renderSortLabelSelect: ->
     return if !@_shouldRenderPart visibleParts.SORT_LABEL
-    return if !@props.sortLabelColumns.count()
+    return if !@props.sortLabelColumns.count() and @props.isEditing
     @_createInput
       type: 'select'
       value: @props.column.get 'sortLabel'
@@ -159,7 +159,7 @@ module.exports = React.createClass
 
   _renderSortOrderSelect: ->
     return if !@_shouldRenderPart visibleParts.SORT_LABEL
-    return if !@props.sortLabelColumns.count()
+    return if !@props.sortLabelColumns.count() and @props.isEditing
     @_createInput
       type: 'select'
       value: @props.column.get 'sortOrder'
