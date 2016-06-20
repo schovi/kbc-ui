@@ -48,6 +48,7 @@ function monkeypatchRender(prototype) {
 
 const originalCreateElement = React.createElement;
 React.createElement = (Component, ...rest) => {
+  let newComponent = Component;
   if (typeof Component === 'function') {
     if (typeof Component.prototype.render === 'function') {
       monkeypatchRender(Component.prototype);
@@ -55,7 +56,7 @@ React.createElement = (Component, ...rest) => {
     // stateless functional component
     if (!Component.prototype.render) {
       const originalStatelessComponent = Component;
-      Component = (...args) => {
+      newComponent = (...args) => {
         try {
           return originalStatelessComponent(...args);
         } catch (error) {
@@ -67,7 +68,7 @@ React.createElement = (Component, ...rest) => {
     }
   }
 
-  return originalCreateElement.call(React, Component, ...rest);
+  return originalCreateElement.call(React, newComponent, ...rest);
 };
 
 
