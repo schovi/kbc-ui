@@ -47,7 +47,7 @@ export default React.createClass({
         <Input
           disabled={!this.props.isEditing}
           type="checkbox"
-          label="Enable SSH Tunnel"
+          label={<span>Enable SSH Tunnel {this.renderHelp()}</span>}
           wrapperClassName="col-xs-8"
           checked={this.isEnabled()}
           onChange={() => this.props.onChange(this.props.data.set('enabled', !this.isEnabled()))}
@@ -56,13 +56,24 @@ export default React.createClass({
     } else {
       return (
         <StaticText
-          label="SSH Tunnel"
+          label={<span>SSH Tunnel {this.renderHelp()}</span>}
           labelClassName="col-xs-4"
           wrapperClassName="col-xs-8">
           <Check isChecked={this.isEnabled()} />
         </StaticText>
       );
     }
+  },
+
+  renderHelp() {
+    return (
+      <small>
+        <a href="https://help.keboola.com/extractors/database/ssh/" target="_blank">
+          Help
+          <i className="fa fa-question-circle fa-fw"/>
+        </a>
+      </small>
+    );
   },
 
   renderPublicKey() {
@@ -74,12 +85,12 @@ export default React.createClass({
         </label>
         <div className="col-sm-8">
           {(publicKey ?
-          <pre>
-            {publicKey}
-            {this.renderClipboard(publicKey)}
-          </pre> : null
-          )}
-          {(this.props.isEditing ? this.renderKeyGen(publicKey) : null)}
+            <pre>
+              {publicKey}
+              {this.renderClipboard(publicKey)}
+            </pre> : null
+           )}
+            {(this.props.isEditing ? this.renderKeyGen(publicKey) : null)}
         </div>
       </div>
     );
