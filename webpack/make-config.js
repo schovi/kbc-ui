@@ -9,6 +9,7 @@ module.exports = function (options) {
     var plugins = [
         new webpack.DefinePlugin({
             'process.env': {
+                __DEV__: isDevelopment,
                 NODE_ENV: JSON.stringify(isDevelopment ? 'development' :
                     'production'),
                 IS_BROWSER: true
