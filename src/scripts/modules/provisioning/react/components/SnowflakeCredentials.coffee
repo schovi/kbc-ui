@@ -26,16 +26,16 @@ SnowflakeCredentials = React.createClass
 
   _renderCredentials: ->
     span {},
-      #div {className: 'row'},
-      #  span {className: 'col-md-3'}, 'Host'
-      #  strong {className: 'col-md-9'},
-      #    @props.credentials.get "hostname"
-      #    Clipboard text: @props.credentials.get "hostname"
-      #div {className: 'row'},
-      #  span {className: 'col-md-3'}, 'Port'
-      #  strong {className: 'col-md-9'},
-      #    '443'
-      #    Clipboard text: '443'
+      div {className: 'row'},
+        span {className: 'col-md-3'}, 'Host'
+        strong {className: 'col-md-9'},
+          @props.credentials.get "hostname"
+          Clipboard text: @props.credentials.get "hostname"
+      div {className: 'row'},
+        span {className: 'col-md-3'}, 'Port'
+        strong {className: 'col-md-9'},
+          '443'
+          Clipboard text: '443'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'User'
         strong {className: 'col-md-9'},
