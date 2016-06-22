@@ -98,7 +98,7 @@ export function cancel(configId) {
 }
 
 function getPrimaryKeysArray(inTablePrimaryKey, task) {
-  if (task === 'entities') return [inTablePrimaryKey, 'type'];
+  if (task === 'entities') return [inTablePrimaryKey, 'entity', 'type'];
   if (task === 'hashtags') return [inTablePrimaryKey, 'hashtag'];
   return [inTablePrimaryKey];
 }
@@ -118,7 +118,7 @@ function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
     const tableExists = !!(allTables.get(tableId, false));
     const tablePks = table.get('primaryKey', List());
     const outTablePks = getPrimaryKeysArray(primaryKey, task);
-    // if there is exactly one PK and equals to primaryKey param
+    // table(@tablePks) contains primary keys that are needed by @outTablePks
     const hasPrimaryKey = hasPrimaryKeys(outTablePks, tablePks);
     result.push({
       'source': `${tableId}.csv`,
