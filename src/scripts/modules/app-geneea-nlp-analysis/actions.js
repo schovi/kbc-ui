@@ -97,23 +97,37 @@ export function cancel(configId) {
   setEditingData(configId, null);
 }
 
+function getPrimaryKeysArray(inTablePrimaryKey, task) {
+  if (task === 'entities') return [inTablePrimaryKey, 'type'];
+  if (task === 'hashtags') return [inTablePrimaryKey, 'hashtag'];
+  return [inTablePrimaryKey];
+}
+
+function hasPrimaryKeys(desiredPks, tablePks) {
+  const result = _.reduce(desiredPks, (memo, pk) => {
+    return tablePks.indexOf(pk) >= 0 && memo;
+  }, true);
+  return result;
+}
+
 function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
   let result = [];
-  const isPKEqual = (key) => key === primaryKey;
   for (let task of tasks) {
     const tableId = `${outBucket}${task}`;
     const table = allTables.get(tableId, Map());
     const tableExists = !!(allTables.get(tableId, false));
     const tablePks = table.get('primaryKey', List());
+    const outTablePks = getPrimaryKeysArray(primaryKey, task);
     // if there is exactly one PK and equals to primaryKey param
-    const hasPrimaryKey = tablePks.count() === 1 && !!(tablePks.find(isPKEqual));
+    const hasPrimaryKey = hasPrimaryKeys(outTablePks, tablePks);
     result.push({
       'source': `${tableId}.csv`,
       'destination': tableId,
-      'primary_key': [primaryKey],
+      'primary_key': outTablePks,
       'incremental': !tableExists || hasPrimaryKey
     });
   }
+  console.log('OUTPUTRESULT', result);
   return result;
 }
 
