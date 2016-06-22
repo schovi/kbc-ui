@@ -4,7 +4,7 @@ import {Modal, Alert, Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ProfileInfo from '../ProfileInfo';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
-import ProfilesLoader from '../../../google-utils/react/ProfilesPicker';
+import ProfilesLoader from '../../../google-utils/react/ProfilesLoader';
 import ApplicationActionCreators from '../../../../actions/ApplicationActionCreators';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
