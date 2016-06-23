@@ -67,12 +67,11 @@ export default React.createClass({
 
   renderHelp() {
     return (
-      <small>
-        <a href="https://developers.keboola.com/integrate/database/" target="_blank">
+      <span>
+        <a href="https://help.keboola.com/extractors/database/#connecting-to-database" target="_blank">
           Help
-          <i className="fa fa-question-circle fa-fw"/>
         </a>
-      </small>
+      </span>
     );
   },
 
