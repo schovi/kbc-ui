@@ -68,7 +68,7 @@ export default React.createClass({
   renderHelp() {
     return (
       <small>
-        <a href="https://help.keboola.com/extractors/database/ssh/" target="_blank">
+        <a href="https://developers.keboola.com/integrate/database/" target="_blank">
           Help
           <i className="fa fa-question-circle fa-fw"/>
         </a>
