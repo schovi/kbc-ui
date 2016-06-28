@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import _ from 'underscore';
+import InstantAuthorizationFields from './InstantAuthoriationFields';
 import {TabbedArea, TabPane, ButtonToolbar, Button, Modal} from 'react-bootstrap';
 import Clipboard from '../../../react/common/Clipboard';
 import AuthorizationForm from './AuthorizationForm';
@@ -19,7 +19,7 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      authorizedFor: '',
+      isFormValid: false,
       externalLink: '',
       generatingLink: false,
       activeTab: 'general'
@@ -67,22 +67,22 @@ export default React.createClass({
       this.state.externalLink ?
       <pre>
         <a href={this.state.externalLink} target="_blank">
-        {this.state.externalLink}
+          {this.state.externalLink}
         </a>
         <div style={{paddingTop: '10px'}}>
           <Clipboard text={this.state.externalLink} label="Copy link to clipboard" />
         </div>
       </pre>
-    : null
+      : null
     );
     return (
       <div>
-          <p style={{marginTop: '20px'}}>
-            <span>
-             To authorize an account from non Keboola Connection user, generate a link to the external authorization app and send it to the user you want to have authorized account for. The generated link is valid for <strong>48</strong> hours and will not be stored anywhere.
-            </span>
-            </p>
-            {externalLink}
+        <p style={{marginTop: '20px'}}>
+          <span>
+            To authorize an account from non Keboola Connection user, generate a link to the external authorization app and send it to the user you want to have authorized account for. The generated link is valid for <strong>48</strong> hours and will not be stored anywhere.
+          </span>
+        </p>
+        {externalLink}
       </div>
     );
   },
@@ -99,27 +99,10 @@ export default React.createClass({
 
   renderInstant() {
     return (
-      <div style={{'padding-top': '20px'}} className="form-group">
-        <div className="col-xs-12">
-          <label className="control-label col-xs-2">
-      Description
-          </label>
-          <div className="col-xs-9">
-            <input
-              className="form-control"
-              type="text"
-              name="authorizedFor"
-              help="Describe this authorization, e.g by account name."
-              defaultValue={this.state.authorizedFor}
-              onChange={this.changeAuthorizedFor}
-              autoFocus={true}
-            />
-            <span className="help-text">
-              Describe this authorization, e.g. by account name.
-            </span>
-          </div>
-        </div>
-      </div>
+      <InstantAuthorizationFields
+        componentId={this.props.componentId}
+        setFormValidFn={(newValue) => this.setState({isFormValid: newValue})}
+      />
     );
   },
 
@@ -127,13 +110,13 @@ export default React.createClass({
     return (
       <ButtonToolbar>
         <Button
-            bsStyle="link"
-            onClick={this.props.onHideFn}>Cancel
+          bsStyle="link"
+          onClick={this.props.onHideFn}>Cancel
         </Button>
         <Button
-            bsStyle="success"
-            type="submit"
-            disabled={_.isEmpty(this.state.authorizedFor)}
+          bsStyle="success"
+          type="submit"
+          disabled={!this.state.isFormValid}
         ><span>Authorize</span>
         </Button>
       </ButtonToolbar>
@@ -145,24 +128,18 @@ export default React.createClass({
       <ButtonToolbar>
         {(this.state.generatingLink ? <Loader /> : null)}
         <Button
-            bsStyle="link"
-            onClick={this.props.onHideFn}>Cancel
+          bsStyle="link"
+          onClick={this.props.onHideFn}>Cancel
         </Button>
         <Button
-            type="button"
-            disabled={this.state.generatingLink}
-            bsStyle="success"
-            onClick={this.onGetExternalLink}>
+          type="button"
+          disabled={this.state.generatingLink}
+          bsStyle="success"
+          onClick={this.onGetExternalLink}>
           {(this.state.externalLink ? 'Regenerate Link' : 'Generate Link')}
         </Button>
       </ButtonToolbar>
     );
-  },
-
-  changeAuthorizedFor(e) {
-    this.setState({
-      authorizedFor: e.target.value
-    });
   },
 
   goToTab(tab) {
