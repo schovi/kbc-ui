@@ -18,7 +18,7 @@ export default React.createClass({
   },
 
   isValid() {
-    return !!this.props.mapping.get('source');
+    return !!this.props.mapping.get('source') && !!this.props.mapping.get('destination');
   },
 
   getInitialState() {
