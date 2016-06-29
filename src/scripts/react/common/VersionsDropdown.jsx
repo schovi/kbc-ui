@@ -16,16 +16,25 @@ export default React.createClass({
 
   propTypes: {
     componentId: React.PropTypes.string.isRequired,
-    configId: React.PropTypes.string.isRequired
+    configIdParam: React.PropTypes.string
+  },
+
+  getDefaultProps() {
+    return {
+      configIdParam: 'config'
+    };
   },
 
   getStateFromStores() {
+    const router = RoutesStore.getRouter();
+    const configId = RoutesStore.getCurrentRouteParam(this.props.configIdParam);
     return {
-      versions: VersionsStore.getVersions(this.props.componentId, this.props.configId),
-      newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, this.props.configId),
-      isPending: VersionsStore.isPendingConfig(this.props.componentId, this.props.configId),
-      pendingActions: VersionsStore.getPendingVersions(this.props.componentId, this.props.configId),
-      router: RoutesStore.getRouter()
+      versions: VersionsStore.getVersions(this.props.componentId, configId),
+      newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, configId),
+      isPending: VersionsStore.isPendingConfig(this.props.componentId, configId),
+      pendingActions: VersionsStore.getPendingVersions(this.props.componentId, configId),
+      router: router,
+      configId: configId
     };
   },
 
@@ -57,8 +66,8 @@ export default React.createClass({
         (
           <CopyVersionMenuItem
             version={version}
-            onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
-            onChangeName={this.createOnChangeName(this.props.componentId, this.props.configId, version.get('version'))}
+            onCopy={createVersionOnCopy(this.props.componentId, this.state.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
+            onChangeName={this.createOnChangeName(this.props.componentId, this.state.configId, version.get('version'))}
             newVersionName={this.state.newVersionNames.get(version.get('version'))}
             isDisabled={this.state.isPending}
             isPending={this.state.pendingActions.getIn([version.get('version'), 'copy'])}
@@ -69,7 +78,7 @@ export default React.createClass({
       items.push(
         (<RollbackVersionMenuItem
           version={version}
-          onRollback={createVersionOnRollback(this.props.componentId, this.props.configId, version.get('version'))}
+          onRollback={createVersionOnRollback(this.props.componentId, this.state.configId, version.get('version'))}
           isDisabled={this.state.isPending}
           isPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'])}
         />)
@@ -111,7 +120,7 @@ export default React.createClass({
 
   renderAllVersionsLink() {
     if (this.props.componentId === 'transformation') {
-      var href = this.state.router.makeHref('transformationVersions', {bucketId: this.props.configId});
+      var href = this.state.router.makeHref('transformationVersions', {bucketId: this.state.configId});
       return (
         <MenuItem href={href}>
           Show all versions
