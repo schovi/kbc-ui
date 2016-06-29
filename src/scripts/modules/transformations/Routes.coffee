@@ -15,7 +15,7 @@ TransformationBucketButtons = require './react/components/TransformationBucketBu
 TransformationListButtons = require('./react/components/TransformationsListButtons').default
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
-Versions = require('../../modules/components/react/pages/Versions').default
+createVersionsPageRoute = require('../../modules/components/utils/createVersionsPageRoute').default
 ComponentNameEdit = require '../components/react/components/ComponentName'
 TransformationNameEdit = require './react/components/TransformationNameEditField'
 ApplicationsStore = require '../../stores/ApplicationStore'
@@ -55,11 +55,7 @@ routes =
             VersionsActionCreators.loadVersions('transformation', params.bucketId)
         ]
         childRoutes: [
-          name: 'transformationVersions'
-          path: 'versions'
-          title: ->
-            "Versions"
-          defaultRouteHandler: Versions
+          createVersionsPageRoute('transformation', 'bucketId')
         ,
           name: 'transformationDetail'
           path: 'transformation/:transformationId'
