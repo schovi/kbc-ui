@@ -11,7 +11,6 @@ export default React.createClass({
 
   getStateFromStores() {
     return {
-      configId: RoutesStore.getCurrentRouteParam('bucketId'),
       bucket: TransformationBucketsStore.get(RoutesStore.getCurrentRouteParam('bucketId'))
     };
   },
@@ -19,7 +18,7 @@ export default React.createClass({
   render() {
     return (
       <span>
-        <VersionsDropdown componentId="transformation" configId={this.state.configId} />
+        <VersionsDropdown componentId="transformation" configIdParam="bucketId" />
         <ModalTrigger modal={<NewTransformationModal bucket={this.state.bucket}/>}>
           <button className="btn btn-success">
             <span className="kbc-icon-plus"></span> Add Transformation
