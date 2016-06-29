@@ -1,7 +1,7 @@
 React = require 'react'
 IntalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 actionsProvisioning = require './actionsProvisioning'
-
+VersionsActionCreators = require '../components/VersionsActionCreators'
 ExDbIndex = require './react/pages/index/Index'
 ExDbCredentialsPage = require('./react/pages/credentials/CredentialsPage').default
 ExDbNewCredentialsPage = require('./react/pages/credentials/NewCredentialsPage').default
@@ -12,6 +12,9 @@ ExDbQueryHeaderButtons = require('./react/components/QueryActionButtons').defaul
 ExDbCredentialsHeaderButtons = require './react/components/CredentialsHeaderButtons'
 ExDbNewCredentialsHeaderButtons = require('./react/components/NewCredentialsHeaderButtons').default
 ExDbQueryName = require './react/components/QueryName'
+
+injectProps = require('../components/react/injectProps').default
+VersionsDropdown = require('../../react/common/VersionsDropdown').default
 
 JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
@@ -28,6 +31,8 @@ module.exports = (componentId) ->
   requireData: [
     (params) ->
       actionsProvisioning.loadConfiguration componentId, params.config
+    (params) ->
+      VersionsActionCreators.loadVersions(componentId, params.config)
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
@@ -37,6 +42,7 @@ module.exports = (componentId) ->
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
   defaultRouteHandler: ExDbIndex(componentId)
+  headerButtonsHandler: injectProps({componentId: componentId})(VersionsDropdown)
   childRoutes: [
     name: "ex-db-generic-#{componentId}-query"
     path: 'query/:query'
