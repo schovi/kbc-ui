@@ -77,11 +77,11 @@ export default React.createClass({
     } else {
       items.push(
         (<RollbackVersionMenuItem
-          version={version}
-          onRollback={createVersionOnRollback(this.props.componentId, this.state.configId, version.get('version'))}
-          isDisabled={this.state.isPending}
-          isPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'])}
-        />)
+           version={version}
+           onRollback={createVersionOnRollback(this.props.componentId, this.state.configId, version.get('version'))}
+           isDisabled={this.state.isPending}
+           isPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'])}
+         />)
       );
     }
     items.push(
@@ -109,9 +109,11 @@ export default React.createClass({
     return (
       <span>
         <DropdownButton title={this.dropdownTitle()} pullRight className="kbcVersionsButton">
-          {this.getVersions().map(function(version, i) {
-            return this.renderMenuItems(version, i);
-          }, this).toArray()}
+          {
+            this.getVersions().map(function(version, i) {
+              return this.renderMenuItems(version, i);
+            }, this).toArray()
+          }
           {this.renderAllVersionsLink()}
         </DropdownButton>
       </span>
@@ -119,15 +121,14 @@ export default React.createClass({
   },
 
   renderAllVersionsLink() {
-    if (this.props.componentId === 'transformation') {
-      var href = this.state.router.makeHref('transformationVersions', {bucketId: this.state.configId});
-      return (
-        <MenuItem href={href}>
-          Show all versions
-        </MenuItem>
-      );
-    } else {
-      return null;
-    }
+    const routeName = `${this.props.componentId}Versions`;
+    let params = {};
+    params[this.props.configIdParam] = this.state.configId;
+    var href = this.state.router.makeHref(routeName, params);
+    return (
+      <MenuItem href={href}>
+        Show all versions
+      </MenuItem>
+    );
   }
 });
