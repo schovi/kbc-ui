@@ -1,7 +1,7 @@
 React = require 'react'
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 Link = React.createFactory(require('react-router').Link)
-
+ActivateTableExportButton = require('../../components/ActivateTableExportButton').default
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {Loader} = require 'kbc-react-components'
 SapiTableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
@@ -45,12 +45,9 @@ module.exports = React.createClass
           @_renderDeleteButton()
       else
         span className: 'td text-right',
-          React.createElement ActivateDeactivateButton,
-            activateTooltip: 'Add table to project upload'
-            deactivateTooltip: 'Remove table from the project upload'
-            isActive: @props.table.getIn ['data', 'export']
-            isPending: @props.table.get('savingFields').contains 'export'
-            onChange: @_handleExportChange
+          React.createElement ActivateTableExportButton,
+            configId: @props.configId
+            table: @props.table
           @_renderDeleteButton()
           if @props.table.get('pendingActions').contains 'uploadTable'
             React.DOM.span className: 'btn btn-link',
