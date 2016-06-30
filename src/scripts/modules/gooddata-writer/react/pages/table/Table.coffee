@@ -12,6 +12,7 @@ storageApi = require '../../../../components/StorageApi'
 ColumnsEditor = React.createFactory(require './DatasetColumnsEditor')
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 TableGdName = React.createFactory(require './TableGdNameEdit')
+ActivateTableExportButton = React.createFactory(require('../../components/ActivateTableExportButton').default)
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterTable'
@@ -96,6 +97,15 @@ module.exports = React.createClass
               'Title cannot be changed. It is already exported to GoodData'
             else
               'Edit title in GoodData')
+        p className: '',
+          strong
+            style: {'padding-top': '6px'}
+            className: 'col-xs-2'
+            'Project Upload'
+          ActivateTableExportButton
+            configId: @state.configurationId
+            table: @state.table
+
         div className: 'kbc-buttons',
           EditButtons
             isEditing: @state.isEditingColumns
