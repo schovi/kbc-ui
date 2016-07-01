@@ -43,7 +43,7 @@ module.exports = {
     if (Store.hasConfigByVersion(componentId, configId, version)) {
       return Promise.resolve(Store.getConfigByVersion(componentId, configId, version));
     }
-    return this.loadComponentByVersionForce(componentId, configId, version);
+    return this.loadComponentConfigByVersionForce(componentId, configId, version);
   },
 
   loadComponentConfigByVersionForce(componentId, configId, version) {
@@ -62,7 +62,7 @@ module.exports = {
         data: result,
         type: Constants.ActionTypes.VERSIONS_CONFIG_LOAD_SUCCESS
       });
-      self.pendingStop(componentId, configId);
+      this.pendingStop(componentId, configId);
       return Store.getConfigByVersion(componentId, configId, version);
     }).catch((error) => {
       dispatcher.handleViewAction({
