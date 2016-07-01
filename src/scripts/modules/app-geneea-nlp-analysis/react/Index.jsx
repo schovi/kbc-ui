@@ -42,6 +42,23 @@ import {analysisTypes, languageOptions} from './templates.coffee';
 
 const componentId = 'geneea-nlp-analysis';
 
+const domainOptions = [
+  {
+    label: 'News Articles',
+    value: 'news'
+
+  },
+  {
+    label: 'Hospitality Customer Care',
+    value: 'hcc'
+
+  },
+  {
+    label: 'Transportation Customer Care',
+    value: 'tcc'
+
+  }
+];
 
 export default React.createClass({
   mixins: [createStoreMixin(storageTablesStore, InstalledComponentStore, LatestJobsStore)],
@@ -297,13 +314,7 @@ export default React.createClass({
   },
 
   renderDomainSelect(description) {
-    const predefinedColumns = ['customer care', 'news'].map((c) => {
-      return {
-        'label': c,
-        'value': c
-      };
-    }
-    );
+    const predefinedColumns = domainOptions;
     const prop = params.DOMAIN;
     const result = this.renderFormElement('Domain',
       <Select
@@ -333,7 +344,10 @@ export default React.createClass({
     , description);
     return result;
   },
-
+  findDomainNameByValue(value) {
+    const result = domainOptions.find((c) => c.value === value);
+    return !!result ? result.label : value;
+  },
   renderStatic() {
     return (
       <div className="row">
@@ -344,7 +358,7 @@ export default React.createClass({
         {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
         {this.RenderStaticInput('Output Table Prefix', this.parameter(params.OUTPUT) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
-        {this.RenderStaticInput('Domain', this.parameter(params.DOMAIN) )}
+        {this.RenderStaticInput('Domain', this.findDomainNameByValue(this.parameter(params.DOMAIN)) )}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
