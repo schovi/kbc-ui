@@ -14,20 +14,24 @@ InstalledComponentsStore = require './stores/InstalledComponentsStore'
 installedComponentsApi = require './InstalledComponentsApi'
 RoutesStore = require '../../stores/RoutesStore'
 ComponentsStore = require './stores/ComponentsStore'
-#VersionActionCreators = require '../components/VersionsActionCreators'
+VersionActionCreators = require '../components/VersionsActionCreators'
 
 deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 removeEmptyEncryptAttributes = require './utils/removeEmptyEncryptAttributes'
 
-storeEncodedConfig = (componentId, configId, dataToSave) ->
+storeEncodedConfig = (componentId, configId, dataToSave, changeDescription) ->
   component = InstalledComponentsStore.getComponent(componentId)
-  dataToSave = {configuration: JSON.stringify(removeEmptyEncryptAttributes(dataToSave))}
+  dataToSave = {
+    configuration: JSON.stringify(removeEmptyEncryptAttributes(dataToSave))
+  }
+  if changeDescription
+    dataToSave.changeDescription = changeDescription
   if component.get('flags').includes('encrypt')
     installedComponentsApi
-    .updateComponentConfigurationEncrypted(component.get('uri'), configId, dataToSave)
+    .updateComponentConfigurationEncrypted(component.get('uri'), configId, dataToSave, changeDescription)
   else
     installedComponentsApi
-    .updateComponentConfiguration(componentId, configId, dataToSave)
+    .updateComponentConfiguration(componentId, configId, dataToSave, changeDescription)
 
 module.exports =
 
@@ -89,7 +93,6 @@ module.exports =
     )
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     dataToSave = dataToSave?.toJS()
-
     storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_SUCCESS
@@ -135,7 +138,7 @@ module.exports =
       throw error
 
 
-  saveComponentConfigData: (componentId, configId, forceData) ->
+  saveComponentConfigData: (componentId, configId, forceData, changeDescription) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_START
       componentId: componentId
@@ -145,7 +148,8 @@ module.exports =
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     dataToSave = dataToSave?.toJS()
 
-    storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
+    storeEncodedConfig(componentId, configId, dataToSave, changeDescription).then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGDATA_SAVE_SUCCESS
         componentId: componentId
@@ -280,10 +284,14 @@ module.exports =
     else
       data = {}
       data[field] = newValue
+      if (field == 'description')
+        # diff msg saying that the description has changed
+        data.changeDescription = 'Changed description'
       calledFunction = installedComponentsApi.updateComponentConfiguration
 
     calledFunction(componentId, configurationId, data)
     .then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configurationId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.INSTALLED_COMPONENTS_UPDATE_CONFIGURATION_SUCCESS
         componentId: componentId
