@@ -2,7 +2,9 @@ import React from 'react';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
 import RollbackVersionMenuItem from './RollbackVersionMenuItem';
 import CopyVersionMenuItem from './CopyVersionMenuItem';
+import DiffMenuItem from './DiffMenuItem';
 import createStoreMixin from '../mixins/createStoreMixin';
+import InstalledComponentStore from '../../modules/components/stores/InstalledComponentsStore';
 import VersionsStore from '../../modules/components/stores/VersionsStore';
 import moment from 'moment';
 import createVersionOnRollback from '../../utils/createVersionOnRollback';
@@ -34,7 +36,8 @@ export default React.createClass({
       isPending: VersionsStore.isPendingConfig(this.props.componentId, configId),
       pendingActions: VersionsStore.getPendingVersions(this.props.componentId, configId),
       router: router,
-      configId: configId
+      configId: configId,
+      currentConfigData: InstalledComponentStore.getConfigData(this.props.componentId, configId)
     };
   },
 
@@ -84,6 +87,16 @@ export default React.createClass({
          />)
       );
     }
+    items.push(
+      <DiffMenuItem
+        isDisabled={this.state.isPending}
+        isPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
+        onLoadVersionConfig={() =>
+          VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, version.get('version'))}
+        version={version}
+        currentConfig={this.state.currentConfigData}
+      />
+    );
     items.push(
       (<MenuItem divider/>)
     );

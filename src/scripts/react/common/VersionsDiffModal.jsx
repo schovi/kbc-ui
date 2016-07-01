@@ -7,7 +7,8 @@ export default React.createClass({
     version: React.PropTypes.object.isRequired,
     show: React.PropTypes.bool.isRequired,
     onClose: React.PropTypes.func.isRequired,
-    onRollback: React.PropTypes.func.isRequired
+    currentConfigData: React.PropTypes.object.isRequired,
+    compareConfigData: React.PropTypes.object.isRequired
   },
 
   render() {
@@ -17,8 +18,17 @@ export default React.createClass({
           <Modal.Title>Versions Diff</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+           {this.renderDiff()}
         </Modal.Body>
       </Modal>
+    );
+  },
+
+  renderDiff() {
+    return (
+      <div>
+        TODO: diff currentconfigData vs compareConfigData
+      </div>
     );
   }
 });
