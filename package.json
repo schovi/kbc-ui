@@ -22,6 +22,7 @@
     "d3": "~3.5.6",
     "dagre-d3": "git+https://git@github.com/keboola/dagre-d3.git#6b444d10ddb5276789b4b2bc1eafcd22a767968a",
     "deep-equal": "^1.0.1",
+    "diff": "^2.2.3",
     "dimple": "git+https://github.com/PMSI-AlignAlytics/dimple.git",
     "eslint": "^1.8.0",
     "eslint-loader": "~1.1.1",
