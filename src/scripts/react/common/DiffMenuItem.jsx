@@ -7,7 +7,8 @@ export default React.createClass({
 
   propTypes: {
     version: React.PropTypes.object.isRequired,
-    currentConfigData: React.PropTypes.object.isRequired,
+    referenceConfigData: React.PropTypes.object.isRequired,
+    previousVersion: React.PropTypes.object.isRequired,
     onLoadVersionConfig: React.PropTypes.func.isRequired,
     isPending: React.PropTypes.bool,
     isDisabled: React.PropTypes.bool
@@ -49,17 +50,24 @@ export default React.createClass({
           onSelect={this.openModal}
           disabled={this.props.isDisabled}
         >
-          <em className="fa fa-arrows-h fa-fw"> </em>
+          <em className="fa fa-code-fork fa-fw"> </em>
           Compare
           <VersionsDiffModal
             onClose={this.closeModal}
             show={this.state.showModal}
-            currentConfigData={this.props.currentConfigData}
-            compareConfigData={this.props.version.get('configuration')}
+            referenceConfigData={this.props.version.get('configuration')}
+            compareConfigData={ this.getPreviousVersionConfigData()}
             version={this.props.version}
           />
         </MenuItem>
       );
     }
+  },
+
+  getPreviousVersionConfigData() {
+    if (this.props.previousVersion) {
+      return this.props.previousVersion.get('configuration');
+    }
+    return null;
   }
 });

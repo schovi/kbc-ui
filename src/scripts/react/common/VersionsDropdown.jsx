@@ -1,5 +1,6 @@
 import React from 'react';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
+import {Map} from 'immutable';
 import RollbackVersionMenuItem from './RollbackVersionMenuItem';
 import CopyVersionMenuItem from './CopyVersionMenuItem';
 import DiffMenuItem from './DiffMenuItem';
@@ -14,7 +15,7 @@ import {Loader} from 'kbc-react-components';
 import RoutesStore from '../../stores/RoutesStore';
 
 export default React.createClass({
-  mixins: [createStoreMixin(VersionsStore)],
+  mixins: [createStoreMixin(VersionsStore, InstalledComponentStore)],
 
   propTypes: {
     componentId: React.PropTypes.string.isRequired,
@@ -51,7 +52,8 @@ export default React.createClass({
     };
   },
 
-  renderMenuItems(version, i) {
+  renderMenuItems(version, previousVersion, i) {
+    console.log(i, ': THIS VERSION:', version.toJS(), 'PREVIOUS:', (previousVersion ? previousVersion.toJS() : 'NULL') );
     var items = [];
     items.push(
       (<MenuItem header eventKey={version.get('version')}>
@@ -87,20 +89,28 @@ export default React.createClass({
          />)
       );
     }
-    items.push(
-      <DiffMenuItem
-        isDisabled={this.state.isPending}
-        isPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
-        onLoadVersionConfig={() =>
-          VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, version.get('version'))}
-        version={version}
-        currentConfig={this.state.currentConfigData}
-      />
-    );
+    // if it is not the first version show compare diff menu item
+    if (version.get('version') > 1) {
+      items.push(
+        <DiffMenuItem
+          isDisabled={this.state.isPending}
+          isPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
+          onLoadVersionConfig={() => this.prepareVersionsDiffData(version, previousVersion)}
+          version={version}
+          previousVersion={previousVersion}
+          referenceConfigData={this.state.currentConfigData}
+        />
+      );
+    }
     items.push(
       (<MenuItem divider/>)
     );
     return items;
+  },
+
+  prepareVersionsDiffData(version, previousVersion) {
+    VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, version.get('version'));
+    return VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, previousVersion.get('version'));
   },
 
   dropdownTitle() {
@@ -119,12 +129,14 @@ export default React.createClass({
   },
 
   render() {
+    const allVersions = this.state.versions;
     return (
       <span>
         <DropdownButton title={this.dropdownTitle()} pullRight className="kbcVersionsButton">
           {
             this.getVersions().map(function(version, i) {
-              return this.renderMenuItems(version, i);
+              const previousVersion = allVersions.find((v) => v.get('version') === version.get('version') - 1) || Map();
+              return this.renderMenuItems(version, previousVersion, i);
             }, this).toArray()
           }
           {this.renderAllVersionsLink()}
