@@ -1,20 +1,10 @@
-import request from '../../utils/request';
-import ComponentStore from './stores/ComponentsStore';
-function createUrl() {
-  let baseUrl = ComponentStore.getComponent('keboola.ssh-keygen').get('uri');
-  return `${baseUrl}`;
-}
-
-function createRequest(method) {
-  return request(method, createUrl());
-}
+import callDockerAction from '../components/DockerActionsApi';
 
 export default {
   generateKeys() {
-    return createRequest('POST')
-    .promise()
-    .then((response) => {
-      return response.body;
-    });
+    const params = {
+      configData: []
+    };
+    return callDockerAction('keboola.ssh-keygen-v2', 'generate', params);
   }
 };
