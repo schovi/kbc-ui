@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {fromJS} from 'immutable';
-import KeygenApi from '../../../../components/KeygenApi';
+import callDockerAction from '../../../../components/DockerActionsApi';
 import {Check} from 'kbc-react-components';
 import {Input, FormControls} from 'react-bootstrap';
 import {Protected} from 'kbc-react-components';
@@ -17,7 +17,10 @@ export default React.createClass({
   },
 
   getInitialState() {
-    return {isGenerating: false};
+    return {
+      isGenerating: false,
+      isKeygenError: false
+    };
   },
 
   render() {
@@ -107,18 +110,33 @@ export default React.createClass({
           {publicKey ? 'Regenerate' : 'Generate'}
         </button>
         {this.state.isGenerating ? <Loader /> : null}
+        {(this.state.isKeygenError ?
+            <span className="text-danger">
+              <span className="fa fa-fw fa-meh-o"></span>
+              Unable to Generate SSH keys. Try it again.
+            </span> : null
+        )}
       </span>
     );
   },
 
   generateKeys() {
-    this.setState({isGenerating: true});
-    KeygenApi.generateKeys().then((keys) => {
-      const newKeys = {
-        'public': keys.public,
-        '#private': keys.private
-      };
-      this.props.onChange(this.props.data.setIn(['keys'], fromJS(newKeys)));
+    this.setState({
+      isKeygenError: false,
+      isGenerating: true
+    });
+
+    callDockerAction('keboola.ssh-keygen-v2', 'generate', {configData: []}).then((result) => {
+      if (result.status === 'success' || result.status === 'ok') {
+        const newKeys = {
+          'public': result.public,
+          '#private': result.private
+        };
+        this.props.onChange(this.props.data.setIn(['keys'], fromJS(newKeys)));
+      } else {
+        this.setState({isKeygenError: true});
+      }
+
       this.setState({
         isGenerating: false
       });
