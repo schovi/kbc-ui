@@ -74,8 +74,8 @@ export default React.createClass({
     const referenceData = this.props.referenceConfigData.toJS();
     const compareWithData = this.props.compareConfigData.toJS();
 
-    var from = JSON.stringify(referenceData, null, '  ');
-    var to = JSON.stringify(compareWithData, null, '  ');
+    var from = JSON.stringify(compareWithData, null, '  ');
+    var to = JSON.stringify(referenceData, null, '  ');
 
     return createPatch('config.json', from, to);
 
