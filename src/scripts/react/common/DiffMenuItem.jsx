@@ -50,7 +50,7 @@ export default React.createClass({
           onSelect={this.openModal}
           disabled={this.props.isDisabled}
         >
-          <em className="fa fa-files-o fa-fw"> </em>
+          <em className="fa fa-fw fa-files-o"> </em>
           Compare
           <VersionsDiffModal
             onClose={this.closeModal}

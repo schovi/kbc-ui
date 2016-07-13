@@ -53,7 +53,6 @@ export default React.createClass({
   },
 
   renderMenuItems(version, previousVersion, i) {
-    console.log(i, ': THIS VERSION:', version.toJS(), 'PREVIOUS:', (previousVersion ? previousVersion.toJS() : 'NULL') );
     var items = [];
     items.push(
       (<MenuItem header eventKey={version.get('version')}>
@@ -62,7 +61,7 @@ export default React.createClass({
     );
     items.push(
       (
-        <MenuItem header>{version.get('changeDescription')}</MenuItem>
+        <MenuItem header>{version.get('changeDescription') || 'No description.'}</MenuItem>
       )
     );
 
@@ -91,16 +90,7 @@ export default React.createClass({
     }
     // if it is not the first version show compare diff menu item
     if (version.get('version') > 1) {
-      items.push(
-        <DiffMenuItem
-          isDisabled={this.state.isPending}
-          isPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
-          onLoadVersionConfig={() => this.prepareVersionsDiffData(version, previousVersion)}
-          version={version}
-          previousVersion={previousVersion}
-          referenceConfigData={this.state.currentConfigData}
-        />
-      );
+      items.push(this.renderDiffMenuItem(version, previousVersion));
     }
     items.push(
       (<MenuItem divider/>)
@@ -111,6 +101,19 @@ export default React.createClass({
   prepareVersionsDiffData(version, previousVersion) {
     VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, version.get('version'));
     return VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, previousVersion.get('version'));
+  },
+
+  renderDiffMenuItem(version, previousVersion) {
+    return (
+      <DiffMenuItem
+        isDisabled={this.state.isPending}
+        isPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
+        onLoadVersionConfig={() => this.prepareVersionsDiffData(version, previousVersion)}
+        version={version}
+        previousVersion={previousVersion}
+        referenceConfigData={this.state.currentConfigData}
+      />
+    );
   },
 
   dropdownTitle() {

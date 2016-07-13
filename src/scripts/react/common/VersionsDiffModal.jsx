@@ -2,6 +2,14 @@ import React from 'react';
 import {Button, Modal} from 'react-bootstrap';
 import {diffJson} from 'diff';
 
+function setSignToString(str, sign) {
+  if (str[0] === '') {
+    return sign + str.substr(1);
+  } else {
+    return sign + str;
+  }
+}
+
 export default React.createClass({
 
   propTypes: {
@@ -19,7 +27,7 @@ export default React.createClass({
           <Modal.Title>Versions Diff</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-           {this.renderDiff()}
+          {this.renderDiff()}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -35,14 +43,20 @@ export default React.createClass({
   renderDiff() {
     const dataDiff = this.getDiff();
     const parts = dataDiff.map((part) => {
-      let color = 'grey';
-      if (part.added)   color = 'green';
-      if (part.removed) color = 'red';
+      let val = part.value;
+      let color = '';
+      if (part.added)   {
+        color = '#cfc';
+        val = setSignToString(val, '+');
+      }
+      if (part.removed) {
+        color = '#fcc';
+        val = setSignToString(val, '-');
+      }
       return (
-        <span
-          style={{'color': color}}
-        > {part.value} </span>
-      );
+        <pre style={{'margin-bottom': '1px', 'background-color': color}}>
+          {val}
+        </pre>);
     });
     return (
       <div>
