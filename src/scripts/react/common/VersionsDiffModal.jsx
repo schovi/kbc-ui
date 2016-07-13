@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Modal} from 'react-bootstrap';
-import {diffJson} from 'diff';
+import {diffJson, createPatch, createTwoFilesPatch} from 'diff';
+import CodeEditor from './CodeEditor';
 
 function setSignToString(str, sign) {
   if (str[0] === '') {
@@ -22,12 +23,13 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal show={this.props.show} onHide={this.props.onClose}>
+      <Modal show={this.props.show} onHide={this.props.onClose} bsSize="large">
         <Modal.Header closeButton>
           <Modal.Title>Versions Diff</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.renderDiff()}
+          <CodeEditor readOnly={true} mode='diff' value={this.getDiff()} style={{width:'100%'}}>
+          </CodeEditor>
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -71,6 +73,12 @@ export default React.createClass({
     }
     const referenceData = this.props.referenceConfigData.toJS();
     const compareWithData = this.props.compareConfigData.toJS();
-    return diffJson(compareWithData, referenceData);
+
+    var from = JSON.stringify(referenceData, null, '  ');
+    var to = JSON.stringify(compareWithData, null, '  ');
+
+    return createPatch('config.json', from, to);
+
+    // return createTwoFilesPatch('config.json', 'config.json', from, to, '', '', {context: 1000});
   }
 });
