@@ -1,6 +1,8 @@
 import React from 'react';
 import {Button, Modal} from 'react-bootstrap';
-import {diffJson} from 'diff';
+import {diffJson, createTwoFilesPatch} from 'diff';
+import CodeEditor from './CodeEditor';
+import _ from 'underscore';
 
 function setSignToString(str, sign) {
   if (str[0] === '') {
@@ -8,6 +10,48 @@ function setSignToString(str, sign) {
   } else {
     return sign + str;
   }
+}
+
+function multiDiffValueToString(value) {
+  if (_.isArray(value)) {
+    return value.join(',');
+  }
+  // if (!value) return '';
+  return value.toString();
+}
+
+function reconstructIncompleteJson(strValue) {
+  let result = strValue.trim();
+  if (result[0] !== '{') result = '{' + result;
+  const lastIdx = () => result.length - 1;
+  if (result[lastIdx()] === ',') result = result.substr(0, lastIdx());
+  if (result[lastIdx()] !== '}') result = result + '}';
+  return JSON.parse(result);
+}
+
+function preparseDiffParts(parts) {
+  let previousPart = null;
+  let result = [];
+  for (let part of parts) {
+    const isChanged = part.added || part.removed;
+    if (!isChanged) {
+      if (previousPart) result.push(previousPart);
+      previousPart = null;
+      result.push(part);
+      // if part is added or removed
+    } else if (previousPart) {
+      const multiPart = {
+        isMulti: true,
+        first: previousPart,
+        second: part
+      };
+      previousPart = null;
+      result.push(multiPart);
+    } else {
+      previousPart = part;
+    }
+  }
+  return result;
 }
 
 export default React.createClass({
@@ -42,27 +86,51 @@ export default React.createClass({
 
   renderDiff() {
     const dataDiff = this.getDiff();
-    const parts = dataDiff.map((part) => {
-      let val = part.value;
-      let color = '';
-      if (part.added)   {
-        color = '#cfc';
-        val = setSignToString(val, '+');
-      }
-      if (part.removed) {
-        color = '#fcc';
-        val = setSignToString(val, '-');
-      }
-      return (
-        <pre style={{'margin-bottom': '1px', 'background-color': color}}>
-          {val}
-        </pre>);
+    console.log('DATA DIFF', dataDiff);
+    const preparsedParts = preparseDiffParts(dataDiff);
+    const parts = preparsedParts.map((part) => {
+      if (part.isMulti) return this.renderMultiDiff(part.first, part.second);
+      return this.renderSimplePreDiff(part);
     });
     return (
       <div>
         {parts}
       </div>
     );
+  },
+
+  renderMultiDiff(firstPart, secondPart) {
+    const multiDiff = this.getMultiPartsDiff(firstPart.value, secondPart.value);
+    console.log('multiDiff', multiDiff);
+    const middlePart = (
+      <CodeEditor
+        readOnly={true}
+        mode="diff"
+        value={multiDiff}
+        style={{width: '100%'}}/>
+    );
+
+    return [
+      this.renderSimplePreDiff(firstPart),
+      middlePart,
+      this.renderSimplePreDiff(secondPart)];
+  },
+
+  renderSimplePreDiff(part) {
+    let val = part.value;
+    let color = '';
+    if (part.added)   {
+      color = '#cfc';
+      val = setSignToString(val, '+');
+    }
+    if (part.removed) {
+      color = '#fcc';
+      val = setSignToString(val, '-');
+    }
+    return (
+      <pre style={{'margin-bottom': '1px', 'background-color': color}}>
+        {val}
+      </pre>);
   },
 
   getDiff() {
@@ -72,5 +140,22 @@ export default React.createClass({
     const referenceData = this.props.referenceConfigData.toJS();
     const compareWithData = this.props.compareConfigData.toJS();
     return diffJson(compareWithData, referenceData);
+  },
+
+  getMultiPartsDiff(firstValue, secondValue) {
+    const firstJson = reconstructIncompleteJson(firstValue);
+    const secondJson = reconstructIncompleteJson(secondValue);
+    let firstLines = [];
+    let secondLines = [];
+    for (let key of _.keys(firstJson)) {
+      firstLines.push(key);
+      firstLines.push(multiDiffValueToString(firstJson[key]));
+      secondLines.push(key);
+      secondLines.push(multiDiffValueToString(secondJson[key]));
+    }
+    return createTwoFilesPatch('config.json', 'config.json',
+                               firstLines.join('\n'),
+                               secondLines.join('\n'),
+                               '', '', {context: 1000});
   }
 });
