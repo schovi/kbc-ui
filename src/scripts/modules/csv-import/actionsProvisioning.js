@@ -1,3 +1,5 @@
+import {Map} from 'immutable';
+
 import storeProvisioning from './storeProvisioning';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import storageApi from '../components/StorageApi';
@@ -29,6 +31,31 @@ export default function(configId) {
 
   function getLocalState() {
     return installedComponentsStore.getLocalState(COMPONENT_ID, configId);
+  }
+
+  function editStart() {
+    var settings = installedComponentsStore.getConfigData(COMPONENT_ID, configId);
+    if (!settings) {
+      settings = Map();
+    }
+    updateLocalState(['settings'], settings);
+    updateLocalState(['isEditing'], true);
+  }
+
+  function editCancel() {
+    updateLocalState(['settings'], null);
+    updateLocalState(['isEditing'], false);
+  }
+
+  function setFile(file) {
+    updateLocalState(['file'], file);
+  }
+
+  function editChange(newSettings) {
+    const localState = getLocalState();
+    componentsActions.updateLocalState(COMPONENT_ID, configId,
+      localState.set('settings', newSettings)
+    );
   }
 
   function startUpload() {
@@ -114,6 +141,10 @@ export default function(configId) {
 
   return {
     updateLocalState,
-    startUpload
+    startUpload,
+    editStart,
+    editCancel,
+    setFile,
+    editChange
   };
 }

@@ -14,11 +14,13 @@ import actionsProvisioning from '../../actionsProvisioning';
 
 // specific components
 import UploadStatic from '../components/UploadStatic';
+import UploadEdit from '../components/UploadEdit';
 
 // global components
 import ComponentDescription from '../../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
+import EditButtons from '../../../../react/common/EditButtons';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.csv-import';
@@ -55,8 +57,45 @@ export default React.createClass({
     };
   },
 
-  setFile(file) {
-    this.state.actions.updateLocalState(['file'], file);
+  renderEditButtons() {
+    return React.createElement(EditButtons, {
+      isEditing: this.state.localState.get('isEditing'),
+      isSaving: this.state.localState.get('isSaving'),
+      editLabel: 'Edit Settings',
+      onCancel: this.state.actions.editCancel,
+      onSave: this.state.actions.editSave,
+      onEditStart: this.state.actions.editStart
+    });
+  },
+
+  renderEditForm() {
+    if (this.state.localState.get('isEditing')) {
+      return (
+        <UploadEdit
+          settings={this.state.localState.get('settings')}
+          onChange={this.state.actions.editChange}
+        />
+      );
+    }
+  },
+
+  renderUploadForm() {
+    if (this.state.localState.get('isEditing')) {
+      return null;
+    } else {
+      return (
+        <UploadStatic
+          destination={this.state.destination}
+          incremental={true}
+          primaryKey={['Id', 'Name']}
+          onStartUpload={this.state.actions.startUpload}
+          onChange={this.state.actions.setFile}
+          isValid={this.state.isUploaderValid}
+          isUploading={this.state.localState.get('isUploading')}
+          uploadingMessage={this.state.localState.get('uploadingMessage')}
+        />
+      );
+    }
   },
 
   render() {
@@ -72,16 +111,9 @@ export default React.createClass({
             </div>
           </div>
           <div className="row">
-            <UploadStatic
-              destination={this.state.destination}
-              incremental={true}
-              primaryKey={['Id', 'Name']}
-              onStartUpload={this.state.actions.startUpload}
-              onChange={this.setFile}
-              isValid={this.state.isUploaderValid}
-              isUploading={this.state.localState.get('isUploading')}
-              uploadingMessage={this.state.localState.get('uploadingMessage')}
-            />
+            {this.renderUploadForm()}
+            {this.renderEditForm()}
+            {this.renderEditButtons()}
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
