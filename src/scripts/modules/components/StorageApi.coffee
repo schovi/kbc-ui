@@ -100,4 +100,37 @@ storageApi =
     .then (response) ->
       parse response.text
 
+  prepareFileUpload: (params) ->
+    createRequest('POST', "files/prepare")
+    .type 'form'
+    .send params
+    .promise()
+    .then (response) ->
+      response.body
+
+
+  createBucket: (params) ->
+    createRequest('POST', "buckets")
+    .type 'form'
+    .send params
+    .promise()
+    .then (response) ->
+      response.body
+
+  createTable: (bucketId, params) ->
+    createRequest('POST', "buckets/#{bucketId}/tables-async")
+    .type 'form'
+    .send params
+    .promise()
+    .then (response) ->
+      response.body
+
+  loadTable: (tableId, params) ->
+    createRequest('POST', "tables/#{tableId}/import-async")
+    .type 'form'
+    .send params
+    .promise()
+    .then (response) ->
+      response.body
+
 module.exports = storageApi

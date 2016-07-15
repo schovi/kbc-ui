@@ -83,6 +83,10 @@ module.exports = function (options) {
             configFile: path.resolve(__dirname, '../.eslintrc')
         },
         module: {
+            // via http://andrewhfarmer.com/aws-sdk-with-webpack/
+            noParse: [
+              /aws\-sdk/,
+            ],
             preLoaders: [
                 {
                     test: /\.coffee$/,

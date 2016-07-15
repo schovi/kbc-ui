@@ -5,6 +5,7 @@ Link = require('react-router').Link
 
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
@@ -14,6 +15,8 @@ StorageTablesStore = require './stores/StorageTablesStore'
 StorageTokensStore = require './stores/StorageTokensStore'
 StorageFilesStore = require './stores/StorageFilesStore'
 storageApi = require './StorageApi'
+
+jobPoller = require '../../utils/jobPoller'
 
 module.exports =
 
@@ -159,8 +162,6 @@ module.exports =
       throw error
     )
 
-
-
   loadFilesForce: (params) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.STORAGE_FILES_LOAD
@@ -179,3 +180,76 @@ module.exports =
   loadFiles: (params) ->
     return Promise.resolve() if StorageFilesStore.getIsLoaded()
     @loadFilesForce(params)
+
+
+  createBucket: (params) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_BUCKET_CREATE
+      params: params
+
+    storageApi.createBucket(params)
+    .then((response) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
+        bucket: response
+    ).catch((error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
+        errors: error
+      throw error
+    )
+
+  createTable: (bucketId, params) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_TABLE_CREATE
+      bucketId: bucketId
+      params: params
+
+    storageApi.createTable(bucketId, params)
+    .then((response) ->
+      console.log(response)
+      jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
+      .then((response) ->
+        console.log(response)
+        if (response.status == "error")
+          throw response.error.message;
+        # TODO add table to store
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
+          bucketId: bucketId
+          table: response
+      )
+    ).catch((error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
+        bucketId: bucketId
+        errors: error
+      throw error
+    )
+
+  loadTable: (tableId, params) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_TABLE_LOAD
+      params: params
+      tableId: tableId
+
+    storageApi.loadTable(tableId, params)
+    .then((response) ->
+      console.log(response)
+      jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
+      .then((response) ->
+        if (response.status == "error")
+          throw response.error.message;
+        # TODO modify table in store
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_TABLE_LOAD_SUCCESS
+          tableId: tableId
+          response: response
+      )
+    ).catch((error) ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
+        tableId: tableId
+        errors: error
+      throw error
+    )

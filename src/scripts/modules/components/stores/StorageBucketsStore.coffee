@@ -12,7 +12,8 @@ _store = Map(
   isLoaded: false
   isLoading: false
   credentials: Map() #bucketId
-  pendingCredentials: Map() #bucketId/(loading, deleting, creating)
+  pendingCredentials: Map() #(loading, deleting, creating)
+  pendingBuckets: Map() #(creating)
 )
 
 StorageBucketsStore = StoreUtils.createStore
@@ -25,6 +26,12 @@ StorageBucketsStore = StoreUtils.createStore
 
   getIsLoaded: ->
     _store.get 'isLoaded'
+
+  hasBucket: (bucketId) ->
+    _store.get('buckets').has(bucketId)
+
+  isCreatingBucket: ->
+    _store.getIn ['pendingBuckets', 'creating'], false
 
   hasCredentials: (bucketId) ->
     _store.get('credentials').has(bucketId)
@@ -102,5 +109,18 @@ Dispatcher.register (payload) ->
       _store = _store.setIn ['credentials', bucketId], creds
       StorageBucketsStore.emitChange()
 
+    when constants.ActionTypes.STORAGE_BUCKET_CREATE
+      _store = _store.setIn ['pendingBuckets', 'creating'], true
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
+      _store = _store.setIn ['pendingBuckets', 'creating'], false
+      _store = _store.setIn ['buckets', action.bucket.id], Immutable.fromJS(action.bucket)
+      console.log(_store.getIn(['buckets']).toJS())
+      StorageBucketsStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
+      _store = _store.setIn ['pendingBuckets', 'creating'], false
+      StorageBucketsStore.emitChange()
 
 module.exports = StorageBucketsStore
