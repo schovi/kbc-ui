@@ -1,8 +1,7 @@
 import React from 'react';
 import {Button, Modal} from 'react-bootstrap';
-import {diffJson, createTwoFilesPatch} from 'diff';
-import CodeEditor from './CodeEditor';
-import _ from 'underscore';
+import {diffJson} from 'diff';
+import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
 
 function setSignToString(str, sign) {
   if (str[0] === '') {
@@ -10,23 +9,6 @@ function setSignToString(str, sign) {
   } else {
     return sign + str;
   }
-}
-
-function multiDiffValueToString(value) {
-  if (_.isArray(value)) {
-    return value.join(',');
-  }
-  // if (!value) return '';
-  return value.toString();
-}
-
-function reconstructIncompleteJson(strValue) {
-  let result = strValue.trim();
-  if (result[0] !== '{') result = '{' + result;
-  const lastIdx = () => result.length - 1;
-  if (result[lastIdx()] === ',') result = result.substr(0, lastIdx());
-  if (result[lastIdx()] !== '}') result = result + '}';
-  return JSON.parse(result);
 }
 
 function preparseDiffParts(parts) {
@@ -66,7 +48,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal show={this.props.show} onHide={this.props.onClose}>
+      <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>
         <Modal.Header closeButton>
           <Modal.Title>Versions Diff</Modal.Title>
         </Modal.Header>
@@ -100,15 +82,10 @@ export default React.createClass({
   },
 
   renderMultiDiff(firstPart, secondPart) {
-    const multiDiff = this.getMultiPartsDiff(firstPart.value, secondPart.value);
-    console.log('multiDiff', multiDiff);
     const middlePart = (
-      <CodeEditor
-        readOnly={true}
-        mode="diff"
-        value={multiDiff}
-        style={{width: '100%'}}/>
-    );
+      <DetailedDiff
+        firstPart={firstPart}
+        secondPart={secondPart}/>);
 
     return [
       this.renderSimplePreDiff(firstPart),
@@ -140,22 +117,7 @@ export default React.createClass({
     const referenceData = this.props.referenceConfigData.toJS();
     const compareWithData = this.props.compareConfigData.toJS();
     return diffJson(compareWithData, referenceData);
-  },
-
-  getMultiPartsDiff(firstValue, secondValue) {
-    const firstJson = reconstructIncompleteJson(firstValue);
-    const secondJson = reconstructIncompleteJson(secondValue);
-    let firstLines = [];
-    let secondLines = [];
-    for (let key of _.keys(firstJson)) {
-      firstLines.push(key);
-      firstLines.push(multiDiffValueToString(firstJson[key]));
-      secondLines.push(key);
-      secondLines.push(multiDiffValueToString(secondJson[key]));
-    }
-    return createTwoFilesPatch('config.json', 'config.json',
-                               firstLines.join('\n'),
-                               secondLines.join('\n'),
-                               '', '', {context: 1000});
   }
+
+
 });

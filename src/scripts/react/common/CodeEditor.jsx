@@ -9,6 +9,7 @@ export default React.createClass({
     value: React.PropTypes.string.isRequired,
     readOnly: React.PropTypes.bool,
     onChange: React.PropTypes.func,
+    onClick: React.PropTypes.func,
     mode: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     lineNumbers: React.PropTypes.bool,
@@ -33,6 +34,7 @@ export default React.createClass({
         placeholder={this.props.placeholder}
         lineWrapping={false}
         onChange={this.handleChange}
+        onClick={this.props.onClick}
         readOnly={this.props.readOnly}
         cursorHeight={parseInt(this.props.readOnly, 10)}
         style={this.props.style || this.style()}
