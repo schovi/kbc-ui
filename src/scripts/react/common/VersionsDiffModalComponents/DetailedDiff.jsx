@@ -49,6 +49,7 @@ export default React.createClass({
   },
 
   render() {
+    if (!this.containLineBreaks()) return null;
     return (
       <div>
         <div className="text-center">
@@ -56,7 +57,7 @@ export default React.createClass({
             className="btn btn-default btn-sm"
             onClick={() => this.setState({showDetails: !this.state.showDetails})}>
             <i className="fa fa-fw fa-arrows-v" />
-            {this.state.showDetails ? 'Hide' : 'Compare'}
+            {this.state.showDetails ? 'Hide Details' : 'Show detailed diff'}
           </button>
         </div>
         {this.state.showDetails ? this.renderCodeDitorDiff() : null}
@@ -73,7 +74,11 @@ export default React.createClass({
         mode="diff"
         value={multiDiff}
         style={{width: '100%'}}/>);
+  },
+
+  containLineBreaks() {
+    const {firstPart, secondPart} = this.props;
+    const lineBreakChar = '\\n';
+    return firstPart.value.indexOf(lineBreakChar) >= 0 || secondPart.value.indexOf(lineBreakChar) >= 0;
   }
-
-
 });
