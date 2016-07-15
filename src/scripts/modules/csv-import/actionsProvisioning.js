@@ -33,7 +33,8 @@ export default function(configId) {
       name: store.getLocalState().get('file').name,
       sizeBytes: store.getLocalState().get('file').size
     };
-
+    updateLocalState(['isUploading'], true);
+    updateLocalState(['uploadingMessage'], 'Preparing upload');
     storageApi.prepareFileUpload(params).then(function(response) {
       var fileId = response.id;
       var s3params = {
@@ -48,6 +49,7 @@ export default function(configId) {
         secretAccessKey: credentials.SecretAccessKey,
         sessionToken: credentials.SessionToken
       });
+      updateLocalState(['uploadingMessage'], 'Uploading to S3');
       new AWS.S3().putObject(s3params, function(err, data) {
         if (err) {
           // todo chyba
@@ -59,18 +61,20 @@ export default function(configId) {
           var tableName = tableId.substr(tableId.lastIndexOf('.') + 1);
 
           var createTable = function() {
-            console.log('create table');
+            updateLocalState(['uploadingMessage'], 'Creating table ' + tableId);
             var createTableParams = {
               name: tableName,
               dataFileId: fileId
             };
             storageApiActions.createTable(bucketId, createTableParams).then(function() {
-              console.log('table created');
+              updateLocalState(['isUploading'], false);
+              updateLocalState(['uploadingMessage'], '');
             });
           };
 
           if (!bucketsStore.hasBucket(bucketId)) {
             // create bucket and table
+            updateLocalState(['uploadingMessage'], 'Creating bucket ' + bucketId);
             var createBucketParams = {
               name: bucketId.substr(bucketId.indexOf('-') + 1),
               stage: bucketId.substr(0, bucketId.lastIndexOf('.'))
@@ -83,8 +87,10 @@ export default function(configId) {
               var loadTableParams = {
                 dataFileId: fileId
               };
+              updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
               storageApiActions.loadTable(tableId, loadTableParams).then(function() {
-                console.log('hotovka');
+                updateLocalState(['isUploading'], false);
+                updateLocalState(['uploadingMessage'], '');
               });
             } else {
               createTable();

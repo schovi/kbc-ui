@@ -1,15 +1,19 @@
 import React, {PropTypes} from 'react';
-
+import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Input} from 'react-bootstrap';
 
 export default React.createClass({
+  mixins: [immutableMixin],
+
   propTypes: {
     destination: PropTypes.string.isRequired,
     incremental: PropTypes.bool.isRequired,
     primaryKey: PropTypes.object.isRequired,
     onStartUpload: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    isValid: PropTypes.bool.isRequired
+    isValid: PropTypes.bool.isRequired,
+    isUploading: PropTypes.bool.isRequired,
+    uploadingMessage: PropTypes.string.isRequired
   },
 
   onSubmit() {
@@ -18,6 +22,19 @@ export default React.createClass({
 
   onChange(e) {
     this.props.onChange(e.target.files[0]);
+  },
+
+  uploadStatus() {
+    if (!this.props.isUploading) {
+      return null;
+    }
+    return (
+      <div className="row col-md-12">
+        <div className="col-xs-8 col-xs-offset-4">
+          State: {this.props.uploadingMessage}
+        </div>
+      </div>
+    );
   },
 
   render() {
@@ -93,7 +110,7 @@ export default React.createClass({
               />
           </div>
         </div>
-
+        {this.uploadStatus()}
       </div>
     );
   }

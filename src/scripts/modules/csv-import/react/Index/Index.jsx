@@ -3,6 +3,8 @@ import React from 'react';
 // stores
 import ComponentStore from '../../../components/stores/ComponentsStore';
 import InstalledComponentsStore from '../../../components/stores/InstalledComponentsStore';
+import StorageTablesStore from '../../../components/stores/StorageTablesStore';
+import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import storeProvisioning from '../../storeProvisioning';
@@ -35,8 +37,8 @@ notes
  */
 
 export default React.createClass({
-
-  mixins: [createStoreMixin(InstalledComponentsStore)],
+  // TODO ještě store na joby ve storage
+  mixins: [createStoreMixin(InstalledComponentsStore, StorageTablesStore, StorageBucketsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
@@ -77,6 +79,8 @@ export default React.createClass({
               onStartUpload={this.state.actions.startUpload}
               onChange={this.setFile}
               isValid={this.state.isUploaderValid}
+              isUploading={this.state.localState.isUploading}
+              uploadingMessage={this.state.localState.uploadingMessage}
             />
           </div>
         </div>
