@@ -79,8 +79,8 @@ export default React.createClass({
               onStartUpload={this.state.actions.startUpload}
               onChange={this.setFile}
               isValid={this.state.isUploaderValid}
-              isUploading={this.state.localState.isUploading}
-              uploadingMessage={this.state.localState.uploadingMessage}
+              isUploading={this.state.localState.get('isUploading')}
+              uploadingMessage={this.state.localState.get('uploadingMessage')}
             />
           </div>
         </div>

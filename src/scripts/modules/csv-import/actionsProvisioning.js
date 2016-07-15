@@ -4,6 +4,7 @@ import storageApi from '../components/StorageApi';
 import storageApiActions from '../components/StorageActionCreators';
 import bucketsStore from '../components/stores/StorageBucketsStore';
 import tablesStore from '../components/stores/StorageTablesStore';
+import installedComponentsStore from '../components/stores/InstalledComponentsStore';
 
 // via https://github.com/aws/aws-sdk-js/issues/603#issuecomment-228233113
 import 'aws-sdk/dist/aws-sdk';
@@ -21,27 +22,33 @@ export default function(configId) {
   const store = storeProvisioning(configId);
 
   function updateLocalState(path, data) {
-    const ls = store.getLocalState();
+    const ls = installedComponentsStore.getLocalState(COMPONENT_ID, configId);
     const newLocalState = ls.setIn([].concat(path), data);
     componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
+  }
+
+  function getLocalState() {
+    return installedComponentsStore.getLocalState(COMPONENT_ID, configId);
   }
 
   function startUpload() {
     var params = {
       federationToken: true,
       notify: false,
-      name: store.getLocalState().get('file').name,
-      sizeBytes: store.getLocalState().get('file').size
+      name: getLocalState().get('file').name,
+      sizeBytes: getLocalState().get('file').size
     };
+
     updateLocalState(['isUploading'], true);
     updateLocalState(['uploadingMessage'], 'Preparing upload');
+
     storageApi.prepareFileUpload(params).then(function(response) {
       var fileId = response.id;
       var s3params = {
         Key: response.uploadParams.key,
         Bucket: response.uploadParams.bucket,
         ACL: response.uploadParams.acl,
-        Body: store.getLocalState().get('file')
+        Body: getLocalState().get('file')
       };
       var credentials = response.uploadParams.credentials;
       AWS.config.credentials = new AWS.Credentials({
@@ -49,7 +56,9 @@ export default function(configId) {
         secretAccessKey: credentials.SecretAccessKey,
         sessionToken: credentials.SessionToken
       });
+
       updateLocalState(['uploadingMessage'], 'Uploading to S3');
+
       new AWS.S3().putObject(s3params, function(err, data) {
         if (err) {
           // todo chyba
@@ -67,14 +76,16 @@ export default function(configId) {
               dataFileId: fileId
             };
             storageApiActions.createTable(bucketId, createTableParams).then(function() {
+              updateLocalState(['uploadingMessage'], null);
               updateLocalState(['isUploading'], false);
-              updateLocalState(['uploadingMessage'], '');
             });
           };
 
           if (!bucketsStore.hasBucket(bucketId)) {
             // create bucket and table
+
             updateLocalState(['uploadingMessage'], 'Creating bucket ' + bucketId);
+
             var createBucketParams = {
               name: bucketId.substr(bucketId.indexOf('-') + 1),
               stage: bucketId.substr(0, bucketId.lastIndexOf('.'))
@@ -89,8 +100,8 @@ export default function(configId) {
               };
               updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
               storageApiActions.loadTable(tableId, loadTableParams).then(function() {
+                updateLocalState(['uploadingMessage'], null);
                 updateLocalState(['isUploading'], false);
-                updateLocalState(['uploadingMessage'], '');
               });
             } else {
               createTable();
