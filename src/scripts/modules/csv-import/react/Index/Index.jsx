@@ -53,7 +53,8 @@ export default React.createClass({
       actions: actions,
       isUploaderValid: store.isUploaderValid,
       localState: store.getLocalState(),
-      destination: store.destination
+      destination: store.destination,
+      tables: StorageTablesStore.getAll()
     };
   },
 
@@ -74,6 +75,7 @@ export default React.createClass({
         <UploadEdit
           settings={this.state.localState.get('settings')}
           onChange={this.state.actions.editChange}
+          tables={this.state.tables}
         />
       );
     }
