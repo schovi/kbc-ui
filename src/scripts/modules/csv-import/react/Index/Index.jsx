@@ -22,6 +22,9 @@ import ComponentMetadata from '../../../components/react/components/ComponentMet
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 import EditButtons from '../../../../react/common/EditButtons';
 
+// utils
+import {getDefaultTable} from '../../utils';
+
 // CONSTS
 const COMPONENT_ID = 'keboola.csv-import';
 
@@ -51,10 +54,11 @@ export default React.createClass({
       component: component,
       configId: configId,
       actions: actions,
+      tables: StorageTablesStore.getAll(),
       isUploaderValid: store.isUploaderValid,
       localState: store.getLocalState(),
       destination: store.destination,
-      tables: StorageTablesStore.getAll()
+      incremental: store.incremental
     };
   },
 
@@ -76,6 +80,7 @@ export default React.createClass({
           settings={this.state.localState.get('settings')}
           onChange={this.state.actions.editChange}
           tables={this.state.tables}
+          defaultTable={getDefaultTable(this.state.configId)}
         />
       );
     }
@@ -88,8 +93,10 @@ export default React.createClass({
       return (
         <UploadStatic
           destination={this.state.destination}
-          incremental={true}
-          primaryKey={['Id', 'Name']}
+          incremental={this.state.incremental}
+          primaryKey={this.state.primaryKey}
+          primaryKey={this.state.delimiter}
+          primaryKey={this.state.enclosure}
           onStartUpload={this.state.actions.startUpload}
           onChange={this.state.actions.setFile}
           isValid={this.state.isUploaderValid}

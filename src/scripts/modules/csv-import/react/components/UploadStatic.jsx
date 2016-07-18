@@ -9,6 +9,8 @@ export default React.createClass({
     destination: PropTypes.string.isRequired,
     incremental: PropTypes.bool.isRequired,
     primaryKey: PropTypes.object.isRequired,
+    delimiter: PropTypes.string.isRequired,
+    enclosure: PropTypes.object.isRequired,
     onStartUpload: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     isValid: PropTypes.bool.isRequired,
@@ -87,15 +89,17 @@ export default React.createClass({
             labelClassName="col-xs-4"
             wrapperClassName="col-xs-8"
             disabled={true}
+            value={this.props.delimiter}
             />
         </div>
         <div className="row col-md-12">
           <Input
             type="text"
-            label="Escape character"
+            label="Enclosure"
             labelClassName="col-xs-4"
             wrapperClassName="col-xs-8"
             disabled={true}
+            value={this.props.enclosure}
             />
         </div>
         <div className="row col-md-12">

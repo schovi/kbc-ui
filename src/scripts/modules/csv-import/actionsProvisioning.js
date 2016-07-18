@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
 
 import storeProvisioning from './storeProvisioning';
 import componentsActions from '../components/InstalledComponentsActionCreators';
@@ -12,6 +12,9 @@ import installedComponentsStore from '../components/stores/InstalledComponentsSt
 import 'aws-sdk/dist/aws-sdk';
 const AWS = window.AWS;
 
+// utils
+import {getDefaultTable} from './utils';
+
 const COMPONENT_ID = 'keboola.csv-import';
 
 // PROPTYPES HELPER:
@@ -19,6 +22,39 @@ const COMPONENT_ID = 'keboola.csv-import';
   localState: PropTypes.object.isRequired,
   updateLocalState: PropTypes.func.isRequired,
 */
+
+function createConfigurationFromSettings(settings, configId) {
+  let config = Map();
+
+  if (settings.get('destination') && settings.get('destination') !== '') {
+    config = config.set('destination', config.get('destination'));
+  } else {
+    config = config.set('destination', getDefaultTable(configId));
+  }
+
+  config = config.set('incremental', config.get('incremental', false));
+
+  if (settings.get('primaryKey') && settings.get('primaryKey').count() > 0) {
+    config = config.set('primaryKey', config.get('primaryKey'));
+  } else {
+    config = config.set('primaryKey', List());
+  }
+
+  if (settings.get('delimiter') && settings.get('delimiter') !== '') {
+    config = config.set('delimiter', config.get('delimiter'));
+  } else {
+    config = config.set('delimiter', ',');
+  }
+
+  if (settings.get('enclosure') && settings.get('enclosure') !== '') {
+    config = config.set('enclosure', config.get('enclosure'));
+  } else {
+    config = config.set('enclosure', '"');
+  }
+
+  return config;
+}
+
 
 export default function(configId) {
   const store = storeProvisioning(configId);
@@ -56,6 +92,17 @@ export default function(configId) {
     componentsActions.updateLocalState(COMPONENT_ID, configId,
       localState.set('settings', newSettings)
     );
+  }
+
+  function editSave() {
+    const localState = getLocalState();
+    const config = createConfigurationFromSettings(localState.get('settings', Map()), configId);
+
+    console.log(localState.get('settings').toJS(), config.toJS());
+    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, config).then(() => {
+      updateLocalState(['settings'], null);
+      updateLocalState(['isEditing'], false);
+    });
   }
 
   function startUpload() {
@@ -144,6 +191,7 @@ export default function(configId) {
     startUpload,
     editStart,
     editCancel,
+    editSave,
     setFile,
     editChange
   };

@@ -2,23 +2,55 @@ import React, {PropTypes} from 'react';
 import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Input} from 'react-bootstrap';
 import Autosuggest from 'react-autosuggest';
+import Select from '../../../../react/common/Select';
 
 export default React.createClass({
   mixins: [immutableMixin],
 
   propTypes: {
     settings: PropTypes.object.isRequired,
+    defaultTable: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     tables: PropTypes.object.isRequired
   },
 
   onChangeDestination(value) {
     var settings = this.props.settings.set('destination', value);
+
+    // set primary key if table exists
+    if (this.props.tables.has(value)) {
+      settings = settings.set('primaryKey', this.props.tables.getIn([value, 'primaryKey']));
+    } else {
+      settings = settings.set('primaryKey', []);
+    }
     this.props.onChange(settings);
+  },
+
+  isExistingTable() {
+    const destinationTable = this.props.settings.get('destination');
+    if (!destinationTable || destinationTable === '') {
+      return false;
+    }
+    return this.props.tables.has(destinationTable);
   },
 
   onChangeIncremental(e) {
     var settings = this.props.settings.set('incremental', e.target.value);
+    this.props.onChange(settings);
+  },
+
+  onChangePrimaryKey(value) {
+    var settings = this.props.settings.set('primaryKey', value);
+    this.props.onChange(settings);
+  },
+
+  onChangeDelimiter(e) {
+    var settings = this.props.settings.set('delimiter', e.target.value);
+    this.props.onChange(settings);
+  },
+
+  onChangeEnclosure(e) {
+    var settings = this.props.settings.set('enclosure', e.target.value);
     this.props.onChange(settings);
   },
 
@@ -47,15 +79,15 @@ export default React.createClass({
 
   render() {
     const suggestInputProps = {
-      value: this.props.settings.get('destination'),
+      value: this.props.settings.get('destination', this.props.defaultTable),
       onChange: this.onChangeDestination,
-      placeholder: 'Destination in Storage',
+      placeholder: 'Table in Storage',
       className: 'form-control',
       id: 'destination',
       name: 'destination'
     };
     return (
-      <div>
+      <div className="form-horizontal">
         <div className="row col-md-12">
           <div className="form-group">
             <div className="col-xs-4 control-label">Destination</div>
@@ -64,21 +96,63 @@ export default React.createClass({
                 suggestions={this.getDestinationSuggestions()}
                 inputAttributes={suggestInputProps}
               />
+              <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default {this.props.defaultTable}</span>
             </div>
           </div>
-
         </div>
         <div className="row col-md-12">
           <div className="col-xs-8 col-xs-offset-4">
             <Input
               type="checkbox"
-              label="Incremental"
-              labelClassName="col-xs-4"
-              wrapperClassName="col-xs-8"
+              label="Incremental load"
+              labelClassName="col-xs-12"
               value={this.props.settings.get('incremental')}
               onChange={this.onChangeIncremental}
+              help={(<span>If incremental loads are turned on, table will be updated instead of rewritten. Tables with primary key will update rows, tables without primary key will append rows.</span>)}
               />
           </div>
+        </div>
+        <div className="row col-md-12">
+          <div className="form-group">
+            <div className="col-xs-4 control-label">Primary key</div>
+            <div className="col-xs-8">
+              <Select
+                name="primaryKey"
+                value={this.props.settings.get('primaryKey')}
+                multi={true}
+                allowCreate={true}
+                delimiter=","
+                placeholder="Add a column"
+                emptyStrings={false}
+                onChange={this.onChangePrimaryKey}
+                disabled={this.isExistingTable()}
+                help={(<span>Primary key of the table. If primary key is set, updates can be done on table by selecting <strong>incremental loads</strong>. Primary key can be compound.</span>)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row col-md-12">
+          <Input
+            type="text"
+            label="Delimiter"
+            labelClassName="col-xs-4"
+            wrapperClassName="col-xs-8"
+            value={this.props.settings.get('delimiter', ',')}
+            onChange={this.onChangeDelimiter}
+            help={(<span>Field delimiter used in CSV file. Default value is <code>,</code>. Use <code>\t</code> for tabulator.</span>)}
+            standalone={true}
+            />
+        </div>
+        <div className="row col-md-12">
+          <Input
+            type="text"
+            label="Enclosure"
+            labelClassName="col-xs-4"
+            wrapperClassName="col-xs-8"
+            value={this.props.settings.get('enclosure', '"')}
+            onChange={this.onChangeEnclosure}
+            help={(<span>Field enclosure used in CSV file. Default value is <code>"</code>.</span>)}
+            />
         </div>
       </div>
     );

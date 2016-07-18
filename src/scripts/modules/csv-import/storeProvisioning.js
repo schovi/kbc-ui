@@ -3,6 +3,9 @@ import _ from 'underscore';
 
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
 
+// utils
+import {getDefaultTable} from './utils';
+
 const COMPONENT_ID = 'keboola.csv-import';
 
 // validovat soubor
@@ -15,9 +18,11 @@ export default function(configId) {
   const configData =  InstalledComponentStore.getConfigData(COMPONENT_ID, configId) || Map();
 
   return {
-    destination: configData.get('destination', 'in.c-uploadtest.table'),
+    destination: configData.get('destination', getDefaultTable(configId)),
     incremental: configData.get('incremental', false),
     primaryKey: configData.get('primaryKey', List()),
+    delimiter: configData.get('delimiter', ','),
+    enclosure: configData.get('enclosure', '"'),
 
     isUploaderValid: isUploaderValid(localState),
     // local state stuff
