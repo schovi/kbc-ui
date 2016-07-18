@@ -111,7 +111,7 @@ export default React.createClass({
         onLoadVersionConfig={() => this.prepareVersionsDiffData(version, previousVersion)}
         version={version}
         previousVersion={previousVersion}
-        referenceConfigData={this.state.currentConfigData}
+
       />
     );
   },

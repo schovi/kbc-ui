@@ -19,27 +19,30 @@ function reconstructIncompleteJson(strValue) {
   if (result[lastIdx()] !== '}') result = result + '}';
   return JSON.parse(result);
 }
-function  getMultiPartsDiff(firstValue, secondValue) {
+function  getMultiPartsDiff(firstValue, secondValue, firstDescription, secondDescription) {
   const firstJson = reconstructIncompleteJson(firstValue);
   const secondJson = reconstructIncompleteJson(secondValue);
   let firstLines = [];
   let secondLines = [];
   for (let key of _.keys(firstJson)) {
-    firstLines.push(key);
+    firstLines.push('comparing: ' + key);
     firstLines.push(multiDiffValueToString(firstJson[key]));
-    secondLines.push(key);
+    secondLines.push('comparing: ' + key);
     secondLines.push(multiDiffValueToString(secondJson[key]));
   }
-  return createTwoFilesPatch('config.json', 'config.json',
+  return createTwoFilesPatch('Old version',
+                             'New version',
                              firstLines.join('\n') + '\n',
                              secondLines.join('\n') + '\n',
-                             '', '', {context: 1000});
+                             secondDescription, firstDescription, {context: 1000});
 }
 
 export default React.createClass({
   propTypes: {
     firstPart: PropTypes.object.isRequired,
-    secondPart: PropTypes.object.isRequired
+    secondPart: PropTypes.object.isRequired,
+    firstPartDescription: PropTypes.string,
+    secondPartDescription: PropTypes.string
   },
 
   getInitialState() {
@@ -54,7 +57,7 @@ export default React.createClass({
       <div>
         <div className="text-center">
           <button
-            className="btn btn-default btn-sm"
+            className="btn btn-link btn-sm"
             onClick={() => this.setState({showDetails: !this.state.showDetails})}>
             <i className="fa fa-fw fa-arrows-v" />
             {this.state.showDetails ? 'Hide Details' : 'Show detailed diff'}
@@ -66,7 +69,11 @@ export default React.createClass({
   },
 
   renderCodeDitorDiff() {
-    const multiDiff = getMultiPartsDiff(this.props.firstPart.value, this.props.secondPart.value);
+    const multiDiff = getMultiPartsDiff(
+      this.props.firstPart.value,
+      this.props.secondPart.value,
+      this.props.firstPartDescription,
+      this.props.secondPartDescription);
     return (
       <CodeEditor
         readOnly={true}

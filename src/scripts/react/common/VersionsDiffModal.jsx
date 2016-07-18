@@ -1,7 +1,11 @@
 import React from 'react';
+import moment from 'moment';
 import {Button, Modal} from 'react-bootstrap';
 import {diffJson} from 'diff';
 import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
+
+const COLOR_ADD = '#cfc';
+const COLOR_REMOVE = '#fcc';
 
 function setSignToString(str, sign) {
   if (str[0] === '') {
@@ -42,17 +46,33 @@ export default React.createClass({
     version: React.PropTypes.object.isRequired,
     show: React.PropTypes.bool.isRequired,
     onClose: React.PropTypes.func.isRequired,
-    referenceConfigData: React.PropTypes.object.isRequired,
-    compareConfigData: React.PropTypes.object.isRequired
+    referentialVersion: React.PropTypes.object.isRequired,
+    compareVersion: React.PropTypes.object.isRequired
+  },
+
+  getInitialState() {
+    return {
+      showChangedOnly: false
+    };
   },
 
   render() {
+    console.log(this.props.version.toJS());
     return (
       <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Versions Diff</Modal.Title>
+          <Modal.Title>Compare</Modal.Title>
+          <ul>
+            <li>
+              <strong>{this.renderVersionInfo(this.props.referentialVersion)}</strong>
+            </li>
+            <li>
+              <strong>{this.renderVersionInfo(this.props.compareVersion)}</strong>
+            </li>
+          </ul>
         </Modal.Header>
         <Modal.Body>
+          {this.renderFilterRow()}
           {this.renderDiff()}
         </Modal.Body>
         <Modal.Footer>
@@ -63,6 +83,46 @@ export default React.createClass({
           </Button>
         </Modal.Footer>
       </Modal>
+    );
+  },
+
+  renderFilterRow() {
+    return (
+      <div className="row" style={{'padding-bottom': '8px'}}>
+        <div className="col-md-12">
+          <div className="checkbox" >
+            <label>
+              <input
+                checked={this.state.showChangedOnly}
+                type="checkbox"
+                onChange={this.toggleShowChanged}/>
+              Show changed parts only
+            </label>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  toggleShowChanged(e) {
+    const val = e.target.checked;
+    this.setState({showChangedOnly: val});
+  },
+
+
+  versionDescription(version) {
+    return `#${version.get('version')} (${version.get('changeDescription')}) `;
+  },
+
+  renderVersionInfo(version) {
+    return (
+      <span>
+        {this.versionDescription(version)}
+        {' '}
+        <small>
+          {moment(version.get('created')).fromNow()} by {version.getIn(['creatorToken', 'description'], 'unknown')}
+        </small>
+      </span>
     );
   },
 
@@ -85,7 +145,10 @@ export default React.createClass({
     const middlePart = (
       <DetailedDiff
         firstPart={firstPart}
-        secondPart={secondPart}/>);
+        firstPartDescription={this.versionDescription(this.props.referentialVersion)}
+        secondPart={secondPart}
+        secondPartDescription={this.versionDescription(this.props.compareVersion)}
+      />);
 
     return [
       this.renderSimplePreDiff(firstPart),
@@ -97,27 +160,45 @@ export default React.createClass({
     let val = part.value;
     let color = '';
     if (part.added)   {
-      color = '#cfc';
+      color = COLOR_ADD;
       val = setSignToString(val, '+');
     }
     if (part.removed) {
-      color = '#fcc';
+      color = COLOR_REMOVE;
       val = setSignToString(val, '-');
     }
+    const isChanged = [COLOR_ADD, COLOR_REMOVE].indexOf(color) >= 0;
+    if (!isChanged && this.state.showChangedOnly) return null;
     return (
-      <pre style={{'margin-bottom': '1px', 'background-color': color}}>
+      <pre style={{'margin-bottom': '0px',
+                   'border-radius': '0',
+                   'border': 'none',
+                   'background-color': color}}>
         {val}
       </pre>);
   },
 
   getDiff() {
-    if (!this.props.referenceConfigData || !this.props.compareConfigData) {
+    if (!this.referenceConfigData() || !this.compareConfigData()) {
       return [];
     }
-    const referenceData = this.props.referenceConfigData.toJS();
-    const compareWithData = this.props.compareConfigData.toJS();
+    const referenceData = this.referenceConfigData().toJS();
+    const compareWithData = this.compareConfigData().toJS();
     return diffJson(compareWithData, referenceData);
-  }
+  },
 
+  referenceConfigData() {
+    if (this.props.referentialVersion) {
+      return this.props.referentialVersion.get('configuration');
+    }
+    return null;
+  },
+
+  compareConfigData() {
+    if (this.props.compareVersion) {
+      return this.props.compareVersion.get('configuration');
+    }
+    return null;
+  }
 
 });

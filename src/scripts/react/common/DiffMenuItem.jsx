@@ -7,7 +7,6 @@ export default React.createClass({
 
   propTypes: {
     version: React.PropTypes.object.isRequired,
-    referenceConfigData: React.PropTypes.object.isRequired,
     previousVersion: React.PropTypes.object.isRequired,
     onLoadVersionConfig: React.PropTypes.func.isRequired,
     isPending: React.PropTypes.bool,
@@ -55,19 +54,13 @@ export default React.createClass({
           <VersionsDiffModal
             onClose={this.closeModal}
             show={this.state.showModal}
-            referenceConfigData={this.props.version.get('configuration')}
-            compareConfigData={ this.getPreviousVersionConfigData()}
+            referentialVersion={this.props.version}
+            compareVersion={this.props.previousVersion}
             version={this.props.version}
           />
         </MenuItem>
       );
     }
-  },
-
-  getPreviousVersionConfigData() {
-    if (this.props.previousVersion) {
-      return this.props.previousVersion.get('configuration');
-    }
-    return null;
   }
+
 });
