@@ -3,6 +3,7 @@ import createStoreMixin from '../../../../react/mixins/createStoreMixin';
 import VersionsStore from '../../stores/VersionsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import VersionRow from '../components/VersionRow';
+import {getPreviousVersion} from '../../../../utils/VersionsDiffUtils';
 import {Table} from 'react-bootstrap';
 import SearchRow from '../../../../react/common/SearchRow';
 import VersionsActionCreators from '../../VersionsActionCreators';
@@ -56,6 +57,9 @@ export default function(componentId, configIdParam = 'config') {
             isRollbackPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'], false)}
             isRollbackDisabled={this.state.isPending}
             hideRollback={(i === 0)}
+            isDiffPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
+            isDiffDisabled={this.state.isPending}
+            previousVersion={getPreviousVersion(this.state.versions, version)}
           />
         );
       }, this).toArray();

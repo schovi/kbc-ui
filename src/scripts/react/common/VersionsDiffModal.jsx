@@ -43,7 +43,6 @@ function preparseDiffParts(parts) {
 export default React.createClass({
 
   propTypes: {
-    version: React.PropTypes.object.isRequired,
     show: React.PropTypes.bool.isRequired,
     onClose: React.PropTypes.func.isRequired,
     referentialVersion: React.PropTypes.object.isRequired,
@@ -57,7 +56,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log(this.props.version.toJS());
     return (
       <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>
         <Modal.Header closeButton>
@@ -128,7 +126,6 @@ export default React.createClass({
 
   renderDiff() {
     const dataDiff = this.getDiff();
-    console.log('DATA DIFF', dataDiff);
     const preparsedParts = preparseDiffParts(dataDiff);
     const parts = preparsedParts.map((part) => {
       if (part.isMulti) return this.renderMultiDiff(part.first, part.second);

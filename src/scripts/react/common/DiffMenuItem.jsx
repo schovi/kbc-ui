@@ -55,7 +55,6 @@ export default React.createClass({
             show={this.state.showModal}
             referentialVersion={this.props.version}
             compareVersion={this.props.previousVersion}
-            version={this.props.version}
           />
         </MenuItem>
       );

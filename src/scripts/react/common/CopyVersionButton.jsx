@@ -47,7 +47,7 @@ export default React.createClass({
       return (
         <Tooltip tooltip="Copy version to new" placement="top">
           <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
-            <em className="fa fa-files-o fa-fw"> </em>
+            <em className="fa fa-code-fork fa-fw"> </em>
             <CopyVersionModal
               version={this.props.version}
               show={this.state.showModal}

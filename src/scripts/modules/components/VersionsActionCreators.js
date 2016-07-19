@@ -39,6 +39,7 @@ module.exports = {
     });
   },
 
+
   loadComponentConfigByVersion(componentId, configId, version) {
     if (Store.hasConfigByVersion(componentId, configId, version)) {
       return Promise.resolve(Store.getConfigByVersion(componentId, configId, version));
@@ -74,6 +75,12 @@ module.exports = {
       throw error;
     });
   },
+
+  loadTwoComponentConfigVersions(componentId, configId, version1, version2) {
+    this.loadComponentConfigByVersion(componentId, configId, version1);
+    return this.loadComponentConfigByVersion(componentId, configId, version2);
+  },
+
 
   rollbackVersion: function(componentId, configId, version, reloadCallback) {
     var self = this;
