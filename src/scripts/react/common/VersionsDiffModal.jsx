@@ -70,7 +70,7 @@ export default React.createClass({
     return (
       <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Compare With Previous Version</Modal.Title>
+          <Modal.Title>Compare</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{'padding': '0'}}>
           <div className="row" style={{'padding': '4px', 'margin': '0'}}>
