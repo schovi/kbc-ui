@@ -11,7 +11,7 @@ import createVersionOnRollback from '../../utils/createVersionOnRollback';
 import createVersionOnCopy from '../../utils/createVersionOnCopy';
 import {getPreviousVersion} from '../../utils/VersionsDiffUtils';
 import VersionsActionCreators from '../../../scripts/modules/components/VersionsActionCreators';
-import {Loader} from 'kbc-react-components';
+// import {Loader} from 'kbc-react-components';
 import RoutesStore from '../../stores/RoutesStore';
 
 export default React.createClass({
@@ -19,11 +19,15 @@ export default React.createClass({
 
   propTypes: {
     componentId: React.PropTypes.string.isRequired,
-    configIdParam: React.PropTypes.string
+    configIdParam: React.PropTypes.string,
+    dropDownButtonSize: React.PropTypes.string,
+    firstVersionAsTitle: React.PropTypes.bool
   },
 
   getDefaultProps() {
     return {
+      firstVersionAsTitle: false,
+      dropDownButtonSize: 'default',
       configIdParam: 'config'
     };
   },
@@ -52,11 +56,17 @@ export default React.createClass({
     };
   },
 
+  renderVersionInfo(version) {
+    return (<span>
+      #{version.get('version')} ({moment(version.get('created')).fromNow()} by {version.getIn(['creatorToken', 'description'], 'unknown')})
+    </span>);
+  },
+
   renderMenuItems(version, previousVersion, i) {
     var items = [];
     items.push(
       (<MenuItem header eventKey={version.get('version')}>
-        #{version.get('version')} ({moment(version.get('created')).fromNow()} by {version.getIn(['creatorToken', 'description'], 'unknown')})
+      {this.renderVersionInfo(version)}
       </MenuItem>)
     );
     items.push(
@@ -64,7 +74,9 @@ export default React.createClass({
         <MenuItem header>{version.get('changeDescription') || 'No description.'}</MenuItem>
       )
     );
-
+    if (version.get('version') > 1) {
+      items.push(this.renderDiffMenuItem(version, previousVersion));
+    }
     if (i === 0) {
       items.push(
         (
@@ -89,9 +101,6 @@ export default React.createClass({
       );
     }
     // if it is not the first version show compare diff menu item
-    if (version.get('version') > 1) {
-      items.push(this.renderDiffMenuItem(version, previousVersion));
-    }
 
     items.push(
       (<MenuItem divider/>)
@@ -121,24 +130,18 @@ export default React.createClass({
   },
 
   dropdownTitle() {
-    if (this.state.isPending) {
-      return (
-        <span>
-          <Loader />&nbsp;
-          Versions
-        </span>
-      );
-    } else {
-      return (
-        'Versions'
-      );
-    }
+    return (
+      <span>
+        {this.props.firstVersionAsTitle ? this.renderVersionInfo(this.state.versions.get(0)) : 'Versions'}
+      </span>
+    );
   },
 
   render() {
     return (
       <span>
-        <DropdownButton title={this.dropdownTitle()} pullRight className="kbcVersionsButton">
+        <DropdownButton bsSize={this.props.dropDownButtonSize}
+          title={this.dropdownTitle()} pullRight className="kbcVersionsButton">
           {
             this.getVersions().map(function(version, i) {
               const previousVersion = getPreviousVersion(this.state.versions, version);

@@ -36,9 +36,7 @@ export default React.createClass({
           eventKey={this.props.version.get('version') + '-diff'}
           disabled
         >
-          <em className="fa fa-fw fa-files-o"></em>
-          <Loader/>
-          Compare
+          <Loader/> Compare
         </MenuItem>
       );
     } else {
