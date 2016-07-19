@@ -65,6 +65,12 @@ export default function(configId) {
     componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
   }
 
+  function removeFromLocalState(path) {
+    const ls = installedComponentsStore.getLocalState(COMPONENT_ID, configId);
+    const newLocalState = ls.deleteIn([].concat(path));
+    componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
+  }
+
   function getLocalState() {
     return installedComponentsStore.getLocalState(COMPONENT_ID, configId);
   }
@@ -79,8 +85,8 @@ export default function(configId) {
   }
 
   function editCancel() {
-    updateLocalState(['settings'], null);
     updateLocalState(['isEditing'], false);
+    removeFromLocalState(['settings']);
   }
 
   function setFile(file) {
@@ -103,8 +109,8 @@ export default function(configId) {
     const config = createConfigurationFromSettings(localState.get('settings', Map()), configId);
 
     return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, config).then(() => {
-      updateLocalState(['settings'], null);
       updateLocalState(['isEditing'], false);
+      removeFromLocalState(['settings']);
     });
   }
 
@@ -166,7 +172,7 @@ export default function(configId) {
                 dataFileId: fileId
               };
               storageApiActions.createTable(bucketId, createTableParams).then(function() {
-                updateLocalState(['uploadingMessage'], null);
+                removeFromLocalState(['uploadingMessage']);
                 updateLocalState(['isUploading'], false);
               });
             };
@@ -193,9 +199,9 @@ export default function(configId) {
                 updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
                 updateLocalState(['uploadingProgress'], 90);
                 storageApiActions.loadTable(tableId, loadTableParams).then(function() {
-                  updateLocalState(['uploadingMessage'], null);
+                  removeFromLocalState(['uploadingMessage']);
                   updateLocalState(['isUploading'], false);
-                  updateLocalState(['file'], null);
+                  removeFromLocalState(['file']);
                   resetFileInput();
                   applicationActions.sendNotification({
                     message: 'CSV file successfully imported.',
