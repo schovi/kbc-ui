@@ -200,6 +200,7 @@ module.exports =
     )
 
   createTable: (bucketId, params) ->
+    self = @
     dispatcher.handleViewAction
       type: constants.ActionTypes.STORAGE_TABLE_CREATE
       bucketId: bucketId
@@ -211,11 +212,10 @@ module.exports =
       .then((response) ->
         if (response.status == "error")
           throw response.error.message;
-        # TODO add table to store
         dispatcher.handleViewAction
           type: constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
           bucketId: bucketId
-          table: response
+        return self.loadTablesForce()
       )
     ).catch((error) ->
       dispatcher.handleViewAction
@@ -226,6 +226,7 @@ module.exports =
     )
 
   loadTable: (tableId, params) ->
+    self = @
     dispatcher.handleViewAction
       type: constants.ActionTypes.STORAGE_TABLE_LOAD
       params: params
@@ -237,11 +238,11 @@ module.exports =
       .then((response) ->
         if (response.status == "error")
           throw response.error.message;
-        # TODO modify table in store
         dispatcher.handleViewAction
           type: constants.ActionTypes.STORAGE_TABLE_LOAD_SUCCESS
           tableId: tableId
           response: response
+        return self.loadTablesForce()
       )
     ).catch((error) ->
       dispatcher.handleViewAction

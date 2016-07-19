@@ -17,7 +17,7 @@ StorageTablesStore = StoreUtils.createStore
 
   getAll: ->
     _store.get 'tables'
-    
+
   hasTable: (tableId) ->
     _store.get('tables').has(tableId)
 
@@ -26,10 +26,10 @@ StorageTablesStore = StoreUtils.createStore
 
   getIsLoaded: ->
     _store.get 'isLoaded'
-    
+
   getIsCreatingTable: ->
     _store.getIn ['pendingTables', 'creating'], false
-    
+
   getIsLoadingTable: ->
     _store.getIn ['pendingTables', 'loading'], false
 
@@ -63,8 +63,6 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
       _store = _store.setIn ['pendingTables', 'creating'], false
-      _store = _store.setIn ['tables', action.table.id], Immutable.fromJS(action.table)
-      console.log(_store.getIn(['tables']).toJS())
       StorageTablesStore.emitChange()
 
     when constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
