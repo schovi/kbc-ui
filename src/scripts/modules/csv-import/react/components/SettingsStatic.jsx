@@ -12,36 +12,11 @@ export default React.createClass({
     delimiter: PropTypes.string.isRequired,
     enclosure: PropTypes.object.isRequired,
     onStartUpload: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onStartChangeSettings: PropTypes.func.isRequired,
-    isValid: PropTypes.bool.isRequired,
-    isUploading: PropTypes.bool.isRequired,
-    uploadingMessage: PropTypes.string.isRequired
-  },
-
-  onSubmit() {
-    this.props.onStartUpload();
-  },
-
-  onChange(e) {
-    this.props.onChange(e.target.files[0]);
+    onStartChangeSettings: PropTypes.func.isRequired
   },
 
   onStartChangeSettings() {
     this.props.onStartChangeSettings();
-  },
-
-  uploadStatus() {
-    if (!this.props.isUploading) {
-      return null;
-    }
-    return (
-      <div className="row col-md-12">
-        <div className="col-xs-8 col-xs-offset-4">
-          State: {this.props.uploadingMessage}
-        </div>
-      </div>
-    );
   },
 
   renderPrimaryKey() {
@@ -67,40 +42,9 @@ export default React.createClass({
   },
 
   render() {
+    // TODO destination jako link na tabulku, pokud existuje
     return (
       <div>
-        <h3>Upload CSV File</h3>
-        <div className="form-horizontal">
-          <div className="row col-md-12">
-            <div className="form-group">
-              <label className="control-label col-xs-4">
-                <span>Select file</span>
-              </label>
-              <div className="col-xs-8">
-                <input
-                  type="file"
-                  label="Select file"
-                  onChange={this.onChange}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row col-md-12">
-            <div className="col-xs-8 col-xs-offset-4">
-              <div className="form-group">
-                <button
-                  className="btn btn-success"
-                  title="Upload"
-                  onClick={this.onSubmit}
-                  disabled={!!this.props.isValid}
-                >
-                  Upload
-                </button>
-              </div>
-            </div>
-          </div>
-          {this.uploadStatus()}
-        </div>
         <h3>Settings</h3>
         {this.renderChangeSettings()}
         <div className="form-horizontal">

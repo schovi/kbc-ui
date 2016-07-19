@@ -38,8 +38,8 @@ export default React.createClass({
     return this.props.tables.has(destinationTable);
   },
 
-  onChangeIncremental(e) {
-    var settings = this.props.settings.set('incremental', e.target.value);
+  onChangeIncremental() {
+    var settings = this.props.settings.set('incremental', !this.props.settings.get('incremental', false));
     this.props.onChange(settings);
   },
 
@@ -126,7 +126,7 @@ export default React.createClass({
                 labelClassName="col-xs-12"
                 checked={this.props.settings.get('incremental')}
                 onChange={this.onChangeIncremental}
-                help={(<span>If incremental loads are turned on, table will be updated instead of rewritten. Tables with primary key will update rows, tables without primary key will append rows.</span>)}
+                help={(<span>If incremental load is turned on, table will be updated instead of rewritten. Tables with primary key will update rows, tables without primary key will append rows.</span>)}
                 />
             </div>
           </div>

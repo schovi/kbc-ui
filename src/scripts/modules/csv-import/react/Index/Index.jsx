@@ -13,8 +13,9 @@ import storeProvisioning from '../../storeProvisioning';
 import actionsProvisioning from '../../actionsProvisioning';
 
 // specific components
-import UploadStatic from '../components/UploadStatic';
-import UploadEdit from '../components/UploadEdit';
+import Upload from '../components/Upload';
+import SettingsStatic from '../components/SettingsStatic';
+import SettingsEdit from '../components/SettingsEdit';
 
 // global components
 import ComponentDescription from '../../../components/react/components/ComponentDescription';
@@ -64,10 +65,25 @@ export default React.createClass({
     };
   },
 
-  renderEditForm() {
+  renderUploader() {
+    if (!this.state.localState.get('isEditing')) {
+      return (
+        <Upload
+          onStartUpload={this.state.actions.startUpload}
+          onChange={this.state.actions.setFile}
+          isValid={this.state.isUploaderValid}
+          isUploading={this.state.localState.get('isUploading')}
+          uploadingMessage={this.state.localState.get('uploadingMessage')}
+        />
+      );
+    }
+    return null;
+  },
+
+  renderSettings() {
     if (this.state.localState.get('isEditing')) {
       return (
-        <UploadEdit
+        <SettingsEdit
           settings={this.state.localState.get('settings')}
           onChange={this.state.actions.editChange}
           tables={this.state.tables}
@@ -77,26 +93,15 @@ export default React.createClass({
           isSaving={this.state.localState.get('isSaving')}
         />
       );
-    }
-  },
-
-  renderUploadForm() {
-    if (this.state.localState.get('isEditing')) {
-      return null;
     } else {
       return (
-        <UploadStatic
+        <SettingsStatic
           destination={this.state.destination}
           incremental={this.state.incremental}
           primaryKey={this.state.primaryKey}
           delimiter={this.state.delimiter}
           enclosure={this.state.enclosure}
-          onStartUpload={this.state.actions.startUpload}
-          onChange={this.state.actions.setFile}
           onStartChangeSettings={this.state.actions.editStart}
-          isValid={this.state.isUploaderValid}
-          isUploading={this.state.localState.get('isUploading')}
-          uploadingMessage={this.state.localState.get('uploadingMessage')}
         />
       );
     }
@@ -115,8 +120,8 @@ export default React.createClass({
             </div>
           </div>
           <div className="row">
-            {this.renderUploadForm()}
-            {this.renderEditForm()}
+            {this.renderUploader()}
+            {this.renderSettings()}
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
