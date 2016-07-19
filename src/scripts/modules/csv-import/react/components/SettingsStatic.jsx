@@ -10,8 +10,7 @@ export default React.createClass({
     incremental: PropTypes.bool.isRequired,
     primaryKey: PropTypes.object.isRequired,
     delimiter: PropTypes.string.isRequired,
-    enclosure: PropTypes.object.isRequired,
-    onStartUpload: PropTypes.func.isRequired,
+    enclosure: PropTypes.string.isRequired,
     onStartChangeSettings: PropTypes.func.isRequired,
     isEditDisabled: PropTypes.bool.isRequired
   },

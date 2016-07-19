@@ -33,12 +33,7 @@ const COMPONENT_ID = 'keboola.csv-import';
 notes
 
 - vpravo by to mohlo ukazovat importní joby storage (nevím jak)
-- upload do S3 pomocí https://www.npmjs.com/package/react-s3-uploader
-- postup
-  - create file resource - http://docs.keboola.apiary.io/#reference/files/upload-file/upload-arbitrary-file-to-keboola
-  - upload to S3
-  - (list tables) create or update
-  - progress
+
  */
 
 export default React.createClass({
@@ -72,8 +67,8 @@ export default React.createClass({
           onStartUpload={this.state.actions.startUpload}
           onChange={this.state.actions.setFile}
           isValid={this.state.isUploaderValid}
-          isUploading={this.state.localState.get('isUploading')}
-          uploadingMessage={this.state.localState.get('uploadingMessage')}
+          isUploading={this.state.localState.get('isUploading', false)}
+          uploadingMessage={this.state.localState.get('uploadingMessage', '')}
           uploadingProgress={this.state.localState.get('uploadingProgress', 0)}
         />
       );
@@ -91,7 +86,7 @@ export default React.createClass({
           defaultTable={getDefaultTable(this.state.configId)}
           onCancel={this.state.actions.editCancel}
           onSave={this.state.actions.editSave}
-          isSaving={this.state.localState.get('isSaving')}
+          isSaving={this.state.localState.get('isSaving', false)}
         />
       );
     } else {
@@ -103,7 +98,7 @@ export default React.createClass({
           delimiter={this.state.delimiter}
           enclosure={this.state.enclosure}
           onStartChangeSettings={this.state.actions.editStart}
-          isEditDisabled={this.state.localState.get('isUploading')}
+          isEditDisabled={this.state.localState.get('isUploading', false)}
         />
       );
     }
