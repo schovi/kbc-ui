@@ -114,6 +114,16 @@ export default function(configId) {
     });
   }
 
+  function resetForm() {
+    resetFileInput();
+    removeFromLocalState(['file']);
+  }
+
+  function resetUploadState() {
+    removeFromLocalState(['uploadingMessage']);
+    updateLocalState(['isUploading'], false);
+  }
+
   function startUpload() {
     var params = {
       federationToken: true,
@@ -147,18 +157,19 @@ export default function(configId) {
       new AWS.S3()
         .putObject(s3params)
         .on('httpUploadProgress', function(progress) {
-          console.log('progress', progress);
           var addition = 0;
           if (progress.loaded && progress.total) {
             addition = 30 * (progress.loaded / progress.total);
           }
           updateLocalState(['uploadingProgress'], 30 + addition);
         })
-        .send(function(err, data) {
+        .send(function(err) {
           if (err) {
-            // todo chyba
-            console.log(err, data);
-            throw err;
+            resetUploadState();
+            applicationActions.sendNotification({
+              message: err,
+              type: 'error'
+            });
           } else {
             var tableId = store.destination;
             var bucketId = tableId.substr(0, tableId.lastIndexOf('.'));
@@ -172,11 +183,20 @@ export default function(configId) {
                 dataFileId: fileId
               };
               storageApiActions.createTable(bucketId, createTableParams).then(function() {
-                removeFromLocalState(['uploadingMessage']);
-                updateLocalState(['isUploading'], false);
+                resetUploadState();
+                resetForm();
+                applicationActions.sendNotification({
+                  message: 'CSV file successfully imported.',
+                  autoDelete: true
+                });
+              }).catch(function(e) {
+                resetUploadState();
+                applicationActions.sendNotification({
+                  message: e.message,
+                  type: 'error'
+                });
               });
             };
-            console.log('bucketId', bucketId, bucketsStore.hasBucket(bucketId));
 
             if (!bucketsStore.hasBucket(bucketId)) {
               // create bucket and table
@@ -189,7 +209,14 @@ export default function(configId) {
                 stage: bucketId.substr(0, bucketId.lastIndexOf('.'))
               };
               storageApiActions.createBucket(createBucketParams)
-                .then(createTable);
+                .then(createTable)
+                .catch(function(e) {
+                  resetUploadState();
+                  applicationActions.sendNotification({
+                    message: e.message,
+                    type: 'error'
+                  });
+                });
             } else {
               // does table exist? load or create
               if (tablesStore.hasTable(tableId)) {
@@ -199,13 +226,17 @@ export default function(configId) {
                 updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
                 updateLocalState(['uploadingProgress'], 90);
                 storageApiActions.loadTable(tableId, loadTableParams).then(function() {
-                  removeFromLocalState(['uploadingMessage']);
-                  updateLocalState(['isUploading'], false);
-                  removeFromLocalState(['file']);
-                  resetFileInput();
+                  resetUploadState();
+                  resetForm();
                   applicationActions.sendNotification({
                     message: 'CSV file successfully imported.',
                     autoDelete: true
+                  });
+                }).catch(function(e) {
+                  resetUploadState();
+                  applicationActions.sendNotification({
+                    message: e.message,
+                    type: 'error'
                   });
                 });
               } else {
