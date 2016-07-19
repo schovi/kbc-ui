@@ -70,6 +70,7 @@ export default React.createClass({
           isUploading={this.state.localState.get('isUploading', false)}
           uploadingMessage={this.state.localState.get('uploadingMessage', '')}
           uploadingProgress={this.state.localState.get('uploadingProgress', 0)}
+          key={this.state.localState.get('fileInputKey', 0)}
         />
       );
     }

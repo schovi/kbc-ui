@@ -87,6 +87,10 @@ export default function(configId) {
     updateLocalState(['file'], file);
   }
 
+  function resetFileInput() {
+    updateLocalState(['fileInputKey'], getLocalState().get('fileInputKey', 0) + 1);
+  }
+
   function editChange(newSettings) {
     const localState = getLocalState();
     componentsActions.updateLocalState(COMPONENT_ID, configId,
@@ -192,7 +196,7 @@ export default function(configId) {
                   updateLocalState(['uploadingMessage'], null);
                   updateLocalState(['isUploading'], false);
                   updateLocalState(['file'], null);
-                  // TODO reset file selector
+                  resetFileInput();
                   applicationActions.sendNotification({
                     message: 'CSV file successfully imported.',
                     autoDelete: true
