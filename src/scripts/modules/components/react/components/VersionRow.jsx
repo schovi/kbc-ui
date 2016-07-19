@@ -23,7 +23,8 @@ export default React.createClass({
     isCopyPending: React.PropTypes.bool,
     isCopyDisabled: React.PropTypes.bool,
     isDiffPending: React.PropTypes.bool,
-    isDiffDisabled: React.PropTypes.bool
+    isDiffDisabled: React.PropTypes.bool,
+    onPrepareVersionsDiffData: React.PropTypes.func
   },
 
   onChangeName(name) {
@@ -49,19 +50,11 @@ export default React.createClass({
       <DiffVersionButton
         isDisabled={this.props.isDiffDisabled}
         isPending={this.props.isDiffPending}
-        onLoadVersionConfig={this.prepareVersionsDiffData}
+        onLoadVersionConfig={this.props.onPrepareVersionsDiffData}
         version={this.props.version}
         previousVersion={this.props.previousVersion}
       />
     );
-  },
-
-  prepareVersionsDiffData() {
-    const componentId = this.props.componentId;
-    const configId = this.props.configId;
-    const version1 = this.props.version.get('version');
-    const version2 = this.props.previousVersion.get('version');
-    return VersionsActionCreators.loadTwoComponentConfigVersions(componentId, configId, version1, version2);
   },
 
   render() {

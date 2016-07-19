@@ -99,8 +99,11 @@ export default React.createClass({
   },
 
   prepareVersionsDiffData(version, previousVersion) {
-    VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, version.get('version'));
-    return VersionsActionCreators.loadComponentConfigByVersion(this.props.componentId, this.state.configId, previousVersion.get('version'));
+    const componentId = this.props.componentId;
+    const configId = this.state.configId;
+    const version1 = version.get('version');
+    const version2 = previousVersion.get('version');
+    return VersionsActionCreators.loadTwoComponentConfigVersions(componentId, configId, version1, version2);
   },
 
   renderDiffMenuItem(version, previousVersion) {

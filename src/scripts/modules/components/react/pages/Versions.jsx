@@ -45,6 +45,7 @@ export default function(componentId, configIdParam = 'config') {
 
     renderVersionRows() {
       return this.state.filteredVersions.map(function(version, i) {
+        const previousVersion = getPreviousVersion(this.state.versions, version);
         return (
           <VersionRow
             key={version.get('version')}
@@ -59,10 +60,18 @@ export default function(componentId, configIdParam = 'config') {
             hideRollback={(i === 0)}
             isDiffPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
             isDiffDisabled={this.state.isPending}
-            previousVersion={getPreviousVersion(this.state.versions, version)}
+            previousVersion={previousVersion}
+            onPrepareVersionsDiffData= {() => this.prepareVersionsDiffData(version, previousVersion)}
           />
         );
       }, this).toArray();
+    },
+
+
+    prepareVersionsDiffData(version1, version2) {
+      const configId = this.state.configId;
+      return VersionsActionCreators.loadTwoComponentConfigVersions(
+        this.state.componentId, configId, version1.get('version'), version2.get('version'));
     },
 
     onSearchChange(query) {
