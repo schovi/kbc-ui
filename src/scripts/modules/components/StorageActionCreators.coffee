@@ -235,7 +235,6 @@ module.exports =
 
     storageApi.loadTable(tableId, params)
     .then((response) ->
-      console.log(response)
       jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
       .then((response) ->
         if (response.status == "error")
