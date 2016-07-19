@@ -106,6 +106,7 @@ export default React.createClass({
                   value={this.props.settings.get('destination')}
                   onSelectTableFn={this.onChangeDestination}
                   placeholder="Table in Storage"
+                  allowCreate={true}
                 />
                 <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default <code>{this.props.defaultTable}</code></span>
               </div>
