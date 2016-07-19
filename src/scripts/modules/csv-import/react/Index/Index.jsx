@@ -20,7 +20,6 @@ import UploadEdit from '../components/UploadEdit';
 import ComponentDescription from '../../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
-import EditButtons from '../../../../react/common/EditButtons';
 
 // utils
 import {getDefaultTable} from '../../utils';
@@ -58,19 +57,11 @@ export default React.createClass({
       isUploaderValid: store.isUploaderValid,
       localState: store.getLocalState(),
       destination: store.destination,
-      incremental: store.incremental
+      incremental: store.incremental,
+      primaryKey: store.primaryKey,
+      delimiter: store.delimiter,
+      enclosure: store.enclosure
     };
-  },
-
-  renderEditButtons() {
-    return React.createElement(EditButtons, {
-      isEditing: this.state.localState.get('isEditing'),
-      isSaving: this.state.localState.get('isSaving'),
-      editLabel: 'Edit Settings',
-      onCancel: this.state.actions.editCancel,
-      onSave: this.state.actions.editSave,
-      onEditStart: this.state.actions.editStart
-    });
   },
 
   renderEditForm() {
@@ -81,6 +72,9 @@ export default React.createClass({
           onChange={this.state.actions.editChange}
           tables={this.state.tables}
           defaultTable={getDefaultTable(this.state.configId)}
+          onCancel={this.state.actions.editCancel}
+          onSave={this.state.actions.editSave}
+          isSaving={this.state.localState.get('isSaving')}
         />
       );
     }
@@ -95,10 +89,11 @@ export default React.createClass({
           destination={this.state.destination}
           incremental={this.state.incremental}
           primaryKey={this.state.primaryKey}
-          primaryKey={this.state.delimiter}
-          primaryKey={this.state.enclosure}
+          delimiter={this.state.delimiter}
+          enclosure={this.state.enclosure}
           onStartUpload={this.state.actions.startUpload}
           onChange={this.state.actions.setFile}
+          onStartChangeSettings={this.state.actions.editStart}
           isValid={this.state.isUploaderValid}
           isUploading={this.state.localState.get('isUploading')}
           uploadingMessage={this.state.localState.get('uploadingMessage')}
@@ -122,7 +117,6 @@ export default React.createClass({
           <div className="row">
             {this.renderUploadForm()}
             {this.renderEditForm()}
-            {this.renderEditButtons()}
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
