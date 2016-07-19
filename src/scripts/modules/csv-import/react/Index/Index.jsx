@@ -24,6 +24,7 @@ import DeleteConfigurationButton from '../../../components/react/components/Dele
 
 // utils
 import {getDefaultTable} from '../../utils';
+import {Map} from 'immutable';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.csv-import';
@@ -81,7 +82,7 @@ export default React.createClass({
     if (this.state.localState.get('isEditing')) {
       return (
         <SettingsEdit
-          settings={this.state.localState.get('settings')}
+          settings={this.state.localState.get('settings', Map())}
           onChange={this.state.actions.editChange}
           tables={this.state.tables}
           defaultTable={getDefaultTable(this.state.configId)}
