@@ -70,17 +70,19 @@ export default React.createClass({
     return (
       <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Compare</Modal.Title>
-          <ul>
-            <li>
-              <strong>{this.renderVersionInfo(this.props.referentialVersion)}</strong>
-            </li>
-            <li>
-              <strong>{this.renderVersionInfo(this.props.compareVersion)}</strong>
-            </li>
-          </ul>
+          <Modal.Title>Compare With Previous Version</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{'padding': '0'}}>
+          <div className="row" style={{'padding': '4px', 'margin': '0'}}>
+            <ul>
+              <li>
+                <strong>{this.renderVersionInfo(this.props.referentialVersion)}</strong>
+              </li>
+              <li>
+                <strong>{this.renderVersionInfo(this.props.compareVersion)}</strong>
+              </li>
+            </ul>
+          </div>
           {this.renderFilterRow()}
           {this.renderDiff()}
         </Modal.Body>
@@ -97,7 +99,7 @@ export default React.createClass({
 
   renderFilterRow() {
     return (
-      <div className="row" style={{'padding-bottom': '8px'}}>
+      <div className="row" style={{'padding': '2px 0 0px 8px' }}>
         <div className="col-md-12">
           <div className="checkbox" >
             <label>
