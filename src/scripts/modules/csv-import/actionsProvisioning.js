@@ -7,6 +7,7 @@ import storageApiActions from '../components/StorageActionCreators';
 import bucketsStore from '../components/stores/StorageBucketsStore';
 import tablesStore from '../components/stores/StorageTablesStore';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
+import applicationActions from '../../actions/ApplicationActionCreators';
 
 // via https://github.com/aws/aws-sdk-js/issues/603#issuecomment-228233113
 import 'aws-sdk/dist/aws-sdk';
@@ -190,9 +191,12 @@ export default function(configId) {
                 storageApiActions.loadTable(tableId, loadTableParams).then(function() {
                   updateLocalState(['uploadingMessage'], null);
                   updateLocalState(['isUploading'], false);
-                  // TODO reset file selector
-                  // TODO notification that the file upload is successful
                   updateLocalState(['file'], null);
+                  // TODO reset file selector
+                  applicationActions.sendNotification({
+                    message: 'CSV file successfully imported.',
+                    autoDelete: true
+                  });
                 });
               } else {
                 createTable();
