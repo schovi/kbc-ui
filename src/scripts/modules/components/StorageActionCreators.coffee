@@ -207,10 +207,8 @@ module.exports =
 
     storageApi.createTable(bucketId, params)
     .then((response) ->
-      console.log(response)
       jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
       .then((response) ->
-        console.log(response)
         if (response.status == "error")
           throw response.error.message;
         # TODO add table to store
