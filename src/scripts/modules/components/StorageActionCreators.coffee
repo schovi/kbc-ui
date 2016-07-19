@@ -189,6 +189,8 @@ module.exports =
 
     storageApi.createBucket(params)
     .then((response) ->
+      if (response.status == "error")
+        throw response.error.message;
       dispatcher.handleViewAction
         type: constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
         bucket: response
