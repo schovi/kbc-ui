@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Check} from 'kbc-react-components';
+import TableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -58,7 +59,12 @@ export default React.createClass({
               </label>
               <div className="col-xs-8">
                 <p className="form-control-static">
-                  {this.props.destination}
+                  <TableLink
+                    tableId={this.props.destination}
+                    >
+                    {this.props.destination}
+                  </TableLink>
+
                 </p>
               </div>
             </div>
