@@ -78,10 +78,6 @@ export default React.createClass({
           />
         )
       );
-      // if it is not the first version show compare diff menu item
-      if (version.get('version') > 1) {
-        items.push(this.renderDiffMenuItem(version, previousVersion));
-      }
     } else {
       items.push(
         (<RollbackVersionMenuItem
@@ -92,6 +88,11 @@ export default React.createClass({
          />)
       );
     }
+    // if it is not the first version show compare diff menu item
+    if (version.get('version') > 1) {
+      items.push(this.renderDiffMenuItem(version, previousVersion));
+    }
+
     items.push(
       (<MenuItem divider/>)
     );
