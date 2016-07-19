@@ -60,7 +60,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <h3>Upload CSV File</h3>
