@@ -16,6 +16,7 @@ export default {
   },
   requireData: [
     (params) => installedComponentsActions.loadComponentConfigData(COMPONENT_ID, params.config),
-    () => storageActions.loadTables()
+    () => storageActions.loadTables(),
+    () => storageActions.loadBuckets()
   ]
 };

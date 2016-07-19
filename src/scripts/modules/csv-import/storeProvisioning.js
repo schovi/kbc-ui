@@ -10,7 +10,7 @@ const COMPONENT_ID = 'keboola.csv-import';
 
 // validovat soubor
 function isUploaderValid(localState) {
-  return localState.has('name') && localState.has('size') && localState.get('name') !== '' && localState.get('size') > 0;
+  return localState.has('file') && localState.get('file') && localState.get('file').size && localState.get('file').name;
 }
 
 export default function(configId) {
@@ -23,7 +23,6 @@ export default function(configId) {
     primaryKey: configData.get('primaryKey', List()),
     delimiter: configData.get('delimiter', ','),
     enclosure: configData.get('enclosure', '"'),
-
     isUploaderValid: isUploaderValid(localState),
     // local state stuff
     getLocalState(path) {

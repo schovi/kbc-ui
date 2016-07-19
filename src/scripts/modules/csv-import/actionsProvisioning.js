@@ -113,6 +113,7 @@ export default function(configId) {
 
     updateLocalState(['isUploading'], true);
     updateLocalState(['uploadingMessage'], 'Preparing upload');
+    updateLocalState(['uploadingProgress'], 5);
 
     storageApi.prepareFileUpload(params).then(function(response) {
       var fileId = response.id;
@@ -130,57 +131,75 @@ export default function(configId) {
       });
 
       updateLocalState(['uploadingMessage'], 'Uploading to S3');
+      updateLocalState(['uploadingProgress'], 30);
 
-      new AWS.S3().putObject(s3params, function(err, data) {
-        if (err) {
-          // todo chyba
-          console.log(err, data);
-          throw err;
-        } else {
-          var tableId = store.destination;
-          var bucketId = tableId.substr(0, tableId.lastIndexOf('.'));
-          var tableName = tableId.substr(tableId.lastIndexOf('.') + 1);
-
-          var createTable = function() {
-            updateLocalState(['uploadingMessage'], 'Creating table ' + tableId);
-            var createTableParams = {
-              name: tableName,
-              dataFileId: fileId
-            };
-            storageApiActions.createTable(bucketId, createTableParams).then(function() {
-              updateLocalState(['uploadingMessage'], null);
-              updateLocalState(['isUploading'], false);
-            });
-          };
-
-          if (!bucketsStore.hasBucket(bucketId)) {
-            // create bucket and table
-
-            updateLocalState(['uploadingMessage'], 'Creating bucket ' + bucketId);
-
-            var createBucketParams = {
-              name: bucketId.substr(bucketId.indexOf('-') + 1),
-              stage: bucketId.substr(0, bucketId.lastIndexOf('.'))
-            };
-            storageApiActions.createBucket(createBucketParams)
-              .then(createTable);
+      new AWS.S3()
+        .putObject(s3params)
+        .on('httpUploadProgress', function(progress) {
+          console.log('progress', progress);
+          var addition = 0;
+          if (progress.loaded && progress.total) {
+            addition = 30 * (progress.loaded / progress.total);
+          }
+          updateLocalState(['uploadingProgress'], 30 + addition);
+        })
+        .send(function(err, data) {
+          if (err) {
+            // todo chyba
+            console.log(err, data);
+            throw err;
           } else {
-            // does table exist? load or create
-            if (tablesStore.hasTable(tableId)) {
-              var loadTableParams = {
+            var tableId = store.destination;
+            var bucketId = tableId.substr(0, tableId.lastIndexOf('.'));
+            var tableName = tableId.substr(tableId.lastIndexOf('.') + 1);
+
+            var createTable = function() {
+              updateLocalState(['uploadingMessage'], 'Creating table ' + tableId);
+              updateLocalState(['uploadingProgress'], 75);
+              var createTableParams = {
+                name: tableName,
                 dataFileId: fileId
               };
-              updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
-              storageApiActions.loadTable(tableId, loadTableParams).then(function() {
+              storageApiActions.createTable(bucketId, createTableParams).then(function() {
                 updateLocalState(['uploadingMessage'], null);
                 updateLocalState(['isUploading'], false);
               });
+            };
+            console.log('bucketId', bucketId, bucketsStore.hasBucket(bucketId));
+
+            if (!bucketsStore.hasBucket(bucketId)) {
+              // create bucket and table
+
+              updateLocalState(['uploadingMessage'], 'Creating bucket ' + bucketId);
+              updateLocalState(['uploadingProgress'], 60);
+
+              var createBucketParams = {
+                name: bucketId.substr(bucketId.indexOf('-') + 1),
+                stage: bucketId.substr(0, bucketId.lastIndexOf('.'))
+              };
+              storageApiActions.createBucket(createBucketParams)
+                .then(createTable);
             } else {
-              createTable();
+              // does table exist? load or create
+              if (tablesStore.hasTable(tableId)) {
+                var loadTableParams = {
+                  dataFileId: fileId
+                };
+                updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
+                updateLocalState(['uploadingProgress'], 90);
+                storageApiActions.loadTable(tableId, loadTableParams).then(function() {
+                  updateLocalState(['uploadingMessage'], null);
+                  updateLocalState(['isUploading'], false);
+                  // TODO reset file selector
+                  // TODO notification that the file upload is successful
+                  updateLocalState(['file'], null);
+                });
+              } else {
+                createTable();
+              }
             }
           }
-        }
-      });
+        });
     });
   }
 

@@ -12,7 +12,8 @@ export default React.createClass({
     delimiter: PropTypes.string.isRequired,
     enclosure: PropTypes.object.isRequired,
     onStartUpload: PropTypes.func.isRequired,
-    onStartChangeSettings: PropTypes.func.isRequired
+    onStartChangeSettings: PropTypes.func.isRequired,
+    isEditDisabled: PropTypes.bool.isRequired
   },
 
   onStartChangeSettings() {
@@ -34,7 +35,10 @@ export default React.createClass({
   renderChangeSettings() {
     return (
       <div className="text-right">
-        <button className="btn btn-link" onClick={this.onStartChangeSettings.bind(this, 0)}>
+        <button
+          disabled={this.props.isEditDisabled}
+          className="btn btn-link"
+          onClick={this.onStartChangeSettings}>
           <span className="kbc-icon-pencil"></span> Change Settings
         </button>
       </div>

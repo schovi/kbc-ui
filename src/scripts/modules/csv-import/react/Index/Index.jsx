@@ -74,6 +74,7 @@ export default React.createClass({
           isValid={this.state.isUploaderValid}
           isUploading={this.state.localState.get('isUploading')}
           uploadingMessage={this.state.localState.get('uploadingMessage')}
+          uploadingProgress={this.state.localState.get('uploadingProgress', 0)}
         />
       );
     }
@@ -102,6 +103,7 @@ export default React.createClass({
           delimiter={this.state.delimiter}
           enclosure={this.state.enclosure}
           onStartChangeSettings={this.state.actions.editStart}
+          isEditDisabled={this.state.localState.get('isUploading')}
         />
       );
     }
