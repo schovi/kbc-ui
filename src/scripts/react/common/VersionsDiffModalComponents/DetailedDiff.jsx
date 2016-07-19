@@ -11,14 +11,30 @@ function multiDiffValueToString(value) {
   return value.toString();
 }
 
+// reconstruct string(@strValue) back to json so we know what property we are comparing
+// If @strValue does not seem to be in {property: value} format we reconstruct it as
+// an array ie [@strValue]
 function reconstructIncompleteJson(strValue) {
   let result = strValue.trim();
   if (result[0] !== '{') result = '{' + result;
   const lastIdx = () => result.length - 1;
-  if (result[lastIdx()] === ',') result = result.substr(0, lastIdx());
+  if (result[lastIdx()] === ',') {
+    result = result.substr(0, lastIdx());
+  }
   if (result[lastIdx()] !== '}') result = result + '}';
-  return JSON.parse(result);
+  try {
+    return JSON.parse(result);
+  } catch (e) {
+    // parse as array
+    let arrayResult = strValue.trim();
+    const lastArrayResultIdx = () => arrayResult.length - 1;
+    if (arrayResult[lastArrayResultIdx()] === ',') {
+      arrayResult = arrayResult.substr(0, lastArrayResultIdx());
+    }
+    return JSON.parse(`[${arrayResult}]`);
+  }
 }
+
 function  getMultiPartsDiff(firstValue, secondValue, firstDescription, secondDescription) {
   const firstJson = reconstructIncompleteJson(firstValue);
   const secondJson = reconstructIncompleteJson(secondValue);
