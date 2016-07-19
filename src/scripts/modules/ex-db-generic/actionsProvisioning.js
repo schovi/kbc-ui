@@ -48,9 +48,9 @@ export function createActions(componentId) {
     componentsActions.updateLocalState(componentId, configId, newLocalState);
   }
 
-  function saveConfigData(configId, data, waitingPath) {
+  function saveConfigData(configId, data, waitingPath, changeDescription) {
     updateLocalState(configId, waitingPath, true);
-    return componentsActions.saveComponentConfigData(componentId, configId, data)
+    return componentsActions.saveComponentConfigData(componentId, configId, data, changeDescription)
       .then(() => updateLocalState(configId, waitingPath, false));
   }
 
@@ -90,8 +90,10 @@ export function createActions(componentId) {
           return q;
         }
       });
+      const prefixMsg = !!newValue ? 'Enable' : 'Disable';
+      const diffMsg = prefixMsg + ' query ' + store.getQueryName(qid);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      return saveConfigData(configId, newData, ['pending', qid, 'enabled']);
+      return saveConfigData(configId, newData, ['pending', qid, 'enabled'], diffMsg);
     },
 
     updateNewQuery(configId, newQuery) {
@@ -111,7 +113,8 @@ export function createActions(componentId) {
       let newCredentials = store.getNewCredentials();
       newCredentials = updateProtectedProperties(newCredentials, store.getCredentials());
       const newData = store.configData.setIn(['parameters', 'db'], newCredentials);
-      return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
+      const diffMsg = 'Save new credentials';
+      return saveConfigData(configId, newData, ['isSavingCredentials'], diffMsg).then(() => this.resetNewCredentials(configId));
     },
 
     checkTableName(query, store) {
@@ -128,7 +131,8 @@ export function createActions(componentId) {
       const newQuery = this.checkTableName(store.getNewQuery(), store);
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      return saveConfigData(configId, newData, ['newQueries', 'isSaving']).then(() => this.resetNewQuery(configId));
+      const diffMsg = 'Create query ' + newQuery.get('name');
+      return saveConfigData(configId, newData, ['newQueries', 'isSaving'], diffMsg).then(() => this.resetNewQuery(configId));
     },
 
     saveCredentialsEdit(configId) {
@@ -136,14 +140,16 @@ export function createActions(componentId) {
       let credentials = store.getEditingCredentials();
       credentials = updateProtectedProperties(credentials, store.getCredentials());
       const newConfigData = store.configData.setIn(['parameters', 'db'], credentials);
-      return saveConfigData(configId, newConfigData, 'isSavingCredentials').then(() => this.cancelCredentialsEdit(configId));
+      const diffMsg = 'Update credentials';
+      return saveConfigData(configId, newConfigData, 'isSavingCredentials', diffMsg).then(() => this.cancelCredentialsEdit(configId));
     },
 
     deleteQuery(configId, qid) {
       const store = getStore(configId);
       const newQueries = store.getQueries().filter((q) => q.get('id') !== qid);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      return saveConfigData(configId, newData, ['pending', qid, 'deleteQuery']);
+      const diffMsg = 'Delete query ' + store.getQueryName(qid);
+      return saveConfigData(configId, newData, ['pending', qid, 'deleteQuery'], diffMsg);
     },
 
     updateEditingQuery(configId, query) {
@@ -166,7 +172,8 @@ export function createActions(componentId) {
       newQuery = this.checkTableName(newQuery, store);
       const newQueries = store.getQueries().map((q) => q.get('id') === queryId ? newQuery : q);
       const newData = store.configData.setIn(['parameters', 'tables'], newQueries);
-      saveConfigData(configId, newData, ['savingQueries']).then(() => this.cancelQueryEdit(configId, queryId));
+      const diffMsg = 'Edit query '  + newQuery.get('name');
+      return saveConfigData(configId, newData, ['savingQueries'], diffMsg).then(() => this.cancelQueryEdit(configId, queryId));
     },
 
     testCredentials(configId, credentials) {

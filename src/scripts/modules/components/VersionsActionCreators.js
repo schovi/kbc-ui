@@ -39,6 +39,49 @@ module.exports = {
     });
   },
 
+
+  loadComponentConfigByVersion(componentId, configId, version) {
+    if (Store.hasConfigByVersion(componentId, configId, version)) {
+      return Promise.resolve(Store.getConfigByVersion(componentId, configId, version));
+    }
+    return this.loadComponentConfigByVersionForce(componentId, configId, version);
+  },
+
+  loadComponentConfigByVersionForce(componentId, configId, version) {
+    this.pendingStart(componentId, configId, version, 'config');
+    dispatcher.handleViewAction({
+      componentId: componentId,
+      configId: configId,
+      version: version,
+      type: Constants.ActionTypes.VERSIONS_CONFIG_LOAD_START
+    });
+    return Api.getComponentConfigByVersion(componentId, configId, version).then((result) => {
+      dispatcher.handleViewAction({
+        componentId: componentId,
+        configId: configId,
+        version: version,
+        data: result,
+        type: Constants.ActionTypes.VERSIONS_CONFIG_LOAD_SUCCESS
+      });
+      this.pendingStop(componentId, configId);
+      return Store.getConfigByVersion(componentId, configId, version);
+    }).catch((error) => {
+      dispatcher.handleViewAction({
+        componentId: componentId,
+        configId: configId,
+        version: version,
+        type: Constants.ActionTypes.VERSIONS_CONFIG_LOAD_ERROR
+      });
+      throw error;
+    });
+  },
+
+  loadTwoComponentConfigVersions(componentId, configId, version1, version2) {
+    this.loadComponentConfigByVersion(componentId, configId, version1);
+    return this.loadComponentConfigByVersion(componentId, configId, version2);
+  },
+
+
   rollbackVersion: function(componentId, configId, version, reloadCallback) {
     var self = this;
     // start spinners

@@ -1,6 +1,7 @@
 import React from 'react';
 import CreatedWithIcon from '../../../../react/common/CreatedWithIcon';
 import RollbackVersionButton from '../../../../react/common/RollbackVersionButton';
+import DiffVersionButton from '../../../../react/common/DiffVersionButton';
 import CopyVersionButton from '../../../../react/common/CopyVersionButton';
 import createVersionOnRollback from '../../../../utils/createVersionOnRollback';
 import createVersionOnCopy from '../../../../utils/createVersionOnCopy';
@@ -15,11 +16,15 @@ export default React.createClass({
     configId: React.PropTypes.string.isRequired,
     hideRollback: React.PropTypes.bool,
     version: React.PropTypes.object.isRequired,
+    previousVersion: React.PropTypes.object.isRequired,
     newVersionName: React.PropTypes.string,
     isRollbackPending: React.PropTypes.bool,
     isRollbackDisabled: React.PropTypes.bool,
     isCopyPending: React.PropTypes.bool,
-    isCopyDisabled: React.PropTypes.bool
+    isCopyDisabled: React.PropTypes.bool,
+    isDiffPending: React.PropTypes.bool,
+    isDiffDisabled: React.PropTypes.bool,
+    onPrepareVersionsDiffData: React.PropTypes.func
   },
 
   onChangeName(name) {
@@ -37,6 +42,18 @@ export default React.createClass({
         isDisabled={this.props.isRollbackDisabled}
         isPending={this.props.isRollbackPending}
         />
+    );
+  },
+
+  renderDiffButton() {
+    return (
+      <DiffVersionButton
+        isDisabled={this.props.isDiffDisabled}
+        isPending={this.props.isDiffPending}
+        onLoadVersionConfig={this.props.onPrepareVersionsDiffData}
+        version={this.props.version}
+        previousVersion={this.props.previousVersion}
+      />
     );
   },
 
@@ -59,6 +76,7 @@ export default React.createClass({
         </td>
         <td className="text-right">
           {this.renderRollbackButton()}
+          {this.props.version.get('version') > 1 ? this.renderDiffButton() : null}
           <CopyVersionButton
             version={this.props.version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}

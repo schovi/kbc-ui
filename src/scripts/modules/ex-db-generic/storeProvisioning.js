@@ -196,6 +196,10 @@ export function createStore(componentId, configId) {
 
     getConfigQuery(qid) {
       return this.getQueries().find((q) => q.get('id') === qid );
+    },
+
+    getQueryName(qid) {
+      return this.getConfigQuery(qid).get('name');
     }
 
   };

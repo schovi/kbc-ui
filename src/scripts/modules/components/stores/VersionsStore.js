@@ -22,12 +22,20 @@ var VersionsStore = StoreUtils.createStore({
     return _store.hasIn(['versions', componentId, configId, versionId]);
   },
 
+  hasConfigByVersion: function(componentId, configId, versionId) {
+    return _store.hasIn(['versions', componentId, configId, versionId, 'configuration']);
+  },
+
   isLoadingVersions: function(componentId, configId) {
     return _store.getIn(['loadingVersions', componentId, configId], false);
   },
 
   getVersions: function(componentId, configId) {
     return _store.getIn(['versions', componentId, configId], List());
+  },
+
+  getConfigByVersion: function(componentId, configId, versionId) {
+    return _store.getIn(['versions', componentId, configId, versionId, 'configuration'], Map());
   },
 
   getVersion: function(componentId, configId, versionId) {
@@ -69,11 +77,34 @@ dispatcher.register(function(payload) {
 
     case Constants.ActionTypes.VERSIONS_LOAD_SUCCESS:
       _store = _store.setIn(['versions', action.componentId, action.configId], Immutable.fromJS(action.versions));
+
+      console.log('VERSIONS', _store.toJS(), action.versions);
       _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false);
       return VersionsStore.emitChange();
 
     case Constants.ActionTypes.VERSIONS_LOAD_ERROR:
       _store = _store.setIn(['loadingVersions', action.componentId, action.configId], false);
+      return VersionsStore.emitChange();
+
+    case Constants.ActionTypes.VERSIONS_CONFIG_LOAD_START:
+      _store = _store.setIn(['loadingVersionConfig', action.componentId, action.configId, action.version], true);
+      return VersionsStore.emitChange();
+
+    case Constants.ActionTypes.VERSIONS_CONFIG_LOAD_SUCCESS:
+      const versions = VersionsStore.getVersions(action.componentId, action.configId)
+        .map((v) => {
+          if (v.get('version').toString() === action.version.toString()) {
+            return Immutable.fromJS(action.data);
+          } else {
+            return v;
+          }
+        });
+      _store = _store.setIn(['versions', action.componentId, action.configId], versions);
+      _store = _store.setIn(['loadingVersionConfig', action.componentId, action.configId, action.version], false);
+      return VersionsStore.emitChange();
+
+    case Constants.ActionTypes.VERSIONS_CONFIG_LOAD_ERROR:
+      _store = _store.setIn(['loadingVersionConfig', action.componentId, action.configId, action.version], false);
       return VersionsStore.emitChange();
 
     case Constants.ActionTypes.VERSIONS_ROLLBACK_START:

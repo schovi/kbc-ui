@@ -77,6 +77,14 @@ installedComponentsApi =
       response.body
     )
 
+  getComponentConfigByVersion: (componentId, configId, versionId) ->
+    url = "components/#{componentId}/configs/#{configId}/versions/#{versionId}"
+    createRequest('GET', url)
+    .promise()
+    .then((response) ->
+      response.body
+    )
+
   rollbackVersion: (componentId, configId, version) ->
     url = "components/#{componentId}/configs/#{configId}/versions/#{version}/rollback"
     createRequest('POST', url)

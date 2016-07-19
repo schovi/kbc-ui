@@ -20,6 +20,7 @@ RunExtractionButton = React.createFactory(require '../../../../components/react/
 Link = React.createFactory(require('react-router').Link)
 SearchRow = require('../../../../../react/common/SearchRow').default
 actionProvisioning = require '../../../actionsProvisioning'
+VersionsDropdown = require('../../../../../react/common/VersionsDropdown').default
 
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
@@ -112,6 +113,12 @@ module.exports = (componentId) ->
             React.createElement ComponentMetadata,
               componentId: componentId
               configId: @state.configId
+            div null,
+              'Last Updates:'
+              React.createElement VersionsDropdown,
+                firstVersionAsTitle: true,
+                dropDownButtonSize: 'small',
+                componentId: componentId
 
           ul className: 'nav nav-stacked',
             if @state.hasCredentials

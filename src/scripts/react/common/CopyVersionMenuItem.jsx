@@ -54,7 +54,7 @@ export default React.createClass({
           onSelect={this.openModal}
           disabled={this.props.isDisabled}
         >
-          <em className="fa fa-files-o fa-fw"> </em>
+          <em className="fa fa-code-fork fa-fw"> </em>
           Copy to new
           <CopyVersionModal
             version={this.props.version}
