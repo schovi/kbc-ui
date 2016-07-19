@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Input} from 'react-bootstrap';
-import Autosuggest from 'react-autosuggest';
 import Select from '../../../../react/common/Select';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import SapiTableSelector from '../../../components/react/components/SapiTableSelector';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -82,14 +82,6 @@ export default React.createClass({
   },
 
   render() {
-    const suggestInputProps = {
-      value: this.props.settings.get('destination', this.props.defaultTable),
-      onChange: this.onChangeDestination,
-      placeholder: 'Table in Storage',
-      className: 'form-control',
-      id: 'destination',
-      name: 'destination'
-    };
     return (
       <div>
         <h3>CSV Upload Settings</h3>
@@ -110,11 +102,12 @@ export default React.createClass({
             <div className="form-group">
               <div className="col-xs-4 control-label">Destination</div>
               <div className="col-xs-8">
-                <Autosuggest
-                  suggestions={this.getDestinationSuggestions()}
-                  inputAttributes={suggestInputProps}
+                <SapiTableSelector
+                  value={this.props.settings.get('destination')}
+                  onSelectTableFn={this.onChangeDestination}
+                  placeholder="Table in Storage"
                 />
-                <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default {this.props.defaultTable}</span>
+                <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default <code>{this.props.defaultTable}</code></span>
               </div>
             </div>
           </div>
