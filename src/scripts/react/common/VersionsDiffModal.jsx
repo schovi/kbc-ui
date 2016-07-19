@@ -1,11 +1,22 @@
 import React from 'react';
 import moment from 'moment';
+import {Map} from 'immutable';
 import {Button, Modal} from 'react-bootstrap';
 import {diffJson} from 'diff';
 import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
 
 const COLOR_ADD = '#cfc';
 const COLOR_REMOVE = '#fcc';
+
+const PROPS_TO_COMPARE = ['configuration', 'changeDescription'];
+function prepareDiffObject(versionObj) {
+  if (!versionObj) return null;
+  let result = Map();
+  for (let prop of PROPS_TO_COMPARE) {
+    result = result.set(prop, versionObj.get(prop));
+  }
+  return result.toJS();
+}
 
 function setSignToString(str, sign) {
   if (str[0] === '') {
@@ -176,26 +187,13 @@ export default React.createClass({
   },
 
   getDiff() {
-    if (!this.referenceConfigData() || !this.compareConfigData()) {
+    if (!this.props.referentialVersion || !this.props.compareVersion) {
       return [];
     }
-    const referenceData = this.referenceConfigData().toJS();
-    const compareWithData = this.compareConfigData().toJS();
+    const referenceData = prepareDiffObject(this.props.referentialVersion);
+    const compareWithData = prepareDiffObject(this.props.compareVersion);
     return diffJson(compareWithData, referenceData);
-  },
-
-  referenceConfigData() {
-    if (this.props.referentialVersion) {
-      return this.props.referentialVersion.get('configuration');
-    }
-    return null;
-  },
-
-  compareConfigData() {
-    if (this.props.compareVersion) {
-      return this.props.compareVersion.get('configuration');
-    }
-    return null;
   }
+
 
 });
