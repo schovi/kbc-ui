@@ -15,7 +15,7 @@ ExDbQueryName = require './react/components/QueryName'
 
 createVersionsPageRoute = require('../../modules/components/utils/createVersionsPageRoute').default
 injectProps = require('../components/react/injectProps').default
-VersionsDropdown = require('../../react/common/VersionsDropdown').default
+
 
 JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
@@ -43,7 +43,6 @@ module.exports = (componentId) ->
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
   defaultRouteHandler: ExDbIndex(componentId)
-  headerButtonsHandler: injectProps({componentId: componentId})(VersionsDropdown)
   childRoutes: [
     createVersionsPageRoute(componentId, 'config')
   ,
