@@ -76,7 +76,7 @@ export default React.createClass({
         </td>
         <td className="text-right">
           {this.renderRollbackButton()}
-          {this.renderDiffButton()}
+          {this.props.version.get('version') > 1 ? this.renderDiffButton() : null}
           <CopyVersionButton
             version={this.props.version}
             onCopy={createVersionOnCopy(this.props.componentId, this.props.configId, this.props.version.get('version'), this.props.newVersionName)}
