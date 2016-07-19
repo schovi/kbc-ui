@@ -4,6 +4,7 @@ import {Input} from 'react-bootstrap';
 import Select from '../../../../react/common/Select';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import SapiTableSelector from '../../../components/react/components/SapiTableSelector';
+import {List} from 'immutable';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -25,7 +26,7 @@ export default React.createClass({
     if (this.props.tables.has(value)) {
       settings = settings.set('primaryKey', this.props.tables.getIn([value, 'primaryKey']));
     } else {
-      settings = settings.set('primaryKey', []);
+      settings = settings.set('primaryKey', List());
     }
     this.props.onChange(settings);
   },
