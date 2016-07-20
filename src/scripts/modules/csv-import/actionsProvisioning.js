@@ -182,6 +182,16 @@ export default function(configId) {
                 name: tableName,
                 dataFileId: fileId
               };
+              if (store.primaryKey) {
+                createTableParams.primaryKey = store.primaryKey.toJS();
+              }
+              if (store.delimiter) {
+                createTableParams.delimiter = store.delimiter;
+              }
+              if (store.enclosure) {
+                createTableParams.enclosure = store.enclosure;
+              }
+
               storageApiActions.createTable(bucketId, createTableParams).then(function() {
                 resetUploadState();
                 resetForm();
@@ -223,7 +233,17 @@ export default function(configId) {
                 var loadTableParams = {
                   dataFileId: fileId
                 };
-                updateLocalState(['uploadingMessage'], 'Loading table ' + tableId);
+                if (store.incremental) {
+                  loadTableParams.incremental = store.incremental;
+                }
+                if (store.delimiter) {
+                  loadTableParams.delimiter = store.delimiter;
+                }
+                if (store.enclosure) {
+                  loadTableParams.enclosure = store.enclosure;
+                }
+
+                updateLocalState(['uploadingMessage'], 'Loading into table ' + tableId);
                 updateLocalState(['uploadingProgress'], 90);
                 storageApiActions.loadTable(tableId, loadTableParams).then(function() {
                   resetUploadState();
