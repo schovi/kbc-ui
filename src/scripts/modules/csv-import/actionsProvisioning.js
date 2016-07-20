@@ -202,7 +202,7 @@ export default function(configId) {
               }).catch(function(e) {
                 resetUploadState();
                 applicationActions.sendNotification({
-                  message: e.message,
+                  message: e,
                   type: 'error'
                 });
               });
@@ -223,7 +223,7 @@ export default function(configId) {
                 .catch(function(e) {
                   resetUploadState();
                   applicationActions.sendNotification({
-                    message: e.message,
+                    message: e,
                     type: 'error'
                   });
                 });
@@ -255,7 +255,7 @@ export default function(configId) {
                 }).catch(function(e) {
                   resetUploadState();
                   applicationActions.sendNotification({
-                    message: e.message,
+                    message: e,
                     type: 'error'
                   });
                 });

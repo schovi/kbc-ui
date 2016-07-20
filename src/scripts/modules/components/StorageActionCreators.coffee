@@ -190,15 +190,21 @@ module.exports =
     storageApi.createBucket(params)
     .then((response) ->
       if (response.status == "error")
-        throw response.error.message;
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
+          errors: response.error
+        throw response.error.message
       dispatcher.handleViewAction
         type: constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
         bucket: response
     ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
       dispatcher.handleViewAction
         type: constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
         errors: error
-      throw error
+      throw message
     )
 
   createTable: (bucketId, params) ->
@@ -213,18 +219,25 @@ module.exports =
       jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
       .then((response) ->
         if (response.status == "error")
-          throw response.error.message;
+          dispatcher.handleViewAction
+            type: constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
+            bucketId: bucketId
+            errors: response.error
+          throw response.error.message
         dispatcher.handleViewAction
           type: constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
           bucketId: bucketId
         return self.loadTablesForce()
       )
     ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
       dispatcher.handleViewAction
         type: constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
         bucketId: bucketId
         errors: error
-      throw error
+      throw message
     )
 
   loadTable: (tableId, params) ->
@@ -239,7 +252,11 @@ module.exports =
       jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
       .then((response) ->
         if (response.status == "error")
-          throw response.error.message;
+          dispatcher.handleViewAction
+            type: constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
+            tableId: tableId
+            errors: response.error
+          throw response.error.message
         dispatcher.handleViewAction
           type: constants.ActionTypes.STORAGE_TABLE_LOAD_SUCCESS
           tableId: tableId
@@ -247,9 +264,12 @@ module.exports =
         return self.loadTablesForce()
       )
     ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
       dispatcher.handleViewAction
         type: constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
         tableId: tableId
         errors: error
-      throw error
+      throw message
     )
