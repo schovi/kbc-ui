@@ -10,6 +10,7 @@ import ApplicationStore from '../../../../stores/ApplicationStore';
 import Tooltip from '../../../../react/common/Tooltip';
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
+import VersionsDropdown from '../../../../react/common/VersionsDropdown';
 import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
@@ -84,7 +85,10 @@ export default React.createClass({
             <ComponentMetadata
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
-              />
+            />
+            <VersionsDropdown
+              allVersionsRouteName={`${this.state.component.get('type')}-versions`}
+              componentId={this.state.componentId}/>
           </div>
           <ul className="nav nav-stacked">
             <li>

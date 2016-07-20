@@ -27,6 +27,7 @@ import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
+import VersionsDropdown from '../../../../react/common/VersionsDropdown';
 import Immutable from 'immutable';
 
 export default React.createClass({
@@ -257,7 +258,10 @@ export default React.createClass({
             <ComponentMetadata
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
-              />
+            />
+            <VersionsDropdown componentId={this.state.componentId}
+              allVersionsRouteName={`${this.state.component.get('type')}-versions`}
+            />
           </div>
           <ul className="nav nav-stacked">
             <li className={!!this.isRunDisabledReason() ? 'disabled' : ''}>

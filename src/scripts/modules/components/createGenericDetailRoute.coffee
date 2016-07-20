@@ -1,5 +1,6 @@
 React = require 'react'
-
+VersionsActionCreators = require './VersionsActionCreators'
+createVersionsPageRoute = require('./utils/createVersionsPageRoute').default
 IntalledComponentsStore = require './stores/InstalledComponentsStore'
 SchemasActionsCreators = require './TemplatesActionCreators'
 InstalledComponentsActions = require './InstalledComponentsActionCreators'
@@ -53,6 +54,9 @@ module.exports = (componentType) ->
         StorageActions.loadBuckets()
     ,
       (params) ->
+        VersionsActionCreators.loadVersions(params.component, params.config)
+    ,
+      (params) ->
         SchemasActionsCreators.loadSchema params.component
     ]
     poll:
@@ -60,6 +64,7 @@ module.exports = (componentType) ->
       action: (params) ->
         JobsActionCreators.loadComponentConfigurationLatestJobs(params.component, params.config)
     childRoutes: [
+      createVersionsPageRoute(null, 'config', componentType + '-versions')
       OauthUtils.createRedirectRoute(
         'generic-' + componentType + '-oauth-redirect'
       , 'generic-detail-' + componentType + '-config'
