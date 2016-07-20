@@ -37,8 +37,9 @@ export default React.createClass({
         </span>
       );
     } else {
+      const tooltipMsg = `Compare prior changes(#${this.props.version.get('version')} vs #${this.props.previousVersion.get('version')})`;
       return (
-        <Tooltip tooltip="Compare changes with previous version" placement="top">
+        <Tooltip tooltip={tooltipMsg} placement="top">
           <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
             <em className="fa fa-fw fa-files-o"> </em>
             <VersionsDiffModal

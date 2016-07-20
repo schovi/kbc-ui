@@ -40,7 +40,7 @@ export default React.createClass({
       );
     } else {
       return (
-        <Tooltip tooltip="Rollback this version" placement="top">
+        <Tooltip tooltip="Restore this version" placement="top">
           <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
             <em className="fa fa-undo fa-fw"> </em>
             <RollbackVersionModal
