@@ -116,8 +116,6 @@ module.exports = (componentId) ->
             div null,
               'Last Updates:'
               React.createElement VersionsDropdown,
-                firstVersionAsTitle: true,
-                dropDownButtonSize: 'small',
                 componentId: componentId
 
           ul className: 'nav nav-stacked',

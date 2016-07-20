@@ -18,7 +18,8 @@ export default React.createClass({
   render() {
     return (
       <span>
-        <VersionsDropdown componentId="transformation" configIdParam="bucketId" />
+        <VersionsDropdown firstVersionAsTitle={false} dropDownButtonSize="default"
+          componentId="transformation" configIdParam="bucketId" />
         <ModalTrigger modal={<NewTransformationModal bucket={this.state.bucket}/>}>
           <button className="btn btn-success">
             <span className="kbc-icon-plus"></span> Add Transformation

@@ -26,8 +26,8 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      firstVersionAsTitle: false,
-      dropDownButtonSize: 'default',
+      firstVersionAsTitle: true,
+      dropDownButtonSize: 'small',
       configIdParam: 'config'
     };
   },
