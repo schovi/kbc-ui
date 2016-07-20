@@ -120,9 +120,9 @@ export default React.createClass({
     this.setState({showChangedOnly: val});
   },
 
-
   versionDescription(version) {
-    return `#${version.get('version')} (${version.get('changeDescription')}) `;
+    const desc = version.get('changeDescription') || 'No description';
+    return `#${version.get('version')} (${desc}) `;
   },
 
   renderVersionInfo(version) {
