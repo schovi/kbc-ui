@@ -2,6 +2,7 @@ import React from 'react';
 import {MenuItem} from 'react-bootstrap';
 import RollbackVersionModal from './RollbackVersionModal';
 import {Loader} from 'kbc-react-components';
+import {Tooltip} from '../../react/common/common';
 
 export default React.createClass({
 
@@ -46,20 +47,22 @@ export default React.createClass({
       );
     } else {
       return (
-        <MenuItem
-          eventKey={this.props.version.get('version') + '-rollback'}
-          onSelect={this.openModal}
-          disabled={this.props.isDisabled}
-        >
-          <em className="fa fa-undo fa-fw"> </em>
-          Rollback
-          <RollbackVersionModal
-            version={this.props.version}
-            show={this.state.showModal}
-            onClose={this.closeModal}
-            onRollback={this.onRollback}
-          />
-        </MenuItem>
+        <Tooltip tooltip="Restore this version" placement="left">
+          <MenuItem
+            eventKey={this.props.version.get('version') + '-rollback'}
+            onSelect={this.openModal}
+            disabled={this.props.isDisabled}
+          >
+            <em className="fa fa-undo fa-fw"> </em>
+            Rollback
+            <RollbackVersionModal
+              version={this.props.version}
+              show={this.state.showModal}
+              onClose={this.closeModal}
+              onRollback={this.onRollback}
+            />
+          </MenuItem>
+        </Tooltip>
       );
     }
   }
