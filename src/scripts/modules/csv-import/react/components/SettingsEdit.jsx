@@ -139,8 +139,8 @@ export default React.createClass({
                   emptyStrings={false}
                   onChange={this.onChangePrimaryKey}
                   disabled={this.isExistingTable()}
-                  help={(<span>Primary key of the table. If primary key is set, updates can be done on table by selecting <strong>incremental loads</strong>. Primary key can be compound.</span>)}
                 />
+                <div className="help-block">Primary key of the table. If primary key is set, updates can be done on table by selecting <strong>incremental loads</strong>. Primary key can be compound.</div>
               </div>
             </div>
           </div>
