@@ -32,7 +32,7 @@ export default React.createClass({
   },
 
   isExistingTable() {
-    const destinationTable = this.props.settings.get('destination');
+    const destinationTable = this.props.settings.get('destination', this.props.defaultTable);
     if (!destinationTable || destinationTable === '') {
       return false;
     }
@@ -104,7 +104,7 @@ export default React.createClass({
               <div className="col-xs-4 control-label">Destination</div>
               <div className="col-xs-8">
                 <SapiTableSelector
-                  value={this.props.settings.get('destination')}
+                  value={this.props.settings.get('destination', this.props.defaultTable)}
                   onSelectTableFn={this.onChangeDestination}
                   placeholder="Table in Storage"
                   allowCreate={true}
