@@ -82,6 +82,20 @@ export default React.createClass({
     };
   },
 
+  primaryKeyHelp() {
+    if (this.isExistingTable()) {
+      return (<div className="help-block">Primary key of an existing table cannot be changed.</div>);
+    }
+    return (<div className="help-block">Primary key of the table. If primary key is set, updates can be done on table by selecting <strong>incremental loads</strong>. Primary key can consist of multiple columns.</div>);
+  },
+
+  primaryKeyPlaceholder() {
+    if (this.isExistingTable()) {
+      return 'Cannot add a column';
+    }
+    return 'Add a column';
+  },
+
   render() {
     return (
       <div>
@@ -135,12 +149,12 @@ export default React.createClass({
                   multi={true}
                   allowCreate={true}
                   delimiter=","
-                  placeholder="Add a column"
+                  placeholder={this.primaryKeyPlaceholder()}
                   emptyStrings={false}
                   onChange={this.onChangePrimaryKey}
                   disabled={this.isExistingTable()}
                 />
-                <div className="help-block">Primary key of the table. If primary key is set, updates can be done on table by selecting <strong>incremental loads</strong>. Primary key can be compound.</div>
+                {this.primaryKeyHelp()}
               </div>
             </div>
           </div>
