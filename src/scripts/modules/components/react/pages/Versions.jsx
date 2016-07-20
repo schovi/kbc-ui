@@ -10,13 +10,14 @@ import VersionsActionCreators from '../../VersionsActionCreators';
 import fuzzy from 'fuzzy';
 import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
 
-export default function(componentId, configIdParam = 'config') {
+export default function(componentIdValue, configIdParam = 'config') {
   return React.createClass({
     mixins: [createStoreMixin(VersionsStore, RoutesStore), ImmutableRenderMixin],
 
     getStateFromStores() {
       var versions, filteredVersions, query;
       const configId = RoutesStore.getCurrentRouteParam(configIdParam);
+      const componentId = RoutesStore.getCurrentRouteParam('component') || componentIdValue;
       versions = VersionsStore.getVersions(componentId, configId);
       query = VersionsStore.getSearchFilter(componentId, configId);
       filteredVersions = versions;

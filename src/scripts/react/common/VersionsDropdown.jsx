@@ -21,28 +21,33 @@ export default React.createClass({
     componentId: React.PropTypes.string.isRequired,
     configIdParam: React.PropTypes.string,
     dropDownButtonSize: React.PropTypes.string,
-    firstVersionAsTitle: React.PropTypes.bool
+    firstVersionAsTitle: React.PropTypes.bool,
+    allVersionsRouteName: React.PropTypes.string
   },
 
   getDefaultProps() {
     return {
       firstVersionAsTitle: true,
       dropDownButtonSize: 'small',
-      configIdParam: 'config'
+      configIdParam: 'config',
+      allVersionsRouteName: null
+
     };
   },
 
   getStateFromStores() {
     const router = RoutesStore.getRouter();
     const configId = RoutesStore.getCurrentRouteParam(this.props.configIdParam);
+    const componentId = this.props.componentId || RoutesStore.getCurrentRouteParam('component');
     return {
-      versions: VersionsStore.getVersions(this.props.componentId, configId),
-      newVersionNames: VersionsStore.getNewVersionNames(this.props.componentId, configId),
-      isPending: VersionsStore.isPendingConfig(this.props.componentId, configId),
-      pendingActions: VersionsStore.getPendingVersions(this.props.componentId, configId),
+      versions: VersionsStore.getVersions(componentId, configId),
+      newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
+      isPending: VersionsStore.isPendingConfig(componentId, configId),
+      pendingActions: VersionsStore.getPendingVersions(componentId, configId),
       router: router,
       configId: configId,
-      currentConfigData: InstalledComponentStore.getConfigData(this.props.componentId, configId)
+      componentId: componentId,
+      currentConfigData: InstalledComponentStore.getConfigData(componentId, configId)
     };
   },
 
@@ -82,8 +87,8 @@ export default React.createClass({
         (
           <CopyVersionMenuItem
             version={version}
-            onCopy={createVersionOnCopy(this.props.componentId, this.state.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
-            onChangeName={this.createOnChangeName(this.props.componentId, this.state.configId, version.get('version'))}
+            onCopy={createVersionOnCopy(this.state.componentId, this.state.configId, version.get('version'), this.state.newVersionNames.get(version.get('version')))}
+            onChangeName={this.createOnChangeName(this.state.componentId, this.state.configId, version.get('version'))}
             newVersionName={this.state.newVersionNames.get(version.get('version'))}
             isDisabled={this.state.isPending}
             isPending={this.state.pendingActions.getIn([version.get('version'), 'copy'])}
@@ -94,7 +99,7 @@ export default React.createClass({
       items.push(
         (<RollbackVersionMenuItem
            version={version}
-           onRollback={createVersionOnRollback(this.props.componentId, this.state.configId, version.get('version'))}
+           onRollback={createVersionOnRollback(this.state.componentId, this.state.configId, version.get('version'))}
            isDisabled={this.state.isPending}
            isPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'])}
          />)
@@ -109,7 +114,7 @@ export default React.createClass({
   },
 
   prepareVersionsDiffData(version, previousVersion) {
-    const componentId = this.props.componentId;
+    const componentId = this.state.componentId;
     const configId = this.state.configId;
     const version1 = version.get('version');
     const version2 = previousVersion.get('version');
@@ -155,9 +160,11 @@ export default React.createClass({
   },
 
   renderAllVersionsLink() {
-    const routeName = `${this.props.componentId}Versions`;
+    const routeName = this.props.allVersionsRouteName || `${this.state.componentId}-versions`;
     let params = {};
     params[this.props.configIdParam] = this.state.configId;
+    // generic ui needs parameter component but custom uis dont needed at all i guess
+    params.component = this.state.componentId;
     var href = this.state.router.makeHref(routeName, params);
     return (
       <MenuItem href={href}>
