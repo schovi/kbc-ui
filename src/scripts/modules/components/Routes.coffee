@@ -19,6 +19,7 @@ exMongoDbRoutes = require '../ex-mongodb/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 exGaV4Routes = require('../ex-google-analytics-v4/routes').default
+csvImportRoutes = require('../csv-import/routes').default
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
 dropoxExtractorRoutes = require('../ex-dropbox/routes').default
@@ -116,6 +117,8 @@ routes =
       createComponentRoute 'keboola.ex-db-impala', [exDbGenericRoutes('keboola.ex-db-impala')]
     ,
       createComponentRoute 'keboola.ex-mongodb', [exMongoDbRoutes('keboola.ex-mongodb')]
+    ,
+      createComponentRoute 'keboola.csv-import', [csvImportRoutes]
     ,
       createGenericDetailRoute 'extractor'
 

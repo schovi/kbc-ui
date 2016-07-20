@@ -10,6 +10,7 @@ _store = Map(
   tables: Map()
   isLoaded: false
   isLoading: false
+  pendingTables: Map() #(creating/loading)
 )
 
 StorageTablesStore = StoreUtils.createStore
@@ -17,12 +18,20 @@ StorageTablesStore = StoreUtils.createStore
   getAll: ->
     _store.get 'tables'
 
+  hasTable: (tableId) ->
+    _store.get('tables').has(tableId)
+
   getIsLoading: ->
     _store.get 'isLoading'
 
   getIsLoaded: ->
     _store.get 'isLoaded'
 
+  getIsCreatingTable: ->
+    _store.getIn ['pendingTables', 'creating'], false
+
+  getIsLoadingTable: ->
+    _store.getIn ['pendingTables', 'loading'], false
 
 Dispatcher.register (payload) ->
   action = payload.action
@@ -48,5 +57,28 @@ Dispatcher.register (payload) ->
       _store = _store.set 'isLoading', false
       StorageTablesStore.emitChange()
 
+    when constants.ActionTypes.STORAGE_TABLES_CREATE
+      _store = _store.setIn ['pendingTables', 'creating'], true
+      StorageTablesStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
+      _store = _store.setIn ['pendingTables', 'creating'], false
+      StorageTablesStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
+      _store = _store.setIn ['pendingTables', 'creating'], false
+      StorageTablesStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_TABLES_LOAD
+      _store = _store.setIn ['pendingTables', 'loading'], true
+      StorageTablesStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_TABLE_LOAD_SUCCESS
+      _store = _store.setIn ['pendingTables', 'loading'], false
+      StorageTablesStore.emitChange()
+
+    when constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
+      _store = _store.setIn ['pendingTables', 'loading'], false
+      StorageTablesStore.emitChange()
 
 module.exports = StorageTablesStore

@@ -5,6 +5,7 @@ Link = require('react-router').Link
 
 
 ApplicationActionCreators = require '../../actions/ApplicationActionCreators'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 dispatcher = require '../../Dispatcher'
 constants = require './Constants'
@@ -14,6 +15,8 @@ StorageTablesStore = require './stores/StorageTablesStore'
 StorageTokensStore = require './stores/StorageTokensStore'
 StorageFilesStore = require './stores/StorageFilesStore'
 storageApi = require './StorageApi'
+
+jobPoller = require '../../utils/jobPoller'
 
 module.exports =
 
@@ -159,8 +162,6 @@ module.exports =
       throw error
     )
 
-
-
   loadFilesForce: (params) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.STORAGE_FILES_LOAD
@@ -179,3 +180,96 @@ module.exports =
   loadFiles: (params) ->
     return Promise.resolve() if StorageFilesStore.getIsLoaded()
     @loadFilesForce(params)
+
+
+  createBucket: (params) ->
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_BUCKET_CREATE
+      params: params
+
+    storageApi.createBucket(params)
+    .then((response) ->
+      if (response.status == "error")
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
+          errors: response.error
+        throw response.error.message
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
+        bucket: response
+    ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR
+        errors: error
+      throw message
+    )
+
+  createTable: (bucketId, params) ->
+    self = @
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_TABLE_CREATE
+      bucketId: bucketId
+      params: params
+
+    storageApi.createTable(bucketId, params)
+    .then((response) ->
+      jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
+      .then((response) ->
+        if (response.status == "error")
+          dispatcher.handleViewAction
+            type: constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
+            bucketId: bucketId
+            errors: response.error
+          throw response.error.message
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_TABLE_CREATE_SUCCESS
+          bucketId: bucketId
+        return self.loadTablesForce()
+      )
+    ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TABLE_CREATE_ERROR
+        bucketId: bucketId
+        errors: error
+      throw message
+    )
+
+  loadTable: (tableId, params) ->
+    self = @
+    dispatcher.handleViewAction
+      type: constants.ActionTypes.STORAGE_TABLE_LOAD
+      params: params
+      tableId: tableId
+
+    storageApi.loadTable(tableId, params)
+    .then((response) ->
+      jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url)
+      .then((response) ->
+        if (response.status == "error")
+          dispatcher.handleViewAction
+            type: constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
+            tableId: tableId
+            errors: response.error
+          throw response.error.message
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.STORAGE_TABLE_LOAD_SUCCESS
+          tableId: tableId
+          response: response
+        return self.loadTablesForce()
+      )
+    ).catch((error) ->
+      message = error
+      if (error.message)
+        message = error.message
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.STORAGE_TABLE_LOAD_ERROR
+        tableId: tableId
+        errors: error
+      throw message
+    )

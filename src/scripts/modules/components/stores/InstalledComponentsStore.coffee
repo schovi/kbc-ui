@@ -77,7 +77,7 @@ InstalledComponentsStore = StoreUtils.createStore
     _store.getIn ['configDataParametersSaving', componentId, configId]
 
   getConfigData: (componentId, configId) ->
-    _store.getIn ['configData', componentId, configId]
+    _store.getIn ['configData', componentId, configId], Map()
 
   getEditingConfigDataObject: (componentId, configId) ->
     _store.getIn ['configDataEditingObject', componentId, configId], Map()
