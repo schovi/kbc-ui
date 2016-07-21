@@ -61,7 +61,8 @@ export default React.createClass({
       this.props.configId,
       'output',
       'files',
-      'new-mapping'
+      'new-mapping',
+      'Add file output'
     );
   }
 

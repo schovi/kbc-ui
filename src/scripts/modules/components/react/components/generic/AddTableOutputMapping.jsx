@@ -60,12 +60,14 @@ export default React.createClass({
   },
 
   handleSave() {
+    const newTableId = this.props.mapping.get('destination');
     // returns promise
     return actionCreators.saveEditingMapping(this.props.componentId,
       this.props.configId,
       'output',
       'tables',
-      'new-mapping'
+      'new-mapping',
+      `Add output table ${newTableId}`
     );
   }
 

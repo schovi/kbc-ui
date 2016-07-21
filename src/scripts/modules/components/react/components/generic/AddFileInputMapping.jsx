@@ -61,7 +61,8 @@ export default React.createClass({
       this.props.configId,
       'input',
       'files',
-      'new-mapping'
+      'new-mapping',
+      'Add input file'
     );
   }
 

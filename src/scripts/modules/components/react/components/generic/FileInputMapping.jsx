@@ -54,7 +54,7 @@ export default React.createClass({
   },
 
   onSaveMapping(key) {
-    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'files', key, 'Update file input');
   },
 
   onCancelEditMapping(key) {
@@ -62,7 +62,7 @@ export default React.createClass({
   },
 
   onDeleteMapping(key) {
-    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'files', key);
+    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'files', key, 'Delete file input');
   },
 
   content() {

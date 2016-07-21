@@ -56,7 +56,8 @@ export default React.createClass({
   },
 
   onSaveMapping(key) {
-    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'output', 'tables', key);
+    const updatingTableId = this.props.value.get(key).get('destination');
+    return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'output', 'tables', key, `Update output table ${updatingTableId}`);
   },
 
   onCancelEditMapping(key) {
@@ -64,7 +65,8 @@ export default React.createClass({
   },
 
   onDeleteMapping(key) {
-    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'output', 'tables', key);
+    const updatingTableId = this.props.value.get(key).get('destination');
+    return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'output', 'tables', key, `Delete output table mappping ${updatingTableId}`);
   },
 
   content() {
