@@ -8,7 +8,7 @@ import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
 const COLOR_ADD = '#cfc';
 const COLOR_REMOVE = '#fcc';
 
-const PROPS_TO_COMPARE = ['configuration', 'description', 'rows'];
+const PROPS_TO_COMPARE = ['configuration', 'description', 'rows', 'name'];
 function prepareDiffObject(versionObj) {
   if (!versionObj) return null;
   let result = Map();
