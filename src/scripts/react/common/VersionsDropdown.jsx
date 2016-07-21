@@ -135,9 +135,14 @@ export default React.createClass({
   },
 
   dropdownTitle() {
+    const version = this.state.versions.get(0);
     return (
       <span>
-        {this.props.firstVersionAsTitle ? this.renderVersionInfo(this.state.versions.get(0)) : 'Versions'}
+        {this.props.firstVersionAsTitle ?
+         <span>
+           #{version.get('version')} ({moment(version.get('created')).fromNow()})
+         </span>
+         : 'Versions'}
       </span>
     );
   },
