@@ -93,7 +93,8 @@ module.exports =
     )
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     dataToSave = dataToSave?.toJS()
-    storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
+    storeEncodedConfig(componentId, configId, dataToSave, 'Update configuration').then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATA_SAVE_SUCCESS
         componentId: componentId
@@ -121,7 +122,8 @@ module.exports =
     dataToSave = dataToSave?.toJS()
     dataToSave.parameters = parametersToSave
 
-    storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
+    storeEncodedConfig(componentId, configId, dataToSave, 'Update parameters').then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_RAWCONFIGDATAPARAMETERS_SAVE_SUCCESS
         componentId: componentId
@@ -280,13 +282,12 @@ module.exports =
     newValue = InstalledComponentsStore.getEditingConfig(componentId, configurationId, field)
     if (field == 'configuration')
       data = newValue
+      data.changeDescription = 'Update configuration'
       calledFunction = storeEncodedConfig
     else
       data = {}
+      data.changeDescription = "Update #{field}"
       data[field] = newValue
-      if (field == 'description')
-        # diff msg saying that the description has changed
-        data.changeDescription = 'Changed description'
       calledFunction = installedComponentsApi.updateComponentConfiguration
 
     calledFunction(componentId, configurationId, data)
@@ -429,7 +430,7 @@ module.exports =
       value: value
     )
 
-  saveEditingMapping: (componentId, configId, type, storage, index) ->
+  saveEditingMapping: (componentId, configId, type, storage, index, changeDescription) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_START
       componentId: componentId
@@ -450,8 +451,9 @@ module.exports =
       pathDestination = pathSource
 
     data = dataToSave.setIn(pathDestination, mappingData.getIn(pathSource)).toJSON()
-    storeEncodedConfig componentId, configId, data
+    storeEncodedConfig componentId, configId, data, changeDescription
     .then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_SAVE_SUCCESS
         componentId: componentId
@@ -468,7 +470,7 @@ module.exports =
         error: e
       throw e
 
-  deleteMapping: (componentId, configId, type, storage, index) ->
+  deleteMapping: (componentId, configId, type, storage, index, changeDescription) ->
     dispatcher.handleViewAction(
       type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_START
       componentId: componentId
@@ -481,8 +483,9 @@ module.exports =
     dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
     path = ['storage', type, storage, index]
     data = dataToSave.deleteIn(path).toJSON()
-    storeEncodedConfig componentId, configId, data
+    storeEncodedConfig componentId, configId, data, changeDescription
     .then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction
         type: constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_DELETE_SUCCESS
         componentId: componentId
@@ -548,7 +551,8 @@ module.exports =
     dataToSave = InstalledComponentsStore.getSavingConfigData(componentId, configId)
     dataToSave = dataToSave?.toJS()
 
-    storeEncodedConfig(componentId, configId, dataToSave).then (response) ->
+    storeEncodedConfig(componentId, configId, dataToSave, 'Update parameters').then (response) ->
+      VersionActionCreators.loadVersionsForce(componentId, configId)
       dispatcher.handleViewAction(
         type: constants.ActionTypes.INSTALLED_COMPONENTS_TEMPLATED_CONFIGURATION_EDIT_SAVE_SUCCESS
         componentId: componentId

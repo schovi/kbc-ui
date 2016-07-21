@@ -77,8 +77,6 @@ dispatcher.register(function(payload) {
 
     case Constants.ActionTypes.VERSIONS_LOAD_SUCCESS:
       _store = _store.setIn(['versions', action.componentId, action.configId], Immutable.fromJS(action.versions));
-
-      console.log('VERSIONS', _store.toJS(), action.versions);
       _store = _store.setIn(['rollbackVersions', action.componentId, action.configId], false);
       return VersionsStore.emitChange();
 
