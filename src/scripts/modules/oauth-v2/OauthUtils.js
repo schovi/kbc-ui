@@ -25,7 +25,7 @@ function processRedirectData(componentId, configId, id) {
           // save configuration with authorization id
           const saveFn = installedComponentsActions.saveComponentConfigData;
           const authorizedFor = credentials.get('authorizedFor');
-          return saveFn(componentId, configId, fromJS(newConfiguration)).then(() => authorizedFor);
+          return saveFn(componentId, configId, fromJS(newConfiguration), `Save authorization for ${authorizedFor}`).then(() => authorizedFor);
         });
     });
 }
@@ -99,12 +99,14 @@ export function loadCredentialsFromConfig(componentId, configId) {
 export function deleteCredentialsAndConfigAuth(componentId, configId) {
   const configData = installedComponentsStore.getConfigData(componentId, configId);
   const credentialsId = configData.getIn(configOauthPath);
+  const credentials = OauthStore.getCredentials(componentId, credentialsId);
+  const authorizedFor = credentials.get('authorizedFor');
   return OauthActions.deleteCredentials(componentId, credentialsId)
     .then(() => {
       // delete the whole authorization object part of the configuration
       const newConfigData = configData.deleteIn([].concat(configOauthPath[0]));
       const saveFn = installedComponentsActions.saveComponentConfigData;
-      return saveFn(componentId, configId, newConfigData);
+      return saveFn(componentId, configId, newConfigData, `Reset authorization of ${authorizedFor}`);
     });
 }
 
