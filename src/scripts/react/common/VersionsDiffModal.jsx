@@ -167,7 +167,9 @@ export default React.createClass({
   },
 
   renderSimplePreDiff(part) {
-    let val = part.value;
+    let val = part.value
+                  .replace(/\\'/g, "\'")
+                  .replace(/\\"/g, '\"');
     let color = '';
     if (part.added)   {
       color = COLOR_ADD;
