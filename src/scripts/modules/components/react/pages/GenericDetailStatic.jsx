@@ -41,7 +41,7 @@ export default React.createClass({
             <ComponentDescription
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
-              />
+            />
           </div>
           <div className="row">
             <div classNmae="col-xs-4">
@@ -60,9 +60,12 @@ export default React.createClass({
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
             />
-            <VersionsDropdown
-              allVersionsRouteName={`${this.state.component.get('type')}-versions`}
-              componentId={this.state.componentId}/>
+            <div>
+              Last Updates:
+              <VersionsDropdown
+                allVersionsRouteName={`${this.state.component.get('type')}-versions`}
+                componentId={this.state.componentId}/>
+            </div>
           </div>
           <ul className="nav nav-stacked">
             <li>
@@ -71,7 +74,7 @@ export default React.createClass({
                 component={this.state.componentId}
                 mode="link"
                 runParams={this.runParams()}
-                >
+              >
                 You are about to run component.
               </RunComponentButton>
             </li>
@@ -79,7 +82,7 @@ export default React.createClass({
               <DeleteConfigurationButton
                 componentId={this.state.componentId}
                 configId={this.state.config.get('id')}
-                />
+              />
             </li>
           </ul>
           <LatestJobs jobs={this.state.latestJobs} />

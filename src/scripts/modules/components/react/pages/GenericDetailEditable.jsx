@@ -86,9 +86,12 @@ export default React.createClass({
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
             />
-            <VersionsDropdown
-              allVersionsRouteName={`${this.state.component.get('type')}-versions`}
-              componentId={this.state.componentId}/>
+            <div>
+              Last Updates:
+              <VersionsDropdown
+                allVersionsRouteName={`${this.state.component.get('type')}-versions`}
+                componentId={this.state.componentId}/>
+            </div>
           </div>
           <ul className="nav nav-stacked">
             <li>
