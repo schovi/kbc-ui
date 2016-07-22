@@ -12,6 +12,7 @@ ExDbQueryHeaderButtons = require('./react/components/QueryActionButtons').defaul
 ExDbCredentialsHeaderButtons = require './react/components/CredentialsHeaderButtons'
 ExDbNewCredentialsHeaderButtons = require('./react/components/NewCredentialsHeaderButtons').default
 ExDbQueryName = require './react/components/QueryName'
+VersionsDropdown = require('../../react/common/VersionsDropdown').default
 
 createVersionsPageRoute = require('../../modules/components/utils/createVersionsPageRoute').default
 injectProps = require('../components/react/injectProps').default
@@ -43,6 +44,7 @@ module.exports = (componentId) ->
     action: (params) ->
       JobsActionCreators.loadComponentConfigurationLatestJobs(componentId, params.config)
   defaultRouteHandler: ExDbIndex(componentId)
+  headerButtonsHandler: injectProps({componentId: componentId})(VersionsDropdown)
   childRoutes: [
     createVersionsPageRoute(componentId, 'config')
   ,

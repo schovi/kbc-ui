@@ -8,6 +8,7 @@ createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 storeProvisioning = require '../../../storeProvisioning'
 RoutesStore = require '../../../../../stores/RoutesStore'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+VersionsStore = require '../../../../components/stores/VersionsStore'
 
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -20,15 +21,14 @@ RunExtractionButton = React.createFactory(require '../../../../components/react/
 Link = React.createFactory(require('react-router').Link)
 SearchRow = require('../../../../../react/common/SearchRow').default
 actionProvisioning = require '../../../actionsProvisioning'
-VersionsDropdown = require('../../../../../react/common/VersionsDropdown').default
-
+LastUpdateInfo = require('../../../../../react/common/LastUpdateInfo').default
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
 module.exports = (componentId) ->
   actionCreators = actionProvisioning.createActions(componentId)
   return React.createClass
     displayName: 'ExDbIndex'
-    mixins: [createStoreMixin(LatestJobsStore, storeProvisioning.componentsStore)]
+    mixins: [createStoreMixin(VersionsStore, LatestJobsStore, storeProvisioning.componentsStore)]
 
     componentWillReceiveProps: ->
       @setState(@getStateFromStores())
@@ -41,6 +41,7 @@ module.exports = (componentId) ->
 
       #state
       configId: config
+      versions: VersionsStore.getVersions(componentId, config)
       pendingActions: ExDbStore.getQueriesPendingActions()
       latestJobs: LatestJobsStore.getJobs componentId, config
       hasCredentials: ExDbStore.hasValidCredentials(credentials)
@@ -113,11 +114,8 @@ module.exports = (componentId) ->
             React.createElement ComponentMetadata,
               componentId: componentId
               configId: @state.configId
-            div null,
-              'Last Updates:'
-              React.createElement VersionsDropdown,
-                componentId: componentId
-
+            React.createElement LastUpdateInfo,
+              lastVersion: @state.versions.get(0)
           ul className: 'nav nav-stacked',
             if @state.hasCredentials
               li null,
