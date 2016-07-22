@@ -62,7 +62,7 @@ export default React.createClass({
 
   getInitialState() {
     return {
-      showChangedOnly: false
+      showChangedOnly: true
     };
   },
 
