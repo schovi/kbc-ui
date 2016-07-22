@@ -63,7 +63,8 @@ export default React.createClass({
           <div className="pull-left" style={{padding: '6px 12px'}}>
             <span className={'text-' + this.props.progressStatus}>
               {renderStatusIcon(this.props.progressStatus)} {this.props.progress}
-              {this.props.jobId ? <Link to="jobDetail" params={{jobId: this.props.jobId}} > More details</Link> : null}
+              <span> </span>
+              {this.props.jobId ? <Link to="jobDetail" params={{jobId: this.props.jobId}}>More details</Link> : null}
             </span>
           </div>
           <ConfirmButtons
