@@ -5,10 +5,10 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
+import VersionsStore from '../../stores/VersionsStore';
 
 import * as oauthUtils from '../../../oauth-v2/OauthUtils';
 import OauthStore from '../../../oauth-v2/Store';
-
 
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
@@ -27,11 +27,11 @@ import StorageTablesStore from '../../stores/StorageTablesStore';
 import StorageBucketsStore from '../../stores/StorageBucketsStore';
 import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
-import VersionsDropdown from '../../../../react/common/VersionsDropdown';
+import LastUpdateInfo from '../../../../react/common/LastUpdateInfo';
 import Immutable from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore, ComponentStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore, ComponentStore, VersionsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -44,6 +44,7 @@ export default React.createClass({
     return {
       componentId: componentId,
       configId: configId,
+      versions: VersionsStore.getVersions(componentId, configId),
       configDataParameters: InstalledComponentStore.getConfigDataParameters(componentId, configId),
       configData: configData,
       editingConfigData: InstalledComponentStore.getEditingConfigDataObject(componentId, configId),
@@ -259,12 +260,7 @@ export default React.createClass({
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
             />
-            <div>
-              Last Updates:
-              <VersionsDropdown componentId={this.state.componentId}
-                allVersionsRouteName={`${this.state.component.get('type')}-versions`}
-              />
-            </div>
+            <LastUpdateInfo lastVersion={this.state.versions.get(0)} />
           </div>
           <ul className="nav nav-stacked">
             <li className={!!this.isRunDisabledReason() ? 'disabled' : ''}>

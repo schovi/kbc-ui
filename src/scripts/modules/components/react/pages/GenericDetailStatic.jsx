@@ -5,6 +5,7 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ComponentStore from '../../stores/ComponentsStore';
+import VersionsStore from '../../stores/VersionsStore';
 
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
@@ -12,12 +13,12 @@ import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import contactSupport from '../../../../utils/contactSupport';
-import VersionsDropdown from '../../../../react/common/VersionsDropdown';
+import LastUpdateInfo from '../../../../react/common/LastUpdateInfo';
 import {Button} from 'react-bootstrap';
 
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore, VersionsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -26,6 +27,7 @@ export default React.createClass({
     return {
       componentId: componentId,
       configData: InstalledComponentStore.getConfigData(componentId, configId),
+      versions: VersionsStore.getVersions(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
       component: ComponentStore.getComponent(componentId)
@@ -33,7 +35,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log(this.state.config.toJS());
     return (
       <div className="container-fluid">
         <div className="col-md-9 kbc-main-content">
@@ -60,12 +61,7 @@ export default React.createClass({
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
             />
-            <div>
-              Last Updates:
-              <VersionsDropdown
-                allVersionsRouteName={`${this.state.component.get('type')}-versions`}
-                componentId={this.state.componentId}/>
-            </div>
+            <LastUpdateInfo lastVersion={this.state.versions.get(0)} />
           </div>
           <ul className="nav nav-stacked">
             <li>

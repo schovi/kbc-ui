@@ -11,14 +11,19 @@ ComponentNameEdit = require './react/components/ComponentName'
 {GENERIC_DETAIL_PREFIX} = require('./Constants').Routes
 ComponentDetailLink = require '../../react/common/ComponentDetailLink'
 ComponentDetail = require '../components/react/pages/component-detail/ComponentDetail'
-
+VersionsDropdown = require('../../react/common/VersionsDropdown').default
 ComponentsStore = require './stores/ComponentsStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 ComponentsActionCreators = require './ComponentsActionCreators'
+injectProps = require('./react/injectProps').default
 
 OauthUtils = require '../oauth-v2/OauthUtils'
 
+
+
 module.exports = (componentType) ->
+  VersionsElement = injectProps({componentId: null,allVersionsRouteName: "#{componentType}-versions"})(VersionsDropdown)
+  # return
   name: GENERIC_DETAIL_PREFIX + componentType
   title: (routerState) ->
     componentId = routerState.getIn ['params', 'component']
@@ -38,6 +43,7 @@ module.exports = (componentType) ->
         React.createElement ComponentNameEdit,
           componentId: params.component
           configId: params.config
+    headerButtonsHandler: VersionsElement
     defaultRouteHandler: GenericDetail
     path: ":config"
     isComponent: true

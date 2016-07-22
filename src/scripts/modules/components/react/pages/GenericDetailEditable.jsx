@@ -6,11 +6,12 @@ import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import ApplicationStore from '../../../../stores/ApplicationStore';
+import VersionsStore from '../../stores/VersionsStore';
 
 import Tooltip from '../../../../react/common/Tooltip';
 import ComponentDescription from '../components/ComponentDescription';
 import ComponentMetadata from '../components/ComponentMetadata';
-import VersionsDropdown from '../../../../react/common/VersionsDropdown';
+import LastUpdateInfo from '../../../../react/common/LastUpdateInfo';
 import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
@@ -19,7 +20,7 @@ import InstalledComponentsActionCreators from '../../InstalledComponentsActionCr
 import Immutable from 'immutable';
 
 export default React.createClass({
-  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore, VersionsStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config'),
@@ -29,6 +30,7 @@ export default React.createClass({
     return {
       component: ComponentStore.getComponent(componentId),
       componentId: componentId,
+      versions: VersionsStore.getVersions(componentId, configId),
       configData: InstalledComponentStore.getConfigData(componentId, configId),
       config: InstalledComponentStore.getConfig(componentId, configId),
       latestJobs: LatestJobsStore.getJobs(componentId, configId),
@@ -86,12 +88,7 @@ export default React.createClass({
               componentId={this.state.componentId}
               configId={this.state.config.get('id')}
             />
-            <div>
-              Last Updates:
-              <VersionsDropdown
-                allVersionsRouteName={`${this.state.component.get('type')}-versions`}
-                componentId={this.state.componentId}/>
-            </div>
+            <LastUpdateInfo lastVersion={this.state.versions.get(0)} />
           </div>
           <ul className="nav nav-stacked">
             <li>

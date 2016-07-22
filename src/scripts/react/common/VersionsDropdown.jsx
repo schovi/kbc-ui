@@ -28,7 +28,7 @@ export default React.createClass({
   getDefaultProps() {
     return {
       firstVersionAsTitle: true,
-      dropDownButtonSize: 'small',
+      dropDownButtonSize: 'default',
       configIdParam: 'config',
       allVersionsRouteName: null
 
@@ -60,7 +60,6 @@ export default React.createClass({
       VersionsActionCreators.changeNewVersionName(componentId, configId, version, name);
     };
   },
-
   renderVersionInfo(version) {
     return (<span>
       #{version.get('version')} ({moment(version.get('created')).fromNow()} by {version.getIn(['creatorToken', 'description'], 'unknown')})
@@ -135,16 +134,7 @@ export default React.createClass({
   },
 
   dropdownTitle() {
-    const version = this.state.versions.get(0);
-    return (
-      <span>
-        {this.props.firstVersionAsTitle ?
-         <span>
-           #{version.get('version')} ({moment(version.get('created')).fromNow()})
-         </span>
-         : 'Versions'}
-      </span>
-    );
+    return 'Versions';
   },
 
   render() {
