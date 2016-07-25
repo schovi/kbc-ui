@@ -20,7 +20,6 @@ module.exports = React.createClass
 
 
   renderJobs: ->
-    console.log(@props.jobs.toJS())
     if (@props.jobs.get('jobs').count() || @props.jobs.get('isLoading'))
       @props.jobs.get('jobs').map (job) ->
         React.createElement JobRow,
