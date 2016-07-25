@@ -183,7 +183,7 @@ export default React.createClass({
       </tr>
     );
   },
-  
+
   projectPageUrl(path) {
     return ApplicationStore.getProjectPageUrl(path);
   }
