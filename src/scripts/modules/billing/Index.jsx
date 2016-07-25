@@ -110,10 +110,7 @@ export default React.createClass({
           <thead>
           <tr>
             <th>Date</th>
-            <th>Data In</th>
-            <th>Data Out</th>
-            <th>Storage In</th>
-            <th>Storage Out</th>
+            <th>Storage IO</th>
             <th>Application Credits</th>
           </tr>
           </thead>
@@ -131,22 +128,7 @@ export default React.createClass({
         <td><strong>{day.get('date')}</strong></td>
         <td>
           <strong>
-            <FileSize size={daySum(day.get('components'), 'containerIn')}/>
-          </strong>
-        </td>
-        <td>
-          <strong>
-            <FileSize size={daySum(day.get('components'), 'containerOut')}/>
-          </strong>
-        </td>
-        <td>
-          <strong>
             <FileSize size={daySum(day.get('components'), 'storageIn')}/>
-          </strong>
-        </td>
-        <td>
-          <strong>
-            <FileSize size={daySum(day.get('components'), 'storageOut')}/>
           </strong>
         </td>
         <td>
@@ -166,16 +148,7 @@ export default React.createClass({
       <tr>
         <td><span style={{paddingLeft: '10px'}}>{component.get('name')}</span></td>
         <td>
-          <FileSize size={component.get('containerIn')}/>
-        </td>
-        <td>
-          <FileSize size={component.get('containerOut')}/>
-        </td>
-        <td>
           <FileSize size={component.get('storageIn')}/>
-        </td>
-        <td>
-          <FileSize size={component.get('storageOut')}/>
         </td>
         <td>
           {component.get('appUsage')}
