@@ -71,19 +71,19 @@ TransformationRow = React.createClass(
       to: 'transformationDetail'
       params: {transformationId: @props.transformation.get('id'), bucketId: @props.bucket.get('id')}
     ,
-      span {className: 'td col-xs-4'},
+      span {className: 'td col-xs-3'},
         h4 {},
           span {className: 'label kbc-label-rounded-small label-default pull-left'},
             @props.transformation.get('phase') || 1
           ' '
           @props.transformation.get('name')
-      span {className: 'td col-xs-5'},
+      span {className: 'td col-xs-4'},
         small {}, @props.transformation.get('description') || em {}, 'No description'
       span {className: 'td col-xs-1'},
         TransformationTypeLabel
           backend: @props.transformation.get 'backend'
           type: @props.transformation.get 'type'
-      span {className: 'td text-right col-xs-2'},
+      span {className: 'td text-right col-xs-4'},
         @buttons()
 
   _deleteTransformation: ->

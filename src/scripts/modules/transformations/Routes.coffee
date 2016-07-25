@@ -19,6 +19,7 @@ createVersionsPageRoute = require('../../modules/components/utils/createVersions
 ComponentNameEdit = require '../components/react/components/ComponentName'
 TransformationNameEdit = require './react/components/TransformationNameEditField'
 ApplicationsStore = require '../../stores/ApplicationStore'
+JobsActionCreators = require '../jobs/ActionCreators'
 
 routes =
       name: 'transformations'
@@ -54,6 +55,11 @@ routes =
           (params) ->
             VersionsActionCreators.loadVersions('transformation', params.bucketId)
         ]
+        poll:
+          interval: 10
+          action: (params) ->
+            JobsActionCreators.loadComponentConfigurationLatestJobs('transformation', params.bucketId)
+
         childRoutes: [
           createVersionsPageRoute('transformation', 'bucketId')
         ,
