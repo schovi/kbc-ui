@@ -18,6 +18,7 @@ moment = require 'moment'
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
+MigrationRow = require('../../../../components/react/components/MigrationRow').default
 
 {p, strong, br, ul, li, div, span, i} = React.DOM
 
@@ -48,6 +49,8 @@ module.exports = React.createClass
   _renderMainContent: ->
     queries = @state.config.get('configuration')
     div {className: 'col-md-9 kbc-main-content'},
+      React.createElement MigrationRow,
+        componentId: 'ex-google-analytics'
       div className: 'row kbc-header',
         div className: 'col-sm-8',
           ComponentDescription
