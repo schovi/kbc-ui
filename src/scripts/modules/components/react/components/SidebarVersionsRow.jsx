@@ -43,7 +43,10 @@ module.exports = React.createClass({
                     #{this.props.version.get('version')}
                   </small>
                   <small className="text-muted pull-right">
-                    <CreatedWithIcon createdTime={this.props.version.get('created')} />
+                    <CreatedWithIcon
+                      createdTime={this.props.version.get('created')}
+                      tooltipPlacement="bottom"
+                    />
                   </small>
                 </div>
               </div>
