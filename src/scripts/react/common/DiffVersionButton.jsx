@@ -37,7 +37,7 @@ export default React.createClass({
         </span>
       );
     } else {
-      const tooltipMsg = `Compare prior changes(#${this.props.version.get('version')} vs #${this.props.previousVersion.get('version')})`;
+      const tooltipMsg = `Compare with previous (#${this.props.previousVersion.get('version')} to #${this.props.version.get('version')})`;
       return (
         <Tooltip tooltip={tooltipMsg} placement="top">
           <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
