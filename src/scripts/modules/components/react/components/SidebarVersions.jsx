@@ -23,10 +23,12 @@ module.exports = React.createClass({
     const props = this.props;
     if (this.props.versions.count() || this.props.isLoading) {
       return this.props.versions.slice(0, 3).map(function(version) {
+        const isLast = (version.get('version') === props.versions.first().get('version'));
         return (
           <SidebarVersionsRow
             version={version}
             bucketId={props.bucketId}
+            isLast={isLast}
           />);
       }).toArray();
     } else {
