@@ -1,6 +1,7 @@
 import React from 'react';
 import {addons} from 'react/addons';
 import SidebarVersionsRow from './SidebarVersionsRow';
+import {Link} from 'react-router';
 import './SidebarVersions.less';
 
 module.exports = React.createClass({
@@ -34,11 +35,23 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    const linkParams = {
+      bucketId: this.props.bucketId
+    };
     return (
       <div>
         <h4>Last updates</h4>
         <div className="kbc-sidebar-versions">
           {this.renderVersions()}
+          <div className="versions-link">
+            <Link
+
+              to="transformation-versions"
+              params={linkParams}
+            >
+              Show all versions
+            </Link>
+          </div>
         </div>
       </div>
     );

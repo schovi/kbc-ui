@@ -31,7 +31,6 @@ module.exports = React.createClass({
               <span className="fa fa-circle-o fa-fw version-icon"></span>
             </span>
             <span className="td">
-
               <div>
                 <div>
                   {this.getVersionDescription()}
