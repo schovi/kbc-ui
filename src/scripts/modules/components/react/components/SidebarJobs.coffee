@@ -17,11 +17,14 @@ module.exports = React.createClass
   mixins: [PureRenderMixin]
   propTypes:
     jobs: React.PropTypes.object.isRequired
-
+    limit: React.PropTypes.number
+    
+  getDefaultprops: ->
+    limit: 5
 
   renderJobs: ->
     if (@props.jobs.get('jobs').count() || @props.jobs.get('isLoading'))
-      @props.jobs.get('jobs').map (job) ->
+      @props.jobs.get('jobs').slice(0, @props.limit).map (job) ->
         React.createElement JobRow,
           job: job
           key: job.get 'id'
