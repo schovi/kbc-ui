@@ -1,6 +1,7 @@
 import React from 'react';
 import {addons} from 'react/addons';
 import SidebarVersionsRow from './SidebarVersionsRow';
+import './SidebarVersions.less';
 
 module.exports = React.createClass({
   displayName: 'LatestVersions',
