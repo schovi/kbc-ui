@@ -3,8 +3,8 @@ import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Input} from 'react-bootstrap';
 import Select from '../../../../react/common/Select';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
-import SapiTableSelector from '../../../components/react/components/SapiTableSelector';
 import {List} from 'immutable';
+import AutoSuggestWrapper from '../../../transformations/react/components/mapping/AutoSuggestWrapper';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -17,6 +17,14 @@ export default React.createClass({
     onCancel: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
     tables: PropTypes.object.isRequired
+  },
+
+  isValid() {
+    const destinationTable = this.props.settings.get('destination', this.props.defaultTable);
+    if (!destinationTable.match(/^(in|out)\.c-[a-zA-z0-9_\-]+\.[a-zA-z0-9_\-]+$/)) {
+      return false;
+    }
+    return true;
   },
 
   onChangeDestination(value) {
@@ -96,6 +104,26 @@ export default React.createClass({
     return 'Add a column';
   },
 
+  createGetSuggestions() {
+    const tables = this.props.tables.filter(function(item) {
+      return item.get('id').substr(0, 3) === 'in.' || item.get('id').substr(0, 4) === 'out.';
+    }).sortBy(function(item) {
+      return item.get('id');
+    }).map(function(item) {
+      return item.get('id');
+    }).toList();
+
+    return function(input, callback) {
+      var suggestions;
+      suggestions = tables.filter(function(value) {
+        return value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      }).sortBy(function(item) {
+        return item;
+      }).slice(0, 10).toList();
+      return callback(null, suggestions.toJS());
+    };
+  },
+
   render() {
     return (
       <div>
@@ -108,6 +136,7 @@ export default React.createClass({
               onCancel={this.props.onCancel}
               placement="right"
               saveLabel="Save Settings"
+              isDisabled={!this.isValid()}
               />
           </div>
         </p>
@@ -117,11 +146,13 @@ export default React.createClass({
             <div className="form-group">
               <div className="col-xs-4 control-label">Destination</div>
               <div className="col-xs-8">
-                <SapiTableSelector
+                <AutoSuggestWrapper
+                  suggestions={this.createGetSuggestions()}
                   value={this.props.settings.get('destination', this.props.defaultTable)}
-                  onSelectTableFn={this.onChangeDestination}
+                  onChange={this.onChangeDestination}
                   placeholder="Table in Storage"
-                  allowCreate={true}
+                  id="destination"
+                  name="destination"
                 />
                 <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default <code>{this.props.defaultTable}</code></span>
               </div>
