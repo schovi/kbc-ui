@@ -7,7 +7,7 @@ import QueryDetailHeaderButtons from './react/QueryDetail/HeaderButtons';
 import NewQueryHeaderButtons from './react/NewQuery/HeaderButtons';
 // import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
-// import jobsActionCreators from '../jobs/ActionCreators';
+import jobsActionCreators from '../jobs/ActionCreators';
 import versionsActions from '../components/VersionsActionCreators';
 
 import store from './storeProvisioning';
@@ -32,6 +32,10 @@ export default {
     (params) => versionsActions.loadVersions(COMPONENT_ID, params.config),
     () => storageActions.loadTables()
   ],
+  poll: {
+    interval: 7,
+    action: (params) => jobsActionCreators.loadComponentConfigurationLatestJobs(COMPONENT_ID, params.config)
+  },
   childRoutes: [
     oauthUtils.createRedirectRouteSimple(COMPONENT_ID),
     {
@@ -53,10 +57,4 @@ export default {
       title: () => 'New Query'
     }
   ]
-
-  // ,
-  // poll: {
-  //   interval: 5,
-  //   action: (params) => jobsActionCreators.loadComponentConfigurationLatestJobs(COMPONENT_ID, params.config)
-  // }
 };
