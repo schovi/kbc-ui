@@ -75,7 +75,7 @@ module.exports = React.createClass
     console.log(value)
     create = false
     label = value
-    if (value.match(/^(in|out)\.c-[a-zA-z_-]+\.[a-zA-z_-]+$/))
+    if (value.match(/^(in|out)\.c-[a-zA-z0-9_\-]+\.[a-zA-z0-9_\-]+$/))
       create = true
     else
       label = value + ' is not a valid table identifier'
