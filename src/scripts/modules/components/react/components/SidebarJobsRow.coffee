@@ -38,7 +38,7 @@ JobNavRow = React.createClass
               if @props.job.get('startTime')
                 DurationWithIcon startTime: @props.job.get('startTime'), endTime: @props.job.get('endTime')
             small className: 'pull-right',
-              FinishedWithIcon endTime: @props.job.get('endTime')
+              FinishedWithIcon endTime: @props.job.get('endTime'), tooltipPlacement: 'bottom'
 
 
 module.exports = JobNavRow

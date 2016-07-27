@@ -18,13 +18,15 @@ NewTransformationModal = require('../../modals/NewTransformation').default
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 LatestJobsStore = require('../../../../jobs/stores/LatestJobsStore')
 SidebarJobs = require('../../../../components/react/components/SidebarJobs')
+SidebarVersions = require('../../../../components/react/components/SidebarVersions')
+VersionsStore = require('../../../../components/stores/VersionsStore')
 
 {div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
 
 TransformationBucket = React.createClass
   displayName: 'TransformationBucket'
   mixins: [
-    createStoreMixin(TransformationsStore, TransformationBucketsStore, LatestJobsStore)
+    createStoreMixin(TransformationsStore, TransformationBucketsStore, LatestJobsStore, VersionsStore)
     Router.Navigation
   ]
 
@@ -35,6 +37,7 @@ TransformationBucket = React.createClass
     bucket: TransformationBucketsStore.get(bucketId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)
     latestJobs: LatestJobsStore.getJobs('transformation', bucketId),
+    latestVersions: VersionsStore.getVersions('transformation', bucketId),
 
   componentWillReceiveProps: ->
     @setState(@getStateFromStores())
@@ -97,6 +100,12 @@ TransformationBucket = React.createClass
                   ' Delete bucket'
         React.createElement SidebarJobs,
           jobs: @state.latestJobs
+          limit: 3
+        React.createElement SidebarVersions,
+          versions: @state.latestVersions
+          bucketId: @state.bucketId
+          limit: 3
+
 
   _renderTable: ->
     div className: 'table table-striped table-hover',

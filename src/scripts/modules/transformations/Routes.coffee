@@ -12,7 +12,6 @@ ProvisioningActionCreators = require('../provisioning/ActionCreators')
 StorageActionCreators = require('../components/StorageActionCreators')
 TransformationsIndexReloaderButton = require './react/components/TransformationsIndexReloaderButton'
 TransformationBucketButtons = require './react/components/TransformationBucketButtons'
-TransformationListButtons = require('./react/components/TransformationsListButtons').default
 TransformationBucketsStore = require  './stores/TransformationBucketsStore'
 TransformationsStore = require  './stores/TransformationsStore'
 createVersionsPageRoute = require('../../modules/components/utils/createVersionsPageRoute').default
@@ -50,7 +49,6 @@ routes =
           else
             return TransformationBucketsStore.get(params.bucketId).get 'name'
         defaultRouteHandler: TransformationBucket
-        headerButtonsHandler: TransformationListButtons
         requireData: [
           (params) ->
             VersionsActionCreators.loadVersions('transformation', params.bucketId)
