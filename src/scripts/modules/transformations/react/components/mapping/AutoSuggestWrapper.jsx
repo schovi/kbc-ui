@@ -11,13 +11,12 @@ import AutoSuggest from 'react-autosuggest';
 
 export default React.createClass({
   propTypes: {
-    suggestion: PropTypes.func.isRequired,
+    suggestions: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
-    suggestions: PropTypes.object.isRequired
+    placeholder: PropTypes.string.isRequired
   },
 
   getInitialState() {
