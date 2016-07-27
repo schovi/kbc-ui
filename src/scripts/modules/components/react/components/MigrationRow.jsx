@@ -20,8 +20,7 @@ import Tooltip from '../../../../react/common/Tooltip';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 
 const PERNAMENT_MIGRATION_COMPONENTS = [
-  'ex-db',
-  'ex-google-analytics'
+  'ex-db'
 ];
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
