@@ -64,7 +64,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log('state', this.state.config.toJS(), this.state.configData.toJS(), this.state.oauthCredentials);
     return this.state.isConfigured ? this.renderConfigured() : this.renderWizard();
   },
 

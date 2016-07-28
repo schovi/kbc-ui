@@ -127,7 +127,6 @@ function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
       'incremental': !tableExists || hasPrimaryKey
     });
   }
-  console.log('OUTPUTRESULT', result);
   return result;
 }
 
@@ -157,7 +156,6 @@ export function getInputMapping(configId, isEditing) {
 export function save(configId, allTables) {
   const data = getLocalState(configId, ['editing']).toJS();
   const primaryKey = data[params.PRIMARYKEY];
-  console.log('EDITING DATA TO SAVE', data, allTables);
   const inputMapping = getInputMapping(configId, true);
   const columns = [data[params.DATACOLUMN], primaryKey];
   const storage = {

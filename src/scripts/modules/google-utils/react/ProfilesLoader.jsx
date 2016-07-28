@@ -93,7 +93,6 @@ export default React.createClass({
     const request = gapi().client.analytics.management.accountSummaries.list();
     request.execute(
       (resp) => {
-        console.log('PROFILES', resp);
         disconnect();
         if (resp.error) {
           return this.props.onProfilesLoadError(resp);

@@ -153,7 +153,6 @@ export default React.createClass({
               email: email
             });
             this.props.updateLocalStatePickerData(pickerData);
-            console.log('loaded profiles', profiles, email);
           }}
       />
     );

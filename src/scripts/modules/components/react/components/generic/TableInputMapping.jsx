@@ -23,7 +23,7 @@ export default React.createClass({
         return mapping.get('destination').toLowerCase();
       }
     }).filter(function(destination) {
-      return destination !== undefined;
+      return typeof destination !== 'undefined';
     });
   },
 

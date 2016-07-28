@@ -66,7 +66,6 @@ export default React.createClass({
     const queryProfiles = propValue(['query', 'viewId']);
     const outTableId = this.props.outputBucket + '.' + propValue('outputTable');
 
-    console.log(query.toJS());
     return (
       <Link
         to={COMPONENT_ID + '-query-detail'}

@@ -89,12 +89,11 @@ export default React.createClass({
 
   onGetExternalLink() {
     this.setState({generatingLink: true});
-    oauthUtils.generateLink(this.props.componentId, this.props.configId)
-              .then((link) => {
-                console.log('external link', link);
-                this.setState({generatingLink: false, externalLink: link});
-              }
-              );
+    oauthUtils
+      .generateLink(this.props.componentId, this.props.configId)
+      .then((link) => {
+        this.setState({generatingLink: false, externalLink: link});
+      });
   },
 
   renderInstant() {
