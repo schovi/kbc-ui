@@ -10,7 +10,8 @@ module.exports = React.createClass({
   propTypes: {
     versions: React.PropTypes.object.isRequired,
     isLoading: React.PropTypes.bool.isRequired,
-    bucketId: React.PropTypes.string.isRequired,
+    configId: React.PropTypes.string.isRequired,
+    componentId: React.PropTypes.string.isRequired,
     limit: React.PropTypes.number
   },
   getDefaultProps: function() {
@@ -27,7 +28,8 @@ module.exports = React.createClass({
         return (
           <SidebarVersionsRow
             version={version}
-            bucketId={props.bucketId}
+            configId={props.configId}
+            componentId={props.componentId}
             isLast={isLast}
           />);
       }).toArray();
@@ -38,8 +40,9 @@ module.exports = React.createClass({
 
   render: function() {
     const linkParams = {
-      bucketId: this.props.bucketId
+      configId: this.props.configId
     };
+    const linkTo = this.props.componentId + '-versions';
     return (
       <div>
         <h4>Last updates</h4>
@@ -47,8 +50,7 @@ module.exports = React.createClass({
           {this.renderVersions()}
           <div className="versions-link">
             <Link
-
-              to="transformation-versions"
+              to={linkTo}
               params={linkParams}
             >
               Show all versions

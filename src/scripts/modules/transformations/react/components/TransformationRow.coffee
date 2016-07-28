@@ -69,7 +69,7 @@ TransformationRow = React.createClass(
     Link
       className: 'tr'
       to: 'transformationDetail'
-      params: {transformationId: @props.transformation.get('id'), bucketId: @props.bucket.get('id')}
+      params: {transformationId: @props.transformation.get('id'), configId: @props.bucket.get('id')}
     ,
       span {className: 'td col-xs-3'},
         h4 {},

@@ -1,7 +1,5 @@
 React = require('react')
-Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
-Map = Immutable.Map
 fuzzy = require 'fuzzy'
 
 

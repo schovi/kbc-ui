@@ -1,5 +1,4 @@
 React = require('react')
-Link = React.createFactory(require('react-router').Link)
 Router = require 'react-router'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
@@ -22,7 +21,7 @@ TransformationGraph = React.createClass
   ]
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
+    bucketId = RoutesStore.getCurrentRouteParam 'configId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)

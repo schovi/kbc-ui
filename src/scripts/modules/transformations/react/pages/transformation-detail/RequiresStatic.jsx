@@ -40,7 +40,7 @@ export default React.createClass({
 
   transformation(transformationId) {
     return (
-      <Link to="transformationDetail" key={transformationId} params={{transformationId: transformationId, bucketId: this.props.bucketId}}>
+      <Link to="transformationDetail" key={transformationId} params={{transformationId: transformationId, configId: this.props.bucketId}}>
         <span className="label kbc-label-rounded-small label-default">
           {this.findTransformationById(transformationId)}
         </span>

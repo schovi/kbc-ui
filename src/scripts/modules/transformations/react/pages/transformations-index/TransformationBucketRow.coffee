@@ -1,5 +1,4 @@
 React = require 'react'
-Link = React.createFactory(require('react-router').Link)
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 InstalledComponentsActionCreators = require '../../../../components/InstalledComponentsActionCreators'
 RunComponentButton = React.createFactory(require '../../../../components/react/components/RunComponentButton')
@@ -77,7 +76,7 @@ TransformationBucketRow = React.createClass(
           onClick: (e) ->
             e.preventDefault()
             e.stopPropagation()
-            RoutesStore.getRouter().transitionTo("transformationBucket", {bucketId: props.bucket.get('id')})
+            RoutesStore.getRouter().transitionTo("transformationBucket", {configId: props.bucket.get('id')})
         ,
           i {className: "fa fa-fw fa-chevron-right"}
     )
@@ -98,8 +97,6 @@ TransformationBucketRow = React.createClass(
     # if transformation is deleted immediately view is rendered with missing bucket because of store changed
     bucketId = @props.bucket.get('id')
     TransformationActionCreators.deleteTransformationBucket(bucketId)
-
-
 )
 
 module.exports = TransformationBucketRow

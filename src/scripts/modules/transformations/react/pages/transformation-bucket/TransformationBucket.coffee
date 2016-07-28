@@ -1,5 +1,4 @@
 React = require('react')
-Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 Router = require 'react-router'
 
@@ -31,7 +30,7 @@ TransformationBucket = React.createClass
   ]
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
+    bucketId = RoutesStore.getCurrentRouteParam 'configId'
     bucketId: bucketId
     transformations: TransformationsStore.getTransformations(bucketId)
     bucket: TransformationBucketsStore.get(bucketId)
@@ -103,7 +102,8 @@ TransformationBucket = React.createClass
           limit: 3
         React.createElement SidebarVersions,
           versions: @state.latestVersions
-          bucketId: @state.bucketId
+          componentId: "transformation"
+          configId: @state.bucketId
           limit: 3
 
 

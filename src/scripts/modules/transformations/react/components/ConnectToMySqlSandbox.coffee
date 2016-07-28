@@ -1,7 +1,5 @@
 React = require 'react'
 
-Link = React.createFactory(require('react-router').Link)
-
 {button, form, input, span} = React.DOM
 
 ConnectToMySqlSandbox = React.createClass

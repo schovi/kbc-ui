@@ -1,5 +1,4 @@
 React = require('react')
-Link = React.createFactory(require('react-router').Link)
 Immutable = require('immutable')
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'

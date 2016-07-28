@@ -35,47 +35,47 @@ routes =
       ]
       childRoutes: [
         name: 'transformationBucket'
-        path: 'bucket/:bucketId'
+        path: 'bucket/:configId'
         title: (routerState) ->
-          bucketId = routerState.getIn(['params', 'bucketId'])
-          name = TransformationBucketsStore.get(bucketId).get 'name'
+          configId = routerState.getIn(['params', 'configId'])
+          name = TransformationBucketsStore.get(configId).get 'name'
           name
         nameEdit: (params) ->
-          if (parseInt(params.bucketId) > 0)
+          if (parseInt(params.configId) > 0)
             return React.DOM.span null,
               React.createElement ComponentNameEdit,
                 componentId: 'transformation'
-                configId: params.bucketId
+                configId: params.configId
           else
-            return TransformationBucketsStore.get(params.bucketId).get 'name'
+            return TransformationBucketsStore.get(params.configId).get 'name'
         defaultRouteHandler: TransformationBucket
         requireData: [
           (params) ->
-            VersionsActionCreators.loadVersions('transformation', params.bucketId)
+            VersionsActionCreators.loadVersions('transformation', params.configId)
         ]
         poll:
           interval: 10
           action: (params) ->
-            JobsActionCreators.loadComponentConfigurationLatestJobs('transformation', params.bucketId)
+            JobsActionCreators.loadComponentConfigurationLatestJobs('transformation', params.configId)
 
         childRoutes: [
-          createVersionsPageRoute('transformation', 'bucketId')
+          createVersionsPageRoute('transformation', 'configId')
         ,
           name: 'transformationDetail'
           path: 'transformation/:transformationId'
           title: (routerState) ->
-            bucketId = routerState.getIn(['params', 'bucketId'])
+            configId = routerState.getIn(['params', 'configId'])
             transformationId = routerState.getIn(['params', 'transformationId'])
-            name = TransformationsStore.getTransformation(bucketId, transformationId).get 'name'
+            name = TransformationsStore.getTransformation(configId, transformationId).get 'name'
             name
           nameEdit: (params) ->
             if (parseInt(params.transformationId) > 0)
               return React.DOM.span null,
                 React.createElement TransformationNameEdit,
-                  configId: params.bucketId
+                  configId: params.configId
                   rowId: params.transformationId
             else
-              return TransformationsStore.getTransformation(params.bucketId, params.transformationId).get 'name'
+              return TransformationsStore.getTransformation(params.configId, params.transformationId).get 'name'
           defaultRouteHandler: TransformationDetail
           requireData: [
             ->

@@ -34,7 +34,7 @@ module.exports = React.createClass
     @setState(@getStateFromStores())
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'bucketId'
+    bucketId = RoutesStore.getCurrentRouteParam 'configId'
     transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
@@ -98,7 +98,7 @@ module.exports = React.createClass
           li {},
             Link
               to: 'transformationDetailGraph'
-              params: {transformationId: @state.transformation.get("id"), bucketId: @state.bucket.get('id')}
+              params: {transformationId: @state.transformation.get("id"), configId: @state.bucket.get('id')}
             ,
               span className: 'fa fa-search fa-fw'
               ' Overview'

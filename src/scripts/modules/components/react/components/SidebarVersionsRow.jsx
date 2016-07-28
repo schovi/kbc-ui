@@ -9,7 +9,8 @@ module.exports = React.createClass({
   mixins: [ImmutableRendererMixin],
   propTypes: {
     version: React.PropTypes.object.isRequired,
-    bucketId: React.PropTypes.string.isRequired,
+    configId: React.PropTypes.string.isRequired,
+    componentId: React.PropTypes.string.isRequired,
     isLast: React.PropTypes.bool
   },
   getDefaultProps: function() {
@@ -24,12 +25,13 @@ module.exports = React.createClass({
 
   render: function() {
     const linkParams = {
-      bucketId: this.props.bucketId
+      configId: this.props.configId
     };
+    const linkTo = this.props.componentId + '-versions';
     return (
       <Link
         className="list-group-item"
-        to="transformation-versions"
+        to={linkTo}
         params={linkParams}
       >
         <span className="table">
