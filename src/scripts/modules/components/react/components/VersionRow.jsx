@@ -16,7 +16,8 @@ export default React.createClass({
     configId: React.PropTypes.string.isRequired,
     hideRollback: React.PropTypes.bool,
     version: React.PropTypes.object.isRequired,
-    previousVersion: React.PropTypes.object.isRequired,
+    versionConfig: React.PropTypes.object.isRequired,
+    previousVersionConfig: React.PropTypes.object.isRequired,
     newVersionName: React.PropTypes.string,
     isRollbackPending: React.PropTypes.bool,
     isRollbackDisabled: React.PropTypes.bool,
@@ -51,8 +52,8 @@ export default React.createClass({
         isDisabled={this.props.isDiffDisabled}
         isPending={this.props.isDiffPending}
         onLoadVersionConfig={this.props.onPrepareVersionsDiffData}
-        version={this.props.version}
-        previousVersion={this.props.previousVersion}
+        version={this.props.versionConfig}
+        previousVersion={this.props.previousVersionConfig}
       />
     );
   },

@@ -8,6 +8,7 @@ var Map = Immutable.Map, List = Immutable.List;
 var _store = Map({
   loadingVersions: Map(),
   versions: Map(),
+  versionsConfigs: Map(),
   newVersionNames: Map(),
   searchFilters: Map(),
   pending: Map()
@@ -23,7 +24,7 @@ var VersionsStore = StoreUtils.createStore({
   },
 
   hasConfigByVersion: function(componentId, configId, versionId) {
-    return _store.hasIn(['versions', componentId, configId, versionId, 'configuration']);
+    return _store.hasIn(['versionsConfigs', componentId, configId, versionId]);
   },
 
   isLoadingVersions: function(componentId, configId) {
@@ -34,8 +35,12 @@ var VersionsStore = StoreUtils.createStore({
     return _store.getIn(['versions', componentId, configId], List());
   },
 
+  getVersionsConfigs: function(componentId, configId) {
+    return _store.getIn(['versionsConfigs', componentId, configId], List());
+  },
+
   getConfigByVersion: function(componentId, configId, versionId) {
-    return _store.getIn(['versions', componentId, configId, versionId, 'configuration'], Map());
+    return _store.getIn(['versionsConfigs', componentId, configId, versionId], Map());
   },
 
   getVersion: function(componentId, configId, versionId) {
@@ -89,15 +94,7 @@ dispatcher.register(function(payload) {
       return VersionsStore.emitChange();
 
     case Constants.ActionTypes.VERSIONS_CONFIG_LOAD_SUCCESS:
-      const versions = VersionsStore.getVersions(action.componentId, action.configId)
-        .map((v) => {
-          if (v.get('version').toString() === action.version.toString()) {
-            return Immutable.fromJS(action.data);
-          } else {
-            return v;
-          }
-        });
-      _store = _store.setIn(['versions', action.componentId, action.configId], versions);
+      _store = _store.setIn(['versionsConfigs', action.componentId, action.configId, action.version], Immutable.fromJS(action.data));
       _store = _store.setIn(['loadingVersionConfig', action.componentId, action.configId, action.version], false);
       return VersionsStore.emitChange();
 

@@ -9,6 +9,7 @@ import SearchRow from '../../../../react/common/SearchRow';
 import VersionsActionCreators from '../../VersionsActionCreators';
 import fuzzy from 'fuzzy';
 import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
+import {Map} from 'immutable';
 
 export default function(componentIdValue, configIdParam = 'config') {
   return React.createClass({
@@ -36,6 +37,7 @@ export default function(componentIdValue, configIdParam = 'config') {
         componentId: componentId,
         configId: configId,
         versions: versions,
+        versionsConfigs: VersionsStore.getVersionsConfigs(componentId, configId),
         filteredVersions: filteredVersions,
         newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
         query: VersionsStore.getSearchFilter(componentId, configId),
@@ -47,10 +49,15 @@ export default function(componentIdValue, configIdParam = 'config') {
     renderVersionRows() {
       return this.state.filteredVersions.map(function(version, i) {
         const previousVersion = getPreviousVersion(this.state.versions, version);
+        const previousVersionConfig = getPreviousVersion(this.state.versionsConfigs, version) || Map();
+        const currentVersionConfig = this.state.versionsConfigs.filter((currentVersion) => {
+          return version.get('version') === currentVersion.get('version');
+        }).first() || Map();
         return (
           <VersionRow
             key={version.get('version')}
             version={version}
+            versionConfig={currentVersionConfig}
             componentId={this.state.componentId}
             configId={this.state.configId}
             newVersionName={this.state.newVersionNames.get(version.get('version'))}
@@ -61,7 +68,7 @@ export default function(componentIdValue, configIdParam = 'config') {
             hideRollback={(i === 0)}
             isDiffPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
             isDiffDisabled={this.state.isPending}
-            previousVersion={previousVersion}
+            previousVersionConfig={previousVersionConfig}
             onPrepareVersionsDiffData= {() => this.prepareVersionsDiffData(version, previousVersion)}
           />
         );

@@ -77,8 +77,10 @@ module.exports = {
   },
 
   loadTwoComponentConfigVersions(componentId, configId, version1, version2) {
-    this.loadComponentConfigByVersion(componentId, configId, version1);
-    return this.loadComponentConfigByVersion(componentId, configId, version2);
+    var self = this;
+    return this.loadComponentConfigByVersion(componentId, configId, version1).then(() => {
+      return self.loadComponentConfigByVersion(componentId, configId, version2);
+    });
   },
 
 
