@@ -10,7 +10,7 @@ module.exports =
 
      if nodes[i].object.type == 'transformation'
        nodes[i].link = router.makeHref('transformationDetail', {
-         bucketId: nodes[i].object.bucket,
+         configId: nodes[i].object.bucket,
          transformationId: nodes[i].object.transformation
        })
 
