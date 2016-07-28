@@ -7,6 +7,7 @@ import createVersionOnRollback from '../../../../utils/createVersionOnRollback';
 import createVersionOnCopy from '../../../../utils/createVersionOnCopy';
 import VersionsActionCreators from '../../VersionsActionCreators';
 import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
+import VersionIcon from './VersionIcon';
 
 export default React.createClass({
   mixins: [ImmutableRenderMixin],
@@ -25,7 +26,8 @@ export default React.createClass({
     isCopyDisabled: React.PropTypes.bool,
     isDiffPending: React.PropTypes.bool,
     isDiffDisabled: React.PropTypes.bool,
-    onPrepareVersionsDiffData: React.PropTypes.func
+    onPrepareVersionsDiffData: React.PropTypes.func,
+    isLast: React.PropTypes.bool.isRequired
   },
 
   onChangeName(name) {
@@ -62,9 +64,15 @@ export default React.createClass({
     return (
       <tr>
         <td>
-          #{this.props.version.get('version')}
+          {this.props.version.get('version')}
         </td>
-        <td >
+        <td>
+          <VersionIcon
+            isLast={this.props.isLast}
+          />
+        </td>
+
+        <td>
           {this.props.version.get('changeDescription') ? this.props.version.get('changeDescription') : (<small><em>No description</em></small>)}
         </td>
         <td>

@@ -47,6 +47,7 @@ export default function(componentIdValue, configIdParam = 'config') {
     },
 
     renderVersionRows() {
+      const allVersions = this.state.versions;
       return this.state.filteredVersions.map(function(version, i) {
         const previousVersion = getPreviousVersion(this.state.versions, version);
         const previousVersionConfig = getPreviousVersion(this.state.versionsConfigs, version) || Map();
@@ -70,6 +71,7 @@ export default function(componentIdValue, configIdParam = 'config') {
             isDiffDisabled={this.state.isPending}
             previousVersionConfig={previousVersionConfig}
             onPrepareVersionsDiffData= {() => this.prepareVersionsDiffData(version, previousVersion)}
+            isLast={allVersions.first().get('version') === version.get('version')}
           />
         );
       }, this).toArray();
@@ -102,6 +104,7 @@ export default function(componentIdValue, configIdParam = 'config') {
             <thead>
               <tr>
                 <th>#</th>
+                <th></th>
                 <th>Description</th>
                 <th>Changed</th>
                 <th>Created by</th>

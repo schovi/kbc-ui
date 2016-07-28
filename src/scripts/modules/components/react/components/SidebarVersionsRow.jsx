@@ -2,6 +2,7 @@ import React from 'react';
 import CreatedWithIcon from '../../../../react/common/CreatedWithIcon';
 import ImmutableRendererMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Link} from 'react-router';
+import VersionIcon from './VersionIcon';
 
 module.exports = React.createClass({
   displayName: 'LatestVersionsRow',
@@ -21,18 +22,6 @@ module.exports = React.createClass({
     return this.props.version.get('changeDescription') || 'No description.';
   },
 
-  renderIcon() {
-    if (this.props.isLast) {
-      return (
-        <span className="fa fa-check-circle fa-fw version-icon-last"></span>
-      );
-    } else {
-      return (
-        <span className="fa fa-circle-o fa-fw version-icon"></span>
-      );
-    }
-  },
-
   render: function() {
     const linkParams = {
       bucketId: this.props.bucketId
@@ -46,7 +35,9 @@ module.exports = React.createClass({
         <span className="table">
           <span className="tr">
             <span className="td versions-status">
-              {this.renderIcon()}
+              <VersionIcon
+                isLast={this.props.isLast}
+              />
             </span>
             <span className="td">
               <div>
