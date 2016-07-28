@@ -45,6 +45,7 @@ module.exports = React.createClass
       _.map(
         _.filter(transformations.toArray(), (transformation) ->
           parseInt(transformation.get("phase")) == parseInt(currentTransformation.get("phase")) &&
+            transformation.get("backend") == currentTransformation.get("backend") &&
             transformation.get("id") != currentTransformation.get("id")
         ), (transformation) -> {
           label: transformation.get("name")
