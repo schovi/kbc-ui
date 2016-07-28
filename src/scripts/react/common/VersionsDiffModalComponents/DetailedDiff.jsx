@@ -35,7 +35,7 @@ function reconstructIncompleteJson(strValue) {
   }
 }
 
-function  getMultiPartsDiff(firstValue, secondValue, firstDescription, secondDescription) {
+function getMultiPartsDiff(firstValue, secondValue, firstDescription, secondDescription) {
   const firstJson = reconstructIncompleteJson(firstValue);
   const secondJson = reconstructIncompleteJson(secondValue);
   let firstLines = [];
@@ -47,10 +47,10 @@ function  getMultiPartsDiff(firstValue, secondValue, firstDescription, secondDes
     secondLines.push(multiDiffValueToString(secondJson[key]));
   }
   return createTwoFilesPatch('Old version',
-                             'New version',
-                             firstLines.join('\n') + '\n',
-                             secondLines.join('\n') + '\n',
-                             secondDescription, firstDescription, {context: 1000});
+    'New version',
+    firstLines.join('\n') + '\n',
+    secondLines.join('\n') + '\n',
+    secondDescription, firstDescription, {context: 1000});
 }
 
 export default React.createClass({
@@ -75,7 +75,7 @@ export default React.createClass({
           <button
             className="btn btn-link btn-sm"
             onClick={() => this.setState({showDetails: !this.state.showDetails})}>
-            <i className="fa fa-fw fa-arrows-v" />
+            <i className="fa fa-fw fa-arrows-v"/>
             {this.state.showDetails ? 'Hide Details' : 'Show detailed diff'}
           </button>
         </div>

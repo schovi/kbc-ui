@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
 import {Button, Modal} from 'react-bootstrap';
 import {diffJson} from 'diff';
 import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
@@ -8,12 +8,23 @@ import DetailedDiff from './VersionsDiffModalComponents/DetailedDiff';
 const COLOR_ADD = '#cfc';
 const COLOR_REMOVE = '#fcc';
 
-const PROPS_TO_COMPARE = ['configuration', 'description', 'rows', 'name'];
+const PROPS_TO_COMPARE = ['configuration', 'description', 'name'];
+
 function prepareDiffObject(versionObj) {
-  if (!versionObj) return null;
+  if (!versionObj) {
+    return null;
+  }
   let result = Map();
   for (let prop of PROPS_TO_COMPARE) {
     result = result.set(prop, versionObj.get(prop));
+  }
+
+  if (versionObj.has('rows')) {
+    let rows = List();
+    versionObj.get('rows').forEach((version) => {
+      rows = rows.push(prepareDiffObject(version));
+    });
+    result = result.set('rows', rows);
   }
   return result.toJS();
 }
@@ -141,7 +152,9 @@ export default React.createClass({
     const dataDiff = this.getDiff();
     const preparsedParts = preparseDiffParts(dataDiff);
     const parts = preparsedParts.map((part) => {
-      if (part.isMulti) return this.renderMultiDiff(part.first, part.second);
+      if (part.isMulti) {
+        return this.renderMultiDiff(part.first, part.second);
+      }
       return this.renderSimplePreDiff(part);
     });
     return (
