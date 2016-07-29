@@ -15,7 +15,7 @@ export default React.createClass({
         Configuration copied,&nbsp;
           <Link
             to="transformationBucket"
-            params={{bucketId: this.props.configId}}
+            params={{configId: this.props.configId}}
           >
             go to the new configuration
           </Link>.
