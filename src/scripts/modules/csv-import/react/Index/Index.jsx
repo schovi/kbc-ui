@@ -21,6 +21,7 @@ import SettingsEdit from '../components/SettingsEdit';
 import ComponentDescription from '../../../components/react/components/ComponentDescription';
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
+import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 
 // utils
 import {getDefaultTable} from '../../utils';
@@ -136,6 +137,9 @@ export default React.createClass({
               />
             </li>
           </ul>
+          <LatestVersions
+            componentId="keboola.csv-import"
+          />
         </div>
       </div>
 
