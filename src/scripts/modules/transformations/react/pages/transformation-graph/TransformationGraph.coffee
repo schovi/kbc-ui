@@ -21,8 +21,8 @@ TransformationGraph = React.createClass
   ]
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'configId'
-    transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
+    bucketId = RoutesStore.getCurrentRouteParam 'config'
+    transformationId = RoutesStore.getCurrentRouteParam 'row'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
     pendingActions: TransformationsStore.getPendingActions(bucketId)

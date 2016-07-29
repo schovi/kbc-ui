@@ -10,8 +10,8 @@ module.exports =
 
      if nodes[i].object.type == 'transformation'
        nodes[i].link = router.makeHref('transformationDetail', {
-         configId: nodes[i].object.bucket,
-         transformationId: nodes[i].object.transformation
+         config: nodes[i].object.bucket,
+         row: nodes[i].object.transformation
        })
 
      if nodes[i].object.type == 'writer' or nodes[i].object.type == 'dataset'

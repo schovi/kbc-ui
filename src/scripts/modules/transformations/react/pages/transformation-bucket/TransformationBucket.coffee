@@ -30,7 +30,7 @@ TransformationBucket = React.createClass
   ]
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'configId'
+    bucketId = RoutesStore.getCurrentRouteParam 'config'
     bucketId: bucketId
     transformations: TransformationsStore.getTransformations(bucketId)
     bucket: TransformationBucketsStore.get(bucketId)

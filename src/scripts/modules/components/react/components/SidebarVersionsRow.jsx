@@ -25,7 +25,7 @@ module.exports = React.createClass({
 
   render: function() {
     const linkParams = {
-      configId: this.props.configId
+      config: this.props.configId
     };
     const linkTo = this.props.componentId + '-versions';
     return (

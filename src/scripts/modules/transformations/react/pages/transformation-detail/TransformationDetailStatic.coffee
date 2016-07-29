@@ -108,7 +108,7 @@ module.exports = React.createClass
                   Link
                     key: dependent.get("id")
                     to: 'transformationDetail'
-                    params: {transformationId: dependent.get("id"), configId: @props.bucket.get('id')}
+                    params: {row: dependent.get("id"), config: @props.bucket.get('id')}
                   ,
                     span {className: 'label kbc-label-rounded-small label-default'},
                       dependent.get("name")

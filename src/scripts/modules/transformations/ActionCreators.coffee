@@ -65,7 +65,7 @@ module.exports =
       )
       VersionActionCreators.loadVersionsForce('transformation', newBucket.id)
       RoutesStore.getRouter().transitionTo 'transformationBucket',
-        bucketId: newBucket.id
+        config: newBucket.id
     )
 
   createTransformation: (bucketId, data) ->
@@ -80,8 +80,8 @@ module.exports =
       )
       VersionActionCreators.loadVersionsForce('transformation', bucketId)
       RoutesStore.getRouter().transitionTo 'transformationDetail',
-        transformationId: transformation.id
-        bucketId: bucketId
+        row: transformation.id
+        config: bucketId
 
 
   deleteTransformationBucket: (bucketId) ->

@@ -34,8 +34,8 @@ module.exports = React.createClass
     @setState(@getStateFromStores())
 
   getStateFromStores: ->
-    bucketId = RoutesStore.getCurrentRouteParam 'configId'
-    transformationId = RoutesStore.getCurrentRouteParam 'transformationId'
+    bucketId = RoutesStore.getCurrentRouteParam 'config'
+    transformationId = RoutesStore.getCurrentRouteParam 'row'
     bucket: TransformationBucketsStore.get(bucketId)
     transformation: TransformationsStore.getTransformation(bucketId, transformationId)
     editingFields: TransformationsStore.getTransformationEditingFields(bucketId, transformationId)
@@ -56,7 +56,7 @@ module.exports = React.createClass
     bucketId = @state.bucket.get('id')
     TransformationsActionCreators.deleteTransformation(bucketId, transformationId)
     @transitionTo 'transformationBucket',
-      bucketId: bucketId
+      config: bucketId
 
   _handleActiveChange: (newValue) ->
     if (newValue)
@@ -78,6 +78,7 @@ module.exports = React.createClass
     @state.transformation.get('backend') == 'docker'
 
   render: ->
+    console.log(@state.transformation)
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
           TransformationDetailStatic
@@ -98,7 +99,7 @@ module.exports = React.createClass
           li {},
             Link
               to: 'transformationDetailGraph'
-              params: {transformationId: @state.transformation.get("id"), configId: @state.bucket.get('id')}
+              params: {row: @state.transformation.get("id"), config: @state.bucket.get('id')}
             ,
               span className: 'fa fa-search fa-fw'
               ' Overview'

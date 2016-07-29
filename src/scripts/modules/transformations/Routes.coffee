@@ -35,47 +35,47 @@ routes =
       ]
       childRoutes: [
         name: 'transformationBucket'
-        path: 'bucket/:configId'
+        path: 'bucket/:config'
         title: (routerState) ->
-          configId = routerState.getIn(['params', 'configId'])
+          configId = routerState.getIn(['params', 'config'])
           name = TransformationBucketsStore.get(configId).get 'name'
           name
         nameEdit: (params) ->
-          if (parseInt(params.configId) > 0)
+          if (parseInt(params.config) > 0)
             return React.DOM.span null,
               React.createElement ComponentNameEdit,
                 componentId: 'transformation'
-                configId: params.configId
+                configId: params.config
           else
-            return TransformationBucketsStore.get(params.configId).get 'name'
+            return TransformationBucketsStore.get(params.config).get 'name'
         defaultRouteHandler: TransformationBucket
         requireData: [
           (params) ->
-            VersionsActionCreators.loadVersions('transformation', params.configId)
+            VersionsActionCreators.loadVersions('transformation', params.config)
         ]
         poll:
           interval: 10
           action: (params) ->
-            JobsActionCreators.loadComponentConfigurationLatestJobs('transformation', params.configId)
+            JobsActionCreators.loadComponentConfigurationLatestJobs('transformation', params.config)
 
         childRoutes: [
-          createVersionsPageRoute('transformation', 'configId')
+          createVersionsPageRoute('transformation', 'config')
         ,
           name: 'transformationDetail'
-          path: 'transformation/:transformationId'
+          path: 'transformation/:row'
           title: (routerState) ->
-            configId = routerState.getIn(['params', 'configId'])
-            transformationId = routerState.getIn(['params', 'transformationId'])
+            configId = routerState.getIn(['params', 'config'])
+            transformationId = routerState.getIn(['params', 'row'])
             name = TransformationsStore.getTransformation(configId, transformationId).get 'name'
             name
           nameEdit: (params) ->
-            if (parseInt(params.transformationId) > 0)
+            if (parseInt(params.row) > 0)
               return React.DOM.span null,
                 React.createElement TransformationNameEdit,
-                  configId: params.configId
-                  rowId: params.transformationId
+                  configId: params.config
+                  rowId: params.row
             else
-              return TransformationsStore.getTransformation(params.configId, params.transformationId).get 'name'
+              return TransformationsStore.getTransformation(params.config, params.row).get 'name'
           defaultRouteHandler: TransformationDetail
           requireData: [
             ->

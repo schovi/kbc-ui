@@ -26,7 +26,7 @@ module.exports = React.createClass
         className: @props.className
         to: 'transformationBucket'
         params:
-          configId: @props.configId
+          config: @props.configId
       ,
         @props.children
     else if @props.componentId == 'orchestrator'

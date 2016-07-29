@@ -76,7 +76,7 @@ TransformationBucketRow = React.createClass(
           onClick: (e) ->
             e.preventDefault()
             e.stopPropagation()
-            RoutesStore.getRouter().transitionTo("transformationBucket", {configId: props.bucket.get('id')})
+            RoutesStore.getRouter().transitionTo("transformationBucket", {config: props.bucket.get('id')})
         ,
           i {className: "fa fa-fw fa-chevron-right"}
     )
