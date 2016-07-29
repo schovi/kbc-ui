@@ -18,6 +18,8 @@ import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import Immutable from 'immutable';
+import LatestVersions from '../components/SidebarVersionsWrapper';
+
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, ComponentStore, VersionsStore)],
@@ -109,7 +111,13 @@ export default React.createClass({
             </li>
             {this.renderShinyAppLink()}
           </ul>
-          <LatestJobs jobs={this.state.latestJobs} />
+          <LatestJobs
+            jobs={this.state.latestJobs}
+            limit="3"
+          />
+          <LatestVersions
+            limit={3}
+          />
         </div>
       </div>
     );

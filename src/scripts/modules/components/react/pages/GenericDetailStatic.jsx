@@ -15,6 +15,7 @@ import LatestJobs from '../components/SidebarJobs';
 import contactSupport from '../../../../utils/contactSupport';
 import LastUpdateInfo from '../../../../react/common/LastUpdateInfo';
 import {Button} from 'react-bootstrap';
+import LatestVersions from '../components/SidebarVersionsWrapper';
 
 
 export default React.createClass({
@@ -81,7 +82,13 @@ export default React.createClass({
               />
             </li>
           </ul>
-          <LatestJobs jobs={this.state.latestJobs} />
+          <LatestJobs
+            jobs={this.state.latestJobs}
+            limit={3}
+          />
+          <LatestVersions
+            limit={3}
+          />
         </div>
       </div>
     );

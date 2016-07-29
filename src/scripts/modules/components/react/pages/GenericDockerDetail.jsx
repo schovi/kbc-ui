@@ -29,6 +29,7 @@ import {Map, List} from 'immutable';
 import contactSupport from '../../../../utils/contactSupport';
 import LastUpdateInfo from '../../../../react/common/LastUpdateInfo';
 import Immutable from 'immutable';
+import LatestVersions from '../components/SidebarVersionsWrapper';
 
 export default React.createClass({
   mixins: [createStoreMixin(InstalledComponentStore, LatestJobsStore, StorageTablesStore, OauthStore, ComponentStore, VersionsStore)],
@@ -282,7 +283,13 @@ export default React.createClass({
                 />
             </li>
           </ul>
-          <LatestJobs jobs={this.state.latestJobs} />
+          <LatestJobs
+            jobs={this.state.latestJobs}
+            limit="3"
+          />
+          <LatestVersions
+            limit={3}
+          />
         </div>
       </div>
     );
