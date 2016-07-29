@@ -141,12 +141,12 @@ module.exports = (componentId) ->
                 configId: @state.configId
 
           LatestJobs
-            limit: '3'
+            limit: 3
             jobs: @state.latestJobs
 
           LatestVersions
             componentId: componentId
-            limit: '3'
+            limit: 3
 
     _renderNotFound: ->
       div {className: 'table table-striped'},
