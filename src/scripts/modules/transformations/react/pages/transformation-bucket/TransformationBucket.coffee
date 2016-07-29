@@ -17,7 +17,7 @@ NewTransformationModal = require('../../modals/NewTransformation').default
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
 LatestJobsStore = require('../../../../jobs/stores/LatestJobsStore')
 SidebarJobs = require('../../../../components/react/components/SidebarJobs')
-SidebarVersions = require('../../../../components/react/components/SidebarVersionsWrapper')
+SidebarVersions = require('../../../../components/react/components/SidebarVersionsWrapper').default
 VersionsStore = require('../../../../components/stores/VersionsStore')
 
 {div, span, input, strong, form, button, h4, i, button, small, ul, li, a} = React.DOM
@@ -100,10 +100,10 @@ TransformationBucket = React.createClass
         React.createElement SidebarJobs,
           jobs: @state.latestJobs
           limit: 3
+
         React.createElement SidebarVersions,
           componentId: "transformation"
           limit: 3
-
 
   _renderTable: ->
     div className: 'table table-striped table-hover',
