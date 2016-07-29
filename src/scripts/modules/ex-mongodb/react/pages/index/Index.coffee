@@ -20,6 +20,7 @@ RunExtractionButton = React.createFactory(require '../../../../components/react/
 Link = React.createFactory(require('react-router').Link)
 SearchRow = require('../../../../../react/common/SearchRow').default
 actionProvisioning = require '../../../actionsProvisioning'
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 
 {div, table, tbody, tr, td, ul, li, i, a, p, span, h2, p, strong, br, button} = React.DOM
 
@@ -140,7 +141,12 @@ module.exports = (componentId) ->
                 configId: @state.configId
 
           LatestJobs
+            limit: '3'
             jobs: @state.latestJobs
+
+          LatestVersions
+            componentId: componentId
+            limit: '3'
 
     _renderNotFound: ->
       div {className: 'table table-striped'},

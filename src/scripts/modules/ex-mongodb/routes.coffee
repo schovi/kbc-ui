@@ -19,6 +19,7 @@ ExDbQueryName = require '../ex-db-generic/react/components/QueryName'
 
 JobsActionCreators = require '../jobs/ActionCreators'
 StorageActionCreators = require('../components/StorageActionCreators')
+VersionsActionsCreators = require('../components/VersionsActionCreators')
 
 storeProvisioning = require './storeProvisioning'
 
@@ -32,6 +33,8 @@ module.exports = (componentId) ->
   requireData: [
     (params) ->
       actionsProvisioning.loadConfiguration componentId, params.config
+    (params) ->
+      VersionsActionsCreators.loadVersions componentId, params.config
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']
