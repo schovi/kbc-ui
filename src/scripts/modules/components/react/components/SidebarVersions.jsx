@@ -12,7 +12,9 @@ module.exports = React.createClass({
     isLoading: React.PropTypes.bool.isRequired,
     configId: React.PropTypes.string.isRequired,
     componentId: React.PropTypes.string.isRequired,
-    limit: React.PropTypes.number
+    limit: React.PropTypes.number,
+    versionsLinkTo: React.PropTypes.string,
+    versionsLinkParams: React.PropTypes.object
   },
   getDefaultProps: function() {
     return {
@@ -20,18 +22,35 @@ module.exports = React.createClass({
     };
   },
 
+  getVersionsLinkParams: function() {
+    return this.props.versionsLinkParams || {
+      component: this.props.componentId,
+      config: this.props.configId
+    };
+  },
+
+  getVersionsLinkTo: function() {
+    return this.props.versionsLinkTo || this.props.componentId + '-versions';
+  },
+
   renderVersions: function() {
     const props = this.props;
+    const self = this;
     if (this.props.versions.count() || this.props.isLoading) {
       return this.props.versions.slice(0, 3).map(function(version) {
         const isLast = (version.get('version') === props.versions.first().get('version'));
         return (
-          <SidebarVersionsRow
-            version={version}
-            configId={props.configId}
-            componentId={props.componentId}
-            isLast={isLast}
-          />);
+          <Link
+            className="list-group-item"
+            to={self.getVersionsLinkTo()}
+            params={self.getVersionsLinkParams()}
+          >
+            <SidebarVersionsRow
+              version={version}
+              isLast={isLast}
+            />
+          </Link>
+            );
       }).toArray();
     } else {
       return (<div><small className="text-muted">No versions found.</small></div>);
@@ -39,10 +58,6 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    const linkParams = {
-      config: this.props.configId
-    };
-    const linkTo = this.props.componentId + '-versions';
     return (
       <div>
         <h4>Last updates</h4>
@@ -50,8 +65,8 @@ module.exports = React.createClass({
           {this.renderVersions()}
           <div className="versions-link">
             <Link
-              to={linkTo}
-              params={linkParams}
+              to={this.getVersionsLinkTo()}
+              params={this.getVersionsLinkParams()}
             >
               Show all versions
             </Link>
