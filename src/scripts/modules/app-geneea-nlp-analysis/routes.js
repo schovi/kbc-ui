@@ -3,6 +3,7 @@ import installedComponentsActions from '../components/InstalledComponentsActionC
 import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
 import jobsActionCreators from '../jobs/ActionCreators';
+import versionsActions from '../components/VersionsActionCreators';
 
 const componentId = 'geneea-nlp-analysis';
 
@@ -14,7 +15,8 @@ export default {
   headerButtonsHandler: HeaderButtons,
   requireData: [
     (params) => installedComponentsActions.loadComponentConfigData(componentId, params.config),
-    () => storageActions.loadTables()
+    () => storageActions.loadTables(),
+    (params) => versionsActions.loadVersions(componentId, params.config)
   ],
   poll: {
     interval: 5,
