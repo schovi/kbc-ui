@@ -12,6 +12,7 @@ import ComponentMetadata from '../../components/react/components/ComponentMetada
 import RunComponentButton from '../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
 import LatestJobs from '../../components/react/components/SidebarJobs';
+import LatestVersions from '../../components/react/components/SidebarVersionsWrapper';
 import CredentialsModal from './CredentialsModal';
 import TemplateModal from './TemplateModal';
 import Configuration from '../../components/react/components/Configuration';
@@ -159,7 +160,14 @@ export default React.createClass({
                 />
             </li>
           </ul>
-          <LatestJobs jobs={this.state.latestJobs} />
+          <LatestJobs
+            jobs={this.state.latestJobs}
+            limit={3}
+          />
+          <LatestVersions
+            limit={3}
+            componentId={this.state.componentId}
+          />
           <CredentialsModal
             show={this.state.showCredentialsModal}
             onHide={this.closeCredentialsModal}
