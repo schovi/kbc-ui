@@ -11,6 +11,7 @@ DateDimensionsPage = require './react/pages/date-dimensions/DateDimensions'
 ModelPage = require './react/pages/model/Model'
 storageActionCreators = require '../components/StorageActionCreators'
 JobsActionCreators = require '../jobs/ActionCreators'
+VersionsActionCreators = require '../components/VersionsActionCreators'
 
 module.exports =
   name: 'gooddata-writer'
@@ -22,6 +23,9 @@ module.exports =
     ,
       ->
         storageActionCreators.loadTables()
+    ,
+      (params) ->
+        VersionsActionCreators.loadVersions('gooddata-writer', params.config)
   ]
   poll:
     interval: 5
