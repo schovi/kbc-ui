@@ -18,6 +18,7 @@ ComponentsStore = require '../components/stores/ComponentsStore'
 RouterStore = require('../../stores/RoutesStore')
 componentId = 'tde-exporter'
 {fromJS} = require 'immutable'
+VersionsActionCreators = require '../components/VersionsActionCreators'
 
 # return first non empty(aka authorized) writer account
 findNonEmptyAccount = (configData) ->
@@ -96,6 +97,9 @@ module.exports =
         storageActionCreators.loadTables()
       ->
         loadFiles(false)
+    ,
+      (params) ->
+        VersionsActionCreators.loadVersions('tde-exporter', params.config)
   ]
   title: (routerState) ->
     configId = routerState.getIn ['params', 'config']

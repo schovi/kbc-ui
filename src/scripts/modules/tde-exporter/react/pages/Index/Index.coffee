@@ -27,6 +27,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 storageActionCreators = require '../../../../components/StorageActionCreators'
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 
 AddNewTableModal = require './AddNewTableModal'
 
@@ -126,7 +127,11 @@ module.exports = React.createClass
 
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+        limit: 3
 
+      LatestVersions
+        componentId: componentId
+        limit: 3
 
   _renderSetupDestinationLink: ->
     Link
