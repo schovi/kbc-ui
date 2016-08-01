@@ -9,6 +9,7 @@ RouterStore = require('../../stores/RoutesStore')
 {Navigation} = require 'react-router'
 ApplicationActionCreators = require('../../actions/ApplicationActionCreators')
 JobsActionCreators = require '../jobs/ActionCreators'
+VersionsActionCreators = require '../components/VersionsActionCreators'
 
 module.exports =
   name: 'wr-dropbox'
@@ -20,6 +21,9 @@ module.exports =
     (params) ->
       oauthActions.loadCredentials('wr-dropbox', params.config)
     (params) -> StorageActions.loadTables()
+    (params) ->
+      VersionsActionCreators.loadVersions('wr-dropbox', params.config)
+
   ]
   poll:
     interval: 7

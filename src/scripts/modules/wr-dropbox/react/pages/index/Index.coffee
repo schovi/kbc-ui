@@ -29,6 +29,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 InputMappigModal = require('../../../../components/react/components/generic/TableInputMappingModal').default
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
 componentId = 'wr-dropbox'
@@ -275,6 +276,11 @@ module.exports = React.createClass
             preDeleteFn: @_deleteCredentials
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+        limit: 3
+
+      LatestVersions
+        componentId: 'wr-dropbox'
+        limit: 3
 
 
   _renderResetAuthorization: ->
