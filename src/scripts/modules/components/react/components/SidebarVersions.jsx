@@ -53,8 +53,24 @@ module.exports = React.createClass({
             );
       }).toArray();
     } else {
-      return (<div><small className="text-muted">No versions found.</small></div>);
+      return (<div><small className="text-muted">No versions found</small></div>);
     }
+  },
+
+  renderAllVersionsLink() {
+    if (this.props.versions.count() === 0) {
+      return null;
+    }
+    return (
+      <div className="versions-link">
+        <Link
+          to={this.getVersionsLinkTo()}
+          params={this.getVersionsLinkParams()}
+        >
+          Show all versions
+        </Link>
+      </div>
+    );
   },
 
   render: function() {
@@ -63,14 +79,7 @@ module.exports = React.createClass({
         <h4>Last updates</h4>
         <div className="kbc-sidebar-versions">
           {this.renderVersions()}
-          <div className="versions-link">
-            <Link
-              to={this.getVersionsLinkTo()}
-              params={this.getVersionsLinkParams()}
-            >
-              Show all versions
-            </Link>
-          </div>
+          {this.renderAllVersionsLink()}
         </div>
       </div>
     );
