@@ -19,7 +19,13 @@ module.exports = React.createClass({
   },
 
   getVersionDescription() {
-    return this.props.version.get('changeDescription') || 'No description.';
+    if (this.props.version.get('changeDescription')) {
+      return this.props.version.get('changeDescription');
+    } else {
+      return (
+        <small className="text-muted">No description</small>
+      );
+    }
   },
 
   render: function() {
