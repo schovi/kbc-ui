@@ -9,6 +9,7 @@ import RunButtonModal from '../../components/react/components/RunComponentButton
 import classnames from 'classnames';
 import ComponentDescription from '../../components/react/components/ComponentDescription';
 import DeleteConfigurationButton from '../../components/react/components/DeleteConfigurationButton';
+import LatestVersions from '../../components/react/components/SidebarVersionsWrapper';
 
 import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 
@@ -323,7 +324,14 @@ export default React.createClass({
             />
           </li>
           <li>
-            <LatestJobs jobs={this.state.latestJobs} />
+            <LatestJobs
+              limit={3}
+              jobs={this.state.latestJobs}
+            />
+            <LatestVersions
+              limit={3}
+              componentId="keboola.csv-import"
+            />
           </li>
         </ul>
       </div>

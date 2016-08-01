@@ -5,6 +5,7 @@ import oauthStore from '../components/stores/OAuthStore';
 import oauthActions from '../components/OAuthActionCreators';
 import RouterStore from '../../stores/RoutesStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
+import versionsActions from '../components/VersionsActionCreators';
 
 
 export default {
@@ -13,7 +14,8 @@ export default {
   isComponent: true,
   requireData: [
     (params) => installedComponentsActions.loadComponentConfigData('ex-dropbox', params.config),
-    (params) => oauthActions.loadCredentials('ex-dropbox', params.config)
+    (params) => oauthActions.loadCredentials('ex-dropbox', params.config),
+    (params) => versionsActions.loadVersions('ex-dropbox', params.config)
   ],
   poll: {
     interval: 7,
