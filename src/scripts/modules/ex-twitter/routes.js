@@ -2,6 +2,8 @@ import Index from './react/Index';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import jobsActionCreators from '../jobs/ActionCreators';
 import * as OauthUtils from '../oauth-v2/OauthUtils';
+import versionsActions from '../components/VersionsActionCreators';
+
 
 const COMPONENT_ID = 'keboola.ex-twitter';
 
@@ -16,7 +18,8 @@ export default {
         .then(() => {
           return OauthUtils.loadCredentialsFromConfig(COMPONENT_ID, params.config);
         });
-    }
+    },
+    (params) => versionsActions.loadVersions(COMPONENT_ID, params.config)
   ],
   poll: {
     interval: 5,
