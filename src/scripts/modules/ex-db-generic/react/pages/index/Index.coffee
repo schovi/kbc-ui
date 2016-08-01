@@ -13,6 +13,7 @@ VersionsStore = require '../../../../components/stores/VersionsStore'
 QueryTable = React.createFactory(require './QueryTable')
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 
 DeleteConfigurationButton = require '../../../../components/react/components/DeleteConfigurationButton'
 
@@ -143,7 +144,12 @@ module.exports = (componentId) ->
                 configId: @state.configId
 
           LatestJobs
+            limit: 3
             jobs: @state.latestJobs
+
+          LatestVersions
+            componentId: componentId
+            limit: 3
 
     _renderNotFound: ->
       div {className: 'table table-striped'},
