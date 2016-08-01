@@ -8,6 +8,7 @@ import NewQueryHeaderButtons from './react/NewQuery/HeaderButtons';
 // import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
 // import jobsActionCreators from '../jobs/ActionCreators';
+import versionsActions from '../components/VersionsActionCreators';
 
 import store from './storeProvisioning';
 import IntalledComponentsStore from '../components/stores/InstalledComponentsStore';
@@ -28,6 +29,7 @@ export default {
     (params) => installedComponentsActions.loadComponentConfigData(COMPONENT_ID, params.config).then(() => {
       return oauthUtils.loadCredentialsFromConfig(COMPONENT_ID, params.config);
     }),
+    (params) => versionsActions.loadVersions(COMPONENT_ID, params.config),
     () => storageActions.loadTables()
   ],
   childRoutes: [

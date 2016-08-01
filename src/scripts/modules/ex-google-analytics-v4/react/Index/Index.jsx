@@ -20,6 +20,7 @@ import DeleteConfigurationButton from '../../../components/react/components/Dele
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 import {Link} from 'react-router';
 import ProfileInfo from '../ProfileInfo';
+import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 
 // index components
 import QueriesTable from './QueriesTable';
@@ -120,7 +121,11 @@ export default React.createClass({
               />
             </li>
           </ul>
-          {/* <LatestJobs jobs={this.state.latestJobs} /> */}
+          {/* <LatestJobs jobs={this.state.latestJobs} limit={3} /> */}
+          <LatestVersions
+            limit={3}
+            componentId={COMPONENT_ID}
+          />
         </div>
       </div>
 
