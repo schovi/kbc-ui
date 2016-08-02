@@ -158,7 +158,7 @@ export default React.createClass({
       return this.renderSimplePreDiff(part);
     });
     return (
-      <div>
+      <div className="pre-scrollable">
         {parts}
       </div>
     );
