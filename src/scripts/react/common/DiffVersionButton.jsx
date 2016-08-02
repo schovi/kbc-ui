@@ -7,7 +7,9 @@ export default React.createClass({
 
   propTypes: {
     version: React.PropTypes.object.isRequired,
+    versionConfig: React.PropTypes.object.isRequired,
     previousVersion: React.PropTypes.object.isRequired,
+    previousVersionConfig: React.PropTypes.object.isRequired,
     isPending: React.PropTypes.bool,
     isDisabled: React.PropTypes.bool,
     onLoadVersionConfig: React.PropTypes.func
@@ -45,8 +47,8 @@ export default React.createClass({
             <VersionsDiffModal
               onClose={this.closeModal}
               show={this.state.showModal}
-              referentialVersion={this.props.version}
-              compareVersion={this.props.previousVersion}
+              referentialVersion={this.props.versionConfig}
+              compareVersion={this.props.previousVersionConfig}
             />
           </button>
         </Tooltip>

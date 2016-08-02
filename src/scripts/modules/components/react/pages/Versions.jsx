@@ -69,6 +69,7 @@ export default function(componentIdValue, configIdParam = 'config') {
             hideRollback={(i === 0)}
             isDiffPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
             isDiffDisabled={this.state.isPending}
+            previousVersion={previousVersion}
             previousVersionConfig={previousVersionConfig}
             onPrepareVersionsDiffData= {() => this.prepareVersionsDiffData(version, previousVersion)}
             isLast={allVersions.first().get('version') === version.get('version')}
