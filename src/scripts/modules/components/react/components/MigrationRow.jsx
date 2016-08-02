@@ -8,7 +8,6 @@ import {Link} from 'react-router';
 import SapiTableLink from './StorageApiTableLink';
 import ApplicationStore from '../../../../stores/ApplicationStore';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
-// import EmptyState from './ComponentEmptyState';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {Modal, TabbedArea, TabPane, Alert} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
@@ -20,7 +19,7 @@ import {Check} from 'kbc-react-components';
 import Tooltip from '../../../../react/common/Tooltip';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 
-const PERNANENT_MIGRATION_COMPONENTS = [
+const PERNAMENT_MIGRATION_COMPONENTS = [
   'ex-db'
 ];
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
@@ -81,7 +80,7 @@ export default React.createClass({
    *},*/
 
   canMigrate() {
-    const isPernament = PERNANENT_MIGRATION_COMPONENTS.indexOf(this.props.componentId) >= 0;
+    const isPernament = PERNAMENT_MIGRATION_COMPONENTS.indexOf(this.props.componentId) >= 0;
     return isPernament || ApplicationStore.hasCurrentAdminFeature(MIGRATION_ALLOWED_FEATURE);
   },
 
@@ -172,7 +171,7 @@ export default React.createClass({
         <span>
           <h3 className="text-center">This extractor has been deprecated</h3>
           <span>
-            Migrate your current configurations to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.
+            {this.getInfo()}
           </span>
           <br/>
           <br/>
@@ -182,6 +181,16 @@ export default React.createClass({
         </div>
       </Alert>
     );
+  },
+
+  getInfo() {
+    if (this.props.componentId === 'ex-db') {
+      return 'Migrate your current configurations to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.';
+    } else if (this.props.componentId === 'ex-google-analytics') {
+      return 'Migrate your current configurations to new Google Analytics Extractor, which uses the newest API V4. This extractor will continue to work until November 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.';
+    } else {
+      return '';
+    }
   },
 
   renderModal(title, body, footer, props) {
@@ -283,7 +292,7 @@ export default React.createClass({
           {this.state.status.get('configurations', List()).map((row) =>
             <tr>
               <td>
-                {this.renderConfigLink(row.get('configId'), 'ex-db', row.get('configName'))}
+                {this.renderConfigLink(row.get('configId'), this.props.componentId, row.get('configName'))}
               </td>
               <td>
                 {this.renderTableLink(row.get('tableId'))}
@@ -333,13 +342,21 @@ export default React.createClass({
   },
 
   renderNewConfigLink(row) {
-    const newComponentId = `ex-db-generic-${row.get('componentId')}`;
+    const newComponentId = this.getNewComponentId(row.get('componentId'));
     const newLabel = `${row.get('componentId')} / ${row.get('configId')}`;
     const configExists = InstalledComponentsStore.getConfig(row.get('componentId'), row.get('configId'));
     if (configExists) {
       return this.renderConfigLink(row.get('configId'), newComponentId, newLabel);
     } else {
       return newLabel;
+    }
+  },
+
+  getNewComponentId(componentId) {
+    if (componentId.indexOf('ex-db') > -1) {
+      return `ex-db-generic-${componentId}`;
+    } else if (componentId.indexOf('ex-google-analytics') > -1) {
+      return `keboola.ex-google-analytics-v4-config`;
     }
   },
 
