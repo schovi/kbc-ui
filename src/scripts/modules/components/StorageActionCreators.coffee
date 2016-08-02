@@ -95,8 +95,12 @@ module.exports =
 
 
   loadBuckets: ->
-    return Promise.resolve() if StorageBucketsStore.getIsLoaded()
-    @loadBucketsForce()
+    if StorageBucketsStore.getIsLoaded()
+      @loadBucketsForce()
+      return Promise.resolve()
+    if StorageBucketsStore.getIsLoading()
+      return Promise.resolve()
+    return @loadBucketsForce()
 
   loadTablesForce: ->
     return Promise.resolve() if StorageTablesStore.getIsLoading()
@@ -122,8 +126,12 @@ module.exports =
     )
 
   loadTables: ->
-    return Promise.resolve() if StorageTablesStore.getIsLoaded() or StorageTablesStore.getIsLoading()
-    @loadTablesForce()
+    if StorageTablesStore.getIsLoaded()
+      @loadTablesForce()
+      return Promise.resolve()
+    if StorageTablesStore.getIsLoading()
+      return Promise.resolve()
+    return @loadTablesForce()
 
   loadTokensForce: ->
     dispatcher.handleViewAction
