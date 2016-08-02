@@ -277,11 +277,11 @@ export default React.createClass({
   getAuthorizationInformation() {
     if (this.state.hasCredentials) {
       return (
-        <strong>{this.state.credentials.get('description')}</strong>
+        <span>Authorized for <strong>{this.state.credentials.get('description')}</strong></span>
       );
     } else {
       return (
-        <strong>not authorized</strong>
+        <small className="text-muted">Not yet authorized</small>
       );
     }
   },
@@ -294,8 +294,7 @@ export default React.createClass({
     return (
       <div className="col-md-3 kbc-main-sidebar">
         <div className="kbc-buttons kbc-text-light">
-          <p><span>Authorized for {this.getAuthorizationInformation()}</span></p>
-
+          <p>{this.getAuthorizationInformation()}</p>
           <ComponentsMetadata componentId={componentId} configId={this.state.configId} />
         </div>
         <ul className="nav nav-stacked">
