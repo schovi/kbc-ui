@@ -49,5 +49,4 @@ module.exports = React.createClass
     url = RouterStore.getRouter().makeHref('tde-exporter-gdrive-redirect', config: @props.configId)
     projectUrl = ApplicationStore.getProjectBaseUrl()
     result = "#{origin}#{url}"
-    console.log result
     return result

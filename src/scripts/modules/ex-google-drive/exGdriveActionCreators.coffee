@@ -60,7 +60,6 @@ module.exports =
       configurationId: configurationId
 
   addMoreFiles: (configurationId, files) ->
-    console.log "ADDING"
     dispatcher.handleViewAction
       type: constants.ActionTypes.EX_GDRIVE_ADD_MORE_FILES
       configurationId: configurationId

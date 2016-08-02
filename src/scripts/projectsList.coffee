@@ -33,7 +33,6 @@ App = React.createClass
 
 global.kbcApp =
   start: (appOptions) ->
-    console.log 'start list', appOptions
     document.body.className = 'kbc-outer-page kbc-projects-list'
     React.render(React.createElement(App,
       user: Immutable.fromJS(appOptions.data.kbc.admin)

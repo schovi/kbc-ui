@@ -70,8 +70,6 @@ module.exports = React.createClass
     dialogTitle: 'Choose'
     buttonLabel: 'Choose'
     views: []
-    onPickedFn: (data) ->
-      console.log "picked", data
 
   getInitialState: ->
     accessToken: null

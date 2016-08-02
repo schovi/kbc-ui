@@ -43,7 +43,6 @@ module.exports = React.createClass
     origin = window.location.origin
     basepath = ApplicationStore.getProjectPageUrl "extractors/ex-google-analytics"
     referrer = "#{origin}#{basepath}/#{@state.configId}/profiles"
-    console.log "referrer", referrer
     return referrer
 
   _isExtLinkOnly: ->

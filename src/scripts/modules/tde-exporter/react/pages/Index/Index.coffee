@@ -261,7 +261,6 @@ module.exports = React.createClass
     data =
       configData: configData.toJS()
       config: @state.configId
-    console.log 'RUN', data
     return data
 
 

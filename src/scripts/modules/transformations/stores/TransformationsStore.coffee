@@ -198,7 +198,6 @@ Dispatcher.register (payload) ->
       TransformationsStore.emitChange()
 
     when Constants.ActionTypes.TRANSFORMATION_EDIT_SAVE_SUCCESS
-      console.log(action)
       _store = _store.withMutations (store) ->
         tObj = enhanceTransformation(Immutable.fromJS(action.data))
         store = store

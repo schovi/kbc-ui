@@ -66,7 +66,6 @@ templateFn = (componentId) ->
 
 
   render: ->
-    console.log 'render', @state.tables.toJS()
     div {className: 'container-fluid'},
       @_renderMainContent()
       @_renderSideBar()

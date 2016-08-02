@@ -20,8 +20,6 @@ module.exports = React.createClass
     dateUntil: dateUntil
 
   render: ->
-    console.log('FROM:', @props.dateFrom.toISOString(), @props.dateFrom)
-    console.log('UNTIL:', @props.dateUntil.toISOString())
     daysRange = @props.dateUntil.from(@props.dateFrom, true)
     form className: 'form-horizontal',
       h3 {}, 'Specify date range'

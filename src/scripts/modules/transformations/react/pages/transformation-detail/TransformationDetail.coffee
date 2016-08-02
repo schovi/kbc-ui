@@ -78,7 +78,6 @@ module.exports = React.createClass
     @state.transformation.get('backend') == 'docker'
 
   render: ->
-    console.log(@state.transformation)
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
           TransformationDetailStatic

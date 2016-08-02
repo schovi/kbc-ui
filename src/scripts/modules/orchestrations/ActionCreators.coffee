@@ -34,7 +34,6 @@ rephaseTasks = (tasks) ->
       result.push(newPhase)
     else
       currentPhase.tasks.push(task)
-  console.log 'REPHASED', tasks, result
   #return tasks
   return result
 

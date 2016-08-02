@@ -43,7 +43,6 @@ module.exports = React.createClass
     @props.onChange @props.configuration.set(propName, event.target.value)
 
   render: ->
-    console.log 'can create', @state.canCreateProdProject
     div null,
       ModalHeader
         className: "add-configuration-form"

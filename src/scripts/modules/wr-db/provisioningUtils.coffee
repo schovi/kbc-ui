@@ -27,7 +27,6 @@ getWrDbToken = (driver) ->
     return wrDbToken
 
 retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver) ->
-  console.log "retrieve credentials", wrDbToken
   readPromise = null
   #enforce recreate read credentials for redshift only(permisson for)
   if driver == 'redshift'
@@ -72,6 +71,5 @@ module.exports =
           wrDbToken = wrDbToken.get 'token'
           retrieveProvisioningCredentials(isReadOnly, wrDbToken, driver)
       else #token exists
-        console.log "TOKEN EXISTS", wrDbToken.toJS()
         wrDbToken = wrDbToken.get 'token'
         retrieveProvisioningCredentials(isReadOnly, wrDbToken, driver)

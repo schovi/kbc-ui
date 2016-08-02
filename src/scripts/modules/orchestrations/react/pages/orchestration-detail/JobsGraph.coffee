@@ -23,7 +23,6 @@ JobsGraph = React.createClass
     yAxis.title = "Duration (#{data.get('unit')})"
     s = chart.addSeries("status", dimple.plot.bar)
     s.getTooltipText = (e) ->
-      console.log 'tooltip', e
       [
         "Created: #{date.format(e.xField[0])}"
         "Duration:  #{numeral(e.yValueList[0]).format('0.0')} #{data.get('unit')}",

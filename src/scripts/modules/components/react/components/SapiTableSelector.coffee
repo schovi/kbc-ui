@@ -72,7 +72,6 @@ module.exports = React.createClass
     tables.toList().toJS()
 
   _newOptionCreator: (value) ->
-    console.log(value)
     create = false
     label = value
     if (value.match(/^(in|out)\.c-[a-zA-z0-9_\-]+\.[a-zA-z0-9_\-]+$/))

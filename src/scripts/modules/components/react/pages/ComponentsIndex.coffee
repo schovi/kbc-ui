@@ -40,7 +40,6 @@ module.exports = React.createClass
     filter: ComponentsStore.getFilter(@props.type)
 
   render: ->
-    console.log 'render comp'
     if @state.installedComponents.count()
       rows =  @state.installedComponents.map((component) ->
         React.createElement ComponentRow,

@@ -59,18 +59,15 @@ migrateUploadTasks = (configData, configId) ->
   if not stageTask
     newConfig = configData
     if uploadTasks.count() > 0
-      console.log('migrating from uploadTasks')
       stageTask = uploadTasks.first()
       newConfig = configData.setIn ['parameters', 'stageUploadTask'], stageTask
       newConfig = configData
     else
       newTask = findNonEmptyAccount(configData)
       if newTask
-        console.log('migrating from', newTask)
         newConfig = configData.setIn ['parameters', 'stageUploadTask'], newTask
     # if data has changed then update
     if newConfig != configData
-      console.log('migrating upload tasks', configData?.toJS(), newConfig?.toJS())
       saveFn = installedComponentsActions.saveComponentConfigData
       saveFn(componentId, configId, newConfig)
 

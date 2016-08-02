@@ -116,7 +116,6 @@ Dispatcher.register (payload) ->
     when constants.ActionTypes.STORAGE_BUCKET_CREATE_SUCCESS
       _store = _store.setIn ['pendingBuckets', 'creating'], false
       _store = _store.setIn ['buckets', action.bucket.id], Immutable.fromJS(action.bucket)
-      console.log(_store.getIn(['buckets']).toJS())
       StorageBucketsStore.emitChange()
 
     when constants.ActionTypes.STORAGE_BUCKET_CREATE_ERROR

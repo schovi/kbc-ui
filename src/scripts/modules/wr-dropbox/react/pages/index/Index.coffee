@@ -103,7 +103,6 @@ module.exports = React.createClass
       (t.getIn(['bucket', 'stage']) in ['in', 'out'] and not inputTables.has(t.get('id'))) or isCurrentTable
     )
 
-    console.log data.toJS(), mode
     return React.createElement(InputMappigModal,
       mode: mode
       mapping: mapping

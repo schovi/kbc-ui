@@ -48,7 +48,6 @@ Dispatcher.register (payload) ->
       if index >= 0
         isPaused = _store.get('notifications').get(index).get('paused')
         if not isPaused or forceDelete
-          console.log 'delete', index, action.notificationId
           _store = _store.update 'notifications', (notifications) ->
             notifications.delete index
           NotificationsStore.emitChange()

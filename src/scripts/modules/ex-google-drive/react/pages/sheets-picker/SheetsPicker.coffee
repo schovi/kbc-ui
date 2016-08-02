@@ -49,7 +49,6 @@ module.exports = React.createClass
 
   render: ->
     #console.log 'sheet picker files', @state.files.toJS()
-    console.log 'DEVEL render'
     if @state.isConfigLoaded and @state.config
       div {className: 'container-fluid kbc-main-content'},
         div {className: 'table kbc-table-border-vertical kbc-detail-table'},
@@ -106,7 +105,6 @@ module.exports = React.createClass
           data = _.map data, (file) ->
             file.title = file.name
             file
-          console.log "PICKED sheets", data
           ActionCreators.addMoreFiles(@state.configId, data)
 
         views: [

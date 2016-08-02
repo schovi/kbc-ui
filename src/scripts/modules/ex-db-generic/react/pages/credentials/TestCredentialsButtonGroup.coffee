@@ -71,7 +71,6 @@ module.exports = React.createClass
       ' Connected! '
 
   _testError: (result) ->
-    console.log(result)
     span className: 'text-danger',
       span className: 'fa fa-fw fa-meh-o'
       ' Failed to connect! '

@@ -98,7 +98,6 @@ Dispatcher.register (payload) ->
 
   switch action.type
     when Constants.ActionTypes.APPLICATION_DATA_RECEIVED
-      console.log 'action', action
       _store = _store.withMutations (store) ->
         store
           .set 'sapiToken', Immutable.fromJS(action.applicationData.sapiToken)

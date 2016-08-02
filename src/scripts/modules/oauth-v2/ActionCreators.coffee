@@ -22,11 +22,11 @@ module.exports =
         credentials: Immutable.fromJS(result)
       return result
     .catch (err) ->
-      console.log "GET CREDENTIALS API ERROR", err
       dispatcher.handleViewAction
         type: Constants.ActionTypes.OAUTHV2_LOAD_CREDENTIALS_ERROR
         componentId: componentId
         id: id
+      throw err
 
 
   deleteCredentials: (componentId, id) ->
@@ -41,8 +41,8 @@ module.exports =
         id: id
         credentials: result
     .catch (err) ->
-      console.log "DELETE CREDENTIALS API ERROR", err
       dispatcher.handleViewAction
         type: Constants.ActionTypes.OAUTHV2_API_ERROR
         componentId: componentId
         id: id
+      throw err

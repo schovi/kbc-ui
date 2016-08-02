@@ -123,7 +123,6 @@ module.exports = React.createClass
       query: event.target.value
 
   _handleKeyDown: (event) ->
-    console.log 'key down', event.key, event.keyCode
     switch event.key
       when 'ArrowDown' then @_selectNextProjectOrOrganization()
       when 'ArrowUp' then @_selectPreviousProjectOrOrganization()

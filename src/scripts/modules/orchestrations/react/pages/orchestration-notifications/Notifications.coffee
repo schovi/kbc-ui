@@ -34,7 +34,6 @@ module.exports = React.createClass
     onNotificationsChange: React.PropTypes.func.isRequired
     onInputChange: React.PropTypes.func.isRequired
   render: ->
-    console.log 'render', @props.notifications.toJS()
     errorEmails = @_getNotificationsForChannel 'error'
     warningEmails = @_getNotificationsForChannel 'warning'
     processingEmails = @_getNotificationsForChannel 'processing'

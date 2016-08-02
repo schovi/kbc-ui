@@ -83,9 +83,6 @@ module.exports = React.createClass
   _getRedirectUrl: ->
     origin = 'https://connection.keboola.com'
     url = @state.router.makeHref(@props.redirectRouterPath, config: @props.configId)
-    console.log "url=", url
     projectUrl = ApplicationStore.getProjectBaseUrl()
-    console.log "project url =", projectUrl
     result = "#{origin}#{url}"
-    console.log result
     result

@@ -176,7 +176,6 @@ module.exports = React.createClass
       onPickedFn: (data) =>
         data = _.filter data, (file) ->
           file.type == 'folder'
-        console.log "PICKED folder", data
         folderId = data[0].id
         folderName = data[0].name
         data[0].title = folderName

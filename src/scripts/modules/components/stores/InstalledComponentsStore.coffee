@@ -89,7 +89,6 @@ InstalledComponentsStore = StoreUtils.createStore
     _store.getIn ['components', componentId, 'configurations', configId]
 
   getConfigRow: (componentId, configId, rowId) ->
-    console.log(_store.toJS())
     _store.getIn ['components', componentId, 'configurations', configId, 'rows', rowId]
 
   isEditingConfig: (componentId, configId, field) ->

@@ -41,5 +41,4 @@ module.exports = React.createClass
     origin = window.location.origin
     basepath = ApplicationStore.getProjectPageUrl "writers/wr-google-drive"
     referrer = "#{origin}#{basepath}/#{@state.configId}"
-    console.log "referrer", referrer
     return referrer #encodeURIComponent(referrer)

@@ -79,7 +79,6 @@ Events = React.createClass
     @_events.reset()
 
   render: ->
-    console.log 'render events', @props.currentEventId
     div null,
       div null,
         SearchRow
