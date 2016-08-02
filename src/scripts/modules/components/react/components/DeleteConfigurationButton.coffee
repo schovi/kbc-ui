@@ -45,4 +45,4 @@ module.exports = React.createClass
     if @state.isDeleting
       React.createElement Loader
     else
-      React.DOM.span className: 'kbc-icon-cup fa-fw'
+      React.DOM.span className: 'kbc-icon-cup fa fa-fw'

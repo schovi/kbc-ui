@@ -302,7 +302,7 @@ export default React.createClass({
           <li className={classnames({disabled: !this.canRunUpload()})}>
             <RunButtonModal
               title="Upload selected tables"
-              icon="fa fa-fw fa-upload"
+              icon="fa-upload"
               mode="link"
               component="ex-dropbox"
               disabled={!this.canRunUpload()}
@@ -361,7 +361,7 @@ export default React.createClass({
     } else {
       return (
         <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
-          <span className="btn btn-link"><i className="fa fa-fw fa-user"></i>Authorize Dropbox Account</span>
+          <a className="btn btn-link"><i className="fa fa-fw fa-user"></i> Authorize Dropbox Account</a>
         </ModalTrigger>
       );
     }

@@ -30,7 +30,7 @@ InputMappigModal = require('../../../../components/react/components/generic/Tabl
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ActivateDeactivateButton = React.createFactory(ActivateDeactivateButton)
 LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
-{p, ul, li, span, button, strong, div, i} = React.DOM
+{p, ul, li, span, button, strong, div, i, a} = React.DOM
 
 componentId = 'wr-dropbox'
 
@@ -265,7 +265,7 @@ module.exports = React.createClass
               updateParamsFn: @_updateParmeters
               isUpadting: @state.savingData.has('parameters')
           ,
-            span className: 'btn btn-link',
+            a {},
               i className: 'fa fa-fw fa-gear'
               ' Options'
         li null,
