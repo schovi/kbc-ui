@@ -25,5 +25,5 @@ module.exports =
       actions.receiveAllOrchestrations(orchestrations)
     )
     .catch (err) ->
-      throw err
+      console.log 'error', err
 

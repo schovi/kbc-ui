@@ -61,7 +61,7 @@ module.exports = React.createClass
       crontabRecord: crontabRecord
     .then @_handleSaveSuccess
     .catch (e) ->
-      throw e
+      console.log 'error', e
 
   _handleSaveSuccess: (response) ->
     actionCreators
