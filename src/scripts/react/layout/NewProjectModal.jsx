@@ -145,6 +145,7 @@ export default React.createClass({
           value={template.get('stringId')}
           onChange={this.handleTypeChange}
           wrapperClassName="col-xs-offset-4 col-xs-6"
+          key={template.get('stringId')}
           />
       );
     });

@@ -50,6 +50,7 @@ module.exports = React.createClass({
             className="list-group-item"
             to={self.getVersionsLinkTo()}
             params={self.getVersionsLinkParams()}
+            key={version.get('version')}
           >
             <SidebarVersionsRow
               version={version}
