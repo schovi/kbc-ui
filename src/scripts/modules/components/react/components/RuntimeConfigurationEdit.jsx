@@ -68,7 +68,7 @@ export default React.createClass({
                 wrapperClassName="col-xs-9"
                 value={this.props.data.get('repository', '')}
                 onChange={this.onChangeRepository}
-                help="GitHub repository URL"
+                help="GitHub or Bitbucket repository URL"
                 placeholder="https://github.com/keboola/my-r-app"
                 />
             </div>
