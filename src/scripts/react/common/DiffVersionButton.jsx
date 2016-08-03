@@ -35,7 +35,7 @@ export default React.createClass({
     if (this.props.isPending) {
       return (
         <span className="btn btn-link">
-          <Loader/>
+          <Loader className="fa-fw"/>
         </span>
       );
     } else {
