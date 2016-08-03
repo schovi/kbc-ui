@@ -18,7 +18,7 @@ export default React.createClass({
       component = ComponentStore.getComponent(componentId);
 
     var versionsLinkTo = null;
-    var versionsLinkParams = {};
+    var versionsLinkParams = null;
 
     if (component) {
       versionsLinkTo = component.get('type') + '-versions';
@@ -34,7 +34,7 @@ export default React.createClass({
       configId: configId,
       isLoading: false,
       versionsLinkTo: versionsLinkTo,
-      versionParams: versionsLinkParams
+      versionsLinkParams: versionsLinkParams
     };
   },
 

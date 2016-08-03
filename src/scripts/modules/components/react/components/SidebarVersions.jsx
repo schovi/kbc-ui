@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 import './SidebarVersions.less';
 
 module.exports = React.createClass({
-  displayName: 'LatestVersions',
+  displayName: 'SidebarVersions',
   mixins: [addons.PureRenderMixin],
   propTypes: {
     versions: React.PropTypes.object.isRequired,
@@ -23,14 +23,20 @@ module.exports = React.createClass({
   },
 
   getVersionsLinkParams: function() {
-    return this.props.versionsLinkParams || {
+    if (this.props.versionsLinkParams) {
+      return this.props.versionsLinkParams;
+    }
+    return {
       component: this.props.componentId,
       config: this.props.configId
     };
   },
 
   getVersionsLinkTo: function() {
-    return this.props.versionsLinkTo || this.props.componentId + '-versions';
+    if (this.props.versionsLinkTo) {
+      return this.props.versionsLinkTo;
+    }
+    return this.props.componentId + '-versions';
   },
 
   renderVersions: function() {

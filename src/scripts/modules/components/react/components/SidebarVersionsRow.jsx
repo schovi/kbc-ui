@@ -4,12 +4,10 @@ import ImmutableRendererMixin from '../../../../react/mixins/ImmutableRendererMi
 import VersionIcon from './VersionIcon';
 
 module.exports = React.createClass({
-  displayName: 'LatestVersionsRow',
+  displayName: 'SidebarVersionsRow',
   mixins: [ImmutableRendererMixin],
   propTypes: {
     version: React.PropTypes.object.isRequired,
-    versionsLinkTo: React.PropTypes.string.isRequired,
-    versionsLinkParams: React.PropTypes.object.isRequired,
     isLast: React.PropTypes.bool
   },
   getDefaultProps: function() {
