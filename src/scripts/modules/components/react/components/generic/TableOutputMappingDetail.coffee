@@ -40,7 +40,7 @@ TableInputMappingDetail = React.createClass(
           'Incremental'
         span {className: "col-md-6"},
           Check
-            isChecked: @props.value.get('incremental')
+            isChecked: @props.value.get('incremental', false)
 
       ListGroupItem {key: 'primary_key'},
         strong {className: "col-md-4"},
