@@ -25,7 +25,8 @@ export default React.createClass({
     help: PropTypes.node,
     schema: PropTypes.object,
     editHelp: PropTypes.string,
-    documentationUrl: PropTypes.string
+    documentationUrl: PropTypes.string,
+    showDocumentationLink: PropTypes.bool
   },
 
   getDefaultProps() {
@@ -34,7 +35,8 @@ export default React.createClass({
       help: null,
       editLabel: 'Edit configuration',
       saveLabel: 'Save configuration',
-      schema: Immutable.Map()
+      schema: Immutable.Map(),
+      showDocumentationLink: true
     };
   },
 
@@ -73,9 +75,13 @@ export default React.createClass({
     if (this.props.schema.count()) {
       return null;
     }
-    return (
-      <p className="help-block">This component is configured manually. Read the <a href={this.props.documentationUrl}>configuration documentation</a> for more information.</p>
-    );
+    if (this.props.showDocumentationLink) {
+      return (
+        <p className="help-block">This component is configured manually. Read the <a href={this.props.documentationUrl}>configuration
+          documentation</a> for more information.</p>
+      );
+    }
+    return null;
   },
 
   scripts() {
