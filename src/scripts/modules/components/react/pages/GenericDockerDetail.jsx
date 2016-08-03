@@ -16,6 +16,7 @@ import RunComponentButton from '../components/RunComponentButton';
 import DeleteConfigurationButton from '../components/DeleteConfigurationButton';
 import LatestJobs from '../components/SidebarJobs';
 import Configuration from '../components/Configuration';
+import RuntimeConfiguration from '../components/RuntimeConfiguration';
 import TemplatedConfiguration from '../components/TemplatedConfiguration';
 import TableInputMapping from '../components/generic/TableInputMapping';
 import FileInputMapping from '../components/generic/FileInputMapping';
@@ -38,7 +39,6 @@ export default React.createClass({
     const configId = RoutesStore.getCurrentRouteParam('config'),
       componentId = RoutesStore.getCurrentRouteParam('component'),
       localState = InstalledComponentStore.getLocalState(componentId, configId),
-      isValidEditingConfigDataRuntime = this.isStringValidJson(localState.getIn(['runtime', 'editing'])),
       configData = InstalledComponentStore.getConfigData(componentId, configId),
       credentialsId = oauthUtils.getCredentialsId(configData) || configId;
 
@@ -55,7 +55,6 @@ export default React.createClass({
       isParametersSaving: InstalledComponentStore.isSavingConfigDataParameters(componentId, configId),
       editingConfigDataParameters: InstalledComponentStore.getEditingRawConfigDataParameters(componentId, configId, '{}'),
       isValidEditingConfigDataParameters: InstalledComponentStore.isValidEditingConfigDataParameters(componentId, configId),
-      isValidEditingConfigDataRuntime: isValidEditingConfigDataRuntime,
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll(),
       pendingActions: InstalledComponentStore.getPendingActions(componentId, configId),
@@ -84,10 +83,10 @@ export default React.createClass({
     if (this.state.component.get('flags').includes('genericDockerUI-runtime')) {
       return (
         <div>
-          <Configuration
+          <RuntimeConfiguration
             data={this.getConfigDataRuntime()}
-            isEditing={this.state.localState.getIn(['runtime', 'isEditing'])}
-            isSaving={this.state.localState.getIn(['runtime', 'saving'])}
+            isEditing={this.state.localState.getIn(['runtime', 'isEditing'], false)}
+            isSaving={this.state.localState.getIn(['runtime', 'saving'], false)}
             onEditStart={this.onEditRuntimeStart}
             onEditCancel={this.onEditRuntimeCancel}
             onEditChange={this.onEditRuntimeChange}
@@ -95,7 +94,6 @@ export default React.createClass({
             onEditSubmit={this.onEditRuntimeSubmit}
             isValid={this.state.isValidEditingConfigDataRuntime}
             supportsEncryption={false}
-            useJsonSchema={false}
             />
         </div>
       );
@@ -310,12 +308,12 @@ export default React.createClass({
     if (this.state.localState.getIn(['runtime', 'isEditing'])) {
       return this.state.localState.getIn(['runtime', 'editing']);
     } else {
-      return JSON.stringify(this.state.configData.get('runtime', Map()).toJSON(), null, '  ');
+      return this.state.configData.get('runtime', Map());
     }
   },
 
   onEditRuntimeStart() {
-    const data = JSON.stringify(this.state.configData.get('runtime', Map()).toJSON(), null, '  ');
+    const data = this.state.configData.get('runtime', Map());
     let runtime = this.state.localState.get('runtime', Map());
     runtime = runtime.set('editing', data);
     runtime = runtime.set('isEditing', true);
@@ -331,13 +329,13 @@ export default React.createClass({
   },
 
   onEditRuntimeSubmit() {
-    const newRuntime = JSON.parse(this.state.localState.getIn(['runtime', 'editing']));
+    const newRuntime = this.state.localState.getIn(['runtime', 'editing']);
     const newConfigData = this.state.configData.set('runtime', newRuntime);
     const saveFn = InstalledComponentsActionCreators.saveComponentConfigData;
     const componentId = this.state.componentId;
     const configId = this.state.config.get('id');
     this.updateLocalState(['runtime', 'saving'], true);
-    saveFn(componentId, configId, newConfigData).then( () => {
+    saveFn(componentId, configId, newConfigData, 'Update runtime configuration').then( () => {
       this.updateLocalState(['runtime', 'saving'], false);
       return this.onEditRuntimeCancel();
     });
