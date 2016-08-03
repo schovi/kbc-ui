@@ -14,10 +14,6 @@ export default React.createClass({
     };
   },
 
-  render() {
-    return this.props.data && this.props.data.count() ? this.script() : this.emptyState();
-  },
-
   renderUsernamePassword() {
     // do not display if username and password not set
     if (!this.props.data.get('username') && !this.props.data.get('#password')) {
@@ -62,7 +58,7 @@ export default React.createClass({
     );
   },
 
-  script() {
+  render() {
     return (
       <div className="edit kbc-configuration-editor">
         <div className="text-right">{this.startEditButton()}</div>
