@@ -37,9 +37,8 @@ module.exports = React.createClass
     error: null
 
   componentDidMount: ->
-    storageActionCreators.loadBuckets()
-
-
+    setTimeout ->
+      storageActionCreators.loadBuckets()
 
   getStateFromStores: ->
     buckets = bucketsStore.getAll()

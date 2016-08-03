@@ -34,15 +34,16 @@ module.exports = React.createClass
     tables: tables
 
   componentDidMount: ->
-    storageActionCreators.loadTables().then =>
-      #force expand of the first bucket if is the only one
-      tables = storageTablesStore.getAll()
-      buckets = @_getFilteredBuckets(tables)
-      forceExpand = buckets.count() == 1
-      if forceExpand
-        bucketId = buckets.keySeq().first()
-        if not @_isBucketToggled(bucketId)
-          @props.onToggleBucketFn bucketId
+    setTimeout =>
+      storageActionCreators.loadTables().then =>
+        #force expand of the first bucket if is the only one
+        tables = storageTablesStore.getAll()
+        buckets = @_getFilteredBuckets(tables)
+        forceExpand = buckets.count() == 1
+        if forceExpand
+          bucketId = buckets.keySeq().first()
+          if not @_isBucketToggled(bucketId)
+            @props.onToggleBucketFn bucketId
 
 
   getDefaultProps: ->

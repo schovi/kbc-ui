@@ -32,7 +32,8 @@ module.exports = React.createClass
     tables: tables
 
   componentDidMount: ->
-    storageActionCreators.loadTables()
+    setTimeout ->
+      storageActionCreators.loadTables()
 
   shouldComponentUpdate: (nextProps) ->
     nextProps.value != @props.value

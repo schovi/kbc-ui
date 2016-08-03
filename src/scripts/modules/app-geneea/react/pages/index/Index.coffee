@@ -86,9 +86,11 @@ module.exports = (componentId) ->
       useBeta: useBeta
 
     componentWillMount: ->
-      storageActionCreators.loadTables()
+      setTimeout ->
+        storageActionCreators.loadTables()
     componentDidMount: ->
-      storageActionCreators.loadTables()
+      setTimeout ->
+        storageActionCreators.loadTables()
 
     render: ->
       #console.log 'rendering', @state.config.toJS()
