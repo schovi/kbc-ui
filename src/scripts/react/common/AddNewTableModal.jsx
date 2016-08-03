@@ -20,7 +20,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      'allowedBuckets': ['in', 'out']
+      allowedBuckets: ['in', 'out']
     };
   },
 

@@ -283,7 +283,7 @@ export default React.createClass({
           </ul>
           <LatestJobs
             jobs={this.state.latestJobs}
-            limit="3"
+            limit={3}
           />
           <LatestVersions
             limit={3}

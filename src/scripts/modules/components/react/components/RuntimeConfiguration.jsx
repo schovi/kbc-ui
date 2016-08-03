@@ -7,7 +7,7 @@ require('codemirror/mode/javascript/javascript');
 
 export default React.createClass({
   propTypes: {
-    data: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired,
     isEditing: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onEditStart: PropTypes.func.isRequired,

@@ -20,8 +20,8 @@ module.exports = React.createClass
   propTypes:
     jobs: React.PropTypes.object.isRequired
     limit: React.PropTypes.number
-    
-  getDefaultprops: ->
+
+  getDefaultProps: ->
     limit: 5
 
   renderJobs: ->

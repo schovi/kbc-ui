@@ -14,7 +14,7 @@ module.exports = React.createClass
     placeholder: React.PropTypes.string.isRequired
     value: React.PropTypes.string.isRequired
     excludeTableFn: React.PropTypes.func
-    allowedBuckets: React.PropTypes.Array
+    allowedBuckets: React.PropTypes.array
     allowCreate: React.PropTypes.bool
 
   getDefaultProps: ->
