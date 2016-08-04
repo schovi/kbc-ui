@@ -11,7 +11,7 @@ import jobsActionCreators from '../jobs/ActionCreators';
 import versionsActions from '../components/VersionsActionCreators';
 
 import store from './storeProvisioning';
-import IntalledComponentsStore from '../components/stores/InstalledComponentsStore';
+import InstalledComponentsStore from '../components/stores/InstalledComponentsStore';
 
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
@@ -22,7 +22,7 @@ export default {
   defaultRouteHandler: Index,
   title: (routerState) => {
     const configId = routerState.getIn(['params', 'config']);
-    return IntalledComponentsStore.getConfig(COMPONENT_ID, configId).get('name');
+    return InstalledComponentsStore.getConfig(COMPONENT_ID, configId).get('name');
   },
   // headerButtonsHandler: HeaderButtons,
   requireData: [

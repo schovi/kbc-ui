@@ -1,6 +1,7 @@
 import storeProvisioning from './storeProvisioning';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
+import callDockerAction from '../components/DockerActionsApi';
 import _ from 'underscore';
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
@@ -140,8 +141,20 @@ export default function(configId) {
 
     setQueriesFilter(newFilter) {
       return updateLocalState('filter', newFilter);
+    },
+
+    runQuerySample(query) {
+      let queryRequest = query.set('id', 0);
+      if (!queryRequest.get('outputTable')) {
+        queryRequest = queryRequest.set('outputTable', common.sanitizeTableName(queryRequest.get('name')));
+      }
+      const queries = [queryRequest];
+      const data = store.configData.setIn(['parameters', 'queries'], queries);
+      const params = {
+        configData: data.toJS()
+      };
+
+      return callDockerAction(COMPONENT_ID, 'sample', params);
     }
-
-
   };
 }

@@ -64,6 +64,7 @@ export default React.createClass({
         allProfiles={this.state.store.profiles}
         outputBucket={this.state.store.outputBucket}
         onChangeQuery={this.state.actions.onUpdateNewQuery}
+        onRunQuery={this.state.actions.runQuerySample}
         query={this.state.newQuery}
         {...this.state.actions.prepareLocalState('NewQuery')}/>
     );
