@@ -123,9 +123,7 @@ TransformationsStore = StoreUtils.createStore
         transformationId
         'queriesString'
       ], '')
-    console.log(bucketId, transformationId, queriesString)
     parsedQueriesString = parseQueries(@getTransformation(bucketId, transformationId), queriesString).toJS().join('')
-    console.log(queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, ''))
     queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, '')
 
 Dispatcher.register (payload) ->
