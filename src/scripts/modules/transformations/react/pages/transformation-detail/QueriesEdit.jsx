@@ -56,7 +56,7 @@ export default React.createClass({
               autofocus={true}
               onChange={this.handleChange}
               readOnly={this.props.isSaving ? 'nocursor' : false}
-              placeholder="CREATE VIEW `sample-transformed` AS SELECT `id`  FROM `in.c-main.sample`;"
+              placeholder="CREATE VIEW `sample-transformed` AS SELECT `id` FROM `in.c-main.sample`;"
               />
           </div>
         </div>
