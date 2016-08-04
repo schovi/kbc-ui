@@ -13,6 +13,7 @@ export default React.createClass({
     cursorPos: PropTypes.number.isRequired,
     backend: PropTypes.string.isRequired,
     isSaving: PropTypes.bool.isRequired,
+    isValid: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
@@ -40,6 +41,7 @@ export default React.createClass({
                   onCancel={this.props.onCancel}
                   placement="right"
                   saveLabel="Save Queries"
+                  isDisabled={!this.props.isValid}
                   />
               </div>
             </Sticky>

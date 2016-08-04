@@ -24,6 +24,7 @@ export default React.createClass({
     transformation: PropTypes.object.isRequired,
     queries: PropTypes.string.isRequired,
     isEditing: PropTypes.bool.isRequired,
+    isEditingValid: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onEditStart: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired,
@@ -62,6 +63,7 @@ export default React.createClass({
           cursorPos={this.state.cursorPos}
           backend={this.props.transformation.get('backend')}
           isSaving={this.props.isSaving}
+          isValid={this.props.isEditingValid}
           onSave={this.props.onEditSubmit}
           onChange={this.props.onEditChange}
           onCancel={this.props.onEditCancel}

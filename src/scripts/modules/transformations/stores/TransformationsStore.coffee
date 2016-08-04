@@ -7,6 +7,7 @@ Constants = require '../Constants'
 fuzzy = require 'fuzzy'
 StoreUtils = require '../../../utils/StoreUtils'
 _ = require 'underscore'
+parseQueries = require('../utils/parseQueries').default
 
 _store = Map(
   transformationsByBucketId: Map()
@@ -114,6 +115,18 @@ TransformationsStore = StoreUtils.createStore
 
   getOpenOutputMappings: (bucketId, transformationId) ->
     _store.getIn(['openOutputMappings', bucketId, transformationId], Map())
+
+  getTransformationEditingQueriesIsValid: (bucketId, transformationId) ->
+    queriesString = _store.getIn([
+        'editingTransformationsFields'
+        bucketId
+        transformationId
+        'queriesString'
+      ], '')
+    console.log(bucketId, transformationId, queriesString)
+    parsedQueriesString = parseQueries(@getTransformation(bucketId, transformationId), queriesString).toJS().join('')
+    console.log(queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, ''))
+    queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, '')
 
 Dispatcher.register (payload) ->
   action = payload.action

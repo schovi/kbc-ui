@@ -44,6 +44,7 @@ module.exports = React.createClass
     bucket: React.PropTypes.object.isRequired
     transformation: React.PropTypes.object.isRequired
     editingFields: React.PropTypes.object.isRequired
+    isEditingQueriesValid: React.PropTypes.bool.isRequired
     transformations: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
@@ -285,6 +286,7 @@ module.exports = React.createClass
       isSaving: @props.pendingActions.has('save-queriesString')
       queries: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
       scripts: @props.editingFields.get('queriesString', @props.transformation.get("queriesString"))
+      isEditingValid: @props.isEditingQueriesValid
       onEditStart: =>
         TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
           @props.transformationId, 'queriesString')
@@ -303,6 +305,7 @@ module.exports = React.createClass
           @props.transformationId, 'queriesString', changeDescription)
 
   render: ->
+    console.log(@props)
     div {},
       div className: 'kbc-row kbc-header',
         div className: 'col-xs-8',
