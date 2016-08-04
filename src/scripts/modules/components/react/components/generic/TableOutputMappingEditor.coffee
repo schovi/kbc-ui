@@ -127,7 +127,7 @@ module.exports = React.createClass
             wrapperClassName: 'col-xs-10'
             help: React.DOM.span {},
               "File will be uploaded from"
-              React.DOM.code {}, "/data/out/tables"
+              React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group',
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'

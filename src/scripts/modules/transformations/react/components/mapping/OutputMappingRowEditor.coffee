@@ -128,7 +128,7 @@ module.exports = React.createClass
               wrapperClassName: 'col-xs-10'
               help: React.DOM.span {},
                 "File will be uploaded from"
-                React.DOM.code {}, "/data/out/tables"
+                React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
           else
             Input
               type: 'text'
