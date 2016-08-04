@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {fromJS} from 'immutable';
+import {fromJS, List} from 'immutable';
 import parse from '../../../../../utils/parseCsv';
 import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import {Table} from 'react-bootstrap';
@@ -29,8 +29,6 @@ export default React.createClass({
 
     this.props.onRunQuery(this.props.query)
       .then((result) => {
-        console.log(result);
-        console.log(result.status !== 'success');
         if (result.status !== 'success') {
           throw result;
         }
@@ -54,8 +52,10 @@ export default React.createClass({
       });
   },
 
-  componentDidMount() {
-
+  isQueryValid(query) {
+    return query && query.getIn(['query', 'metrics'], List()).count() > 0 &&
+      query.getIn(['query', 'dimensions'], List()).count() > 0 &&
+      !!query.get('name');
   },
 
   render() {
@@ -114,7 +114,7 @@ export default React.createClass({
         <button
           className="btn btn-primary"
           type="button"
-          disabled={this.state.isLoading}
+          disabled={this.state.isLoading || !this.isQueryValid(this.props.query)}
           onClick={() => {
             this.runQuery();
           }}

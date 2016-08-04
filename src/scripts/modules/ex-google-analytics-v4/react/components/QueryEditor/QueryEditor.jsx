@@ -25,7 +25,6 @@ export default React.createClass({
     isLoadingMetadata: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
     metadata: PropTypes.object.isRequired
-
   },
 
   componentDidMount() {
