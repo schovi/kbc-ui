@@ -23,8 +23,7 @@ MySqlSSLInfoModal = React.createClass
       ModalBody null,
         p {},
           "To establish a secure connection to MySQL sandbox follow our "
-          a {href: "https://sites.google.com/a/keboola.com/wiki/home/keboola-connection" +
-            "/user-space/kbc-generic/ssl-connection-to-mysql-sandbox"},
+          a {href: "https://help.keboola.com/manipulation/transformations/sandbox/#connecting-to-sandbox"},
             "wiki guide"
           "."
       ModalFooter null,
