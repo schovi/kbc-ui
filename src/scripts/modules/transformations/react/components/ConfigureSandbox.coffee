@@ -56,7 +56,7 @@ ConfigureSandbox = React.createClass
               type: 'checkbox'
               onChange: @_setPreserve
               ref: 'preserve'
-            ' Preserve'
+            ' Preserve existing data'
 
   _setInclude: (string, array) ->
     values = _.map(array, (item) ->
