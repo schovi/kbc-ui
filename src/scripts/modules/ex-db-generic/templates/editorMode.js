@@ -3,6 +3,8 @@ export default function(componentId) {
   switch (componentId) {
     case 'keboola.ex-db-pgsql':
       return 'text/x-sql';
+    case 'keboola.ex-db-redshift':
+      return 'text/x-sql';
     case 'mysql':
       return 'text/x-mysql';
     case 'mssql':
