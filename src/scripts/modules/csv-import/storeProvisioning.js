@@ -10,8 +10,13 @@ const COMPONENT_ID = 'keboola.csv-import';
 
 // validovat soubor
 function isUploaderValid(localState) {
-  return localState.has('file') && localState.get('file') && localState.get('file').size && localState.get('file').name;
+  if (localState.has('file') && localState.get('file') && localState.get('file').size && localState.get('file').name) {
+    return true;
+  }
+  return false;
 }
+
+// todo large file warning
 
 export default function(configId) {
   const localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();

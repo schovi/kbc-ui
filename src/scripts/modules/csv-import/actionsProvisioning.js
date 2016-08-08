@@ -138,13 +138,16 @@ export default function(configId) {
 
     storageApi.prepareFileUpload(params).then(function(response) {
       var fileId = response.id;
-      var s3params = {
+      const awsParams = {
+        maxRetries: 0
+      };
+      const s3params = {
         Key: response.uploadParams.key,
         Bucket: response.uploadParams.bucket,
         ACL: response.uploadParams.acl,
         Body: getLocalState().get('file')
       };
-      var credentials = response.uploadParams.credentials;
+      const credentials = response.uploadParams.credentials;
       AWS.config.credentials = new AWS.Credentials({
         accessKeyId: credentials.AccessKeyId,
         secretAccessKey: credentials.SecretAccessKey,
@@ -154,7 +157,7 @@ export default function(configId) {
       updateLocalState(['uploadingMessage'], 'Uploading to S3');
       updateLocalState(['uploadingProgress'], 30);
 
-      new AWS.S3()
+      new AWS.S3(awsParams)
         .putObject(s3params)
         .on('httpUploadProgress', function(progress) {
           var addition = 0;
@@ -167,7 +170,7 @@ export default function(configId) {
           if (err) {
             resetUploadState();
             applicationActions.sendNotification({
-              message: err,
+              message: 'Error uploading file to S3: ' + err.toString(),
               type: 'error'
             });
           } else {
