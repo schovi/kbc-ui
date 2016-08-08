@@ -192,7 +192,6 @@ module.exports =
     .then ->
       ApplicationActionCreators.sendNotification
         message: 'Credentials are set up now. You can continue by adding queries.'
-        autoDelete: true
 
   editCredentials: (configurationId) ->
     dispatcher.handleViewAction

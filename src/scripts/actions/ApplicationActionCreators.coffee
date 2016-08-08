@@ -22,7 +22,6 @@ module.exports =
       pause: false
       message: ''
       type: 'success'
-      autoDelete: false
       id: _.uniqueId('notification')
       created: new Date()
       timeout: timeout
