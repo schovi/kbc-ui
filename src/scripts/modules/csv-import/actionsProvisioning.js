@@ -138,8 +138,12 @@ export default function(configId) {
 
     storageApi.prepareFileUpload(params).then(function(response) {
       var fileId = response.id;
+      // one retry, 10 minutes timeout
       const awsParams = {
-        maxRetries: 0
+        maxRetries: 1,
+        httpOptions: {
+          timeout: 10 * 60 * 1000
+        }
       };
       const s3params = {
         Key: response.uploadParams.key,
@@ -171,7 +175,8 @@ export default function(configId) {
             resetUploadState();
             applicationActions.sendNotification({
               message: 'Error uploading file to S3: ' + err.toString(),
-              type: 'error'
+              type: 'error',
+              timeout: 0
             });
           } else {
             var tableId = store.destination;
@@ -200,13 +205,14 @@ export default function(configId) {
                 resetForm();
                 applicationActions.sendNotification({
                   message: 'CSV file successfully imported.',
-                  autoDelete: true
+                  timeout: 0
                 });
               }).catch(function(e) {
                 resetUploadState();
                 applicationActions.sendNotification({
                   message: e,
-                  type: 'error'
+                  type: 'error',
+                  timeout: 0
                 });
               });
             };
@@ -227,7 +233,8 @@ export default function(configId) {
                   resetUploadState();
                   applicationActions.sendNotification({
                     message: e,
-                    type: 'error'
+                    type: 'error',
+                    timeout: 0
                   });
                 });
             } else {
@@ -253,13 +260,14 @@ export default function(configId) {
                   resetForm();
                   applicationActions.sendNotification({
                     message: 'CSV file successfully imported.',
-                    autoDelete: true
+                    timeout: 9999
                   });
                 }).catch(function(e) {
                   resetUploadState();
                   applicationActions.sendNotification({
                     message: e,
-                    type: 'error'
+                    type: 'error',
+                    autoDelete: false
                   });
                 });
               } else {

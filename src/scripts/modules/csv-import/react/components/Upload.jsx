@@ -9,6 +9,7 @@ export default React.createClass({
     onStartUpload: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     isValid: PropTypes.bool.isRequired,
+    isFileTooBig: PropTypes.bool.isRequired,
     isUploading: PropTypes.bool.isRequired,
     uploadingMessage: PropTypes.string.isRequired,
     uploadingProgress: PropTypes.number.isRequired
@@ -59,6 +60,15 @@ export default React.createClass({
     );
   },
 
+  fileInputHelp() {
+    if (this.props.isFileTooBig) {
+      return (
+        <div className="help-block"><small>Upload time limit is 10 minutes. The CSV file is larger than 100MB, your upload may not be successful. Please try compressing the file or refer to <a href="http://docs.keboola.apiary.io/#reference/tables/create-table-asynchronously/create-new-table-from-csv-file">documentation</a> to perform a manual upload and import.</small></div>
+      );
+    }
+    return null;
+  },
+
   render() {
     return (
       <div>
@@ -77,6 +87,7 @@ export default React.createClass({
                   onChange={this.onChange}
                   disabled={this.props.isUploading}
                 />
+                {this.fileInputHelp()}
               </div>
             </div>
           </div>

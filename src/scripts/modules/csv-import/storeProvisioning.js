@@ -16,7 +16,12 @@ function isUploaderValid(localState) {
   return false;
 }
 
-// todo large file warning
+function isUploaderFileTooBig(localState) {
+  if (isUploaderValid(localState) && localState.get('file').size > 100 * 1024 * 1024) {
+    return true;
+  }
+  return false;
+}
 
 export default function(configId) {
   const localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
@@ -29,6 +34,7 @@ export default function(configId) {
     delimiter: configData.get('delimiter', ','),
     enclosure: configData.get('enclosure', '"'),
     isUploaderValid: isUploaderValid(localState),
+    isUploaderFileTooBig: isUploaderFileTooBig(localState),
     // local state stuff
     getLocalState(path) {
       if (_.isEmpty(path)) {

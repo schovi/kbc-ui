@@ -53,6 +53,7 @@ export default React.createClass({
       actions: actions,
       tables: StorageTablesStore.getAll(),
       isUploaderValid: store.isUploaderValid,
+      isUploaderFileTooBig: store.isUploaderFileTooBig,
       localState: store.getLocalState(),
       destination: store.destination,
       incremental: store.incremental,
@@ -69,6 +70,7 @@ export default React.createClass({
           onStartUpload={this.state.actions.startUpload}
           onChange={this.state.actions.setFile}
           isValid={this.state.isUploaderValid}
+          isFileTooBig={this.state.isUploaderFileTooBig}
           isUploading={this.state.localState.get('isUploading', false)}
           uploadingMessage={this.state.localState.get('uploadingMessage', '')}
           uploadingProgress={this.state.localState.get('uploadingProgress', 0)}
