@@ -150,9 +150,11 @@ export default React.createClass({
 
   onSelectMetric(strMetrics) {
     let metricsArray = [];
-    for ( let metric of strMetrics.split(',')) {
-      if (metricsArray.indexOf(metric) < 0) {
-        metricsArray.push(metric);
+    if (strMetrics && strMetrics !== '') {
+      for ( let metric of strMetrics.split(',')) {
+        if (metricsArray.indexOf(metric) < 0) {
+          metricsArray.push(metric);
+        }
       }
     }
     const newMetrics = fromJS(metricsArray.map((m) => {return {expression: m};}));
@@ -167,9 +169,11 @@ export default React.createClass({
 
   onSelectDimension(strDimensions) {
     let dimensionsArray = [];
-    for ( let dimension of strDimensions.split(',')) {
-      if (dimensionsArray.indexOf(dimension) < 0) {
-        dimensionsArray.push(dimension);
+    if (strDimensions && strDimensions !== '') {
+      for ( let dimension of strDimensions.split(',')) {
+        if (dimensionsArray.indexOf(dimension) < 0) {
+          dimensionsArray.push(dimension);
+        }
       }
     }
     const newDimensions = fromJS(dimensionsArray.map((m) => {return {name: m};}));
@@ -184,9 +188,11 @@ export default React.createClass({
 
   onSelectSegment(strSegments) {
     let segmentsArray = [];
-    for ( let segment of strSegments.split(',')) {
-      if (segmentsArray.indexOf(segment) < 0) {
-        segmentsArray.push(segment);
+    if (strSegments && strSegments !== '') {
+      for ( let segment of strSegments.split(',')) {
+        if (segmentsArray.indexOf(segment) < 0) {
+          segmentsArray.push(segment);
+        }
       }
     }
     const newSegments = fromJS(segmentsArray.map((m) => {return {segmentId: m};}));
