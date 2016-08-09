@@ -23,7 +23,7 @@ const defaultNewQuery = Map({
 export const storeMixins = [InstalledComponentStore, OauthStore];
 
 export default function(configId) {
-  const localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
+  const localState = () => InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
   const configData =  InstalledComponentStore.getConfigData(COMPONENT_ID, configId) || Map();
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
 
@@ -39,7 +39,7 @@ export default function(configId) {
   const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
 
-  const filter = localState.get('filter', '');
+  const filter = localState().get('filter', '');
   const queriesFiltered = queries.filter((q) => {
     return fuzzy.match(filter, q.get('name'));
   });
@@ -55,9 +55,9 @@ export default function(configId) {
     // local state stuff
     getLocalState(path) {
       if (_.isEmpty(path)) {
-        return localState || Map();
+        return localState() || Map();
       }
-      return localState.getIn([].concat(path), Map());
+      return localState().getIn([].concat(path), Map());
     },
 
     // config data stuff
@@ -70,7 +70,7 @@ export default function(configId) {
     queriesFiltered: queriesFiltered,
 
     isSaving(what) {
-      return localState.getIn(savingPath.concat(what), false);
+      return localState().getIn(savingPath.concat(what), false);
     },
 
     isQueryValid(query) {
@@ -89,7 +89,7 @@ export default function(configId) {
     },
 
     getNewQuery() {
-      return localState.getIn(newQueryPath, defaultNewQuery);
+      return localState().getIn(newQueryPath, defaultNewQuery);
     },
 
     getEditingQueryPath(queryId) {
@@ -97,7 +97,7 @@ export default function(configId) {
     },
 
     getEditingQuery(queryId) {
-      return localState.getIn(this.getEditingQueryPath(queryId), null);
+      return localState().getIn(this.getEditingQueryPath(queryId), null);
     },
 
     getPendingPath(what) {
@@ -105,7 +105,7 @@ export default function(configId) {
     },
 
     isPending(what) {
-      return localState.getIn(pendingPath.concat(what), null);
+      return localState().getIn(pendingPath.concat(what), null);
     },
 
     getRunSingleQueryData(queryId) {
