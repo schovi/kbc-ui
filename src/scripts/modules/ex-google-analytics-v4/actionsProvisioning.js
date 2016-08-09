@@ -1,4 +1,6 @@
 import storeProvisioning from './storeProvisioning';
+import {fromJS} from 'immutable';
+import parseCsv from '../../utils/parseCsv';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import callDockerAction from '../components/DockerActionsApi';
@@ -143,7 +145,8 @@ export default function(configId) {
       return updateLocalState('filter', newFilter);
     },
 
-    runQuerySample(query) {
+    runQuerySample(query, queryId) {
+      const path = store.getSampleDataInfoPath(queryId);
       let queryRequest = query.set('id', 0);
       if (!queryRequest.get('outputTable')) {
         queryRequest = queryRequest.set('outputTable', common.sanitizeTableName(queryRequest.get('name')));
@@ -154,7 +157,28 @@ export default function(configId) {
         configData: data.toJS()
       };
 
-      return callDockerAction(COMPONENT_ID, 'sample', params);
+      updateLocalState(path.concat('isLoading'), true);
+      return callDockerAction(COMPONENT_ID, 'sample', params)
+        .then((result) => {
+          if (result.status !== 'success') {
+            throw result;
+          }
+          return parseCsv(result.data);
+        })
+        .then((parsedCsvData) =>
+              updateLocalState(path, fromJS({
+                isLoading: false,
+                isError: false,
+                error: null,
+                data: parsedCsvData
+              })))
+        .catch((error) =>
+               updateLocalState(path, fromJS({
+                 isLoading: false,
+                 isError: true,
+                 error: error,
+                 data: null
+               })));
     }
   };
 }

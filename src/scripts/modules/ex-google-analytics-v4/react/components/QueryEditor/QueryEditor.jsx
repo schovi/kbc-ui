@@ -20,7 +20,9 @@ export default React.createClass({
     onRunQuery: PropTypes.func.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
-    metadata: PropTypes.object.isRequired
+    metadata: PropTypes.object.isRequired,
+    sampleDataInfo: PropTypes.object.isRequired,
+    isQueryValidFn: PropTypes.func
   },
 
   render() {
@@ -141,8 +143,9 @@ export default React.createClass({
 
         </div>
         <QuerySample
-          onRunQuery={this.props.onRunQuery}
-          query={this.props.query}
+          onRunQuery={() => this.props.onRunQuery(this.props.query)}
+          isQueryValid={this.props.isQueryValidFn(this.props.query)}
+          sampleDataInfo={this.props.sampleDataInfo}
         />
       </div>
     );

@@ -108,6 +108,14 @@ export default function(configId) {
       return localState().getIn(pendingPath.concat(what), null);
     },
 
+    getSampleDataInfoPath(queryId) {
+      return ['sampleData', queryId || 'newQuery'];
+    },
+
+    getSampleDataInfo(queryId) {
+      return localState().getIn(this.getSampleDataInfoPath(queryId), Map());
+    },
+
     getRunSingleQueryData(queryId) {
       const query = getConfigQuery(queryId).set('enabled', true);
       return configData.setIn(['parameters', 'queries'], List().push(query)).toJS();

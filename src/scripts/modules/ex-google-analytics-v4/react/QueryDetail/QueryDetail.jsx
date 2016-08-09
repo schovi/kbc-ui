@@ -87,9 +87,12 @@ export default React.createClass({
         allProfiles={this.state.store.profiles}
         outputBucket={this.state.store.outputBucket}
         onChangeQuery={this.state.actions.onChangeEditingQueryFn(this.state.queryId)}
-        onRunQuery={this.state.actions.runQuerySample}
+        onRunQuery={(query) => this.state.actions.runQuerySample(query, this.state.queryId)}
+        sampleDataInfo={this.state.store.getSampleDataInfo(this.state.queryId)}
+        isQueryValidFn={this.state.store.isQueryValid}
         query={isEditing ? this.state.editingQuery : this.state.query}
-        {...this.state.actions.prepareLocalState('QueryDetail' + this.state.queryId)}/>
+
+        {...this.state.actions.prepareLocalState('QueryDetail')}/>
     );
   }
 

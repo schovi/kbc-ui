@@ -1,77 +1,33 @@
 import React, {PropTypes} from 'react';
-import {fromJS, List} from 'immutable';
-import parse from '../../../../../utils/parseCsv';
-import EmptyState from '../../../../components/react/components/ComponentEmptyState';
+// import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import {Table} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
 
 export default React.createClass({
   propTypes: {
-    query: PropTypes.object.isRequired,
-    onRunQuery: PropTypes.func.isRequired
+    sampleDataInfo: PropTypes.object.isRequired,
+    onRunQuery: PropTypes.func.isRequired,
+    isQueryValid: PropTypes.bool
   },
 
-  getInitialState: function() {
-    return {
-      isLoading: false,
-      isError: false,
-      error: null,
-      data: []
-    };
-  },
-
-  runQuery() {
-    this.setState({
-      isLoading: true
-    });
-
-    const component = this;
-
-    this.props.onRunQuery(this.props.query)
-      .then((result) => {
-        if (result.status !== 'success') {
-          throw result;
-        }
-        return parse(result.data);
-      })
-      .then((data) => {
-        component.setState({
-          isLoading: false,
-          isError: false,
-          error: null,
-          data: data
-        });
-      })
-      .catch((error) => {
-        component.setState({
-          isLoading: false,
-          isError: true,
-          error: error,
-          data: []
-        });
-      });
-  },
-
-  isQueryValid(query) {
-    return query && query.getIn(['query', 'metrics'], List()).count() > 0 &&
-      query.getIn(['query', 'dimensions'], List()).count() > 0 &&
-      !!query.get('name');
+  getSampleDataInfo(key, defaultValue) {
+    return this.props.sampleDataInfo.getIn([].concat(key), defaultValue);
   },
 
   render() {
-    const csvMap = fromJS(this.state.data);
+    return (
+      <div>
+        {this.renderRunButton()}
+        {this.renderSamplesTable()}
+      </div>
+    );
+  },
 
-    if (csvMap.count() === 0 && csvMap !== null) {
-      return (
-        <div>
-          {this.renderRunButton()}
-          <EmptyState>
-            No Data.
-          </EmptyState>
-        </div>
-      );
+  renderSamplesTable() {
+    const csvMap = this.getSampleDataInfo('data', null);
+    if (!csvMap || csvMap.count() === 0 ) {
+      return null;
     }
-
     const header = csvMap.first().map((c) => {
       return (
         <th>
@@ -90,39 +46,38 @@ export default React.createClass({
           {cols}
         </tr>);
     });
-
     return (
-      <div>
-        {this.renderRunButton()}
-        <Table responsive className="table table-striped">
-          <thead>
+      <Table responsive className="table table-striped">
+        <thead>
           <tr>
             {header}
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           {rows}
-          </tbody>
-        </Table>
-      </div>
+        </tbody>
+      </Table>
     );
   },
 
   renderRunButton() {
+    const isLoading = this.getSampleDataInfo('isLoading', false);
+    const isError = this.getSampleDataInfo('isError', false);
+    const error = this.getSampleDataInfo('error');
     return (
       <div>
         <button
           className="btn btn-primary"
           type="button"
-          disabled={this.state.isLoading || !this.isQueryValid(this.props.query)}
-          onClick={() => {
-            this.runQuery();
-          }}
+          disabled={isLoading || !this.props.isQueryValid}
+          onClick={this.props.onRunQuery}
         >
-          Run Query
+          Run Sample Query
+          {isLoading ? <Loader /> : null}
         </button>
-        {this.state.isLoading ? <Loader /> : null}
-        {this.state.isError ? <div className="alert alert-danger">{this.state.error.message}</div> : null}
+        {isError ?
+         <div className="alert alert-danger">{error.get('message')}</div>
+         : null}
       </div>
     );
   }
