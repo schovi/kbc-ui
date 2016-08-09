@@ -81,8 +81,7 @@ export default React.createClass({
     return data.map((op) => {
       op.value = op.id;
       return op;
-    })
-               .sort((a, b) => a.attributes.group.localeCompare(b.attributes.group));
+    }).sort((a, b) => a.attributes.group.localeCompare(b.attributes.group));
     // .filter((op) => this.props.selectedValues.indexOf(op.value) < 0);
   },
 

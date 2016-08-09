@@ -35,16 +35,16 @@ export default React.createClass({
             </label>
             <div className="col-md-6">
               {isEditing ?
-              <input
-                type="text"
-                className="form-control"
-                value={query.get('name')}
-                placeholder="e.g. Untitled Query"
-                onChange={this.onChangeTextPropFn('name')}/>
-              :
-              <p className="form-control-static">
-                {query.get('name')}
-              </p>
+               <input
+                 type="text"
+                 className="form-control"
+                 value={query.get('name')}
+                 placeholder="e.g. Untitled Query"
+                 onChange={this.onChangeTextPropFn('name')}/>
+               :
+               <p className="form-control-static">
+                 {query.get('name')}
+               </p>
               }
             </div>
             <div className="col-md-4 checkbox">
@@ -62,17 +62,17 @@ export default React.createClass({
             </label>
             <div className="col-md-8">
               {isEditing ?
-              <div className="input-group">
-                <div className="input-group-addon">
-                  <small>{this.props.outputBucket}</small>.
-                </div>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={query.get('outputTable')}
-                  placeholder={sanitizeTableName(query.get('name'))}
-                  onChange={this.onChangeTextPropFn('outputTable')}/>
-              </div>
+               <div className="input-group">
+                 <div className="input-group-addon">
+                   <small>{this.props.outputBucket}</small>.
+                 </div>
+                 <input
+                   type="text"
+                   className="form-control"
+                   value={query.get('outputTable')}
+                   placeholder={sanitizeTableName(query.get('name'))}
+                   onChange={this.onChangeTextPropFn('outputTable')}/>
+               </div>
                :
                <p className="form-control-static">
                  <SapiTableLinkEx tableId={outTableId} />
