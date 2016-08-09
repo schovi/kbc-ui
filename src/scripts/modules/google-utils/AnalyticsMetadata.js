@@ -1,6 +1,6 @@
 import request from '../../utils/request';
 
-const getMetadataUrl = 'https://content.googleapis.com/analytics/v3/metadata/ga/columns';
+const getMetadataUrl = 'https://content.googleapis.com/analytics/v3/metadata/ga/columns?reportType=ga';
 
 function getMetadata() {
   return request('GET', getMetadataUrl)
