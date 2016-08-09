@@ -26,8 +26,6 @@ export default React.createClass({
     const store = storeProvisioning(configId);
     const actions = actionsProvisioning(configId);
     const editingQuery = store.getEditingQuery(queryId);
-
-
     return {
       queryId: queryId,
       editingQuery: editingQuery,

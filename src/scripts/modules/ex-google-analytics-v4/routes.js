@@ -5,7 +5,6 @@ import * as oauthUtils from '../oauth-v2/OauthUtils';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import QueryDetailHeaderButtons from './react/QueryDetail/HeaderButtons';
 import NewQueryHeaderButtons from './react/NewQuery/HeaderButtons';
-// import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
 import jobsActionCreators from '../jobs/ActionCreators';
 import versionsActions from '../components/VersionsActionCreators';

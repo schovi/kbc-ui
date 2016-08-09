@@ -38,7 +38,7 @@ export default React.createClass({
         isEditing={true}
         isSaving={this.state.store.isSaving('newQuery')}
         isDisabled={!this.state.store.isQueryValid(this.state.newQuery)}
-        onCancel={ this.redirectToIndex}
+        onCancel={this.redirectToIndex}
         onSave={this.save}
         onEditStart={() => {}}
       />

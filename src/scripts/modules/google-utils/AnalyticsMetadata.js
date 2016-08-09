@@ -1,7 +1,6 @@
-// import metadata from 'javascript-api-utils/lib/metadata';
 import request from '../../utils/request';
 
-const getMetadataUrl = 'https://content.googleapis.com/analytics/v3/metadata/ga/columns?reportType=ga';
+const getMetadataUrl = 'https://content.googleapis.com/analytics/v3/metadata/ga/columns';
 
 function getMetadata() {
   return request('GET', getMetadataUrl)
@@ -19,9 +18,5 @@ function prepareMetadata(data) {
 export function loadMetadata() {
   return getMetadata().then((data) => {
     return prepareMetadata(data);
-    // return {
-    //   metrics: m.allMetrics(),
-    //   dimensions: m.allDimensions()
-    // };
   });
 }

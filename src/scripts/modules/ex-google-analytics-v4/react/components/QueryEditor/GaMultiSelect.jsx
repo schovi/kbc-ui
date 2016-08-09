@@ -13,10 +13,8 @@ export default React.createClass({
     isEditing: PropTypes.bool.isRequired,
     isLoadingMetadata: PropTypes.bool.isRequired,
     metadata: PropTypes.array.isRequired,
-
     labelClassName: PropTypes.string,
     wrapperClassName: PropTypes.string
-
   },
 
   getDefaultProps() {
@@ -33,7 +31,6 @@ export default React.createClass({
       name: isNew ? op.value : op.attributes.uiName,
       desc: isNew ? '' : op.attributes.description,
       id: isNew ? op.value : op.id
-
     };
 
     return !!fuzzy.match(filter, data.group) ||

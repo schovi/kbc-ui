@@ -1,10 +1,6 @@
 import React, {PropTypes} from 'react';
 import {fromJS, List} from 'immutable';
-
-
 import {sanitizeTableName} from '../../../common';
-
-
 import ProfileSelector from './ProfileSelector';
 import GaMultiSelect from './GaMultiSelect';
 import DateRangesSelector from './DateRangesSelector';
@@ -25,10 +21,6 @@ export default React.createClass({
     isLoadingMetadata: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
     metadata: PropTypes.object.isRequired
-  },
-
-  componentDidMount() {
-
   },
 
   render() {
@@ -113,6 +105,14 @@ export default React.createClass({
             selectedValues={this.getSelectedDimensions()}
             isEditing={isEditing}
           />
+          <GaMultiSelect
+            isLoadingMetadata={this.props.isLoadingMetadata}
+            metadata={this.props.metadata.get('segments', List()).toJS()}
+            name="Segments"
+            onSelectValue={this.onSelectSegment}
+            selectedValues={this.getSelectedSegments()}
+            isEditing={isEditing}
+          />
           <div className="form-group">
             <label className="col-md-4 control-label">
               Filters Expressions
@@ -132,6 +132,7 @@ export default React.createClass({
 
             </div>
           </div>
+
           <DateRangesSelector
             isEditing={isEditing}
             ranges={query.getIn(['query', 'dateRanges'], List())}
@@ -181,25 +182,40 @@ export default React.createClass({
     return dimensions.map((m) => m.get('name')).toArray();
   },
 
+  onSelectSegment(strSegments) {
+    let segmentsArray = [];
+    for ( let segment of strSegments.split(',')) {
+      if (segmentsArray.indexOf(segment) < 0) {
+        segmentsArray.push(segment);
+      }
+    }
+    const newSegments = fromJS(segmentsArray.map((m) => {return {segmentId: m};}));
+    const newQuery = this.props.query.setIn(['query', 'segments'], newSegments);
+    this.props.onChangeQuery(newQuery);
+  },
+
+  getSelectedSegments() {
+    const segments = this.props.query.getIn(['query', 'segments'], List());
+    return segments.map((m) => m.get('segmentId')).toArray();
+  },
+
   onChangePropertyFn(propName, getValueFnParam) {
     let getValueFn = getValueFnParam;
     if (!getValueFn) {
       getValueFn = (value) => value;
     }
-    const changeFn = (event) => {
+    return (event) => {
       const value = getValueFn(event);
       const newQuery = this.props.query.setIn([].concat(propName), value);
       this.props.onChangeQuery(newQuery);
     };
-    return changeFn;
   },
 
   onChangeTextPropFn(propName) {
-    const changeFn = (ev) => {
+    return (ev) => {
       const value = ev.target.value;
       const newQuery = this.props.query.setIn([].concat(propName), value);
       this.props.onChangeQuery(newQuery);
     };
-    return changeFn;
   }
 });
