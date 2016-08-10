@@ -15,7 +15,7 @@ import InstalledComponentsStore from '../components/stores/InstalledComponentsSt
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
 export default {
-  name: COMPONENT_ID + '-config',
+  name: COMPONENT_ID,
   path: ':config',
   isComponent: true,
   defaultRouteHandler: Index,
