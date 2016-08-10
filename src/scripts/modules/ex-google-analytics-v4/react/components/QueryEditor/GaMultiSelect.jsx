@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import fuzzy from 'fuzzy';
 import Select from 'react-select';
 import Tooltip from '../../../../../react/common/Tooltip';
-
+import {Loader} from 'kbc-react-components';
 import './GaMultiSelect.less';
 
 export default React.createClass({
@@ -119,6 +119,7 @@ export default React.createClass({
       <div className="form-group">
         <label className={'control-label ' + this.props.labelClassName}>
           {this.props.name}
+          {this.props.isLoadingMetadata ? <span><Loader/></span> : null}
         </label>
         <div className={this.props.wrapperClassName}>
           <p className="form-control-static">

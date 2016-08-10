@@ -140,8 +140,7 @@ export default React.createClass({
   },
 
   isAuthorized() {
-    const creds = this.state.oauthCredentials;
-    return  creds && creds.has('id');
+    this.state.store.isAuthorized();
   },
 
   hasProfiles() {

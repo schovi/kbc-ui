@@ -179,6 +179,48 @@ export default function(configId) {
                  error: error,
                  data: null
                })));
+    },
+
+    loadAccountSegments() {
+      if (!store.isAuthorized()) return null;
+      const path = store.getAccountSegmentsPath();
+      // const segments = store.accountSegments;
+      const data = store.configData;
+      const params = {
+        configData: data.toJS()
+      };
+      updateLocalState(path.concat('isLoading'), true);
+      return callDockerAction(COMPONENT_ID, 'segments', params)
+        .then((result) => {
+          if (result.status !== 'success') {
+            throw result;
+          }
+          return result.data.map((s) => {
+            const attrs = {
+              group: s.type,
+              uiName: s.name,
+              id: s.segmentId,
+              description: ''
+            };
+            s.attributes = attrs;
+            s.id = s.segmentId;
+            return s;
+          });
+        })
+        .then((segmentsData) =>
+              updateLocalState(path, fromJS({
+                isLoading: false,
+                isError: false,
+                error: null,
+                data: segmentsData
+              })))
+        .catch((error) =>
+               updateLocalState(path, fromJS({
+                 isLoading: false,
+                 isError: true,
+                 error: error,
+                 data: []
+               })));
     }
   };
 }

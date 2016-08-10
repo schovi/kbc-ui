@@ -43,6 +43,7 @@ export default React.createClass({
 
   componentDidMount() {
     GapiActions.loadAnalyticsMetadata();
+    this.state.actions.loadAccountSegments();
   },
 
   render() {
@@ -59,6 +60,7 @@ export default React.createClass({
       <QueryEditor
         isEditing={true}
         isLoadingMetadata={this.state.isLoadingMetadata}
+        accountSegments={this.state.store.accountSegments}
         metadata={this.state.metadata}
         allProfiles={this.state.store.profiles}
         outputBucket={this.state.store.outputBucket}

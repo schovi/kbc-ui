@@ -22,6 +22,7 @@ export default React.createClass({
     isEditing: PropTypes.bool.isRequired,
     metadata: PropTypes.object.isRequired,
     sampleDataInfo: PropTypes.object.isRequired,
+    accountSegments: PropTypes.object.isRequired,
     isQueryValidFn: PropTypes.func
   },
 
@@ -108,8 +109,8 @@ export default React.createClass({
             isEditing={isEditing}
           />
           <GaMultiSelect
-            isLoadingMetadata={this.props.isLoadingMetadata}
-            metadata={this.props.metadata.get('segments', List()).toJS()}
+            isLoadingMetadata={this.props.accountSegments.get('isLoading')}
+            metadata={this.props.accountSegments.get('data', List()).toJS()}
             name="Segments"
             onSelectValue={this.onSelectSegment}
             selectedValues={this.getSelectedSegments()}

@@ -35,7 +35,7 @@ export default function(configId) {
   const editingQueriesPath = tempPath.concat('editingQueries');
   const newQueryPath = tempPath.concat('newQuery');
   const pendingPath = tempPath.concat('pending');
-
+  const accountSegmentsPath = tempPath.concat(['segments', oauthCredentialsId]);
   const defaultOutputBucket = getDefaultBucket(COMPONENT_ID, configId);
   const outputBucket = parameters.get('outputBucket') || defaultOutputBucket;
 
@@ -60,6 +60,8 @@ export default function(configId) {
       return localState().getIn([].concat(path), Map());
     },
 
+    accountSegments: localState().getIn(accountSegmentsPath, Map()),
+
     // config data stuff
     queries: queries,
     profiles: parameters.getIn(['profiles'], List()),
@@ -68,6 +70,8 @@ export default function(configId) {
     defaultNewQuery: defaultNewQuery,
     filter: filter,
     queriesFiltered: queriesFiltered,
+    hasCredentials: !!oauthCredentialsId,
+
 
     isSaving(what) {
       return localState().getIn(savingPath.concat(what), false);
@@ -109,7 +113,7 @@ export default function(configId) {
     },
 
     getSampleDataInfoPath(queryId) {
-      return ['sampleData', queryId || 'newQuery'];
+      return tempPath.concat(['sampleData', queryId || 'newQuery']);
     },
 
     getSampleDataInfo(queryId) {
@@ -119,6 +123,16 @@ export default function(configId) {
     getRunSingleQueryData(queryId) {
       const query = getConfigQuery(queryId).set('enabled', true);
       return configData.setIn(['parameters', 'queries'], List().push(query)).toJS();
+    },
+
+    getAccountSegmentsPath() {
+      return accountSegmentsPath;
+    },
+
+    isAuthorized() {
+      const creds = this.oauthCredentials;
+      return creds && creds.has('id');
     }
+
   };
 }

@@ -76,7 +76,12 @@ export default React.createClass({
           {isLoading ? <Loader /> : null}
         </button>
         {isError ?
-         <div className="alert alert-danger">{error.get('message')}</div>
+         <div className="alert alert-danger">
+           {error.get('message') }
+           <div>
+             {error.get('exceptionId') }
+           </div>
+         </div>
          : null}
       </div>
     );
