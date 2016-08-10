@@ -7,7 +7,6 @@ import storageApiActions from '../components/StorageActionCreators';
 import bucketsStore from '../components/stores/StorageBucketsStore';
 import tablesStore from '../components/stores/StorageTablesStore';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
-import applicationActions from '../../actions/ApplicationActionCreators';
 
 // via https://github.com/aws/aws-sdk-js/issues/603#issuecomment-228233113
 import 'aws-sdk/dist/aws-sdk';
@@ -124,6 +123,21 @@ export default function(configId) {
     updateLocalState(['isUploading'], false);
   }
 
+  function resultSuccess(message) {
+    updateLocalState(['resultState'], 'success');
+    updateLocalState(['resultMessage'], message);
+  }
+
+  function resultError(message) {
+    updateLocalState(['resultState'], 'error');
+    updateLocalState(['resultMessage'], message);
+  }
+
+  function dismissResult() {
+    removeFromLocalState(['resultState']);
+    removeFromLocalState(['resultMessage']);
+  }
+
   function startUpload() {
     var params = {
       federationToken: true,
@@ -173,11 +187,7 @@ export default function(configId) {
         .send(function(err) {
           if (err) {
             resetUploadState();
-            applicationActions.sendNotification({
-              message: 'Error uploading file to S3: ' + err.toString(),
-              type: 'error',
-              timeout: 0
-            });
+            resultError(err.toString());
           } else {
             var tableId = store.destination;
             var bucketId = tableId.substr(0, tableId.lastIndexOf('.'));
@@ -203,17 +213,10 @@ export default function(configId) {
               storageApiActions.createTable(bucketId, createTableParams).then(function() {
                 resetUploadState();
                 resetForm();
-                applicationActions.sendNotification({
-                  message: 'CSV file successfully imported.',
-                  timeout: 0
-                });
+                resultSuccess('CSV file successfully imported.');
               }).catch(function(e) {
                 resetUploadState();
-                applicationActions.sendNotification({
-                  message: e,
-                  type: 'error',
-                  timeout: 0
-                });
+                resultError(e);
               });
             };
 
@@ -231,11 +234,7 @@ export default function(configId) {
                 .then(createTable)
                 .catch(function(e) {
                   resetUploadState();
-                  applicationActions.sendNotification({
-                    message: e,
-                    type: 'error',
-                    timeout: 0
-                  });
+                  resultError(e);
                 });
             } else {
               // does table exist? load or create
@@ -258,17 +257,10 @@ export default function(configId) {
                 storageApiActions.loadTable(tableId, loadTableParams).then(function() {
                   resetUploadState();
                   resetForm();
-                  applicationActions.sendNotification({
-                    message: 'CSV file successfully imported.',
-                    timeout: 9999
-                  });
+                  resultSuccess('CSV file successfully imported.');
                 }).catch(function(e) {
                   resetUploadState();
-                  applicationActions.sendNotification({
-                    message: e,
-                    type: 'error',
-                    autoDelete: false
-                  });
+                  resultError(e);
                 });
               } else {
                 createTable();
@@ -280,12 +272,12 @@ export default function(configId) {
   }
 
   return {
-    updateLocalState,
     startUpload,
     editStart,
     editCancel,
     editSave,
     setFile,
-    editChange
+    editChange,
+    dismissResult
   };
 }

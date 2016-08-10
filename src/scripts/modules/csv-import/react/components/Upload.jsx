@@ -12,7 +12,10 @@ export default React.createClass({
     isFileTooBig: PropTypes.bool.isRequired,
     isUploading: PropTypes.bool.isRequired,
     uploadingMessage: PropTypes.string.isRequired,
-    uploadingProgress: PropTypes.number.isRequired
+    uploadingProgress: PropTypes.number.isRequired,
+    resultMessage: PropTypes.string,
+    resultState: PropTypes.string,
+    onDismissResult: PropTypes.func.isRequired
   },
 
   onChange(e) {
@@ -36,6 +39,24 @@ export default React.createClass({
         </div>
       </div>
     );
+  },
+
+  renderResult() {
+    if (this.props.resultMessage) {
+      var alertClassName = 'alert ';
+      if (this.props.resultState === 'error') {
+        alertClassName += 'alert-danger';
+      } else if (this.props.resultState === 'success') {
+        alertClassName += 'alert-success';
+      }
+      return (
+        <div className={alertClassName} role="alert">
+          <button type="button" className="close" onClick={this.props.onDismissResult}><span aria-hidden="true">×</span><span className="sr-only">Close</span></button>
+          {this.props.resultMessage}
+        </div>
+      );
+    }
+    return null;
   },
 
   uploadButton() {
@@ -73,6 +94,7 @@ export default React.createClass({
     return (
       <div>
         <h3>Upload CSV File</h3>
+        {this.renderResult()}
         <div className="form-horizontal">
           <div className="row col-md-12">
             <div className="form-group">

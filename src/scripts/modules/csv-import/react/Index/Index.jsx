@@ -75,6 +75,9 @@ export default React.createClass({
           uploadingMessage={this.state.localState.get('uploadingMessage', '')}
           uploadingProgress={this.state.localState.get('uploadingProgress', 0)}
           key={this.state.localState.get('fileInputKey', 0)}
+          resultMessage={this.state.localState.get('resultMessage', '')}
+          resultState={this.state.localState.get('resultState', '')}
+          onDismissResult={this.state.actions.dismissResult}
         />
       );
     }
