@@ -29,7 +29,7 @@ export default React.createClass({
     const {query, isEditing} = this.props;
     const outTableId = this.props.outputBucket + '.' + query.get('outputTable');
     return (
-      <div className={this.props.divClassName}>
+      <div className="row">
         <div className="form-horizontal">
           <div className="form-group">
             <label className="col-md-2 control-label">

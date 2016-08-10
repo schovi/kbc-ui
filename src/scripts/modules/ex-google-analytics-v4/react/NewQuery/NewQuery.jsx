@@ -55,9 +55,8 @@ export default React.createClass({
   },
 
   renderQueryEditor() {
-    const contentClassName = 'row';
     return (
-      <QueryEditor divClassName={contentClassName}
+      <QueryEditor
         isEditing={true}
         isLoadingMetadata={this.state.isLoadingMetadata}
         metadata={this.state.metadata}

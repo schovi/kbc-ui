@@ -122,7 +122,10 @@ export default React.createClass({
         </label>
         <div className={this.props.wrapperClassName}>
           <p className="form-control-static">
-            {this.props.selectedValues.map((val, idx) => this.renderStaticOption(val, idx))}
+            {(this.props.selectedValues.length > 0) ?
+             this.props.selectedValues.map((val, idx) => this.renderStaticOption(val, idx))
+             : 'N/A'
+            }
           </p>
         </div>
       </div>

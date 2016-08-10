@@ -53,10 +53,7 @@ export default React.createClass({
 
   render() {
     const isEditing = !!this.state.editingQuery;
-    let contentClassName = 'col-md-9 kbc-main-content-with-nav';
-    if (isEditing) {
-      contentClassName = 'row';
-    }
+    const editor = this.renderQueryEditor(isEditing);
     return (
       <div className="container-fluid kbc-main-content">
         {isEditing ? null :
@@ -72,15 +69,20 @@ export default React.createClass({
            </div>
          </div>
         }
-         {this.renderQueryEditor(contentClassName, isEditing)}
+         {isEditing ?
+          {editor} :
+          <div className="col-md-9 kbc-main-content-with-nav">
+            {editor}
+          </div>
+         }
       </div>
 
     );
   },
 
-  renderQueryEditor(contentClassName, isEditing) {
+  renderQueryEditor(isEditing) {
     return (
-      <QueryEditor divClassName={contentClassName}
+      <QueryEditor
         isEditing={isEditing}
         isLoadingMetadata={this.state.isLoadingMetadata}
         metadata={this.state.metadata}
