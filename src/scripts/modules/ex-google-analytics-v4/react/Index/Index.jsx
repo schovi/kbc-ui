@@ -54,83 +54,83 @@ export default React.createClass({
 
   render() {
     return (
-        <div className="container-fluid">
-          <ProfilesManagerModal
-              show={this.state.localState.getIn(['ProfilesManagerModal', 'profiles'], false)}
-              onHideFn={() => this.state.actions.updateLocalState('ProfilesManagerModal', Map())}
-              profiles={this.state.store.profiles}
-              isSaving={this.state.store.isSaving('profiles')}
-              authorizedEmail={this.state.authorizedEmail}
-              onSaveProfiles={(newProfiles) => this.state.actions.saveProfiles(newProfiles)}
-              {...this.state.actions.prepareLocalState('ProfilesManagerModal')}
-              />
-          <div className="col-md-9 kbc-main-content">
-            <div className="row kbc-header">
-              <div className="col-sm-10">
-                <ComponentDescription
-                    componentId={COMPONENT_ID}
-                    configId={this.state.configId}
-                    />
-              </div>
-              <div className="col-sm-2 kbc-buttons">
-                {this.hasQueries() ? this.renderAddQueryLink() : null}
-              </div>
-            </div>
-            <div className="row">
-              {this.renderAuthorizedInfo('col-xs-5')}
-              {this.renderProfiles('col-xs-7')}
-            </div>
-            {(this.hasQueries() > 0)
-                ? this.renderQueriesTable()
-                : this.renderEmptyQueries()
-            }
-          </div>
-          <div className="col-md-3 kbc-main-sidebar">
-            <ComponentMetadata
+      <div className="container-fluid">
+        <ProfilesManagerModal
+          show={this.state.localState.getIn(['ProfilesManagerModal', 'profiles'], false)}
+          onHideFn={() => this.state.actions.updateLocalState('ProfilesManagerModal', Map())}
+          profiles={this.state.store.profiles}
+          isSaving={this.state.store.isSaving('profiles')}
+          authorizedEmail={this.state.authorizedEmail}
+          onSaveProfiles={(newProfiles) => this.state.actions.saveProfiles(newProfiles)}
+          {...this.state.actions.prepareLocalState('ProfilesManagerModal')}
+        />
+        <div className="col-md-9 kbc-main-content">
+          <div className="row kbc-header">
+            <div className="col-sm-10">
+              <ComponentDescription
                 componentId={COMPONENT_ID}
                 configId={this.state.configId}
-                />
-            <ul className="nav nav-stacked">
-              <li className={!!this.invalidToRun() ? 'disabled' : null}>
-                <RunComponentButton
-                    title="Run"
-                    component={COMPONENT_ID}
-                    mode="link"
-                    runParams={this.runParams()}
-                    disabled={!!this.invalidToRun()}
-                    disabledReason={this.invalidToRun()}
-                    >
-                  You are about to run component.
-                </RunComponentButton>
-              </li>
-              {/* <li>
-               <a href={this.state.component.get('documentationUrl')} target="_blank">
-               <i className="fa fa-question-circle fa-fw" /> Documentation
-               </a>
-               </li> */}
-              {this.hasProfiles() ?
-                  <li>
-                    <a
-                        onClick={this.showProfilesModal}>
-                      <i className="fa fa-fw fa-globe" />
-                      Setup Profiles
-                    </a>
-                  </li>
-                  : null }
-              <li>
-                <DeleteConfigurationButton
-                    componentId={COMPONENT_ID}
-                    configId={this.state.configId}
-                    />
-              </li>
-            </ul>
-            <LatestJobs jobs={this.state.latestJobs} limit={3} />
-            <LatestVersions
-                limit={3}
-                componentId={COMPONENT_ID}
-                />
+              />
+            </div>
+            <div className="col-sm-2 kbc-buttons">
+              {this.hasQueries() ? this.renderAddQueryLink() : null}
+            </div>
           </div>
+          <div className="row">
+            {this.renderAuthorizedInfo('col-xs-5')}
+            {this.renderProfiles('col-xs-7')}
+          </div>
+          {(this.hasQueries() > 0)
+           ? this.renderQueriesTable()
+           : this.renderEmptyQueries()
+          }
         </div>
+        <div className="col-md-3 kbc-main-sidebar">
+          <ComponentMetadata
+            componentId={COMPONENT_ID}
+            configId={this.state.configId}
+          />
+          <ul className="nav nav-stacked">
+            <li className={!!this.invalidToRun() ? 'disabled' : null}>
+              <RunComponentButton
+                title="Run"
+                component={COMPONENT_ID}
+                mode="link"
+                runParams={this.runParams()}
+                disabled={!!this.invalidToRun()}
+                disabledReason={this.invalidToRun()}
+              >
+                You are about to run component.
+              </RunComponentButton>
+            </li>
+            {/* <li>
+            <a href={this.state.component.get('documentationUrl')} target="_blank">
+            <i className="fa fa-question-circle fa-fw" /> Documentation
+            </a>
+            </li> */}
+            {this.hasProfiles() ?
+            <li>
+              <a
+                onClick={this.showProfilesModal}>
+                <i className="fa fa-fw fa-globe" />
+                Setup Profiles
+              </a>
+            </li>
+            : null }
+            <li>
+              <DeleteConfigurationButton
+                componentId={COMPONENT_ID}
+                configId={this.state.configId}
+              />
+            </li>
+          </ul>
+          <LatestJobs jobs={this.state.latestJobs} limit={3} />
+          <LatestVersions
+            limit={3}
+            componentId={COMPONENT_ID}
+          />
+        </div>
+      </div>
 
     );
   },
@@ -169,85 +169,88 @@ export default React.createClass({
 
   renderAuthorizedInfo(clName) {
     return (
-        <AuthorizationRow
-            className={this.isAuthorized() || this.hasProfiles() ? clName : 'col-xs-12'}
-            id={this.state.oauthCredentialsId}
-            configId={this.state.configId}
-            componentId={COMPONENT_ID}
-            credentials={this.state.oauthCredentials}
-            isResetingCredentials={false}
-            onResetCredentials={this.deleteCredentials}
-            showHeader={false}
-            />
+      <AuthorizationRow
+        className={this.isAuthorized() || this.hasProfiles() ? clName : 'col-xs-12'}
+        id={this.state.oauthCredentialsId}
+        configId={this.state.configId}
+        componentId={COMPONENT_ID}
+        credentials={this.state.oauthCredentials}
+        isResetingCredentials={false}
+        onResetCredentials={this.deleteCredentials}
+        showHeader={false}
+      />
     );
   },
 
   renderProfiles(clName) {
-    return (this.isAuthorized() || this.hasProfiles() ?
-            <div className={clName}>
-              <div className="form-group form-group-sm">
-                <label> Available Profiles </label>
-                <div>
-                  {this.hasProfiles() ?
-                      <div className="form-control-static">
-                        {this.state.store.profiles.map(
-                            (p) => <ProfileInfo profile={p} />
-                        )}
-                      </div>
-                      :
-                      <EmptyState>
-                        <p> No profiles selected </p>
-                        <button type="button" className="btn btn-success"
-                                onClick={this.showProfilesModal}>
-                          Select Profiles
-                        </button>
-                      </EmptyState>
-                  }
-                </div>
-              </div>
+    if (this.isAuthorized() || this.hasProfiles()) {
+      return (
+        <div className={clName}>
+          <div className="form-group form-group-sm">
+            <label> Available Profiles </label>
+            <div>
+              {this.hasProfiles() ?
+               <div className="form-control-static">
+                 {this.state.store.profiles.map(
+                    (p) => <ProfileInfo profile={p} />
+                  )}
+               </div>
+               :
+               <EmptyState>
+                 <p> No profiles selected </p>
+                 <button type="button" className="btn btn-success"
+                   onClick={this.showProfilesModal}>
+                   Select Profiles
+                 </button>
+               </EmptyState>
+              }
             </div>
-            : null
-    );
+          </div>
+        </div>
+
+      );
+    }
+    return null;
   },
 
   renderQueriesTable() {
     return (
-        <div className="row">
-          <QueriesTable
-              outputBucket={this.state.store.outputBucket}
-              deleteQueryFn={this.state.actions.deleteQuery}
-              toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
-              getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
-              isPendingFn={this.state.store.isPending}
-              queries={this.state.store.queries}
-              allProfiles={this.state.store.profiles}
-              configId={this.state.configId}
-              {...this.state.actions.prepareLocalState('QueriesTable')}
-              />
-        </div>
+      <div className="row">
+        <QueriesTable
+          outputBucket={this.state.store.outputBucket}
+          deleteQueryFn={this.state.actions.deleteQuery}
+          toggleQueryEnabledFn={this.state.actions.toggleQueryEnabled}
+          getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
+          isPendingFn={this.state.store.isPending}
+          queries={this.state.store.queries}
+          allProfiles={this.state.store.profiles}
+          configId={this.state.configId}
+          {...this.state.actions.prepareLocalState('QueriesTable')}
+        />
+      </div>
     );
   },
   renderAddQueryLink() {
     return (
-        <Link
-            to={COMPONENT_ID + '-new-query'}
-            params={{config: this.state.configId}}
-            className="btn btn-success">
-          Add Query
-        </Link>
+      <Link
+        to={COMPONENT_ID + '-new-query'}
+        params={{config: this.state.configId}}
+        className="btn btn-success">
+        Add Query
+      </Link>
     );
   },
 
   renderEmptyQueries() {
     return (
-        this.hasProfiles() && this.isAuthorized() ?
-            <div className="row">
-              <EmptyState>
-                <p>No Queries Configured</p>
-                {this.renderAddQueryLink()}
-              </EmptyState>
-            </div>
-            : null
+      this.hasProfiles() && this.isAuthorized() ?
+      <div className="row">
+        <EmptyState>
+          <p>No Queries Configured</p>
+          {this.renderAddQueryLink()}
+        </EmptyState>
+      </div>
+      : null
     );
   },
 
