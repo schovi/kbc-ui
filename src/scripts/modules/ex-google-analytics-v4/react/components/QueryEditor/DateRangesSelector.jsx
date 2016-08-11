@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {fromJS} from 'immutable';
-
+// import DateInput from './DateInput';
 export default React.createClass({
   propTypes: {
     ranges: PropTypes.object.isRequired,
@@ -14,27 +14,30 @@ export default React.createClass({
         <label className="control-label col-md-12">
           Date Ranges:
         </label>
-        <div className="col-xs-12">
-          <div className="table table-condensed">
+        <div className="col-xs-6">
+          <div className="table">
             <div className="thead">
               <div className="tr">
                 <div className="th">
-                  <strong>Since </strong>
+                  <strong>Since</strong>
                 </div>
                 <div className="th">
-                  <strong>Until </strong>
+                  <strong>Until</strong>
                 </div>
                 <div className="th">
-                  {this.props.isEditing ?
-                  <span onClick={this.addRange}
-                    className="fa fa-fw fa-plus kbc-cursor-pointer" />
-                   : ''
-                  }
                 </div>
               </div>
             </div>
             <div className="tbody">
               {this.props.ranges.map((r, idx) => this.renderRange(r, idx))}
+              {this.props.isEditing ?
+               <div className="tr">
+                 <button className="btn btn-link" onClick={this.addRange}>
+                   Add Date Range
+                 </button>
+               </div>
+               : null
+              }
             </div>
           </div>
         </div>
@@ -46,35 +49,25 @@ export default React.createClass({
     return (
       <div className="tr">
         <div className="td" >
-          {this.props.isEditing ?
-          <input
-            type="text"
-            className="form-control input-sm"
-            value={range.get('startDate')}
-            onChange={this.createUpdateFn('startDate', idx)}
-          />
-           : range.get('startDate')
-          }
+          {range.get('startDate')}
         </div>
-        <div className="td">
-          {this.props.isEditing ?
-          <input
-            className="form-control input-sm"
-            value={range.get('endDate')}
-            onChange={this.createUpdateFn('endDate', idx)}
-          />
-            : range.get('endDate')
-          }
+        <div className="td" >
+          {range.get('endDate')}
         </div>
-        <div className="td">
-          { (idx === 0 || !this.props.isEditing) ?
-            null
-            :
-            <span onClick={() => this.deleteRange(idx)}
-              className="kbc-icon-cup kbc-cursor-pointer" />
-          }
-        </div>
-
+        { (!this.props.isEditing) ?
+          <div className="td"></div>
+          :
+          <div className="td">
+            {/* <span className="btn btn-link" onClick={() => this.editRange(range, idx)}>
+            <i className="fa fa-fw kbc-icon-pencil" />
+            </span> */}
+            { idx !== 0 ?
+              <span className="btn btn-link" onClick={() => this.deleteRange(idx)}>
+                <i className="kbc-icon-cup kbc-cursor-pointer" />
+              </span> : null
+            }
+          </div>
+        }
       </div>
 
     );
@@ -82,10 +75,15 @@ export default React.createClass({
 
   addRange() {
     const newRange = fromJS({
-      'startDate': '',
-      'endDate': ''
+      'startDate': '-4 days',
+      'endDate': 'now'
     });
     this.props.onChange(this.props.ranges.push(newRange));
+  },
+
+  editRange(range, idx) {
+    // update local state editRangeModal with range and idx
+    return idx;
   },
 
   deleteRange(idx) {
@@ -94,7 +92,7 @@ export default React.createClass({
 
   createUpdateFn(propName, idx) {
     return (e) => {
-      const value = e.target.value;
+      const value = e;
       const newRanges = this.props.ranges.map((r, ridx) => idx === ridx ? r.set(propName, value) : r);
       this.props.onChange(newRanges);
     };
