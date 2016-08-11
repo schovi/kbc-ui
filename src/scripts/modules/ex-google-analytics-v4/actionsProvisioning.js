@@ -188,7 +188,8 @@ export default function(configId) {
     loadAccountSegments() {
       if (!store.isAuthorized()) return null;
       const path = store.getAccountSegmentsPath();
-      // const segments = store.accountSegments;
+      const segments = store.accountSegments;
+      if (segments.count() > 0) return null;
       const data = store.configData;
       const params = {
         configData: data.toJS()

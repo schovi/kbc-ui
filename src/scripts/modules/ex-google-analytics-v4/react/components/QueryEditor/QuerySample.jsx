@@ -65,7 +65,7 @@ export default React.createClass({
     const isError = this.getSampleDataInfo('isError', false);
     const error = this.getSampleDataInfo('error');
     return (
-      <div>
+      <div className="text-center">
         <button
           className="btn btn-primary"
           type="button"
