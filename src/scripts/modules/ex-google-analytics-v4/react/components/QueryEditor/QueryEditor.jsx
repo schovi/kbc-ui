@@ -124,6 +124,7 @@ export default React.createClass({
               {isEditing ?
                <input
                  type="text"
+                 placeholder="e.g ga:sourceMedium=~(something)"
                  className="form-control"
                  value={query.getIn(['query', 'filtersExpression'])}
                  onChange={this.onChangeTextPropFn(['query', 'filtersExpression'])}/>
