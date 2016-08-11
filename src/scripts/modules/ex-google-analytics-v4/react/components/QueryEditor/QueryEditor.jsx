@@ -140,7 +140,7 @@ export default React.createClass({
             isEditing={isEditing}
             ranges={query.getIn(['query', 'dateRanges'], List())}
             onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
-          />
+            {...this.props.prepareLocalState('DateRangeSelector')}/>
 
         </div>
         <QuerySample

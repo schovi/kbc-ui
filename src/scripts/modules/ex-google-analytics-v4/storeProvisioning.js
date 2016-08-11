@@ -15,7 +15,7 @@ const defaultNewQuery = Map({
   query: Map({
     dateRanges: List([Map({
       startDate: '-4 days',
-      endDate: 'now'
+      endDate: 'today'
     })])
   })
 });
