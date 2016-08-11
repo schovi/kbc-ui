@@ -140,7 +140,7 @@ export default React.createClass({
   },
 
   isAuthorized() {
-    this.state.store.isAuthorized();
+    return this.state.store.isAuthorized();
   },
 
   hasProfiles() {
