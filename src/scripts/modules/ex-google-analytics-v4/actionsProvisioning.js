@@ -22,7 +22,7 @@ export default function(configId) {
     componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
   }
 
-  function saveConfigData(data, waitingPath) {
+  function saveConfigData(data, waitingPath, changeDescription) {
     let dataToSave = data;
     // check default output bucket and save default if non set
     const ob = dataToSave.getIn(['parameters', 'outputBucket']);
@@ -31,7 +31,7 @@ export default function(configId) {
     }
 
     updateLocalState(waitingPath, true);
-    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, dataToSave)
+    return componentsActions.saveComponentConfigData(COMPONENT_ID, configId, dataToSave, changeDescription)
       .then(() => updateLocalState(waitingPath, false));
   }
 
@@ -64,9 +64,10 @@ export default function(configId) {
     return newId;
   }
 
-  function saveQueries(newQueries, savingPath) {
+  function saveQueries(newQueries, savingPath, changeDescription) {
+    const msg = changeDescription || 'Update queries';
     const data = store.configData.setIn(['parameters', 'queries'], newQueries);
-    return saveConfigData(data, savingPath);
+    return saveConfigData(data, savingPath, msg);
   }
 
 
@@ -76,7 +77,7 @@ export default function(configId) {
     saveProfiles(newProfiles) {
       const waitingPath = store.getSavingPath('profiles');
       const newData = store.configData.setIn(['parameters', 'profiles'], newProfiles);
-      return saveConfigData(newData, waitingPath);
+      return saveConfigData(newData, waitingPath, 'Update profiles');
     },
 
     onChangeEditingQueryFn(queryId) {
@@ -104,7 +105,7 @@ export default function(configId) {
       const queries = store.queries.push(newQuery);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
       const savingPath = store.getSavingPath(['newQuery']);
-      return saveConfigData(data, savingPath);
+      return saveConfigData(data, savingPath, `Create query ${newQuery.get('name')}`);
     },
 
     cancelEditingNewQuery() {
@@ -114,6 +115,7 @@ export default function(configId) {
 
     saveEditingQuery(queryId) {
       let query = store.getEditingQuery(queryId);
+      const msg = `Update query ${query.get('name')}`;
       if (!query.get('outputTable')) {
         const name = query.get('name');
         query = query.set('outputTable', common.sanitizeTableName(name));
@@ -121,7 +123,7 @@ export default function(configId) {
       const queries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? query : q);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
       const savingPath = store.getSavingPath(['queries', queryId]);
-      return saveConfigData(data, savingPath).then(() => this.cancelEditingQuery(queryId));
+      return saveConfigData(data, savingPath, msg).then(() => this.cancelEditingQuery(queryId));
     },
 
     cancelEditingQuery(queryId) {
@@ -131,14 +133,16 @@ export default function(configId) {
 
     deleteQuery(queryId) {
       const newQueries = store.queries.filter((q) => q.get('id').toString() !== queryId.toString());
-      return saveQueries(newQueries, store.getPendingPath(['delete', queryId]));
+      const msg = `Remove query ${store.getConfigQuery(queryId).get('name')}`;
+      return saveQueries(newQueries, store.getPendingPath(['delete', queryId]), msg);
     },
 
     toggleQueryEnabled(queryId) {
       let newQuery = store.getConfigQuery(queryId);
+      const msg = `${newQuery.get('enabled') ? 'Disable' : 'Enable'} query ${newQuery.get('name')}`;
       newQuery = newQuery.set('enabled', !newQuery.get('enabled'));
       const newQueries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? newQuery : q);
-      return saveQueries(newQueries, store.getPendingPath(['toggle', queryId]));
+      return saveQueries(newQueries, store.getPendingPath(['toggle', queryId]), msg);
     },
 
     setQueriesFilter(newFilter) {

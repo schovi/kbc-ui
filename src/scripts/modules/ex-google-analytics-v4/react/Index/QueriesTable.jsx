@@ -41,7 +41,7 @@ export default React.createClass({
               <strong> Date Range(s) </strong>
             </div>
             <div className="th">
-              <strong> Selected Profile(s) </strong>
+              <strong> Selected Profile</strong>
             </div>
             <div className="th">
               {/* right arrow */}
