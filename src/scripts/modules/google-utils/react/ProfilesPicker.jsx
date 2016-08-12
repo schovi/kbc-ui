@@ -26,7 +26,7 @@ export default React.createClass({
     const email = gaData.get('email');
     return (
       <div className="text-center">
-        <h3> 1. Load Google Account Profiles</h3>
+        <h3> Loaded Google Account Profiles</h3>
         {this.renderProfilesPicker()}
         {profiles ?
          <span>
