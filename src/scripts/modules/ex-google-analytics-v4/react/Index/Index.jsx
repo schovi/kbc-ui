@@ -183,22 +183,35 @@ export default React.createClass({
   },
 
   renderProfiles(clName) {
+    const showThreshold = 2;
+    const {profiles} = this.state.store;
+    const showMoreCount = profiles.count() - showThreshold;
+
     if (this.isAuthorized() || this.hasProfiles()) {
       return (
         <div className={clName}>
           <div className="form-group form-group-sm">
-            <label> Available Profiles </label>
+            <label> Registered Profiles </label>
             <div>
               {this.hasProfiles() ?
                <div className="form-control-static">
-                 {this.state.store.profiles.map(
-                    (p) => <ProfileInfo profile={p} />
+                 {profiles.take(showThreshold).map(
+                    (p) => <div><ProfileInfo profile={p} /></div>
                   )}
+                 <div>
+                   {showMoreCount > 0 ?
+                    <a
+                      onClick={this.showProfilesModal}>
+                      and {showMoreCount} more
+                    </a>
+                    : null
+                   }
+                 </div>
                </div>
                :
                <EmptyState>
                  <p> No profiles selected </p>
-                 <button type="button" className="btn btn-success"
+                 <button type="button" className="btn btn-success btn-sm"
                    onClick={this.showProfilesModal}>
                    Select Profiles
                  </button>
