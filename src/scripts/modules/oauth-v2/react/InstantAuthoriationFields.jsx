@@ -59,7 +59,7 @@ export default React.createClass({
               onChange={this.makeSetStatePropertyFn('authorizedFor')}
               autoFocus={true}
             />
-            <span className="help-text">
+            <span className="help-block">
               Describe this authorization, e.g. by account name.
             </span>
           </div>
