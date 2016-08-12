@@ -38,7 +38,7 @@ export default React.createClass({
               <strong>Name </strong>
             </div>
             <div className="th">
-              <strong> Date Range(s) </strong>
+              <strong> Date Ranges </strong>
             </div>
             <div className="th">
               <strong> Selected Profile</strong>

@@ -125,8 +125,8 @@ export default React.createClass({
     return (
       <form className="form-horizontal">
         <h4> Specify absolute date range </h4>
-        {this.renderPicker('Start Date', startDateProps)}
-        {this.renderPicker('End Date', endDateProps)}
+        {this.renderPicker('Since', startDateProps)}
+        {this.renderPicker('Until', endDateProps)}
       </form>
     );
   },
@@ -134,7 +134,7 @@ export default React.createClass({
   renderPicker(name, extraProps) {
     return (
       <div className="form-group form-group-sm">
-        <label className="col-sm-2 control-label">
+        <label className="col-sm-1 control-label">
           {name}
         </label>
         <div className="col-sm-6">
@@ -185,8 +185,8 @@ export default React.createClass({
 
           </select>
         </h4>
-        {this.renderRelativeInput('Start Date', startDateProps)}
-        {this.renderRelativeInput('End Date', endDateProps)}
+        {this.renderRelativeInput('Since', startDateProps)}
+        {this.renderRelativeInput('Until', endDateProps)}
       </form>
     );
   },
@@ -194,7 +194,7 @@ export default React.createClass({
   renderRelativeInput(name, extraProps) {
     return (
       <div className="form-group form-group-sm">
-        <label className="col-sm-2 control-label">
+        <label className="col-sm-1 control-label">
           {name}
         </label>
         <div className="col-sm-6">
