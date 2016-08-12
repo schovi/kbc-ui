@@ -95,6 +95,7 @@ export default React.createClass({
           onClick={this.props.onRunQuery}
         >
           Run Sample Query
+          {' '}
           {isLoading ? <Loader /> : null}
         </button>
         {isError ?

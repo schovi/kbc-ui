@@ -119,7 +119,7 @@ export default React.createClass({
       <div className="form-group">
         <label className={'control-label ' + this.props.labelClassName}>
           {this.props.name}
-          {this.props.isLoadingMetadata ? <span><Loader/></span> : null}
+          {this.props.isLoadingMetadata ? <span>{' '}<Loader/></span> : null}
         </label>
         <div className={this.props.wrapperClassName}>
           <p className="form-control-static">
