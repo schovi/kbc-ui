@@ -17,10 +17,10 @@ export default React.createClass({
     return (
       <div className="form-group form-group-sme">
         {this.renderRangeModal()}
-        <label className="control-label col-md-12">
+        <label className="control-label col-md-2">
           Date Ranges:
         </label>
-        <div className="col-xs-6">
+        <div className="col-md-10">
           <div className="table">
             <div className="thead">
               <div className="tr">

@@ -19,7 +19,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      labelClassName: 'col-md-12 control-label',
+      labelClassName: 'col-md-2 control-label',
       wrapperClassName: 'col-md-10'
     };
   },

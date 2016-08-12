@@ -117,8 +117,8 @@ export default React.createClass({
             isEditing={isEditing}
           />
           <div className="form-group">
-            <label className="col-md-4 control-label">
-              Filters Expressions
+            <label className="col-md-2 control-label">
+              Filters
             </label>
             <div className="col-md-10">
               {isEditing ?
