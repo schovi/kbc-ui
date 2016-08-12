@@ -75,7 +75,7 @@ export default React.createClass({
     const creator = this.props.credentials.getIn(['creator', 'description']);
     return (
       <div>
-        Account authorized for <strong>{this.props.credentials.get('authorizedFor')}</strong>
+        Authorized for <strong>{this.props.credentials.get('authorizedFor')}</strong>
         {!this.props.isResetingCredentials ?  (
            <Confirm
              text="Do you really want to reset the authorized account?"
