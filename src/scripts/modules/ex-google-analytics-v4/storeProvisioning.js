@@ -117,7 +117,7 @@ export default function(configId) {
     },
 
     getSampleDataInfoPath(queryId) {
-      return tempPath.concat(['sampleData', queryId || 'newQuery']);
+      return tempPath.concat(['sampleData', queryId || 'NewQuery']);
     },
 
     getSampleDataInfo(queryId) {

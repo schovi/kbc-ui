@@ -1,5 +1,5 @@
 import storeProvisioning from './storeProvisioning';
-import {fromJS} from 'immutable';
+import {Map, fromJS} from 'immutable';
 import parseCsv from '../../utils/parseCsv';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
@@ -106,6 +106,11 @@ export default function(configId) {
       const data = store.configData.setIn(['parameters', 'queries'], queries);
       const savingPath = store.getSavingPath(['newQuery']);
       return saveConfigData(data, savingPath, `Create query ${newQuery.get('name')}`);
+    },
+
+    resetNewQuerySampleDataInfo() {
+      const path = store.getSampleDataInfoPath('NewQuery');
+      updateLocalState(path, Map());
     },
 
     cancelEditingNewQuery() {
