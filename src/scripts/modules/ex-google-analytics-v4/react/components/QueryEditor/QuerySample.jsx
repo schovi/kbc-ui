@@ -60,10 +60,32 @@ export default React.createClass({
     );
   },
 
+  renderError(error) {
+    console.log(error.toJS());
+    let message = error.get('message');
+    const code = error.get('code');
+    if (code < 500) {
+      try {
+        message = JSON.parse(message).message || message;
+      } catch (e) {
+        message = message;
+      }
+    }
+    return (
+      <div className="alert alert-danger">
+        {message}
+        <div>
+          {code >= 500 ? error.get('exceptionId') : null}
+        </div>
+      </div>
+    );
+  },
+
   renderRunButton() {
     const isLoading = this.getSampleDataInfo('isLoading', false);
     const isError = this.getSampleDataInfo('isError', false);
     const error = this.getSampleDataInfo('error');
+
     return (
       <div className="text-center">
         <button
@@ -76,12 +98,7 @@ export default React.createClass({
           {isLoading ? <Loader /> : null}
         </button>
         {isError ?
-         <div className="alert alert-danger">
-           {error.get('message') }
-           <div>
-             {error.get('exceptionId') }
-           </div>
-         </div>
+         this.renderError(error)
          : null}
       </div>
     );
