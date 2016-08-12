@@ -40,7 +40,7 @@ export default React.createClass({
     return (
       <EditButtons
          isEditing={this.state.isEditing}
-         isSaving={this.state.store.isSaving('queries')}
+         isSaving={this.state.store.isSavingQuery(this.state.queryId)}
          isDisabled={!this.state.store.isQueryValid(this.state.editingQuery)}
          onCancel={ () => actions.cancelEditingQuery(this.state.queryId)}
          onSave={ () => actions.saveEditingQuery(this.state.queryId)}

@@ -77,6 +77,10 @@ export default function(configId) {
       return localState().getIn(savingPath.concat(what), false);
     },
 
+    isSavingQuery(queryId) {
+      return localState().getIn(this.getSavingPath(['queries', queryId]), false);
+    },
+
     isQueryValid(query) {
       return query && query.getIn(['query', 'metrics'], List()).count() > 0 &&
         query.getIn(['query', 'dimensions'], List()).count() > 0 &&
