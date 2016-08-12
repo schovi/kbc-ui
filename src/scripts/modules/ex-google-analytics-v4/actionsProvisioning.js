@@ -156,7 +156,9 @@ export default function(configId) {
         queryRequest = queryRequest.set('outputTable', common.sanitizeTableName(queryRequest.get('name')));
       }
       const queries = [queryRequest];
-      const data = store.configData.setIn(['parameters', 'queries'], queries);
+      const data = store.configData
+            .setIn(['parameters', 'queries'], queries)
+            .setIn(['parameters', 'outputBucket'], store.outputBucket);
       const params = {
         configData: data.toJS()
       };
