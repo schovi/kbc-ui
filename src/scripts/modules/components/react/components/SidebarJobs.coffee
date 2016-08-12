@@ -25,7 +25,7 @@ module.exports = React.createClass
     limit: 5
 
   renderJobs: ->
-    if (@props.jobs.get('jobs').count() || @props.jobs.get('isLoading'))
+    if (@props.jobs.get('jobs').count())
       @props.jobs.get('jobs').slice(0, @props.limit).map (job) ->
         React.createElement JobRow,
           job: job
