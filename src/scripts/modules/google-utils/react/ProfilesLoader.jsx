@@ -1,7 +1,6 @@
 // Google analytics komponenta ktora vynuti od uzivatela docasny oauth token a
 // vylistuje mu jeho google analytics profily z ktorych si vyberie
 import React, {PropTypes} from 'react';
-import Tooltip from '../../../react/common/Tooltip';
 import {Button} from 'react-bootstrap';
 import _ from 'underscore';
 
@@ -57,7 +56,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      buttonLabel: 'Select Google Account and Load Profiles'
+      buttonLabel: 'Load Profiles'
     };
   },
 
@@ -79,12 +78,6 @@ export default React.createClass({
         bsStyle="success"
         onClick={this.onButtonClick}>
         {this.props.buttonLabel}
-          <Tooltip
-             tooltip="Requires temporal authorization of a Google Account after which a short-lived access token is obtained to load profiles from the selected account."
-             placement="top">
-            <i className="fa fa-fw fa-question-circle"></i>
-          </Tooltip>
-
       </Button>
     );
   },

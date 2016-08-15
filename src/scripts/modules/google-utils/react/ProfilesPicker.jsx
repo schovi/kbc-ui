@@ -26,17 +26,22 @@ export default React.createClass({
     const email = gaData.get('email');
     return (
       <div className="text-center">
-        <h3> Loaded Google Account Profiles</h3>
+        <h3>Retrieve Profiles From Google Account
+        </h3>
         {this.renderProfilesPicker()}
+
         {profiles ?
          <span>
-           <h3>2. Select Profiles of {email} </h3>
+           <h3>Select Profiles of {email} </h3>
            {this.renderWarning(email)}
            {this.renderLoadedProfiles(profiles)}
          </span>
          :
          <EmptyState>
-           No Profiles Loaded
+           <small>
+             <p>Requires temporal authorization of a Google account after which a short-lived access token is obtained to load profiles from the selected account. </p>
+             <p>Google authorization uses a pop up window, hence disable windows pop up blocking for this site in the browser settings please.</p>
+           </small>
          </EmptyState>
         }
       </div>

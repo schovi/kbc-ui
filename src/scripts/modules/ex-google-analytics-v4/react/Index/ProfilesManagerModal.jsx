@@ -95,7 +95,7 @@ export default React.createClass({
     const profiles = this.getLocalProfiles();
     return (
       <div>
-        <h3> Selected Profiles To Extract Data from {this.props.authorizedEmail}</h3>
+        <h3> Review Selected Profiles To Extract Data From {this.props.authorizedEmail ? this.props.authorizedEmail : 'n/a'}</h3>
 
         {profiles.count() > 0 ?
          <ul>
