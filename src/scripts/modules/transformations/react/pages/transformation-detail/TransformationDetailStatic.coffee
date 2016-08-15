@@ -305,7 +305,6 @@ module.exports = React.createClass
           @props.transformationId, 'queriesString', changeDescription)
 
   render: ->
-    console.log(@props)
     div {},
       div className: 'kbc-row kbc-header',
         div className: 'col-xs-8',

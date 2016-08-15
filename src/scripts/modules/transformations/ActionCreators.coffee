@@ -17,7 +17,6 @@ module.exports =
     Request orchestrations reload from server
   ###
   loadTransformationBucketsForce: ->
-    console.log('LOAD FORCE BUCKETS TRANSFORMATION')
     actions = @
 
     # trigger load initialized
