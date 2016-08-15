@@ -17,6 +17,7 @@ module.exports =
     Request orchestrations reload from server
   ###
   loadTransformationBucketsForce: ->
+    console.log('LOAD FORCE BUCKETS TRANSFORMATION')
     actions = @
 
     # trigger load initialized
@@ -46,8 +47,11 @@ module.exports =
   ###
   loadTransformationBuckets: ->
     # don't load if already loaded
-    return Promise.resolve() if TransformationBucketsStore.getIsLoaded()
-    @.loadTransformationBucketsForce()
+    if TransformationBucketsStore.getIsLoaded()
+      @.loadTransformationBucketsForce()
+      return Promise.resolve()
+    else
+      return @.loadTransformationBucketsForce()
 
   createTransformationBucket: (data) ->
     newBucket = {}

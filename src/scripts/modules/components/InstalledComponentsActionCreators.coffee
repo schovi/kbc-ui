@@ -82,8 +82,11 @@ module.exports =
 
   #loads configuration JSON data of the component and specified configId
   loadComponentConfigData: (componentId, configId) ->
-    return Promise.resolve() if InstalledComponentsStore.getIsConfigDataLoaded(componentId, configId)
-    @loadComponentConfigDataForce(componentId, configId)
+    if InstalledComponentsStore.getIsConfigDataLoaded(componentId, configId)
+      @loadComponentConfigDataForce(componentId, configId)
+      return Promise.resolve()
+    else
+      return @loadComponentConfigDataForce(componentId, configId)
 
   saveComponentRawConfigData: (componentId, configId) ->
     dispatcher.handleViewAction(

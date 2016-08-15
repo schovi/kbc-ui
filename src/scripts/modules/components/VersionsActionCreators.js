@@ -10,6 +10,7 @@ import ConfigurationCopiedNotification from './react/components/ConfigurationCop
 module.exports = {
   loadVersions: function(componentId, configId) {
     if (Store.hasVersions(componentId, configId)) {
+      this.loadVersionsForce(componentId, configId);
       return Promise.resolve();
     }
     return this.loadVersionsForce(componentId, configId);
