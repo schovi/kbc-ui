@@ -14,6 +14,12 @@ export default React.createClass({
     return this.props.sampleDataInfo.getIn([].concat(key), defaultValue);
   },
 
+  getInitialState() {
+    return {
+      showIds: false
+    };
+  },
+
   render() {
     return (
       <div>
@@ -28,17 +34,27 @@ export default React.createClass({
     if (!csvMap || csvMap.count() === 0 ) {
       return null;
     }
-    const header = csvMap.first().map((c) => {
+    let idIdx = 0;
+    const header = csvMap.first().map((c, idx) => {
+      if (c === 'id') idIdx = idx;
       return (
         <th>
           {c}
+          {c === 'id' ?
+           <button style={{'padding-left': '2px', 'padding-bottom': 0, 'padding-top': 0}}
+             onClick={() => this.setState({showIds: !this.state.showIds})}
+             className="btn btn-link btn-sm">
+             {this.state.showIds ? 'Hide' : 'Show'}
+           </button>
+           : null}
+
         </th>
       );
     }).toArray();
 
     const rows = csvMap.rest().map((row) => {
-      const cols = row.map( (c) => {
-        return (<td>{c}</td>);
+      const cols = row.map( (c, idx) => {
+        return (<td>{ (idx === idIdx && !this.state.showIds) ? '...' : c}</td>);
       });
 
       return (
@@ -94,7 +110,7 @@ export default React.createClass({
           disabled={isLoading || !this.props.isQueryValid}
           onClick={this.props.onRunQuery}
         >
-          Run Sample Query
+          Test Query
           {' '}
           {isLoading ? <Loader /> : null}
         </button>
