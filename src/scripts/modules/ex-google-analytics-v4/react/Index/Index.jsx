@@ -192,7 +192,6 @@ export default React.createClass({
         <div className={clName}>
           <div className="form-group form-group-sm">
             <label> Registered Profiles </label>
-            <div>
               {this.hasProfiles() ?
                <div className="form-control-static">
                  {profiles.take(showThreshold).map(
@@ -217,7 +216,6 @@ export default React.createClass({
                  </button>
                </EmptyState>
               }
-            </div>
           </div>
         </div>
 
