@@ -36,7 +36,7 @@ export default React.createClass({
             </div>
             <div className="tbody">
               {this.props.ranges.map((r, idx) => this.renderRange(r, idx))}
-              {this.props.isEditing ?
+              {this.props.isEditing && this.props.ranges.count() < 2 ?
                <div className="tr">
                  <button className="btn btn-link" onClick={this.addRange}>
                    Add Date Range
