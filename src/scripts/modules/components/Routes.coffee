@@ -19,6 +19,7 @@ exMongoDbRoutes = require '../ex-mongodb/routes'
 exGdriveGoogleRoutes = require '../ex-google-drive-old/exGdriveRoutes'
 exGanalRoutes = require '../ex-google-analytics/exGanalRoutes'
 exGaV4Routes = require('../ex-google-analytics-v4/routes').default
+exGdriveNewRoutes = require('../ex-google-drive/routes').default
 csvImportRoutes = require('../csv-import/routes').default
 appGeneeaRoutes = require '../app-geneea/appGeneeaRoutes'
 goodDataWriterRoutes = require '../gooddata-writer/routes'
@@ -99,6 +100,7 @@ routes =
     ,
       createComponentRoute 'ex-google-analytics', [exGanalRoutes]
       createComponentRoute 'keboola.ex-google-analytics-v4', [exGaV4Routes]
+      createComponentRoute 'keboola.ex-google-drive', [exGdriveNewRoutes]
     ,
       createComponentRoute 'ex-adform', [adformRoutes]
     ,
