@@ -19,12 +19,13 @@ ComponentNameEdit = require '../components/react/components/ComponentName'
 TransformationNameEdit = require './react/components/TransformationNameEditField'
 ApplicationsStore = require '../../stores/ApplicationStore'
 JobsActionCreators = require '../jobs/ActionCreators'
+injectProps = require('../components/react/injectProps').default
 
 routes =
       name: 'transformations'
       title: 'Transformations'
       defaultRouteHandler: TransformationsIndex
-      reloaderHandler: TransformationsIndexReloaderButton
+      reloaderHandler: injectProps(allowRefresh: true)(TransformationsIndexReloaderButton)
       headerButtonsHandler: TransformationBucketButtons
       requireData: [
         ->
@@ -49,6 +50,7 @@ routes =
           else
             return TransformationBucketsStore.get(params.config).get 'name'
         defaultRouteHandler: TransformationBucket
+        reloaderHandler: TransformationsIndexReloaderButton
         requireData: [
           (params) ->
             VersionsActionCreators.loadVersions('transformation', params.config)
@@ -77,6 +79,7 @@ routes =
             else
               return TransformationsStore.getTransformation(params.config, params.row).get 'name'
           defaultRouteHandler: TransformationDetail
+          reloaderHandler: TransformationsIndexReloaderButton
           requireData: [
             ->
               StorageActionCreators.loadTables()
