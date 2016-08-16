@@ -78,7 +78,7 @@ MySqlSandbox = React.createClass
           MySqlSSLInfoModal {show: @state.showSSLInfoModal, onHide: @_hideSSLInfoModal}
         div {},
           DeleteButton
-            label: 'Drop credentials'
+            label: 'Drop sandbox'
             tooltip: 'Delete MySQL Sandbox'
             isPending: @state.pendingActions.get 'drop'
             fixedWidth: true
@@ -90,7 +90,7 @@ MySqlSandbox = React.createClass
       if !@state.pendingActions.get("create")
         button {className: 'btn btn-link', onClick: @_createCredentials},
           i className: 'fa fa-fw fa-plus'
-          ' Create credentials'
+          ' Create sandbox'
 
 
   render: ->

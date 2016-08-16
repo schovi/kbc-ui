@@ -16,13 +16,13 @@ SnowflakeCredentials = React.createClass
       if @props.isCreating
         span {},
           Loader()
-          ' Creating credentials'
+          ' Creating sandbox'
       else
         if @props.credentials.get "id"
           @_renderCredentials()
 
         else
-          'Credentials not found'
+          'Sandbox not found'
 
   _renderCredentials: ->
     span {},

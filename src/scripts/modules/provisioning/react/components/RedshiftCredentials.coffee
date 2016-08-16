@@ -21,13 +21,13 @@ RedshiftCredentials = React.createClass
       if @props.isCreating
         span {},
           Loader()
-          ' Creating credentials'
+          ' Creating sandbox'
       else
         if @props.credentials.get "id"
           @_renderCredentials()
 
         else
-          'Credentials not found'
+          'Sandbox not found'
 
   _renderCredentials: ->
     jdbcRedshift = 'jdbc:redshift://' + @props.credentials.get("hostname") + ':5439/' + @props.credentials.get("db")

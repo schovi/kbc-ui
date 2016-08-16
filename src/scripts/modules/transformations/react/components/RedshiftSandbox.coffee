@@ -92,7 +92,7 @@ RedshiftSandbox = React.createClass
           DeleteButton
             tooltip: 'Delete Redshift Sandbox'
             isPending: @state.pendingActions.get 'drop'
-            label: 'Drop credentials'
+            label: 'Drop sandbox'
             fixedWidth: true
             confirm:
               title: 'Delete Redshift Sandbox'
@@ -102,7 +102,7 @@ RedshiftSandbox = React.createClass
       if !@state.pendingActions.get("create")
         button {className: 'btn btn-link', onClick: @_createCredentials},
           i className: 'fa fa-fw fa-plus'
-          ' Create credentials'
+          ' Create sandbox'
 
   render: ->
     div {className: 'row'},
