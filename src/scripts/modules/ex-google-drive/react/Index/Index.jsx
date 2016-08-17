@@ -24,7 +24,7 @@ import EmptyState from '../../../components/react/components/ComponentEmptyState
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 
 // index components
-// import SheetsTable from './SheetsTable';
+import SheetsTable from './SheetsTable';
 
 
 // CONSTS
@@ -121,7 +121,7 @@ export default React.createClass({
   },
 
   hasSheets() {
-    return this.state.store.sheets && this.state.store.sheets.count();
+    return this.state.store.sheets && this.state.store.sheets.count() || true;
   },
 
   invalidToRun() {
@@ -155,21 +155,21 @@ export default React.createClass({
   renderSheetsTable() {
     return (
       <div className="row">
-        Sheets table
-        {/* <SheetsTable
-        outputBucket={this.state.store.outputBucket}
-        deleteSheetFn={this.state.actions.deleteSheet}
-        toggleSheetEnabledFn={this.state.actions.toggleSheetEnabled}
-        getRunSingleSheetDataFn={this.state.store.getRunSingleSheetData}
-        isPendingFn={this.state.store.isPending}
-        sheets={this.state.store.sheets}
-        allProfiles={this.state.store.profiles}
-        configId={this.state.configId}
-        {...this.state.actions.prepareLocalState('SheetsTable')}
-        /> */}
+        <SheetsTable
+          outputBucket={this.state.store.outputBucket}
+          deleteSheetFn={this.state.actions.deleteSheet}
+          toggleSheetEnabledFn={this.state.actions.toggleSheetEnabled}
+          getRunSingleSheetDataFn={this.state.store.getRunSingleSheetData}
+          isPendingFn={this.state.store.isPending}
+          sheets={this.state.store.sheets}
+          allProfiles={this.state.store.profiles}
+          configId={this.state.configId}
+          {...this.state.actions.prepareLocalState('SheetsTable')}
+        />
       </div>
     );
   },
+
   renderAddSheetLink() {
     return 'TODO';
     /* return (
