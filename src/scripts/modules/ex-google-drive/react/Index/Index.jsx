@@ -1,5 +1,5 @@
 import React from 'react';
-// import {Map} from 'immutable';
+import {Map} from 'immutable';
 
 // stores
 import storeProvisioning, {storeMixins} from '../../storeProvisioning';
@@ -25,6 +25,7 @@ import LatestVersions from '../../../components/react/components/SidebarVersions
 
 // index components
 import SheetsTable from './SheetsTable';
+import SheetsManagerModal from './SheetsManagerModal';
 
 
 // CONSTS
@@ -55,6 +56,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid">
+        {this.renderSheetsManagerModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <div className="col-sm-10">
@@ -151,7 +153,6 @@ export default React.createClass({
     );
   },
 
-
   renderSheetsTable() {
     return (
       <div className="row">
@@ -171,7 +172,13 @@ export default React.createClass({
   },
 
   renderAddSheetLink() {
-    return 'TODO';
+    return (
+      <button
+        className="btn btn-success"
+        onClick={this.showSheetsManagerModal}>
+        Add Sheet
+      </button>
+    );
     /* return (
      *   <Link
      *     to={COMPONENT_ID + '-new-sheet'}
@@ -202,6 +209,22 @@ export default React.createClass({
 
   deleteCredentials() {
     deleteCredentialsAndConfigAuth(COMPONENT_ID, this.state.configId);
-  }
+  },
 
+  showSheetsManagerModal() {
+    this.state.actions.updateLocalState(['SheetsManagerModal', 'show']);
+  },
+
+  renderSheetsManagerModal() {
+    return (
+      <SheetsManagerModal
+        show={this.state.localState.getIn(['SheetsManagerModal', 'show'], false)}
+        onHideFn={() => this.state.actions.updateLocalState('SheetsManagerModal', Map())}
+        isSaving={this.state.store.isSaving('sheets')}
+        authorizedEmail={this.state.authorizedEmail}
+        onSaveSheets={(newSheets) => this.state.actions.saveSheets(newSheets)}
+        {...this.state.actions.prepareLocalState('SheetsManagerModal')}
+      />
+    );
+  }
 });
