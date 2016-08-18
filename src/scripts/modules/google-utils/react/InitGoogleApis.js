@@ -19,7 +19,7 @@ if (!window.handleGoogleClientLoad) {
 export function authorize(scope, callBackFn, userEmail) {
   const signInOptions = {
     'client_id': clientId,
-    'scope': scope,
+    'scope': [].concat(scope).join(' '),
     'cookie_policy': 'single_host_origin',
     'user_id': userEmail, // forces to log in specific email
     'prompt': 'select_account' // forces to always select account(no cached selection)

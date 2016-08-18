@@ -8,14 +8,23 @@ templates = require './PickerViewTemplates'
 {GapiStore} = require './GapiFlux'
 createStoreMixin = require '../../../react/mixins/createStoreMixin'
 
-scope = 'https://www.googleapis.com/auth/drive.readonly'
+
+GDRIVE_SCOPE = [
+  'https://www.googleapis.com/auth/drive.readonly'
+]
+
+SHEETS_SCOPE = [
+  'https://www.googleapis.com/auth/drive.readonly'
+  'https://www.googleapis.com/auth/spreadsheets.readonly'
+]
+
 
 setZIndex = ->
   elements = document.getElementsByClassName("picker")
   for el in elements
     el.style.zIndex = '1500'
 
-authorizePicker = (userEmail, callbackFn) ->
+authorizePicker = (userEmail, scope, callbackFn) ->
   authorize(scope, callbackFn, userEmail)
 
 createGdrivePicker = (views, viewGroups) ->
@@ -47,6 +56,7 @@ module.exports = React.createClass
     viewGroups: React.PropTypes.array
     email: React.PropTypes.string
     buttonProps: React.PropTypes.object
+    requireSheetsApi: React.PropTypes.bool
 
   getStateFromStores: ->
     isInitialized: GapiStore.isInitialized()
@@ -70,13 +80,17 @@ module.exports = React.createClass
     dialogTitle: 'Choose'
     buttonLabel: 'Choose'
     views: []
+    requireSheetsApi: false
 
   getInitialState: ->
     accessToken: null
 
   _ButtonClick: ->
+    scope = GDRIVE_SCOPE
+    if @props.requireSheetsApi
+      scope = SHEETS_SCOPE
     if not @state.accessToken
-      authorizePicker(@props.email, (authResult) =>
+      authorizePicker(@props.email, scope, (authResult) =>
         if authResult and !authResult.error
           @setState
             accessToken: authResult.access_token
