@@ -7,46 +7,62 @@ export default React.createClass({
   propTypes: {
     authToken: PropTypes.string.isRequired,
     file: PropTypes.object,
-    updateSheets: PropTypes.func.isRequired,
+    selectSheet: PropTypes.func.isRequired,
     onSelectFile: PropTypes.func.isRequired
 
   },
 
   render() {
     const {file} = this.props;
-    const isLoading = file.getIn(['sheetsApi', 'isLoading']);
+    const isLoading = this.isLoading();
     const header = (
       <span>
-        {this.props.file.get('name')}
-        {isLoading ? <Loader /> : null }
+        <span className="table">
+          <span className="tbody">
+            <span className="tr">
+              <span className="td">
+                {this.props.file.get('name')}
+                {' '}
+                {isLoading ? <Loader /> : null }
+              </span>
+            </span>
+          </span>
+        </span>
       </span>
     );
     return (
       <Panel
-        onClick={this.onPanelClick}
+        onSelect={this.onPanelClick}
         header={header}
+        expanded={file.get('isExpanded')}
         collapsible={true}
         key={file.get('id')}
         eventKey={file.get('id')}
       >
         {isLoading ? <span> Loading sheets... </span>
          :
-         <ListGroup
-           key={file.get('id')}
-         >
-           {this.getFileSheets().map(this.renderSheetItem)}
-         </ListGroup>
+         <div className="row">
+           <ListGroup key={file.get('id')}>
+             {this.getFileSheets().map(this.renderSheetItem).toArray()}
+           </ListGroup>
+         </div>
         }
       </Panel>
+
     );
+  },
+
+  isLoading() {
+    return this.props.file.getIn(['sheetsApi', 'isLoading'], false);
   },
 
   renderSheetItem(sheet) {
     return (
       <ListGroupItem
         key={sheet.get('sheetId')}
-        active={sheet.get('selected')}
-        onClick={() => this.selectSheet(sheet)}
+        active={!!sheet.get('selected')}
+        disabled={false}
+        onClick={() => this.props.selectSheet(this.props.file, sheet)}
       >
         {sheet.get('sheetTitle')}
       </ListGroupItem>
@@ -58,16 +74,9 @@ export default React.createClass({
     return this.props.file.getIn(['sheetsApi', 'sheets'], List());
   },
 
-
-  selectSheet(sheet) {
-    const isSelected = !!sheet.get('selected');
-    const sheetId = sheet.get('sheetId');
-    const sheetToUpdate = sheet.set('selected', !isSelected);
-    const newSheets = this.getFileSheets().map((s) => s.get('sheetId') === sheetId ? sheetToUpdate : s);
-    return this.props.updateSheets(newSheets);
-  },
-
-  onPanelClick() {
+  onPanelClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
     this.props.onSelectFile(this.props.file.get('id'));
   }
 });

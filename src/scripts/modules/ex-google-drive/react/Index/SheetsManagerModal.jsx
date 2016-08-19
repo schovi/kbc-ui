@@ -52,10 +52,11 @@ export default React.createClass({
           <div className="row">
             <div className="table kbc-table-border-vertical kbc-detail-table" style={{'border-bottom': 0}}>
               <div className="tr">
-                <div className="td">
+                <div className="td" key="1">
+                  {this.renderFilesSelector()}
                   {this.renderSheetsSelector()}
                 </div>
-                <div className="td">
+                <div className="td" key="2">
                   {this.renderSelectedSheets()}
                 </div>
               </div>
@@ -69,7 +70,7 @@ export default React.createClass({
             onCancel={this.props.onHideFn}
             placement="right"
             saveLabel="Save Changes"
-            isDisabled={true}
+            isDisabled={!this.hasSheetsToSave()}
           />
 
         </Modal.Footer>
@@ -77,9 +78,12 @@ export default React.createClass({
     );
   },
 
-  renderSheetsSelector() {
+  renderFilesSelector() {
     return (
-      <span>
+      <div>
+        <h2>
+          1. Select documents of {this.props.authorizedEmail}
+        </h2>
         <GdrivePicker
           email={this.props.authorizedEmail}
           dialogTitle="Select a spreadsheet document"
@@ -92,21 +96,38 @@ export default React.createClass({
             ViewTemplates.recent
           ]}
         />
-        {this.props.localState.get('files', List()).map((file) =>
-          <SheetsSelector
-            file={file}
-            onSelectFile={this.selectFile}
-            updateSheets={(newSheets) => this.updateFile(file.get('id'), file.setIn(['sheetsApi', 'sheets'], newSheets))}
-          />
-         )}
-      </span>
+
+      </div>
+    );
+  },
+
+  renderSheetsSelector() {
+    return (
+      <div>
+        <h2>
+          2. Select sheets from the selected documents
+        </h2>
+        <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table">
+          {this.props.localState.get('files', List()).map((file) =>
+            <SheetsSelector
+              file={file}
+              onSelectFile={this.selectFile}
+              selectSheet={this.selectSheet}
+            />
+           )}
+        </div>
+      </div>
     );
   },
 
   selectFile(fileId) {
     const sheetsApi = this.getFileSheets(fileId);
-    if (sheetsApi.get('isLoading') || sheetsApi.get('sheets')) return;
-    this.loadFileSheets(fileId);
+    if (sheetsApi.get('isLoading')) return null;
+    if (sheetsApi.get('sheets')) {
+      const file = this.getFile(fileId);
+      return this.updateFile(fileId, file.set('isExpanded', !file.get('isExpanded')));
+    }
+    return this.loadFileSheets(fileId);
   },
 
   getFileSheets(fileId) {
@@ -128,10 +149,13 @@ export default React.createClass({
     this.updateFile(fileId, file.setIn(['sheetsApi', 'isLoading'], true));
     return listSheets(fileId).then((sheets) => {
       console.log('SHEETS', sheets);
-      return this.updateFile(fileId, file.set('sheetsApi', fromJS({
-        isLoading: false,
-        sheets: remapSheets(sheets.result.sheets)
-      })));
+      return this.updateFile(fileId, file
+        .set('sheetsApi', fromJS({
+          isLoading: false,
+          sheets: remapSheets(sheets.result.sheets)
+        }))
+        .set('isExpanded', true)
+      );
     });
   },
 
@@ -141,6 +165,7 @@ export default React.createClass({
       if (!this.getFile(file.id)) files = files.push(fromJS(file));
     }
     this.props.updateLocalState('files', files);
+    files.map((f) => this.selectFile(f.get('id')));
   },
 
   onPickSpreadsheet(data) {
@@ -150,18 +175,75 @@ export default React.createClass({
   },
 
   renderSelectedSheets() {
-    const files = this.props.localState.get('files', List()).filter((f) => {
-      return f.getIn(['sheetsApi', 'sheets'], List()).find((s) => s.get('selected'));
+    const files = this.props.localState.get('files', List()).map((f) => {
+      const sheets =  f.getIn(['sheetsApi', 'sheets'], List());
+      return f.setIn(['sheetsApi', 'sheets'], sheets.filter((s) => !!s.get('selected')));
     });
+    const hasSelectedSheets = this.hasSheetsToSave();
 
     return (
       <div>
-        <h3> Selected Sheets </h3>
-        {files.map((f) => f.get('title'))}
-        <EmptyState>
-          No profiles selected.
-        </EmptyState>
+        <h2>
+          Selected sheets to be added to the project
+        </h2>
+        { !!hasSelectedSheets ?
+          <ul>
+            {
+              files.map((f) =>
+                f.getIn(['sheetsApi', 'sheets']).map((s) =>
+                  this.renderSelectedItem(f, s))
+                 .toArray())
+                   .toArray()
+            }
+          </ul>
+          :
+          <EmptyState>
+            No profiles selected.
+          </EmptyState>
+        }
       </div>
     );
+  },
+
+  selectSheet(file, sheet) {
+    const isSelected = !!sheet.get('selected');
+    const sheetId = sheet.get('sheetId');
+    const sheetToUpdate = sheet.set('selected', !isSelected);
+    const newSheets = this.getFileSheets(file.get('id')).get('sheets')
+                          .map((s) => s.get('sheetId') === sheetId ? sheetToUpdate : s);
+    this.updateFile(file.get('id'), file.setIn(['sheetsApi', 'sheets'], newSheets));
+  },
+
+  hasSheetsToSave() {
+    const files = this.props.localState.get('files', List());
+    return files.find((f) => f.getIn(['sheetsApi', 'sheets'], List()).find((s) => s.get('selected')));
+  },
+
+  renderSelectedItem(file, sheet) {
+    return (
+      <li>
+        {file.get('name')} / {sheet.get('sheetTitle')}
+        <span
+          onClick={() => this.selectSheet(file, sheet)}
+          className="kbc-icon-cup kbc-cursor-pointer"/>
+      </li>
+    );
+  },
+
+  handleSave() {
+    const files = this.props.localState.get('files', List());
+    const itemsToSave = files.map((f) =>
+      f.getIn(['sheetsApi', 'sheets']).map((s) => {
+        return fromJS({
+          fileId: f.get('id'),
+          fileTitle: f.get('name'),
+          sheetId: s.get('sheetId'),
+          sheetTitle: s.get('sheetTitle')
+        });
+      })).flatten(true);
+    console.log(itemsToSave.toJS());
+    this.props.onSaveSheets(itemsToSave);
   }
+
+
 });

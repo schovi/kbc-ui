@@ -220,9 +220,9 @@ export default React.createClass({
       <SheetsManagerModal
         show={this.state.localState.getIn(['SheetsManagerModal', 'show'], false)}
         onHideFn={() => this.state.actions.updateLocalState('SheetsManagerModal', Map())}
-        isSaving={this.state.store.isSaving('sheets')}
+        isSaving={this.state.store.isSaving('newSheets')}
         authorizedEmail={this.state.authorizedEmail}
-        onSaveSheets={(newSheets) => this.state.actions.saveSheets(newSheets)}
+        onSaveSheets={(newSheets) => this.state.actions.saveNewSheets(newSheets)}
         {...this.state.actions.prepareLocalState('SheetsManagerModal')}
       />
     );
