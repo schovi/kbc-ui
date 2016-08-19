@@ -24,6 +24,7 @@ class EventsService
     @_timer = timer
     @stopAutoReload()
     @_emitChange()
+    @_limit = 50
 
   setParams: (params) ->
     @defaultParams = params
@@ -31,6 +32,9 @@ class EventsService
 
   setQuery: (query) ->
     @_query = query
+
+  setLimit: (limit) ->
+    @_limit = limit
 
   setAutoReload: (flag) ->
     if flag
@@ -99,7 +103,7 @@ class EventsService
   _getParams: ->
     _.extend {}, @defaultParams,
       q: @_query
-      limit: 50
+      limit: @_limit
 
   _listEvents: (params) ->
     @api
