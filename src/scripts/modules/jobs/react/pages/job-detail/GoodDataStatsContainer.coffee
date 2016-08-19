@@ -10,6 +10,7 @@ module.exports = React.createClass
   getInitialState: ->
     es = EventsService({runId: @props.job.get('runId')})
     es.setQuery('type:success OR type:error')
+    es.setLimit(100)
     eventService: es
     events: Immutable.List()
 
