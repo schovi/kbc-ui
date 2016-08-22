@@ -238,14 +238,16 @@ export default React.createClass({
   handleSave() {
     const files = this.props.localState.get('files', List());
     const itemsToSave = files.map((f) =>
-      f.getIn(['sheetsApi', 'sheets']).map((s) => {
-        return fromJS({
-          fileId: f.get('id'),
-          fileTitle: f.get('name'),
-          sheetId: s.get('sheetId'),
-          sheetTitle: s.get('sheetTitle')
-        });
-      })).flatten(true);
+      f.getIn(['sheetsApi', 'sheets'])
+       .filter((s) => !!s.get('selected'))
+       .map((s) => {
+         return fromJS({
+           fileId: f.get('id'),
+           fileTitle: f.get('name'),
+           sheetId: s.get('sheetId'),
+           sheetTitle: s.get('sheetTitle')
+         });
+       })).flatten(true);
     this.props.onSaveSheets(itemsToSave).then(this.props.onHideFn);
   }
 
