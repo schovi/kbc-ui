@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {List} from 'immutable';
 import {Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
-
+import Tooltip from '../../../../react/common/Tooltip';
 export default React.createClass({
   propTypes: {
     authToken: PropTypes.string.isRequired,
@@ -56,19 +56,31 @@ export default React.createClass({
     return this.props.file.getIn(['sheetsApi', 'isLoading'], false);
   },
 
+  selectSheet(sheet) {
+    if (sheet.get('isSaved')) return;
+    this.props.selectSheet(this.props.file, sheet);
+  },
+
   renderSheetItem(sheet) {
-    return (
+    const item = (
       <ListGroupItem
         key={sheet.get('sheetId')}
         active={!!sheet.get('selected')}
-        disabled={false}
-        onClick={() => this.props.selectSheet(this.props.file, sheet)}
+        disabled={!!sheet.get('isSaved')}
+        onClick={() => this.selectSheet(sheet)}
       >
         {sheet.get('sheetTitle')}
       </ListGroupItem>
     );
-  },
+    return (
+      sheet.get('isSaved') ?
+      <Tooltip tooltip="Already configured in the project">
+        {item}
+      </Tooltip>
+      : item
 
+    );
+  },
 
   getFileSheets() {
     return this.props.file.getIn(['sheetsApi', 'sheets'], List());

@@ -12,16 +12,6 @@ import ViewTemplates from '../../../google-utils/react/PickerViewTemplates';
 import {listSheets} from '../../../google-utils/react/SheetsApi';
 import SheetsSelector from './SheetsSelector';
 
-function remapSheets(sheets) {
-  const newSheets = sheets.map((sheet) => {
-    const s = sheet.properties;
-    return {
-      sheetId: s.sheetId,
-      sheetTitle: s.title
-    };
-  });
-  return newSheets;
-}
 
 export default React.createClass({
 
@@ -31,6 +21,7 @@ export default React.createClass({
     onHideFn: PropTypes.func,
     authorizedEmail: PropTypes.string,
     localState: PropTypes.object.isRequired,
+    savedSheets: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
     onSaveSheets: PropTypes.func.isRequired
@@ -152,12 +143,26 @@ export default React.createClass({
       return this.updateFile(fileId, file
         .set('sheetsApi', fromJS({
           isLoading: false,
-          sheets: remapSheets(sheets.result.sheets)
+          sheets: this.remapSheets(fileId, sheets.result.sheets)
         }))
         .set('isExpanded', true)
       );
     });
   },
+
+  remapSheets(fileId, sheets) {
+    const newSheets = sheets.map((sheet) => {
+      const s = sheet.properties;
+      const sid = s.sheetId;
+      return {
+        sheetId: sid,
+        sheetTitle: s.title,
+        isSaved: !!this.props.savedSheets.find((ss) => ss.get('sheetId') === sid && ss.get('fileId') === fileId)
+      };
+    });
+    return newSheets;
+  },
+
 
   addFiles(filesToAdd) {
     let files = this.props.localState.get('files', List());
@@ -241,9 +246,7 @@ export default React.createClass({
           sheetTitle: s.get('sheetTitle')
         });
       })).flatten(true);
-    console.log(itemsToSave.toJS());
-    this.props.onSaveSheets(itemsToSave);
+    this.props.onSaveSheets(itemsToSave).then(this.props.onHideFn);
   }
-
 
 });
