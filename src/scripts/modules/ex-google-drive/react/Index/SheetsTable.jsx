@@ -65,7 +65,7 @@ export default React.createClass({
   renderSheetRow(sheet) {
     const propValue = (propName) => sheet.getIn([].concat(propName));
     const outTableId = this.props.outputBucket + '.' + propValue('outputTable');
-
+    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
 
     return (
       <div
@@ -104,7 +104,7 @@ export default React.createClass({
               };
             }}
           >
-            You are about to run extraction.
+            You are about to run extraction of {documentTitle}
           </RunExtractionButton>
         </div>
       </div>
@@ -115,7 +115,9 @@ export default React.createClass({
     return (
       <button className="btn btn-link"
         onClick={() => this.props.onStartEdit(sheet)}>
-        <i className="kbc-icon-pencil" />
+        <Tooltip tooltip="Edit output table name" placement="top">
+          <i className="kbc-icon-pencil" />
+        </Tooltip>
       </button>
     );
   },
@@ -129,7 +131,7 @@ export default React.createClass({
       <Tooltip placement="top" tooltip="Delete sheet">
         <Confirm
           title="Delete sheet"
-          text={`Do you really want to delete sheet ${sheet.get('fileTitle')}/${sheet.get('sheetTitle')}?`}
+          text={`Do you really want to delete extraction of sheet ${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}?`}
           buttonLabel="Delete"
           onConfirm={() => this.props.deleteSheetFn(sheet.get('id'))}
         >

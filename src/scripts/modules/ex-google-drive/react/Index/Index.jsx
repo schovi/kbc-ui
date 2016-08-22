@@ -20,7 +20,7 @@ import RunComponentButton from '../../../components/react/components/RunComponen
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 // import {Link} from 'react-router';
-// import LatestJobs from '../../../components/react/components/SidebarJobs';
+import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 
 // index components
@@ -108,7 +108,7 @@ export default React.createClass({
           />
         </li>
           </ul>
-          {/* <LatestJobs jobs={this.state.latestJobs} limit={3} /> */}
+          <LatestJobs jobs={this.state.latestJobs} limit={3} />
           <LatestVersions
             limit={3}
             componentId={COMPONENT_ID}
@@ -124,7 +124,7 @@ export default React.createClass({
   },
 
   hasSheets() {
-    return this.state.store.sheets && this.state.store.sheets.count() || true;
+    return this.state.store.sheets && this.state.store.sheets.count();
   },
 
   invalidToRun() {

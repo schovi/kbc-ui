@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {Map} from 'immutable';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {Modal} from 'react-bootstrap';
 import {sanitizeTableName} from '../../common';
@@ -19,6 +20,8 @@ export default React.createClass({
   },
 
   render() {
+    const sheet = this.props.localState.get('sheet', Map());
+    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
     return (
       <Modal
         show={this.props.show}
@@ -26,7 +29,7 @@ export default React.createClass({
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Edit Output Table Name
+            Edit Output Table Name of {documentTitle}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
