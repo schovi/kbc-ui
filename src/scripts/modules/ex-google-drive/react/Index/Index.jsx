@@ -26,7 +26,7 @@ import LatestVersions from '../../../components/react/components/SidebarVersions
 // index components
 import SheetsTable from './SheetsTable';
 import SheetsManagerModal from './SheetsManagerModal';
-
+import OutputTableModal from './OutputTableModal';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-google-drive';
@@ -57,6 +57,7 @@ export default React.createClass({
     return (
       <div className="container-fluid">
         {this.renderSheetsManagerModal()}
+        {this.renderEditTableModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <div className="col-sm-10">
@@ -96,16 +97,16 @@ export default React.createClass({
               </RunComponentButton>
             </li>
             {/* <li>
-            <a href={this.state.component.get('documentationUrl')} target="_blank">
-            <i className="fa fa-question-circle fa-fw" /> Documentation
-            </a>
-            </li> */}
-            <li>
-              <DeleteConfigurationButton
-                componentId={COMPONENT_ID}
-                configId={this.state.configId}
-              />
-            </li>
+                <a href={this.state.component.get('documentationUrl')} target="_blank">
+                <i className="fa fa-question-circle fa-fw" /> Documentation
+                </a>
+                </li> */}
+        <li>
+          <DeleteConfigurationButton
+            componentId={COMPONENT_ID}
+            configId={this.state.configId}
+          />
+        </li>
           </ul>
           {/* <LatestJobs jobs={this.state.latestJobs} limit={3} /> */}
           <LatestVersions
@@ -165,6 +166,7 @@ export default React.createClass({
           sheets={this.state.store.sheets}
           allProfiles={this.state.store.profiles}
           configId={this.state.configId}
+          onStartEdit={this.showEditTableModal}
           {...this.state.actions.prepareLocalState('SheetsTable')}
         />
       </div>
@@ -212,7 +214,7 @@ export default React.createClass({
   },
 
   showSheetsManagerModal() {
-    this.state.actions.updateLocalState(['SheetsManagerModal', 'show']);
+    this.state.actions.updateLocalState(['SheetsManagerModal', 'show'], true);
   },
 
   renderSheetsManagerModal() {
@@ -222,8 +224,27 @@ export default React.createClass({
         onHideFn={() => this.state.actions.updateLocalState('SheetsManagerModal', Map())}
         isSaving={this.state.store.isSaving('newSheets')}
         authorizedEmail={this.state.authorizedEmail}
+        savedSheets={this.state.store.sheets}
         onSaveSheets={(newSheets) => this.state.actions.saveNewSheets(newSheets)}
         {...this.state.actions.prepareLocalState('SheetsManagerModal')}
+      />
+    );
+  },
+
+  showEditTableModal(sheet) {
+    this.state.actions.updateLocalState(['TableModal', 'sheet'], sheet);
+  },
+
+  renderEditTableModal() {
+    return (
+      <OutputTableModal
+        show={this.state.localState.getIn(['TableModal', 'sheet'], false)}
+        onHideFn={() => this.state.actions.updateLocalState('TableModal', Map())}
+        isSaving={this.state.store.isSaving('updatingSheets')}
+        outputBucket={this.state.store.outputBucket}
+        savedSheets={this.state.store.sheets}
+        onSaveSheetFn={this.state.actions.saveEditingSheet}
+        {...this.state.actions.prepareLocalState('TableModal')}
       />
     );
   }

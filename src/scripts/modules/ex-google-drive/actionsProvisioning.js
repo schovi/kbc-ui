@@ -91,15 +91,14 @@ export default function(configId) {
     },
 
     saveNewSheets(newSheets) {
-      const sheetsToSave = newSheets.map( (s) => {
+      const sheetsToAdd = newSheets.map( (s) => {
         const name = `${s.get('fileTitle')}-${common.sanitizeTableName(s.get('sheetTitle'))}`;
         return s.set('enabled', true)
           .set('id', generateId())
           .set('outputTable', name);
       });
-      console.log('sheets to save', sheetsToSave.toJS());
-
-      const data = store.configData.setIn(['parameters', 'sheets'], store.sheets.merge(sheetsToSave));
+      const sheetsToSave = store.sheets.toSet().merge(sheetsToAdd);
+      const data = store.configData.setIn(['parameters', 'sheets'], sheetsToSave);
       const savingPath = store.getSavingPath(['newSheets']);
       return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet(s)`);
     },
@@ -109,17 +108,13 @@ export default function(configId) {
       return updateLocalState(path, store.defaultNewSheet);
     },
 
-    saveEditingSheet(sheetId) {
-      let sheet = store.getEditingSheet(sheetId);
+    saveEditingSheet(sheet) {
+      const sheetId = sheet.get('id').toString();
       const msg = `Update sheet ${sheet.get('sheetTitle')}`;
-      if (!sheet.get('outputTable')) {
-        const name = sheet.get('sheetTitle');
-        sheet = sheet.set('outputTable', common.sanitizeTableName(name));
-      }
-      const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId.toString() ? sheet : q);
+      const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId ? sheet : q);
       const data = store.configData.setIn(['parameters', 'sheets'], sheets);
-      const savingPath = store.getSavingPath(['sheets', sheetId]);
-      return saveConfigData(data, savingPath, msg).then(() => this.cancelEditingSheet(sheetId));
+      const savingPath = store.getSavingPath(['updatingSheets']);
+      return saveConfigData(data, savingPath, msg);
     },
 
     cancelEditingSheet(sheetId) {

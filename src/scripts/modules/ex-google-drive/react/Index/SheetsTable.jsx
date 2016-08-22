@@ -19,6 +19,7 @@ export default React.createClass({
     configId: PropTypes.string.isRequired,
     outputBucket: PropTypes.string.isRequired,
     deleteSheetFn: PropTypes.func.isRequired,
+    onStartEdit: PropTypes.func.isRequired,
     isPendingFn: PropTypes.func.isRequired,
     toggleSheetEnabledFn: PropTypes.func.isRequired,
     getRunSingleSheetDataFn: PropTypes.func.isRequired
@@ -31,19 +32,7 @@ export default React.createClass({
         <div className="thead">
           <div className="tr">
             <div className="th">
-              <strong>id </strong>
-            </div>
-            <div className="th">
-              <strong> fileId </strong>
-            </div>
-            <div className="th">
-              <strong> fileTitle</strong>
-            </div>
-            <div className="th">
-              <strong> sheetId</strong>
-            </div>
-            <div className="th">
-              <strong> sheet title</strong>
+              <strong>Document / sheet </strong>
             </div>
             <div className="th">
               {/* right arrow */}
@@ -63,9 +52,20 @@ export default React.createClass({
     );
   },
 
+  renderGoogleLink(sheet) {
+    const url = `https://docs.google.com/spreadsheets/d/${sheet.get('fileId')}/edit#gid=${sheet.get('sheetId')}`;
+    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
+    return (
+      <a href={url} target="_blank">
+        {documentTitle}
+      </a>
+    );
+  },
+
   renderSheetRow(sheet) {
     const propValue = (propName) => sheet.getIn([].concat(propName));
     const outTableId = this.props.outputBucket + '.' + propValue('outputTable');
+
 
     return (
       <div
@@ -76,19 +76,7 @@ export default React.createClass({
         }}
         className="tr">
         <div className="td">
-          {propValue('id')}
-        </div>
-        <div className="td">
-          {propValue('fileId')}
-        </div>
-        <div className="td">
-          {propValue('fileTitle')}
-        </div>
-        <div className="td">
-          {propValue('sheetId')}
-        </div>
-        <div className="td">
-          {propValue('sheetTitle')}
+          {this.renderGoogleLink(sheet)}
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />
@@ -97,6 +85,7 @@ export default React.createClass({
           <StorageTableLink tableId={outTableId} />
         </div>
         <div className="td text-right kbc-no-wrap">
+          {this.renderEditButton(sheet)}
           {this.renderDeleteButton(sheet)}
           <ActivateDeactivateButton
             activateTooltip="Enable Sheet"
@@ -122,6 +111,15 @@ export default React.createClass({
     );
   },
 
+  renderEditButton(sheet) {
+    return (
+      <button className="btn btn-link"
+        onClick={() => this.props.onStartEdit(sheet)}>
+        <i className="kbc-icon-pencil" />
+      </button>
+    );
+  },
+
   renderDeleteButton(sheet) {
     const isPending = this.props.isPendingFn(['delete', sheet.get('id')]);
     if (isPending) {
@@ -142,4 +140,6 @@ export default React.createClass({
       </Tooltip>
     );
   }
+
+
 });
