@@ -32,11 +32,15 @@ export default React.createClass({
       desc: isNew ? '' : op.attributes.description,
       id: isNew ? op.value : op.id
     };
+    const filterEscaped = this.escapeRegExp(filter);
+    return !!fuzzy.match(filterEscaped, data.group) ||
+           !!fuzzy.match(filterEscaped, data.name) ||
+           !!fuzzy.match(filterEscaped, data.id) ||
+           data.desc.search(filterEscaped) >= 0;
+  },
 
-    return !!fuzzy.match(filter, data.group) ||
-           !!fuzzy.match(filter, data.name) ||
-           !!fuzzy.match(filter, data.id) ||
-           data.desc.search(filter) >= 0;
+  escapeRegExp(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   },
 
   createNewOption(input) {
