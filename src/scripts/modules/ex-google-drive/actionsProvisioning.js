@@ -11,6 +11,7 @@ const COMPONENT_ID = 'keboola.ex-google-drive';
   updateLocalState: PropTypes.func.isRequired,
   prepareLocalState: PropTypes.func.isRequired
 */
+const getFullName = common.sheetFullName;
 
 export default function(configId) {
   const store = storeProvisioning(configId);
@@ -76,7 +77,7 @@ export default function(configId) {
 
     saveNewSheets(newSheets) {
       const sheetsToAdd = newSheets.map( (s) => {
-        const name = common.sanitizeTableName(`${s.get('fileTitle')}-${s.get('sheetTitle')}`);
+        const name = common.sanitizeTableName(getFullName(s, '-'));
         return s.set('enabled', true)
           .set('id', generateId())
           .set('outputTable', name);
@@ -90,7 +91,7 @@ export default function(configId) {
 
     saveEditingSheet(sheet) {
       const sheetId = sheet.get('id').toString();
-      const msg = `Update sheet ${sheet.get('sheetTitle')}`;
+      const msg = `Update ${getFullName(sheet)}`;
       const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId ? sheet : q);
       const data = store.configData.setIn(['parameters', 'sheets'], sheets);
       const savingPath = store.getSavingPath(['updatingSheets']);
@@ -100,13 +101,13 @@ export default function(configId) {
 
     deleteSheet(sheetId) {
       const newSheets = store.sheets.filter((q) => q.get('id').toString() !== sheetId.toString());
-      const msg = `Remove sheet ${store.getConfigSheet(sheetId).get('sheetTitle')}`;
+      const msg = `Remove ${getFullName(store.getConfigSheet(sheetId))}`;
       return saveSheets(newSheets, store.getPendingPath(['delete', sheetId]), msg);
     },
 
     toggleSheetEnabled(sheetId) {
       let newSheet = store.getConfigSheet(sheetId);
-      const msg = `${newSheet.get('enabled') ? 'Disable' : 'Enable'} extraction of ${newSheet.get('sheetTitle')} sheet`;
+      const msg = `${newSheet.get('enabled') ? 'Disable' : 'Enable'} extraction of ${getFullName(newSheet)}`;
       newSheet = newSheet.set('enabled', !newSheet.get('enabled'));
       const newSheets = store.sheets.map((q) => q.get('id').toString() === sheetId.toString() ? newSheet : q);
       return saveSheets(newSheets, store.getPendingPath(['toggle', sheetId]), msg);

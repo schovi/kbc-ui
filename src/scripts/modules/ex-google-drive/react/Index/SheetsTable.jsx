@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import * as common from '../../common';
 // import {List} from 'immutable';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
@@ -12,6 +13,11 @@ import Confirm from '../../../../react/common/Confirm';
 // import {Link} from 'react-router';
 
 const COMPONENT_ID = 'keboola.ex-google-drive';
+
+function getDocumentTitle(sheet) {
+  return common.sheetFullName(sheet, ' / ');
+}
+
 
 export default React.createClass({
   propTypes: {
@@ -54,7 +60,7 @@ export default React.createClass({
 
   renderGoogleLink(sheet) {
     const url = `https://docs.google.com/spreadsheets/d/${sheet.get('fileId')}/edit#gid=${sheet.get('sheetId')}`;
-    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
+    const documentTitle = getDocumentTitle(sheet);
     return (
       <a href={url} target="_blank">
         {documentTitle}
@@ -65,7 +71,7 @@ export default React.createClass({
   renderSheetRow(sheet) {
     const propValue = (propName) => sheet.getIn([].concat(propName));
     const outTableId = this.props.outputBucket + '.' + propValue('outputTable');
-    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
+    const documentTitle = getDocumentTitle(sheet);
 
     return (
       <div
@@ -131,7 +137,7 @@ export default React.createClass({
       <Tooltip placement="top" tooltip="Delete sheet">
         <Confirm
           title="Delete sheet"
-          text={`Do you really want to delete extraction of sheet ${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}?`}
+          text={`Do you really want to delete extraction of sheet ${getDocumentTitle(sheet)}?`}
           buttonLabel="Delete"
           onConfirm={() => this.props.deleteSheetFn(sheet.get('id'))}
         >
@@ -142,6 +148,5 @@ export default React.createClass({
       </Tooltip>
     );
   }
-
 
 });

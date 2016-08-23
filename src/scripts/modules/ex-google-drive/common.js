@@ -13,3 +13,7 @@ export function getDefaultBucket(componentId, configId) {
 export function sanitizeTableName(name) {
   return string.sanitizeKbcTableIdString(name || '');
 }
+
+export function sheetFullName(sheet, separator = '/') {
+  return sheet.get('fileTitle') + separator + sheet.get('sheetTitle');
+}

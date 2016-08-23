@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {Map} from 'immutable';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {Modal} from 'react-bootstrap';
-import {sanitizeTableName} from '../../common';
+import {sanitizeTableName, sheetFullName} from '../../common';
 
 export default React.createClass({
 
@@ -21,7 +21,7 @@ export default React.createClass({
 
   render() {
     const sheet = this.props.localState.get('sheet', Map());
-    const documentTitle = `${sheet.get('fileTitle')} / ${sheet.get('sheetTitle')}`;
+    const documentTitle = sheetFullName(sheet, ' / ');
     return (
       <Modal
         show={this.props.show}
