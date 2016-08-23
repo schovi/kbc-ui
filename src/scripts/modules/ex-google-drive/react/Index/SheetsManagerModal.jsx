@@ -71,10 +71,10 @@ export default React.createClass({
 
   renderFilesSelector() {
     return (
-      <div>
-        <h2>
+      <div className="text-center">
+        <h3>
           1. Select documents of {this.props.authorizedEmail}
-        </h2>
+        </h3>
         <GdrivePicker
           email={this.props.authorizedEmail}
           dialogTitle="Select a spreadsheet document"
@@ -92,20 +92,36 @@ export default React.createClass({
     );
   },
 
-  renderSheetsSelector() {
+  renderFilesSelectorEmptyState() {
     return (
-      <div>
-        <h2>
+         <EmptyState>
+           <small>
+             <p>Requires temporal authorization of a Google account after which a short-lived access token is obtained to load spreadsheet documents from the selected account. </p>
+             <p>Google authorization uses a pop up window, hence disable windows pop up blocking for this site in the browser settings please.</p>
+           </small>
+         </EmptyState>
+    );
+  },
+
+  renderSheetsSelector() {
+    const files = this.props.localState.get('files');
+    if (!files) return this.renderFilesSelectorEmptyState();
+    return (
+      <div className="text-center">
+        <h3>
           2. Select sheets from the selected documents
-        </h2>
+        </h3>
         <div className="kbc-accordion kbc-panel-heading-with-table kbc-panel-heading-with-table">
-          {this.props.localState.get('files', List()).map((file) =>
+          {files.count() > 0 ?
+           files.map((file) =>
             <SheetsSelector
               file={file}
               onSelectFile={this.selectFile}
               selectSheet={this.selectSheet}
             />
-           )}
+           ) :
+           <EmptyState> No Files Selected </EmptyState>
+          }
         </div>
       </div>
     );
@@ -188,9 +204,9 @@ export default React.createClass({
 
     return (
       <div>
-        <h2>
+        <h3>
           Selected sheets to be added to the project
-        </h2>
+        </h3>
         { !!hasSelectedSheets ?
           <ul>
             {
@@ -203,7 +219,7 @@ export default React.createClass({
           </ul>
           :
           <EmptyState>
-            No profiles selected.
+            No sheets selected.
           </EmptyState>
         }
       </div>
