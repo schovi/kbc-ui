@@ -74,22 +74,6 @@ export default function(configId) {
     prepareLocalState: prepareLocalState,
     updateLocalState: updateLocalState,
 
-    onChangeEditingSheetFn(sheetId) {
-      const path = store.getEditingSheetPath(sheetId);
-      return (newSheet) => updateLocalState(path, newSheet);
-    },
-
-    onUpdateNewSheet(newSheet) {
-      const path = store.getNewSheetPath();
-      return updateLocalState(path, newSheet);
-    },
-
-    startEditingSheet(sheetId) {
-      const path = store.getEditingSheetPath(sheetId);
-      const sheet = store.getConfigSheet(sheetId);
-      updateLocalState(path, sheet);
-    },
-
     saveNewSheets(newSheets) {
       const sheetsToAdd = newSheets.map( (s) => {
         const name = `${s.get('fileTitle')}-${common.sanitizeTableName(s.get('sheetTitle'))}`;
@@ -103,10 +87,6 @@ export default function(configId) {
       return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet(s)`);
     },
 
-    cancelEditingNewSheet() {
-      const path = store.getNewSheetPath();
-      return updateLocalState(path, store.defaultNewSheet);
-    },
 
     saveEditingSheet(sheet) {
       const sheetId = sheet.get('id').toString();
@@ -117,10 +97,6 @@ export default function(configId) {
       return saveConfigData(data, savingPath, msg);
     },
 
-    cancelEditingSheet(sheetId) {
-      const path = store.getEditingSheetPath(sheetId);
-      updateLocalState(path, null);
-    },
 
     deleteSheet(sheetId) {
       const newSheets = store.sheets.filter((q) => q.get('id').toString() !== sheetId.toString());
@@ -134,11 +110,6 @@ export default function(configId) {
       newSheet = newSheet.set('enabled', !newSheet.get('enabled'));
       const newSheets = store.sheets.map((q) => q.get('id').toString() === sheetId.toString() ? newSheet : q);
       return saveSheets(newSheets, store.getPendingPath(['toggle', sheetId]), msg);
-    },
-
-    setSheetsFilter(newFilter) {
-      return updateLocalState('filter', newFilter);
     }
-
   };
 }

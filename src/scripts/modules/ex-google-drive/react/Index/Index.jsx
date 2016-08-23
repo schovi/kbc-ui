@@ -181,14 +181,6 @@ export default React.createClass({
         Add Sheet
       </button>
     );
-    /* return (
-     *   <Link
-     *     to={COMPONENT_ID + '-new-sheet'}
-     *     params={{config: this.state.configId}}
-     *     className="btn btn-success">
-     *     Add Sheet
-     *   </Link>
-     * );*/
   },
 
   renderEmptySheets() {
