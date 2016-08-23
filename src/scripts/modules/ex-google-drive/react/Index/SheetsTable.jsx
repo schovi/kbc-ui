@@ -38,7 +38,7 @@ export default React.createClass({
         <div className="thead">
           <div className="tr">
             <div className="th">
-              <strong>Document / sheet </strong>
+              <strong>Document / Sheet </strong>
             </div>
             <div className="th">
               {/* right arrow */}

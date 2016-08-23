@@ -86,14 +86,14 @@ export default React.createClass({
           <ul className="nav nav-stacked">
             <li className={!!this.invalidToRun() ? 'disabled' : null}>
               <RunComponentButton
-                title="Run"
+                title="Run Extraction"
                 component={COMPONENT_ID}
                 mode="link"
                 runParams={this.runParams()}
                 disabled={!!this.invalidToRun()}
                 disabledReason={this.invalidToRun()}
               >
-                You are about to run component.
+                You are about to run extraction of all configured sheets.
               </RunComponentButton>
             </li>
             {/* <li>
