@@ -76,7 +76,7 @@ export default function(configId) {
 
     saveNewSheets(newSheets) {
       const sheetsToAdd = newSheets.map( (s) => {
-        const name = `${s.get('fileTitle')}-${common.sanitizeTableName(s.get('sheetTitle'))}`;
+        const name = common.sanitizeTableName(`${s.get('fileTitle')}-${s.get('sheetTitle')}`);
         return s.set('enabled', true)
           .set('id', generateId())
           .set('outputTable', name);
