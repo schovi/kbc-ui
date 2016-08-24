@@ -7,7 +7,10 @@ PayloadSources = KbcConstants.PayloadSources
 class KbcDispatcher extends Dispatcher
 
   handleViewAction: (action) ->
-    console.log 'dispatch', action.type
+    if action.path
+      console.log 'dispatch', action.type, action.path
+    else
+      console.log 'dispatch', action.type
     payload =
       source: PayloadSources.VIEW_ACTION
       action: action
