@@ -226,6 +226,6 @@ module.exports = React.createClass
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
-    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState, path)
   _updateLocalStateDirectly: (newLocalState) ->
     InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)

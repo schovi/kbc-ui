@@ -19,7 +19,7 @@ export default function(configId) {
   function updateLocalState(path, data) {
     const ls = store.getLocalState();
     const newLocalState = ls.setIn([].concat(path), data);
-    componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState);
+    componentsActions.updateLocalState(COMPONENT_ID, configId, newLocalState, path);
   }
 
   function saveConfigData(data, waitingPath, changeDescription) {

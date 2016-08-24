@@ -151,4 +151,4 @@ module.exports = React.createClass
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
-    InstalledComponentsActions.updateLocalState('ex-google-drive', @state.configId, newLocalState)
+    InstalledComponentsActions.updateLocalState('ex-google-drive', @state.configId, newLocalState, path)

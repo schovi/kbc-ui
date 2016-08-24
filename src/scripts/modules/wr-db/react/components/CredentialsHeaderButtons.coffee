@@ -109,7 +109,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     #console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
     #console.log "new local state", newLocalState.toJS()
-    InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState)
+    InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState, path)
 
 
   _hasDbConnection: (credentials) ->

@@ -391,7 +391,7 @@ export default React.createClass({
     const configId = this.state.config.get('id');
     const componentId = this.state.componentId;
     const newState = this.state.localState.setIn(path, data);
-    InstalledComponentsActionCreators.updateLocalState(componentId, configId, newState);
+    InstalledComponentsActionCreators.updateLocalState(componentId, configId, newState, path);
   },
 
   isTemplatedComponent() {

@@ -45,7 +45,7 @@ export function createActions(componentId) {
   function updateLocalState(configId, path, data) {
     const ls = localState(configId);
     const newLocalState = ls.setIn([].concat(path), data);
-    componentsActions.updateLocalState(componentId, configId, newLocalState);
+    componentsActions.updateLocalState(componentId, configId, newLocalState, path);
   }
 
   function saveConfigData(configId, data, waitingPath) {

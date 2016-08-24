@@ -250,4 +250,4 @@ templateFn = (componentId, driver, isProvisioning) ->
     if _.isString path
       path = [path]
     newLocalState = @state.localState.setIn(path, data)
-    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState)
+    InstalledComponentsActions.updateLocalState(componentId, @state.configId, newLocalState, path)

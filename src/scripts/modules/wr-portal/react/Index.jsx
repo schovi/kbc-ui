@@ -182,7 +182,7 @@ export default function(componentId) {
 
     updateLocalState(path, newData) {
       const newState = this.state.localState.setIn(path, newData);
-      installedComponentsActions.updateLocalState(componentId, this.state.configId, newState);
+      installedComponentsActions.updateLocalState(componentId, this.state.configId, newState, path);
     }
 
   });

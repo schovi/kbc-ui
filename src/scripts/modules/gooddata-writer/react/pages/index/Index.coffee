@@ -357,7 +357,7 @@ module.exports = React.createClass
 
   _updateLocalState: (path, data) ->
     newState = @state.localState.setIn(path, data)
-    installedComponentsActions.updateLocalState('gooddata-writer', @state.configId, newState)
+    installedComponentsActions.updateLocalState('gooddata-writer', @state.configId, newState, path)
 
 
   _oldTablesList: ->

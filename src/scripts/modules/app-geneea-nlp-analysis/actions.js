@@ -26,7 +26,7 @@ function getLocalState(configId, path) {
 
 export function updateLocalState(configId, path, data) {
   const newState = InstalledComponentStore.getLocalState(componentId, configId).setIn(path, data);
-  installedComponentsActions.updateLocalState(componentId, configId, newState);
+  installedComponentsActions.updateLocalState(componentId, configId, newState, path);
 }
 
 function getConfigData(configId) {

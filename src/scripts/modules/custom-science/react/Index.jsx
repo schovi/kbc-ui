@@ -181,7 +181,7 @@ export default React.createClass({
 
   updateLocalState(path, data) {
     const newLocalState = this.state.localState.setIn(path, data);
-    InstalledComponentsActions.updateLocalState(componentId, this.state.configId, newLocalState);
+    InstalledComponentsActions.updateLocalState(componentId, this.state.configId, newLocalState, path);
   }
 
 });

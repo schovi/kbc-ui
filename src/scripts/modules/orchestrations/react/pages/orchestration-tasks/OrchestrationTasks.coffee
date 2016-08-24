@@ -113,7 +113,7 @@ OrchestrationTasks = React.createClass
 
   updateLocalState: (path, data) ->
     newState = @state.localState.setIn([].concat(path), data)
-    installedComponentsActions.updateLocalState(componentId, @state.orchestrationId, newState)
+    installedComponentsActions.updateLocalState(componentId, @state.orchestrationId, newState, path)
 
 
 module.exports = OrchestrationTasks
