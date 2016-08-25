@@ -4,8 +4,8 @@ _ = require 'underscore'
 ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
 SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
 
-Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
-ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
+Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker').default)
+ViewTemplates = require('../../../../google-utils/react/PickerViewTemplates').default
 
 {label, a, small, button, option, span, i, button, strong, div, input} = React.DOM
 Input = React.createFactory(require('react-bootstrap').Input)

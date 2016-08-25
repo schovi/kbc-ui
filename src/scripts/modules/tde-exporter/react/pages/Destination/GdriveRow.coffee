@@ -5,8 +5,8 @@ GdriveModal = React.createFactory require './AuthorizeGdriveModal'
 {OverlayTrigger, FormControls, Tooltip, Button} = require 'react-bootstrap'
 Button = React.createFactory(Button)
 {Map} = require 'immutable'
-Picker = React.createFactory(require '../../../../google-utils/react/GooglePicker')
-ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
+Picker = require('../../../../google-utils/react/GooglePicker').default
+ViewTemplates = require('../../../../google-utils/react/PickerViewTemplates').default
 Loader = React.createFactory(require('kbc-react-components').Loader)
 
 Confirm = require('../../../../../react/common/Confirm').default
@@ -107,7 +107,7 @@ module.exports = React.createClass
     folderId = file.get 'targetFolder'
     folderName = file.get('targetFolderName')
 
-    Picker
+    React.createElement Picker,
       email: @props.account.get 'email'
       dialogTitle: 'Select a folder'
       buttonLabel: span null,

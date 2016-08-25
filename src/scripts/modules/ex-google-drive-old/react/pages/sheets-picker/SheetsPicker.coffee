@@ -9,8 +9,8 @@ ActionCreators = require '../../../exGdriveActionCreators'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 
 RoutesStore = require '../../../../../stores/RoutesStore'
-Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker'))
-ViewTemplates = require '../../../../google-utils/react/PickerViewTemplates'
+Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker').default)
+ViewTemplates = require('../../../../google-utils/react/PickerViewTemplates').default
 
 {Panel, PanelGroup} = require('react-bootstrap')
 Accordion = React.createFactory(require('react-bootstrap').Accordion)
