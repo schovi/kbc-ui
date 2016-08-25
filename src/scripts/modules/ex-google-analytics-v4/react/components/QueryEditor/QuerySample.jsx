@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 // import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 import {Table} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
+import EmptyState from '../../../../components/react/components/ComponentEmptyState';
 
 export default React.createClass({
   propTypes: {
@@ -31,9 +32,17 @@ export default React.createClass({
 
   renderSamplesTable() {
     const csvMap = this.getSampleDataInfo('data', null);
-    if (!csvMap || csvMap.count() === 0 ) {
+    if (!csvMap ) {
       return null;
     }
+    if (csvMap.count() === 0) {
+      return (
+        <EmptyState>
+          Query returned empty result
+        </EmptyState>
+      );
+    }
+
     let idIdx = 0;
     const header = csvMap.first().map((c, idx) => {
       if (c === 'id') idIdx = idx;

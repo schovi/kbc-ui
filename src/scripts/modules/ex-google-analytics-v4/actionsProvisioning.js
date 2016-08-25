@@ -5,6 +5,8 @@ import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import callDockerAction from '../components/DockerActionsApi';
 import _ from 'underscore';
+import Promise from 'bluebird';
+
 const COMPONENT_ID = 'keboola.ex-google-analytics-v4';
 
 // PROPTYPES HELPER:
@@ -173,6 +175,9 @@ export default function(configId) {
         .then((result) => {
           if (result.status !== 'success') {
             throw result;
+          }
+          if (result && result.data.length === 0) {
+            return Promise.resolve([]);
           }
           return parseCsv(result.data);
         })
