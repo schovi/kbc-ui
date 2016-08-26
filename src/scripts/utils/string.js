@@ -1,4 +1,4 @@
-REMOVE_DIACRITICS_MAP = [
+const REMOVE_DIACRITICS_MAP = [
   { base: 'A', letters: RegExp('[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0' +
     '\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104' +
     '\u023A\u2C6F]', 'g')},
@@ -17,7 +17,7 @@ REMOVE_DIACRITICS_MAP = [
     '\u0114\u0116\u00CB\u1EBA\u011A\u0204\u0206\u1EB8\u1EC6\u0228\u1E1C\u0118\u1E18\u1E1A\u0190\u018E]', 'g')},
   { base: 'F', letters: /[\u0046\u24BB\uFF26\u1E1E\u0191\uA77B]/g },
   { base: 'G', letters: RegExp('[\u0047\u24BC\uFF27\u01F4\u011C\u1E20\u011E\u0120\u01E6\u0122\u01E4\u0193\uA7A0\uA77D' +
-    '\uA77E]','g')},
+    '\uA77E]', 'g')},
   { base: 'H', letters: /[\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g },
   { base: 'I', letters: RegExp('[\u0049\u24BE\uFF29\u00CC\u00CD\u00CE\u0128\u012A\u012C\u0130\u00CF\u1E2E\u1EC8\u01CF' +
     '\u0208\u020A\u1ECA\u012E\u1E2C\u0197]', 'g')},
@@ -76,7 +76,7 @@ REMOVE_DIACRITICS_MAP = [
   { base: 'g', letters: RegExp('[\u0067\u24D6\uFF47\u01F5\u011D\u1E21\u011F\u0121\u01E7\u0123\u01E5\u0260\uA7A1\u1D79' +
     '\uA77F]', 'g')},
   { base: 'h', letters: RegExp('[\u0068\u24D7\uFF48\u0125\u1E23\u1E27\u021F\u1E25\u1E29\u1E2B\u1E96\u0127\u2C68\u2C76' +
-    '\u0265]' ,'g')},
+    '\u0265]', 'g')},
   { base: 'hv', letters: /[\u0195]/g },
   { base: 'i', letters: RegExp('[\u0069\u24D8\uFF49\u00EC\u00ED\u00EE\u0129\u012B\u012D\u00EF\u1E2F\u1EC9\u01D0\u0209' +
     '\u020B\u1ECB\u012F\u1E2D\u0268\u0131]', 'g')},
@@ -115,29 +115,36 @@ REMOVE_DIACRITICS_MAP = [
     '\u024F\u1EFF]', 'g')},
   { base: 'z', letters: /[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g },
   { base: '-', letters: /\s/g }
-]
+];
 
-removeDiacriticsCache = {}
+let removeDiacriticsCache = {};
 
-removeDiacritics = (str) ->
-  key = '_' + str
-  cached = removeDiacriticsCache[key]
-  return cached if cached
-  for item in REMOVE_DIACRITICS_MAP
-    str = str.replace item.letters, item.base
-  removeDiacriticsCache[key] = str
+const removeDiacritics = (strParam) => {
+  let str = strParam;
+  const key = '_' + str;
+  const cached = removeDiacriticsCache[key];
+  if (cached) return cached;
+  for (let item of REMOVE_DIACRITICS_MAP) {
+    str = str.replace(item.letters, item.base);
+  }
+  removeDiacriticsCache[key] = str;
+  return str;
+};
 
+export default {
+  sanitizeKbcTableIdString(str) {
+    return str.replace(/[^a-zA-Z0-9-]/g, '-');
+  },
 
-module.exports =
-  sanitizeKbcTableIdString: (str) ->
-    return str.replace(/[^a-zA-Z0-9-]/g, '-')
-
-  webalize: (string, separator = '-') ->
+  webalize(string, separator = '-') {
     removeDiacritics(string)
     .toLowerCase()
     .replace(/\ /g, '-')
-    .replace(/[^a-z0-9\-]/g, '')
-    .replace(/-/g, separator)
+      .replace(/[^a-z0-9\-]/g, '')
+      .replace(/-/g, separator);
+  },
 
-  capitalize: (string) ->
-    return string && string[0].toUpperCase() + string.slice(1)
+  capitalize(string) {
+    return string && string[0].toUpperCase() + string.slice(1);
+  }
+};
