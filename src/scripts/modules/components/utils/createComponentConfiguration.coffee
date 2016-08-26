@@ -1,7 +1,7 @@
 installedComponentsApi = require '../InstalledComponentsApi'
 syrupApi = require '../SyrupComponentApi'
 constants = require '../Constants'
-string = require '../../../utils/string'
+string = require('../../../utils/string').default
 ComponentsStore = require '../stores/ComponentsStore'
 ApplicationStore = require '../../../stores/ApplicationStore'
 componentHasApi = require './hasComponentApi'

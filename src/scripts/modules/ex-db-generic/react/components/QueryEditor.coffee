@@ -1,6 +1,6 @@
 React = require 'react'
 fuzzy = require 'fuzzy'
-string = require '../../../../utils/string'
+string = require('../../../../utils/string').default
 CodeEditor  = React.createFactory(require('../../../../react/common/common').CodeEditor)
 Check = React.createFactory(require('../../../../react/common/common').Check)
 Select = React.createFactory require('../../../../react/common/Select').default

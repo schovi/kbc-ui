@@ -9,7 +9,7 @@ Promise = require 'bluebird'
 _ = require 'underscore'
 parseQueries = require('./utils/parseQueries').default
 VersionActionCreators = require('../components/VersionsActionCreators')
-capitalize = require('../../utils/string').capitalize
+{capitalize} = require('../../utils/string').default
 
 module.exports =
 
