@@ -1,6 +1,6 @@
 React = require 'react'
 {Modal, Button} = require('react-bootstrap')
-ConfirmButtons = require '../../../../react/common/ConfirmButtons'
+ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 CronScheduler = require '../../../../react/common/CronScheduler'
 
 OrchestrationsApi = require '../../OrchestrationsApi'

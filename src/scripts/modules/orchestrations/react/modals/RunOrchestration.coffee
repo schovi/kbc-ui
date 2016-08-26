@@ -3,7 +3,7 @@ Modal = React.createFactory(require('react-bootstrap').Modal)
 ButtonToolbar = React.createFactory(require('react-bootstrap').ButtonToolbar)
 Button = React.createFactory(require('react-bootstrap').Button)
 Panel = React.createFactory(require('react-bootstrap').Panel)
-ConfirmButtons = require '../../../../react/common/ConfirmButtons'
+ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 TaskSelectTable = require '../components/TaskSelectTable'
 
 OrchestrationActionCreators = require '../../ActionCreators'

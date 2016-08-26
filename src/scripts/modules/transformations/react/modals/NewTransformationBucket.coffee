@@ -1,6 +1,6 @@
 React = require 'react'
 Modal = React.createFactory(require('react-bootstrap').Modal)
-ConfirmButtons = React.createFactory(require '../../../../react/common/ConfirmButtons')
+ConfirmButtons = React.createFactory(require('../../../../react/common/ConfirmButtons').default)
 
 TransformationActionCreators = require '../../ActionCreators'
 

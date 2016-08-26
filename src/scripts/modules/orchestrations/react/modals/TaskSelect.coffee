@@ -10,7 +10,7 @@ TaskSelectTable = require '../components/TaskSelectTable'
 {div, p, strong, form, input, label} = React.DOM
 
 Panel  = React.createFactory Panel
-ConfirmButtons = require('../../../../react/common/ConfirmButtons')
+ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 
 OrchestrationsApi = require('../../OrchestrationsApi')
 actionCreators = require('../../ActionCreators')

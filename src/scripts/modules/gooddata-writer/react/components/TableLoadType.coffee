@@ -6,7 +6,7 @@ actionCreators = require '../../actionCreators'
 
 {div, span} = React.DOM
 Loader = React.createFactory(require('kbc-react-components').Loader)
-ConfirmButtons = require '../../../../react/common/ConfirmButtons'
+ConfirmButtons = require('../../../../react/common/ConfirmButtons').default
 
 
 FIELD = 'incrementalLoad'
@@ -137,4 +137,3 @@ module.exports = React.createClass
       when false, 0 then 'Full'
       when 1 then 'Incremental  1 day'
       else "Incremental  #{@props.table.getIn ['data', 'incrementalLoad']} days"
-

@@ -1,7 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
 
-ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
+ConfirmButtons = require('../../../../../react/common/ConfirmButtons').default
 SapiTableSelector = require '../../../../components/react/components/SapiTableSelector'
 
 Picker = React.createFactory(require('../../../../google-utils/react/GooglePicker').default)

@@ -7,7 +7,7 @@
 
 React = require 'react'
 
-ConfirmButtons = require './ConfirmButtons'
+ConfirmButtons = require('./ConfirmButtons').default
 Button = require('react-bootstrap').Button
 
 module.exports = React.createClass

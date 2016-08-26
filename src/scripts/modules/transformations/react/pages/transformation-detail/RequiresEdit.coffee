@@ -3,7 +3,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 Select = require('react-select')
 _ = require('underscore')
 Immutable = require('immutable')
-ConfirmButtons = require '../../../../../react/common/ConfirmButtons'
+ConfirmButtons = require('../../../../../react/common/ConfirmButtons').default
 
 module.exports = React.createClass
   displayName: 'SelectRequires'
