@@ -1,5 +1,6 @@
 import {fromJS} from 'immutable';
-import {webalize} from '../../utils/string';
+import stringUtils from '../../utils/string';
+const {webalize} = stringUtils;
 
 export default function(configName, baseConfig) {
   const template = fromJS({
@@ -45,4 +46,3 @@ export default function(configName, baseConfig) {
     .setIn(['parameters', 'config', 'id'], webalize(configName))
     .mergeDeep(baseConfig);
 }
-
