@@ -2,6 +2,7 @@ React = require 'react'
 
 JobRow = require './SidebarJobsRow'
 {Loader} = require 'kbc-react-components'
+{Link} = require('react-router')
 PureRenderMixin = require('react/addons').addons.PureRenderMixin
 {div, small} = React.DOM
 
@@ -30,7 +31,7 @@ module.exports = React.createClass
         React.createElement JobRow,
           job: job
           key: job.get 'id'
-      .toArray()
+      .toArray().concat(@renderAllJobsLink())
     else
       div {},
         small {className: 'text-muted'},
@@ -43,3 +44,22 @@ module.exports = React.createClass
         React.createElement(Loader) if @props.jobs.get 'isLoading'
       React.DOM.div className: 'kbc-sidebar-jobs',
         @renderJobs()
+
+  renderAllJobsLink: ->
+    firstJob = @props.jobs.get('jobs')?.first()
+    params = firstJob?.get('params')
+    if not params
+      return null
+    if params.get('component')
+      component = "+params.component:#{params.get('component')}"
+    else
+      component = "+component:#{firstJob.get('component')}"
+
+    config = params.get('config')
+    div className: 'jobs-link',
+      React.createElement Link,
+        to: 'jobs'
+        query:
+          q: "#{component} +params.config:#{config}"
+      ,
+        'Show all jobs'
