@@ -48,11 +48,11 @@ export default React.createClass({
     }
     return (
       <RunConfigurationButton
-        title="Run"
+        title="Run component configuration"
         component={this.props.componentId}
         runParams={this.runParams()}
       >
-        You are about to run component
+        You are about to run {this.props.component.get('name')} configuration {this.props.config.get('name')}.
       </RunConfigurationButton>
     );
   },

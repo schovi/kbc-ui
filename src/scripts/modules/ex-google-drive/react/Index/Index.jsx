@@ -71,7 +71,7 @@ export default React.createClass({
             </div>
           </div>
           <div className="row">
-            {this.renderAuthorizedInfo('col-xs-5')}
+            {this.renderAuthorizedInfo('col-xs-10')}
           </div>
           {(this.hasSheets() > 0)
            ? this.renderSheetsTable()
