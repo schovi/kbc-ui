@@ -16,6 +16,7 @@ contactSupport = require('../../../../utils/contactSupport').default
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 RedshiftSSLInfoModal = React.createFactory(require './RedshiftSSLInfoModal')
+ApplicationStore = require '../../../../stores/ApplicationStore'
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
@@ -70,14 +71,17 @@ RedshiftSandbox = React.createClass
                 sandboxConfiguration = params
           )
         div {},
-          if @state.pendingActions.get 'refresh'
-            button {className: "btn btn-link", disabled: true},
-              Loader()
-              " Refresh privileges"
+          if !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
+            if @state.pendingActions.get 'refresh'
+              button {className: "btn btn-link", disabled: true},
+                Loader()
+                " Refresh privileges"
+            else
+              button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshCredentials},
+                span {className: 'fa fa-fw fa-refresh'}
+                " Refresh privileges"
           else
-            button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshCredentials},
-              span {className: 'fa fa-fw fa-refresh'}
-              " Refresh privileges"
+            null
         div {},
           OverlayTrigger
             overlay: Tooltip null, "Information about secure connection"

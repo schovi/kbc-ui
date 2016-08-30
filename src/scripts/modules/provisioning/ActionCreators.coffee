@@ -7,9 +7,15 @@ snowflakeSandboxCredentialsStore = require './stores/SnowflakeSandboxCredentials
 WrDbCredentialsStore = require './stores/WrDbCredentialsStore'
 Promise = require 'bluebird'
 HttpError = require '../../utils/HttpError'
+ApplicationStore = require '../../stores/ApplicationStore'
 
 module.exports =
 
+  getRedshiftBackend: ->
+    backend = 'redshift-workspace'
+    if (!ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace'))
+      backend = 'redshift'
+    backend
 
   ###
   Request specified orchestration load from server
@@ -102,7 +108,7 @@ module.exports =
     )
 
     provisioningApi
-    .getCredentials('redshift', 'sandbox')
+    .getCredentials(@getRedshiftBackend(), 'sandbox')
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_LOAD_SUCCESS
@@ -140,7 +146,7 @@ module.exports =
     )
 
     provisioningApi
-    .createCredentials('redshift', 'sandbox', null, {noRefresh: true, restrictTime: true})
+    .createCredentials(@getRedshiftBackend(), 'sandbox', null, {noRefresh: true, restrictTime: true})
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_CREATE_SUCCESS
@@ -160,7 +166,7 @@ module.exports =
     )
 
     provisioningApi
-    .dropCredentials('redshift', redshiftSandboxCredentialsStore.getCredentials().get("id"))
+    .dropCredentials(@getRedshiftBackend(), redshiftSandboxCredentialsStore.getCredentials().get("id"))
     .then( ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_DROP_SUCCESS
@@ -179,7 +185,7 @@ module.exports =
     )
 
     provisioningApi
-    .createCredentials('redshift', 'sandbox')
+    .createCredentials(@getRedshiftBackend(), 'sandbox')
     .then((response) ->
       dispatcher.handleViewAction(
         type: constants.ActionTypes.CREDENTIALS_REDSHIFT_SANDBOX_REFRESH_SUCCESS
