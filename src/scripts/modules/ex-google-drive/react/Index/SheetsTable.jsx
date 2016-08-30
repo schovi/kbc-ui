@@ -121,7 +121,7 @@ export default React.createClass({
     return (
       <button className="btn btn-link"
         onClick={() => this.props.onStartEdit(sheet)}>
-        <Tooltip tooltip="Edit output table name" placement="top">
+        <Tooltip tooltip="Edit sheet extraction" placement="top">
           <i className="kbc-icon-pencil" />
         </Tooltip>
       </button>

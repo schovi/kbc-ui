@@ -80,6 +80,7 @@ export default function(configId) {
         const name = common.sanitizeTableName(getFullName(s, '-'));
         return s.set('enabled', true)
           .set('id', generateId())
+          .setIn(['header', 'rows'], 1)
           .set('outputTable', name);
       });
       const sheetsToSave = store.sheets.toSet().merge(sheetsToAdd);

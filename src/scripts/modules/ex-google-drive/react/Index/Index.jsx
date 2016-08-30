@@ -67,7 +67,7 @@ export default React.createClass({
               />
             </div>
             <div className="col-sm-2 kbc-buttons">
-              {this.hasSheets() ? this.renderAddSheetLink() : null}
+              {this.hasSheets() && this.isAuthorized() ? this.renderAddSheetLink() : null}
             </div>
           </div>
           <div className="row">

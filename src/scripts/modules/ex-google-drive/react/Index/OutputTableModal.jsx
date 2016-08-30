@@ -24,17 +24,20 @@ export default React.createClass({
     const documentTitle = sheetFullName(sheet, ' / ');
     return (
       <Modal
+        bsSize="large"
         show={this.props.show}
         onHide={this.props.onHideFn}
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Edit Output Table Name of {documentTitle}
+            Edit Extraction of {documentTitle}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="row">
-            {this.renderEdit()}
+          <div className="form-horizontal clearfix">
+            <div className="row">
+              {this.renderEdit()}
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -55,12 +58,25 @@ export default React.createClass({
     const sanitized = sanitizeTableName(this.value());
     const sheet = this.props.localState.get('sheet');
     this.props.updateLocalState('dontValidate', true);
-    return this.props.onSaveSheetFn(sheet.set('outputTable', sanitized)).then(this.props.onHideFn);
+    const newSheet = sheet
+      .set('outputTable', sanitized)
+      .setIn(['header', 'rows'], this.headerRowValue());
+    return this.props.onSaveSheetFn(newSheet).then(this.props.onHideFn);
   },
 
   value() {
     const defaultValue = this.props.localState.getIn(['sheet', 'outputTable'], '');
     return this.props.localState.get('value', defaultValue).trim();
+  },
+
+  headerRowValue() {
+    const defaultValue = this.props.localState.getIn(['sheet', 'header', 'rows'], 1);
+    return this.props.localState.get('headerRowValue', defaultValue);
+  },
+
+  onChangeHeaderRowValue(e) {
+    const newVal = e.target.value;
+    this.props.updateLocalState('headerRowValue', newVal);
   },
 
   renderEdit() {
@@ -69,8 +85,12 @@ export default React.createClass({
     const err = this.invalidReason();
     return (
       <div className="col-md-12">
-        <div className={'form-group'}>
-          <div className="col-md-12">
+        <div className="form-group">
+          <label className="control-label col-sm-4">
+            Output Table
+          </label>
+          <div className="col-sm-8">
+
             <span className={err ? 'has-error' : ''}>
               <div className="input-group">
                 <div className="input-group-addon">
@@ -99,6 +119,23 @@ export default React.createClass({
             }
           </div>
         </div>
+        <div className="form-group">
+          <label className="control-label col-sm-4">
+            Header Starts From
+          </label>
+          <div className="col-sm-2">
+            <div className="input-group">
+              <input
+                onChange={this.onChangeHeaderRowValue}
+                value={this.headerRowValue()}
+                type="number"
+                className="form-control form-control-sm"
+              />
+              <div className="input-group-addon">. row</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   },
