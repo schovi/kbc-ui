@@ -20,7 +20,9 @@ const SHEETS_SCOPE = [
 
 function setZIndex() {
   const elements = document.getElementsByClassName('picker');
-  for (let el of elements) {
+
+  for (let i = 0; i < elements.length; i++) {
+    const el = elements.item(i);
     el.style.zIndex = '1500';
   }
 }
