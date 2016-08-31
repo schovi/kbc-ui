@@ -52,7 +52,7 @@ export default React.createClass({
         component={this.props.componentId}
         runParams={this.runParams()}
       >
-        You are about to run {this.props.component.get('name')} configuration {this.props.config.get('name')}.
+        You are about to run {this.props.component.get('name')} configuration <strong>{this.props.config.get('name')}</strong>.
       </RunConfigurationButton>
     );
   },
