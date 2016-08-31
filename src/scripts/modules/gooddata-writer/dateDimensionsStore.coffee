@@ -1,4 +1,3 @@
-
 StoreUtils = require '../../utils/StoreUtils'
 Immutable = require 'immutable'
 dispatcher = require '../../Dispatcher'
@@ -18,7 +17,7 @@ DimensionsStore = StoreUtils.createStore
   getAll: (configurationId) ->
     _store
     .getIn(['dimensionsById', configurationId], Map())
-    .sortBy (dimension) -> dimension.get('id')
+    .sortBy (dimension) -> dimension.get('name')
 
   isLoading: (configurationId) ->
     _store.hasIn ['isLoading', configurationId]
@@ -54,10 +53,10 @@ dispatcher.register (payload) ->
       .map (dimension, id) ->
         Map
           isLoading: false
-          id: id
+          name: dimension.get('name')
           pendingActions: List()
           data: dimension
-
+      dimensionsById = dimensionsById.toMap().mapKeys((_, dim) -> dim.get('name'))
       _store = _store.withMutations (store) ->
         store
         .deleteIn ['isLoading', action.configurationId]

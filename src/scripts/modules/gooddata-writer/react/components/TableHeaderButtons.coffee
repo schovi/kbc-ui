@@ -1,8 +1,10 @@
 React = require 'react'
+{Map} = require 'immutable'
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 goodDataWriterStore = require '../../store'
 actionCreators = require '../../actionCreators'
 RoutesStore = require '../../../../stores/RoutesStore'
+{ColumnTypes} = require '../../constants'
 Loader = require('kbc-react-components').Loader
 TableLoadType = React.createFactory(require './TableLoadType')
 
@@ -25,7 +27,10 @@ module.exports = React.createClass
     configId = RoutesStore.getCurrentRouteParam('config')
     tableId = RoutesStore.getCurrentRouteParam('table')
     isEditingColumns = goodDataWriterStore.isEditingTableColumns(configId, tableId)
+    writer = goodDataWriterStore.getWriter(configId)
 
+    projectExist: !!writer.getIn(['config', 'project'])
+    pid: writer.getIn ['config', 'project', 'id']
     table: goodDataWriterStore.getTable(configId, tableId)
     configurationId: configId
     columns: goodDataWriterStore.getTableColumns(configId,
@@ -49,30 +54,38 @@ module.exports = React.createClass
   _handleResetTable: ->
     actionCreators.resetTable @state.configurationId,
       @state.table.get 'id'
+      @state.pid
 
   _handleSynchronizeTable: ->
     actionCreators.synchronizeTable @state.configurationId,
       @state.table.get 'id'
+      @state.pid
 
   _handleUpload: ->
     actionCreators.uploadToGoodData @state.configurationId, @state.table.get('id')
 
+  _isConnectionPoint: ->
+    @state.columns and @state.columns.find((c) -> c.get('type') == ColumnTypes.CONNECTION_POINT)
+
   render: ->
+    {ATTRIBUTE, REFERENCE, DATE} = ColumnTypes
+    filteredColumns = @state.columns.filter((c) -> c.get('type') in [ATTRIBUTE, REFERENCE, DATE])
+    grainColumns = if !@_isConnectionPoint() then filteredColumns else Map()
     resetExportStatusText = React.DOM.span null,
       'Are you sure you want to reset export status of '
-      React.DOM.strong null, @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' dataset?'
 
     resetTableText = React.DOM.span null,
       'You are about to remove dataset in the GoodData project belonging
       to the table and reset its export status.
       Are you sure you want to reset table '
-      React.DOM.strong null, @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' ?'
 
     uploadTableText = React.DOM.span null,
       'Are you sure you want to upload '
-      @state.table.getIn ['data', 'name']
+      @state.table.getIn ['data', 'title']
       ' to GoodData project?'
 
     synchronizeTableText = React.DOM.span null,
@@ -83,11 +96,12 @@ module.exports = React.createClass
       ,
         'synchronize'
       ' operation on '
-      @state.table.getIn ['data', 'name']
+      React.DOM.strong null, @state.table.getIn ['data', 'title']
       ' dataset?'
 
     div null,
       TableLoadType
+        columns: grainColumns
         table: @state.table
         configurationId: @state.configurationId
       ' '

@@ -19,6 +19,7 @@ createConfigManually = (configuration) ->
   Promise.resolve
     id: string.webalize(configuration.get('name')) + '-' + Math.round(new Date().getTime() % 100)
 
+
 # Custom create method for GoodData writer
 createGoodDataWriter = (configuration) ->
   writerId = string.webalize(configuration.get('name'), '_')
@@ -28,22 +29,25 @@ createGoodDataWriter = (configuration) ->
 
   # create new
   if configuration.get('mode') == constants.GoodDataWriterModes.NEW
-    if configuration.get('tokenType') == constants.GoodDataWriterTokenTypes.CUSTOM
-      params.accessToken = configuration.get 'accessToken'
-    else
-      params.accessToken = ApplicationStore.getKbcVars().getIn [
-        'goodDataTokens'
-        configuration.get('tokenType').toLowerCase()
-      ]
+    params.authToken = configuration.get 'authToken'
 
   # create from existing
   if configuration.get('mode') == constants.GoodDataWriterModes.EXISTING
     params.pid = configuration.get 'pid'
     params.username = configuration.get 'username'
     params.password = configuration.get 'password'
+    params.readModel = configuration.get 'readModel'
+
+  if configuration.get('customDomain')
+    params.domain = configuration.get 'domain'
+    params.username = configuration.get 'username'
+    params.password = configuration.get 'password'
+    params.backendUrl = configuration.get 'backendUrl'
+    params.ssoProvider = configuration.get 'ssoProvider'
+    params.ssoKey = configuration.get 'ssoKey'
 
   syrupApi
-  .createRequest('gooddata-writer', 'POST', 'writers')
+  .createRequest('gooddata-writer', 'POST', 'v2')
   .send params
   .promise()
   .then ->

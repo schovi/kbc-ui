@@ -11,20 +11,27 @@ _store = Map(
 
 _defaults = Immutable.fromJS
   'gooddata-writer':
+    domain: ''
+    customDomain: false
     name: ''
     description: ''
     pid: ''
     username: ''
     password: ''
-    accessToken: ''
+    authToken: constants.GoodDataWriterTokenTypes.DEMO
     mode: constants.GoodDataWriterModes.NEW
-    tokenType: constants.GoodDataWriterTokenTypes.DEVELOPER
+    readModel: true
+    #accessToken: '' DEPRECATED
+    # tokenType: constants.GoodDataWriterTokenTypes.DEMO DEPRECATED
 
 getDefaultConfiguration = (componentId) ->
   _defaults.get componentId, Map(
     name: ''
     description: ''
   )
+
+isCustomGoodDataToken = (token) ->
+  token not in [constants.GoodDataWriterTokenTypes.DEMO, constants.GoodDataWriterTokenTypes.PRODUCTION]
 
 NewConfigurationsStore = StoreUtils.createStore
 
@@ -39,12 +46,16 @@ NewConfigurationsStore = StoreUtils.createStore
     if componentId == 'gooddata-writer'
       switch configuration.get('mode')
         when constants.GoodDataWriterModes.NEW
-          if configuration.get('tokenType') == constants.GoodDataWriterTokenTypes.CUSTOM
-            return false if !configuration.get('accessToken').trim()
+          if constants.isCustomAuthToken(configuration.get('authToken'))
+            return false if !configuration.get('authToken').trim()
         when constants.GoodDataWriterModes.EXISTING
           return false if !configuration.get('pid').trim()
           return false if !configuration.get('password').trim()
           return false if !configuration.get('username').trim()
+      if configuration.get('customDomain')
+        return false if !configuration.get('domain').trim()
+        return false if !configuration.get('password').trim()
+        return false if !configuration.get('username').trim()
     true
 
   isSavingConfiguration: (componentId) ->
@@ -80,4 +91,3 @@ Dispatcher.register (payload) ->
       NewConfigurationsStore.emitChange()
 
 module.exports = NewConfigurationsStore
-

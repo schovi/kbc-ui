@@ -1,4 +1,5 @@
 Promise = require 'bluebird'
+_ = require 'underscore'
 React = require 'react'
 dispatcher = require '../../Dispatcher'
 constants = require './constants'
@@ -131,21 +132,29 @@ module.exports =
     else
       return @loadReferencableTablesForce(configurationId)
 
-  optimizeSLIHash: (configurationId) ->
+  optimizeSLIHash: (configurationId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_START
       configurationId: configurationId
 
     goodDataWriterApi
-    .optimizeSLIHash configurationId
-    .then (response) ->
+    .optimizeSLIHash(configurationId, pid)
+    .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_SUCCESS
         configurationId: configurationId
-
       applicationActionCreators.sendNotification
-        message: 'Optimalization of SLI hashes has been triggered!
-      You can see progress TODO'
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Optimalization of SLI hashes has been triggered! You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.id
+                onClick: @props.onClick
+              ,
+                'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SLI_ERROR
@@ -153,26 +162,69 @@ module.exports =
         error: e
       throw e
 
-  resetProject: (configurationId) ->
+  resetProject: (configurationId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_START
       configurationId: configurationId
 
     goodDataWriterApi
-    .resetProject configurationId
-    .then (response) ->
+    .resetProject configurationId, pid
+    .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_SUCCESS
         configurationId: configurationId
-
-      applicationActionCreators.sendNotification 'Project has been scheduled to reset!
-      You can see progress TODO'
+      applicationActionCreators.sendNotification
+        message: React.createClass
+          render: ->
+            React.DOM.span null,
+              "Project has been scheduled to reset! You can track the job progress "
+              React.createElement Link,
+                to: 'jobDetail'
+                params:
+                  jobId: job.id
+                onClick: @props.onClick
+              ,
+                'here'
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_PROJECT_ERROR
         configurationId: configurationId
         error: e
       throw e
+
+  saveMultipleTableFields: (configurationId, tableId, fields) ->
+    _.map(fields, (newValue, fieldName)  ->
+      dispatcher.handleViewAction
+        type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_START
+        configurationId: configurationId
+        tableId: tableId
+        field: fieldName
+        value: newValue
+    )
+    goodDataWriterApi
+    .updateTable(configurationId, tableId, fields)
+    .then ->
+      _.map(fields, (newValue, fieldName)  ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_SUCCESS
+          configurationId: configurationId
+          tableId: tableId
+          field: fieldName
+          value: newValue
+      )
+    .catch (e) ->
+      _.map(fields, (newValue, fieldName)  ->
+        dispatcher.handleViewAction
+          type: constants.ActionTypes.GOOD_DATA_WRITER_SAVE_TABLE_FIELD_ERROR
+          configurationId: configurationId
+          tableId: tableId
+          field: fieldName
+          value: newValue
+          error: e
+      )
+      throw e
+
+
 
   saveTableField: (configurationId, tableId, fieldName, newValue) ->
     dispatcher.handleViewAction
@@ -279,14 +331,14 @@ module.exports =
         error: e
       throw e
 
-  uploadDateDimensionToGoodData: (configurationId, dimensionName) ->
+  uploadDateDimensionToGoodData: (configurationId, dimensionName, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_START
       configurationId: configurationId
       dimensionName: dimensionName
 
     goodDataWriterApi
-    .uploadDateDimension(configurationId, dimensionName)
+    .uploadDateDimension(configurationId, dimensionName, pid)
     .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_DATE_DIMENSION_UPLOAD_SUCCESS
@@ -304,7 +356,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'
@@ -345,12 +397,12 @@ module.exports =
             render: ->
               React.DOM.span null,
                 "GoodData upload of table "
-                React.DOM.strong null, table.getIn ['data', 'name']
+                React.DOM.strong null, table.getIn ['data', 'title']
                 " has been initiated You can track the job progress "
                 React.createElement Link,
                   to: 'jobDetail'
                   params:
-                    jobId: job.job
+                    jobId: job.id
                   onClick: @props.onClick
                 ,
                   'here'
@@ -363,7 +415,7 @@ module.exports =
                 React.createElement Link,
                   to: 'jobDetail'
                   params:
-                    jobId: job.job
+                    jobId: job.id
                   onClick: @props.onClick
                 ,
                   'here'
@@ -375,14 +427,14 @@ module.exports =
         error: e
       throw e
 
-  resetTable: (configurationId, tableId) ->
+  resetTable: (configurationId, tableId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_RESET_TABLE_START
       configurationId: configurationId
       tableId: tableId
 
     goodDataWriterApi
-    .resetTable configurationId, tableId
+    .resetTable configurationId, tableId, pid
     .then (job) ->
       jobPoller.poll applicationStore.getSapiTokenString(), job.url
     .then (job) ->
@@ -399,7 +451,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'
@@ -411,14 +463,14 @@ module.exports =
         error: e
       throw e
 
-  synchronizeTable: (configurationId, tableId) ->
+  synchronizeTable: (configurationId, tableId, pid) ->
     dispatcher.handleViewAction
       type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_START
       configurationId: configurationId
       tableId: tableId
 
     goodDataWriterApi
-    .synchronizeTable configurationId, tableId
+    .synchronizeTable configurationId, tableId, pid
     .then (job) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.GOOD_DATA_WRITER_SYNC_TABLE_SUCCESS
@@ -433,7 +485,7 @@ module.exports =
               React.createElement Link,
                 to: 'jobDetail'
                 params:
-                  jobId: job.job
+                  jobId: job.id
                 onClick: @props.onClick
               ,
                 'here'

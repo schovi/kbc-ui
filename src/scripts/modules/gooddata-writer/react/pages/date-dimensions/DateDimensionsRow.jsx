@@ -10,7 +10,8 @@ import actionCreators from '../../../actionCreators';
 export default React.createClass({
   propTypes: {
     dimension: PropTypes.object.isRequired,
-    configurationId: PropTypes.string.isRequired
+    configurationId: PropTypes.string.isRequired,
+    pid: PropTypes.string.isRequired
   },
   mixins: [React.addons.PureRenderMixin],
 
@@ -94,10 +95,10 @@ export default React.createClass({
   },
 
   handleDelete() {
-    actionCreators.deleteDateDimension(this.props.configurationId, this.props.dimension.get('id'));
+    actionCreators.deleteDateDimension(this.props.configurationId, this.props.dimension.get('name'));
   },
 
   handleUpload() {
-    actionCreators.uploadDateDimensionToGoodData(this.props.configurationId, this.props.dimension.get('id'));
+    actionCreators.uploadDateDimensionToGoodData(this.props.configurationId, this.props.dimension.get('name'), this.props.pid);
   }
 });

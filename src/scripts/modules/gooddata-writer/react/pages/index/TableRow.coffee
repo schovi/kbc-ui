@@ -69,7 +69,7 @@ module.exports = React.createClass
   _uploadText: ->
     span null,
       'Are you sure you want to upload table '
-      strong null, @props.table.getIn(['data', 'name'])
+      strong null, @props.table.getIn(['data', 'title'])
       ' to GoodData project?'
 
   _renderDeleteButton: ->

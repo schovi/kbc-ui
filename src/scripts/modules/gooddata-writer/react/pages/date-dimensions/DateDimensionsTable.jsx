@@ -4,7 +4,8 @@ import Row from './DateDimensionsRow';
 export default React.createClass({
   propTypes: {
     dimensions: PropTypes.object.isRequired,
-    configurationId: PropTypes.string.isRequired
+    configurationId: PropTypes.string.isRequired,
+    pid: PropTypes.string.isRequired
   },
   mixins: [React.addons.PureRenderMixin],
 
@@ -31,7 +32,8 @@ export default React.createClass({
     return React.createElement(Row, {
       key: dimension.get('id'),
       dimension: dimension,
-      configurationId: this.props.configurationId
+      configurationId: this.props.configurationId,
+      pid: this.props.pid
     });
   }
 });

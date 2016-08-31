@@ -1,7 +1,7 @@
 React = require 'react'
 {Map, List} = require 'immutable'
 Promise = require('bluebird')
-
+{GoodDataWriterTokenTypes} = require '../../../../components/Constants'
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 RoutesStore = require '../../../../../stores/RoutesStore'
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
@@ -16,6 +16,7 @@ SearchRow = require('../../../../../react/common/SearchRow').default
 TablesList = require './BucketTablesList'
 TableRow = require './TableRow'
 TablesByBucketsPanel = require '../../../../components/react/components/TablesByBucketsPanel'
+{Protected} = require 'kbc-react-components'
 
 ActiveCountBadge = require './ActiveCountBadge'
 {Link} = require('react-router')
@@ -29,7 +30,7 @@ InstalledComponentStore = require '../../../../components/stores/InstalledCompon
 goodDataWriterStore = require '../../../store'
 actionCreators = require '../../../actionCreators'
 installedComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
-{strong, br, ul, li, div, span, i, a, button, p} = React.DOM
+{label, small, strong, br, ul, li, div, span, i, a, button, p} = React.DOM
 
 module.exports = React.createClass
   displayName: 'GooddDataWriterIndex'
@@ -38,9 +39,12 @@ module.exports = React.createClass
   getStateFromStores: ->
     config =  RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentStore.getLocalState('gooddata-writer', config)
+    writer = goodDataWriterStore.getWriter(config)
+    console.log("writer detail", writer.toJS())
 
     configId: config
-    writer: goodDataWriterStore.getWriter(config)
+    writer: writer
+    pid: writer.getIn(['config', 'project', 'id'])
     tablesByBucket: goodDataWriterStore.getWriterTablesByBucket(config)
     filter: goodDataWriterStore.getWriterTablesFilter(config)
     deletingTables: goodDataWriterStore.getDeletingTables(config)
@@ -71,6 +75,7 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
+    console.log writer?.toJS()
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
@@ -88,6 +93,12 @@ module.exports = React.createClass
               bsStyle: 'warning'
             ,
               writer.get('info')
+        if not writer.get('project')
+          div className: 'row',
+            React.createElement Alert,
+              bsStyle: 'warning'
+            ,
+              'No GoodData project assigned with this configuration.'
         if @state.tablesByBucket.count()
           React.createElement SearchRow,
             className: 'row kbc-search-row'
@@ -105,6 +116,8 @@ module.exports = React.createClass
           React.createElement ComponentMetadata,
             componentId: 'gooddata-writer'
             configId: @state.configId
+        div null,
+          @_renderGoodDataTokenInfo()
         ul className: 'nav nav-stacked',
           li null,
             React.createElement Link,
@@ -136,6 +149,7 @@ module.exports = React.createClass
                 else
                   span className: 'fa fa-upload fa-fw'
                 ' Upload project'
+
           li null,
             React.createElement Link,
               to: 'gooddata-writer-model'
@@ -145,88 +159,88 @@ module.exports = React.createClass
               span className: 'fa fa-sitemap fa-fw'
               ' Model'
 
-
-        ul className: 'nav nav-stacked',
-          if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-            li null,
-              a
-                href: writer.getIn(['project', 'ssoLink'])
-                target: '_blank'
-              ,
-                span className: 'fa fa-bar-chart-o fa-fw'
-                ' GoodData Project'
-          li null,
+        if writer.get('project')
+          ul className: 'nav nav-stacked',
             if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-              a
-                onClick: @_handleProjectAccessDisable
-              ,
-                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                  React.createElement Loader, className: 'fa-fw kbc-loader'
-                else
-                  span className: 'fa fa-unlink fa-fw'
-                ' Disable Access to Project'
-            if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
-              a
-                onClick: @_handleProjectAccessEnable
-              ,
-                if @state.writer.get('pendingActions', List()).contains 'projectAccess'
-                  React.createElement Loader, className: 'fa-fw kbc-loader'
-                else
-                  span className: 'fa fa-link fa-fw'
-                ' Enable Access to Project'
-
-        ul className: 'nav nav-stacked',
-          li null,
-            if @state.writer.get 'isOptimizingSLI'
-              span null,
-                ' '
-                React.createElement Loader
-            React.createElement DropdownButton,
-              title: span null,
-                span className: 'fa fa-cog fa-fw'
-                ' Advanced'
-              navItem: true
-            ,
               li null,
-                React.createElement Confirm,
-                  title: 'Optimize SLI hash'
-                  text: div null,
-                    p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
-                    process which might damage your GD project.
-                    We insist on consluting with us before taking any further step. '
-                    p null, 'Please contact us on: support@keboola.com'
-                  buttonLabel: 'Optimize'
-                  buttonType: 'primary'
-                  onConfirm: @_handleOptimizeSLI
+                a
+                  href: writer.getIn(['project', 'ssoLink'])
+                  target: '_blank'
                 ,
-                  a null,
-                    'Optimize SLI hash'
-              li null,
-                React.createElement Confirm,
-                  title: 'Reset Project'
-                  text: div null,
-                    p null,
-                      "You are about to create new GoodData project for the writer #{writer.get('id')}. "
-                      "The current GoodData project (#{writer.getIn(['gd', 'pid'])}) will be discarded. "
-                      "Are you sure you want to reset the project?"
-                  buttonLabel: 'Reset'
-                  onConfirm: @_handleProjectReset
+                  span className: 'fa fa-bar-chart-o fa-fw'
+                  ' GoodData Project'
+            li null,
+              if writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+                a
+                  onClick: @_handleProjectAccessDisable
                 ,
-                  a null,
-                    'Reset Project'
-          li null,
-            React.createElement Confirm,
-              title: 'Delete Writer'
-              text: "Are you sure you want to delete writer with its GoodData project?"
-              buttonLabel: 'Delete'
-              onConfirm: @_handleProjectDelete
-            ,
-              a null,
-                if @state.writer.get 'isDeleting'
-                  React.createElement Loader, className: 'fa-fw'
-                else
-                  span className: 'kbc-icon-cup fa-fw'
-                ' Delete Writer'
+                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                    React.createElement Loader, className: 'fa-fw kbc-loader'
+                  else
+                    span className: 'fa fa-unlink fa-fw'
+                  ' Disable Access to Project'
+              if !writer.getIn(['project', 'ssoAccess']) && !writer.get('toDelete')
+                a
+                  onClick: @_handleProjectAccessEnable
+                ,
+                  if @state.writer.get('pendingActions', List()).contains 'projectAccess'
+                    React.createElement Loader, className: 'fa-fw kbc-loader'
+                  else
+                    span className: 'fa fa-link fa-fw'
+                  ' Enable Access to Project'
+        if writer.get('project')
+          ul className: 'nav nav-stacked',
+            li null,
+              if @state.writer.get 'isOptimizingSLI'
+                span null,
+                  ' '
+                  React.createElement Loader
+              React.createElement DropdownButton,
+                title: span null,
+                  span className: 'fa fa-cog fa-fw'
+                  ' Advanced'
+                navItem: true
+              ,
+                li null,
+                  React.createElement Confirm,
+                    title: 'Optimize SLI hash'
+                    text: div null,
+                      p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
+                      process which might damage your GD project.
+                      We insist on consluting with us before taking any further step. '
+                      p null, 'Please contact us on: support@keboola.com'
+                    buttonLabel: 'Optimize'
+                    buttonType: 'primary'
+                    onConfirm: @_handleOptimizeSLI
+                  ,
+                    a null,
+                      'Optimize SLI hash'
+                li null,
+                  React.createElement Confirm,
+                    title: 'Reset Project'
+                    text: div null,
+                      p null,
+                        "You are about to create new GoodData project for the writer #{writer.get('id')}. "
+                        "The current GoodData project (#{@state.pid}) will be discarded. "
+                        "Are you sure you want to reset the project?"
+                    buttonLabel: 'Reset'
+                    onConfirm: @_handleProjectReset
+                  ,
+                    a null,
+                      'Reset Project'
+            li null,
+              React.createElement Confirm,
+                title: 'Delete Writer'
+                text: "Are you sure you want to delete writer with its GoodData project?"
+                buttonLabel: 'Delete'
+                onConfirm: @_handleProjectDelete
+              ,
+                a null,
+                  if @state.writer.get 'isDeleting'
+                    React.createElement Loader, className: 'fa-fw'
+                  else
+                    span className: 'kbc-icon-cup fa-fw'
+                  ' Delete Writer'
         React.createElement LatestJobs,
           jobs: @state.latestJobs
           limit: 3
@@ -237,27 +251,49 @@ module.exports = React.createClass
 
 
   _handleBucketSelect: (bucketId, e) ->
-    actionCreators.toggleBucket @state.writer.getIn(['config', 'id']), bucketId
+    actionCreators.toggleBucket(@state.writer.getIn(['config', 'id']), bucketId)
 
   _handleProjectUpload: ->
-    actionCreators.uploadToGoodData(@state.writer.getIn ['config', 'id'])
+    actionCreators.uploadToGoodData(@state.writer.getIn(['config', 'id']))
 
   _handleProjectDelete: ->
     actionCreators.deleteWriter(@state.writer.getIn ['config', 'id'])
 
   _handleOptimizeSLI: ->
-    actionCreators.optimizeSLIHash(@state.writer.getIn ['config', 'id'])
+    actionCreators.optimizeSLIHash(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectReset: ->
-    actionCreators.resetProject(@state.writer.getIn ['config', 'id'])
+    actionCreators.resetProject(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectAccessEnable: ->
-    actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']),
-      @state.writer.getIn(['config', 'project', 'id']))
+    actionCreators.enableProjectAccess(@state.writer.getIn(['config', 'id']), @state.pid)
 
   _handleProjectAccessDisable: ->
     actionCreators.disableProjectAccess(@state.writer.getIn(['config', 'id']),
       @state.writer.getIn(['config', 'project', 'id']))
+
+  _renderGoodDataTokenInfo: ->
+    token = @state.writer.getIn(['config', 'project', 'authToken'])
+    labelCaption = 'None'
+    labelClass = 'default'
+    if token
+      switch token
+        when GoodDataWriterTokenTypes.DEMO
+          labelCaption = 'Keboola DEMO'
+          labelClass = 'warning'
+        when GoodDataWriterTokenTypes.PRODUCTION
+          labelCaption = 'Keboola Production'
+          labelClass = 'primary'
+        else
+          labelCaption = 'Custom'
+          labelClass = 'primary'
+    small null,
+      'Auth Token: '
+      span className: 'label label-' + labelClass,
+        labelCaption
+      if labelCaption == 'Custom'
+        React.createElement Protected, null, token
+
 
   _renderNotFound: ->
     # div {className: 'table table-striped'},
