@@ -356,7 +356,7 @@ export default React.createClass({
     if (componentId.indexOf('ex-db') > -1) {
       return `ex-db-generic-${componentId}`;
     } else if (componentId.indexOf('ex-google-analytics') > -1) {
-      return `keboola.ex-google-analytics-v4-config`;
+      return 'keboola.ex-google-analytics-v4';
     }
   },
 
