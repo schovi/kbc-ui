@@ -1,93 +1,26 @@
 import React from 'react';
 import {fromJS, List} from 'immutable';
 import FileSize from '../../react/common/FileSize';
-
 import ApplicationStore from '../../stores/ApplicationStore';
-
-function daySum(components, propertyName) {
-  return components
-    .filter(function(component) {
-      return component.has(propertyName);
-    })
-    .reduce(function(reduction, component) {
-      return reduction + component.get(propertyName);
-    }, 0);
-}
-
-const data = fromJS([
-  {
-    'date': 'Jul 1',
-    'components': [
-      {
-        'name': 'Google Analytics',
-        'containerOut': 2345,
-        'containerIn': 234324,
-        'storageIn': 43453,
-        'storageOut': 0
-      },
-      {
-        'name': 'GoodData Writer',
-        'containerOut': 2345,
-        'containerIn': 234324,
-        'storageIn': 0,
-        'storageOut': 23424
-      },
-      {
-        'name': 'Transformation',
-        'containerOut': 0,
-        'containerIn': 0,
-        'storageIn': 0,
-        'storageOut': 23424
-      },
-      {
-        'name': 'Geneea',
-        'containerOut': 12334,
-        'containerIn': 12313,
-        'storageIn': 234324,
-        'storageOut': 23424,
-        'appUsage': 234
-      },
-      {
-        'name': 'Storage Direct',
-        'storageIn': 123,
-        'storageOut': 23424
-      }
-    ]
-  },
-  {
-    'date': 'Jul 2',
-    'components': [
-      {
-        'name': 'Google Analytics',
-        'containerOut': 2345,
-        'containerIn': 234324,
-        'storageIn': 43453,
-        'storageOut': 0
-      },
-      {
-        'name': 'GoodData Writer',
-        'containerOut': 2345,
-        'containerIn': 234324,
-        'storageIn': 0,
-        'storageOut': 23424
-      },
-      {
-        'name': 'Transformation',
-        'containerOut': 0,
-        'containerIn': 0,
-        'storageIn': 0,
-        'storageOut': 23424
-      },
-      {
-        'name': 'Storage Direct',
-        'storageIn': 123,
-        'storageOut': 23424
-      }
-    ]
-  }
-]);
+import MetricsApi from '../metrics/MetricsApi';
 
 export default React.createClass({
+
+  getInitialState: function() {
+    return {
+      metricsData: []
+    };
+  },
+
+  componentDidMount: function() {
+    MetricsApi
+      .getProjectMetrics('2016-08-01', '2016-08-31', 'day')
+      .then((response) => {
+        this.setState({
+          metricsData: fromJS(response)
+        });
+      });
+  },
 
   render() {
     return (
@@ -115,46 +48,57 @@ export default React.createClass({
           </tr>
           </thead>
           <tbody>
-          {data.map(this.dayRow)}
+          {this.state.metricsData.map((item) => {
+            return List([
+              this.daySummary(item),
+              item.get('components').map(this.dayComponents)
+            ]);
+          })}
           </tbody>
         </table>
       </div>
     );
   },
 
-  dayRow(day) {
-    const header = (
+  daySummary(data) {
+    return (
       <tr>
-        <td><strong>{day.get('date')}</strong></td>
+        <td><strong>{data.get('date')}</strong></td>
         <td>
           <strong>
-            <FileSize size={daySum(day.get('components'), 'storageIn')}/>
+            <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>
           </strong>
         </td>
         <td>
-          <strong>
-            {daySum(day.get('components'), 'appUsage')}
-          </strong>
+          <strong>N/A</strong>
         </td>
       </tr>
     );
-    const components = day.get('components').map(this.componentRow);
-
-    return List([header, components]);
   },
 
-  componentRow(component) {
+  dayComponents(component) {
     return (
       <tr>
         <td><span style={{paddingLeft: '10px'}}>{component.get('name')}</span></td>
         <td>
-          <FileSize size={component.get('storageIn')}/>
+          <FileSize size={
+            component.get('storage').get('inBytes') + component.get('storage').get('outBytes')
+          }/>
         </td>
         <td>
-          {component.get('appUsage')}
+          N/A
         </td>
       </tr>
     );
+  },
+
+  dayComponentIoSummary(data, metric) {
+    return data
+      .reduce(function(reduction, component) {
+        return reduction
+          + component.get(metric).get('inBytes')
+          + component.get(metric).get('outBytes');
+      }, 0);
   },
 
   projectPageUrl(path) {
