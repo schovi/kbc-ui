@@ -72,9 +72,9 @@ InputMappingDetail = React.createClass(
                     return '[space character]'
                   return value
                 ).join(', ')
-          if @props.inputMapping.get('days') != 0 && @props.inputMapping.get('whereColumn')
+          if @props.inputMapping.get('days', 0) != 0 && @props.inputMapping.get('whereColumn')
             ' and '
-          if @props.inputMapping.get('days') != 0
+          if @props.inputMapping.get('days', 0) != 0
             span {},
               if @props.inputMapping.get('whereColumn') && @props.inputMapping.get('whereValues')
                 'changed in last '
@@ -82,7 +82,7 @@ InputMappingDetail = React.createClass(
                 'Changed in last '
               @props.inputMapping.get('days')
               ' days'
-          if @props.inputMapping.get('days') == 0 && !@props.inputMapping.get('whereColumn')
+          if @props.inputMapping.get('days', 0) == 0 && !@props.inputMapping.get('whereColumn')
             'N/A'
 
       if @props.transformationBackend == 'mysql'
