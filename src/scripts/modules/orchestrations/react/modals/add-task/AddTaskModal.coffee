@@ -82,7 +82,7 @@ AddTaskModal = React.createClass
 
   _modalTitle: ->
     React.DOM.h4 className: 'modal-title',
-      "Add task to #{@props.phaseId} "
+      "Add new task to #{@props.phaseId} "
       React.createElement ComponentsReloaderButton
 
   _handleComponentSelect: (component) ->
