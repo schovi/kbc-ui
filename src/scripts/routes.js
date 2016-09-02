@@ -3,7 +3,7 @@ import ErrorPage from './react/pages/ErrorPage';
 import Home from './modules/home/react/Index';
 import DataTakeout from './modules/data-takeout/Index';
 import Limits from './modules/limits/Index';
-import Billing from './modules/billing/Index';
+import billingRoutes from './modules/billing/routes';
 import ComponentsOverview from './modules/components/react/pages/ComponentsOverview';
 
 import {extractors, writers, applications} from './modules/components/Routes';
@@ -26,6 +26,7 @@ export default {
     writers,
     applications,
     jobRoutes,
+    billingRoutes,
     transformationRoutes,
     {
       name: 'data-takeout',
@@ -36,11 +37,6 @@ export default {
       name: 'settings-limits',
       title: 'Settings',
       defaultRouteHandler: Limits
-    },
-    {
-      name: 'settings-billing',
-      title: 'Billing',
-      defaultRouteHandler: Billing
     },
     {
       name: 'limits',
