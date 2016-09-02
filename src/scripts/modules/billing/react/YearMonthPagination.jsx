@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
-import {getPreviousYearMonth, getNextYearMonth} from '../helpers';
+import moment from 'moment';
 
 export default React.createClass({
 
@@ -11,9 +11,10 @@ export default React.createClass({
   },
 
   getPreviousLink() {
+    const yearMonth = moment(this.props.current + '-01').subtract(1, 'month').format('YYYY-MM');
     if (this.props.min !== this.props.current) {
       return (
-        <Link to="settings-billing-month" params={{yearMonth: getPreviousYearMonth(this.props.current)}} className="btn btn-primary">
+        <Link to="settings-billing-month" params={{yearMonth: yearMonth}} className="btn btn-primary">
           &larr; Previous month
         </Link>
       );
@@ -27,9 +28,10 @@ export default React.createClass({
   },
 
   getNextLink() {
+    const yearMonth = moment(this.props.current + '-01').add(1, 'month').format('YYYY-MM');
     if (this.props.max !== this.props.current) {
       return (
-        <Link to="settings-billing-month" params={{yearMonth: getNextYearMonth(this.props.current)}} className="btn btn-primary">
+        <Link to="settings-billing-month" params={{yearMonth: yearMonth}} className="btn btn-primary">
           Next month &rarr;
         </Link>
       );

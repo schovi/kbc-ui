@@ -5,22 +5,19 @@ import ApplicationStore from '../../../stores/ApplicationStore';
 import MetricsApi from '../MetricsApi';
 import RoutesStore from '../../../stores/RoutesStore';
 import YearMonthPagination from './YearMonthPagination';
-import {formatAsYearMonth} from '../helpers';
+import moment from 'moment';
 
 function getDatesFromYearMonth(yearMonth) {
-  const date = new Date(yearMonth.substr(0, 4), yearMonth.substr(5, 2), 0);
-  const day = date.getDate();
-  const fullDay = day >= 10 ? day : ('0' + day);
+  const date = moment(yearMonth + '-01');
 
   return {
-    dateFrom: formatAsYearMonth(date.getFullYear(), date.getMonth() + 1) + '-01',
-    dateTo: formatAsYearMonth(date.getFullYear(), date.getMonth() + 1) + '-' + fullDay
+    dateFrom: date.format('YYYY-MM-DD'),
+    dateTo: date.endOf('month').format('YYYY-MM-DD')
   };
 }
 
 function getCurrentYearMonth() {
-  const date = new Date();
-  return formatAsYearMonth(date.getFullYear(), date.getMonth() + 1);
+  return moment().format('YYYY-MM');
 }
 
 export default React.createClass({
@@ -87,7 +84,10 @@ export default React.createClass({
           <div className="row">
             <div className="col-sm-6">
               <h3>
-                Showing billing data from {this.toDateString(dates.dateFrom)} to {this.toDateString(dates.dateTo)}
+                {'Showing billing data from '}
+                {moment(dates.dateFrom).format('MMM D, YYYY')}
+                {' to '}
+                {moment(dates.dateTo).format('MMM D, YYYY')}
               </h3>
             </div>
             <div className="col-sm-6">
@@ -121,17 +121,10 @@ export default React.createClass({
     );
   },
 
-  toDateString(string) {
-    const date = (new Date(string)).toDateString().split(' ');
-    return (
-      <span>{date[1]} {parseInt(date[2], 10)}, {date[3]}</span>
-    );
-  },
-
   daySummary(data) {
     return (
       <tr>
-        <td><strong>{this.toDateString(data.get('date'))}</strong></td>
+        <td><strong>{moment(data.get('date')).format('MMM D, YYYY')}</strong></td>
         <td>
           <strong>
             <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>

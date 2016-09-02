@@ -1,4 +1,5 @@
 import Index from './react/Index';
+import moment from 'moment';
 
 export default {
   name: 'settings-billing',
@@ -11,8 +12,7 @@ export default {
       path: ':yearMonth',
       title: function(routerState) {
         const yearMonth = routerState.getIn(['params', 'yearMonth']);
-        const date = (new Date(yearMonth + '-01')).toDateString().split(' ');
-        return 'Billing for ' + date[1] + ', ' + date[3];
+        return 'Billing for ' + moment(yearMonth + '-01').format('MMM, YYYY');
       },
       handler: Index
     }
