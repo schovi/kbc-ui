@@ -16,11 +16,11 @@ ComponentSelect = React.createClass
       @_renderSection('Transformations', @_getComponentsForType('transformation')),
       @_renderSection('Writers', @_getComponentsForType('writer'))
       @_renderSection('Applications', @_getComponentsForType('application'))
-      @_renderOrchestratorSection('Orchestrations', @props.components.filter((component) ->
-        component.get('id') == 'orchestrator')
-      )
+      @_renderOrchestratorSection('Orchestrations', @props.components.filter((c) -> c.get('id') == 'orchestrator'))
 
   _renderSection: (title, components) ->
+    if !components || components.size == 0
+      return span null
     components = components.map((component) ->
       tr null,
         td null,
@@ -42,6 +42,8 @@ ComponentSelect = React.createClass
           components
 
   _renderOrchestratorSection: (title, components) ->
+    if !components || components.size == 0
+      return span null
     components = components.map((component) ->
       tr null,
         td null,
@@ -60,13 +62,15 @@ ComponentSelect = React.createClass
       h2 null, title
       table className: 'table table-striped table-hover kbc-tasks-list',
         tbody null,
-          components if @props.orchestrations.length
+          components if @props.orchestrations.count()
 
   _handleSelect: (component) ->
     @props.onComponentSelect(component)
 
-  _getComponentsForType: (type) ->
-    @props.components.filter((component) -> component.get('type') == type)
+  _getComponentsForType: (type, filter) ->
+    @props.components.filter((component) ->
+      component.get('type') == type
+    )
 
 
 module.exports = ComponentSelect

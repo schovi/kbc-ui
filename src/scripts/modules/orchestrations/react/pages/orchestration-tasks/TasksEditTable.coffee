@@ -182,6 +182,9 @@ TasksEditTable = React.createClass
       show: !!@props.localState.getIn ['newTask', 'phaseId']
       onHide: =>
         @props.updateLocalState ['newTask'], Map()
+      onChangeSearchQuery: (query) =>
+        @props.updateLocalState ['newTask', 'searchQuery'], query
+      searchQuery: @props.localState.getIn ['newTask', 'searchQuery'], ''
 
 
   _renderMoveTasksModal: ->

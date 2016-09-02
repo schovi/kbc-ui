@@ -16,6 +16,11 @@ ApplicationStore = require '../../../../../stores/ApplicationStore'
 
 require './AddTaskModal.less'
 
+SearchRow = React.createFactory(require('../../../../../react/common/SearchRow').default)
+fuzzy = require 'fuzzy'
+immutableMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+
+
 STEP_COMPONENT_SELECT = 'componentSelect'
 STEP_CONFIGURATION_SELECT = 'configurationSelect'
 STEP_ORCHESTRATOR_CONFIGURATION_SELECT = 'orchestratorConfigurationSelect'
@@ -24,12 +29,14 @@ STEP_ORCHESTRATOR_CONFIGURATION_SELECT = 'orchestratorConfigurationSelect'
 
 AddTaskModal = React.createClass
   displayName: 'AddTaskModal'
-  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationStore)]
+  mixins: [createStoreMixin(InstalledComponentsStore, OrchestrationStore), immutableMixin]
   propTypes:
     onConfigurationSelect: React.PropTypes.func.isRequired
     onHide: React.PropTypes.func
     show: React.PropTypes.bool
     phaseId: React.PropTypes.string
+    searchQuery: React.PropTypes.string
+    onChangeSearchQuery: React.PropTypes.func.isRequired
 
   getInitialState: ->
     selectedComponent: null
@@ -46,33 +53,48 @@ AddTaskModal = React.createClass
       )
     }
 
+  _getFilteredComponents: ->
+    filter = @props.searchQuery
+    @state.components.filter (c) ->
+      fuzzy.match(filter, c.get('name', '')) || fuzzy.match(filter, c.get('id', ''))
+
+  _getFilteredOrchestrations: ->
+    filter = @props.searchQuery
+    @state.orchestrations.filter ->
+      fuzzy.match(filter, 'orchestrator')
+
   render: ->
     Modal
       title: @_modalTitle()
       onRequestHide: @props.onHide
       show: @props.show
 
-      div className: 'modal-body orchestration-task-modal-body',
+      div className: 'modal-body',
         switch @state.currentStep
-
           when STEP_COMPONENT_SELECT
-            ComponentSelect
-              orchestrations: @state.orchestrations
-              components: @state.components
-              onComponentSelect: @_handleComponentSelect
-
+            div null,
+              SearchRow
+                query: @props.searchQuery
+                onChange: @props.onChangeSearchQuery
+              div className: 'orchestration-task-modal-body',
+                ComponentSelect
+                  orchestrations: @_getFilteredOrchestrations()
+                  components: @_getFilteredComponents()
+                  onComponentSelect: @_handleComponentSelect
           when STEP_CONFIGURATION_SELECT
-            ConfigurationSelect
-              component: @state.selectedComponent
-              onReset: @_handleComponentReset
-              onConfigurationSelect: @_handleConfigurationSelect
+            div className: 'orchestration-task-modal-body',
+              ConfigurationSelect
+                component: @state.selectedComponent
+                onReset: @_handleComponentReset
+                onConfigurationSelect: @_handleConfigurationSelect
 
           when STEP_ORCHESTRATOR_CONFIGURATION_SELECT
-            OrchestrationSelect
-              component: @state.selectedComponent
-              orchestrations: @state.orchestrations
-              onReset: @_handleComponentReset
-              onConfigurationSelect: @_handleConfigurationSelect
+            div className: 'orchestration-task-modal-body',
+              OrchestrationSelect
+                component: @state.selectedComponent
+                orchestrations: @state.orchestrations
+                onReset: @_handleComponentReset
+                onConfigurationSelect: @_handleConfigurationSelect
 
       div className: 'modal-footer',
         ButtonToolbar null,
