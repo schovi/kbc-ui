@@ -28,12 +28,12 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      month: RoutesStore.getCurrentRouteParam('month', getCurrentYearMonth())
+      yearMonth: RoutesStore.getCurrentRouteParam('yearMonth', getCurrentYearMonth())
     };
   },
 
   componentDidMount: function() {
-    this.loadMetricsData(this.state.month)
+    this.loadMetricsData(this.state.yearMonth)
       .then((response) => {
         this.setState({
           metricsData: fromJS(response)
@@ -42,10 +42,10 @@ export default React.createClass({
   },
 
   componentWillReceiveProps: function() {
-    const selectedYearMonth = RoutesStore.getCurrentRouteParam('month', getCurrentYearMonth());
-    if (selectedYearMonth !== this.state.month) {
+    const selectedYearMonth = RoutesStore.getCurrentRouteParam('yearMonth', getCurrentYearMonth());
+    if (selectedYearMonth !== this.state.yearMonth) {
       this.setState({
-        month: selectedYearMonth
+        yearMonth: selectedYearMonth
       });
       this.loadMetricsData(selectedYearMonth)
         .then((response) => {
@@ -62,11 +62,11 @@ export default React.createClass({
 
   loadMetricsData: function(yearMonth) {
     const dates = getDatesFromYearMonth(yearMonth);
-    return MetricsApi.getProjectMetrics(dates.dateFrom, dates.dateTo, 'day')
+    return MetricsApi.getProjectMetrics(dates.dateFrom, dates.dateTo, 'day');
   },
 
   render() {
-    const dates = getDatesFromYearMonth(this.state.month);
+    const dates = getDatesFromYearMonth(this.state.yearMonth);
     return (
       <div className="container-fluid kbc-main-content">
         <ul className="nav nav-tabs">
@@ -93,7 +93,7 @@ export default React.createClass({
                 <YearMonthPagination
                   min="2016-08"
                   max={getCurrentYearMonth()}
-                  current={this.state.month}
+                  current={this.state.yearMonth}
                 />
               </div>
             </div>

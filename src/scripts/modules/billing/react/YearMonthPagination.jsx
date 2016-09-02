@@ -13,7 +13,7 @@ export default React.createClass({
   getPreviousLink() {
     if (this.props.min !== this.props.current) {
       return (
-        <Link to="settings-billing-month" params={{month: getPreviousYearMonth(this.props.current)}} className="btn btn-primary">
+        <Link to="settings-billing-month" params={{yearMonth: getPreviousYearMonth(this.props.current)}} className="btn btn-primary">
           &larr; Previous month
         </Link>
       );
@@ -29,7 +29,7 @@ export default React.createClass({
   getNextLink() {
     if (this.props.max !== this.props.current) {
       return (
-        <Link to="settings-billing-month" params={{month: getNextYearMonth(this.props.current)}} className="btn btn-primary">
+        <Link to="settings-billing-month" params={{yearMonth: getNextYearMonth(this.props.current)}} className="btn btn-primary">
           Next month &rarr;
         </Link>
       );

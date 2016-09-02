@@ -8,10 +8,10 @@ export default {
   childRoutes: [
     {
       name: 'settings-billing-month',
-      path: ':month',
+      path: ':yearMonth',
       title: function(routerState) {
-        const month = routerState.getIn(['params', 'month']);
-        return 'Billing for ' + month;
+        const yearMonth = routerState.getIn(['params', 'yearMonth']);
+        return 'Billing for ' + yearMonth;
       },
       handler: Index
     }
