@@ -97,8 +97,8 @@ module.exports = React.createClass
           @state.dimensions.map (dimension) ->
             a
               className: 'tr'
-              key: dimension.get 'id'
-              onClick: @_selectDimension.bind @, dimension.get('id')
+              key: dimension.get 'name'
+              onClick: @_selectDimension.bind @, dimension.get('name')
             ,
               div className: 'td',
                 dimension.getIn ['data', 'name']
@@ -106,7 +106,7 @@ module.exports = React.createClass
                 Check
                   isChecked: dimension.getIn ['data', 'includeTime']
               div className: 'td',
-                if dimension.get('id') == @props.column.get('dateDimension')
+                if dimension.get('name') == @props.column.get('dateDimension')
                   Check
                     isChecked: true
           , @
@@ -117,4 +117,3 @@ module.exports = React.createClass
 
   _title: ->
     "Date dimension for column #{@props.column.get('name')}"
-
