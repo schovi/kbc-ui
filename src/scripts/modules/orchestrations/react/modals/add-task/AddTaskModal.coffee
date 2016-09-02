@@ -14,6 +14,8 @@ RoutesStore = require '../../../../../stores/RoutesStore'
 OrchestrationStore = require '../../../stores/OrchestrationsStore'
 ApplicationStore = require '../../../../../stores/ApplicationStore'
 
+require './AddTaskModal.less'
+
 STEP_COMPONENT_SELECT = 'componentSelect'
 STEP_CONFIGURATION_SELECT = 'configurationSelect'
 STEP_ORCHESTRATOR_CONFIGURATION_SELECT = 'orchestratorConfigurationSelect'
@@ -50,7 +52,7 @@ AddTaskModal = React.createClass
       onRequestHide: @props.onHide
       show: @props.show
 
-      div className: 'modal-body',
+      div className: 'modal-body orchestration-task-modal-body',
         switch @state.currentStep
 
           when STEP_COMPONENT_SELECT
