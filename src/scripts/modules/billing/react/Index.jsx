@@ -86,7 +86,9 @@ export default React.createClass({
         <div className="kbc-header">
           <div className="row">
             <div className="col-sm-6">
-              <h3>Showing billing data from {dates.dateFrom} to {dates.dateTo}</h3>
+              <h3>
+                Showing billing data from {this.toDateString(dates.dateFrom)} to {this.toDateString(dates.dateTo)}
+              </h3>
             </div>
             <div className="col-sm-6">
               <div className="pull-right">
@@ -119,10 +121,17 @@ export default React.createClass({
     );
   },
 
+  toDateString(string) {
+    const date = (new Date(string)).toDateString().split(' ');
+    return (
+      <span>{date[1]} {parseInt(date[2], 10)}, {date[3]}</span>
+    );
+  },
+
   daySummary(data) {
     return (
       <tr>
-        <td><strong>{data.get('date')}</strong></td>
+        <td><strong>{this.toDateString(data.get('date'))}</strong></td>
         <td>
           <strong>
             <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>

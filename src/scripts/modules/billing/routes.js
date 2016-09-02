@@ -11,7 +11,8 @@ export default {
       path: ':yearMonth',
       title: function(routerState) {
         const yearMonth = routerState.getIn(['params', 'yearMonth']);
-        return 'Billing for ' + yearMonth;
+        const date = (new Date(yearMonth + '-01')).toDateString().split(' ');
+        return 'Billing for ' + date[1] + ', ' + date[3];
       },
       handler: Index
     }
