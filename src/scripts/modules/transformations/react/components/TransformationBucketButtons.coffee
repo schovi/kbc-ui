@@ -26,5 +26,11 @@ module.exports = React.createClass
             ' Sandbox'
         React.createElement NewTransformationBucketButton
     else
-      null
+      span {},
+        React.createElement Link,
+          to: 'sandbox'
+        ,
+          button className: 'btn btn-link',
+            span className: 'kbc-icon-cog'
+            ' Sandbox'
 
