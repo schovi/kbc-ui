@@ -382,8 +382,7 @@ module.exports = React.createClass
               React.DOM.small {},
                 "Additional options for COPY command, multiple values separated by comma. "
                 React.DOM.a
-                  href: "http://wiki.keboola.com/home/keboola-connection/devel-space/
-                    transformations/backends/redshift#COPY_command"
+                  href: "https://help.keboola.com/manipulation/transformations/redshift/#best-practices"
                 ,
                   "Default options"
                 "."
