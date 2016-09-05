@@ -1,4 +1,4 @@
-const dockerComponents = ['wr-db-mssql'];
+const dockerComponents = ['wr-db-mssql', 'keboola.wr-db-mssql-v2'];
 import {List, Map, fromJS} from 'immutable';
 import Promise from 'bluebird';
 
@@ -98,13 +98,23 @@ export default function(componentId) {
 
     // ########## SET TABLE COLUMNS
     setTableColumns(configId, tableId, columns) {
+      const columnsToSave = columns.map( (c) => {
+        return {
+          name: c.name,
+          dbName: c.dbName,
+          type: c.type,
+          size: c.size,
+          nullable: !!c.null,
+          default: c.default
+        };
+      });
       return this.loadConfigData(configId).then(
         (data) => {
           var newTable = null;
           const tables = data.getIn(['parameters', 'tables'], List())
                 .map((t) => {
                   if (t.get('tableId') === tableId) {
-                    newTable = t.set('items', fromJS(columns).filter((c) => c.get('type') !== 'IGNORE'));
+                    newTable = t.set('items', fromJS(columnsToSave).filter((c) => c.get('type') !== 'IGNORE'));
                     return newTable;
                   } else {
                     return t;
@@ -194,8 +204,10 @@ export default function(componentId) {
           if (!table) {
             return Promise.reject('Error: table ' + tableId + ' not exits in the config');
           }
-
-          table = table.set('columns', table.get('items'));
+          const columns = table.get('items', List()).map((c) => {
+            return c.set('null', c.get('nullable', false));
+          });
+          table = table.set('columns', columns);
           return table;
         }
       );
