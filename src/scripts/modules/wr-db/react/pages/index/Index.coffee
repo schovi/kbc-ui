@@ -34,7 +34,7 @@ AddNewTableModal = require('../../../../../react/common/AddNewTableModal').defau
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
-allowedBuckets = ['out']
+allowedBuckets = ['out', 'in']
 
 module.exports = (componentId) ->
   React.createClass templateFn(componentId)
