@@ -4,6 +4,7 @@ import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Editor from './TableOutputMappingEditor';
 import resolveOutputShowDetails from './resolveOutputShowDetails';
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
+import validateStorageTableId from '../../../../../utils/validateStorageTableId';
 
 export default React.createClass({
   propTypes: {
@@ -18,7 +19,9 @@ export default React.createClass({
   },
 
   isValid() {
-    return !!this.props.mapping.get('source') && !!this.props.mapping.get('destination');
+    return !!this.props.mapping.get('source') &&
+      !!this.props.mapping.get('destination') &&
+      validateStorageTableId(this.props.mapping.get('destination', ''));
   },
 
   getInitialState() {

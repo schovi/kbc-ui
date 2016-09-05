@@ -3,6 +3,7 @@ import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import OutputMappingRowEditor from '../components/mapping/OutputMappingRowEditor';
 import resolveOutputShowDetails from './resolveOutputShowDetails';
+import validateStorageTableId from '../../../../utils/validateStorageTableId';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -22,7 +23,9 @@ export default React.createClass({
   },
 
   isValid() {
-    return !!this.props.mapping.get('source') && !!this.props.mapping.get('destination');
+    return !!this.props.mapping.get('source') &&
+      !!this.props.mapping.get('destination') &&
+      validateStorageTableId(this.props.mapping.get('destination', ''));
   },
 
   getInitialState() {

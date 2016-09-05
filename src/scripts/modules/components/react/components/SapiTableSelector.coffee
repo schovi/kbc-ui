@@ -4,6 +4,7 @@ storageActionCreators = require '../../StorageActionCreators'
 Loader = React.createFactory(require('kbc-react-components').Loader)
 Select = React.createFactory(require('react-select'))
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
+validateStorageTableId = require '../../../../utils/validateStorageTableId'
 
 module.exports = React.createClass
   displayNanme: 'SapiTableSelector'
@@ -75,7 +76,7 @@ module.exports = React.createClass
   _newOptionCreator: (value) ->
     create = false
     label = value
-    if (value.match(/^(in|out)\.c-[a-zA-z0-9_\-]+\.[a-zA-z0-9_\-]+$/))
+    if (validateStorageTableId(value))
       create = true
     else
       label = value + ' is not a valid table identifier'

@@ -5,6 +5,7 @@ import Select from '../../../../react/common/Select';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {List} from 'immutable';
 import AutoSuggestWrapper from '../../../transformations/react/components/mapping/AutoSuggestWrapper';
+import validateStorageTableId from '../../../../utils/validateStorageTableId';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -21,7 +22,7 @@ export default React.createClass({
 
   isValid() {
     const destinationTable = this.props.settings.get('destination', this.props.defaultTable);
-    if (!destinationTable.match(/^(in|out)\.c-[a-zA-z0-9_\-]+\.[a-zA-z0-9_\-]+$/)) {
+    if (!validateStorageTableId(destinationTable)) {
       return false;
     }
     return true;
