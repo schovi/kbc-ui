@@ -86,7 +86,6 @@ export default React.createClass({
   },
 
   renderError(error) {
-    console.log(error.toJS());
     let message = error.get('message');
     const code = error.get('code');
     if (code < 500) {

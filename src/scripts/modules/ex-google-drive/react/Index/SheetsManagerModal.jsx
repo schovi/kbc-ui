@@ -155,7 +155,6 @@ export default React.createClass({
     const file = this.getFile(fileId);
     this.updateFile(fileId, file.setIn(['sheetsApi', 'isLoading'], true));
     return listSheets(fileId).then((sheets) => {
-      console.log('SHEETS', sheets);
       return this.updateFile(fileId, file
         .set('sheetsApi', fromJS({
           isLoading: false,
@@ -190,7 +189,6 @@ export default React.createClass({
   },
 
   onPickSpreadsheet(data) {
-    console.log('PICKED PYCO', data);
     const docs = data.filter((f) => f.type === 'document');
     this.addFiles(docs);
   },
