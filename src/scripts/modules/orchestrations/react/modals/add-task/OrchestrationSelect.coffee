@@ -2,7 +2,9 @@ React = require 'react'
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 ComponentName = React.createFactory(require('../../../../../react/common/ComponentName').default)
 
-{div, h2, a, ul, li, i, span} = React.DOM
+{div, h2, a, i, span} = React.DOM
+
+require './ConfigurationSelect.less'
 
 OrchestrationSelect = React.createClass
   displayName: 'OrchestrationSelect'
@@ -16,13 +18,17 @@ OrchestrationSelect = React.createClass
     orchestrations = @props.orchestrations
 
     div null,
-      h2 null,
-        ComponentIcon component: @props.component
-        ' '
-        ComponentName component: @props.component
-        a className: 'pull-right', onClick: @_handleBack,
-          span className: 'fa fa-chevron-left', null
-          ' Back'
+      div className: 'table configuration-select-header',
+        div className: 'tr',
+          div className: 'td',
+            h2 null,
+              ComponentIcon component: @props.component
+              ' '
+              ComponentName component: @props.component
+          div className: 'td',
+            a className: 'pull-right', onClick: @_handleBack,
+              span className: 'fa fa-chevron-left', null
+              ' Back'
       div className: 'list-group',
         orchestrations
         .map((configuration) ->
