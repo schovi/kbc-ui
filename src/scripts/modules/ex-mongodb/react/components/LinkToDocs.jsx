@@ -6,7 +6,7 @@ export default React.createClass({
     return (
       <p>
         <small>
-          {'For more information about configuring MongoDb Extractor follow guide at '}
+          {'For more information about configuring MongoDB Extractor follow guide at '}
            <a href="https://help.keboola.com/extractors/mongodb/">https://help.keboola.com</a>.
         </small>
       </p>
