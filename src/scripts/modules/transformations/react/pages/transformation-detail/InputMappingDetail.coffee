@@ -10,6 +10,8 @@ ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
 TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
 
+ApplicationStore = require('../../../../../stores/ApplicationStore')
+
 {span, div, a, button, i, h4, small, em, ul, li, strong} = React.DOM
 numeral = require 'numeral'
 
@@ -138,7 +140,8 @@ InputMappingDetail = React.createClass(
             else
               'No distribution key set'
 
-      if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift())
+      if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift() &&
+          !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace'))
         ListGroupItem {key: 'copyOptions'},
           strong {className: "col-md-4"},
             'COPY options'

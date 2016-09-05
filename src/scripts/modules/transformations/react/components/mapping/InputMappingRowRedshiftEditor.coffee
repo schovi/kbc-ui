@@ -6,6 +6,7 @@ Input = React.createFactory Input
 Select = React.createFactory require('../../../../../react/common/Select').default
 RedshiftDataTypesContainer = React.createFactory(require("./input/RedshiftDataTypesContainer"))
 
+ApplicationStore = require('../../../../../stores/ApplicationStore')
 
 module.exports = React.createClass
   displayName: 'InputMappingRowRedshiftEditor'
@@ -58,7 +59,8 @@ module.exports = React.createClass
       mapping = mapping.set("columns", Immutable.List())
       mapping = mapping.set("sortKey", "")
       mapping = mapping.set("distKey", "")
-      mapping = mapping.set("copyOptions", "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS")
+      if !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
+        mapping = mapping.set("copyOptions", "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS")
     @props.onChange(immutable)
 
   _handleChangeDestination: (e) ->
@@ -366,7 +368,8 @@ module.exports = React.createClass
                 "DISTKEY and DISTSTYLE options used for
                   CREATE TABLE query in Redshift."
 
-      if @state.showDetails && (!@_isSourceTableRedshift())
+      if @state.showDetails && (!@_isSourceTableRedshift()) &&
+          !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
         React.DOM.div {className: "row col-md-12"},
           Input
             bsSize: 'small'
