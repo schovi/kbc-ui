@@ -84,9 +84,6 @@
     "lint": "eslint src --ext .js --ext .jsx",
     "test": "cross-env NODE_ENV=test mocha --reporter progress --recursive \"./src/**/*.spec.js\""
   },
-  "pre-commit": [
-    "lint"
-  ],
   "author": "Martin Halamicek",
   "jest": {
     "rootDir": "./js"
