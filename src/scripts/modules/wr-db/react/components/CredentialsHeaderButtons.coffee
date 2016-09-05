@@ -11,6 +11,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 {States} = require '../pages/credentials/StateConstants'
 credentialsTemplates = require '../../templates/credentialsFields'
 
+
 #componentId = 'wr-db'
 
 #isProvisioning = true
@@ -106,20 +107,24 @@ templateFn = (componentId, driver, isProvisioning) ->
   _updateLocalState: (path, data) ->
     if _.isString path
       path = [path]
-    #console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
-    #console.log "new local state", newLocalState.toJS()
     InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState, path)
 
 
   _hasDbConnection: (credentials) ->
-    credentials = credentials?.toJS()
-    not( _.isEmpty(credentials?.host) or
-    _.isEmpty(credentials?.database) or
-    _.isEmpty(credentials?.password) or
-    _.isEmpty(credentials?.port) or
-    _.isEmpty(credentials?.user) or
-    credentials?.port == "NaN")
+    fields = credentialsTemplates(componentId)
+    result = _.reduce(fields, (memo, field) ->
+      propName = field[1]
+      memo and !!credentials.get(propName)
+    !!credentials)
+    return result
+    # credentials = credentials?.toJS()
+    # not( _.isEmpty(credentials?.host) or
+    # _.isEmpty(credentials?.database) or
+    # _.isEmpty(credentials?.password) or
+    # _.isEmpty(credentials?.port) or
+    # _.isEmpty(credentials?.user) or
+    # credentials?.port == "NaN")
 
   _getDefaultPort: ->
     fields = credentialsTemplates(componentId)
