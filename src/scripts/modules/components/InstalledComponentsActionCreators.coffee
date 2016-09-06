@@ -18,11 +18,14 @@ VersionActionCreators = require '../components/VersionsActionCreators'
 
 deleteComponentConfiguration = require './utils/deleteComponentConfiguration'
 removeEmptyEncryptAttributes = require './utils/removeEmptyEncryptAttributes'
+preferEncryptedAttributes = require './utils/preferEncryptedAttributes'
 
 storeEncodedConfig = (componentId, configId, dataToSave, changeDescription) ->
   component = InstalledComponentsStore.getComponent(componentId)
   dataToSave = {
-    configuration: JSON.stringify(removeEmptyEncryptAttributes(dataToSave))
+    configuration: JSON.stringify(
+      removeEmptyEncryptAttributes(preferEncryptedAttributes(dataToSave))
+    )
   }
   if changeDescription
     dataToSave.changeDescription = changeDescription
