@@ -12,14 +12,16 @@ export default React.createClass({
     isPending: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
     mode: React.PropTypes.oneOf([MODE_BUTTON, MODE_LINK]),
-    tooltipPlacement: React.PropTypes.string
+    tooltipPlacement: React.PropTypes.string,
+    buttonStyle: React.PropTypes.object
   },
 
   getDefaultProps() {
     return {
       isPending: false,
       mode: MODE_BUTTON,
-      tooltipPlacement: 'top'
+      tooltipPlacement: 'top',
+      buttonStyle: {}
     };
   },
 
@@ -38,14 +40,14 @@ export default React.createClass({
   renderButton() {
     if (this.props.isPending) {
       return (
-        <span className="btn btn-link">
+        <span className="btn btn-link" style={this.props.buttonStyle}>
           <Loader className="fa-fw"/>
         </span>
       );
     } else {
       return (
         <OverlayTrigger placement={this.props.tooltipPlacement} overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
-          <button className="btn btn-link" onClick={this.handleClick}>
+          <button style={this.props.buttonStyle} className="btn btn-link" onClick={this.handleClick}>
             {this.renderIcon(this.props.isActive)}
           </button>
         </OverlayTrigger>
