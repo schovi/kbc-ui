@@ -75,7 +75,22 @@ export default function(componentId) {
       };
     },
 
-
+    setTableV2(configId, tableId, tableData) {
+      return this.loadConfigData(configId).then(
+        (data) => {
+          const tables = data.getIn(['parameters', 'tables'], List())
+                .map((t) => {
+                  if (t.get('tableId') === tableId) {
+                    return tableData;
+                  } else {
+                    return t;
+                  }
+                }, tableData);
+          var dataToSave = data.setIn(['parameters', 'tables'], tables);
+          return this.saveConfigData(configId, dataToSave);
+        }
+      );
+    },
     // ########## SET TABLE
     setTable(configId, tableId, tableData) {
       return this.loadConfigData(configId).then(
