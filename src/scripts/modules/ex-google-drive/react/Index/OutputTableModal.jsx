@@ -22,6 +22,7 @@ export default React.createClass({
   render() {
     const sheet = this.props.localState.get('sheet', Map());
     const documentTitle = sheetFullName(sheet, ' / ');
+    const headerRowValue = this.headerRowValue();
     return (
       <Modal
         bsSize="large"
@@ -47,7 +48,7 @@ export default React.createClass({
             onCancel={this.props.onHideFn}
             placement="right"
             saveLabel="Save"
-            isDisabled={this.invalidReason()}
+            isDisabled={this.invalidReason() || isNaN(headerRowValue) || headerRowValue < 1}
           />
         </Modal.Footer>
       </Modal>
@@ -75,7 +76,7 @@ export default React.createClass({
   },
 
   onChangeHeaderRowValue(e) {
-    const newVal = e.target.value;
+    const newVal = parseInt(e.target.value, 10);
     this.props.updateLocalState('headerRowValue', newVal);
   },
 
