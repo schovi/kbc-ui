@@ -22,11 +22,18 @@ preferEncryptedAttributes = require './utils/preferEncryptedAttributes'
 
 storeEncodedConfig = (componentId, configId, dataToSave, changeDescription) ->
   component = InstalledComponentsStore.getComponent(componentId)
-  dataToSave = {
-    configuration: JSON.stringify(
-      removeEmptyEncryptAttributes(preferEncryptedAttributes(dataToSave))
-    )
-  }
+  
+  if component.get('flags').includes('encrypt')
+    dataToSave = {
+      configuration: JSON.stringify(
+        removeEmptyEncryptAttributes(preferEncryptedAttributes(dataToSave))
+      )
+    }
+  else
+    dataToSave = {
+      configuration: JSON.stringify(dataToSave)
+    }
+
   if changeDescription
     dataToSave.changeDescription = changeDescription
   if component.get('flags').includes('encrypt')
