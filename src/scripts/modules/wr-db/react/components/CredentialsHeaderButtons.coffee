@@ -49,6 +49,13 @@ templateFn = (componentId, driver, isProvisioning) ->
       defaultPort = @_getDefaultPort()
       port = creds?.get 'port', defaultPort
       creds = creds?.set 'port', port
+      creds = creds.map((value, key) ->
+        isHashed = key[0] == '#'
+        if isHashed
+          return ''
+        else
+          return value
+        )
       #ActionCreators.resetCredentials componentId, @state.currentConfigId
       ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', creds
       @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
@@ -64,6 +71,13 @@ templateFn = (componentId, driver, isProvisioning) ->
   _handleCreate: ->
     @_updateLocalState('credentialsState', States.SAVING_NEW_CREDS)
     editingCredentials =  WrDbStore.getEditingByPath(componentId, @state.currentConfigId, 'creds')
+    editingCredentials = editingCredentials.map((value, key) =>
+      isHashed = key[0] == '#'
+      if isHashed and _.isEmpty(value)
+        return @state.currentCredentials.get(key)
+      else
+        return value
+    )
     ActionCreators
     .saveCredentials(componentId, @state.currentConfigId, editingCredentials).then =>
       @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
@@ -115,7 +129,8 @@ templateFn = (componentId, driver, isProvisioning) ->
     fields = credentialsTemplates(componentId)
     result = _.reduce(fields, (memo, field) ->
       propName = field[1]
-      memo and !!credentials.get(propName)
+      isHashed = propName[0] == '#'
+      memo and (!!credentials.get(propName) or isHashed)
     !!credentials)
     return result
     # credentials = credentials?.toJS()
