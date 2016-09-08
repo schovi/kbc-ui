@@ -22,7 +22,9 @@ redshift = [
   'TIMESTAMP']
 
 mssql = [
-  'bigint', 'money',
+  'bigint',
+  'uniqueidentifier': {defaultSize: '36'},
+  'money',
   'decimal': {defaultSize: '12,2'},
   'real', 'float': {defaultSize: '12'},
   'date', 'datetime': {defaultSize: 'YYYY-MM-DDThh:mm:ss[.mmm]'},
