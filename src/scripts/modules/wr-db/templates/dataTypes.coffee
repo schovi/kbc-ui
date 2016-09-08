@@ -36,6 +36,7 @@ mssql = [
   ]
 
 module.exports =
+'keboola.wr-db-mssql-v2': mssql
 'wr-db-mssql': mssql
 'wr-db-redshift': redshift
 'wr-db-oracle': ["char","nchar","varchar2","nvarchar",
