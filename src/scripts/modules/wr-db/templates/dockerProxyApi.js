@@ -49,8 +49,8 @@ export default function(componentId) {
       );
     },
 
-    saveConfigData(configId, data) {
-      return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
+    saveConfigData(configId, data, diffMessage) {
+      return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data, diffMessage);
     },
 
     // ######### GET SINGLE TABLE UPLOAD RUN PARAMS
@@ -87,7 +87,8 @@ export default function(componentId) {
                   }
                 }, tableData);
           var dataToSave = data.setIn(['parameters', 'tables'], tables);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update parameters of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -106,7 +107,8 @@ export default function(componentId) {
                   }
                 }, tableData);
           var dataToSave = data.setIn(['parameters', 'tables'], tables);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update parameters of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -137,7 +139,8 @@ export default function(componentId) {
                 }, newTable);
           var dataToSave = data.setIn(['parameters', 'tables'], tables);
           dataToSave = updateTablesMapping(dataToSave, newTable);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update columns of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -151,8 +154,8 @@ export default function(componentId) {
           const dataToSave = data
                 .setIn(['parameters', 'tables'], paramTables)
                 .setIn(tablesPath, mappingTables);
-
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Remove ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -172,7 +175,8 @@ export default function(componentId) {
           var tables = data.getIn(['parameters', 'tables'], List());
           dataToSave = data.setIn(['parameters', 'tables'], tables.push(tableToSave));
           dataToSave = updateTablesMapping(dataToSave, tableToSave);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Add table ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -182,7 +186,8 @@ export default function(componentId) {
       return this.loadConfigData(configId).then(
         (data) => {
           const dataToSave = data.setIn(['parameters', 'db'], fromJS(credentials));
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update credentials`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },

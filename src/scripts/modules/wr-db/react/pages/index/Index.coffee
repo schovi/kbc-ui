@@ -4,7 +4,7 @@ _ = require 'underscore'
 classnames = require 'classnames'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
-
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 dockerProxyApi = require('../../../templates/dockerProxyApi').default
@@ -219,6 +219,11 @@ templateFn = (componentId) ->
             configId: @state.configId
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+      if dockerProxyApi(componentId)
+        LatestVersions
+          componentId: componentId
+          limit: 3
+
 
 
   _renderTableRow: (table, tableExists = true) ->

@@ -2,6 +2,7 @@ dbwrIndex = require './react/pages/index/Index'
 dbWrTableDetail = require './react/pages/table/Table'
 dbWrCredentialsDetail = require './react/pages/credentials/Credentials'
 ActionCreators = require './actionCreators'
+VersionsActionCreators = require '../components/VersionsActionCreators'
 InstalledComponentsStore = require '../components/stores/InstalledComponentsStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
 CredentialsHeader = require './react/components/CredentialsHeaderButtons'
@@ -37,6 +38,8 @@ createRoute = (componentId, driver, isProvisioning) ->
     ,
       ->
         storageActionCreators.loadTables()
+    (params) ->
+      VersionsActionCreators.loadVersions(componentId, params.config)
 
   ]
   childRoutes: [
