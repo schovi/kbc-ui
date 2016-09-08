@@ -119,12 +119,12 @@ templateFn = (componentId) ->
     isRenderIncremental = IsDockerBasedFn(componentId) and componentId != 'wr-db-mssql'
     tableEditClassName = 'col-sm-12'
     if isRenderIncremental
-      tableEditClassName = 'col-sm-7'
+      tableEditClassName = 'col-sm-6'
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-table-editor-header',
         div className: tableEditClassName, @_renderTableEdit()
         if isRenderIncremental
-          div className: 'col-sm-5', @_renderIncremetnalSetup()
+          div className: 'col-sm-6', @_renderIncremetnalSetup()
         div className: 'col-sm-offset-7 col-sm-3',
           if !!@state.editingColumns
             @_renderSetColumnsType()

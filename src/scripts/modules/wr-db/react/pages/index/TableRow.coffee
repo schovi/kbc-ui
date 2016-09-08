@@ -2,7 +2,7 @@ React = require 'react'
 
 {ActivateDeactivateButton, Confirm, Tooltip} = require '../../../../../react/common/common'
 {span, button, strong, div} = React.DOM
-{Loader} = require 'kbc-react-components'
+{Check, Loader} = require 'kbc-react-components'
 Link = React.createFactory(require('react-router').Link)
 
 dockerProxyApi = require('../../../templates/dockerProxyApi').default
@@ -22,8 +22,10 @@ module.exports = React.createClass
     tableExists: React.PropTypes.bool.isRequired
     isTableExported: React.PropTypes.bool.isRequired
     isPending: React.PropTypes.bool.isRequired
+    isV2: React.PropTypes.bool.isRequired
     onExportChangeFn: React.PropTypes.func.isRequired
     table: React.PropTypes.object.isRequired
+    v2ConfigTable: React.PropTypes.object.isRequired
     tableDbName: React.PropTypes.string.isRequired
     configId: React.PropTypes.string.isRequired
     componentId: React.PropTypes.string.isRequired
@@ -43,14 +45,18 @@ module.exports = React.createClass
           @props.table.get 'name'
       span className: 'td',
         @props.tableDbName
+      if @props.isV2
+        span className: 'td',
+          React.createElement Check,
+            isChecked: @props.v2ConfigTable.get('incremental')
       span {className: 'td text-right'},
+        @_renderDeleteButton()
         React.createElement ActivateDeactivateButton,
           activateTooltip: 'Select table to upload'
           deactivateTooltip: 'Deselect table from upload'
           isActive: @props.isTableExported
           isPending: @props.isPending
           onChange: @props.onExportChangeFn
-        @_renderDeleteButton()
         if @props.tableExists
           React.createElement Tooltip,
             tooltip: 'Upload table to Dropbox'

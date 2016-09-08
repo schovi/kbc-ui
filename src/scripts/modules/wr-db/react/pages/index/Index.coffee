@@ -10,6 +10,7 @@ LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 dockerProxyApi = require('../../../templates/dockerProxyApi').default
 ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+V2Actions = require('../../../v2-actions').default
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
@@ -48,7 +49,7 @@ templateFn = (componentId) ->
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles', Map())
-
+    v2Actions = V2Actions(configId, componentId)
     tables = WrDbStore.getTables(componentId, configId)
     credentials = WrDbStore.getCredentials(componentId, configId)
 
@@ -63,7 +64,7 @@ templateFn = (componentId) ->
     localState: localState
     bucketToggles: toggles
     deletingTables: WrDbStore.getDeletingTables(componentId, configId)
-
+    v2ConfigTables: v2Actions.configTables
 
   render: ->
     div {className: 'container-fluid'},
@@ -227,10 +228,14 @@ templateFn = (componentId) ->
 
 
   _renderTableRow: (table, tableExists = true) ->
+    v2ConfigTable = @state.v2ConfigTables.find((t) -> t.get('tableId') == table.get('id'))
+    console.log v2ConfigTable
     #div null, table.get('id')
     TableRow
       tableExists: tableExists
       configId: @state.configId
+      isV2: @isV2()
+      v2ConfigTable: v2ConfigTable
       tableDbName: @_getConfigTable(table.get('id')).get('name')
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
@@ -243,12 +248,18 @@ templateFn = (componentId) ->
         WrDbActions.deleteTable(componentId, @state.configId, tableId)
       isDeleting: @state.deletingTables.get(table.get('id'))
 
+  isV2: ->
+    !!dockerProxyApi(componentId) and componentId != 'wr-db-mssql'
+
   _renderHeaderRow: ->
     div className: 'tr',
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
         strong null, 'Database name'
+      if @isV2()
+        span className: 'th',
+          strong null, 'Incremental'
 
   _handleExportChange: (tableId) ->
     isExported = @_isTableExported(tableId)
