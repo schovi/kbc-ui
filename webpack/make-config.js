@@ -80,6 +80,8 @@ module.exports = function (options) {
             configFile: 'coffeelint.json'
         },
         eslint: {
+            failOnWarning: false,
+            failOnError: true,
             configFile: path.resolve(__dirname, '../.eslintrc')
         },
         module: {
@@ -88,6 +90,7 @@ module.exports = function (options) {
               /aws\-sdk/,
             ],
             preLoaders: [
+                { test: /\.jsx?$/, loader: 'eslint', exclude: /node_modules/ },
                 {
                     test: /\.coffee$/,
                     loader: "coffee-lint-loader",
