@@ -10,6 +10,7 @@ export default React.createClass({
     deactivateTooltip: React.PropTypes.string.isRequired,
     isActive: React.PropTypes.bool.isRequired,
     isPending: React.PropTypes.bool,
+    buttonDisabled: React.PropTypes.bool,
     onChange: React.PropTypes.func.isRequired,
     mode: React.PropTypes.oneOf([MODE_BUTTON, MODE_LINK]),
     tooltipPlacement: React.PropTypes.string,
@@ -18,6 +19,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
+      buttonDisabled: false,
       isPending: false,
       mode: MODE_BUTTON,
       tooltipPlacement: 'top',
@@ -47,7 +49,8 @@ export default React.createClass({
     } else {
       return (
         <OverlayTrigger placement={this.props.tooltipPlacement} overlay={<Tooltip>{this.tooltip()}</Tooltip>}>
-          <button style={this.props.buttonStyle} className="btn btn-link" onClick={this.handleClick}>
+          <button disabled={this.props.buttonDisabled}
+            style={this.props.buttonStyle} className="btn btn-link" onClick={this.handleClick}>
             {this.renderIcon(this.props.isActive)}
           </button>
         </OverlayTrigger>
