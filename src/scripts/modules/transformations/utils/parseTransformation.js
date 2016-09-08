@@ -30,6 +30,14 @@ export default function(rowConfig) {
       }
     }
   }
-
+  if (!transformationConfig.disabled) {
+    transformationConfig.disabled = false;
+  }
+  if (transformationConfig.disabled === '0') {
+    transformationConfig.disabled = false;
+  }
+  if (transformationConfig.disabled === '1') {
+    transformationConfig.disabled = true;
+  }
   return transformationConfig;
 }
