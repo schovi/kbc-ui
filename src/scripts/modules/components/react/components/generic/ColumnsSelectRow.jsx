@@ -26,7 +26,7 @@ export default React.createClass({
               options={this._getColumnsOptions()}/>
             <small
               className="help-block">
-              Import only specified columns blablabla
+              Import only specified columns
             </small>
           </div>
         </div>

@@ -22,6 +22,8 @@ EditButtons = React.createFactory(require('../../../../../react/common/EditButto
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 ActivateDeactivateButton = require('../../../../../react/common/ActivateDeactivateButton').default
+InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
+PrimaryKeyModal = React.createFactory(require('./PrimaryKeyModal').default)
 
 #componentId = 'wr-db'
 
@@ -153,8 +155,13 @@ templateFn = (componentId) ->
     @_setValidateColumn(column.get('name'), valid)
 
   _renderIncremetnalSetup: ->
+
     exportInfo = @state.v2ConfigTable
+    v2State = @state.v2State
     isIncremental = exportInfo.get('incremental')
+    primaryKey = exportInfo.get('primaryKey', List())
+    editingPkPath = @state.v2Actions.editingPkPath
+    editingPk = v2State.getIn(editingPkPath)
     div null,
       strong null,
         'Incremental'
@@ -164,18 +171,32 @@ templateFn = (componentId) ->
         deactivateTooltip: 'reset incremental'
         isPending: @state.v2State.get('saving')
         buttonStyle: {'padding-top': '0', 'padding-bottom': '0'}
+        buttonDisabled: !!@state.editingColumns
         onChange: =>
           @setV2TableInfo(exportInfo.set('incremental', !isIncremental))
-      # strong null,
-      #   'Primary Key'
-      # React.createElement ActivateDeactivateButton,
-      #   isActive: @state.exportInfo.get('incremental')
-      #   activateTooltip: 'Set incremental'
-      #   deactivateTooltip: 'reset incremental'
-      #   onChange: ->
-
-
-      #@state.exportInfo.get('primaryKey')
+      strong null,
+        'Primary Key'
+      ' '
+      button
+        className: 'btn btn-link'
+        style: {'paddingTop': 0, 'paddingBottom': 0}
+        disabled: !!@state.editingColumns
+        onClick: =>
+          @state.v2Actions.updateV2State(editingPkPath, primaryKey)
+        primaryKey.join(', ') or 'n/a'
+        ' '
+        span className: 'kbc-icon-pencil'
+      PrimaryKeyModal
+        tableConfig: @state.tableConfig
+        columns: @state.columns.map (c) ->
+          c.get('dbName')
+        show: !!editingPk
+        currentValue: primaryKey.join(',')
+        isSaving: @state.v2State.get('saving')
+        onHide: =>
+          @state.v2Actions.updateV2State(editingPkPath, null)
+        onSave: (newPk) =>
+          @setV2TableInfo(exportInfo.set('primaryKey', newPk))
 
   _onEditColumn: (newColumn) ->
     cname = newColumn.get('name')

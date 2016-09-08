@@ -20,6 +20,8 @@ export default function(configId, componentId) {
   }
 
   return {
+    editingPkPath: ['editingPk'],
+    updateV2State: (path, data) => updateLocalState(['v2'].concat(path), data),
     configTables: getconfigData().getIn(['parameters', 'tables'], List()),
     setTableInfo(tableId, newTableInfo) {
       updateLocalState(['v2', 'saving'], true);
