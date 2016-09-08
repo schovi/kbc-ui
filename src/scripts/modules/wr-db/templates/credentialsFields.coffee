@@ -26,7 +26,7 @@ fields =
     [ 'Password', 'password', 'password', true]
     [ 'Database Name', 'database', 'text']
     [ 'Schema', 'schema', 'text']
-    ]
+  ]
 
   'wr-db-mssql': [
     [ 'Host name', 'host']
@@ -34,7 +34,14 @@ fields =
     [ 'Username', 'user']
     [ 'Password', 'password', 'password', true]
     [ 'Database Name', 'database', 'text']
+  ]
 
+  'keboola.wr-db-mssql-v2': [
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '1433']
+    [ 'Username', 'user']
+    [ 'Password', '#password', 'password', true]
+    [ 'Database Name', 'database', 'text']
   ]
 
 

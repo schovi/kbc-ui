@@ -210,6 +210,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     isSaving =  state == States.SAVING_NEW_CREDS
     isProvisioningProp = state == States.SHOW_PROV_READ_CREDS
     React.createElement CredentialsForm,
+      savedCredentials: @state.credentials
       isEditing: isEditing
       credentials: credentials
       onChangeFn: @_handleChange

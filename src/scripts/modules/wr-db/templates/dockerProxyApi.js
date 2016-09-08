@@ -1,4 +1,4 @@
-const dockerComponents = ['wr-db-mssql'];
+const dockerComponents = ['wr-db-mssql', 'keboola.wr-db-mssql-v2'];
 import {List, Map, fromJS} from 'immutable';
 import Promise from 'bluebird';
 
@@ -49,8 +49,8 @@ export default function(componentId) {
       );
     },
 
-    saveConfigData(configId, data) {
-      return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data);
+    saveConfigData(configId, data, diffMessage) {
+      return InstalledComponentsActions.saveComponentConfigData(componentId, configId, data, diffMessage);
     },
 
     // ######### GET SINGLE TABLE UPLOAD RUN PARAMS
@@ -75,7 +75,23 @@ export default function(componentId) {
       };
     },
 
-
+    setTableV2(configId, tableId, tableData) {
+      return this.loadConfigData(configId).then(
+        (data) => {
+          const tables = data.getIn(['parameters', 'tables'], List())
+                .map((t) => {
+                  if (t.get('tableId') === tableId) {
+                    return tableData;
+                  } else {
+                    return t;
+                  }
+                }, tableData);
+          var dataToSave = data.setIn(['parameters', 'tables'], tables);
+          const msg = `Update parameters of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
+        }
+      );
+    },
     // ########## SET TABLE
     setTable(configId, tableId, tableData) {
       return this.loadConfigData(configId).then(
@@ -91,20 +107,31 @@ export default function(componentId) {
                   }
                 }, tableData);
           var dataToSave = data.setIn(['parameters', 'tables'], tables);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update parameters of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
 
     // ########## SET TABLE COLUMNS
     setTableColumns(configId, tableId, columns) {
+      const columnsToSave = columns.map( (c) => {
+        return {
+          name: c.name,
+          dbName: c.dbName,
+          type: c.type,
+          size: c.size,
+          nullable: !!c.null,
+          default: c.default
+        };
+      });
       return this.loadConfigData(configId).then(
         (data) => {
           var newTable = null;
           const tables = data.getIn(['parameters', 'tables'], List())
                 .map((t) => {
                   if (t.get('tableId') === tableId) {
-                    newTable = t.set('items', fromJS(columns).filter((c) => c.get('type') !== 'IGNORE'));
+                    newTable = t.set('items', fromJS(columnsToSave).filter((c) => c.get('type') !== 'IGNORE'));
                     return newTable;
                   } else {
                     return t;
@@ -112,7 +139,8 @@ export default function(componentId) {
                 }, newTable);
           var dataToSave = data.setIn(['parameters', 'tables'], tables);
           dataToSave = updateTablesMapping(dataToSave, newTable);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update columns of ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -126,8 +154,8 @@ export default function(componentId) {
           const dataToSave = data
                 .setIn(['parameters', 'tables'], paramTables)
                 .setIn(tablesPath, mappingTables);
-
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Remove ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -147,7 +175,8 @@ export default function(componentId) {
           var tables = data.getIn(['parameters', 'tables'], List());
           dataToSave = data.setIn(['parameters', 'tables'], tables.push(tableToSave));
           dataToSave = updateTablesMapping(dataToSave, tableToSave);
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Add table ${tableId}`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -157,7 +186,8 @@ export default function(componentId) {
       return this.loadConfigData(configId).then(
         (data) => {
           const dataToSave = data.setIn(['parameters', 'db'], fromJS(credentials));
-          return this.saveConfigData(configId, dataToSave);
+          const msg = `Update credentials`;
+          return this.saveConfigData(configId, dataToSave, msg);
         }
       );
     },
@@ -194,8 +224,10 @@ export default function(componentId) {
           if (!table) {
             return Promise.reject('Error: table ' + tableId + ' not exits in the config');
           }
-
-          table = table.set('columns', table.get('items'));
+          const columns = table.get('items', List()).map((c) => {
+            return c.set('null', c.get('nullable', false));
+          });
+          table = table.set('columns', columns);
           return table;
         }
       );

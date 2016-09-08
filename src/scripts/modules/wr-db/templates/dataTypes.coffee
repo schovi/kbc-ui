@@ -22,7 +22,9 @@ redshift = [
   'TIMESTAMP']
 
 mssql = [
-  'bigint', 'money',
+  'bigint',
+  'uniqueidentifier': {defaultSize: '36'},
+  'money',
   'decimal': {defaultSize: '12,2'},
   'real', 'float': {defaultSize: '12'},
   'date', 'datetime': {defaultSize: 'YYYY-MM-DDThh:mm:ss[.mmm]'},
@@ -36,6 +38,7 @@ mssql = [
   ]
 
 module.exports =
+'keboola.wr-db-mssql-v2': mssql
 'wr-db-mssql': mssql
 'wr-db-redshift': redshift
 'wr-db-oracle': ["char","nchar","varchar2","nvarchar",

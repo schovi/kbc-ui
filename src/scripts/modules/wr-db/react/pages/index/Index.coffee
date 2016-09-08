@@ -4,12 +4,13 @@ _ = require 'underscore'
 classnames = require 'classnames'
 
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
-
+LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
 LatestJobsStore = require '../../../../jobs/stores/LatestJobsStore'
 dockerProxyApi = require('../../../templates/dockerProxyApi').default
 ComponentEmptyState = require('../../../../components/react/components/ComponentEmptyState').default
 RunButtonModal = React.createFactory(require('../../../../components/react/components/RunComponentButton'))
+V2Actions = require('../../../v2-actions').default
 Link = React.createFactory(require('react-router').Link)
 TableRow = React.createFactory require('./TableRow')
 TablesByBucketsPanel = React.createFactory require('../../../../components/react/components/TablesByBucketsPanel')
@@ -34,7 +35,7 @@ AddNewTableModal = require('../../../../../react/common/AddNewTableModal').defau
 
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
-allowedBuckets = ['out']
+allowedBuckets = ['out', 'in']
 
 module.exports = (componentId) ->
   React.createClass templateFn(componentId)
@@ -48,7 +49,7 @@ templateFn = (componentId) ->
     configId = RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
     toggles = localState.get('bucketToggles', Map())
-
+    v2Actions = V2Actions(configId, componentId)
     tables = WrDbStore.getTables(componentId, configId)
     credentials = WrDbStore.getCredentials(componentId, configId)
 
@@ -63,7 +64,7 @@ templateFn = (componentId) ->
     localState: localState
     bucketToggles: toggles
     deletingTables: WrDbStore.getDeletingTables(componentId, configId)
-
+    v2ConfigTables: v2Actions.configTables
 
   render: ->
     div {className: 'container-fluid'},
@@ -219,13 +220,22 @@ templateFn = (componentId) ->
             configId: @state.configId
       React.createElement LatestJobs,
         jobs: @state.latestJobs
+      if dockerProxyApi(componentId)
+        LatestVersions
+          componentId: componentId
+          limit: 3
+
 
 
   _renderTableRow: (table, tableExists = true) ->
+    v2ConfigTable = @state.v2ConfigTables.find((t) -> t.get('tableId') == table.get('id'))
+    console.log v2ConfigTable
     #div null, table.get('id')
     TableRow
       tableExists: tableExists
       configId: @state.configId
+      isV2: @isV2()
+      v2ConfigTable: v2ConfigTable
       tableDbName: @_getConfigTable(table.get('id')).get('name')
       isTableExported: @_isTableExported(table.get('id'))
       isPending: @_isPendingTable(table.get('id'))
@@ -238,12 +248,18 @@ templateFn = (componentId) ->
         WrDbActions.deleteTable(componentId, @state.configId, tableId)
       isDeleting: @state.deletingTables.get(table.get('id'))
 
+  isV2: ->
+    !!dockerProxyApi(componentId) and componentId != 'wr-db-mssql'
+
   _renderHeaderRow: ->
     div className: 'tr',
       span className: 'th',
         strong null, 'Table name'
       span className: 'th',
         strong null, 'Database name'
+      if @isV2()
+        span className: 'th',
+          strong null, 'Incremental'
 
   _handleExportChange: (tableId) ->
     isExported = @_isTableExported(tableId)

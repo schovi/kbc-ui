@@ -163,6 +163,7 @@ routes =
       createComponentRoute 'wr-tableau', [createDbWriterRoutes('wr-tableau', 'mysql', true)]
     ,
       createComponentRoute 'wr-db-mssql', [createDbWriterRoutes('wr-db-mssql', 'mssql', false)]
+      createComponentRoute 'keboola.wr-db-mssql-v2', [createDbWriterRoutes('keboola.wr-db-mssql-v2', 'mssql', false)]
     ,
       createComponentRoute 'wr-portal-sas', [wrPortalCreateRouteFn('wr-portal-sas')]
     ,

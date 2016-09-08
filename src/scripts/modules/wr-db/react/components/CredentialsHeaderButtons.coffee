@@ -11,6 +11,7 @@ Loader = React.createFactory(require('kbc-react-components').Loader)
 {States} = require '../pages/credentials/StateConstants'
 credentialsTemplates = require '../../templates/credentialsFields'
 
+
 #componentId = 'wr-db'
 
 #isProvisioning = true
@@ -48,6 +49,13 @@ templateFn = (componentId, driver, isProvisioning) ->
       defaultPort = @_getDefaultPort()
       port = creds?.get 'port', defaultPort
       creds = creds?.set 'port', port
+      creds = creds.map((value, key) ->
+        isHashed = key[0] == '#'
+        if isHashed
+          return ''
+        else
+          return value
+        )
       #ActionCreators.resetCredentials componentId, @state.currentConfigId
       ActionCreators.setEditingData componentId, @state.currentConfigId, 'creds', creds
       @_updateLocalState('credentialsState', States.CREATE_NEW_CREDS)
@@ -63,6 +71,13 @@ templateFn = (componentId, driver, isProvisioning) ->
   _handleCreate: ->
     @_updateLocalState('credentialsState', States.SAVING_NEW_CREDS)
     editingCredentials =  WrDbStore.getEditingByPath(componentId, @state.currentConfigId, 'creds')
+    editingCredentials = editingCredentials.map((value, key) =>
+      isHashed = key[0] == '#'
+      if isHashed and _.isEmpty(value)
+        return @state.currentCredentials.get(key)
+      else
+        return value
+    )
     ActionCreators
     .saveCredentials(componentId, @state.currentConfigId, editingCredentials).then =>
       @_updateLocalState('credentialsState', States.SHOW_STORED_CREDS)
@@ -106,20 +121,25 @@ templateFn = (componentId, driver, isProvisioning) ->
   _updateLocalState: (path, data) ->
     if _.isString path
       path = [path]
-    #console.log "UPDATE STATE", path, data
     newLocalState = @state.localState.setIn(path, data)
-    #console.log "new local state", newLocalState.toJS()
     InstalledComponentsActions.updateLocalState(componentId, @state.currentConfigId, newLocalState, path)
 
 
   _hasDbConnection: (credentials) ->
-    credentials = credentials?.toJS()
-    not( _.isEmpty(credentials?.host) or
-    _.isEmpty(credentials?.database) or
-    _.isEmpty(credentials?.password) or
-    _.isEmpty(credentials?.port) or
-    _.isEmpty(credentials?.user) or
-    credentials?.port == "NaN")
+    fields = credentialsTemplates(componentId)
+    result = _.reduce(fields, (memo, field) ->
+      propName = field[1]
+      isHashed = propName[0] == '#'
+      memo and (!!credentials.get(propName) or isHashed)
+    !!credentials)
+    return result
+    # credentials = credentials?.toJS()
+    # not( _.isEmpty(credentials?.host) or
+    # _.isEmpty(credentials?.database) or
+    # _.isEmpty(credentials?.password) or
+    # _.isEmpty(credentials?.port) or
+    # _.isEmpty(credentials?.user) or
+    # credentials?.port == "NaN")
 
   _getDefaultPort: ->
     fields = credentialsTemplates(componentId)

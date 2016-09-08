@@ -13,6 +13,7 @@ storageApi = require '../../../../components/StorageApi'
 
 WrDbStore = require '../../../store'
 WrDbActions = require '../../../actionCreators'
+V2Actions = require('../../../v2-actions').default
 RoutesStore = require '../../../../../stores/RoutesStore'
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 Input = React.createFactory(require('react-bootstrap').Input)
@@ -20,6 +21,10 @@ Input = React.createFactory(require('react-bootstrap').Input)
 EditButtons = React.createFactory(require('../../../../../react/common/EditButtons'))
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
+ActivateDeactivateButton = require('../../../../../react/common/ActivateDeactivateButton').default
+InlineEditText = React.createFactory(require '../../../../../react/common/InlineEditTextInput')
+PrimaryKeyModal = React.createFactory(require('./PrimaryKeyModal').default)
+IsDockerBasedFn = require('../../../templates/dockerProxyApi').default
 
 #componentId = 'wr-db'
 
@@ -57,7 +62,7 @@ templateFn = (componentId) ->
     editingColumns = editingData.getIn ['columns', tableId]
     isSavingColumns = !!WrDbStore.getUpdatingColumns(componentId, configId, tableId)
     hideIgnored = localState.getIn ['hideIgnored', tableId], false
-
+    v2Actions = V2Actions(configId, componentId)
     columnsValidation = editingData.getIn(['validation', tableId], Map())
 
     #state
@@ -73,6 +78,9 @@ templateFn = (componentId) ->
     localState: localState
     exportInfo: exportInfo
     isSavingColumns: isSavingColumns
+    v2Actions: v2Actions
+    v2State: localState.get('v2', Map())
+    v2ConfigTable: v2Actions.configTables.find((t) -> t.get('tableId') == tableId)
 
   getInitialState: ->
     dataPreview: null
@@ -108,11 +116,16 @@ templateFn = (componentId) ->
 
 
   render: ->
+    isRenderIncremental = IsDockerBasedFn(componentId) and componentId != 'wr-db-mssql'
+    tableEditClassName = 'col-sm-12'
+    if isRenderIncremental
+      tableEditClassName = 'col-sm-6'
     div className: 'container-fluid kbc-main-content',
       div className: 'row kbc-table-editor-header',
-        div className: 'col-sm-5', @_renderTableEdit()
-        div className: 'col-sm-2', @_renderHideIngored()
-        div className: 'col-sm-3',
+        div className: tableEditClassName, @_renderTableEdit()
+        if isRenderIncremental
+          div className: 'col-sm-6', @_renderIncremetnalSetup()
+        div className: 'col-sm-offset-7 col-sm-3',
           if !!@state.editingColumns
             @_renderSetColumnsType()
           else
@@ -120,6 +133,9 @@ templateFn = (componentId) ->
         div className: 'col-sm-2 kbc-buttons', @_renderEditButtons()
 
       ColumnsEditor
+        onToggleHideIgnored: (e) =>
+          path = ['hideIgnored', @state.tableId]
+          @_updateLocalState(path, e.target.checked)
         dataTypes: DataTypes[componentId] or defaultDataTypes
         columns: @state.columns
         renderRowFn: @_renderColumnRow
@@ -147,6 +163,49 @@ templateFn = (componentId) ->
     @_setValidateColumn(column.get('name'), valid)
 
 
+  _renderIncremetnalSetup: ->
+    exportInfo = @state.v2ConfigTable
+    v2State = @state.v2State
+    isIncremental = exportInfo.get('incremental')
+    primaryKey = exportInfo.get('primaryKey', List())
+    editingPkPath = @state.v2Actions.editingPkPath
+    editingPk = v2State.getIn(editingPkPath)
+    div null,
+      strong null,
+        'Incremental'
+      React.createElement ActivateDeactivateButton,
+        isActive: isIncremental
+        activateTooltip: 'Set incremental'
+        deactivateTooltip: 'reset incremental'
+        isPending: @state.v2State.get('saving')
+        buttonStyle: {'paddingTop': '0', 'paddingBottom': '0'}
+        buttonDisabled: !!@state.editingColumns
+        onChange: =>
+          @setV2TableInfo(exportInfo.set('incremental', !isIncremental))
+      strong null,
+        'Primary Key'
+      ' '
+      button
+        className: 'btn btn-link'
+        style: {'paddingTop': 0, 'paddingBottom': 0}
+        disabled: !!@state.editingColumns
+        onClick: =>
+          @state.v2Actions.updateV2State(editingPkPath, primaryKey)
+        primaryKey.join(', ') or 'n/a'
+        ' '
+        span className: 'kbc-icon-pencil'
+      PrimaryKeyModal
+        tableConfig: @state.tableConfig
+        columns: @state.columns.map (c) ->
+          c.get('dbName')
+        show: !!editingPk
+        currentValue: primaryKey.join(',')
+        isSaving: @state.v2State.get('saving')
+        onHide: =>
+          @state.v2Actions.updateV2State(editingPkPath, null)
+        onSave: (newPk) =>
+          @setV2TableInfo(exportInfo.set('primaryKey', newPk))
+
   _onEditColumn: (newColumn) ->
     cname = newColumn.get('name')
     path = ['columns', @state.tableId, cname]
@@ -162,19 +221,6 @@ templateFn = (componentId) ->
     newCols = columns.filterNot (c) =>
       c.get('type') == 'IGNORE' and @state.hideIgnored
     newCols
-
-  _renderHideIngored: ->
-    div className: 'checkbox',
-      label className: '',
-        input
-          type: 'checkbox'
-          label: 'Hide IGNORED'
-          onChange: (e) =>
-            path = ['hideIgnored', @state.tableId]
-            @_updateLocalState(path, e.target.checked)
-
-        ' Hide Ignored'
-
 
   _renderColumnRow: (props) ->
     React.createElement ColumnRow, props
@@ -278,6 +324,9 @@ templateFn = (componentId) ->
         onSave: @_handleEditColumnsSave
         onEditStart: @_handleEditColumnsStart
         editLabel: 'Edit Columns'
+
+  setV2TableInfo: (newTableInfo) ->
+    @state.v2Actions.setTableInfo(@state.tableId, newTableInfo)
 
   _updateLocalState: (path, data) ->
     newLocalState = @state.localState.setIn(path, data)
