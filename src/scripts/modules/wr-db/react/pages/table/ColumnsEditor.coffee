@@ -1,5 +1,5 @@
 React = require 'react'
-{table, tr, th, tbody, thead, div, td} = React.DOM
+{label, input, table, tr, th, tbody, thead, div, td} = React.DOM
 
 module.exports = React.createClass
 
@@ -13,8 +13,10 @@ module.exports = React.createClass
     isSaving: React.PropTypes.bool
     allColumns: React.PropTypes.object
     filterColumnFn: React.PropTypes.func
+    onToggleHideIgnored: React.PropTypes.func
     dataPreview: React.PropTypes.array
     columnsValidation: React.PropTypes.object
+
 
 
   render: ->
@@ -48,7 +50,17 @@ module.exports = React.createClass
             tr null,
               th null, 'KB Storage Column'
               th null, 'Database Column Name'
-              th null, 'Data Type'
+              th null,
+                'Data Type'
+                div
+                  style: {'margin': 0}
+                  className: 'checkbox',
+                  label className: '',
+                    input
+                      type: 'checkbox'
+                      label: 'Hide IGNORED'
+                      onChange: this.props.onToggleHideIgnored
+                    ' Hide Ignored'
               th null, 'NULL'
               th null, 'Default Value'
               th null
