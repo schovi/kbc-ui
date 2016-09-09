@@ -17,7 +17,22 @@ function isUploaderValid(localState) {
 }
 
 function isUploaderFileTooBig(localState) {
+  if (!localState.get('file')) {
+    return false;
+  }
   if (isUploaderValid(localState) && localState.get('file').size > 100 * 1024 * 1024) {
+    return true;
+  }
+  return false;
+}
+
+function isUploaderFileInvalidFormat(localState) {
+  if (!localState.get('file')) {
+    return false;
+  }
+  const fileName = localState.get('file').name || '';
+  if (isUploaderValid(localState) &&
+    fileName.substring(fileName.length - 4, fileName.length) !== '.csv') {
     return true;
   }
   return false;
@@ -33,8 +48,9 @@ export default function(configId) {
     primaryKey: configData.get('primaryKey', List()),
     delimiter: configData.get('delimiter', ','),
     enclosure: configData.get('enclosure', '"'),
-    isUploaderValid: isUploaderValid(localState),
+    isUploaderValid: isUploaderValid(localState) && !isUploaderFileInvalidFormat(localState),
     isUploaderFileTooBig: isUploaderFileTooBig(localState),
+    isUploaderFileInvalidFormat: isUploaderFileInvalidFormat(localState),
     // local state stuff
     getLocalState(path) {
       if (_.isEmpty(path)) {
