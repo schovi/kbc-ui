@@ -147,9 +147,25 @@ export default React.createClass({
     return this.state.store.google && this.state.store.google.get('projectId', null);
   },
 
+  hasStorage() {
+    return this.state.store.google && this.state.store.google.get('storage', null);
+  },
+
   invalidToRun() {
     if (!this.isAuthorized()) {
       return 'No Google BigQuery account authorized';
+    }
+
+    if(!this.hasProject()) {
+      return 'No Google BigQuery Project or Cloud Storage bucketstorage specified';
+    }
+
+    if(!this.hasStorage()) {
+      return 'No Google Cloud Storage bucket specified';
+    }
+
+    if(!this.hasQueries()) {
+      return 'No queries configured yet';
     }
 
     return false;
