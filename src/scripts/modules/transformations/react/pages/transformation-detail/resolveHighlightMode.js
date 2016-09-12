@@ -16,6 +16,9 @@ export default function(backend, type) {
     if (type === 'python') {
       return 'text/x-python';
     }
+    if (type === 'openrefine') {
+      return 'application/json';
+    }
   } else {
     return null;
   }

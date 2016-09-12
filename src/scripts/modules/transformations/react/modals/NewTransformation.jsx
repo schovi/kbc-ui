@@ -29,6 +29,10 @@ function prepareDataForCreate(data) {
     case 'python':
       newData = newData.set('backend', 'docker').set('type', 'python');
       break;
+    case 'openrefine':
+      newData = newData.set('backend', 'docker').set('type', 'openrefine');
+      break;
+
     default:
       throw new Error('Unknown backend ' + data.get('backend'));
   }
@@ -125,6 +129,9 @@ export default React.createClass({
     }
     options.push({value: 'r', label: 'R'});
     options.push({value: 'python', label: 'Python'});
+    if (ApplicationStore.hasCurrentAdminFeature('transformation-openrefine')) {
+      options.push({value: 'openrefine', label: 'OpenRefine'});
+    }
     return options.map(function(option) {
       return (
         <option value={option.value} key={option.value}>{option.label}</option>

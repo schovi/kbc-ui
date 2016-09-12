@@ -34,12 +34,13 @@ export default React.createClass({
               </a>.
             </div>
           ) : null}
-
-          <div className="well">
-            All source tables are stored in <code>/data/in/tables</code>
-            (relative path <code>in/tables</code> , save all tables for output mapping to
-            <code>/data/out/tables</code> (relative path <code>out/tables</code>).
-          </div>
+          {this.props.transformationType !== 'openrefine' ? (
+            <div className="well">
+              All source tables are stored in <code>/data/in/tables</code>
+              (relative path <code>in/tables</code> , save all tables for output mapping to
+              <code>/data/out/tables</code> (relative path <code>out/tables</code>).
+            </div>
+          ) : null}
           <div className="edit form-group kbc-queries-editor">
             <div className="text-right">
               <ConfirmButtons

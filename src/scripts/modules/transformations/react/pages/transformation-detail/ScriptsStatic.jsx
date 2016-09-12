@@ -37,6 +37,7 @@ export default React.createClass({
       <p>
         {this.props.transformationType === 'r' ? (<small>No R script.</small>) : null}
         {this.props.transformationType === 'python' ? (<small>No Python script.</small>) : null}
+        {this.props.transformationType === 'openrefine' ? (<small>No OpenRefine configuration.</small>) : null}
         {this.startEditButton()}
       </p>
     );
@@ -46,8 +47,9 @@ export default React.createClass({
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
         <span className="kbc-icon-pencil"></span>
-          {this.props.transformationType === 'r' ? 'Edit R Script' : null}
-          {this.props.transformationType === 'python' ? 'Edit Python Script' : null}
+          {this.props.transformationType === 'r' ? 'Edit R script' : null}
+          {this.props.transformationType === 'python' ? 'Edit Python script' : null}
+          {this.props.transformationType === 'openrefine' ? 'Edit OpenRefine configuration' : null}
       </button>
     );
   }

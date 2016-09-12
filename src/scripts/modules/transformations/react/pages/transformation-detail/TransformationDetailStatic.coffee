@@ -220,7 +220,7 @@ module.exports = React.createClass
             , @).toArray()
         else
           div {className: "well text-center"},
-            p {}, 'No Output Mapping assigned yet.'
+            p {}, 'No outputs assigned yet.'
             React.createElement AddOutputMapping,
               tables: @props.tables
               buckets: @props.buckets
@@ -228,7 +228,7 @@ module.exports = React.createClass
               bucket: @props.bucket
               mapping: @props.editingFields.get('new-output-mapping', Map())
 
-      if @props.transformation.get('backend') == 'docker'
+      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
         div {},
           h2 {}, 'Packages'
           React.createElement Packages,
@@ -250,7 +250,7 @@ module.exports = React.createClass
             onEditSubmit: =>
               TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
                 @props.transformationId, 'packages')
-      if @props.transformation.get('backend') == 'docker'
+      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
         div {},
           h2 {}, 'Stored Files'
           React.createElement SavedFiles,
