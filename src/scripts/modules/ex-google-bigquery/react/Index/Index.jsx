@@ -294,14 +294,16 @@ export default React.createClass({
   },
 
   renderAddQueryLink() {
-    return (
-      <Link
-        to={ROUTE_PREFIX + COMPONENT_ID + '-new-query'}
-        params={{config: this.state.configId}}
-        className="btn btn-success">
+    if (this.hasProject() && this.hasStorage()) {
+      return (
+        <Link
+          to={ROUTE_PREFIX + COMPONENT_ID + '-new-query'}
+          params={{config: this.state.configId}}
+          className="btn btn-success">
           <span className="kbc-icon-plus"></span> Add Query
-      </Link>
-    );
+        </Link>
+      );
+    }
   },
 
   renderEmptyQueries() {
