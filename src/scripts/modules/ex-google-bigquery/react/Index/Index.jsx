@@ -112,11 +112,11 @@ export default React.createClass({
                 You are about to run component.
               </RunComponentButton>
             </li>
-            {/* <li>
-            <a href={this.state.component.get('documentationUrl')} target="_blank">
-            <i className="fa fa-question-circle fa-fw" /> Documentation
-            </a>
-            </li> */}
+            <li>
+              <a href={this.state.component.get('documentationUrl')} target="_blank">
+                <i className="fa fa-question-circle fa-fw" /> Documentation
+              </a>
+            </li>
             <li>
               <DeleteConfigurationButton
                 componentId={COMPONENT_ID}
