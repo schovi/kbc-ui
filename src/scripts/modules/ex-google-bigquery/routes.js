@@ -16,7 +16,7 @@ const ROUTE_PREFIX = 'ex-db-generic-';
 const COMPONENT_ID = 'keboola.ex-google-bigquery';
 
 export default {
-  name: ROUTE_PREFIX + COMPONENT_ID,
+  name: COMPONENT_ID,
   path: ':config',
   isComponent: true,
   defaultRouteHandler: Index,
@@ -37,7 +37,7 @@ export default {
   //   action: (params) => jobsActionCreators.loadComponentConfigurationLatestJobs(COMPONENT_ID, params.config)
   // },
   childRoutes: [
-    oauthUtils.createRedirectRouteSimple(ROUTE_PREFIX + COMPONENT_ID),
+    oauthUtils.createRedirectRouteSimple(COMPONENT_ID),
     {
       name: ROUTE_PREFIX + COMPONENT_ID + '-query',
       path: 'query/:query',

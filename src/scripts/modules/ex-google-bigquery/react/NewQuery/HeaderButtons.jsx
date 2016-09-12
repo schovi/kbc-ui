@@ -47,7 +47,7 @@ export default React.createClass({
   },
 
   redirectToIndex() {
-    this.transitionTo(ROUTE_PREFIX + COMPONENT_ID, {config: this.state.configId});
+    this.transitionTo(COMPONENT_ID, {config: this.state.configId});
     return this.state.actions.cancelEditingNewQuery();
   },
 
