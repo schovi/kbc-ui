@@ -6,6 +6,7 @@ import GaMultiSelect from './GaMultiSelect';
 import DateRangesSelector from './DateRangesSelector';
 import SapiTableLinkEx from '../../../../components/react/components/StorageApiTableLinkEx';
 import QuerySample from './QuerySample';
+import UrlParserModal from './UrlParserModal';
 
 export default React.createClass({
   propTypes: {
@@ -50,13 +51,16 @@ export default React.createClass({
                </p>
               }
             </div>
-            <div className="col-md-4 checkbox">
+            <div className="col-md-2 checkbox">
               <label>
                 <input type="checkbox" checked={query.get('enabled')}
                   disabled={!isEditing}
                   onChange={this.onChangePropertyFn('enabled', (e) => e.target.checked)}/>
                 Enabled
               </label>
+            </div>
+            <div className="col-md-2">
+              {isEditing ? this.renderUrlParser() : null}
             </div>
           </div>
           <div className="form-group">
@@ -150,6 +154,23 @@ export default React.createClass({
           sampleDataInfo={this.props.sampleDataInfo}
         />
       </div>
+    );
+  },
+
+  renderUrlParser() {
+    const {localState, query, onChangeQuery} = this.props;
+    return (
+      <span>
+        <button onClick={() => this.props.updateLocalState('showUrlParser', true)}
+          className="btn btn-primary btn-sm">
+          Parse Query Url
+        </button>
+        <UrlParserModal
+          onSave={(newQuery) => onChangeQuery(query.set('query', newQuery))}
+          show={localState.get('showUrlParser', false)}
+          onCancel={() => this.props.updateLocalState('showUrlParser', false)}
+          {...this.props.prepareLocalState('UrlParser')}/>
+      </span>
     );
   },
 
