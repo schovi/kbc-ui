@@ -156,15 +156,15 @@ export default React.createClass({
       return 'No Google BigQuery account authorized';
     }
 
-    if(!this.hasProject()) {
+    if (!this.hasProject()) {
       return 'No Google BigQuery Project or Cloud Storage bucketstorage specified';
     }
 
-    if(!this.hasStorage()) {
+    if (!this.hasStorage()) {
       return 'No Google Cloud Storage bucket specified';
     }
 
-    if(!this.hasQueries()) {
+    if (!this.hasQueries()) {
       return 'No queries configured yet';
     }
 

@@ -12,7 +12,6 @@ import actionsProvisioning from '../../actionsProvisioning';
 // ui components
 import EditButtons from '../../../../react/common/EditButtons';
 
-const ROUTE_PREFIX = 'ex-db-generic-';
 const COMPONENT_ID = 'keboola.ex-google-bigquery';
 
 export default React.createClass({
