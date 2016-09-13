@@ -96,7 +96,7 @@ export default React.createClass({
   renderProfilePanel(profile, profileName) {
     const header = (
       <span>
-        {profileName}
+        {profileName} ({profile.first().get('webPropertyId')})
       </span>);
     return (
       <Panel
@@ -111,7 +111,7 @@ export default React.createClass({
                 active={this.isSelected(pItem)}
                 onClick={() => this.onProfileClick(pItem)}>
                 <div className="text-center">
-                  {pItem.get('name')}
+                  {pItem.get('name')} ({pItem.get('id')})
                 </div>
               </ListGroupItem>).toArray()}
           </ListGroup>
