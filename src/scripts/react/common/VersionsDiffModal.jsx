@@ -149,6 +149,10 @@ export default React.createClass({
   },
 
   renderDiff() {
+    if (!this.props.referentialVersion || !this.props.compareVersion || !this.props.show) {
+      return null;
+    }
+
     const dataDiff = this.getDiff();
     const preparsedParts = preparseDiffParts(dataDiff);
     const parts = preparsedParts.map((part) => {
@@ -204,12 +208,10 @@ export default React.createClass({
   },
 
   getDiff() {
-    if (!this.props.referentialVersion || !this.props.compareVersion) {
-      return [];
-    }
     const referenceData = prepareDiffObject(this.props.referentialVersion);
     const compareWithData = prepareDiffObject(this.props.compareVersion);
-    return diffJson(compareWithData, referenceData);
+    const result = diffJson(compareWithData, referenceData);
+    return result;
   }
 
 
