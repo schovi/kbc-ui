@@ -14,7 +14,7 @@ export default function(configId) {
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
 
   const parameters = configData.get('parameters', Map());
-  const sheets = parameters.getIn(['sheets'], List());
+  const sheets = parameters.getIn(['sheets'], List()).sortBy((s) => s.get('fileTitle').toLowerCase());
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
