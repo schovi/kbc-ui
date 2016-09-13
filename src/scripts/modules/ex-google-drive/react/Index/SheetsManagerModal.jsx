@@ -262,7 +262,18 @@ export default React.createClass({
            sheetTitle: s.get('sheetTitle')
          });
        })).flatten(true);
-    this.props.onSaveSheets(itemsToSave).then(this.props.onHideFn);
+    this.props.onSaveSheets(itemsToSave).then(() => {
+      const newFiles = files.map((f) => {
+        const newSheets = f.getIn(['sheetsApi', 'sheets'], List())
+                           .map((s) => s.set('isSaved', s.get('isSaved') || !!s.get('selected'))
+                                        .set('selected', false));
+        return f.setIn(['sheetsApi', 'sheets'], newSheets);
+      }
+      );
+
+      this.props.updateLocalState('files', newFiles);
+      this.props.onHideFn();
+    });
   }
 
 });
