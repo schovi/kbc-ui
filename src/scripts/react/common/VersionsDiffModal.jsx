@@ -77,6 +77,10 @@ export default React.createClass({
     };
   },
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.show ^ this.props.show;
+  },
+
   render() {
     return (
       <Modal bsSize="large" show={this.props.show} onHide={this.props.onClose}>

@@ -11,6 +11,12 @@ import fuzzy from 'fuzzy';
 import ImmutableRenderMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Map} from 'immutable';
 
+function simpleMatch(query, test) {
+  return test.toLocaleLowerCase().indexOf(query.toLowerCase()) >= 0;
+}
+
+const ITEMS_PER_PAGE = 20;
+
 export default function(componentIdValue, configIdParam = 'config') {
   return React.createClass({
     mixins: [createStoreMixin(VersionsStore, RoutesStore), ImmutableRenderMixin],
@@ -25,14 +31,13 @@ export default function(componentIdValue, configIdParam = 'config') {
       if (query && query !== '') {
         filteredVersions = versions.filter(function(version) {
           return (
-            fuzzy.match(query, (String(version.get('version')) || '')) ||
-            fuzzy.match(query, (version.get('changeDescription') || '')) ||
-            fuzzy.match(query, (version.getIn(['creatorToken', 'description']) || '')) ||
-            fuzzy.match(query, (String(version.get('created')) || ''))
+            simpleMatch(query, (String(version.get('version')) || '')) ||
+            fuzzy.test(query, (version.get('changeDescription') || '')) ||
+            simpleMatch(query, (version.getIn(['creatorToken', 'description']) || '')) ||
+            simpleMatch(query, (String(version.get('created')) || ''))
           );
         });
       }
-
       return {
         componentId: componentId,
         configId: configId,
@@ -46,9 +51,19 @@ export default function(componentIdValue, configIdParam = 'config') {
       };
     },
 
+    getInitialState() {
+      return {
+        page: 1
+      };
+    },
+
+    getPaginatedVersions() {
+      return this.state.filteredVersions.slice(0, ITEMS_PER_PAGE * this.state.page);
+    },
+
     renderVersionRows() {
       const allVersions = this.state.versions;
-      return this.state.filteredVersions.map(function(version, i) {
+      return this.getPaginatedVersions().map(function(version, i) {
         const previousVersion = getPreviousVersion(this.state.versions, version);
         const previousVersionConfig = getPreviousVersion(this.state.versionsConfigs, version) || Map();
         const currentVersionConfig = this.state.versionsConfigs.filter((currentVersion) => {
@@ -89,6 +104,11 @@ export default function(componentIdValue, configIdParam = 'config') {
       VersionsActionCreators.changeFilter(this.state.componentId, this.state.configId, query);
     },
 
+    onShowMore() {
+      const nextPage = this.state.page + 1;
+      this.setState({page: nextPage});
+    },
+
     render() {
       if (this.state.filteredVersions.count() === 0 && this.state.versions.count() > 0) {
         return (
@@ -116,6 +136,14 @@ export default function(componentIdValue, configIdParam = 'config') {
               {this.renderVersionRows()}
             </tbody>
           </Table>
+          {this.state.filteredVersions.count() > this.state.page * ITEMS_PER_PAGE ?
+           <div className="kbc-block-with-padding">
+             <button onClick={this.onShowMore} className="btn btn-default btn-large text-center">
+               More..
+             </button>
+           </div>
+           : null
+          }
         </div>
       );
     }
