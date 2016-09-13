@@ -78,7 +78,9 @@ export default React.createClass({
   },
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.show ^ this.props.show;
+    const thisShow = this.props.show;
+    const nextShow = nextProps.show;
+    return thisShow ^ nextShow || (thisShow && nextShow);
   },
 
   render() {
