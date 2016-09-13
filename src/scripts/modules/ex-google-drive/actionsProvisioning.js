@@ -86,7 +86,8 @@ export default function(configId) {
       const sheetsToSave = store.sheets.toSet().merge(sheetsToAdd);
       const data = store.configData.setIn(['parameters', 'sheets'], sheetsToSave);
       const savingPath = store.getSavingPath(['newSheets']);
-      return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet(s)`);
+      const plural = newSheets.count() > 1 ? 's' : '';
+      return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet${plural}`);
     },
 
 
