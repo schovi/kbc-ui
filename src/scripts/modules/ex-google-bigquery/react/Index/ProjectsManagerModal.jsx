@@ -67,6 +67,65 @@ export default React.createClass({
     }
   },
 
+  renderProjectSelect() {
+    if (this.props.isPendingFn('projects')) {
+      return (
+        <Loader/>
+      );
+    } else {
+      const projects = this.props.projects;
+      if (projects && projects.count() > 0) {
+        const projectOptions = projects.map((project) => {
+          return {
+            'label': project.get('name'),
+            'value': project.get('id')
+          };
+        }).toList().toJS();
+        return (
+          <Select
+            key="projectId"
+            name="projectId"
+            clearable={false}
+            disabled={false}
+            value={this.props.google.get('projectId', '').toString()}
+            onChange= {(newValue) => this.updateEditingValue('projectId', newValue)}
+            options= {projectOptions}/>
+        );
+      } else {
+        return (
+          <EmptyState>The account has no projects</EmptyState>
+        );
+      }
+    }
+  },
+
+  renderForm() {
+    return (
+      <div className="form-horizontal clearfix">
+        <div className="row col-md-12">
+          <div className="form-group">
+            <label className="col-xs-3 control-label">Select billable project</label>
+            <div className="col-xs-9">
+              { this.renderProjectSelect() }
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-xs-3 control-label">Cloud storage bucket</label>
+            <div className="col-xs-9">
+              <Input
+                type="text"
+                className="form-control"
+                value={this.props.google.get('storage', '')}
+                placeholder="gs://"
+                onChange= {(e) => this.updateEditingValue('storage', e.target.value)}
+                />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
   render() {
     return (
       <Modal
@@ -75,16 +134,11 @@ export default React.createClass({
         >
         <Modal.Header closeButton>
           <Modal.Title>
-            Setup Google BigQuery
+            Google configuration
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { this.props.isPendingFn('projects') ?
-            <Loader/>
-            :
-            this.renderProjects(this.props.projects)
-          }
-
+          { this.renderForm() }
           <div className="row">
             <div className="table kbc-table-border-vertical kbc-detail-table" style={{'border-bottom': 0}}>
               <div className="tr">
