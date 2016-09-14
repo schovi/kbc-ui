@@ -78,10 +78,23 @@ module.exports = {
   },
 
   loadTwoComponentConfigVersions(componentId, configId, version1, version2) {
-    var self = this;
-    return this.loadComponentConfigByVersion(componentId, configId, version1).then(() => {
-      return self.loadComponentConfigByVersion(componentId, configId, version2);
+    dispatcher.handleViewAction({
+      componentId: componentId,
+      configId: configId,
+      pivotVersion: version1,
+      type: Constants.ActionTypes.VERSIONS_MULTI_PENDING_START
     });
+    const stopAction = {
+      componentId: componentId,
+      configId: configId,
+      pivotVersion: version1,
+      type: Constants.ActionTypes.VERSIONS_MULTI_PENDING_STOP
+    };
+    const v1Promise = this.loadComponentConfigByVersion(componentId, configId, version1);
+    const v2Promise = this.loadComponentConfigByVersion(componentId, configId, version2);
+    return Promise.all([v1Promise, v2Promise])
+      .then(() => dispatcher.handleViewAction(stopAction))
+      .catch(() => dispatcher.handleViewAction(stopAction));
   },
 
 

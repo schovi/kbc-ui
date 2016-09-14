@@ -47,7 +47,8 @@ export default function(componentIdValue, configIdParam = 'config') {
         newVersionNames: VersionsStore.getNewVersionNames(componentId, configId),
         query: VersionsStore.getSearchFilter(componentId, configId),
         isPending: VersionsStore.isPendingConfig(componentId, configId),
-        pendingActions: VersionsStore.getPendingVersions(componentId, configId)
+        pendingActions: VersionsStore.getPendingVersions(componentId, configId),
+        pendingMultiLoad: VersionsStore.getPendingMultiLoad(componentId, configId)
       };
     },
 
@@ -69,6 +70,7 @@ export default function(componentIdValue, configIdParam = 'config') {
         const currentVersionConfig = this.state.versionsConfigs.filter((currentVersion) => {
           return version.get('version') === currentVersion.get('version');
         }).first() || Map();
+        const isMultiPending = this.state.pendingMultiLoad.get(version.get('version'), false);
         return (
           <VersionRow
             key={version.get('version')}
@@ -82,8 +84,8 @@ export default function(componentIdValue, configIdParam = 'config') {
             isRollbackPending={this.state.pendingActions.getIn([version.get('version'), 'rollback'], false)}
             isRollbackDisabled={this.state.isPending}
             hideRollback={(i === 0)}
-            isDiffPending={this.state.pendingActions.getIn([version.get('version'), 'config'])}
-            isDiffDisabled={this.state.isPending}
+            isDiffPending={isMultiPending}
+            isDiffDisabled={this.state.isPending || isMultiPending}
             previousVersion={previousVersion}
             previousVersionConfig={previousVersionConfig}
             onPrepareVersionsDiffData= {() => this.prepareVersionsDiffData(version, previousVersion)}

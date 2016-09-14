@@ -80,7 +80,7 @@ export default React.createClass({
   shouldComponentUpdate(nextProps) {
     const thisShow = this.props.show;
     const nextShow = nextProps.show;
-    return thisShow ^ nextShow || (thisShow && nextShow);
+    return thisShow || nextShow;
   },
 
   render() {

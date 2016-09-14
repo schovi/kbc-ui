@@ -11,7 +11,8 @@ var _store = Map({
   versionsConfigs: Map(),
   newVersionNames: Map(),
   searchFilters: Map(),
-  pending: Map()
+  pending: Map(),
+  multiLoadPending: Map()
 });
 
 var VersionsStore = StoreUtils.createStore({
@@ -65,8 +66,11 @@ var VersionsStore = StoreUtils.createStore({
 
   getPendingVersions: function(componentId, configId) {
     return _store.getIn(['pending', componentId, configId], Map());
-  }
+  },
 
+  getPendingMultiLoad(componentId, configId) {
+    return _store.getIn(['multiLoadPending', componentId, configId], Map());
+  }
 
 });
 
@@ -136,6 +140,14 @@ dispatcher.register(function(payload) {
 
     case Constants.ActionTypes.VERSIONS_PENDING_STOP:
       _store = _store.deleteIn(['pending', action.componentId, action.configId]);
+      return VersionsStore.emitChange();
+
+    case Constants.ActionTypes.VERSIONS_MULTI_PENDING_START:
+      _store = _store.setIn(['multiLoadPending', action.componentId, action.configId, action.pivotVersion], true);
+      return VersionsStore.emitChange();
+
+    case Constants.ActionTypes.VERSIONS_MULTI_PENDING_STOP:
+      _store = _store.deleteIn(['multiLoadPending', action.componentId, action.configId, action.pivotVersion]);
       return VersionsStore.emitChange();
 
     default:
