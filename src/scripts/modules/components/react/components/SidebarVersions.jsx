@@ -101,7 +101,10 @@ module.exports = React.createClass({
         onLoadVersionConfig={() => this.props.prepareVersionsDiffData(version, previousVersion)}
         version={version}
         tooltipMsg="Compare changes of the most recent update"
-        buttonStyle={{'padding': '0 10px 0 10px'}}
+        buttonClassName="pull-right"
+        isSmall={true}
+        buttonAsSpan={true}
+        buttonText=" Last Update Diff"
         versionConfig={currentVersionConfig}
         previousVersion={previousVersion}
         previousVersionConfig={previousVersionConfig}
