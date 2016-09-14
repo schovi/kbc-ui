@@ -12,7 +12,9 @@ export default React.createClass({
     previousVersionConfig: React.PropTypes.object.isRequired,
     isPending: React.PropTypes.bool,
     isDisabled: React.PropTypes.bool,
-    onLoadVersionConfig: React.PropTypes.func
+    onLoadVersionConfig: React.PropTypes.func,
+    tooltipMsg: React.PropTypes.string,
+    buttonStyle: React.PropTypes.object
   },
 
   getInitialState() {
@@ -34,15 +36,17 @@ export default React.createClass({
   render() {
     if (this.props.isPending) {
       return (
-        <span className="btn btn-link">
+        <span className="btn btn-link" style={this.props.buttonStyle}>
           <Loader className="fa-fw"/>
         </span>
       );
     } else {
       const tooltipMsg = `Compare with previous (#${this.props.previousVersion.get('version')} to #${this.props.version.get('version')})`;
       return (
-        <Tooltip tooltip={tooltipMsg} placement="top">
-          <button className="btn btn-link" disabled={this.props.isDisabled} onClick={this.openModal}>
+        <Tooltip tooltip={this.props.tooltipMsg || tooltipMsg} placement="top">
+          <button className="btn btn-link"
+            style={this.props.buttonStyle}
+            disabled={this.props.isDisabled} onClick={this.openModal}>
             <em className="fa fa-fw fa-files-o"> </em>
             <VersionsDiffModal
               onClose={this.closeModal}

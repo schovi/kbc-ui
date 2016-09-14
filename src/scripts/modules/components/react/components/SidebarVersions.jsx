@@ -1,20 +1,26 @@
 import React from 'react';
+import {Map} from 'immutable';
 import {addons} from 'react/addons';
 import SidebarVersionsRow from './SidebarVersionsRow';
 import {Link} from 'react-router';
 import './SidebarVersions.less';
-
+import {getPreviousVersion} from '../../../../utils/VersionsDiffUtils';
+import DiffVersionButton from '../../../../react/common/DiffVersionButton';
 module.exports = React.createClass({
   displayName: 'SidebarVersions',
   mixins: [addons.PureRenderMixin],
   propTypes: {
     versions: React.PropTypes.object.isRequired,
+    versionsConfigs: React.PropTypes.object.isRequired,
     isLoading: React.PropTypes.bool.isRequired,
     configId: React.PropTypes.string.isRequired,
     componentId: React.PropTypes.string.isRequired,
     limit: React.PropTypes.number,
     versionsLinkTo: React.PropTypes.string,
-    versionsLinkParams: React.PropTypes.object
+    versionsLinkParams: React.PropTypes.object,
+    pendingMultiLoad: React.PropTypes.object,
+    isPending: React.PropTypes.bool,
+    prepareVersionsDiffData: React.PropTypes.func
   },
   getDefaultProps: function() {
     return {
@@ -57,7 +63,7 @@ module.exports = React.createClass({
               isLast={isLast}
             />
           </Link>
-            );
+        );
       }).toArray();
     } else {
       return (<div><small className="text-muted">No versions found</small></div>);
@@ -80,10 +86,36 @@ module.exports = React.createClass({
     );
   },
 
+  renderLatestChangeDiffButton() {
+    const version = this.props.versions.first();
+    const previousVersion = getPreviousVersion(this.props.versions, version);
+    const previousVersionConfig = getPreviousVersion(this.props.versionsConfigs, version) || Map();
+    const currentVersionConfig = this.props.versionsConfigs.filter((currentVersion) => {
+      return version.get('version') === currentVersion.get('version');
+    }).first() || Map();
+    const isMultiPending = this.props.pendingMultiLoad.get(version.get('version'), false);
+    return (
+      <DiffVersionButton
+        isDisabled={isMultiPending || this.props.isPending}
+        isPending={isMultiPending}
+        onLoadVersionConfig={() => this.props.prepareVersionsDiffData(version, previousVersion)}
+        version={version}
+        tooltipMsg="Compare changes of the most recent update"
+        buttonStyle={{'padding': '0 10px 0 10px'}}
+        versionConfig={currentVersionConfig}
+        previousVersion={previousVersion}
+        previousVersionConfig={previousVersionConfig}
+      />
+    );
+  },
+
+
   render: function() {
     return (
       <div>
-        <h4>Last updates</h4>
+        <h4>Last updates
+          {this.renderLatestChangeDiffButton()}
+        </h4>
         <div className="kbc-sidebar-versions">
           {this.renderVersions()}
           {this.renderAllVersionsLink()}

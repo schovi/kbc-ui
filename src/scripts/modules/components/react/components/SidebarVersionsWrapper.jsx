@@ -6,6 +6,7 @@ import RoutesStore from '../../../../stores/RoutesStore';
 import InstalledComponentStore from '../../stores/InstalledComponentsStore';
 import ComponentStore from '../../stores/ComponentsStore';
 import VersionsStore from '../../stores/VersionsStore';
+import VersionsActionCreators from '../../VersionsActionCreators';
 
 export default React.createClass({
   displayName: 'LatestVersionsWrapper',
@@ -34,7 +35,10 @@ export default React.createClass({
       configId: configId,
       isLoading: false,
       versionsLinkTo: versionsLinkTo,
-      versionsLinkParams: versionsLinkParams
+      versionsLinkParams: versionsLinkParams,
+      versionsConfigs: VersionsStore.getVersionsConfigs(componentId, configId),
+      pendingMultiLoad: VersionsStore.getPendingMultiLoad(componentId, configId),
+      isPending: VersionsStore.isPendingConfig(componentId, configId)
     };
   },
 
@@ -62,7 +66,18 @@ export default React.createClass({
         versionsLinkTo={this.state.versionsLinkTo}
         versionsLinkParams={this.state.versionsLinkParams}
         limit={this.props.limit}
+        prepareVersionsDiffData={this.prepareVersionsDiffData}
+        versionsConfigs={this.state.versionsConfigs}
+        pendingMultiLoad={this.state.pendingMultiLoad}
+        isPending={this.state.isPending}
       />
     );
+  },
+
+  prepareVersionsDiffData(version1, version2) {
+    const configId = this.state.configId;
+    return VersionsActionCreators.loadTwoComponentConfigVersions(
+      this.state.componentId, configId, version1.get('version'), version2.get('version'));
   }
+
 });
