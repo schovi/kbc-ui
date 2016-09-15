@@ -171,6 +171,7 @@ export default React.createClass({
       <form className="form-horizontal">
         <h4> Specify relative date range {' '}
           <select
+            className="input-sm"
             defaultValue=""
             onChange={this.selectSuggestion}
           >

@@ -18,7 +18,7 @@ require './AddConfigurationForm.less'
 ApplicationStore = require '../../../../../stores/ApplicationStore'
 contactSupport = require('../../../../../utils/contactSupport').default
 
-{label, input, div, form, h3, p, span, a} = React.DOM
+{small, label, input, div, form, h3, p, span, a} = React.DOM
 
 
 module.exports = React.createClass
@@ -105,6 +105,12 @@ module.exports = React.createClass
             @_renderCustomDomainForm()
 
       ModalFooter null,
+        small className: 'pull-left',
+          'By creating a config, you agree with the'
+          a
+            href: 'http://www.gooddata.com/terms-of-use'
+            target: '_blank'
+            ' GoodData terms and conditions.'
         ButtonToolbar null,
           if @props.isSaving
             span null,
