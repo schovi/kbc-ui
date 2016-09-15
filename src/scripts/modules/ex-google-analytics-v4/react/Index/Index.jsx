@@ -22,6 +22,7 @@ import {Link} from 'react-router';
 import ProfileInfo from '../ProfileInfo';
 import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
+import OptionsModal from './OptionsModal';
 
 // index components
 import QueriesTable from './QueriesTable';
@@ -55,6 +56,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid">
+        {this.renderOptionsModal()}
         <ProfilesManagerModal
           show={this.state.localState.getIn(['ProfilesManagerModal', 'profiles'], false)}
           onHideFn={() => this.state.actions.updateLocalState('ProfilesManagerModal', Map())}
@@ -102,6 +104,12 @@ export default React.createClass({
               >
                 You are about to run component.
               </RunComponentButton>
+            </li>
+            <li>
+              <a
+                onClick={() => this.state.actions.updateLocalState(['OptionsModal', 'show'], true)}>
+                Setup AntiSampling
+              </a>
             </li>
             {this.hasProfiles() ?
             <li>
@@ -262,6 +270,19 @@ export default React.createClass({
         </EmptyState>
       </div>
       : null
+    );
+  },
+
+  renderOptionsModal() {
+    const path = ['OptionsModal'];
+    const ls = this.state.localState.getIn(path, Map());
+    return (
+      <OptionsModal
+        show={ls.get('show', false)}
+        onHideFn={() => this.state.actions.updateLocalState(path, Map())}
+        isSaving={ls.get('saving')}
+        {...this.state.actions.prepareLocalState(path)}
+      />
     );
   },
 
