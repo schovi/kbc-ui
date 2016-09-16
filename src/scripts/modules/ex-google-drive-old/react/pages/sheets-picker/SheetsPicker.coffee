@@ -94,7 +94,7 @@ module.exports = React.createClass
 
   _renderPicker: ->
     div className: '',
-      React.DOM.h2 {}, "1. Select documents of #{@state.config.get('email')}"
+      React.DOM.h2 {}, "1. Select documents from #{@state.config.get('email')}"
       Picker
         email: @state.config.get('email')
         dialogTitle: 'Select a spreadsheet document'

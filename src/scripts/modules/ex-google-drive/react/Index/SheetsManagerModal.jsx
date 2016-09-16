@@ -73,7 +73,7 @@ export default React.createClass({
     return (
       <div className="text-center">
         <h3>
-          1. Select documents of {this.props.authorizedEmail}
+          1. Select documents from {this.props.authorizedEmail}
         </h3>
         <GdrivePicker
           email={this.props.authorizedEmail}
