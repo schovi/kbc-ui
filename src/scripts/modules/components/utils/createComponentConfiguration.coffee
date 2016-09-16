@@ -15,11 +15,6 @@ createConfigByApi = (componentId, configuration) ->
   .then (response) ->
     response.body
 
-createConfigManually = (configuration) ->
-  Promise.resolve
-    id: string.webalize(configuration.get('name')) + '-' + Math.round(new Date().getTime() % 100)
-
-
 # Custom create method for GoodData writer
 createGoodDataWriter = (configuration) ->
   writerId = string.webalize(configuration.get('name'), '_')
