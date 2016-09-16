@@ -54,13 +54,13 @@ export default React.createClass({
               className="form-control"
               type="text"
               name="authorizedFor"
-              help="Describe this authorization, e.g by account name."
+              help="Describe this authorization, e.g by the account name."
               defaultValue={this.state.authorizedFor}
               onChange={this.makeSetStatePropertyFn('authorizedFor')}
               autoFocus={true}
             />
             <span className="help-block">
-              Describe this authorization, e.g. by account name.
+              Describe this authorization, e.g. by the account name.
             </span>
           </div>
         </div>
