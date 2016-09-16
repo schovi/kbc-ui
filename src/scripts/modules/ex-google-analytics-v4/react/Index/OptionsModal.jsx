@@ -13,7 +13,6 @@ export default React.createClass({
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
     onSaveFn: PropTypes.func.isRequired
-
   },
 
   render() {
@@ -27,7 +26,9 @@ export default React.createClass({
           <Modal.Title>
             Setup AntiSampling
             <div>
-              <small> Choose from one of the following antisampling algorithms </small>
+              <small>
+                Sampling in Analytics is the practice of selecting a subset of data from your traffic and reporting on the trends available in that sample set. If your API call covers a date range greater than the set session limits, it will return a sampled call. To avoid this and get more precise results, you can use one of following algorithms.
+              </small>
             </div>
           </Modal.Title>
         </Modal.Header>
@@ -52,44 +53,48 @@ export default React.createClass({
   },
 
   handleSave() {
-    return;
+    const value = this.props.localState.get('value');
+    return this.props.onSaveFn(value).then(() => this.props.onHideFn());
   },
 
   renderBody() {
     return (
       <div className="col-md-12">
         <div className="form-group">
-          <label className="control-label col-sm-3">
-            AntiSampling Algorithms
-          </label>
-          <div className="col-sm-9">
-            <div className="radio">
-              <label>
-                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked/>
-                Daily Walk - desc TBA
-              </label>
-            </div>
-            <div className="radio">
-              <label>
-                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked/>
-                Somethin other - desc TBA
-              </label>
-            </div>
-            <div className="radio">
-              <label>
-                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked/>
-                None
-              </label>
-            </div>
-          </div>
+          {/* <label className="control-label col-sm-3">
+              AntiSampling Algorithms
+              </label> */}
+        <div className="col-sm-9">
+          {this.createRadioInput('None', null, 'No antisampling algorithm used.')}
+          {this.createRadioInput('Daily Walk algorithm', 'dailyWalk', 'Will make one request per date in the date range, you will get the most precise results, but it takes a lot of API calls.')}
+          {this.createRadioInput('Adaptive algorithm', 'adaptive', 'Will divide the date range into multiple smaller date ranges, which is way more faster, but might not be that precise.')}
+        </div>
         </div>
 
       </div>
     );
   },
 
-  onChange(e) {
-    const newVal = e.target.value;
+  createRadioInput(name, value, description) {
+    const currentValue = this.props.localState.get('value');
+    return (
+      <div className="radio">
+        <label>
+          <input type="radio"
+            name="antisampling"
+            id={name}
+            value={value}
+            checked={currentValue === value}
+            onChange={() => this.onChange(value)}
+          />
+          {name} - {description}
+        </label>
+      </div>
+    );
+  },
+
+
+  onChange(newVal) {
     this.props.updateLocalState('value', newVal);
   }
 

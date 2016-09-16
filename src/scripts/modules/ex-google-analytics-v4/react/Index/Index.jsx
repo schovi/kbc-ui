@@ -1,5 +1,5 @@
 import React from 'react';
-import {Map} from 'immutable';
+import {Map, fromJS} from 'immutable';
 // stores
 import storeProvisioning, {storeMixins} from '../../storeProvisioning';
 import ComponentStore from '../../../components/stores/ComponentsStore';
@@ -107,7 +107,8 @@ export default React.createClass({
             </li>
             <li>
               <a
-                onClick={() => this.state.actions.updateLocalState(['OptionsModal', 'show'], true)}>
+                onClick={this.openOptionsDialogModal}>
+                <i className="fa fa-fw fa-flask" />
                 Setup AntiSampling
               </a>
             </li>
@@ -273,6 +274,14 @@ export default React.createClass({
     );
   },
 
+  openOptionsDialogModal() {
+    const stav = {
+      show: true,
+      value: this.state.store.antisampling
+    };
+    this.state.actions.updateLocalState(['OptionsModal'], fromJS(stav));
+  },
+
   renderOptionsModal() {
     const path = ['OptionsModal'];
     const ls = this.state.localState.getIn(path, Map());
@@ -280,7 +289,8 @@ export default React.createClass({
       <OptionsModal
         show={ls.get('show', false)}
         onHideFn={() => this.state.actions.updateLocalState(path, Map())}
-        isSaving={ls.get('saving')}
+        onSaveFn={(newVal) => this.state.actions.saveAntisampling(newVal)}
+        isSaving={this.state.store.isSaving('antisampling')}
         {...this.state.actions.prepareLocalState(path)}
       />
     );

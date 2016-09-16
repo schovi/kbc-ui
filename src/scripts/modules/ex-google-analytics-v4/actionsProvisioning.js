@@ -120,6 +120,12 @@ export default function(configId) {
       return updateLocalState(path, store.defaultNewQuery);
     },
 
+    saveAntisampling(newVal) {
+      const data = store.configData.setIn(['parameters', 'antisampling'], newVal);
+      const savingPath = store.getSavingPath(['antisampling']);
+      return saveConfigData(data, savingPath, `Set antisampling to ${newVal || 'None'}`);
+    },
+
     saveEditingQuery(queryId) {
       let query = store.getEditingQuery(queryId);
       const msg = `Update query ${query.get('name')}`;
