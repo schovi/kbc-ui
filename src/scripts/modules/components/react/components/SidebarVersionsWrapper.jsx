@@ -11,7 +11,7 @@ import VersionsActionCreators from '../../VersionsActionCreators';
 export default React.createClass({
   displayName: 'LatestVersionsWrapper',
 
-  mixins: [createStoreMixin(InstalledComponentStore, ComponentStore, VersionsStore, RoutesStore)],
+  mixins: [createStoreMixin(InstalledComponentStore, ComponentStore, VersionsStore)],
 
   getStateFromStores: function() {
     const configId = RoutesStore.getCurrentRouteParam('config'),

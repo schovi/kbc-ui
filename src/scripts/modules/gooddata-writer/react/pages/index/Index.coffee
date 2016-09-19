@@ -40,7 +40,6 @@ module.exports = React.createClass
     config =  RoutesStore.getCurrentRouteParam('config')
     localState = InstalledComponentStore.getLocalState('gooddata-writer', config)
     writer = goodDataWriterStore.getWriter(config)
-    console.log("writer detail", writer.toJS())
 
     configId: config
     writer: writer
