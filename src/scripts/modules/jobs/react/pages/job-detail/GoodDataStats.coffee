@@ -5,7 +5,7 @@ StatusLabel = React.createFactory require('../../../../../react/common/JobStatus
 Immutable = require 'immutable'
 
 ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
-{div, strong, span} = React.DOM
+{a, div, strong, span} = React.DOM
 Duration = require('../../../../../utils/duration')
 date = require '../../../../../utils/date'
 {Tree} = require 'kbc-react-components'
@@ -60,9 +60,17 @@ module.exports = React.createClass
               @_renderCell(started)
               @_renderCell(Duration(duration))
               @_renderCell(status)
-              @_renderCell(details)
+              @_renderCell(@_renderLinkIf(details))
               @_renderCell(React.createElement Tree, {data: params})
 
+  _renderLinkIf: (value) ->
+    if not value
+      return null
+    if not _.isString(value)
+      return value
+    if value.trim().startsWith('http')
+      return a {target: '_blank', href: value}, value
+    return value
 
   _renderCell: (value) ->
     div className: 'td',
