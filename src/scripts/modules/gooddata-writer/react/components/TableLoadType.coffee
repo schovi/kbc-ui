@@ -40,7 +40,6 @@ LoadTypeModal = React.createClass
       @props.onRequestHide()
 
   render: ->
-    console.log(@props.table?.toJS(), @props.columns?.toJS(), @props.grain)
     isSaving = @props.table.get('savingFields').contains FIELD
     grain = ''
     if @props.table.hasIn(['editingFields', FIELD])
@@ -109,7 +108,6 @@ LoadTypeModal = React.createClass
       grainArray = []
     else
       grainArray = grain.split(',')
-    console.log('CURRENT GRAIN', grain)
     div null,
       label null,
         'Fact Grain:'
@@ -130,6 +128,14 @@ LoadTypeModal = React.createClass
           strong null, 'Warning: '
           'Violated conditions for fact grain: \
           There must be at least one column of attribute, reference or date type and no connection point.'
+      else if (grainArray.length < 2 or grainArray.length > 32) and enabled
+        div className: 'text text-warning',
+          strong null, 'Warning: '
+          if grainArray.length < 2
+            'Insufficient number of attributes or references selected for the fact grain. There must be at least 2.'
+          else
+            'Too many attributes or references selected for the fact grain. There must be maximum 32.'
+
   _renderOneGrainFactSelect: (selectedColumn, grainArray, enabled) ->
     columnsOptions = null
     columns = @props.columns
