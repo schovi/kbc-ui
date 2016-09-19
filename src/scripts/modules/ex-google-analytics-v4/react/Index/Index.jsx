@@ -109,7 +109,7 @@ export default React.createClass({
               <a
                 onClick={this.openOptionsDialogModal}>
                 <i className="fa fa-fw fa-flask" />
-                Setup AntiSampling
+                Setup Anti-sampling
               </a>
             </li>
             {this.hasProfiles() ?

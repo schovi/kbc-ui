@@ -24,15 +24,15 @@ export default React.createClass({
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Setup AntiSampling
-            <div>
-              <small>
-                Sampling in Analytics is the practice of selecting a subset of data from your traffic and reporting on the trends available in that sample set. If your API call covers a date range greater than the set session limits, it will return a sampled call. To avoid this and get more precise results, you can use one of following algorithms.
-              </small>
-            </div>
+            Setup Anti-sampling
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className="text-muted">
+            <span>
+              Sampling in Analytics is the practice of selecting a subset of data from your traffic and reporting on the trends available in that sample set. If your API call covers a date range greater than the set session limits, it will return a sampled call. To avoid this and get more precise results, you can use one of the following algorithms.
+            </span>
+          </div>
           <div className="form-horizontal clearfix">
             <div className="row">
               {this.renderBody()}
@@ -62,12 +62,13 @@ export default React.createClass({
       <div className="col-md-12">
         <div className="form-group">
           {/* <label className="control-label col-sm-3">
-              AntiSampling Algorithms
+              Anti-sampling Algorithms
               </label> */}
         <div className="col-sm-9">
-          {this.createRadioInput('None', null, 'No antisampling algorithm used.')}
-          {this.createRadioInput('Daily Walk algorithm', 'dailyWalk', 'Will make one request per date in the date range, you will get the most precise results, but it takes a lot of API calls.')}
-          {this.createRadioInput('Adaptive algorithm', 'adaptive', 'Will divide the date range into multiple smaller date ranges, which is way more faster, but might not be that precise.')}
+          {this.createRadioInput('None', null, 'No anti-sampling algorithm used.')}
+
+          {this.createRadioInput('Adaptive algorithm', 'adaptive', 'Will divide the date range into multiple smaller date ranges. This is way more faster, but might not be that precise.')}
+          {this.createRadioInput('Daily Walk algorithm', 'dailyWalk', 'Will make one request per date in the date range. You will get the most precise results, but it takes a lot of API calls.')}
         </div>
         </div>
 
@@ -87,9 +88,12 @@ export default React.createClass({
             checked={currentValue === value}
             onChange={() => this.onChange(value)}
           />
-          {name} - {description}
+          {name}
+          <small className="help-block">{description}</small>
         </label>
+
       </div>
+
     );
   },
 
