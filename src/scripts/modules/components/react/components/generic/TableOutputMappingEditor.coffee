@@ -164,10 +164,11 @@ module.exports = React.createClass
                   value: @props.value.get('primary_key')
                   multi: true
                   disabled: @props.disabled
-                  allowCreate: true
+                  allowCreate: (@_getColumns().size == 0)
                   delimiter: ','
                   placeholder: 'Add a column to primary key...'
-                  emptyStrings: false,
+                  emptyStrings: false
+                  noResultsText: 'No matching column found'
                   help: React.DOM.small {},
                     "Primary key of the table in Storage API. If the table already exists, primary key must match."
                   onChange: @_handleChangePrimaryKey
