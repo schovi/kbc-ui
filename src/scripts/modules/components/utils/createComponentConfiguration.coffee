@@ -53,6 +53,12 @@ module.exports = (componentId, configuration) ->
   flags = component.get('flags')
   if componentId == 'gooddata-writer'
     promise = createGoodDataWriter(configuration)
+    promise.then (response) ->
+      installedComponentsApi
+      .createConfiguration componentId,
+        name: configuration.get 'name'
+        description: configuration.get 'description'
+        configurationId: response.id
   else if component.get('uri') and
       componentHasApi(component.get('id')) and
       !(flags.includes 'genericUI') and
