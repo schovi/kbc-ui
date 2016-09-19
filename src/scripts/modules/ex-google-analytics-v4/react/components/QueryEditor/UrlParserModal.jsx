@@ -81,7 +81,7 @@ export default React.createClass({
 
   renderParsedQuery() {
     const parsedQuery = this.props.localState.get('parsed');
-    const dates = parsedQuery.first();
+    const dates = parsedQuery.get('dateRanges').first();
     return (
       <div>
         <ul>
