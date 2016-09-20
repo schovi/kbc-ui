@@ -153,22 +153,21 @@ export default React.createClass({
                     {'type': 'string', 'role': 'style'}
                   ];
                 }
+              } else if (limitValue) {
+                return [
+                  row[0],
+                  row[1] === null ? null : conversion(row[1]),
+                  style,
+                  conversion(limitValue)
+                ];
               } else {
-                if (limitValue) {
-                  return [
-                    row[0],
-                    row[1] === null ? null : conversion(row[1]),
-                    style,
-                    conversion(limitValue)
-                  ];
-                } else {
-                  return [
-                    row[0],
-                    row[1] === null ? null : conversion(row[1]),
-                    style
-                  ];
-                }
-              }});
+                return [
+                  row[0],
+                  row[1] === null ? null : conversion(row[1]),
+                  style
+                ];
+              }
+            });
           var chartOptions = createChartOptions({
             elementWidth: el.offsetWidth,
             vAxisFormat: format(unit)

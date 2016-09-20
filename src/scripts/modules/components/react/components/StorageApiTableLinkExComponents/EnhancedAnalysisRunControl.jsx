@@ -67,20 +67,20 @@ export default React.createClass({
           </Link>
         </span>
       );
-    } else {
-      if (this.isShowRunButton()) {
-        if (this.props.isCallingRunAnalysis) {
-          return (<Loader />);
-        } else {
-          return (
-            <Button style={{padding: 0}}
-                    className="btn btn-link"
-                    onClick={this.props.onRunAnalysis}>
-              Run Analysis
-            </Button>
-          );
-        }
+    } else if (this.isShowRunButton()) {
+      if (this.props.isCallingRunAnalysis) {
+        return (<Loader />);
+      } else {
+        return (
+          <Button style={{padding: 0}}
+                  className="btn btn-link"
+                  onClick={this.props.onRunAnalysis}>
+            Run Analysis
+          </Button>
+        );
       }
+    } else {
+      return null;
     }
   },
 
