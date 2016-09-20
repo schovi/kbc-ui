@@ -64,6 +64,7 @@ export default function(configId) {
 
     // config data stuff
     queries: queries,
+    antisampling: parameters.get('antisampling', null),
     profiles: parameters.getIn(['profiles'], List()),
     configData: configData,
     outputBucket: outputBucket,
