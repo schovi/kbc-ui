@@ -142,14 +142,8 @@ export default React.createClass({
             </div>
           </div>
 
-          <DateRangesSelector
-            isEditing={isEditing}
-            ranges={query.getIn(['query', 'dateRanges'], List())}
-            onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
-            {...this.props.prepareLocalState('DateRangeSelector')}/>
-
           <div className="form-group">
-            <label className="col-md-3 control-label">
+            <label className="col-md-2 control-label">
               {this.renderOptionsModal()}
               Anti-sampling
             </label>
@@ -168,6 +162,13 @@ export default React.createClass({
               }
             </div>
           </div>
+
+          <DateRangesSelector
+            isEditing={isEditing}
+            ranges={query.getIn(['query', 'dateRanges'], List())}
+            onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
+            {...this.props.prepareLocalState('DateRangeSelector')}/>
+
 
         </div>
         <QuerySample
