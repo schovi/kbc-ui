@@ -1,35 +1,9 @@
 import React from 'react';
-import Tooltip from '../../../../../react/common/Tooltip';
-import _ from 'underscore';
-
-function renderLabel(caption) {
-  return (<span className="label label-info">{caption}</span>);
-}
+import EnhancedAnalysisDataType from './EnhancedAnalysis/DataType';
+import EnhancedAnalysisUniqueness from './EnhancedAnalysis/Uniqueness';
 
 export default {
-  'data_type': {
-    name: 'Data Type',
-    formatFn: (value, rowValues) => {
-      const format = _.find(rowValues, r => r.name === 'format').value;
-      const ists = _.find(rowValues, r => r.name === 'is_ts').value;
-      const result = format ? `${value} (${format})` : `${value}`;
-      const tsTooltip = 'Can be interpreted as a time series.';
-      const tsRender = (<small>{renderLabel('Timeseries')}</small>);
-
-      if (ists === '1') {
-        return (<span><div>{result}</div><Tooltip tooltip={tsTooltip} placement="top">
-        {tsRender}</Tooltip></span>);
-      } else {
-        return result;
-      }
-    },
-    desc: (<span>The type of data present in the column.  Possible values are:
-      <div>String - alphanumeric characters</div>
-      <div>Integer - whole numbers without decimals</div>
-      <div>float - numbers with decimals</div>
-      <div>bool - logical (true/false, 0/1)</div>
-      <div>date or datetime</div></span>)
-  },
+  'data_type': EnhancedAnalysisDataType,
 
   // merged to data_type
   'format': {
@@ -43,29 +17,7 @@ export default {
     skip: true
   },
 
-  'val_ratio': {
-    name: 'Uniqueness(%)',
-    desc: `If every value in the column is distinct, the uniqueness will be 100%.
-Columns that have few distinct values repeatedly (such as categories) will have lower uniqueness value. If every row contains the same value, the uniqueness will be 0%.`,
-    formatFn: (value, rowValues) => {
-      const isid = _.find(rowValues, r => r.name === 'is_identity').value;
-      const val = ((parseFloat(value)) * 100).toFixed(4);
-      if (isid === 'no') {
-        return val;
-      } else {
-        const idLabel = isid === 'yes' ? 'id' : 'id?';
-        const tooltip = isid === 'yes' ? 'Identifying the table row' : 'Probably identifying the table row';
-        return (
-          <span>
-            <div>{val}</div>
-            <Tooltip tooltip={tooltip} placement="top">
-              {renderLabel(idLabel)}
-            </Tooltip>
-          </span>
-        );
-      }
-    }
-  },
+  'val_ratio': EnhancedAnalysisUniqueness,
 
   'is_identity': {
     name: 'Identifying Column',
