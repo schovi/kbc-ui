@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 // import {Map} from 'immutable';
-import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import {Modal} from 'react-bootstrap';
 // import {sanitizeTableName, sheetFullName} from '../../common';
 
@@ -8,7 +8,6 @@ export default React.createClass({
 
   propTypes: {
     show: PropTypes.bool.isRequired,
-    isSaving: PropTypes.bool.isRequired,
     onHideFn: PropTypes.func,
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
@@ -41,11 +40,12 @@ export default React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <ConfirmButtons
-            isSaving={this.props.isSaving}
+            isSaving={false}
             onSave={this.handleSave}
             onCancel={this.props.onHideFn}
             placement="right"
-            saveLabel="Save"
+            saveLabel="Set"
+            saveStyle="primary"
           />
         </Modal.Footer>
       </Modal>
@@ -54,7 +54,8 @@ export default React.createClass({
 
   handleSave() {
     const value = this.props.localState.get('value');
-    return this.props.onSaveFn(value).then(() => this.props.onHideFn());
+    this.props.onSaveFn(value);
+    this.props.onHideFn();
   },
 
   renderBody() {

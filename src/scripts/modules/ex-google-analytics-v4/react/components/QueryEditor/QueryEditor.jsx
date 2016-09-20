@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {fromJS, List} from 'immutable';
+import {Map, fromJS, List} from 'immutable';
 import {sanitizeTableName} from '../../../common';
 import ProfileSelector from './ProfileSelector';
 import GaMultiSelect from './GaMultiSelect';
@@ -7,6 +7,7 @@ import DateRangesSelector from './DateRangesSelector';
 import SapiTableLinkEx from '../../../../components/react/components/StorageApiTableLinkEx';
 import QuerySample from './QuerySample';
 import UrlParserModal from './UrlParserModal';
+import AntiSamplingModal from './AntiSamplingModal';
 
 export default React.createClass({
   propTypes: {
@@ -147,6 +148,27 @@ export default React.createClass({
             onChange={this.onChangePropertyFn(['query', 'dateRanges'])}
             {...this.props.prepareLocalState('DateRangeSelector')}/>
 
+          <div className="form-group">
+            <label className="col-md-3 control-label">
+              {this.renderOptionsModal()}
+              Anti-sampling
+            </label>
+            <div className="col-md-9 pull-left">
+              {isEditing ?
+               <span className="btn btn-link form-control-static"
+                 onClick={this.openOptionsDialogModal}>
+                 {query.get('antisampling') || 'None'}
+                 {' '}
+                 <span className="kbc-icon-pencil"></span>
+               </span>
+               :
+               <p className="form-control-static">
+                 {query.get('antisampling') || 'None'}
+               </p>
+              }
+            </div>
+          </div>
+
         </div>
         <QuerySample
           onRunQuery={() => this.props.onRunQuery(this.props.query)}
@@ -156,6 +178,29 @@ export default React.createClass({
       </div>
     );
   },
+
+  openOptionsDialogModal() {
+    const stav = {
+      show: true,
+      value: this.props.query.get('antisampling', null)
+    };
+    this.props.updateLocalState(['OptionsModal'], fromJS(stav));
+  },
+
+  renderOptionsModal() {
+    const {query, onChangeQuery} = this.props;
+    const path = ['OptionsModal'];
+    const ls = this.props.localState.getIn(path, Map());
+    return (
+      <AntiSamplingModal
+        show={ls.get('show', false)}
+        onHideFn={() => this.props.updateLocalState(path, Map())}
+        onSaveFn={(newVal) => onChangeQuery(query.set('antisampling', newVal))}
+        {...this.props.prepareLocalState(path)}
+      />
+    );
+  },
+
 
   renderUrlParser() {
     const {localState, query, onChangeQuery} = this.props;
