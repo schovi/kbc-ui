@@ -1,5 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {Routes} from '../../Constants';
+import RoutesStore from '../../../../stores/RoutesStore';
+import ComponentsStore from '../../stores/ComponentsStore';
+const {GENERIC_DETAIL_PREFIX} = Routes;
 
 export default React.createClass({
 
@@ -9,24 +13,48 @@ export default React.createClass({
   },
 
   render() {
-    if (this.props.componentId === 'transformation') {
-      return (
-        <span>
+    return (
+      <span>
         Configuration copied,&nbsp;
-          <Link
-            to="transformationBucket"
-            params={{config: this.props.configId}}
-          >
-            go to the new configuration
-          </Link>.
+        {this.renderLink()}
       </span>
-      );
-    } else {
+    );
+  },
+
+  renderLink() {
+    const {componentId, configId} = this.props;
+    // transformation component
+    if (componentId === 'transformation') {
       return (
-        <span>
-          Configuration copied successfully.
-        </span>
+        <Link
+          to="transformationBucket"
+          params={{config: configId}}
+        >
+          go to the new configuration.
+        </Link>
       );
     }
+    // typical component route
+    if (RoutesStore.hasRoute(componentId)) {
+      return (
+        <Link
+          to={componentId}
+          params={{config: configId}}
+        >
+          go to the new configuration.
+        </Link>
+
+      );
+    }
+    const components = ComponentsStore.getAll();
+    // generic component route
+    return (
+      <Link
+        to={GENERIC_DETAIL_PREFIX + components.getIn([componentId, 'type']) + '-config'}
+        params={{config: configId}}
+      >
+        go to the new configuration.
+      </Link>
+    );
   }
 });

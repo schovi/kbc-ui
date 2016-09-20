@@ -6,7 +6,6 @@ import Constants from './VersionsConstants';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 import React from 'react';
 import ConfigurationCopiedNotification from './react/components/ConfigurationCopiedNotification';
-import transitionToComponentConfiguration from './utils/componentConfigurationTransition';
 
 module.exports = {
   loadVersions: function(componentId, configId) {
@@ -184,8 +183,6 @@ module.exports = {
             }
           })
         });
-        // redirect to newly created copy
-        transitionToComponentConfiguration(componentId, result.id);
       }).catch(function(error) {
         throw error;
       });
