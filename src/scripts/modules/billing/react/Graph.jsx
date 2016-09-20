@@ -188,8 +188,6 @@ export default React.createClass({
     });
     const graphData = this.getGraphData();
 
-    console.log(graphData);
-
     /* global google */
     const ds = new google.visualization.arrayToDataTable(graphData);
     const combo = new google.visualization.ComboChart(element);

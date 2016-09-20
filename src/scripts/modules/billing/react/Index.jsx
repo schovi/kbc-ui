@@ -1,23 +1,19 @@
 import React from 'react';
-import {fromJS, List} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import FileSize from '../../../react/common/FileSize';
 import ApplicationStore from '../../../stores/ApplicationStore';
 import MetricsApi from '../MetricsApi';
-import RoutesStore from '../../../stores/RoutesStore';
-import YearMonthPagination from './YearMonthPagination';
 import moment from 'moment';
+import Graph from './Graph';
 
-function getDatesFromYearMonth(yearMonth) {
-  const date = moment(yearMonth + '-01');
+function getDatesForLastMonth() {
+  const dateTo = moment().subtract(1, 'day');
+  const dateFrom = moment().subtract(1, 'day').subtract(1, 'month');
 
   return {
-    dateFrom: date.format('YYYY-MM-DD'),
-    dateTo: date.endOf('month').format('YYYY-MM-DD')
+    dateFrom: dateFrom.format('YYYY-MM-DD'),
+    dateTo: dateTo.format('YYYY-MM-DD')
   };
-}
-
-function getCurrentYearMonth() {
-  return moment().format('YYYY-MM');
 }
 
 export default React.createClass({
@@ -25,12 +21,12 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      yearMonth: RoutesStore.getCurrentRouteParam('yearMonth', getCurrentYearMonth())
+      dates: getDatesForLastMonth()
     };
   },
 
   componentDidMount: function() {
-    this.loadMetricsData(this.state.yearMonth)
+    this.loadMetricsData()
       .then((response) => {
         this.setState({
           metricsData: fromJS(response)
@@ -38,32 +34,11 @@ export default React.createClass({
       });
   },
 
-  componentWillReceiveProps: function() {
-    const selectedYearMonth = RoutesStore.getCurrentRouteParam('yearMonth', getCurrentYearMonth());
-    if (selectedYearMonth !== this.state.yearMonth) {
-      this.setState({
-        yearMonth: selectedYearMonth
-      });
-      this.loadMetricsData(selectedYearMonth)
-        .then((response) => {
-          this.setState({
-            metricsData: fromJS(response)
-          });
-        }, () => {
-          this.setState({
-            metricsData: fromJS([])
-          });
-        });
-    }
-  },
-
-  loadMetricsData: function(yearMonth) {
-    const dates = getDatesFromYearMonth(yearMonth);
-    return MetricsApi.getProjectMetrics(dates.dateFrom, dates.dateTo, 'day');
+  loadMetricsData: function() {
+    return MetricsApi.getProjectMetrics(this.state.dates.dateFrom, this.state.dates.dateTo, 'day');
   },
 
   render() {
-    const dates = getDatesFromYearMonth(this.state.yearMonth);
     return (
       <div className="container-fluid kbc-main-content">
         <ul className="nav nav-tabs">
@@ -82,41 +57,47 @@ export default React.createClass({
         </ul>
         <div className="kbc-header">
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-md-6">
               <h3>
                 {'Showing billing data from '}
-                {moment(dates.dateFrom).format('MMM D, YYYY')}
+                {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
                 {' to '}
-                {moment(dates.dateTo).format('MMM D, YYYY')}
+                {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
               </h3>
-            </div>
-            <div className="col-sm-6">
-              <div className="pull-right">
-                <YearMonthPagination
-                  min="2016-08"
-                  max={getCurrentYearMonth()}
-                  current={this.state.yearMonth}
+              <div>
+                <Graph
+                  data={this.state.metricsData.map((item) => {
+                    return Map({
+                      date: item.get('date'),
+                      value: this.dayComponentIoSummary(item.get('components'), 'storage')
+                    });
+                  })}
+                  showTrendLine={true}
+                  unit="bytes"
                 />
               </div>
             </div>
+            <div className="col-md-6">
+              <table className="table">
+                <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Storage IO</th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.state.metricsData.map((item) => {
+                  return List([
+                    this.daySummary(item),
+                    item.get('components').map(this.dayComponents)
+                  ]);
+                })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <table className="table">
-          <thead>
-          <tr>
-            <th>Date</th>
-            <th>Storage IO</th>
-          </tr>
-          </thead>
-          <tbody>
-          {this.state.metricsData.map((item) => {
-            return List([
-              this.daySummary(item),
-              item.get('components').map(this.dayComponents)
-            ]);
-          })}
-          </tbody>
-        </table>
+
       </div>
     );
   },
