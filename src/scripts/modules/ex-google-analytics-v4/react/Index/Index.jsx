@@ -105,13 +105,13 @@ export default React.createClass({
                 You are about to run component.
               </RunComponentButton>
             </li>
-            <li>
-              <a
+            {/* <li>
+                <a
                 onClick={this.openOptionsDialogModal}>
                 <i className="fa fa-fw fa-flask" />
                 Setup Anti-sampling
-              </a>
-            </li>
+                </a>
+                </li> */}
             {this.hasProfiles() ?
             <li>
               <a
