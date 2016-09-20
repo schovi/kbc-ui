@@ -125,7 +125,7 @@ export default React.createClass({
     const query = fromJS({
       metrics: this.safeSplit(parsedParams.metrics),
       dimensions: this.safeSplit(parsedParams.dimensions),
-      segments: [parsedParams.segment],
+      segments: parsedParams.segment ? [parsedParams.segment] : [],
       filtersExpression: parsedParams.filters,
       dateRanges: [{
         startDate: parsedParams['start-date'],
@@ -154,3 +154,6 @@ export default React.createClass({
 /*
    https://ga-dev-tools.appspot.com/query-explorer/?start-date=2016-08-05&end-date=yesterday&metrics=ga%3Agoal17Starts&dimensions=ga%3AuserType%2Cga%3AsessionCount%2Cga%3Abrowser&filters=ga%3Abrowser%3D~%5EFirefox&segment=gaid%3A%3A-1&samplingLevel=faster&max-results=10
  */
+
+
+/* https://ga-dev-tools.appspot.com/query-explorer/?start-date=2016-08-05&end-date=yesterday&metrics=ga%3Ausers&dimensions=ga%3AuserType%2Cga%3AsessionCount%2Cga%3Abrowser&filters=ga%3Abrowser%3D~%5EFirefox&samplingLevel=faster&max-results=10*/
