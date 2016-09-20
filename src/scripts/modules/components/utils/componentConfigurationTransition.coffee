@@ -16,7 +16,8 @@ module.exports = (componentId, configurationId) ->
     RoutesStore.getRouter().transitionTo GENERIC_DETAIL_PREFIX + components.getIn([componentId, 'type']) + '-config',
       component: componentId
       config: configurationId
+  else if componentId == 'transformation'
+    return RoutesStore.getRouter().transitionTo 'transformationBucket',
+      config: configurationId
   else
     throw new Error("Component #{componentId} has no UI to link to")
-
-
