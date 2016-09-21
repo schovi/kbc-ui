@@ -154,7 +154,6 @@ export default function(configId) {
     resetGoogle() {
       const data = store.configData.setIn(['parameters', 'google'], store.defaultGoogle);
       return saveConfigData(data, store.getPendingPath(['projectId']), `Reset Google configuration`).then(() => this.cancelEditingGoogle());
-
     },
 
     saveGoogle(google) {
