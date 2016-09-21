@@ -22,6 +22,8 @@ import RunComponentButton from '../../../components/react/components/RunComponen
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 import SearchRow from '../../../../react/common/SearchRow';
+import Confirm from '../../../../react/common/Confirm';
+import Tooltip from '../../../../react/common/Tooltip';
 import {Link} from 'react-router';
 // import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
@@ -179,6 +181,10 @@ export default React.createClass({
     this.state.actions.saveGoogle(google).then(() => this.state.actions.updateLocalState(['ProjectsManagerModal', 'projects'], false));
   },
 
+  handleProjectReset() {
+    this.state.actions.resetGoogle();
+  },
+
   hideProjectsModal() {
     this.state.actions.cancelEditingGoogle();
     this.state.actions.updateLocalState(['ProjectsManagerModal', 'projects'], false);
@@ -208,6 +214,17 @@ export default React.createClass({
             Edit
           </button>
         }
+        <Confirm
+          text="Do you really want to reset the Google configuration?"
+          title="Reset Authorization"
+          buttonLabel="Reset Google configuration"
+          onConfirm={this.handleProjectReset}>
+          <a className="btn btn-link" style={{'padding-top': 0, 'padding-bottom': 0}}>
+            <Tooltip tooltip="Reset Google configuration" placement="top">
+              <span>Reset</span>
+            </Tooltip>
+          </a>
+        </Confirm>
       </div>
       </span>
     );
@@ -223,10 +240,10 @@ export default React.createClass({
               this.renderProjectInfo()
               :
               <EmptyState>
-                <p> No project selected </p>
+                <p> No configuration found </p>
                 <button type="button" className="btn btn-success btn-sm"
                         onClick={this.showProjectsModal}>
-                  Select project
+                  Configure
                 </button>
               </EmptyState>
             }

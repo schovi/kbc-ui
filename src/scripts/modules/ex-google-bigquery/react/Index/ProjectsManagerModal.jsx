@@ -70,7 +70,10 @@ export default React.createClass({
   renderProjectSelect() {
     if (this.props.isPendingFn('projects')) {
       return (
-        <Loader/>
+        <div
+          className="form-group">
+          <Loader/>
+        </div>
       );
     } else {
       const projects = this.props.projects;
@@ -93,7 +96,10 @@ export default React.createClass({
         );
       } else {
         return (
-          <EmptyState>The account has no projects</EmptyState>
+          <div
+            className="form-control">
+            <em>The account has no projects</em>
+          </div>
         );
       }
     }
@@ -107,18 +113,20 @@ export default React.createClass({
             <label className="col-xs-3 control-label">Select billable project</label>
             <div className="col-xs-9">
               { this.renderProjectSelect() }
+              <div className="help-block">BigQuery charges for data storage, streaming inserts, and for querying data.</div>
             </div>
           </div>
           <div className="form-group">
-            <label className="col-xs-3 control-label">Cloud storage bucket</label>
+            <label className="col-xs-3 control-label">Cloud Storage bucket</label>
             <div className="col-xs-9">
               <Input
                 type="text"
                 className="form-control"
                 value={this.props.google.get('storage', '')}
-                placeholder="gs://"
+                placeholder="gs://some-bucket-name"
                 onChange= {(e) => this.updateEditingValue('storage', e.target.value)}
                 />
+              <div className="help-block">Existing Google Cloud Storage bucket. There will be data temporarily exported, before load to KBC.</div>
             </div>
           </div>
         </div>

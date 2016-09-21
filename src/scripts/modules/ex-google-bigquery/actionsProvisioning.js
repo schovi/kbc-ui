@@ -151,6 +151,12 @@ export default function(configId) {
       return saveConfigData(data, savingPath, msg).then(() => this.cancelEditingQuery(queryId));
     },
 
+    resetGoogle() {
+      const data = store.configData.setIn(['parameters', 'google'], store.defaultGoogle);
+      return saveConfigData(data, store.getPendingPath(['projectId']), `Reset Google configuration`).then(() => this.cancelEditingGoogle());
+
+    },
+
     saveGoogle(google) {
       const data = store.configData.setIn(['parameters', 'google'], google);
       return saveConfigData(data, store.getPendingPath(['projectId']), `Update Google configuration`).then(() => this.cancelEditingGoogle());
