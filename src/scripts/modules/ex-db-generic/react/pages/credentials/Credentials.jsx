@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import CredentialsForm from './CredentialsForm';
 import SSLForm from './SSLForm';
-import FixedIP from './FixedIP';
 import {TabbedArea, TabPane} from 'react-bootstrap';
 
 export default React.createClass({
@@ -35,11 +34,6 @@ export default React.createClass({
             />
           </TabPane>
           {this.renderSSLForm()}
-          <TabPane eventKey="fixedIp" tab="Fixed IP">
-            <FixedIP
-              credentials={this.props.credentials}
-            />
-          </TabPane>
         </TabbedArea>
       </div>
     );
