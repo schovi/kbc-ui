@@ -25,7 +25,7 @@ import SearchRow from '../../../../react/common/SearchRow';
 import Confirm from '../../../../react/common/Confirm';
 import Tooltip from '../../../../react/common/Tooltip';
 import {Link} from 'react-router';
-// import LatestJobs from '../../../components/react/components/SidebarJobs';
+import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 import {Loader} from 'kbc-react-components';
 
@@ -126,7 +126,7 @@ export default React.createClass({
               />
             </li>
           </ul>
-          {/* <LatestJobs jobs={this.state.latestJobs} limit={3} /> */}
+          <LatestJobs jobs={this.state.latestJobs} limit={3} />
           <LatestVersions
             limit={3}
             componentId={COMPONENT_ID}

@@ -9,6 +9,7 @@ import store from './storeProvisioning';
 import InstalledComponentsStore from '../components/stores/InstalledComponentsStore';
 import * as oauthUtils from '../oauth-v2/OauthUtils';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
+import jobsActionCreators from '../jobs/ActionCreators';
 import versionsActions from '../components/VersionsActionCreators';
 import storageActions from '../components/StorageActionCreators';
 
@@ -32,10 +33,10 @@ export default {
     (params) => versionsActions.loadVersions(COMPONENT_ID, params.config),
     () => storageActions.loadTables()
   ],
-  // poll: {
-  //   interval: 7,
-  //   action: (params) => jobsActionCreators.loadComponentConfigurationLatestJobs(COMPONENT_ID, params.config)
-  // },
+  poll: {
+    interval: 7,
+    action: (params) => jobsActionCreators.loadComponentConfigurationLatestJobs(COMPONENT_ID, params.config)
+  },
   childRoutes: [
     oauthUtils.createRedirectRouteSimple(COMPONENT_ID),
     {
