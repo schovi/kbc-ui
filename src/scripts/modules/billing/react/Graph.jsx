@@ -84,52 +84,6 @@ function createChartOptions(options) {
   });
 }
 
-function getTrendLine(props) {
-  const conv = getConversion('bytes');
-
-  var first = 0, second = 0, third = 0, fourth = 0, fifth = 0;
-
-  // first = n * sum (x * y)
-  var i = 1;
-  props.forEach(function(item) {
-    first = first + parseFloat(Number(i * parseFloat(conv(item.get('value')))).toFixed(2));
-    i = i + 1;
-  });
-  first = props.size * first;
-
-  // second = sum (x)
-  for (var j = 1; j <= props.size; j++) {
-    second += j;
-  }
-
-  // third = sum (y)
-  props.forEach(function(item) {
-    third += parseFloat(conv(item.get('value')));
-  });
-
-  for (var k = 1; k <= props.size; k++) {
-    fourth += k ^ 2;
-  }
-  fourth = props.size * fourth;
-
-  for (var l = 1; l <= props.size; l++) {
-    fifth += l;
-  }
-  fifth = fifth ^ 2;
-
-  const alpha = (first - (second * third)) / (fourth - fifth);
-  const beta = (third - (alpha * second)) / props.size;
-
-  return {
-    alpha: alpha,
-    beta: beta
-  };
-}
-
-function getTrendLineValue(a, b, x) {
-  return (a * x) + b;
-}
-
 export default React.createClass({
 
   propTypes: {
@@ -155,20 +109,16 @@ export default React.createClass({
         [
           'Date',
           'Value',
-          {'type': 'string', 'role': 'style'},
-          'Trend'
+          {'type': 'string', 'role': 'style'}
         ]
       ];
-
-      const trendLine = getTrendLine(this.props.data);
 
       var index = 1;
       this.props.data.forEach(function(item) {
         converted.push([
           new Date(item.get('date')),
           conversion(item.get('value')),
-          null,
-          getTrendLineValue(trendLine.alpha, trendLine.beta, index)
+          null
         ]);
 
         index += 1;
