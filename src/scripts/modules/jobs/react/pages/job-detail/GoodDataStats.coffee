@@ -69,7 +69,7 @@ module.exports = React.createClass
     if not _.isString(value)
       return value
     if value.trim().startsWith('http')
-      return a {target: '_blank', href: value}, value
+      return a {target: '_blank', href: value}, 'Raw log'
     return value
 
   _renderCell: (value) ->
