@@ -49,7 +49,7 @@ module.exports = React.createClass
             i className: 'kbc-icon-cup'
 
   _deleteQuery: ->
-    @transitionTo "ex-db-generic-#{@props.componentId}",
+    @transitionTo @props.componentId,
       config: @props.configurationId
 
     # if query is deleted immediatelly view is rendered with missing orchestration because of store changed
