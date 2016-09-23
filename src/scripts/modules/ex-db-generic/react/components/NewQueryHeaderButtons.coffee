@@ -23,13 +23,13 @@ module.exports = (componentId, actionsProvisioning, storeProvisioning) ->
 
     _handleCancel: ->
       ExDbActionCreators.resetNewQuery @state.currentConfigId
-      @transitionTo "ex-db-generic-#{componentId}", config: @state.currentConfigId
+      @transitionTo componentId, config: @state.currentConfigId
 
     _handleCreate: ->
       ExDbActionCreators
       .createQuery @state.currentConfigId
       .then (query) =>
-        @transitionTo "ex-db-generic-#{componentId}",
+        @transitionTo componentId,
           config: @state.currentConfigId
 
     render: ->

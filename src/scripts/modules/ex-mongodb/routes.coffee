@@ -27,7 +27,7 @@ credentialsTemplate = require '../ex-db-generic/templates/credentials'
 hasSshTunnel = require('../ex-db-generic/templates/hasSshTunnel').default
 
 module.exports = (componentId) ->
-  name: "ex-db-generic-#{componentId}"
+  name: componentId
   path: ':config'
   isComponent: true
   requireData: [

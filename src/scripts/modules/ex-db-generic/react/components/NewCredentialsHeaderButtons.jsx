@@ -33,7 +33,7 @@ export default function(componentId, actionsProvisioning, storeProvisioning) {
     },
 
     goToIndex() {
-      this.transitionTo(`ex-db-generic-${componentId}`, {
+      this.transitionTo(componentId, {
         config: this.state.configId
       });
     },
