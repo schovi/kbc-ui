@@ -71,10 +71,9 @@ export default React.createClass({
           onHideFn={this.hideProjectsModal}
           projects={this.state.store.projects}
           google={this.state.store.getEditingGoogle()}
-          isSaving={this.state.store.isPending(this.state.store.getPendingPath(['projectId']))}
           onChangeFn={this.state.actions.onUpdateEditingGoogle}
           {...this.state.actions.prepareLocalState('ProjectsManagerModal')}
-          />
+        />
 
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
@@ -283,6 +282,7 @@ export default React.createClass({
           query={this.state.queriesFilter} />
       );
     }
+    return null;
   },
 
   renderQueryTable() {
@@ -298,7 +298,7 @@ export default React.createClass({
             deleteQueryFn={this.handleDelete}
             toggleQueryEnabledFn={this.handleToggle}
             getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
-            />
+          />
         );
       } else {
         return (
@@ -312,6 +312,7 @@ export default React.createClass({
         );
       }
     }
+    return null;
   },
 
   renderAddQueryLink() {
