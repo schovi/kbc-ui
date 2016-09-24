@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import {fromJS} from 'immutable';
-import callDockerAction from '../../../../components/DockerActionsApi';
+import callDockerAction from '../../modules/components/DockerActionsApi';
 import {Check} from 'kbc-react-components';
 import {Input, FormControls} from 'react-bootstrap';
 import {Protected} from 'kbc-react-components';
-import Clipboard from '../../../../../react/common/Clipboard';
+import Clipboard from './Clipboard';
 import {Loader} from 'kbc-react-components';
 const StaticText = FormControls.Static;
 

@@ -7,7 +7,7 @@ Input = React.createFactory(require('react-bootstrap').Input)
 TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Tooltip = require('../../../../../react/common/Tooltip').default
-SshTunnelRow = React.createFactory(require('./SshTunnelRow').default)
+SshTunnelRow = React.createFactory(require('../../../../../react/common/SshTunnelRow').default)
 
 {small, span, form, div, label, p, option} = React.DOM
 
