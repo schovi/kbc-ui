@@ -98,6 +98,10 @@ export default React.createClass({
     };
   },
 
+  shouldComponentUpdate: function(nextProps) {
+    return !nextProps.data.isEmpty();
+  },
+
   componentDidUpdate: function() {
     this.drawGraph();
   },

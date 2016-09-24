@@ -22,11 +22,18 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      dates: getDatesForLastMonth()
+      dates: getDatesForLastMonth(),
+      graphElementWidth: null
     };
   },
 
   componentDidMount: function() {
+    /* eslint-disable react/no-did-mount-set-state */
+    this.setState({
+      graphElementWidth: React.findDOMNode(this.refs.graph).offsetWidth
+    });
+    /* eslint-enable react/no-did-mount-set-state */
+
     this.loadMetricsData()
       .then((response) => {
         this.setState({
@@ -65,17 +72,19 @@ export default React.createClass({
                 {' to '}
                 {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
               </h3>
-              <div>
-                <Graph
-                  data={this.state.metricsData.map((item) => {
-                    return Map({
-                      date: item.get('date'),
-                      value: this.dayComponentIoSummary(item.get('components'), 'storage')
-                    });
-                  })}
-                  showTrendLine={true}
-                  unit="bytes"
-                />
+              <div ref="graph">
+                <div style={{height: `${0.5 * this.state.graphElementWidth}px`, position: 'relative'}}>
+                  <Graph
+                    data={this.state.metricsData.map((item) => {
+                      return Map({
+                        date: item.get('date'),
+                        value: this.dayComponentIoSummary(item.get('components'), 'storage')
+                      });
+                    })}
+                    showTrendLine={true}
+                    unit="bytes"
+                  />
+                </div>
               </div>
             </div>
             <div className="col-md-6">
