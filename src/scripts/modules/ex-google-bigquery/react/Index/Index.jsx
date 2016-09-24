@@ -199,33 +199,37 @@ export default React.createClass({
   renderProjectInfo() {
     return (
       <span>
-      <div className="static-modal">
-        Billable BigQuery Project: <strong>{this.state.store.google.get('projectId', null)}</strong>
-      </div>
-      <div className="static-modal">
-        CloudStorage bucket: <strong>{this.state.store.google.get('storage', null)}</strong>
-      </div>
-      <div className="static-modal">
-        { this.state.store.isPending(this.state.store.getPendingPath(['projectId'])) ?
-          <Loader />
-          :
-          <button type="button" className="btn btn-success btn-sm"
-                  onClick={this.showProjectsModal}>
-            Edit
-          </button>
-        }
-        <Confirm
-          text="Do you really want to reset the Google configuration?"
-          title="Reset Authorization"
-          buttonLabel="Reset Google configuration"
-          onConfirm={this.handleProjectReset}>
-          <a className="btn btn-link" style={{'padding-top': 0, 'padding-bottom': 0}}>
-            <Tooltip tooltip="Reset Google configuration" placement="top">
-              <span>Reset</span>
-            </Tooltip>
-          </a>
-        </Confirm>
-      </div>
+        <button type="button" className="btn btn-link btn-sm"
+          onClick={this.showProjectsModal}>
+          Edit
+          {' '}
+          <span className="kbc-icon-pencil"></span>
+        </button>
+        <div className="static-modal">
+          Billable BigQuery Project: <strong>{this.state.store.google.get('projectId', null)}</strong>
+        </div>
+        <div className="static-modal">
+          CloudStorage bucket: <strong>{this.state.store.google.get('storage', null)}</strong>
+        </div>
+        <div className="static-modal">
+          <Confirm
+            text="Do you really want to reset the Google configuration?"
+            title="Reset Authorization"
+            buttonLabel="Reset Google configuration"
+            onConfirm={this.handleProjectReset}>
+            <span className="btn btn-link btn-sm" style={{'padding-top': 0, 'padding-bottom': 0, 'paddingLeft': 0}}>
+
+              { this.state.store.isPending(['projectId'])
+                ?
+                <Loader />
+                :
+                <Tooltip tooltip="Reset Google configuration" placement="top">
+                  <span>Reset</span>
+                </Tooltip>
+              }
+            </span>
+          </Confirm>
+        </div>
       </span>
     );
   },
@@ -237,15 +241,15 @@ export default React.createClass({
           <div className="form-group form-group-sm">
             <label> Google configuration </label>
             {this.hasProject() ?
-              this.renderProjectInfo()
-              :
-              <EmptyState>
-                <p> No configuration found </p>
-                <button type="button" className="btn btn-success btn-sm"
-                        onClick={this.showProjectsModal}>
-                  Configure
-                </button>
-              </EmptyState>
+             this.renderProjectInfo()
+             :
+             <EmptyState>
+               <p> No configuration found </p>
+               <button type="button" className="btn btn-success btn-sm"
+                 onClick={this.showProjectsModal}>
+                 Configure
+               </button>
+             </EmptyState>
             }
           </div>
         </div>
