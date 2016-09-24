@@ -22,18 +22,11 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      dates: getDatesForLastMonth(),
-      graphElementWidth: null
+      dates: getDatesForLastMonth()
     };
   },
 
   componentDidMount: function() {
-    /* eslint-disable react/no-did-mount-set-state */
-    this.setState({
-      graphElementWidth: React.findDOMNode(this.refs.graph).offsetWidth
-    });
-    /* eslint-enable react/no-did-mount-set-state */
-
     this.loadMetricsData()
       .then((response) => {
         this.setState({
@@ -67,25 +60,19 @@ export default React.createClass({
           <div className="row">
             <div className="col-md-6">
               <h3>
-                {'Showing billing data from '}
+                {'Consumed storage capacity from '}
                 {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
                 {' to '}
                 {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
               </h3>
-              <div ref="graph">
-                <div style={{height: `${0.5 * this.state.graphElementWidth}px`, position: 'relative'}}>
-                  <Graph
-                    data={this.state.metricsData.map((item) => {
-                      return Map({
-                        date: item.get('date'),
-                        value: this.dayComponentIoSummary(item.get('components'), 'storage')
-                      });
-                    })}
-                    showTrendLine={true}
-                    unit="bytes"
-                  />
-                </div>
-              </div>
+              <Graph
+                data={this.state.metricsData.map((item) => {
+                  return Map({
+                    date: item.get('date'),
+                    value: this.dayComponentIoSummary(item.get('components'), 'storage')
+                  });
+                })}
+              />
             </div>
             <div className="col-md-6">
               <table className="table">
