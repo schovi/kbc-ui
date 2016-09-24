@@ -321,21 +321,21 @@ export default React.createClass({
         </Link>
       );
     }
+    return null;
   },
 
   renderEmptyQueries() {
-    if (!this.hasQueries()) {
+    if (!this.hasQueries() && this.isAuthorized() && this.hasProject()) {
       return (
-        this.isAuthorized() ?
-          <div className="row">
-            <EmptyState>
-              <p>No queries configured yet.</p>
-              {this.renderAddQueryLink()}
-            </EmptyState>
-          </div>
-          : null
+        <div className="row">
+          <EmptyState>
+            <p>No queries configured yet.</p>
+            {this.renderAddQueryLink()}
+          </EmptyState>
+        </div>
       );
     }
+    return null;
   },
 
   runParams() {
