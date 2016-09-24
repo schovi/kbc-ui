@@ -5,6 +5,7 @@ import ApplicationStore from '../../../stores/ApplicationStore';
 import MetricsApi from '../MetricsApi';
 import moment from 'moment';
 import Graph from './Graph';
+import ComponentsStore from '../../components/stores/ComponentsStore';
 
 function getDatesForLastMonth() {
   const dateTo = moment().subtract(1, 'day');
@@ -115,10 +116,22 @@ export default React.createClass({
     );
   },
 
+  getComponentNameAndIcon(componentSlug) {
+    const componentFromStore = ComponentsStore.getComponent(componentSlug);
+    return {
+      name: componentFromStore ? componentFromStore.get('name') : componentSlug,
+      icon: componentFromStore ? componentFromStore.get('ico32') : ''
+    };
+  },
+
   dayComponents(component) {
+    const componentNameAndIcon = this.getComponentNameAndIcon(component.get('name'));
     return (
       <tr>
-        <td><span style={{paddingLeft: '10px'}}>{component.get('name')}</span></td>
+        <td>
+          <img src={componentNameAndIcon.icon} />
+          <span style={{paddingLeft: '10px'}}>{componentNameAndIcon.name}</span>
+        </td>
         <td>
           <FileSize size={
             component.get('storage').get('inBytes') + component.get('storage').get('outBytes')
