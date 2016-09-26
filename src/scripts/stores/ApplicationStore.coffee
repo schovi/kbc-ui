@@ -54,10 +54,10 @@ ApplicationStore = StoreUtils.createStore
     _store.getIn ['sapiToken', 'owner', 'id']
 
   getCurrentProject: ->
-    _store.getIn ['sapiToken', 'owner']
+    _store.getIn ['sapiToken', 'owner'], Map()
 
   getCurrentProjectFeatures: ->
-    @getCurrentProject().get 'features'
+    @getCurrentProject().get 'features', List()
 
   hasCurrentProjectFeature: (feature) ->
     @getCurrentProjectFeatures().includes(feature)

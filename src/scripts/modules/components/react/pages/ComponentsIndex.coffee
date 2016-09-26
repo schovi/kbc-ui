@@ -1,11 +1,12 @@
 React = require 'react'
 _ = require 'underscore'
-{Map} = require 'immutable'
+{Map, List} = require 'immutable'
 
 createStoreMixin = require '../../../../react/mixins/createStoreMixin'
 InstalledComponentsStore = require '../../stores/InstalledComponentsStore'
 ComponentsStore = require '../../stores/ComponentsStore'
 InstalledComponentsActionCreators = require '../../InstalledComponentsActionCreators'
+ApplicationStore = require '../../../../stores/ApplicationStore'
 
 ComponentRow = require('./ComponentRow').default
 
@@ -23,6 +24,34 @@ TEXTS =
     writer: 'Get started with your first writer!'
     application: 'Get started with your first application!'
 
+snowflakeEnabled = List([
+  "keboola.ex-google-drive",
+  "ex-adform",
+  "keboola.csv-import",
+  "keboola.ex-github",
+  "keboola.ex-gcalendar",
+  "keboola.ex-mongodb",
+  "keboola.ex-db-mysql",
+  "keboola.ex-db-pgsql",
+  "keboola.ex-intercom",
+  "keboola.ex-db-redshift",
+  "ex-salesforce",
+  "keboola.ex-zendesk",
+  "esnerda.ex-bingads",
+  "keboola.ex-db-impala",
+  "keboola.ex-db-db2",
+  "ex-dropbox",
+  "keboola.ex-gmail",
+  "ex-gooddata",
+  "keboola.ex-google-analytics-v4",
+  "ex-google-bigquery",
+  "esnerda.ex-mailkit",
+  "keboola.ex-db-oracle",
+  "keboola.ex-slack",
+  "keboola.ex-db-mssql"
+  "keboola.ex-stripe"
+])
+
 
 module.exports = React.createClass
   displayName: 'InstalledComponents'
@@ -32,7 +61,13 @@ module.exports = React.createClass
 
   getStateFromStores: ->
     components = ComponentsStore.getFilteredForType(@props.type).filter( (component) ->
-      not component.get('flags').includes('excludeFromNewList'))
+      if component.get('flags').includes('excludeFromNewList')
+        return false
+      if ApplicationStore.hasCurrentProjectFeature('ui-snowflake-demo') &&
+          !snowflakeEnabled.contains(component.get('id'))
+        return false
+      return true
+    )
 
     installedComponents: InstalledComponentsStore.getAllForType(@props.type)
     deletingConfigurations: InstalledComponentsStore.getDeletingConfigurations()

@@ -43,11 +43,37 @@ _pages = [
 
 ]
 
+_pagesSnowflake = [
+    id: 'home'
+    title: 'Overview'
+    icon: 'kbc-icon-overview'
+  ,
+    id: 'extractors'
+    title: 'Extractors'
+    icon: 'kbc-icon-extractors'
+  ,
+    id: 'orchestrations'
+    title: 'Orchestrations'
+    icon: 'kbc-icon-orchestrations'
+  ,
+    id: 'storage'
+    title: 'Storage'
+    icon: 'kbc-icon-storage'
+  ,
+    id: 'jobs'
+    title: 'Jobs'
+    icon: 'kbc-icon-jobs'
+
+]
+
 Sidebar = React.createClass
   displayName: 'Sidebar'
   mixins: [ State ]
   renderLinks: ->
-    _.map(_pages, (page) ->
+    pages = _pages
+    if ApplicationStore.hasCurrentProjectFeature('ui-snowflake-demo')
+      pages = _pagesSnowflake
+    _.map(pages, (page) ->
       isActive = @isActive(page.id)
       className = if isActive then 'active' else ''
       li className: className, key: page.id,

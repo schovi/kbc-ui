@@ -12,10 +12,12 @@ PageTitle = React.createFactory(require './PageTitle')
 
 CurrentUser = React.createFactory(require './CurrentUser')
 UserLinks = React.createFactory(require './UserLinks')
+PoweredByKeboola = React.createFactory(require './PoweredByKeboola')
 
-{div} = React.DOM
+{div, small} = React.DOM
 
 require '../../../styles/app.less'
+require '../../../styles/app-snowflake.less'
 
 App = React.createClass
   displayName: 'App'
@@ -34,8 +36,12 @@ App = React.createClass
     canCreateProject: ApplicationStore.getCanCreateProject()
     canManageApps: ApplicationStore.getKbcVars().get 'canManageApps'
     homeUrl: ApplicationStore.getUrlTemplates().get 'home'
+    projectFeatures: ApplicationStore.getCurrentProjectFeatures()
   render: ->
-    div null,
+    mainDivClassName = ''
+    if ApplicationStore.hasCurrentProjectFeature('ui-snowflake-demo')
+      mainDivClassName = 'snowflake'
+    div className: mainDivClassName,
       PageTitle()
       Header
         homeUrl: @state.homeUrl
@@ -60,6 +66,7 @@ App = React.createClass
                 canManageApps: @state.canManageApps
                 dropup: true
               UserLinks()
+              PoweredByKeboola()
           div className: 'col-xs-9 col-xs-offset-3 kbc-main',
             if @props.isError
               ErrorPage()
