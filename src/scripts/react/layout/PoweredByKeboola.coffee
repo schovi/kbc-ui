@@ -13,7 +13,7 @@ module.exports = React.createClass
       div className: 'kbc-user-links',
         div null
           small null,
-            ' Powered by Keboola'
+            ' Powered by Keboola Connection'
     else
       return null
 
