@@ -236,35 +236,28 @@ export default function(configId) {
                   resetUploadState();
                   resultError(e);
                 });
-            } else {
-              // does table exist? load or create
-              if (tablesStore.hasTable(tableId)) {
-                var loadTableParams = {
-                  dataFileId: fileId
-                };
-                if (store.incremental) {
-                  loadTableParams.incremental = store.incremental;
-                }
-                if (store.delimiter) {
-                  loadTableParams.delimiter = store.delimiter;
-                }
-                if (store.enclosure) {
-                  loadTableParams.enclosure = store.enclosure;
-                }
+            } else if (tablesStore.hasTable(tableId)) {
+              // table exist? load
+              var loadTableParams = {
+                dataFileId: fileId
+              };
 
-                updateLocalState(['uploadingMessage'], 'Loading into table ' + tableId);
-                updateLocalState(['uploadingProgress'], 90);
-                storageApiActions.loadTable(tableId, loadTableParams).then(function() {
-                  resetUploadState();
-                  resetForm();
-                  resultSuccess('CSV file successfully imported.');
-                }).catch(function(e) {
-                  resetUploadState();
-                  resultError(e);
-                });
-              } else {
-                createTable();
-              }
+              store.incremental && (loadTableParams.incremental = store.incremental);
+              store.delimiter && (loadTableParams.delimiter = store.delimiter);
+              store.enclosure && (loadTableParams.enclosure = store.enclosure);
+
+              updateLocalState(['uploadingMessage'], 'Loading into table ' + tableId);
+              updateLocalState(['uploadingProgress'], 90);
+              storageApiActions.loadTable(tableId, loadTableParams).then(function() {
+                resetUploadState();
+                resetForm();
+                resultSuccess('CSV file successfully imported.');
+              }).catch(function(e) {
+                resetUploadState();
+                resultError(e);
+              });
+            } else {
+              createTable();
             }
           }
         });

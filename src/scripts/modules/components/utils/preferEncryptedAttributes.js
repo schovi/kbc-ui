@@ -6,27 +6,23 @@ var isObject = function(val) {
 var preferEncryptedAttributesFromObject = function(data) {
   var keys = Object.keys(data);
   keys.forEach(function(key) {
+    var plainKey = (key.substr(0, 1) === '#') ? key.substr(1) : key;
+    var encryptedKey = (key.substr(0, 1) === '#') ? key : '#' + key;
+
     if (key.substr(0, 1) === '#') {
-      var plainKey = key.substr(1);
-      if (data[key] !== '' && data[key] !== null) {
+      if (data[key] !== '' && data[key] !== null && (data[plainKey])) {
         // try to delete plain value if encrypted value is not empty/null
-        if (data[plainKey]) {
-          delete data[plainKey];
-        }
-      } else {
+        delete data[plainKey];
+      } else if (data[plainKey]) {
         // try to replace empty/null encrypted value by plain value if exists
-        if (data[plainKey]) {
-          data[key] = data[plainKey];
-          delete data[plainKey];
-        }
+        data[key] = data[plainKey];
+        delete data[plainKey];
       }
-    } else {
-      var encKey = '#' + key;
+    } else if (data[encryptedKey] && data[encryptedKey] !== null && data[encryptedKey] !== '') {
       // delete plain value if encrypted exists and is not empty/null
-      if (data[encKey] && data[encKey] !== null && data[encKey] !== '') {
-        delete data[key];
-      }
+      delete data[key];
     }
+
     if (isObject(data[key])) {
       preferEncryptedAttributesFromObject(data[key]);
     } else if (Array.isArray(data[key])) {

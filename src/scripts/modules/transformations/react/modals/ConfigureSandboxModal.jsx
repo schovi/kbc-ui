@@ -8,17 +8,6 @@ import SnowflakeCredentialsContainer from '../components/SnowflakeCredentialsCon
 import ConnectToMySqlSandbox from '../components/ConnectToMySqlSandbox';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
-function renderStatusIcon(status) {
-  switch (status) {
-    case 'success':
-      return <span className="fa fa-check"/>;
-    case 'danger':
-      return <span className="fa fa-times"/>;
-    default:
-      return null;
-  }
-}
-
 export default React.createClass({
   propTypes: {
     show: PropTypes.bool.isRequired,
@@ -62,7 +51,7 @@ export default React.createClass({
         <Modal.Footer>
           <div className="pull-left" style={{padding: '6px 12px'}}>
             <span className={'text-' + this.props.progressStatus}>
-              {renderStatusIcon(this.props.progressStatus)} {this.props.progress}
+              {this.renderStatusIcon()} {this.props.progress}
               <span> </span>
               {this.props.jobId ? <Link to="jobDetail" params={{jobId: this.props.jobId}}>More details</Link> : null}
             </span>
@@ -79,6 +68,20 @@ export default React.createClass({
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  renderStatusIcon() {
+    if (this.props.progressStatus === 'success') {
+      return (
+        <span className="fa fa-check"/>
+      );
+    } else if (this.props.progressStatus === 'danger') {
+      return (
+        <span className="fa fa-times"/>
+      );
+    } else {
+      return null;
+    }
   },
 
   hasCredentials() {
