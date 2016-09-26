@@ -33,8 +33,13 @@ module.exports = React.createClass
     isDeleting: React.PropTypes.bool.isRequired
 
   render: ->
-    Link
-      className: 'tr'
+    rowElement = Link
+    rowClass = 'tr'
+    if not @props.tableExists
+      rowElement = div
+      rowClass = 'tr text-muted'
+    rowElement
+      className: rowClass
       to: "#{@props.componentId}-table"
       params:
         config: @props.configId
