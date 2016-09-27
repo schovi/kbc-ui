@@ -14,10 +14,9 @@ CurrentUser = React.createFactory(require './CurrentUser')
 UserLinks = React.createFactory(require './UserLinks')
 PoweredByKeboola = React.createFactory(require './PoweredByKeboola')
 
-{div, small} = React.DOM
+{div} = React.DOM
 
 require '../../../styles/app.less'
-require '../../../styles/app-snowflake.less'
 
 App = React.createClass
   displayName: 'App'

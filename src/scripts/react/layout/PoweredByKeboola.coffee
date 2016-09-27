@@ -10,7 +10,7 @@ module.exports = React.createClass
 
   render: ->
     if (ApplicationStore.hasCurrentProjectFeature('ui-snowflake-demo'))
-      div className: 'kbc-user-links',
+      div className: 'kbc-powered-by',
         div null
           small null,
             ' Powered by Keboola Connection'
