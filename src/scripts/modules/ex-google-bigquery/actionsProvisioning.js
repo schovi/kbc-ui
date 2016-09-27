@@ -10,8 +10,6 @@ import {Map, fromJS} from 'immutable';
 import _ from 'underscore';
 const COMPONENT_ID = 'keboola.ex-google-bigquery';
 
-import * as common from './common';
-
 // PROPTYPES HELPER:
 /*
   localState: PropTypes.object.isRequired,
@@ -73,8 +71,7 @@ export default function(configId) {
     saveNewQuery() {
       let newQuery = store.getNewQuery();
       if (!newQuery.get('outputTable')) {
-        const name = newQuery.get('name');
-        newQuery = newQuery.set('outputTable', common.sanitizeTableName(name));
+        newQuery = newQuery.set('outputTable', store.getDefaultOutputTableId(newQuery));
       }
       const queries = store.queries.push(newQuery);
       const data = store.configData.setIn(['parameters', 'queries'], queries);
@@ -141,8 +138,7 @@ export default function(configId) {
       let query = store.getEditingQuery(queryId);
       const msg = `Update query ${query.get('name')}`;
       if (!query.get('outputTable')) {
-        const name = query.get('name');
-        query = query.set('outputTable', common.sanitizeTableName(name));
+        query = query.set('outputTable', store.getDefaultOutputTableId(query));
       }
 
       const queries = store.queries.map((q) => q.get('id').toString() === queryId.toString() ? query : q);
