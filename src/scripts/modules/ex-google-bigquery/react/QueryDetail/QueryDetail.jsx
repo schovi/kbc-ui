@@ -43,7 +43,7 @@ export default React.createClass({
       tables: StorageTablesStore.getAll(),
       queriesFilter: store.filter,
       queriesFiltered: store.queriesFiltered,
-      defaultOutputTable: store.getDefaultOutputTableId(query)
+      defaultOutputTable: store.getDefaultOutputTableId(editingQuery)
     };
   },
 
