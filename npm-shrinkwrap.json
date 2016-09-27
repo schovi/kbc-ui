@@ -1353,9 +1353,9 @@
       "resolved": "https://registry.npmjs.org/boom/-/boom-2.10.1.tgz"
     },
     "bootstrap": {
-      "version": "3.3.5",
+      "version": "3.3.7",
       "from": "bootstrap@>=3.3.5 <3.4.0",
-      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.5.tgz"
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz"
     },
     "brace-expansion": {
       "version": "1.1.1",
@@ -3377,9 +3377,9 @@
       }
     },
     "kbc-bootstrap": {
-      "version": "0.3.1",
+      "version": "0.3.2",
       "from": "git+https://git@github.com/keboola/kbc-bootstrap.git",
-      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#c84c6a3cdb47a6fe09323ad8e7cd0b4c47357cc1"
+      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#7d6d3fe93bd6eda802abbb73e5a6cc747f809303"
     },
     "kbc-react-components": {
       "version": "0.0.9",
