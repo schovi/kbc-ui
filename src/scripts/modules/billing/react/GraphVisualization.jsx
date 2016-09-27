@@ -71,8 +71,7 @@ function createChartOptions(options) {
 export default React.createClass({
 
   propTypes: {
-    data: PropTypes.object.isRequired,
-    unit: PropTypes.string.isRequired
+    data: PropTypes.object.isRequired
   },
 
   getDefaultProps() {

@@ -1,6 +1,9 @@
-import React, {PropTypes}  from 'react';
+import React  from 'react';
 import GraphLegend from './GraphLegend';
 import GraphVisualization from './GraphVisualization';
+import moment from 'moment';
+import {fromJS, Map} from 'immutable';
+import MetricsApi from '../MetricsApi';
 
 export function getConversion(unit) {
   switch (unit) {
@@ -18,21 +21,66 @@ export function getConversion(unit) {
       };
   }
 }
+function getDatesForLastMonth() {
+  const dateTo = moment().subtract(1, 'day');
+  const dateFrom = moment().subtract(1, 'day').subtract(1, 'month');
+
+  return {
+    dateFrom: dateFrom.format('YYYY-MM-DD'),
+    dateTo: dateTo.format('YYYY-MM-DD')
+  };
+}
+
 
 export default React.createClass({
 
-  propTypes: {
-    data: PropTypes.object.isRequired,
-    unit: PropTypes.string.isRequired
+  getInitialState: function() {
+    return {
+      metricsData: fromJS([]),
+      dates: getDatesForLastMonth()
+    };
+  },
+
+  componentDidMount: function() {
+    this.loadMetricsData()
+      .then((response) => {
+        this.setState({
+          metricsData: fromJS(response).map((item) => {
+            return Map({
+              date: item.get('dateFrom'), // same as dateTo
+              value: this.dayComponentIoSummary(item.get('components'), 'storage')
+            });
+          })
+        });
+      });
+  },
+
+  loadMetricsData: function() {
+    return MetricsApi.getProjectMetrics(this.state.dates.dateFrom, this.state.dates.dateTo, 'day');
+  },
+
+  dayComponentIoSummary(data, metric) {
+    return data
+      .reduce(function(reduction, component) {
+        return reduction
+          + component.get(metric).get('inBytes')
+          + component.get(metric).get('outBytes');
+      }, 0);
   },
 
   render() {
     return (
       <div>
-        <GraphVisualization data={this.props.data}/>
+        <h3>
+          {'Consumed Storage IO from '}
+          {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
+          {' to '}
+          {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
+        </h3>
+        <GraphVisualization data={this.state.metricsData}/>
         <GraphLegend
           title="Storage IO"
-          value={this.props.data.reduce(function(monthSummary, day) {
+          value={this.state.metricsData.reduce(function(monthSummary, day) {
             return monthSummary + day.get('value');
           }, 0)}
         />

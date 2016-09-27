@@ -4,7 +4,7 @@ import {getConversion} from './Graph';
 export default React.createClass({
 
   propTypes: {
-    title: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired
   },
 
