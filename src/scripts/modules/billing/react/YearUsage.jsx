@@ -1,9 +1,10 @@
 import React from 'react';
-import {List, fromJS} from 'immutable';
+import {fromJS, List} from 'immutable';
 import moment from 'moment';
 import MetricsApi from '../MetricsApi';
 import FileSize from '../../../react/common/FileSize';
 import ComponentsStore from '../../components/stores/ComponentsStore';
+import {Panel} from 'react-bootstrap';
 
 function getDatesForLastYear() {
   const monthAgo = moment().subtract(1, 'month');
@@ -40,47 +41,48 @@ export default React.createClass({
 
   render() {
     return (
-      <div>
+      <div style={{marginBottom: '10em'}}>
         <h3>
           {'Consumed Storage IO from '}
           {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
           {' to '}
           {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
         </h3>
-        <table className="table">
-          <thead>
-          <tr>
-            <th>Month</th>
-            <th>Storage IO</th>
-          </tr>
-          </thead>
-          <tbody>
-          {this.state.metricsData.map((item) => {
-            return List([
-              this.daySummary(item),
-              item.get('components').map(this.dayComponents)
-            ]);
-          })}
-          </tbody>
-        </table>
+        {this.state.metricsData.map((item) => {
+          if (!item.get('components').isEmpty()) {
+            return (
+              <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
+                <table className="table">
+                  {List([item.get('components').map(this.dayComponents)])}
+                </table>
+              </Panel>
+            );
+          } else {
+            return (
+              <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
+                N/A
+              </Panel>
+            );
+          }
+        })}
       </div>
     );
   },
 
   daySummary(data) {
     return (
-      <tr>
-        <td>
+      <div className="row">
+        <div className="col-sm-6">
           <strong>{moment(data.get('dateFrom')).format('MMM D, YYYY')}</strong>
           {' - '}
           <strong>{moment(data.get('dateTo')).format('MMM D, YYYY')}</strong>
-        </td>
-        <td>
+        </div>
+        <div className="col-sm-6">
           <strong>
             <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>
           </strong>
-        </td>
-      </tr>
+        </div>
+      </div>
     );
   },
 
