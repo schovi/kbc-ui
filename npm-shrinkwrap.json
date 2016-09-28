@@ -3377,9 +3377,9 @@
       }
     },
     "kbc-bootstrap": {
-      "version": "0.3.2",
+      "version": "0.3.3",
       "from": "git+https://git@github.com/keboola/kbc-bootstrap.git",
-      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#7d6d3fe93bd6eda802abbb73e5a6cc747f809303"
+      "resolved": "git+https://git@github.com/keboola/kbc-bootstrap.git#2a27c8519dcbf4fb6a6951de326751153b61500c"
     },
     "kbc-react-components": {
       "version": "0.0.9",
