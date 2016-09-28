@@ -5,6 +5,8 @@ import MetricsApi from '../MetricsApi';
 import FileSize from '../../../react/common/FileSize';
 import ComponentsStore from '../../components/stores/ComponentsStore';
 import {Panel} from 'react-bootstrap';
+import ComponentName from './../../../react/common/ComponentName';
+import ComponentIcon from './../../../react/common/ComponentIcon';
 
 function getDatesForLastYear() {
   const monthAgo = moment().subtract(1, 'month');
@@ -52,7 +54,7 @@ export default React.createClass({
           if (!item.get('components').isEmpty()) {
             return (
               <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
-                <table className="table">
+                <table className="table table-striped">
                   {List([item.get('components').map(this.dayComponents)])}
                 </table>
               </Panel>
@@ -71,13 +73,13 @@ export default React.createClass({
 
   daySummary(data) {
     return (
-      <div className="row">
-        <div className="col-sm-6">
+      <div className="row" style={{paddingBottom: '1em'}}>
+        <div className="col-sm-8">
           <strong>{moment(data.get('dateFrom')).format('MMM D, YYYY')}</strong>
           {' - '}
           <strong>{moment(data.get('dateTo')).format('MMM D, YYYY')}</strong>
         </div>
-        <div className="col-sm-6">
+        <div className="col-sm-4">
           <strong>
             <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>
           </strong>
@@ -91,28 +93,23 @@ export default React.createClass({
 
     if (componentFromStore) {
       return (
-        <div>
-          <img src={componentFromStore.get('ico32')} />
-          <span style={{paddingLeft: '10px'}}>{componentFromStore.get('name')}</span>
-        </div>
-      );
-    } else if (componentSlug === 'transformation') {
-      return (
-        <div>
-          <span style={{paddingLeft: '10px'}}>Transformations</span>
-        </div>
+        <span>
+          <ComponentIcon component={componentFromStore} />
+          <ComponentName component={componentFromStore} />
+        </span>
       );
     } else if (componentSlug === 'storage-direct') {
       return (
-        <div>
-          <span style={{paddingLeft: '10px'}}>Storage Direct</span>
-        </div>
+        <span>
+          <span className="kb-sapi-component-icon kbc-icon-storage" style={{fontSize: '32px', verticalAlign: 'middle'}}/>
+          <span>Direct Storage API access</span>
+        </span>
       );
     } else {
       return (
-        <div>
-          <span style={{paddingLeft: '10px'}}>{componentSlug}</span>
-        </div>
+        <span>
+          <span>{componentSlug}</span>
+        </span>
       );
     }
   },
@@ -121,12 +118,18 @@ export default React.createClass({
     return (
       <tr>
         <td>
-          {this.renderComponentNameAndIcon(component.get('name'))}
-        </td>
-        <td>
-          <FileSize size={
-            component.get('storage').get('inBytes') + component.get('storage').get('outBytes')
-          }/>
+          <div className="row">
+            <div className="col-md-8">
+              {this.renderComponentNameAndIcon(component.get('name'))}
+            </div>
+            <div className="col-md-4">
+              <span style={{lineHeight: '2em'}}>
+                <FileSize size={
+                  component.get('storage').get('inBytes') + component.get('storage').get('outBytes')
+                }/>
+              </span>
+            </div>
+          </div>
         </td>
       </tr>
     );
