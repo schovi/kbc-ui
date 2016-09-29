@@ -1,9 +1,13 @@
 import React, {PropTypes} from 'react';
-import fuzzy from 'fuzzy';
+// import fuzzy from 'fuzzy';
 import Select from 'react-select';
 import Tooltip from '../../../../../react/common/Tooltip';
 import {Loader} from 'kbc-react-components';
 import './GaMultiSelect.less';
+
+function simpleMatch(query, test) {
+  return test.toLocaleLowerCase().indexOf(query.toLowerCase()) >= 0;
+}
 
 export default React.createClass({
   propTypes: {
@@ -32,11 +36,11 @@ export default React.createClass({
       desc: isNew ? '' : op.attributes.description,
       id: isNew ? op.value : op.id
     };
-    const filterEscaped = this.escapeRegExp(filter);
-    return !!fuzzy.match(filterEscaped, data.group) ||
-           !!fuzzy.match(filterEscaped, data.name) ||
-           !!fuzzy.match(filterEscaped, data.id) ||
-           data.desc.search(filterEscaped) >= 0;
+    // const filterEscaped = this.escapeRegExp(filter);
+    return !!simpleMatch(filter, data.group) ||
+           !!simpleMatch(filter, data.name) ||
+           !!simpleMatch(filter, data.id);
+           // data.desc.search(filterEscaped) >= 0;
   },
 
   escapeRegExp(str) {
