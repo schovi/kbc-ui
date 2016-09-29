@@ -1,7 +1,7 @@
 import React from 'react';
 import ApplicationStore from '../../../stores/ApplicationStore';
 import Graph from './Graph';
-import YearUsage from './YearUsage';
+import UsageByMonth from './UsageByMonth';
 
 export default React.createClass({
 
@@ -28,11 +28,10 @@ export default React.createClass({
               <Graph/>
             </div>
             <div className="col-md-6">
-              <YearUsage/>
+              <UsageByMonth />
             </div>
           </div>
         </div>
-
       </div>
     );
   },

@@ -50,12 +50,6 @@ function createChartOptions(options) {
       },
       format: options.vAxisFormat
     },
-    chartArea: {
-      left: 10,
-      top: 10,
-      width: options.elementWidth - 20,
-      height: (0.5 * options.elementWidth - 20) - 10
-    },
     lineWidth: 3,
     areaOpacity: 0.1,
     seriesType: 'area',
@@ -99,15 +93,12 @@ export default React.createClass({
         ]
       ];
 
-      var index = 1;
       this.props.data.forEach(function(item) {
         converted.push([
           new Date(item.get('date')),
           conversion(item.get('value')),
           null
         ]);
-
-        index += 1;
       });
 
       return converted;
@@ -117,9 +108,8 @@ export default React.createClass({
   },
 
   drawGraph() {
-    const element = React.findDOMNode(this.refs.metric);
+    const element = React.findDOMNode(this.refs.lastMonthUsage);
     const chartOptions = createChartOptions({
-      elementWidth: element.offsetWidth,
       vAxisFormat: format('bytes')
     });
     const graphData = this.prepareGraphData();
@@ -132,7 +122,7 @@ export default React.createClass({
 
   render: function() {
     return (
-      <div ref="metric"/>
+      <div ref="lastMonthUsage"/>
     );
   }
 

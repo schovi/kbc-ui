@@ -8,14 +8,10 @@ import {Panel} from 'react-bootstrap';
 import ComponentName from './../../../react/common/ComponentName';
 import ComponentIcon from './../../../react/common/ComponentIcon';
 
-function getDatesForLastYear() {
-  const monthAgo = moment().subtract(1, 'month');
-  const dateTo = moment([monthAgo.get('year'), monthAgo.get('month'), 31]);
-  const dateFrom = monthAgo.subtract(12, 'month');
-
+function getDatesForMonthlyUsage() {
   return {
-    dateFrom: dateFrom.format('YYYY-MM-01'),
-    dateTo: dateTo.format('YYYY-MM-DD')
+    dateFrom: '2016-08-17',
+    dateTo: moment().subtract(1, 'day').format('YYYY-MM-DD')
   };
 }
 
@@ -24,7 +20,7 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      dates: getDatesForLastYear()
+      dates: getDatesForMonthlyUsage()
     };
   },
 
@@ -32,7 +28,7 @@ export default React.createClass({
     this.loadMetricsData()
       .then((response) => {
         this.setState({
-          metricsData: fromJS(response)
+          metricsData: fromJS(response).reverse()
         });
       });
   },
