@@ -4,6 +4,7 @@ import GraphVisualization from './GraphVisualization';
 import moment from 'moment';
 import {fromJS, Map} from 'immutable';
 import MetricsApi from '../MetricsApi';
+import {componentIoSummary} from './Index';
 
 export function getConversion(unit) {
   switch (unit) {
@@ -48,7 +49,7 @@ export default React.createClass({
           metricsData: fromJS(response).map((item) => {
             return Map({
               date: item.get('dateFrom'), // same as dateTo
-              value: this.dayComponentIoSummary(item.get('components'), 'storage')
+              value: componentIoSummary(item.get('components'), 'storage')
             });
           })
         });
@@ -57,15 +58,6 @@ export default React.createClass({
 
   loadMetricsData: function() {
     return MetricsApi.getProjectMetrics(this.state.dates.dateFrom, this.state.dates.dateTo, 'day');
-  },
-
-  dayComponentIoSummary(data, metric) {
-    return data
-      .reduce(function(reduction, component) {
-        return reduction
-          + component.get(metric).get('inBytes')
-          + component.get(metric).get('outBytes');
-      }, 0);
   },
 
   render() {

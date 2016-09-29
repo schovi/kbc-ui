@@ -7,6 +7,7 @@ import ComponentsStore from '../../components/stores/ComponentsStore';
 import {Panel} from 'react-bootstrap';
 import ComponentName from './../../../react/common/ComponentName';
 import ComponentIcon from './../../../react/common/ComponentIcon';
+import {componentIoSummary} from './Index';
 
 function getDatesForMonthlyUsage() {
   return {
@@ -77,7 +78,7 @@ export default React.createClass({
         </div>
         <div className="col-sm-4">
           <strong>
-            <FileSize size={this.dayComponentIoSummary(data.get('components'), 'storage')}/>
+            <FileSize size={componentIoSummary(data.get('components'), 'storage')}/>
           </strong>
         </div>
       </div>
@@ -129,15 +130,5 @@ export default React.createClass({
         </td>
       </tr>
     );
-  },
-
-  dayComponentIoSummary(data, metric) {
-    return data
-      .reduce(function(reduction, component) {
-        return reduction
-          + component.get(metric).get('inBytes')
-          + component.get(metric).get('outBytes');
-      }, 0);
   }
-
 });

@@ -3,6 +3,15 @@ import ApplicationStore from '../../../stores/ApplicationStore';
 import Graph from './Graph';
 import UsageByMonth from './UsageByMonth';
 
+export function componentIoSummary(data, metric) {
+  return data
+    .reduce(function(reduction, component) {
+      return reduction
+        + component.get(metric).get('inBytes')
+        + component.get(metric).get('outBytes');
+    }, 0);
+}
+
 export default React.createClass({
 
   render() {
