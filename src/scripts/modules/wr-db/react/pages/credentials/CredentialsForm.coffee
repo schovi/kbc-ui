@@ -2,6 +2,7 @@ React = require 'react'
 {Map} = require 'immutable'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 fieldsTemplates = require '../../../templates/credentialsFields'
+hasSshTunnel = require '../../../templates/hasSshTunnel'
 Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = require('../../../../../react/common/SshTunnelRow').default
 _ = require 'underscore'
@@ -53,6 +54,8 @@ module.exports = React.createClass
       @_renderSshTunnelRow()
 
   _renderSshTunnelRow: ->
+    if not hasSshTunnel(@props.componentId)
+      return null
     React.createElement SshTunnelRow,
       onChange: (newSshData) =>
         @props.changeCredentialsFn(@props.credentials.set('ssh', newSshData))
