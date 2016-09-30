@@ -36,8 +36,8 @@ module.exports = React.createClass
     setTimeout ->
       storageActionCreators.loadTables()
 
-  shouldComponentUpdate: (nextProps) ->
-    nextProps.value != @props.value
+  # shouldComponentUpdate: (nextProps) ->
+  #   nextProps.value != @props.value
 
   render: ->
     isTablesLoading = @state.isTablesLoading
