@@ -246,7 +246,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     credentials = credentials?.toJS()
     not( _.isEmpty(credentials?.host) or
     _.isEmpty(credentials?.database) or
-    _.isEmpty(credentials?.password) or
+    #_.isEmpty(credentials?.password) or
     _.isEmpty(credentials?.user) or
     credentials?.port == "NaN")
 
