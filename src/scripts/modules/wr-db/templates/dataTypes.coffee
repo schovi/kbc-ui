@@ -40,6 +40,7 @@ mssql = [
 module.exports =
 'keboola.wr-db-mssql-v2': mssql
 'wr-db-mssql': mssql
+'keboola.wr-redshift-v2': redshift
 'wr-db-redshift': redshift
 'wr-db-oracle': ["char","nchar","varchar2","nvarchar",
 "blob","clob","nclob","bfile","number","binary_float",

@@ -1,4 +1,4 @@
-const dockerComponents = ['wr-db-mssql', 'keboola.wr-db-mssql-v2'];
+const dockerComponents = ['wr-db-mssql', 'keboola.wr-db-mssql-v2', 'keboola.wr-redshift-v2'];
 import {List, Map, fromJS} from 'immutable';
 import Promise from 'bluebird';
 

@@ -81,7 +81,7 @@ templateFn = (componentId) ->
       return false
     fields = fieldsTemplate(componentId)
     result = _.reduce(fields, (memo, field) =>
-      not _.isEmpty(@state.credentials.get(field[1])) and memo
+      not _.isEmpty(@state.credentials.get(field[1], '').toString()) and memo
     , true)
     return result
 

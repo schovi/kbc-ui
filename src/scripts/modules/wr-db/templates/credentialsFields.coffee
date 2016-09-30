@@ -44,6 +44,15 @@ fields =
     [ 'Database Name', 'database', 'text']
   ]
 
+  'keboola.wr-redshift-v2': [
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '5439']
+    [ 'Username', 'user']
+    [ 'Password', '#password', 'password', true]
+    [ 'Database Name', 'database', 'text']
+    [ 'Schema', 'schema', 'text']
+  ]
+
 
 
 module.exports = (componentId) ->

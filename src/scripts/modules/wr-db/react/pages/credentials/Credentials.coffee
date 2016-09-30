@@ -214,6 +214,7 @@ templateFn = (componentId, driver, isProvisioning) ->
       isEditing: isEditing
       credentials: credentials
       onChangeFn: @_handleChange
+      changeCredentialsFn: @setCredentials
       isSaving: isSaving
       isProvisioning: isProvisioningProp
       componentId: componentId
@@ -236,7 +237,9 @@ templateFn = (componentId, driver, isProvisioning) ->
       value = event.target.value
     value = value.toString()
     creds = @state.editingCredentials.set propName, value
+    @setCredentials(creds)
 
+  setCredentials: (creds) ->
     WrDbActions.setEditingData componentId, @state.configId, 'creds', creds
 
   _hasDbConnection: (credentials) ->

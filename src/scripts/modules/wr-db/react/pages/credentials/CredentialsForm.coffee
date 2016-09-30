@@ -1,7 +1,9 @@
 React = require 'react'
+{Map} = require 'immutable'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 fieldsTemplates = require '../../../templates/credentialsFields'
 Tooltip = require('../../../../../react/common/Tooltip').default
+SshTunnelRow = require('../../../../../react/common/SshTunnelRow').default
 _ = require 'underscore'
 
 {div} = React.DOM
@@ -20,6 +22,7 @@ module.exports = React.createClass
     credentials: React.PropTypes.object
     savedCredentials: React.PropTypes.object
     onChangeFn: React.PropTypes.func
+    changeCredentialsFn: React.PropTypes.func
     isSaving: React.PropTypes.bool
     isProvisioning: React.PropTypes.bool
     componentId: React.PropTypes.string
@@ -47,6 +50,14 @@ module.exports = React.createClass
       div className: 'row',
         _.map fields, (field) =>
           @_createInput(field[0], field[1], field[2], field[3], field[4])
+      @_renderSshTunnelRow()
+
+  _renderSshTunnelRow: ->
+    React.createElement SshTunnelRow,
+      onChange: (newSshData) =>
+        @props.changeCredentialsFn(@props.credentials.set('ssh', newSshData))
+      data: @props.credentials.get('ssh', Map())
+      isEditing: @props.isEditing
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     isHashed = propName[0] == '#'
