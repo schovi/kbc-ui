@@ -5,6 +5,7 @@ import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
 import Add from './AddTableOutputMapping';
+import {List} from 'immutable';
 
 export default React.createClass({
   propTypes: {
@@ -15,12 +16,21 @@ export default React.createClass({
     tables: PropTypes.object.isRequired,
     buckets: PropTypes.object.isRequired,
     pendingActions: PropTypes.object.isRequired,
-    openMappings: PropTypes.object.isRequired
+    openMappings: PropTypes.object.isRequired,
+    definition: PropTypes.object,
+    allowAdd: PropTypes.bool
+  },
+
+  getDefaultProps: function() {
+    return {
+      definition: List(),
+      allowAdd: true
+    };
   },
 
   render() {
     var addButton;
-    if (this.props.value.count() >= 1) {
+    if (this.getValue().count() >= 1 && this.props.allowAdd) {
       addButton = (
         <span className="pull-right">
           <Add
@@ -56,7 +66,7 @@ export default React.createClass({
   },
 
   onSaveMapping(key) {
-    const updatingTableId = this.props.value.get(key).get('destination');
+    const updatingTableId = this.getValue().get(key).get('destination');
     return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'output', 'tables', key, `Update output table ${updatingTableId}`);
   },
 
@@ -65,14 +75,36 @@ export default React.createClass({
   },
 
   onDeleteMapping(key) {
-    const updatingTableId = this.props.value.get(key).get('destination');
+    const updatingTableId = this.getValue().get(key).get('destination');
     return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'output', 'tables', key, `Delete output table mappping ${updatingTableId}`);
+  },
+
+  getValue() {
+    if (this.props.definition.size > 0) {
+      // add output mappings from definition
+      var value = this.props.value;
+      this.props.definition.forEach(function(definition) {
+        if (value.filter(
+          function(item) {
+            return item.get('source') === definition.get('source');
+          }).size === 0) {
+          value = value.push(Immutable.fromJS({
+            source: definition.get('source'),
+            destination: ''
+          }));
+        }
+      });
+      return value;
+    }
+    // no definition
+    return this.props.value;
   },
 
   content() {
     var component = this;
-    if (this.props.value.count() >= 1) {
-      var mappings = this.props.value.map(function(output, key) {
+    if (this.getValue().count() >= 1) {
+      var mappings = this.getValue().map(function(output, key) {
+        const definition = component.findDefinition(output.get('source'));
         return React.createElement(Panel,
           {
             className: 'kbc-panel-heading-with-table',
@@ -93,6 +125,7 @@ export default React.createClass({
                   buckets: component.props.buckets,
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
+                  label: definition.get('label'),
                   onEditStart: function() {
                     return component.onEditStart(key);
                   },
@@ -114,7 +147,8 @@ export default React.createClass({
             {
               fill: true,
               value: output,
-              tables: component.props.tables
+              tables: component.props.tables,
+              label: definition.get('label')
             }
           )
         );
@@ -138,5 +172,12 @@ export default React.createClass({
         </div>
       );
     }
+  },
+
+  findDefinition(source) {
+    return this.props.definition.find(function(definition) {
+      return definition.get('source') === source;
+    }) || new Map();
   }
+
 });

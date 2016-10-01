@@ -24,6 +24,7 @@ TableInputMappingDetail = React.createClass(
   propTypes:
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    label: React.PropTypes.string.isRequired
 
   render: ->
     ListGroupItems = [
@@ -32,8 +33,11 @@ TableInputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Destination table'
         span {className: "col-md-6"},
-          TableLinkEx
-            tableId: @props.value.get('destination')
+          if (@props.value.get('destination'))
+            TableLinkEx
+              tableId: @props.value.get('destination')
+          else
+            'Not set'
 
       ListGroupItem {key: 'incremental'},
         strong {className: "col-md-4"},

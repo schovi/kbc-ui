@@ -25,6 +25,7 @@ module.exports = React.createClass(
     onDelete: React.PropTypes.func.isRequired
     pendingActions: React.PropTypes.object.isRequired
     onEditStart: React.PropTypes.func.isRequired
+    label: React.PropTypes.string
 
   render: ->
     component = @
@@ -32,7 +33,10 @@ module.exports = React.createClass(
       span {className: 'tbody'},
         span {className: 'tr'},
           span {className: 'td col-xs-4'},
-            'out/tables/' + @props.value.get 'source'
+            if (@props.label)
+              @props.label
+            else
+              'out/tables/' + @props.value.get 'source'
           span {className: 'td col-xs-1'},
             span {className: 'fa fa-chevron-right fa-fw'}
           span {className: 'td col-xs-3'},
@@ -42,7 +46,10 @@ module.exports = React.createClass(
             TableBackendLabel
               backend: @props.tables.getIn [@props.value.get('destination'), 'bucket', 'backend']
           span {className: 'td col-xs-3'},
-            @props.value.get 'destination'
+            if @props.value.get('destination') != ''
+              @props.value.get('destination')
+            else
+              'Not set'
           span {className: 'td col-xs-1 text-right kbc-no-wrap'},
             React.createElement DeleteButton,
               tooltip: 'Delete Output'
