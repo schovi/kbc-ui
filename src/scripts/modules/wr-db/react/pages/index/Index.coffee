@@ -81,7 +81,13 @@ templateFn = (componentId) ->
       return false
     fields = fieldsTemplate(componentId)
     result = _.reduce(fields, (memo, field) =>
-      not _.isEmpty(@state.credentials.get(field[1], '').toString()) and memo
+      prop = field[1]
+      isHashed = prop[0] == '#'
+      hashFallbackEmpty = false
+      if isHashed
+        nonHashedProp = prop.slice(1, prop.length)
+        hashFallbackEmpty = _.isEmpty(@state.credentials.get(nonHashedProp, '').toString())
+      not (_.isEmpty(@state.credentials.get(prop, '').toString()) and hashFallbackEmpty) and memo
     , true)
     return result
 
