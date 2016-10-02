@@ -100,11 +100,11 @@ templateFn = (componentId) ->
           size: ''
 
   componentDidMount: ->
-    if @state.columns.reduce(
-      (memo, value) ->
-        memo and value.get('type') == 'IGNORE'
-    , true)
-      @_handleEditColumnsStart()
+    # if @state.columns.reduce(
+    #   (memo, value) ->
+    #     memo and value.get('type') == 'IGNORE'
+    # , true)
+    #   @_handleEditColumnsStart()
     tableId = RoutesStore.getCurrentRouteParam('tableId')
     component = @
     storageApi
