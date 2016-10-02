@@ -54,7 +54,7 @@ module.exports = React.createClass
       @_renderSshTunnelRow()
 
   _renderSshTunnelRow: ->
-    if not hasSshTunnel(@props.componentId)
+    if not hasSshTunnel(@props.componentId) or @props.isProvisioning
       return null
     React.createElement SshTunnelRow,
       onChange: (newSshData) =>
