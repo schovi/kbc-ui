@@ -43,7 +43,6 @@ module.exports = React.createClass
               'Keboola provided database credentials'
               div null,
                 small null, provDescription
-
           else
             h2 null,
               'User specified database credentials'
@@ -64,6 +63,10 @@ module.exports = React.createClass
 
   _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
     isHashed = propName[0] == '#'
+    if @props.isProvisioning and isHashed
+      propName = propName.slice(1, propName.length)
+      isHashed = false
+
     if @props.isEditing
       if isHashed
         @_createProtectedInput(labelValue, propName)
