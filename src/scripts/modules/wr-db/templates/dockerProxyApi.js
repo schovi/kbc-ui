@@ -121,7 +121,7 @@ export default function(componentId) {
           dbName: c.dbName,
           type: c.type,
           size: c.size,
-          nullable: !!c.null,
+          nullable: c.null === '1',
           default: c.default
         };
       });
@@ -225,7 +225,7 @@ export default function(componentId) {
             return Promise.reject('Error: table ' + tableId + ' not exits in the config');
           }
           const columns = table.get('items', List()).map((c) => {
-            return c.set('null', c.get('nullable', false));
+            return c.set('null', c.get('nullable', false) ? '1' : '0');
           });
           table = table.set('columns', columns);
           return table;
