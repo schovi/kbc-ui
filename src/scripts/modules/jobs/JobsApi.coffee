@@ -24,12 +24,13 @@ module.exports =
       .query({'q': query})
       .query({'limit': limit})
       .query({'offset': offset})
+      .query({'include': 'metrics'})
       .promise()
       .then (response) ->
         response.body
 
     getJobDetail: (jobId) ->
-      createRequest('GET','jobs/' + jobId)
+      createRequest('GET','jobs/' + jobId + '?include=metrics')
       .promise()
       .then (response) ->
         response.body
