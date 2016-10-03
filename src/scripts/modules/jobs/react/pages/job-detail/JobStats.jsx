@@ -7,6 +7,7 @@ import {filesize} from '../../../../../utils/utils';
 import TablesList from './TablesList';
 import FilesPie from './FilesPie';
 
+import JobMetrics from './JobMetrics';
 import IntlMessageFormat from 'intl-messageformat';
 
 const MESSAGES = {
@@ -32,7 +33,8 @@ export default React.createClass({
   propTypes: {
     stats: React.PropTypes.object.isRequired,
     isLoading: React.PropTypes.bool.isRequired,
-    mode: React.PropTypes.oneOf([MODE_DEFAULT, MODE_TRANSFORMATION])
+    mode: React.PropTypes.oneOf([MODE_DEFAULT, MODE_TRANSFORMATION]),
+    jobMetrics: React.PropTypes.object.isRequired
   },
   mixins: [addons.PureRenderMixin],
 
@@ -83,6 +85,7 @@ export default React.createClass({
             <h1>{this.dataSize()}</h1>
             {this.filesPie()}
           </div>
+          <JobMetrics metrics={this.props.jobMetrics} />
         </div>
       </div>
     );

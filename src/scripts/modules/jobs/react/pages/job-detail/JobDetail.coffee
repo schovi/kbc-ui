@@ -7,6 +7,7 @@ JobsStore = require('../../../stores/JobsStore')
 ComponentsStore  = require('../../../../components/stores/ComponentsStore')
 InstalledComponentsStore = require '../../../../components/stores/InstalledComponentsStore'
 PureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
+{fromJS} = require 'immutable'
 
 Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require('../../../../../react/common/ComponentName').default)
@@ -227,6 +228,7 @@ module.exports = React.createClass
           runId: job.get 'runId'
           autoRefresh: !job.get('endTime')
           mode: if isTransformation then 'transformation' else 'default'
+          jobMetrics: (if job.get('metrics') then job.get('metrics') else fromJS({}))
 
   _renderParamsRow: (job) ->
     status = job.get 'status'
