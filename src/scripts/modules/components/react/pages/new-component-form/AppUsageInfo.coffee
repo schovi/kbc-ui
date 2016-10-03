@@ -18,6 +18,14 @@ module.exports = React.createClass
         td null,
           'This is a 3rd party ' + @getAppType()
 
+    if (@props.component.get("flags").contains("appInfo.fullAccess"))
+      features.push tr {key: "fullAccess"},
+        td null,
+          em {className: "fa fa-exclamation-triangle"}
+        td null,
+          'This ' + @getAppType() + ' will have full access to the project including all its data.'
+
+
     if (@props.component.get("flags").contains("appInfo.fee"))
       features.push tr {key: "fee"},
         td null,
