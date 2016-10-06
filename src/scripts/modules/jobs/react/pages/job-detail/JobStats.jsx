@@ -1,12 +1,9 @@
 import React from 'react';
 import {addons} from 'react/addons';
 import {Loader} from 'kbc-react-components';
-import {Map} from 'immutable';
 
-import {filesize} from '../../../../../utils/utils';
 import TablesList from './TablesList';
-import FilesPie from './FilesPie';
-
+import JobMetrics from './JobMetrics';
 import IntlMessageFormat from 'intl-messageformat';
 
 const MESSAGES = {
@@ -32,31 +29,13 @@ export default React.createClass({
   propTypes: {
     stats: React.PropTypes.object.isRequired,
     isLoading: React.PropTypes.bool.isRequired,
-    mode: React.PropTypes.oneOf([MODE_DEFAULT, MODE_TRANSFORMATION])
+    mode: React.PropTypes.oneOf([MODE_DEFAULT, MODE_TRANSFORMATION]),
+    jobMetrics: React.PropTypes.object.isRequired
   },
   mixins: [addons.PureRenderMixin],
 
-  dataSize() {
-    return filesize(this.props.stats.getIn(['files', 'total', 'dataSizeBytes', 'total']));
-  },
-
-  filesCount() {
-    return this.props.stats.getIn(['files', 'total', 'count']);
-  },
-
   loader() {
     return this.props.isLoading ? <Loader/> : '';
-  },
-
-  pieData() {
-    return this.props.stats
-      .getIn(['files', 'tags', 'tags'])
-      .map((tag) => {
-        return Map({
-          Tag: tag.get('tag'),
-          Size: tag.getIn(['dataSizeBytes', 'total'])
-        });
-      });
   },
 
   render() {
@@ -76,27 +55,10 @@ export default React.createClass({
           <TablesList tables={this.props.stats.getIn(['tables', isTransformation ? 'import' : 'export'])}/>
         </div>
         <div className="col-md-4">
-          <h4>
-            Data Transfer <small>{message('TOTAL_FILES', {totalCount: this.filesCount()})}</small>
-          </h4>
-          <div className="text-center">
-            <h1>{this.dataSize()}</h1>
-            {this.filesPie()}
-          </div>
+          <JobMetrics metrics={this.props.jobMetrics} />
         </div>
       </div>
     );
-  },
-
-  filesPie() {
-    const pieData = this.pieData();
-    if (pieData.count() <= 1) {
-      return null;
-    } else {
-      return (
-        <FilesPie data={pieData}/>
-      );
-    }
   },
 
   importsTotal() {
