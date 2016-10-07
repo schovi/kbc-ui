@@ -22,7 +22,7 @@ preferEncryptedAttributes = require './utils/preferEncryptedAttributes'
 
 storeEncodedConfig = (componentId, configId, dataToSave, changeDescription) ->
   component = InstalledComponentsStore.getComponent(componentId)
-  
+
   if component.get('flags').includes('encrypt')
     dataToSave = {
       configuration: JSON.stringify(
@@ -457,6 +457,10 @@ module.exports =
     dataToSave = InstalledComponentsStore.getConfigData(componentId, configId)
     mappingData = InstalledComponentsStore.getEditingConfigDataObject(componentId, configId)
 
+    # force list type
+    if (!dataToSave.hasIn(['storage', type, storage]))
+      dataToSave = dataToSave.setIn(['storage', type, storage], Immutable.List())
+
     pathSource = ['storage', type, storage, index]
     if index == 'new-mapping'
       lastIndex = dataToSave.getIn(['storage', type, storage], Immutable.List()).count()
@@ -465,6 +469,7 @@ module.exports =
       pathDestination = pathSource
 
     data = dataToSave.setIn(pathDestination, mappingData.getIn(pathSource)).toJSON()
+
     storeEncodedConfig componentId, configId, data, changeDescription
     .then (response) ->
       VersionActionCreators.loadVersionsForce(componentId, configId)

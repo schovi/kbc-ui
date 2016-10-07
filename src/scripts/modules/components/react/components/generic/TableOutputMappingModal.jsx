@@ -5,6 +5,7 @@ import Editor from './TableOutputMappingEditor';
 import resolveOutputShowDetails from './resolveOutputShowDetails';
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 import validateStorageTableId from '../../../../../utils/validateStorageTableId';
+import Immutable from 'immutable';
 
 export default React.createClass({
   propTypes: {
@@ -15,11 +16,19 @@ export default React.createClass({
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onRequestHide: PropTypes.func.isRequired
+    onRequestHide: PropTypes.func.isRequired,
+    definition: PropTypes.object
+  },
+
+
+  getDefaultProps: function() {
+    return {
+      definition: Immutable.Map()
+    };
   },
 
   isValid() {
-    return !!this.props.mapping.get('source') &&
+    return (this.props.definition.has('source') || !!this.props.mapping.get('source')) &&
       !!this.props.mapping.get('destination') &&
       validateStorageTableId(this.props.mapping.get('destination', ''));
   },
@@ -31,8 +40,12 @@ export default React.createClass({
   },
 
   render() {
+    var title = 'Output Mapping';
+    if (this.props.definition.get('label')) {
+      title = this.props.definition.get('label');
+    }
     return (
-      <Modal {...this.props} title="Output Mapping" bsSize="large" onChange={() => null}>
+      <Modal {...this.props} title={title} bsSize="large" onChange={() => null}>
         <div className="modal-body">
           {this.editor()}
         </div>
@@ -57,6 +70,7 @@ export default React.createClass({
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
       backend: 'docker',
+      definition: this.props.definition,
       initialShowDetails: resolveOutputShowDetails(this.props.mapping)
     };
     return React.createElement(Editor, props);

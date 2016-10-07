@@ -9,6 +9,7 @@ ListGroup = React.createFactory(require('react-bootstrap').ListGroup)
 ListGroupItem = React.createFactory(require('react-bootstrap').ListGroupItem)
 _ = require('underscore')
 TableLinkEx = React.createFactory(require('../../../../components/react/components/StorageApiTableLinkEx').default)
+Immutable = require('immutable')
 
 ApplicationStore = require('../../../../../stores/ApplicationStore')
 
@@ -23,6 +24,10 @@ InputMappingDetail = React.createClass(
     transformationBackend: React.PropTypes.string.isRequired
     inputMapping: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   _isSourceTableInRedshift: ->
     @props.tables.getIn([@props.inputMapping.get('source'), 'bucket', 'backend']) == 'redshift'
@@ -34,8 +39,11 @@ InputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Source table'
         span {className: "col-md-6"},
-          TableLinkEx
-            tableId: @props.inputMapping.get('source')
+          if @props.inputMapping.get('source')
+            TableLinkEx
+              tableId: @props.inputMapping.get('source')
+          else
+            'Not set'
 
       if (@props.transformationBackend == 'mysql' || @props.transformationBackend == 'redshift')
         ListGroupItem {key: 'optional'},
@@ -49,7 +57,7 @@ InputMappingDetail = React.createClass(
         strong {className: "col-md-4"},
           'Columns'
         span {className: "col-md-6"},
-          if @props.inputMapping.get('columns').count()
+          if @props.inputMapping.get('columns', Immutable.List()).count()
             @props.inputMapping.get('columns').join(', ')
           else
             'Use all columns'
@@ -92,7 +100,7 @@ InputMappingDetail = React.createClass(
           strong {className: "col-md-4"},
             'Indexes'
           span {className: "col-md-6"},
-            if @props.inputMapping.get('indexes').count()
+            if @props.inputMapping.get('indexes', Immutable.List()).count()
               @props.inputMapping.get('indexes').map((index, key) ->
                 span {key: index},
                   span {className: 'label label-default'},
@@ -109,7 +117,7 @@ InputMappingDetail = React.createClass(
             strong {className: "col-md-4"},
               'Data types'
             span {className: "col-md-6"},
-              if @props.inputMapping.get('datatypes').count()
+              if @props.inputMapping.get('datatypes', Immutable.List()).count()
                 ul {},
                   @props.inputMapping.get('datatypes').map((definition, column) ->
                     li {key: column},

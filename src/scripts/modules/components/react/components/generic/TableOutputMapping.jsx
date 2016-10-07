@@ -5,7 +5,7 @@ import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
 import Add from './AddTableOutputMapping';
-import {List} from 'immutable';
+import {getOutputMappingValue, findOutputMappingDefinition} from '../../../utils/mappingDefinitions';
 
 export default React.createClass({
   propTypes: {
@@ -17,20 +17,18 @@ export default React.createClass({
     buckets: PropTypes.object.isRequired,
     pendingActions: PropTypes.object.isRequired,
     openMappings: PropTypes.object.isRequired,
-    definition: PropTypes.object,
-    allowAdd: PropTypes.bool
+    definitions: PropTypes.object
   },
 
   getDefaultProps: function() {
     return {
-      definition: List(),
-      allowAdd: true
+      definitions: Immutable.List()
     };
   },
 
   render() {
     var addButton;
-    if (this.getValue().count() >= 1 && this.props.allowAdd) {
+    if (this.getValue().count() >= 1 && this.props.definitions.count() === 0) {
       addButton = (
         <span className="pull-right">
           <Add
@@ -80,31 +78,14 @@ export default React.createClass({
   },
 
   getValue() {
-    if (this.props.definition.size > 0) {
-      // add output mappings from definition
-      var value = this.props.value;
-      this.props.definition.forEach(function(definition) {
-        if (value.filter(
-          function(item) {
-            return item.get('source') === definition.get('source');
-          }).size === 0) {
-          value = value.push(Immutable.fromJS({
-            source: definition.get('source'),
-            destination: ''
-          }));
-        }
-      });
-      return value;
-    }
-    // no definition
-    return this.props.value;
+    return getOutputMappingValue(this.props.definitions, this.props.value);
   },
 
   content() {
     var component = this;
     if (this.getValue().count() >= 1) {
       var mappings = this.getValue().map(function(output, key) {
-        const definition = component.findDefinition(output.get('source'));
+        const definition = findOutputMappingDefinition(component.props.definitions, output);
         return React.createElement(Panel,
           {
             className: 'kbc-panel-heading-with-table',
@@ -125,12 +106,16 @@ export default React.createClass({
                   buckets: component.props.buckets,
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
-                  label: definition.get('label'),
+                  definition: definition,
                   onEditStart: function() {
                     return component.onEditStart(key);
                   },
                   onChange: function(value) {
-                    return component.onChangeMapping(key, value);
+                    var modifiedValue = value;
+                    if (definition.has('source')) {
+                      modifiedValue = modifiedValue.set('source', definition.get('source'));
+                    }
+                    return component.onChangeMapping(key, modifiedValue);
                   },
                   onSave: function() {
                     return component.onSaveMapping(key);
@@ -148,7 +133,7 @@ export default React.createClass({
               fill: true,
               value: output,
               tables: component.props.tables,
-              label: definition.get('label')
+              definition: definition
             }
           )
         );
@@ -172,12 +157,5 @@ export default React.createClass({
         </div>
       );
     }
-  },
-
-  findDefinition(source) {
-    return this.props.definition.find(function(definition) {
-      return definition.get('source') === source;
-    }) || new Map();
   }
-
 });

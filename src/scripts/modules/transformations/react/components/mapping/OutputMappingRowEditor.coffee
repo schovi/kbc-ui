@@ -30,6 +30,10 @@ module.exports = React.createClass
     backend: React.PropTypes.string.isRequired
     type: React.PropTypes.string.isRequired
     initialShowDetails: React.PropTypes.bool.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
@@ -114,32 +118,33 @@ module.exports = React.createClass
                 label: React.DOM.small {}, 'Show details'
                 checked: @state.showDetails
                 onChange: @_handleToggleShowDetails
-        React.DOM.div {className: "row col-md-12"},
-          if @props.backend == 'docker'
-            Input
-              type: 'text'
-              name: 'source'
-              label: 'File'
-              value: @props.value.get("source")
-              disabled: @props.disabled
-              placeholder: "File name"
-              onChange: @_handleChangeSource
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
-              help: React.DOM.span {},
-                "File will be uploaded from"
-                React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
-          else
-            Input
-              type: 'text'
-              name: 'source'
-              label: 'Source'
-              value: @props.value.get("source")
-              disabled: @props.disabled
-              placeholder: "Source table in transformation DB"
-              onChange: @_handleChangeSource
-              labelClassName: 'col-xs-2'
-              wrapperClassName: 'col-xs-10'
+        if (!@props.definition.has('source'))
+          React.DOM.div {className: "row col-md-12"},
+            if @props.backend == 'docker'
+              Input
+                type: 'text'
+                name: 'source'
+                label: 'File'
+                value: @props.value.get("source")
+                disabled: @props.disabled
+                placeholder: "File name"
+                onChange: @_handleChangeSource
+                labelClassName: 'col-xs-2'
+                wrapperClassName: 'col-xs-10'
+                help: React.DOM.span {},
+                  "File will be uploaded from"
+                  React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
+            else
+              Input
+                type: 'text'
+                name: 'source'
+                label: 'Source'
+                value: @props.value.get("source")
+                disabled: @props.disabled
+                placeholder: "Source table in transformation DB"
+                onChange: @_handleChangeSource
+                labelClassName: 'col-xs-2'
+                wrapperClassName: 'col-xs-10'
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group',
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'

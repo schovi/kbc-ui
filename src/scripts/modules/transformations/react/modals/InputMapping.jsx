@@ -6,6 +6,7 @@ import InputMappingRowDockerEditor from '../components/mapping/InputMappingRowDo
 import InputMappingRowRedshiftEditor from '../components/mapping/InputMappingRowRedshiftEditor';
 import InputMappingRowSnowflakeEditor from '../components/mapping/InputMappingRowSnowflakeEditor';
 import resolveInputShowDetails from './resolveInputShowDetails';
+import Immutable from 'immutable';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -20,7 +21,14 @@ export default React.createClass({
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onRequestHide: PropTypes.func.isRequired
+    onRequestHide: PropTypes.func.isRequired,
+    definition: PropTypes.object
+  },
+
+  getDefaultProps() {
+    return {
+      definition: Immutable.Map()
+    };
   },
 
   isValid() {
@@ -39,8 +47,12 @@ export default React.createClass({
   },
 
   render() {
+    var title = 'Input Mapping';
+    if (this.props.definition.get('label')) {
+      title = this.props.definition.get('label');
+    }
     return (
-      <Modal {...this.props} title="Input Mapping" bsSize="large" onChange={() => null}>
+      <Modal {...this.props} title={title} bsSize="large" onChange={() => null}>
         <div className="modal-body">
           {this.editor()}
         </div>
@@ -64,7 +76,8 @@ export default React.createClass({
       disabled: this.state.isSaving,
       onChange: this.props.onChange,
       initialShowDetails: resolveInputShowDetails(this.props.backend, this.props.type, this.props.mapping),
-      isDestinationDuplicate: this.isDestinationDuplicate()
+      isDestinationDuplicate: this.isDestinationDuplicate(),
+      definition: this.props.definition
     };
     if (this.props.backend === 'mysql' && this.props.type === 'simple') {
       return React.createElement(InputMappingRowMySqlEditor, props);

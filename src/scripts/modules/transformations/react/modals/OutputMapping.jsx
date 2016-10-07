@@ -4,6 +4,7 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import OutputMappingRowEditor from '../components/mapping/OutputMappingRowEditor';
 import resolveOutputShowDetails from './resolveOutputShowDetails';
 import validateStorageTableId from '../../../../utils/validateStorageTableId';
+import Immutable from 'immutable';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -19,7 +20,14 @@ export default React.createClass({
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onHide: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
+    definition: PropTypes.object
+  },
+
+  getDefaultProps() {
+    return {
+      definition: Immutable.Map()
+    };
   },
 
   isValid() {
@@ -35,6 +43,10 @@ export default React.createClass({
   },
 
   render() {
+    var title = 'Output Mapping';
+    if (this.props.definition.get('label')) {
+      title = this.props.definition.get('label');
+    }
     return (
       <Modal
         onHide={this.props.onHide}
@@ -43,7 +55,7 @@ export default React.createClass({
         animation={false}
         >
         <Modal.Header closeButton={true}>
-          <Modal.Title>Output Mapping</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <OutputMappingRowEditor
@@ -56,6 +68,7 @@ export default React.createClass({
             backend={this.props.backend}
             type={this.props.type}
             initialShowDetails={resolveOutputShowDetails(this.props.mapping)}
+            definition={this.props.definition}
             />
         </Modal.Body>
         <Modal.Footer>

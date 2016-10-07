@@ -5,6 +5,7 @@ import {Panel} from 'react-bootstrap';
 import Immutable from 'immutable';
 import InstalledComponentsActions from '../../../InstalledComponentsActionCreators';
 import Add from './AddTableInputMapping';
+import {getInputMappingValue, findInputMappingDefinition} from '../../../utils/mappingDefinitions';
 
 export default React.createClass({
   propTypes: {
@@ -14,11 +15,18 @@ export default React.createClass({
     value: PropTypes.object.isRequired,
     tables: PropTypes.object.isRequired,
     pendingActions: PropTypes.object.isRequired,
-    openMappings: PropTypes.object.isRequired
+    openMappings: PropTypes.object.isRequired,
+    definitions: PropTypes.object
+  },
+
+  getDefaultProps: function() {
+    return {
+      definitions: Immutable.List()
+    };
   },
 
   inputMappingDestinations(exclude) {
-    return this.props.value.map(function(mapping, key) {
+    return this.getValue().map(function(mapping, key) {
       if (key !== exclude) {
         return mapping.get('destination').toLowerCase();
       }
@@ -29,7 +37,7 @@ export default React.createClass({
 
   render() {
     var addButton;
-    if (this.props.value.count() >= 1) {
+    if (this.getValue().count() >= 1 && this.props.definitions.count() === 0) {
       addButton = (
         <span className="pull-right">
           <Add
@@ -65,7 +73,7 @@ export default React.createClass({
   },
 
   onSaveMapping(key) {
-    const updatingTableId = this.props.value.get(key).get('source');
+    const updatingTableId = this.getValue().get(key).get('source');
     return InstalledComponentsActions.saveEditingMapping(this.props.componentId, this.props.configId, 'input', 'tables', key, `Update input table ${updatingTableId}`);
   },
 
@@ -74,14 +82,19 @@ export default React.createClass({
   },
 
   onDeleteMapping(key) {
-    const updatingTableId = this.props.value.get(key).get('source');
+    const updatingTableId = this.getValue().get(key).get('source');
     return InstalledComponentsActions.deleteMapping(this.props.componentId, this.props.configId, 'input', 'tables', key, `Delete input table mappping ${updatingTableId}`);
+  },
+
+  getValue() {
+    return getInputMappingValue(this.props.definitions, this.props.value);
   },
 
   content() {
     var component = this;
-    if (this.props.value.count() >= 1) {
-      var mappings = this.props.value.map(function(input, key) {
+    if (this.getValue().count() >= 1) {
+      var mappings = this.getValue().map(function(input, key) {
+        const definition = findInputMappingDefinition(component.props.definitions, input);
         return React.createElement(Panel,
           {
             className: 'kbc-panel-heading-with-table',
@@ -102,11 +115,16 @@ export default React.createClass({
                   mappingIndex: key,
                   pendingActions: component.props.pendingActions,
                   otherDestinations: component.inputMappingDestinations(key),
+                  definition: definition,
                   onEditStart: function() {
                     return component.onEditStart(key);
                   },
                   onChange: function(value) {
-                    return component.onChangeMapping(key, value);
+                    var modifiedValue = value;
+                    if (definition.has('destination')) {
+                      modifiedValue = modifiedValue.set('destination', definition.get('destination'));
+                    }
+                    return component.onChangeMapping(key, modifiedValue);
                   },
                   onSave: function() {
                     return component.onSaveMapping(key);

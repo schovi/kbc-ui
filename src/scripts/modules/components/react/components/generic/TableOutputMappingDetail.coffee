@@ -24,7 +24,10 @@ TableInputMappingDetail = React.createClass(
   propTypes:
     value: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
-    label: React.PropTypes.string.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   render: ->
     ListGroupItems = [

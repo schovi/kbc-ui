@@ -15,6 +15,10 @@ module.exports = React.createClass
     disabled: React.PropTypes.bool.isRequired
     initialShowDetails: React.PropTypes.bool.isRequired
     isDestinationDuplicate: React.PropTypes.bool.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
@@ -35,6 +39,8 @@ module.exports = React.createClass
   _handleChangeSource: (value) ->
     # use only table name from the table identifier
     destination = value.substr(value.lastIndexOf(".") + 1) + ".csv"
+    if (@props.definition.has('destination'))
+      destination = @props.definition.get('destination')
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
       mapping = mapping.set("destination", destination)
@@ -155,25 +161,25 @@ module.exports = React.createClass
               onChange: @_handleChangeSource
               options: @_getTables()
 
-
-      React.DOM.div {className: "row col-md-12"},
-        Input
-          type: 'text'
-          label: 'File name'
-          value: @props.value.get("destination")
-          disabled: @props.disabled
-          placeholder: "File name"
-          onChange: @_handleChangeDestination
-          labelClassName: 'col-xs-2'
-          wrapperClassName: 'col-xs-10'
-          bsStyle: if @props.isDestinationDuplicate then 'error' else null
-          help: if @props.isDestinationDuplicate then React.DOM.small {'className': 'error'},
-              'Duplicate destination '
-              React.DOM.code {}, @props.value.get("destination")
-              '.'
-            else React.DOM.span {className: "help-block"},
-              "File will be available at"
-              React.DOM.code {}, "/data/in/tables/" + @_getFileName()
+      if (!@props.definition.has('destination'))
+        React.DOM.div {className: "row col-md-12"},
+          Input
+            type: 'text'
+            label: 'File name'
+            value: @props.value.get("destination")
+            disabled: @props.disabled
+            placeholder: "File name"
+            onChange: @_handleChangeDestination
+            labelClassName: 'col-xs-2'
+            wrapperClassName: 'col-xs-10'
+            bsStyle: if @props.isDestinationDuplicate then 'error' else null
+            help: if @props.isDestinationDuplicate then React.DOM.small {'className': 'error'},
+                'Duplicate destination '
+                React.DOM.code {}, @props.value.get("destination")
+                '.'
+              else React.DOM.span {className: "help-block"},
+                "File will be available at"
+                React.DOM.code {}, "/data/in/tables/" + @_getFileName()
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
