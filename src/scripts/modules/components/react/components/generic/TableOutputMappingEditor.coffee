@@ -28,7 +28,11 @@ module.exports = React.createClass
     onChange: React.PropTypes.func.isRequired
     disabled: React.PropTypes.bool.isRequired
     backend: React.PropTypes.string.isRequired
+    definition: React.PropTypes.object,
     initialShowDetails: React.PropTypes.bool.isRequired
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   getInitialState: ->
     showDetails: @props.initialShowDetails
@@ -114,20 +118,21 @@ module.exports = React.createClass
                 label: React.DOM.small {}, 'Show details'
                 checked: @state.showDetails
                 onChange: @_handleToggleShowDetails
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            type: 'text'
-            name: 'source'
-            label: 'File'
-            value: @props.value.get("source")
-            disabled: @props.disabled
-            placeholder: "File name"
-            onChange: @_handleChangeSource
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-            help: React.DOM.span {},
-              "File will be uploaded from"
-              React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
+        if (!@props.definition.has('source'))
+          React.DOM.div {className: "row col-md-12"},
+            Input
+              type: 'text'
+              name: 'source'
+              label: 'File'
+              value: @props.value.get("source")
+              disabled: @props.disabled
+              placeholder: "File name"
+              onChange: @_handleChangeSource
+              labelClassName: 'col-xs-2'
+              wrapperClassName: 'col-xs-10'
+              help: React.DOM.span {},
+                "File will be uploaded from"
+                React.DOM.code {}, "/data/out/tables/" + @props.value.get("source", "")
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group',
             React.DOM.label className: 'col-xs-2 control-label', 'Destination'

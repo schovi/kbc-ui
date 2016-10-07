@@ -453,11 +453,19 @@ Dispatcher.register (payload) ->
 
     when constants.ActionTypes.INSTALLED_COMPONENTS_CONFIGURATION_MAPPING_EDITING_START
       currentMapping = InstalledComponentsStore.getConfigData(action.componentId, action.configId)
-      .getIn(['storage', action.mappingType, action.storage, action.index])
+      .getIn(['storage', action.mappingType, action.storage, action.index], Map())
       path = [
         'configDataEditingObject', action.componentId,
         action.configId, 'storage', action.mappingType, action.storage, action.index
       ]
+      pathList = [
+        'configDataEditingObject', action.componentId,
+        action.configId, 'storage', action.mappingType, action.storage
+      ]
+
+      if (!_store.hasIn(pathList))
+        _store = _store.setIn(pathList, List())
+
       _store = _store.setIn(path, currentMapping)
       InstalledComponentsStore.emitChange()
 

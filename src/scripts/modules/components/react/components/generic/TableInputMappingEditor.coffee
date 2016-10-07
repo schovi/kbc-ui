@@ -8,8 +8,6 @@ Select = React.createFactory require('../../../../../react/common/Select').defau
 DaysFilterInput = require('./DaysFilterInput').default
 DataFilterRow = require('./DataFilterRow').default
 
-
-
 module.exports = React.createClass
   displayName: 'TableInputMappingEditor'
 
@@ -21,12 +19,14 @@ module.exports = React.createClass
     initialShowDetails: React.PropTypes.bool.isRequired
     showFileHint: React.PropTypes.bool
     isDestinationDuplicate: React.PropTypes.bool.isRequired
-
-  getInitialState: ->
-    showDetails: @props.initialShowDetails
+    definition: React.PropTypes.object
 
   getDefaultProps: ->
     showFileHint: true
+    definition: Immutable.Map()
+
+  getInitialState: ->
+    showDetails: @props.initialShowDetails
 
   _handleToggleShowDetails: (e) ->
     @setState(
@@ -42,9 +42,9 @@ module.exports = React.createClass
     should
 
   _handleChangeSource: (value) ->
+    # use only table name from the table identifier
     immutable = @props.value.withMutations (mapping) ->
       mapping = mapping.set("source", value)
-      # use only table name from the table identifier
       destination = value.substr(value.lastIndexOf(".") + 1) + ".csv"
       mapping = mapping.set("destination", destination)
       mapping = mapping.set("where_column", "")
@@ -93,7 +93,6 @@ module.exports = React.createClass
               label: React.DOM.small {}, 'Show details'
               checked: @state.showDetails
               onChange: @_handleToggleShowDetails
-
       React.DOM.div {className: "row col-md-12"},
         React.DOM.div className: 'form-group',
           React.DOM.label className: 'col-xs-2 control-label', 'Source'
@@ -105,6 +104,7 @@ module.exports = React.createClass
               placeholder: "Source table"
               onChange: @_handleChangeSource
               options: @_getTables()
+      if (!@props.definition.has('destination'))
         React.DOM.div {className: "row col-md-12"},
           Input
             type: 'text'

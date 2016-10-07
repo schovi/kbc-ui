@@ -6,6 +6,7 @@ TableBackendLabel = React.createFactory(require '../../components/TableBackendLa
 DeleteButton = require '../../../../../react/common/DeleteButton'
 OutputMappingModal = require('../../modals/OutputMapping').default
 actionCreators = require '../../../ActionCreators'
+Immutable = require 'immutable'
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
@@ -23,6 +24,10 @@ OutputMappingRow = React.createClass(
     buckets: React.PropTypes.object.isRequired
     bucket: React.PropTypes.object.isRequired
     pendingActions: React.PropTypes.object.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   getInitialState: ->
     showModal: false
@@ -41,33 +46,60 @@ OutputMappingRow = React.createClass(
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
-          span {className: 'td col-xs-4'},
-            if @props.transformation.get('backend') == 'docker'
-              'out/tables/' + @props.outputMapping.get 'source'
-            else
-              @props.outputMapping.get 'source'
-          span {className: 'td col-xs-1'},
-            span {className: 'fa fa-chevron-right fa-fw'}
-          span {className: 'td col-xs-3'},
-            TableSizeLabel
-              size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
-            ' '
-            TableBackendLabel
-              backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
-          span {className: 'td col-xs-3'},
-            @props.outputMapping.get 'destination'
+          if @props.definition.has('label')
+            [
+              span {className: 'td col-xs-4', key: 'label'},
+                if @props.definition.has('label')
+                  @props.definition.get('label')
+                else
+                  if @props.transformation.get('backend') == 'docker'
+                    'out/tables/' + @props.outputMapping.get 'source'
+                  else
+                    @props.outputMapping.get 'source'
+              span {className: 'td col-xs-1', key: 'arrow'},
+                span {className: 'fa fa-chevron-right fa-fw'}
+              span {className: 'td col-xs-6', key: 'destination'},
+                TableSizeLabel
+                  size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
+                ' '
+                TableBackendLabel
+                  backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
+                if @props.outputMapping.get('destination') != ''
+                  @props.outputMapping.get('destination')
+                else
+                  'Not set'
+            ]
+          else
+            [
+              span {className: 'td col-xs-4', key: 'soruce'},
+                if @props.transformation.get('backend') == 'docker'
+                  'out/tables/' + @props.outputMapping.get 'source'
+                else
+                  @props.outputMapping.get 'source'
+              span {className: 'td col-xs-1', key: 'arrow'},
+                span {className: 'fa fa-chevron-right fa-fw'}
+              span {className: 'td col-xs-3', key: 'buttons'},
+                TableSizeLabel
+                  size: @props.tables.getIn [@props.outputMapping.get('destination'), 'dataSizeBytes']
+                ' '
+                TableBackendLabel
+                  backend: @props.tables.getIn [@props.outputMapping.get('destination'), 'bucket', 'backend']
+              span {className: 'td col-xs-3', key: 'destination'},
+                @props.outputMapping.get('destination')
+            ]
           span {className: 'td col-xs-1 col-xs-1 text-right kbc-no-wrap'},
-            React.createElement DeleteButton,
-              tooltip: 'Delete Output'
-              isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
-              confirm:
-                title: 'Delete Output'
-                text: span null,
-                  "Do you really want to delete output mapping for "
-                  code null,
-                    @props.outputMapping.get('source')
-                  "?"
-                onConfirm: @_handleDelete
+            if (@props.outputMapping.get('destination') != '')
+              React.createElement DeleteButton,
+                tooltip: 'Delete Output'
+                isPending: @props.pendingActions.get('delete-output-' + @props.mappingIndex)
+                confirm:
+                  title: 'Delete Output'
+                  text: span null,
+                    "Do you really want to delete output mapping for "
+                    code null,
+                      @props.outputMapping.get('destination')
+                    "?"
+                  onConfirm: @_handleDelete
             React.createElement OverlayTrigger,
               overlay: React.createElement Tooltip, null, 'Edit Output'
               placement: 'top'
@@ -90,6 +122,7 @@ OutputMappingRow = React.createClass(
               onSave: @_handleSave
               show: @state.showModal
               onHide: @closeModal
+              definition: @props.definition
 
   _handleChange: (newMapping) ->
     actionCreators.updateTransformationEditingField(@props.bucket.get('id'),

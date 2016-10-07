@@ -32,6 +32,9 @@ AddOutputMapping = require('./AddOutputMapping').default
 AddInputMapping = require('./AddInputMapping').default
 InlineEditArea = require '../../../../../react/common/InlineEditArea'
 
+{getInputMappingValue, getOutputMappingValue,
+  findInputMappingDefinition, findOutputMappingDefinition} = require('../../../../components/utils/mappingDefinitions')
+
 
 {div, span, input, strong, form, button, h2, i, ul, li, button, a, small, p, code, em} = React.DOM
 
@@ -55,6 +58,36 @@ module.exports = React.createClass
     openOutputMappings: React.PropTypes.object.isRequired
     showDetails: React.PropTypes.bool.isRequired
 
+  # TODO move this to component definition UI Options
+  openRefine:
+    inputMappingDefinitions: Immutable.fromJS([
+      {
+        'label': 'Load data from table',
+        'destination': 'data.csv'
+      }
+    ])
+    outputMappingDefinitions: Immutable.fromJS([
+      {
+        'label': 'Save result to table',
+        'source': 'data.csv'
+      }
+    ])
+
+  _isOpenRefineTransformation: ->
+    @props.transformation.get("backend") == "docker" && @props.transformation.get("type") == "openrefine"
+
+  _getInputMappingValue: ->
+    value = @props.transformation.get("input", List())
+    if (@_isOpenRefineTransformation())
+      return getInputMappingValue(@openRefine.inputMappingDefinitions, value)
+    return value
+
+  _getOutputMappingValue: ->
+    value = @props.transformation.get("output", List())
+    if (@_isOpenRefineTransformation())
+      return getOutputMappingValue(@openRefine.outputMappingDefinitions, value)
+    return value
+
   _toggleInputMapping: (index) ->
     TransformationsActionCreators.toggleOpenInputMapping(@props.bucketId, @props.transformationId, index)
 
@@ -68,7 +101,7 @@ module.exports = React.createClass
     )
 
   _inputMappingDestinations: (exclude) ->
-    @props.transformation.get("input", Map()).map((mapping, key) ->
+    @_getInputMappingValue().map((mapping, key) ->
       if key != exclude
         return mapping.get("destination").toLowerCase()
     ).filter((destination) ->
@@ -127,7 +160,7 @@ module.exports = React.createClass
       div {},
         h2 {},
           'Input Mapping'
-          if @props.transformation.get('input').count() >= 1
+          if @_getInputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
             span className: 'pull-right',
               React.createElement AddInputMapping,
                 tables: @props.tables
@@ -135,9 +168,11 @@ module.exports = React.createClass
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-input-mapping', Map())
                 otherDestinations: @_inputMappingDestinations()
-        if @props.transformation.get('input').count()
+        if @_getInputMappingValue().count()
           div {},
-            @props.transformation.get('input').map((input, key) ->
+            @_getInputMappingValue().map((input, key) ->
+              if (@_isOpenRefineTransformation())
+                definition = findInputMappingDefinition(@openRefine.inputMappingDefinitions, input)
               Panel
                 className: 'kbc-panel-heading-with-table'
                 key: key
@@ -159,12 +194,14 @@ module.exports = React.createClass
                       mappingIndex: key
                       pendingActions: @props.pendingActions
                       otherDestinations: @_inputMappingDestinations(key)
+                      definition: definition
               ,
                 InputMappingDetail
                   fill: true
                   transformationBackend: @props.transformation.get('backend')
                   inputMapping: input
                   tables: @props.tables
+                  definition: definition
             , @).toArray()
         else
           div {className: "well text-center"},
@@ -178,7 +215,7 @@ module.exports = React.createClass
       div {},
         h2 {},
           'Output Mapping'
-          if  @props.transformation.get('output').count() >= 1
+          if  @_getOutputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
             span className: 'pull-right',
               React.createElement AddOutputMapping,
                 tables: @props.tables
@@ -186,9 +223,11 @@ module.exports = React.createClass
                 transformation: @props.transformation
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-output-mapping', Map())
-        if @props.transformation.get('output').count()
+        if @_getOutputMappingValue().count()
           div {},
-            @props.transformation.get('output').map((output, key) ->
+            @_getOutputMappingValue().map((output, key) ->
+              if (@_isOpenRefineTransformation())
+                definition = findOutputMappingDefinition(@openRefine.outputMappingDefinitions, output)
               Panel
                 className: 'kbc-panel-heading-with-table'
                 key: key
@@ -210,6 +249,7 @@ module.exports = React.createClass
                       tables: @props.tables
                       pendingActions: @props.pendingActions
                       buckets: @props.buckets
+                      definition: definition
               ,
                 OutputMappingDetail
                   fill: true

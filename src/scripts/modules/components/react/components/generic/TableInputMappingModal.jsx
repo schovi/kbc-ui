@@ -3,6 +3,7 @@ import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import Editor from './TableInputMappingEditor';
 import resolveInputShowDetails from './resolveInputShowDetails';
+import Immutable from 'immutable';
 
 const MODE_CREATE = 'create', MODE_EDIT = 'edit';
 
@@ -17,19 +18,20 @@ export default React.createClass({
     title: PropTypes.string,
     onRequestHide: PropTypes.func.isRequired,
     otherDestinations: PropTypes.object.isRequired,
-    showFileHint: PropTypes.bool
+    showFileHint: PropTypes.bool,
+    definition: PropTypes.object
   },
 
   getDefaultProps() {
     return {
-      title: 'Input Mapping',
-      showFileHint: true
+      showFileHint: true,
+      definition: Immutable.Map()
     };
   },
 
   isValid() {
     return !!this.props.mapping.get('source')
-      && !!this.props.mapping.get('destination')
+      && (this.props.definition.has('destination') || !!this.props.mapping.get('destination'))
       && !this.isDestinationDuplicate();
   },
 
@@ -48,8 +50,12 @@ export default React.createClass({
   },
 
   render() {
+    var title = 'Input Mapping';
+    if (this.props.definition.get('label')) {
+      title = this.props.definition.get('label');
+    }
     return (
-      <Modal {...this.props} title={this.props.title} bsSize="large" onChange={() => null}>
+      <Modal {...this.props} title={title} bsSize="large" onChange={() => null}>
         <div className="modal-body">
           {this.editor()}
         </div>
@@ -74,7 +80,8 @@ export default React.createClass({
       onChange: this.props.onChange,
       initialShowDetails: resolveInputShowDetails(this.props.mapping),
       isDestinationDuplicate: this.isDestinationDuplicate(),
-      showFileHint: this.props.showFileHint
+      showFileHint: this.props.showFileHint,
+      definition: this.props.definition
     };
     return React.createElement(Editor, props);
   },

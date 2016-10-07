@@ -6,6 +6,7 @@ ImmutableRenderMixin = require '../../../../../react/mixins/ImmutableRendererMix
 TableSizeLabel = React.createFactory(require '../../../../transformations/react/components/TableSizeLabel')
 TableBackendLabel = React.createFactory(require '../../../../transformations/react/components/TableBackendLabel')
 TableInputMappingModal = require('./TableInputMappingModal').default
+Immutable = require('immutable')
 
 {span, div, a, button, i, h4, small, em, code} = React.DOM
 
@@ -25,34 +26,58 @@ module.exports = React.createClass(
     pendingActions: React.PropTypes.object.isRequired
     onEditStart: React.PropTypes.func.isRequired
     otherDestinations: React.PropTypes.object.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   render: ->
     component = @
     span {className: 'table'},
       span {className: 'tbody'},
         span {className: 'tr'},
-          span {className: 'td col-xs-3'},
-            TableSizeLabel {size: @props.tables.getIn [@props.value.get('source'), 'dataSizeBytes']}
-            ' '
-            TableBackendLabel {backend: @props.tables.getIn [@props.value.get('source'), 'bucket', 'backend']}
-          span {className: 'td col-xs-4'},
-            @props.value.get 'source'
-          span {className: 'td col-xs-1'},
-            span {className: 'fa fa-chevron-right fa-fw'}
-          span {className: 'td col-xs-3'},
-            'in/tables/' + @props.value.get('destination', @props.value.get('source'))
+          if @props.definition.has('label')
+            [
+              span {className: 'td col-xs-4', key: 'label'},
+                @props.definition.get('label')
+              span {className: 'td col-xs-1', key: 'arrow'},
+                span {className: 'fa fa-chevron-right fa-fw'}
+
+              span {className: 'td col-xs-6', key: 'source'},
+                TableSizeLabel {size: @props.tables.getIn [@props.value.get('source'), 'dataSizeBytes']}
+                ' '
+                TableBackendLabel {backend: @props.tables.getIn [@props.value.get('source'), 'bucket', 'backend']}
+                if @props.value.get('source') != ''
+                  @props.value.get('source')
+                else
+                  'Not set'
+            ]
+          else
+            [
+              span {className: 'td col-xs-3', key: 'icons'},
+                TableSizeLabel {size: @props.tables.getIn [@props.value.get('source'), 'dataSizeBytes']}
+                ' '
+                TableBackendLabel {backend: @props.tables.getIn [@props.value.get('source'), 'bucket', 'backend']}
+              span {className: 'td col-xs-4', key: 'source'},
+                @props.value.get 'source'
+              span {className: 'td col-xs-1', key: 'arrow'},
+                span {className: 'fa fa-chevron-right fa-fw'}
+              span {className: 'td col-xs-3', key: 'destination'},
+                'in/tables/' + @props.value.get('destination', @props.value.get('source'))
+            ]
           span {className: 'td col-xs-1 text-right kbc-no-wrap'},
-            React.createElement DeleteButton,
-              tooltip: 'Delete Input'
-              isPending: @props.pendingActions.getIn(['input', 'tables', @props.mappingIndex, 'delete'], false)
-              confirm:
-                title: 'Delete Input'
-                text: span null,
-                  "Do you really want to delete input mapping for "
-                  code null,
-                    @props.value.get('source')
-                  "?"
-                onConfirm: @props.onDelete
+            if (@props.value.get('source') != '')
+              React.createElement DeleteButton,
+                tooltip: 'Delete Input'
+                isPending: @props.pendingActions.getIn(['input', 'tables', @props.mappingIndex, 'delete'], false)
+                confirm:
+                  title: 'Delete Input'
+                  text: span null,
+                    "Do you really want to delete input mapping for "
+                    code null,
+                      @props.value.get('source')
+                    "?"
+                  onConfirm: @props.onDelete
             React.createElement OverlayTrigger,
               overlay: React.createElement Tooltip, null, 'Edit Input'
               placement: 'top'
@@ -66,6 +91,7 @@ module.exports = React.createClass(
                   onCancel: @props.onCancel
                   onSave: @props.onSave
                   otherDestinations: @props.otherDestinations
+                  definition: @props.definition
               ,
                 React.DOM.button
                   className: "btn btn-link"

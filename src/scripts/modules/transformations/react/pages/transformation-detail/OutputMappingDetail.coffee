@@ -21,6 +21,10 @@ OutputMappingDetail = React.createClass(
     transformationBackend: React.PropTypes.string.isRequired
     outputMapping: React.PropTypes.object.isRequired
     tables: React.PropTypes.object.isRequired
+    definition: React.PropTypes.object
+
+  getDefaultProps: ->
+    definition: Immutable.Map()
 
   _getTableBackend: (tableId) ->
     table = @props.tables.find((table) ->
