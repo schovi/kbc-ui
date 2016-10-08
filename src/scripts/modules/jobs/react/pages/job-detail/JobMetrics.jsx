@@ -19,7 +19,8 @@ export default React.createClass({
             <dd>{this.renderSize(this.props.metrics.get('storage').get('outBytes'))}</dd>
           </dl>
           <small>
-            IO is processed asynchronously. Shown numbers may keep changing until processing is done.
+            <span className="glyphicon glyphicon-info-sign" /> Input and output show total of transferred bytes (compressed and uncompressed).
+            Shown numbers are processed asynchronously and may keep changing until processing is done.
           </small>
         </div>
       );
