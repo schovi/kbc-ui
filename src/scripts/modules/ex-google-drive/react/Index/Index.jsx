@@ -129,7 +129,7 @@ export default React.createClass({
 
   invalidToRun() {
     if (!this.isAuthorized()) {
-      return 'No Google Analytics account authorized';
+      return 'No Google Drive account authorized';
     }
 
     if (!this.hasSheets()) {
