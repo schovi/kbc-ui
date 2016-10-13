@@ -236,7 +236,7 @@ module.exports = React.createClass
     exceptionId = job.getIn ['result', 'exceptionId'] if result
     message =  job.getIn ['result', 'message'] if result
     div null,
-      div {className: 'col-md-6'},
+      div {className: 'col-md-6', style: {'wordWrap': 'break-word'}},
         h4 null, 'Params '
         React.createElement Tree, {data: job.get('params')}
       div {className: 'col-md-6'},
