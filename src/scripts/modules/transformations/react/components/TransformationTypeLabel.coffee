@@ -28,7 +28,7 @@ TransformationTypeLabel = React.createClass
         'Python'
     else if @props.backend == 'docker' && @props.type == 'openrefine'
       span {className: 'label label-danger'},
-        'OpenRefine'
+        'OpenRefine (beta)'
     else if @props.backend == 'snowflake'
       span {className: 'label label-info'},
         'snowflake'

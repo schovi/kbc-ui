@@ -157,6 +157,23 @@ module.exports = React.createClass
     div {className: 'kbc-row'},
       if @props.transformation.get('backend') != 'docker'
         @_renderRequires()
+      if @_isOpenRefineTransformation()
+        [
+          h2 {},
+            'OpenRefine Beta Warning'
+
+          div {className: "help-block"},
+            span {},
+              'OpenRefine transformations are now in public beta. '
+              'Please be aware, that things may change before it makes to production. '
+              'If you encounter any errors, please contact us at '
+              a {href: "mailto:support@keboola.com"},
+                'support@keboola.com'
+              'or read more in the '
+              a {href: "https://help.keboola.com/manipulation/transformations/openrefine/"},
+                'documentation'
+              '.'
+        ]
       div {},
         h2 {},
           'Input Mapping'

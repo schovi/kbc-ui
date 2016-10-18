@@ -129,9 +129,7 @@ export default React.createClass({
     }
     options.push({value: 'r', label: 'R'});
     options.push({value: 'python', label: 'Python'});
-    if (ApplicationStore.hasCurrentAdminFeature('transformation-openrefine')) {
-      options.push({value: 'openrefine', label: 'OpenRefine'});
-    }
+    options.push({value: 'openrefine', label: 'OpenRefine (beta)'});
     return options.map(function(option) {
       return (
         <option value={option.value} key={option.value}>{option.label}</option>
