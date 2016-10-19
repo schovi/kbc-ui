@@ -44,6 +44,15 @@ fields =
     [ 'Database Name', 'database', 'text']
   ]
 
+  'keboola.wr-db-mysql': [
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '3306']
+    [ 'Username', 'user']
+    [ 'Password', '#password', 'password', true]
+    [ 'Database Name', 'database', 'text']
+
+  ]
+
   'keboola.wr-redshift-v2': [
     [ 'Host name', 'host']
     [ 'Port', 'port', 'number', false, '5439']
