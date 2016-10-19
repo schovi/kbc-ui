@@ -16,6 +16,7 @@ module.exports = React.createClass
     configId: React.PropTypes.string.isRequired
     redirectRouterPath: React.PropTypes.string
     credentialsId: React.PropTypes.string
+    componentId: React.PropTypes.string
 
   getInitialState: ->
     oauthUrl = 'https://syrup.keboola.com/oauth/auth20'
@@ -26,6 +27,7 @@ module.exports = React.createClass
 
   getDefaultProps: ->
     redirectRouterPath: 'wr-dropbox-oauth-redirect'
+    componentId: 'wr-dropbox'
 
   componentDidMount: ->
     @refs.description.getInputDOMNode().focus()
@@ -39,7 +41,7 @@ module.exports = React.createClass
           className: 'form-horizontal'
           action: @state.oauthUrl
           method: 'POST'
-          @_createHiddenInput('api', 'wr-dropbox')
+          @_createHiddenInput('api', @props.componentId)
           @_createHiddenInput('id', @props.credentialsId or @props.configId)
           @_createHiddenInput('token', @state.token)
           @_createHiddenInput('returnUrl', @_getRedirectUrl())

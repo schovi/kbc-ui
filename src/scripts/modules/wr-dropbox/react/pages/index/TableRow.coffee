@@ -17,6 +17,7 @@ module.exports = React.createClass
     table: React.PropTypes.object.isRequired
     mapping: React.PropTypes.object.isRequired
     onEditTable: React.PropTypes.func
+    componentId: React.PropTypes.string
 
   render: ->
     outputName = @props.mapping.get('destination') or "#{@props.mapping.get('source')}.csv"
@@ -39,7 +40,7 @@ module.exports = React.createClass
             tooltip: "Upload #{@props.table.get('id')}"
             mode: 'button'
             icon: 'fa fa-upload fa-fw'
-            component: 'wr-dropbox'
+            component: @props.componentId
             runParams: =>
               configData: @props.prepareSingleUploadDataFn(@props.table)
           ,

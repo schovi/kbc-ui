@@ -145,7 +145,9 @@ routes =
     ,
       createComponentRoute 'gooddata-writer', [goodDataWriterRoutes]
     ,
-      createComponentRoute 'wr-dropbox', [dropoxWriterRoutes]
+      createComponentRoute 'wr-dropbox', [dropoxWriterRoutes('wr-dropbox')]
+    ,
+      createComponentRoute 'keboola.wr-vizable', [dropoxWriterRoutes('keboola.wr-vizable')]
     ,
       createComponentRoute 'tde-exporter', [tdeRoutes]
     ,
