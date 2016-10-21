@@ -169,7 +169,7 @@ module.exports = React.createClass
               'If you encounter any errors, please contact us at '
               a {href: "mailto:support@keboola.com"},
                 'support@keboola.com'
-              'or read more in the '
+              ' or read more in the '
               a {href: "https://help.keboola.com/manipulation/transformations/openrefine/"},
                 'documentation'
               '.'
