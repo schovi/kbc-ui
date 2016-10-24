@@ -37,6 +37,7 @@ tdeRoutes = require '../tde-exporter/tdeRoutes'
 adformRoutes = require('../ex-adform/routes').default
 twitterRoutes = require('../ex-twitter/routes').default
 geneeaGeneralRoutes = require('../app-geneea-nlp-analysis/routes').default
+geneeaV2Routes = require('../geneea-nlp-analysis-v2/routes').default
 customScienceRoutes = require('../custom-science/Routes').default
 
 extractor = injectProps(type: 'extractor')
@@ -76,6 +77,8 @@ routes =
       appGeneeaRoutes.entityRecognition
     ,
       createComponentRoute 'geneea-nlp-analysis', [geneeaGeneralRoutes]
+    ,
+      createComponentRoute 'geneea.nlp-analysis-v2', [geneeaV2Routes]
     ,
       createComponentRoute 'custom-science', [customScienceRoutes]
     ,
