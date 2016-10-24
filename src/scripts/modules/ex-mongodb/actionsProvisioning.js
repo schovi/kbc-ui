@@ -133,10 +133,7 @@ export function createActions(componentId) {
       const store = getStore(configId);
       let newQuery = store.getNewQuery();
 
-      newQuery = newQuery.set('name', newQuery.get('newName'));
-      newQuery = newQuery.delete('newName');
-      newQuery = newQuery.set('mapping', JSON.parse(newQuery.get('newMapping')));
-      newQuery = newQuery.delete('newMapping');
+      newQuery = this.prepareQueryToSave(newQuery);
 
       const newQueries = store.getQueries().push(newQuery);
       const newData = store.configData.setIn(['parameters', 'exports'], newQueries);
@@ -183,10 +180,7 @@ export function createActions(componentId) {
       let newQuery = store.getEditingQuery(queryId);
       let newQueries = store.getQueries().filter( (q) => q.get('name') !== newQuery.get('name'));
 
-      newQuery = newQuery.set('name', newQuery.get('newName'));
-      newQuery = newQuery.delete('newName');
-      newQuery = newQuery.set('mapping', JSON.parse(newQuery.get('newMapping')));
-      newQuery = newQuery.delete('newMapping');
+      newQuery = this.prepareQueryToSave(newQuery);
 
       newQueries = newQueries.push(newQuery);
       const newData = store.configData.setIn(['parameters', 'exports'], newQueries);
