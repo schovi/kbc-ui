@@ -45,6 +45,9 @@ module.exports = React.createClass
   _handleCollectionChange: (event) ->
     @props.onChange(@props.query.set 'collection', event.target.value)
 
+  _handleModeChange: (value) ->
+    @props.onChange(@props.query.set 'mode', value)
+
   render: ->
     div className: 'row',
       LinkToDocs null
@@ -139,16 +142,39 @@ module.exports = React.createClass
 
         div className: 'form-group',
           label className: 'col-md-2 control-label',
-            'Mapping'
+            'Mode'
             ExportHelp
-              message: 'Mapping to define structure of exported tables. Has to be valid JSON.'
-          div className: 'col-md-10',
-            CodeMirror
-              placeholder: ('e.g. {"_id.$oid": "id", "name": "name"}')
-              value: @props.query.get('newMapping')
-              onChange: @_handleMappingChange
-              mode: 'application/json'
-              lint: true
-              lineWrapping: true
-              lineNumbers: true
-              theme: 'solarized'
+              message:
+                """
+                Mapping mode allows you to define more precise structure.
+                In raw mode, only JSON objects are exported.
+                """
+          div className: 'col-md-4',
+            div
+              Select
+                name: 'mode'
+                options: [{label: "Mapping", value: "mapping"}, {label: "Raw", value: "raw"}]
+                onChange: @_handleModeChange
+                clearable: false
+                value:
+                  if @props.query.get('mode')
+                    @props.query.get('mode')
+                  else
+                    'mapping'
+
+        if (!@props.query.get('mode') or @props.query.get('mode') == 'mapping')
+          div className: 'form-group',
+            label className: 'col-md-2 control-label',
+              'Mapping'
+              ExportHelp
+                message: 'Mapping to define structure of exported tables. Has to be valid JSON.'
+            div className: 'col-md-10',
+              CodeMirror
+                placeholder: ('e.g. {"_id.$oid": "id", "name": "name"}')
+                value: @props.query.get('newMapping')
+                onChange: @_handleMappingChange
+                mode: 'application/json'
+                lint: true
+                lineWrapping: true
+                lineNumbers: true
+                theme: 'solarized'
