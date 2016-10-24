@@ -114,6 +114,21 @@ export function createActions(componentId) {
       return saveConfigData(configId, newData, ['isSavingCredentials']).then(() => this.resetNewCredentials(configId));
     },
 
+    prepareQueryToSave(query) {
+      let newQuery = query;
+      newQuery = newQuery.set('name', newQuery.get('newName'));
+      newQuery = newQuery.delete('newName');
+
+      const mode = newQuery.get('mode', 'mapping');
+      if (mode === 'mapping') {
+        newQuery = newQuery.set('mapping', JSON.parse(newQuery.get('newMapping')));
+      } else {
+        newQuery = newQuery.delete('mapping');
+      }
+      newQuery = newQuery.delete('newMapping');
+      return newQuery;
+    },
+
     createQuery(configId) {
       const store = getStore(configId);
       let newQuery = store.getNewQuery();
