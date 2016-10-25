@@ -70,6 +70,13 @@ export function startEditing(configId) {
     if (key === BETA) {
       defaultVal = false;
     }
+    if (key === CORRECTION) {
+      defaultVal = 'none';
+    }
+    if (key === DIACRITIC) {
+      defaultVal = 'none';
+    }
+
     const value = configData.getIn(['parameters'].concat(key), defaultVal);
     return memo.setIn([].concat(key), value);
   }, Map());

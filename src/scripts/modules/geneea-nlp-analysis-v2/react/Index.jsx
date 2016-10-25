@@ -101,7 +101,7 @@ export default React.createClass({
 
   parameterList(key, defaultValue) {
     const val = this.parameter(key, defaultValue);
-    return val ? val.join(',') : val;
+    return val ? val.join(', ') : val;
   },
 
   parameter(key, defaultValue) {
@@ -186,10 +186,10 @@ export default React.createClass({
             excludeTableFn= { () => false}/>, 'Table conatining documents to analyze')
         }
         {this.renderFormElement(this.renderFilterLabel(), this.renderDataFilter(), 'Input table data filtered by specified rules, the filtered columns must be indexed.')}
-        {this.renderColumnSelect('Id column', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row in the table.', true)}
-        {this.renderColumnSelect('Text Column', params.DATACOLUMN, 'Main text of the analyzed document')}
-        {this.renderColumnSelect('Title Column (optional)', params.TITLE, 'Title of the analyzed document')}
-        {this.renderColumnSelect('Lead Column (optional)', params.LEAD, 'Lead or abstract of the analyzed document')}
+        {this.renderColumnSelect('Id columns', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row in the table.', true)}
+        {this.renderColumnSelect('Text Columns', params.DATACOLUMN, 'Main text of the analyzed document', true)}
+        {this.renderColumnSelect('Title Columns (optional)', params.TITLE, 'Title of the analyzed document', true)}
+        {this.renderColumnSelect('Lead Columns (optional)', params.LEAD, 'Lead or abstract of the analyzed document', true)}
 
         {this.renderDomainSelect('The source domain from which the document originates.')}
         {this.renderFormElement('Language',
@@ -203,29 +203,16 @@ export default React.createClass({
         }
 
 
-      {this.renderEditCheckBox(params.CORRECTION, 'Correction', 'Indicates whether common typos should be corrected before analysis')}
-      {this.renderEditCheckBox(params.DIACRITIC, 'Diacritization', 'Before analysing Czech text where diacritics are missing, add all the wedges and accents. For example, Muj ctyrnohy pritel is changed to Můj čtyřnohý přítel.')}
+      {this.renderFormElement('Correction',
+                              this.renderEnumSelect(params.CORRECTION, ['none', 'basic', 'aggressive']),
+                              'Indicates whether common typos should be corrected before analysis')}
+      {this.renderFormElement('Diacritization',
+                              this.renderEnumSelect(params.DIACRITIC, ['none', 'auto', 'yes']),
+                              'Before analysing Czech text where diacritics are missing, add all the wedges and accents. For example, Muj ctyrnohy pritel is changed to Můj čtyřnohý přítel.')}
       {this.renderEditCheckBox(params.BETA, 'Use Beta Version', "Use Geneea's beta server (use only when instructed to do so)")}
         {this.renderAnalysisTypesSelect()}
       </div>
     );
-  },
-
-  renderUseBetaEdit() {
-    return (
-      <div className="form-group">
-        <div className="checkbox col-sm-3">
-          <label>
-            <input
-              type="checkbox"
-              checked={this.getEditingValue(params.BETA)}
-              onChange= {(event) => this.updateEditingValue(params.BETA, event.target.checked)}/>
-          Use BETA Version
-          </label>
-
-        </div>
-      </div>
-      );
   },
 
   renderEditCheckBox(prop, name, description) {
@@ -365,6 +352,24 @@ export default React.createClass({
     return result;
   },
 
+  renderEnumSelect(prop, options) {
+    const selectOptions = options.map((op) => {
+      return {
+        label: op,
+        value: op
+      };
+    });
+    return (
+      <Select
+        key={prop}
+        name={prop}
+        clearable={false}
+        value={this.getEditingValue(prop)}
+        onChange= {(newValue) => this.updateEditingValue(prop, newValue)}
+        options= {selectOptions}/>
+    );
+  },
+
   renderColumnSelect(label, column, description, isMulti) {
     const value = this.getEditingValue(column);
     const result = this.renderFormElement(label,
@@ -399,8 +404,8 @@ export default React.createClass({
         {this.RenderStaticInput('Domain', this.findDomainNameByValue(this.parameter(params.DOMAIN)) )}
         {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
 
-        {this.RenderStaticInput('Correction', this.parameter(params.CORRECTION), true)}
-        {this.RenderStaticInput('Diacritization', this.parameter(params.DIACRITIC), true)}
+        {this.RenderStaticInput('Correction', this.parameter(params.CORRECTION))}
+        {this.RenderStaticInput('Diacritization', this.parameter(params.DIACRITIC))}
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
