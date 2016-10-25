@@ -62,7 +62,7 @@ export function startEditing(configId) {
   let editingData = _.reduce(_.values(params), (memo, key) => {
     let defaultVal = null;
     if (key === ANALYSIS) {
-      defaultVal = [];
+      defaultVal = List();
     }
     if (key === LANGUAGE) {
       defaultVal = 'en';
