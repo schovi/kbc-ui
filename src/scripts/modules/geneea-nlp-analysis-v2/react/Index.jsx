@@ -170,6 +170,8 @@ export default React.createClass({
     resetEditingMapping(this.state.configId, value);
     const table = this.state.allTables.find((t) => t.get('id') === value);
     this.updateEditingValue(params.DATACOLUMN, List());
+    this.updateEditingValue(params.LEAD, List());
+    this.updateEditingValue(params.TITLE, List());
     this.updateEditingValue(params.PRIMARYKEY, table ? table.get('primaryKey') : List());
   },
 
@@ -408,7 +410,7 @@ export default React.createClass({
   },
 
   renderOutput() {
-    const bucketId = getDefaultBucket(componentId, this.state.configId);
+    const bucketId = getDefaultBucket('out', componentId, this.state.configId);
     return (
       <ul className="nav nav-stacked">
         <li>
