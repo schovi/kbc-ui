@@ -6,6 +6,8 @@ import {Check} from 'kbc-react-components';
 import Select from 'react-select';
 import classnames from 'classnames';
 
+import getDefaultBucket from '../../../utils/getDefaultBucket';
+
 import Tooltip from '../../../react/common/Tooltip';
 import SapiTableLinkEx from '../../components/react/components/StorageApiTableLinkEx';
 import SapiTableSelector from '../../components/react/components/SapiTableSelector';
@@ -400,41 +402,39 @@ export default React.createClass({
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
+        {this.RenderStaticInput('Analysis results', this.renderOutput())}
       </div>
+    );
+  },
+
+  renderOutput() {
+    const bucketId = getDefaultBucket(componentId, this.state.configId);
+    return (
+      <ul className="nav nav-stacked">
+        <li>
+        <SapiTableLinkEx
+          tableId={`${bucketId}.analysis-result-documents`}/>
+        </li>
+        <li>
+        <SapiTableLinkEx
+          tableId={`${bucketId}.analysis-result-entities`}/>
+        </li>
+      </ul>
     );
   },
 
   renderStaticTasks() {
     const tasks = this.parameter(params.ANALYSIS, List());
-    // const outParam = 'TODO';
-    let renderedTasks = tasks.map((task) => {
+    let renderedTasks = tasks.map((task, idx) => {
       const info = analysisTypes[task];
-      // const outTableId = outParam ? `${outParam}${task}` : '';
       return (
         <Tooltip tooltip={info.description} placement="top">
-          <span className="col-sm-4" style={{ paddingLeft: 0}}>
-            <strong className="text-left">
-              {info.name}
-            </strong>
+          <span>
+            {idx === 0 ? '' : ', '}
+            {info.name}
           </span>
         </Tooltip>
       );
-      /* return (
-       *   <li>
-       *     <span className="col-sm-12" style={{ paddingLeft: 0}}>
-       *       <Tooltip tooltip={info.description} placement="top">
-       *         <span className="col-sm-4" style={{ paddingLeft: 0}}>
-       *           <strong className="text-left">
-       *             {info.name}
-       *           </strong>
-       *         </span>
-       *       </Tooltip> <i style={{ paddingLeft: 0}}
-       *                     className="kbc-icon-arrow-right col-sm-1"></i>
-       *       <SapiTableLinkEx className="col-sm-4" tableId={outTableId}/>
-       *     </span>
-
-       *   </li>
-       * );*/
     }).toArray();
     return (<span>{renderedTasks}</span>);
   },
