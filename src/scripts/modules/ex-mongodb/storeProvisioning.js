@@ -37,6 +37,8 @@ function isJsonValid(jsonString) {
 }
 
 function isValidQuery(query) {
+  const mode = query.get('mode', 'mapping');
+  const newMapping = query.get('newMapping', '') || '';
   return query.get('newName', '').trim().length > 0
     && query.get('collection', '').trim().length > 0
 
@@ -45,8 +47,13 @@ function isValidQuery(query) {
     && (query.get('sort', '').toString().trim().length === 0
       || isJsonValid(query.get('sort', '').toString()))
 
-    && query.get('newMapping', '').toString().trim().length > 0
-    && isJsonValid(query.get('newMapping', '').toString());
+    && (mode === 'raw'
+      || (
+        mode === 'mapping'
+        && newMapping.toString().trim().length > 0
+        && isJsonValid(newMapping.toString())
+      )
+    );
 }
 
 export function getLocalState(componentId, configId) {

@@ -8,6 +8,8 @@ SapiTableLinkEx = React.createFactory(require('../../../../components/react/comp
 ExportHelp = React.createFactory require('../../components/ExportHelp').default
 LinkToDocs = React.createFactory require('../../components/LinkToDocs').default
 
+Select = React.createFactory(require('react-select'))
+
 module.exports = React.createClass
   displayName: 'ExDbQueryDetailStatic'
   propTypes:
@@ -97,13 +99,29 @@ module.exports = React.createClass
                 checked: @props.query.get 'incremental'
 
         div className: 'form-group',
-          label className: 'col-md-2 control-label', 'Mapping'
-          div className: 'col-md-10',
-            CodeEditor
-              readOnly: true
-              value:
-                if @props.query.get('mapping')
-                  JSON.stringify(@props.query.get('mapping'), null, 2)
-                else
-                  ''
-              mode: 'application/json'
+          label className: 'col-md-2 control-label', 'Mode'
+          div className: 'col-md-4',
+            div
+              Select
+                clearable: false
+                disabled: true
+                checked: @props.query.get 'incremental'
+                value:
+                  if @props.query.get('mode')
+                    @props.query.get 'mode'
+                  else
+                    'mapping'
+                options: [{label: "Mapping", value: "mapping"}, {label: "Raw", value: "raw"}]
+
+        if (!@props.query.get('mode') or @props.query.get('mode') == 'mapping')
+          div className: 'form-group',
+            label className: 'col-md-2 control-label', 'Mapping'
+            div className: 'col-md-10',
+              CodeEditor
+                readOnly: true
+                value:
+                  if @props.query.get('mapping')
+                    JSON.stringify(@props.query.get('mapping'), null, 2)
+                  else
+                    ''
+                mode: 'application/json'
