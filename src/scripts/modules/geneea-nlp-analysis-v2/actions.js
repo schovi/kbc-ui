@@ -71,11 +71,10 @@ export function startEditing(configId) {
       defaultVal = false;
     }
     const value = configData.getIn(['parameters'].concat(key), defaultVal);
-    memo[key] = value;
-    return memo;
-  }, {});
-  editingData.intable = getInTable(configId) || {};
-  setEditingData(configId, fromJS(editingData));
+    return memo.setIn([].concat(key), value);
+  }, Map());
+  editingData = editingData.set('intable', getInTable(configId) || Map());
+  setEditingData(configId, editingData);
 }
 
 export function isOutputValid(output) {
@@ -99,38 +98,38 @@ export function cancel(configId) {
   setEditingData(configId, null);
 }
 
-function getPrimaryKeysArray(inTablePrimaryKey, task) {
-  if (task === 'entities') return [inTablePrimaryKey, 'entity', 'type'];
-  if (task === 'hashtags') return [inTablePrimaryKey, 'hashtag'];
-  return [inTablePrimaryKey];
-}
+// function getPrimaryKeysArray(inTablePrimaryKey, task) {
+//   if (task === 'entities') return [inTablePrimaryKey, 'entity', 'type'];
+//   if (task === 'hashtags') return [inTablePrimaryKey, 'hashtag'];
+//   return [inTablePrimaryKey];
+// }
 
-function hasPrimaryKeys(desiredPks, tablePks) {
-  const result = _.reduce(desiredPks, (memo, pk) => {
-    return tablePks.indexOf(pk) >= 0 && memo;
-  }, true);
-  return result;
-}
+// function hasPrimaryKeys(desiredPks, tablePks) {
+//   const result = _.reduce(desiredPks, (memo, pk) => {
+//     return tablePks.indexOf(pk) >= 0 && memo;
+//   }, true);
+//   return result;
+// }
 
-function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
-  let result = [];
-  for (let task of tasks) {
-    const tableId = `${outBucket}${task}`;
-    const table = allTables.get(tableId, Map());
-    const tableExists = !!(allTables.get(tableId, false));
-    const tablePks = table.get('primaryKey', List());
-    const outTablePks = getPrimaryKeysArray(primaryKey, task);
-    // table(@tablePks) contains primary keys that are needed by @outTablePks
-    const hasPrimaryKey = hasPrimaryKeys(outTablePks, tablePks);
-    result.push({
-      'source': `${tableId}.csv`,
-      'destination': tableId,
-      'primary_key': outTablePks,
-      'incremental': !tableExists || hasPrimaryKey
-    });
-  }
-  return result;
-}
+// function prepareOutTables(tasks, outBucket, primaryKey, allTables) {
+//   let result = [];
+//   for (let task of tasks) {
+//     const tableId = `${outBucket}${task}`;
+//     const table = allTables.get(tableId, Map());
+//     const tableExists = !!(allTables.get(tableId, false));
+//     const tablePks = table.get('primaryKey', List());
+//     const outTablePks = getPrimaryKeysArray(primaryKey, task);
+//     // table(@tablePks) contains primary keys that are needed by @outTablePks
+//     const hasPrimaryKey = hasPrimaryKeys(outTablePks, tablePks);
+//     result.push({
+//       'source': `${tableId}.csv`,
+//       'destination': tableId,
+//       'primary_key': outTablePks,
+//       'incremental': !tableExists || hasPrimaryKey
+//     });
+//   }
+//   return result;
+// }
 
 export function updateEditingMapping(configId, newMapping) {
   updateEditingValue(configId, 'inputMapping', newMapping);
@@ -155,29 +154,36 @@ export function getInputMapping(configId, isEditing) {
   }
 }
 
-export function save(configId, allTables) {
-  const data = getLocalState(configId, ['editing']).toJS();
-  const primaryKey = data[params.PRIMARYKEY];
+export function save(configId) {
+  const data = getLocalState(configId, ['editing']);
+
   const inputMapping = getInputMapping(configId, true);
-  const columns = [data[params.DATACOLUMN], primaryKey];
+
+  const primaryKey = data.getIn(params.PRIMARYKEY);
+  const textColumn = data.getIn(params.DATACOLUMN);
+  const leadColumn = data.getIn(params.LEAD);
+  const titleColumn = data.getIn(params.TITLE);
+
+  const columns = primaryKey.push(textColumn, leadColumn || List(), titleColumn || List())
+        .filter((c) => (List.isList(c) && c.count() > 0) || (!List.isList(c) && c));
+
   const storage = {
     input: {
-      tables: [ fromJS(inputMapping.set('columns', columns))]
-    },
-    output: {
-      tables: prepareOutTables(data[params.ANALYSIS], data[params.OUTPUT], primaryKey, allTables)
-
+      tables: [ fromJS(inputMapping.set('columns', columns.flatten().toSet()))]
     }
+    // ,
+    // output: {
+    //   tables: prepareOutTables(data[params.ANALYSIS], data[params.OUTPUT], primaryKey, allTables)
+  // }
   };
 
   const parameters = _.reduce(_.values(params), (memo, key) => {
-    memo[key] = data[key];
-    return memo;
-  }, {});
+    return memo.setIn([].concat(key), data.getIn([].concat(key)));
+  }, Map());
 
   let config = fromJS({
     storage: storage,
-    parameters: parameters
+    parameters: parameters.toJS()
   });
   const saveFn = installedComponentsActions.saveComponentConfigData;
   saveFn(componentId, configId, config).then( () => {

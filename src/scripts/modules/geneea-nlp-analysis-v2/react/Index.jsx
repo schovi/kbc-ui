@@ -97,8 +97,13 @@ export default React.createClass({
     }
   },
 
+  parameterList(key, defaultValue) {
+    const val = this.parameter(key, defaultValue);
+    return val ? val.join(',') : val;
+  },
+
   parameter(key, defaultValue) {
-    return this.state.parameters.get(key, defaultValue);
+    return this.state.parameters.getIn([].concat(key), defaultValue);
   },
 
   render() {
@@ -113,9 +118,9 @@ export default React.createClass({
             />
           </div>
           <div className="row">
-            <form className="form-horizontal">
+            <div className="form form-horizontal">
               { this.state.editing ? this.renderEditing() : this.renderStatic()}
-            </form>
+            </div>
           </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
@@ -158,27 +163,29 @@ export default React.createClass({
     );
   },
 
+  intableChange(value) {
+    this.updateEditingValue('intable', value);
+    resetEditingMapping(this.state.configId, value);
+    const table = this.state.allTables.find((t) => t.get('id') === value);
+    this.updateEditingValue(params.DATACOLUMN, List());
+    this.updateEditingValue(params.PRIMARYKEY, table ? table.get('primaryKey') : List());
+  },
+
   renderEditing() {
-    const intableChange = (value) => {
-      this.updateEditingValue('intable', value);
-      resetEditingMapping(this.state.configId, value);
-      this.updateEditingValue(params.DATACOLUMN, '');
-      this.updateEditingValue(params.PRIMARYKEY, '');
-    };
     return (
-      <div className="row">
+      <div>
         {this.renderFormElement('Input Table',
            <SapiTableSelector
             placeholder="Select..."
             value={this.getEditingValue('intable')}
-            onSelectTableFn= {intableChange}
+            onSelectTableFn= {this.intableChange}
             excludeTableFn= { () => false}/>, 'Table conatining documents to analyze')
         }
         {this.renderFormElement(this.renderFilterLabel(), this.renderDataFilter(), 'Input table data filtered by specified rules, the filtered columns must be indexed.')}
         {this.renderColumnSelect('Id column', params.PRIMARYKEY, 'Column of the input table uniquely identifying a row in the table.', true)}
         {this.renderColumnSelect('Text Column', params.DATACOLUMN, 'Main text of the analyzed document')}
-        {this.renderColumnSelect('Title Column(optional)', params.TITLE, 'Title of the analyzed document')}
-        {this.renderColumnSelect('Lead Column(optional)', params.LEAD, 'Lead or abstract of the analyzed document')}
+        {this.renderColumnSelect('Title Column (optional)', params.TITLE, 'Title of the analyzed document')}
+        {this.renderColumnSelect('Lead Column (optional)', params.LEAD, 'Lead or abstract of the analyzed document')}
 
         {this.renderDomainSelect('The source domain from which the document originates.')}
         {this.renderFormElement('Language',
@@ -355,14 +362,15 @@ export default React.createClass({
   },
 
   renderColumnSelect(label, column, description, isMulti) {
+    const value = this.getEditingValue(column);
     const result = this.renderFormElement(label,
       <Select
         multi={isMulti}
         clearable={false}
         key={column}
         name={column}
-        value={this.getEditingValue(column)}
-        onChange= {(newValue) => this.updateEditingValue(column, isMulti ? newValue.split(',') : [newValue])}
+        value={value ? value.toJS() : ''}
+        onChange= {(newValue) => this.updateEditingValue(column, isMulti ? List(newValue.split(',')) : List([newValue]))}
         options= {this.getColumns()}
       />
     , description);
@@ -373,56 +381,72 @@ export default React.createClass({
     const result = domainOptions.find((c) => c.value === value);
     return !!result ? result.label : value;
   },
+
   renderStatic() {
     return (
-      <div className="row">
+      <div>
         {this.renderIntableStatic()}
-        {this.RenderStaticInput('Data Filter', this.renderDataFilter() )}
-        {this.RenderStaticInput('Data Column', this.parameter(params.DATACOLUMN) )}
+        {this.RenderStaticInput('Input Data Filter', this.renderDataFilter() )}
+        {this.RenderStaticInput('Id column', this.parameterList(params.PRIMARYKEY ))}
+        {this.RenderStaticInput('Text Column', this.parameterList(params.DATACOLUMN) )}
+        {this.RenderStaticInput('Title Column (optional)', this.parameterList(params.TITLE) )}
+        {this.RenderStaticInput('Lead Column (optional)', this.parameterList(params.LEAD) )}
 
-        {this.RenderStaticInput('Primary Key', this.parameter(params.PRIMARYKEY ))}
-        {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
         {this.RenderStaticInput('Domain', this.findDomainNameByValue(this.parameter(params.DOMAIN)) )}
+        {this.RenderStaticInput('Language', this.parameter(params.LANGUAGE))}
+
+        {this.RenderStaticInput('Correction', this.parameter(params.CORRECTION), true)}
+        {this.RenderStaticInput('Diacritization', this.parameter(params.DIACRITIC), true)}
+        {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
-        {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
       </div>
     );
   },
 
   renderStaticTasks() {
     const tasks = this.parameter(params.ANALYSIS, List());
-    const outParam = 'TODO';
+    // const outParam = 'TODO';
     let renderedTasks = tasks.map((task) => {
       const info = analysisTypes[task];
-      const outTableId = outParam ? `${outParam}${task}` : '';
+      // const outTableId = outParam ? `${outParam}${task}` : '';
       return (
-        <li>
-          <span className="col-sm-12" style={{ paddingLeft: 0}}>
-            <Tooltip tooltip={info.description} placement="top">
-              <span className="col-sm-4" style={{ paddingLeft: 0}}>
-                <strong className="text-left">
-                  {info.name}
-                </strong>
-              </span>
-            </Tooltip> <i style={{ paddingLeft: 0}}
-                          className="kbc-icon-arrow-right col-sm-1"></i>
-            <SapiTableLinkEx className="col-sm-4" tableId={outTableId}/>
+        <Tooltip tooltip={info.description} placement="top">
+          <span className="col-sm-4" style={{ paddingLeft: 0}}>
+            <strong className="text-left">
+              {info.name}
+            </strong>
           </span>
-
-        </li>
+        </Tooltip>
       );
+      /* return (
+       *   <li>
+       *     <span className="col-sm-12" style={{ paddingLeft: 0}}>
+       *       <Tooltip tooltip={info.description} placement="top">
+       *         <span className="col-sm-4" style={{ paddingLeft: 0}}>
+       *           <strong className="text-left">
+       *             {info.name}
+       *           </strong>
+       *         </span>
+       *       </Tooltip> <i style={{ paddingLeft: 0}}
+       *                     className="kbc-icon-arrow-right col-sm-1"></i>
+       *       <SapiTableLinkEx className="col-sm-4" tableId={outTableId}/>
+       *     </span>
+
+       *   </li>
+       * );*/
     }).toArray();
-    return (<ul className="nav nav-stacked">{renderedTasks}</ul>);
+    return (<span>{renderedTasks}</span>);
   },
 
   renderIntableStatic() {
     const tableId = this.state.intable;
-    const link = (<p
-        label="Input Table"
+    const link = (
+      <p label="Input Table"
         className="form-control-static">
         <SapiTableLinkEx
-          tableId={tableId}/></p>
+          tableId={tableId}/>
+      </p>
     );
     return this.renderFormElement((<span>Input Table</span>), link);
   },
@@ -434,7 +458,8 @@ export default React.createClass({
         labelClassName="col-sm-3"
         wrapperClassName="col-sm-9">
         {isBetaCheckobx ? <Check
-         isChecked={value}/> : value || 'n/a'}
+                            isChecked={value}/>
+         : value || 'n/a'}
       </StaticText>
     );
   },
