@@ -4,7 +4,7 @@ _ = require 'underscore'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 
 Input = React.createFactory(require('react-bootstrap').Input)
-TestCredentialsButtonGroup = React.createFactory(require './TestCredentialsButtonGroup')
+TestCredentialsButtonGroup = React.createFactory(require '../../../../../react/common/TestCredentialsButtonGroup')
 StaticText = React.createFactory(require('react-bootstrap').FormControls.Static)
 Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = React.createFactory(require('../../../../../react/common/SshTunnelRow').default)
@@ -40,10 +40,12 @@ module.exports = React.createClass
           onChange: (sshObject) =>
             @props.onChange(@props.credentials.set('ssh', sshObject))
       TestCredentialsButtonGroup
-        credentials: @props.credentials
-        componentId: @props.componentId
-        configId: @props.configId
-        actionsProvisioning: @props.actionsProvisioning
+        testCredentialsFn: @testCredentials
+
+  testCredentials: ->
+    ExDbActionCreators = @props.actionsProvisioning.createActions(@props.componentId)
+    ExDbActionCreators.testCredentials(@props.configId, @props.credentials)
+
 
   _handleChange: (propName, event) ->
     if ['port'].indexOf(propName) >= 0

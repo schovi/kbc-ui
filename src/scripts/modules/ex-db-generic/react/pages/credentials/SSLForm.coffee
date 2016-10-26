@@ -4,7 +4,7 @@ _ = require 'underscore'
 Textarea = require 'react-textarea-autosize'
 {Input} = require 'react-bootstrap'
 {form, div, label, p, a, label} = React.DOM
-TestCredentials = require './TestCredentialsButtonGroup'
+TestCredentials = require '../../../../../react/common/TestCredentialsButtonGroup'
 {NewLineToBr, Check} = require('kbc-react-components')
 
 _helpUrl = 'https://help.keboola.com/extractors/database/#mysql-encryption'
@@ -50,10 +50,12 @@ module.exports = React.createClass
             'cipher',
             'You can optionally provide a list of permissible ciphers to use for SSL encryption.'
           React.createElement TestCredentials,
-            credentials: @props.credentials
+            testCredentialsFn: @testCredentials
             hasOffset: false
-            componentId: @props.componentId
-            actionsProvisioning: @props.actionsProvisioning
+
+  testCredentials: ->
+    ExDbActionCreators = @props.actionsProvisioning.createActions(@props.componentId)
+    ExDbActionCreators.testCredentials(@props.configId, @props.credentials)
 
 
   _createEnableSSLCheckbox: (propName) ->

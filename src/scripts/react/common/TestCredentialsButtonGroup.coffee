@@ -11,11 +11,8 @@ Link = React.createFactory(require('react-router').Link)
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
-    credentials: React.PropTypes.object.isRequired
     hasOffset: React.PropTypes.bool.isRequired
-    componentId: React.PropTypes.string.isRequired
-    configId: React.PropTypes.string.isRequired
-    actionsProvisioning: React.PropTypes.object.isRequired
+    testCredentialsFn: React.PropTypes.func.isRequired
 
   getDefaultProps: ->
     hasOffset: true
@@ -26,14 +23,12 @@ module.exports = React.createClass
     result: null
 
   _startTesting: ->
-    ExDbActionCreators = @props.actionsProvisioning.createActions(@props.componentId)
     @setState
       isTesting: true
       isError: false
       result: null
 
-    ExDbActionCreators
-    .testCredentials @props.configId, @props.credentials
+    @props.testCredentialsFn()
     .then(@_onTestingDone, @_onTestingError)
 
   _onTestingDone: (result) ->
