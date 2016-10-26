@@ -16,6 +16,18 @@ function getDatesForMonthlyUsage() {
   };
 }
 
+function sortComponentsByStorageIoDesc(first, second) {
+  const firstStorageIo = first.get('storage').get('inBytes') + first.get('storage').get('outBytes');
+  const secondStorageIo = second.get('storage').get('inBytes') + second.get('storage').get('outBytes');
+  if (firstStorageIo > secondStorageIo) {
+    return -1;
+  } else if (firstStorageIo < secondStorageIo) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 export default React.createClass({
 
   getInitialState: function() {
@@ -52,8 +64,8 @@ export default React.createClass({
             return (
               <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
                 <table className="table table-striped">
-                  {List([item.get('components').map(this.dayComponents)])}
                 </table>
+                  {List([item.get('components').sort(sortComponentsByStorageIoDesc).map(this.dayComponents)])}
               </Panel>
             );
           } else {
