@@ -7,7 +7,6 @@ Link = React.createFactory(require('react-router').Link)
 
 {small, div, span} = React.DOM
 
-# THIS REACT COMPONENT IS NOT USED!!! SEE render method!
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
