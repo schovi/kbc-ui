@@ -4,7 +4,7 @@ import moment from 'moment';
 import MetricsApi from '../MetricsApi';
 import FileSize from '../../../react/common/FileSize';
 import ComponentsStore from '../../components/stores/ComponentsStore';
-import {Panel} from 'react-bootstrap';
+import {Panel, Table} from 'react-bootstrap';
 import ComponentName from './../../../react/common/ComponentName';
 import ComponentIcon from './../../../react/common/ComponentIcon';
 import {componentIoSummary} from './Index';
@@ -63,9 +63,9 @@ export default React.createClass({
           if (!item.get('components').isEmpty()) {
             return (
               <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
-                <table className="table table-striped">
-                </table>
+                <Table fill className="table">
                   {List([item.get('components').sort(sortComponentsByStorageIoDesc).map(this.dayComponents)])}
+                </Table>
               </Panel>
             );
           } else {
