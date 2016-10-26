@@ -12,7 +12,7 @@ import Loader from './Loader';
 
 function getDatesForMonthlyUsage() {
   return {
-    dateFrom: '2016-08-17',
+    dateFrom: '2016-10-01',
     dateTo: moment().subtract(1, 'day').format('YYYY-MM-DD')
   };
 }
