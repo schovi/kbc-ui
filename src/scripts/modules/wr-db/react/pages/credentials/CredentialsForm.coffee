@@ -57,7 +57,7 @@ module.exports = React.createClass
       @_renderTestCredentials()
 
   _renderTestCredentials: ->
-    if not isDockerBasedWriter(@props.componentId)
+    if not isDockerBasedWriter(@props.componentId) or @props.componentId == 'wr-db-mssql'
       return null
     React.createElement TestCredentialsButton,
       testCredentialsFn: =>
