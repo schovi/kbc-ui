@@ -5,6 +5,7 @@ import moment from 'moment';
 import {fromJS, Map} from 'immutable';
 import MetricsApi from '../MetricsApi';
 import {componentIoSummary} from './Index';
+import Loader from './Loader';
 
 export function getConversion(unit) {
   switch (unit) {
@@ -32,13 +33,13 @@ function getDatesForLastMonth() {
   };
 }
 
-
 export default React.createClass({
 
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      dates: getDatesForLastMonth()
+      dates: getDatesForLastMonth(),
+      showLoader: true
     };
   },
 
@@ -51,7 +52,8 @@ export default React.createClass({
               date: item.get('dateFrom'), // same as dateTo
               value: componentIoSummary(item.get('components'), 'storage')
             });
-          })
+          }),
+          showLoader: false
         });
       });
   },
@@ -61,23 +63,29 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <div>
-        <h3>
-          {'Consumed Storage IO from '}
-          {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
-          {' to '}
-          {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
-        </h3>
-        <GraphVisualization data={this.state.metricsData}/>
-        <GraphLegend
-          title="Storage IO"
-          value={this.state.metricsData.reduce(function(monthSummary, day) {
-            return monthSummary + day.get('value');
-          }, 0)}
-        />
-      </div>
-    );
+    if (this.state.showLoader) {
+      return (
+        <Loader />
+      );
+    } else {
+      return (
+        <div>
+          <h3>
+            {'Consumed Storage IO from '}
+            {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
+            {' to '}
+            {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
+          </h3>
+          <GraphVisualization data={this.state.metricsData}/>
+          <GraphLegend
+            title="Storage IO"
+            value={this.state.metricsData.reduce(function(monthSummary, day) {
+              return monthSummary + day.get('value');
+            }, 0)}
+          />
+        </div>
+      );
+    }
   }
 
 });

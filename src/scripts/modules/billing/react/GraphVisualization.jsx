@@ -74,11 +74,7 @@ export default React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps) {
-    return !nextProps.data.isEmpty();
-  },
-
-  componentDidUpdate: function() {
+  componentDidMount: function() {
     this.drawGraph();
   },
 
