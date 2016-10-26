@@ -69,4 +69,7 @@ module.exports = React.createClass
       span className: 'fa fa-fw fa-meh-o'
       ' Failed to connect! '
       div null,
-        small null, result?.message
+        small null,
+          result?.message
+          ' '
+          result?.exceptionId
