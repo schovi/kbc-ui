@@ -28,7 +28,7 @@ export default React.createClass({
             <a href={this.projectPageUrl('settings-limits')}>Limits</a>
           </li>
           <li role="presentation" className="active">
-            <a href={this.projectPageUrl('settings-billing')}>Billing</a>
+            <a href={this.projectPageUrl('settings-project-power')}>Project Power</a>
           </li>
         </ul>
         <div className="kbc-header">

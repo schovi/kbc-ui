@@ -1,8 +1,8 @@
 import Index from './react/Index';
 
 export default {
-  name: 'settings-billing',
-  path: 'settings-billing',
-  title: 'Billing',
+  name: 'settings-project-power',
+  path: 'settings-project-power',
+  title: 'Project Power',
   defaultRouteHandler: Index
 };
