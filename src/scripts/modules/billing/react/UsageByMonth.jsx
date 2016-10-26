@@ -4,16 +4,29 @@ import moment from 'moment';
 import MetricsApi from '../MetricsApi';
 import FileSize from '../../../react/common/FileSize';
 import ComponentsStore from '../../components/stores/ComponentsStore';
-import {Panel} from 'react-bootstrap';
+import {Panel, Table} from 'react-bootstrap';
 import ComponentName from './../../../react/common/ComponentName';
 import ComponentIcon from './../../../react/common/ComponentIcon';
 import {componentIoSummary} from './Index';
+import Loader from './Loader';
 
 function getDatesForMonthlyUsage() {
   return {
-    dateFrom: '2016-08-17',
+    dateFrom: '2016-10-01',
     dateTo: moment().subtract(1, 'day').format('YYYY-MM-DD')
   };
+}
+
+function sortComponentsByStorageIoDesc(first, second) {
+  const firstStorageIo = first.get('storage').get('inBytes') + first.get('storage').get('outBytes');
+  const secondStorageIo = second.get('storage').get('inBytes') + second.get('storage').get('outBytes');
+  if (firstStorageIo > secondStorageIo) {
+    return -1;
+  } else if (firstStorageIo < secondStorageIo) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 export default React.createClass({
@@ -21,7 +34,8 @@ export default React.createClass({
   getInitialState: function() {
     return {
       metricsData: fromJS([]),
-      dates: getDatesForMonthlyUsage()
+      dates: getDatesForMonthlyUsage(),
+      showLoader: true
     };
   },
 
@@ -29,7 +43,8 @@ export default React.createClass({
     this.loadMetricsData()
       .then((response) => {
         this.setState({
-          metricsData: fromJS(response).reverse()
+          metricsData: fromJS(response).reverse(),
+          showLoader: false
         });
       });
   },
@@ -39,33 +54,39 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <div style={{marginBottom: '10em'}}>
-        <h3>
-          {'Consumed Storage IO from '}
-          {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
-          {' to '}
-          {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
-        </h3>
-        {this.state.metricsData.map((item) => {
-          if (!item.get('components').isEmpty()) {
-            return (
-              <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
-                <table className="table table-striped">
-                  {List([item.get('components').map(this.dayComponents)])}
-                </table>
-              </Panel>
-            );
-          } else {
-            return (
-              <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
-                N/A
-              </Panel>
-            );
-          }
-        })}
-      </div>
-    );
+    if (this.state.showLoader) {
+      return (
+        <Loader />
+      );
+    } else {
+      return (
+        <div style={{marginBottom: '10em'}}>
+          <h3>
+            {'Consumed Storage IO from '}
+            {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
+            {' to '}
+            {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
+          </h3>
+          {this.state.metricsData.map((item) => {
+            if (!item.get('components').isEmpty()) {
+              return (
+                <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
+                  <Table fill className="table">
+                    {List([item.get('components').sort(sortComponentsByStorageIoDesc).map(this.dayComponents)])}
+                  </Table>
+                </Panel>
+              );
+            } else {
+              return (
+                <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
+                  N/A
+                </Panel>
+              );
+            }
+          })}
+        </div>
+      );
+    }
   },
 
   daySummary(data) {
