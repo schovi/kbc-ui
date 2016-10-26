@@ -16,6 +16,8 @@ import FiltersDescription from '../../components/react/components/generic/Filter
 
 import TablesFilterModal from '../../components/react/components/generic/TableFiltersOnlyModal';
 
+import ResultsHelpModal from './ResultsHelpModal';
+
 const StaticText = FormControls.Static;
 import {params,
   getInTable,
@@ -111,6 +113,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid">
+        {this.renderResultsHelpModal()}
         {this.renderTableFiltersModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
@@ -409,8 +412,35 @@ export default React.createClass({
         {this.RenderStaticInput('Use beta', this.parameter(params.BETA), true)}
 
         {this.RenderStaticInput('Analysis tasks', this.renderStaticTasks())}
-        {this.RenderStaticInput('Analysis results', this.renderOutput())}
+        {this.RenderStaticInput(this.renderResultLabel(), this.renderOutput())}
       </div>
+    );
+  },
+
+  renderResultLabel() {
+    return (
+      <Tooltip tooltip="show results explanation">
+        <span>
+          Analysis results {' '}
+          <span
+            onClick={this.showResultsHelpModal}
+            className="fa fa-question-circle kbc-cursor-pointer" />
+        </span>
+      </Tooltip>
+    );
+  },
+
+  showResultsHelpModal() {
+    this.updateLocalState(['showResultsHelpModal'], true);
+  },
+
+
+  renderResultsHelpModal() {
+    return (
+      <ResultsHelpModal
+        show={this.state.localState.get('showResultsHelpModal', false)}
+        onClose={() => this.updateLocalState(['showResultsHelpModal'], false)}
+      />
     );
   },
 
