@@ -56,7 +56,7 @@ export default React.createClass({
     if (showLeadingCommentWarning) {
       warning = (
         <div className="col-md-1 vertical-center">
-          <OverlayTrigger overlay={<Tooltip>Queries containing comments at the end could fail
+          <OverlayTrigger overlay={<Tooltip>Queries containing comments at the end may fail
           execution. Remove trailing comments, please.</Tooltip>}>
           <i className="fa fa-exclamation-triangle"/>
           </OverlayTrigger>
