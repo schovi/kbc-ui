@@ -155,6 +155,27 @@ module.exports = React.createClass
     props = @props
     component = @
     div {className: 'kbc-row'},
+      h2 {},
+        'Description'
+      React.createElement InlineEditArea,
+        isEditing: @props.editingFields.has('description')
+        isSaving: @props.pendingActions.has('save-description')
+        text: @props.editingFields.get('description', @props.transformation.get("description"))
+        editTooltip: "Click to edit description"
+        placeholder: "Describe the transformation"
+        onEditStart: =>
+          TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+            @props.transformationId, 'description')
+        onEditCancel: =>
+          TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'description')
+        onEditChange: (newValue) =>
+          TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'description', newValue)
+        onEditSubmit: =>
+          TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+            @props.transformationId, 'description')
+
       if @props.transformation.get('backend') != 'docker'
         @_renderRequires()
       if @_isOpenRefineTransformation()
@@ -363,35 +384,14 @@ module.exports = React.createClass
 
   render: ->
     div {},
-      div className: 'kbc-row kbc-header',
-        div className: 'col-xs-8',
-          React.createElement InlineEditArea,
-            isEditing: @props.editingFields.has('description')
-            isSaving: @props.pendingActions.has('save-description')
-            text: @props.editingFields.get('description', @props.transformation.get("description"))
-            editTooltip: "Click to edit description"
-            placeholder: "Describe the transformation"
-            onEditStart: =>
-              TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-                @props.transformationId, 'description')
-            onEditCancel: =>
-              TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'description')
-            onEditChange: (newValue) =>
-              TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'description', newValue)
-            onEditSubmit: =>
-              TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'description')
-        div {className: 'col-xs-4'},
-          div className: 'pull-right',
-            React.createElement Phase,
-              bucketId: @props.bucketId
-              transformation: @props.transformation
-            ' '
-            TransformationTypeLabel
-              backend: @props.transformation.get 'backend'
-              type: @props.transformation.get 'type'
+      div className: 'text-right',
+        React.createElement Phase,
+          bucketId: @props.bucketId
+          transformation: @props.transformation
+        ' '
+        TransformationTypeLabel
+          backend: @props.transformation.get 'backend'
+          type: @props.transformation.get 'type'
 
       div className: '',
         if @props.showDetails

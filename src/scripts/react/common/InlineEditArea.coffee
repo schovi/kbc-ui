@@ -5,10 +5,11 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
-{Loader, NewLineToBr} = require('kbc-react-components')
+{Loader} = require('kbc-react-components')
+Markdown = React.createFactory(require('./Markdown').default)
 Textarea = require 'react-textarea-autosize'
 
-{div, span, i, textarea, br} = React.DOM
+{div, span, textarea, button, a} = React.DOM
 
 StaticArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaStatic'
@@ -20,21 +21,33 @@ StaticArea = React.createFactory React.createClass
 
   render: ->
     props = _.omit @props, 'text'
-    props.className = 'kbc-inline-edit-link'
-    OverlayTrigger
-      overlay: Tooltip null, @props.editTooltip
-      placement: 'top'
-    ,
+    # props.className = 'kbc-inline-edit-link-markdown'
+    span null,
       div props,
         if @props.text
-          span null,
-            React.createElement NewLineToBr,
-              text: @props.text
+          [
+            OverlayTrigger
+              overlay: Tooltip null, @props.editTooltip
+              placement: 'top'
+            ,
+              div className: 'pull-right',
+                button className: 'btn btn-link',
+                  span className: 'kbc-icon-pencil'
+            div null,
+              Markdown
+                source: @props.text
+                escapeHtml: true
+          ]
         else
-          span className: 'text-muted',
-            @props.placeholder
-        ' '
-        i className: 'kbc-icon-pencil'
+          OverlayTrigger
+            overlay: Tooltip null, @props.editTooltip
+            placement: 'top'
+          ,
+            div className: 'text-right',
+              button className: 'btn btn-link',
+                @props.placeholder
+                ' '
+                span className: 'kbc-icon-pencil'
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
@@ -81,6 +94,10 @@ EditArea = React.createFactory React.createClass
           onClick: @props.onSave
         ,
           'Save'
+      span className: 'small help-block',
+        a href: 'https://blog.ghost.org/markdown/',
+          'Markdown'
+        ' is supported'
 
 
 
