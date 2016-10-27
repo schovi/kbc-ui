@@ -45,9 +45,11 @@ StaticArea = React.createFactory React.createClass
           ,
             div className: 'text-right',
               button className: 'btn btn-link',
-                @props.placeholder
-                ' '
                 span className: 'kbc-icon-pencil'
+                ' '
+                @props.placeholder
+
+
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'

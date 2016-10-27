@@ -14,6 +14,6 @@ module.exports = React.createClass
       configId: @props.configId
       fieldName: 'description'
       editElement: InlineEditTextArea
-      placeholder: 'Describe the configuration...'
+      placeholder: 'Describe configuration'
 
 
