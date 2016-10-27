@@ -40,7 +40,11 @@ export default React.createClass({
   hasLastQueryLeadingComment(query) {
     var parts = query.split(/\r\n|\r|\n/);
     var last = parts.pop();
-    var regex = /^--|^ +--/;
+    // ^--            : starts with simple comment, e.g. "--"
+    // ^ +--          : starts with one ore more empty strings and simple comment, e.g. " --"
+    // ^\/\*.*\*\/$   : multi-line command in one line, e.g. "/* whatever */"
+    // \*\/$          : ends with multi-line comment, e.g. "*/"
+    var regex = /^--|^ +--|^\/\*.*\*\/$|\*\/$/;
     return regex.test(last);
   },
 
