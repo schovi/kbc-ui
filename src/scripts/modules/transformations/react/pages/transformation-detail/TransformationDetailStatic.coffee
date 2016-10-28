@@ -182,7 +182,7 @@ module.exports = React.createClass
                   'documentation'
                 '.'
           ]
-          
+
         React.createElement InlineEditArea,
           isEditing: @props.editingFields.has('description')
           isSaving: @props.pendingActions.has('save-description')

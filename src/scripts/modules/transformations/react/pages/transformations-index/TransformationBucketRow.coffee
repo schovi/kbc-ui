@@ -7,6 +7,7 @@ TransformationActionCreators = require '../../../ActionCreators'
 RoutesStore = require '../../../../../stores/RoutesStore'
 NewTransformationModal = require('../../modals/NewTransformation').default
 {ModalTrigger, OverlayTrigger, Tooltip} = require 'react-bootstrap'
+descriptionExcerpt = require('../../../../../utils/descriptionExcerpt').default
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -89,7 +90,7 @@ TransformationBucketRow = React.createClass(
       span {className: 'td col-xs-4'},
         h4 {}, @props.bucket.get('name')
       span {className: 'td col-xs-5'},
-        small {}, @props.description || em {}, 'No description'
+        small {}, descriptionExcerpt(@props.description) || em {}, 'No description'
       span {className: 'td col-xs-3 text-right kbc-no-wrap'},
         @buttons()
 

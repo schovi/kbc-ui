@@ -3,6 +3,7 @@ import ConfigurationLink from '../components/ComponentConfigurationLink';
 import RunConfigurationButton from '../components/RunComponentButton';
 import DeleteButton from '../../../../react/common/DeleteButton';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
+import descriptionExcerpt from '../../../../utils/descriptionExcerpt';
 
 export default React.createClass({
   mixins: [React.addons.PureRenderMixin],
@@ -62,7 +63,7 @@ export default React.createClass({
       return null;
     }
     return (
-      <small> - {this.props.config.get('description')}</small>
+      <div><small>{descriptionExcerpt(this.props.config.get('description'))}</small></div>
     );
   },
 

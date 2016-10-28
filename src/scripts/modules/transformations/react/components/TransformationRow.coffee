@@ -9,6 +9,7 @@ DeleteButton = React.createFactory(require '../../../../react/common/DeleteButto
 ActivateDeactivateButton = React.createFactory(require('../../../../react/common/ActivateDeactivateButton').default)
 CreateSandboxButton = require('./CreateSandboxButton').default
 TransformationsActionCreators = require '../../ActionCreators'
+descriptionExcerpt = require('../../../../utils/descriptionExcerpt').default
 
 {span, div, a, button, i, h4, small, em} = React.DOM
 
@@ -78,7 +79,7 @@ TransformationRow = React.createClass(
           ' '
           @props.transformation.get('name')
       span {className: 'td col-xs-4'},
-        small {}, @props.transformation.get('description') || em {}, 'No description'
+        small {}, descriptionExcerpt(@props.transformation.get('description')) || em {}, 'No description'
       span {className: 'td col-xs-1'},
         TransformationTypeLabel
           backend: @props.transformation.get 'backend'
