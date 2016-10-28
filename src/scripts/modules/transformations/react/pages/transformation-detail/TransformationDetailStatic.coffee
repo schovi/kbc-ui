@@ -155,14 +155,21 @@ module.exports = React.createClass
     props = @props
     component = @
     div {className: 'kbc-row'},
-      h2 {},
-        'Description'
+      p className: 'text-right',
+        React.createElement Phase,
+          bucketId: @props.bucketId
+          transformation: @props.transformation
+        ' '
+        TransformationTypeLabel
+          backend: @props.transformation.get 'backend'
+          type: @props.transformation.get 'type'
+
       React.createElement InlineEditArea,
         isEditing: @props.editingFields.has('description')
         isSaving: @props.pendingActions.has('save-description')
         text: @props.editingFields.get('description', @props.transformation.get("description"))
         editTooltip: "Click to edit description"
-        placeholder: "Describe the transformation"
+        placeholder: "Describe transformation"
         onEditStart: =>
           TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
             @props.transformationId, 'description')
@@ -383,20 +390,10 @@ module.exports = React.createClass
           @props.transformationId, 'queriesString', changeDescription)
 
   render: ->
-    div {},
-      div className: 'text-right',
-        React.createElement Phase,
-          bucketId: @props.bucketId
-          transformation: @props.transformation
-        ' '
-        TransformationTypeLabel
-          backend: @props.transformation.get 'backend'
-          type: @props.transformation.get 'type'
-
-      div className: '',
-        if @props.showDetails
-          @_renderDetail()
-        else
-          div {className: 'kbc-row'},
-            div {className: 'well'},
-              "This transformation is not supported in UI."
+    div null,
+      if @props.showDetails
+        @_renderDetail()
+      else
+        div {className: 'kbc-row'},
+          div {className: 'well'},
+            "This transformation is not supported in UI."

@@ -49,6 +49,7 @@ TransformationBucket = React.createClass
             ComponentDescription
               componentId: 'transformation'
               configId: @state.bucket.get 'id'
+              placeholder: 'Describe transformation bucket'
         if @state.transformations.count()
           @_renderTable()
         else

@@ -18,6 +18,7 @@ StaticArea = React.createFactory React.createClass
     placeholder: React.PropTypes.string
     editTooltip: React.PropTypes.string
     onCancel: React.PropTypes.func
+    onEditStart: React.PropTypes.func
 
   render: ->
     props = _.omit @props, 'text'
@@ -30,21 +31,32 @@ StaticArea = React.createFactory React.createClass
               overlay: Tooltip null, @props.editTooltip
               placement: 'top'
             ,
-              div className: 'pull-right',
-                button className: 'btn btn-link',
+              div className: 'text-right',
+                button
+                  className: 'btn btn-link'
+                  onClick: @props.onEditStart
+                ,
                   span className: 'kbc-icon-pencil'
+                  ' '
+                  @props.placeholder
+
             div null,
               Markdown
                 source: @props.text
                 escapeHtml: true
           ]
         else
-          OverlayTrigger
-            overlay: Tooltip null, @props.editTooltip
-            placement: 'top'
+          div
+            className: 'text-right'
           ,
-            div className: 'text-right',
-              button className: 'btn btn-link',
+            OverlayTrigger
+              overlay: Tooltip null, @props.editTooltip
+              placement: 'top'
+            ,
+              button
+                className: 'btn btn-link'
+                onClick: @props.onEditStart
+              ,
                 span className: 'kbc-icon-pencil'
                 ' '
                 @props.placeholder
@@ -101,8 +113,6 @@ EditArea = React.createFactory React.createClass
           'Markdown'
         ' is supported'
 
-
-
 module.exports = React.createClass
   displayName: 'InlineEditArea'
   propTypes:
@@ -135,5 +145,5 @@ module.exports = React.createClass
         text: @props.text
         editTooltip: @props.editTooltip
         placeholder: @props.placeholder
-        onClick: @props.onEditStart
+        onEditStart: @props.onEditStart
 
