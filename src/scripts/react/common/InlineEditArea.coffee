@@ -5,10 +5,11 @@ _ = require 'underscore'
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Button = React.createFactory(require('react-bootstrap').Button)
-{Loader, NewLineToBr} = require('kbc-react-components')
+{Loader} = require('kbc-react-components')
+Markdown = React.createFactory(require('./Markdown').default)
 Textarea = require 'react-textarea-autosize'
 
-{div, span, i, textarea, br} = React.DOM
+{div, span, textarea, button, a} = React.DOM
 
 StaticArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaStatic'
@@ -17,24 +18,50 @@ StaticArea = React.createFactory React.createClass
     placeholder: React.PropTypes.string
     editTooltip: React.PropTypes.string
     onCancel: React.PropTypes.func
+    onEditStart: React.PropTypes.func
 
   render: ->
     props = _.omit @props, 'text'
-    props.className = 'kbc-inline-edit-link'
-    OverlayTrigger
-      overlay: Tooltip null, @props.editTooltip
-      placement: 'top'
-    ,
+    # props.className = 'kbc-inline-edit-link-markdown'
+    span null,
       div props,
         if @props.text
-          span null,
-            React.createElement NewLineToBr,
-              text: @props.text
+          [
+            OverlayTrigger
+              overlay: Tooltip null, @props.editTooltip
+              placement: 'top'
+            ,
+              div className: 'text-right',
+                button
+                  className: 'btn btn-link'
+                  onClick: @props.onEditStart
+                ,
+                  span className: 'kbc-icon-pencil'
+                  ' '
+                  @props.placeholder
+
+            div null,
+              Markdown
+                source: @props.text
+                escapeHtml: true
+          ]
         else
-          span className: 'text-muted',
-            @props.placeholder
-        ' '
-        i className: 'kbc-icon-pencil'
+          div
+            className: 'text-right'
+          ,
+            OverlayTrigger
+              overlay: Tooltip null, @props.editTooltip
+              placement: 'top'
+            ,
+              button
+                className: 'btn btn-link'
+                onClick: @props.onEditStart
+              ,
+                span className: 'kbc-icon-pencil'
+                ' '
+                @props.placeholder
+
+
 
 EditArea = React.createFactory React.createClass
   displayName: 'InlineEditAreaEdit'
@@ -81,8 +108,10 @@ EditArea = React.createFactory React.createClass
           onClick: @props.onSave
         ,
           'Save'
-
-
+      span className: 'small help-block',
+        a href: 'https://blog.ghost.org/markdown/',
+          'Markdown'
+        ' is supported'
 
 module.exports = React.createClass
   displayName: 'InlineEditArea'
@@ -116,5 +145,5 @@ module.exports = React.createClass
         text: @props.text
         editTooltip: @props.editTooltip
         placeholder: @props.placeholder
-        onClick: @props.onEditStart
+        onEditStart: @props.onEditStart
 

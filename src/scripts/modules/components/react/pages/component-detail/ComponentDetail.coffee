@@ -65,11 +65,12 @@ module.exports = React.createClass
       if @_isDeprecated()
         React.createElement MigrationRow,
           componentId: @state.component.get('id')
-      div className: "row",
-        div className: "col-md-12",
-          React.createElement ReadMore, null,
-            React.createElement ComponentDescription,
-              component: @state.component
+      if (@state.component.get('longDescription'))
+        div className: "row",
+          div className: "col-md-12",
+            React.createElement ReadMore, null,
+              React.createElement ComponentDescription,
+                component: @state.component
       @_renderConfigurations()
 
   _isDeprecated: ->
