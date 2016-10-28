@@ -13,6 +13,7 @@ export default React.createClass({
     transformation: PropTypes.object.isRequired,
     scripts: PropTypes.string.isRequired,
     isEditing: PropTypes.bool.isRequired,
+    isEditingValid: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onEditStart: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired,
@@ -37,6 +38,7 @@ export default React.createClass({
         <Edit
           script={this.props.scripts}
           transformationType={this.props.transformation.get('type')}
+          isValid={this.props.isEditingValid}
           isSaving={this.props.isSaving}
           onSave={this.props.onEditSubmit}
           onChange={this.props.onEditChange}

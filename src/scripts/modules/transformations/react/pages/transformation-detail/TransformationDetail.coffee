@@ -47,7 +47,7 @@ module.exports = React.createClass
     openInputMappings: TransformationsStore.getOpenInputMappings(bucketId, transformationId)
     openOutputMappings: TransformationsStore.getOpenOutputMappings(bucketId, transformationId)
     transformations: TransformationsStore.getTransformations(bucketId)
-    isTransformationEditingQueriesValid: TransformationsStore.getTransformationEditingQueriesIsValid(
+    isTransformationEditingValid: TransformationsStore.getTransformationEditingIsValid(
       bucketId, transformationId
     )
 
@@ -96,7 +96,7 @@ module.exports = React.createClass
             openInputMappings: @state.openInputMappings
             openOutputMappings: @state.openOutputMappings
             showDetails: @_showDetails()
-            isEditingQueriesValid: @state.isTransformationEditingQueriesValid
+            isEditingValid: @state.isTransformationEditingValid
       div className: 'col-md-3 kbc-main-sidebar',
         ul className: 'nav nav-stacked',
           li {},

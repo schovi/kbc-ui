@@ -116,15 +116,30 @@ TransformationsStore = StoreUtils.createStore
   getOpenOutputMappings: (bucketId, transformationId) ->
     _store.getIn(['openOutputMappings', bucketId, transformationId], Map())
 
-  getTransformationEditingQueriesIsValid: (bucketId, transformationId) ->
-    queriesString = _store.getIn([
-        'editingTransformationsFields'
-        bucketId
-        transformationId
-        'queriesString'
-      ], '')
-    parsedQueriesString = parseQueries(@getTransformation(bucketId, transformationId), queriesString).toJS().join('')
-    queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, '')
+  getTransformationEditingIsValid: (bucketId, transformationId) ->
+    transformation = @getTransformation(bucketId, transformationId)
+    if ['redshift', 'mysql', 'snowflake'].indexOf(transformation.get('backend')) >= 0
+      queriesString = _store.getIn([
+          'editingTransformationsFields'
+          bucketId
+          transformationId
+          'queriesString'
+        ], '')
+
+      parsedQueriesString = parseQueries(@getTransformation(bucketId, transformationId), queriesString).toJS().join('')
+      return queriesString.replace(/[\t\n ]/g, '') == parsedQueriesString.replace(/[\t\n ]/g, '')
+    if transformation.get('backend') == "docker" && transformation.get('type') == "openrefine"
+      scriptsString = _store.getIn([
+          'editingTransformationsFields'
+          bucketId
+          transformationId
+          'queriesString'
+        ], '')
+      try
+        JSON.parse(scriptsString)
+        return true
+      return false
+    return true
 
 Dispatcher.register (payload) ->
   action = payload.action

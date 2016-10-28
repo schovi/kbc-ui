@@ -13,10 +13,25 @@ export default React.createClass({
     isSaving: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    isValid: PropTypes.bool.isRequired
   },
 
   render() {
+    var codeMirrorParams = {
+      value: this.props.script,
+      theme: 'solarized',
+      lineNumbers: true,
+      mode: resolveHighlightMode('docker', this.props.transformationType),
+      autofocus: true,
+      lineWrapping: true,
+      onChange: this.handleChange,
+      readOnly: this.props.isSaving
+    };
+    if (this.props.transformationType === 'openrefine') {
+      codeMirrorParams.lint = true;
+      codeMirrorParams.gutters = ['CodeMirror-lint-markers'];
+    }
     return (
       <div className="kbc-queries-edit">
         <div>
@@ -48,18 +63,11 @@ export default React.createClass({
                 onSave={this.props.onSave}
                 onCancel={this.props.onCancel}
                 placement="right"
+                isDisabled={!this.props.isValid}
                 saveLabel="Save Script"
                 />
             </div>
-            <CodeMirror
-              value={this.props.script}
-              theme="solarized"
-              lineNumbers={true}
-              mode={resolveHighlightMode('docker', this.props.transformationType)}
-              autofocus={true}
-              lineWrapping={true}
-              onChange={this.handleChange}
-              readOnly={this.props.isSaving}
+            <CodeMirror {...codeMirrorParams} />
               />
           </div>
         </div>
