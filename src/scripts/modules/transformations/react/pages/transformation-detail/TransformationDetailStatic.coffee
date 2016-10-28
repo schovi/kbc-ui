@@ -154,209 +154,213 @@ module.exports = React.createClass
   _renderDetail: ->
     props = @props
     component = @
-    div {className: 'kbc-row'},
-      p className: 'text-right',
-        React.createElement Phase,
-          bucketId: @props.bucketId
-          transformation: @props.transformation
-        ' '
-        TransformationTypeLabel
-          backend: @props.transformation.get 'backend'
-          type: @props.transformation.get 'type'
+    span null,
+      div {className: 'kbc-row'},
+        p className: 'text-right',
+          React.createElement Phase,
+            bucketId: @props.bucketId
+            transformation: @props.transformation
+          ' '
+          TransformationTypeLabel
+            backend: @props.transformation.get 'backend'
+            type: @props.transformation.get 'type'
 
-      React.createElement InlineEditArea,
-        isEditing: @props.editingFields.has('description')
-        isSaving: @props.pendingActions.has('save-description')
-        text: @props.editingFields.get('description', @props.transformation.get("description"))
-        editTooltip: "Click to edit description"
-        placeholder: "Describe transformation"
-        onEditStart: =>
-          TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-            @props.transformationId, 'description')
-        onEditCancel: =>
-          TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'description')
-        onEditChange: (newValue) =>
-          TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'description', newValue)
-        onEditSubmit: =>
-          TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-            @props.transformationId, 'description')
+        if @_isOpenRefineTransformation()
+          [
+            h2 {},
+              'OpenRefine Beta Warning'
 
-      if @props.transformation.get('backend') != 'docker'
-        @_renderRequires()
-      if @_isOpenRefineTransformation()
-        [
+            div {className: "help-block"},
+              span {},
+                'OpenRefine transformations are now in public beta. '
+                'Please be aware, that things may change before it makes to production. '
+                'If you encounter any errors, please contact us at '
+                a {href: "mailto:support@keboola.com"},
+                  'support@keboola.com'
+                ' or read more in the '
+                a {href: "https://help.keboola.com/manipulation/transformations/openrefine/"},
+                  'documentation'
+                '.'
+          ]
+          
+        React.createElement InlineEditArea,
+          isEditing: @props.editingFields.has('description')
+          isSaving: @props.pendingActions.has('save-description')
+          text: @props.editingFields.get('description', @props.transformation.get("description"))
+          editTooltip: "Click to edit description"
+          placeholder: "Describe transformation"
+          onEditStart: =>
+            TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+              @props.transformationId, 'description')
+          onEditCancel: =>
+            TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description')
+          onEditChange: (newValue) =>
+            TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description', newValue)
+          onEditSubmit: =>
+            TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+              @props.transformationId, 'description')
+
+      div {className: 'kbc-row'},
+
+        if @props.transformation.get('backend') != 'docker'
+          @_renderRequires()
+        div {},
           h2 {},
-            'OpenRefine Beta Warning'
-
-          div {className: "help-block"},
-            span {},
-              'OpenRefine transformations are now in public beta. '
-              'Please be aware, that things may change before it makes to production. '
-              'If you encounter any errors, please contact us at '
-              a {href: "mailto:support@keboola.com"},
-                'support@keboola.com'
-              ' or read more in the '
-              a {href: "https://help.keboola.com/manipulation/transformations/openrefine/"},
-                'documentation'
-              '.'
-        ]
-      div {},
-        h2 {},
-          'Input Mapping'
-          if @_getInputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
-            span className: 'pull-right',
+            'Input Mapping'
+            if @_getInputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
+              span className: 'pull-right',
+                React.createElement AddInputMapping,
+                  tables: @props.tables
+                  transformation: @props.transformation
+                  bucket: @props.bucket
+                  mapping: @props.editingFields.get('new-input-mapping', Map())
+                  otherDestinations: @_inputMappingDestinations()
+          if @_getInputMappingValue().count()
+            div {},
+              @_getInputMappingValue().map((input, key) ->
+                if (@_isOpenRefineTransformation())
+                  definition = findInputMappingDefinition(@openRefine.inputMappingDefinitions, input)
+                Panel
+                  className: 'kbc-panel-heading-with-table'
+                  key: key
+                  collapsible: true
+                  eventKey: key
+                  expanded: props.openInputMappings.get(key, false)
+                  header:
+                    div
+                      onClick: ->
+                        component._toggleInputMapping(key)
+                    ,
+                      InputMappingRow
+                        transformation: @props.transformation
+                        bucket: @props.bucket
+                        inputMapping: input
+                        tables: @props.tables
+                        editingInputMapping: @props.editingFields.get('input-' + key, input)
+                        editingId: 'input-' + key
+                        mappingIndex: key
+                        pendingActions: @props.pendingActions
+                        otherDestinations: @_inputMappingDestinations(key)
+                        definition: definition
+                ,
+                  InputMappingDetail
+                    fill: true
+                    transformationBackend: @props.transformation.get('backend')
+                    inputMapping: input
+                    tables: @props.tables
+                    definition: definition
+              , @).toArray()
+          else
+            div {className: "well text-center"},
+              p {}, 'No inputs assigned yet.'
               React.createElement AddInputMapping,
                 tables: @props.tables
                 transformation: @props.transformation
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-input-mapping', Map())
                 otherDestinations: @_inputMappingDestinations()
-        if @_getInputMappingValue().count()
-          div {},
-            @_getInputMappingValue().map((input, key) ->
-              if (@_isOpenRefineTransformation())
-                definition = findInputMappingDefinition(@openRefine.inputMappingDefinitions, input)
-              Panel
-                className: 'kbc-panel-heading-with-table'
-                key: key
-                collapsible: true
-                eventKey: key
-                expanded: props.openInputMappings.get(key, false)
-                header:
-                  div
-                    onClick: ->
-                      component._toggleInputMapping(key)
-                  ,
-                    InputMappingRow
-                      transformation: @props.transformation
-                      bucket: @props.bucket
-                      inputMapping: input
-                      tables: @props.tables
-                      editingInputMapping: @props.editingFields.get('input-' + key, input)
-                      editingId: 'input-' + key
-                      mappingIndex: key
-                      pendingActions: @props.pendingActions
-                      otherDestinations: @_inputMappingDestinations(key)
-                      definition: definition
-              ,
-                InputMappingDetail
-                  fill: true
-                  transformationBackend: @props.transformation.get('backend')
-                  inputMapping: input
+        div {},
+          h2 {},
+            'Output Mapping'
+            if  @_getOutputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
+              span className: 'pull-right',
+                React.createElement AddOutputMapping,
                   tables: @props.tables
-                  definition: definition
-            , @).toArray()
-        else
-          div {className: "well text-center"},
-            p {}, 'No inputs assigned yet.'
-            React.createElement AddInputMapping,
-              tables: @props.tables
-              transformation: @props.transformation
-              bucket: @props.bucket
-              mapping: @props.editingFields.get('new-input-mapping', Map())
-              otherDestinations: @_inputMappingDestinations()
-      div {},
-        h2 {},
-          'Output Mapping'
-          if  @_getOutputMappingValue().count() >= 1 && !@_isOpenRefineTransformation()
-            span className: 'pull-right',
+                  buckets: @props.buckets
+                  transformation: @props.transformation
+                  bucket: @props.bucket
+                  mapping: @props.editingFields.get('new-output-mapping', Map())
+          if @_getOutputMappingValue().count()
+            div {},
+              @_getOutputMappingValue().map((output, key) ->
+                if (@_isOpenRefineTransformation())
+                  definition = findOutputMappingDefinition(@openRefine.outputMappingDefinitions, output)
+                Panel
+                  className: 'kbc-panel-heading-with-table'
+                  key: key
+                  collapsible: true
+                  eventKey: key
+                  expanded: props.openOutputMappings.get(key, false)
+                  header:
+                    div
+                      onClick: ->
+                        component._toggleOutputMapping(key)
+                    ,
+                      OutputMappingRow
+                        transformation: @props.transformation
+                        bucket: @props.bucket
+                        outputMapping: output
+                        editingOutputMapping: @props.editingFields.get('input-' + key, output)
+                        editingId: 'input-' + key
+                        mappingIndex: key
+                        tables: @props.tables
+                        pendingActions: @props.pendingActions
+                        buckets: @props.buckets
+                        definition: definition
+                ,
+                  OutputMappingDetail
+                    fill: true
+                    transformationBackend: @props.transformation.get('backend')
+                    outputMapping: output
+                    tables: @props.tables
+
+              , @).toArray()
+          else
+            div {className: "well text-center"},
+              p {}, 'No outputs assigned yet.'
               React.createElement AddOutputMapping,
                 tables: @props.tables
                 buckets: @props.buckets
                 transformation: @props.transformation
                 bucket: @props.bucket
                 mapping: @props.editingFields.get('new-output-mapping', Map())
-        if @_getOutputMappingValue().count()
+
+        if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
           div {},
-            @_getOutputMappingValue().map((output, key) ->
-              if (@_isOpenRefineTransformation())
-                definition = findOutputMappingDefinition(@openRefine.outputMappingDefinitions, output)
-              Panel
-                className: 'kbc-panel-heading-with-table'
-                key: key
-                collapsible: true
-                eventKey: key
-                expanded: props.openOutputMappings.get(key, false)
-                header:
-                  div
-                    onClick: ->
-                      component._toggleOutputMapping(key)
-                  ,
-                    OutputMappingRow
-                      transformation: @props.transformation
-                      bucket: @props.bucket
-                      outputMapping: output
-                      editingOutputMapping: @props.editingFields.get('input-' + key, output)
-                      editingId: 'input-' + key
-                      mappingIndex: key
-                      tables: @props.tables
-                      pendingActions: @props.pendingActions
-                      buckets: @props.buckets
-                      definition: definition
-              ,
-                OutputMappingDetail
-                  fill: true
-                  transformationBackend: @props.transformation.get('backend')
-                  outputMapping: output
-                  tables: @props.tables
-
-            , @).toArray()
-        else
-          div {className: "well text-center"},
-            p {}, 'No outputs assigned yet.'
-            React.createElement AddOutputMapping,
-              tables: @props.tables
-              buckets: @props.buckets
+            h2 {}, 'Packages'
+            React.createElement Packages,
+              bucketId: @props.bucket.get('id')
               transformation: @props.transformation
-              bucket: @props.bucket
-              mapping: @props.editingFields.get('new-output-mapping', Map())
+              transformations: @props.transformations
+              isEditing: @props.editingFields.has('packages')
+              isSaving: @props.pendingActions.has('save-packages')
+              packages: @props.editingFields.get('packages', @props.transformation.get("packages", List()))
+              onEditStart: =>
+                TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+                  @props.transformationId, 'packages')
+              onEditCancel: =>
+                TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'packages')
+              onEditChange: (newValue) =>
+                TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'packages', newValue)
+              onEditSubmit: =>
+                TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'packages')
+        if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
+          div {},
+            h2 {}, 'Stored Files'
+            React.createElement SavedFiles,
+              bucketId: @props.bucket.get('id')
+              isEditing: @props.editingFields.has('tags')
+              isSaving: @props.pendingActions.has('save-tags')
+              tags: @props.editingFields.get('tags', @props.transformation.get("tags", List()))
+              onEditStart: =>
+                TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
+                  @props.transformationId, 'tags')
+              onEditCancel: =>
+                TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'tags')
+              onEditChange: (newValue) =>
+                TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'tags', newValue)
+              onEditSubmit: =>
+                TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
+                  @props.transformationId, 'tags')
 
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
-        div {},
-          h2 {}, 'Packages'
-          React.createElement Packages,
-            bucketId: @props.bucket.get('id')
-            transformation: @props.transformation
-            transformations: @props.transformations
-            isEditing: @props.editingFields.has('packages')
-            isSaving: @props.pendingActions.has('save-packages')
-            packages: @props.editingFields.get('packages', @props.transformation.get("packages", List()))
-            onEditStart: =>
-              TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-                @props.transformationId, 'packages')
-            onEditCancel: =>
-              TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'packages')
-            onEditChange: (newValue) =>
-              TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'packages', newValue)
-            onEditSubmit: =>
-              TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'packages')
-      if @props.transformation.get('backend') == 'docker' && @props.transformation.get('type') != 'openrefine'
-        div {},
-          h2 {}, 'Stored Files'
-          React.createElement SavedFiles,
-            bucketId: @props.bucket.get('id')
-            isEditing: @props.editingFields.has('tags')
-            isSaving: @props.pendingActions.has('save-tags')
-            tags: @props.editingFields.get('tags', @props.transformation.get("tags", List()))
-            onEditStart: =>
-              TransformationsActionCreators.startTransformationFieldEdit(@props.bucketId,
-                @props.transformationId, 'tags')
-            onEditCancel: =>
-              TransformationsActionCreators.cancelTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'tags')
-            onEditChange: (newValue) =>
-              TransformationsActionCreators.updateTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'tags', newValue)
-            onEditSubmit: =>
-              TransformationsActionCreators.saveTransformationEditingField(@props.bucketId,
-                @props.transformationId, 'tags')
-
-      @_renderCodeEditor()
+        @_renderCodeEditor()
 
   _renderCodeEditor: ->
     if  @props.transformation.get('backend') == 'docker'
