@@ -27,7 +27,7 @@ mssql = [
   'money',
   'decimal': {defaultSize: '12,2'},
   'real', 'float': {defaultSize: '12'},
-  'date', 'datetime': {defaultSize: 'YYYY-MM-DDThh:mm:ss[.mmm]'},
+  'date', 'datetime', 'smalldatetime',
   'datetime2',
   'time': {defaultSize: '7'}, 'timestamp',
   'char': {defaultSize: '255'},
