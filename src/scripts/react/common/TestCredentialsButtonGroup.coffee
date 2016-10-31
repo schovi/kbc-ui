@@ -7,7 +7,6 @@ Link = React.createFactory(require('react-router').Link)
 
 {small, div, span} = React.DOM
 
-# THIS REACT COMPONENT IS NOT USED!!! SEE render method!
 module.exports = React.createClass
   displayName: 'TestCredentialsButtonGroup'
   propTypes:
@@ -70,4 +69,7 @@ module.exports = React.createClass
       span className: 'fa fa-fw fa-meh-o'
       ' Failed to connect! '
       div null,
-        small null, result?.message
+        small null,
+          result?.message
+          ' '
+          result?.exceptionId

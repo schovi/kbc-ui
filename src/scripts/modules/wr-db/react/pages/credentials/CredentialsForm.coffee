@@ -3,8 +3,10 @@ React = require 'react'
 Clipboard = React.createFactory(require('../../../../../react/common/Clipboard').default)
 fieldsTemplates = require '../../../templates/credentialsFields'
 hasSshTunnel = require '../../../templates/hasSshTunnel'
+isDockerBasedWriter = require('../../../templates/dockerProxyApi').default
 Tooltip = require('../../../../../react/common/Tooltip').default
 SshTunnelRow = require('../../../../../react/common/SshTunnelRow').default
+TestCredentialsButton = require '../../../../../react/common/TestCredentialsButtonGroup'
 _ = require 'underscore'
 
 {div} = React.DOM
@@ -28,6 +30,7 @@ module.exports = React.createClass
     isProvisioning: React.PropTypes.bool
     componentId: React.PropTypes.string
     driver: React.PropTypes.string
+    testCredentialsFn: React.PropTypes.func
 
   render: ->
     provDescription = 'This is readonly credentials to the database provided by Keboola.'
@@ -51,6 +54,15 @@ module.exports = React.createClass
         _.map fields, (field) =>
           @_createInput(field[0], field[1], field[2], field[3], field[4])
       @_renderSshTunnelRow()
+      @_renderTestCredentials()
+
+  _renderTestCredentials: ->
+    if not isDockerBasedWriter(@props.componentId) or @props.componentId == 'wr-db-mssql'
+      return null
+    React.createElement TestCredentialsButton,
+      testCredentialsFn: =>
+        # creds = if @props.isProvisioning then @props.savedCredentials else @props.credentials
+        @props.testCredentialsFn(@props.credentials)
 
   _renderSshTunnelRow: ->
     if not hasSshTunnel(@props.componentId) or @props.isProvisioning

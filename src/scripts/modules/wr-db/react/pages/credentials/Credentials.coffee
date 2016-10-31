@@ -7,6 +7,7 @@ ApplicationStore = require '../../../../../stores/ApplicationStore'
 {States} = require './StateConstants'
 WrDbActions = require '../../../actionCreators'
 InstalledComponentsActions = require '../../../../components/InstalledComponentsActionCreators'
+V2Actions = require('../../../v2-actions').default
 
 credentialsTemplate = require '../../../templates/credentialsFields'
 provisioningTemplates = require '../../../templates/provisioning'
@@ -50,6 +51,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     provisioningCredentials = WrDbStore.getProvisioningCredentials(componentId, configId)
     isLoadingProvCredentials = WrDbStore.isLoadingProvCredentials(componentId, configId)
     localState = InstalledComponentsStore.getLocalState(componentId, configId)
+    v2Actions = V2Actions(configId, componentId)
 
     localState: localState
     provisioningCredentials: provisioningCredentials
@@ -59,6 +61,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     isEditing: isEditing
     isSaving: isSaving
     loadingProvisioning: isLoadingProvCredentials
+    v2Actions: v2Actions
 
   componentDidMount: ->
     state = @state.localState.get 'credentialsState'
@@ -219,6 +222,8 @@ templateFn = (componentId, driver, isProvisioning) ->
       isProvisioning: isProvisioningProp
       componentId: componentId
       driver: driver
+      testCredentialsFn: (credentials) =>
+        @state.v2Actions.testCredentials(credentials)
 
   _isProvCredentials: ->
     host = @state.credentials?.get('host')
