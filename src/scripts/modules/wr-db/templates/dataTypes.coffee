@@ -36,8 +36,15 @@ mssql = [
   'binary': {defaultSize: '1'}, 'image', 'varbinary': {defaultSize: '1'}
 
   ]
+impala = [
+  'bigint', 'boolean', 'char', 'decimal',
+  'double', 'float', 'int', 'real',
+  'smallint', 'string', 'timestamp',
+  'tinyint', 'varchar'
+]
 
 module.exports =
+'keboola.wr-db-impala': impala
 'keboola.wr-db-mssql-v2': mssql
 'wr-db-mssql': mssql
 'keboola.wr-redshift-v2': redshift
