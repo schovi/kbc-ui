@@ -27,6 +27,9 @@ MySqlCredentialsContainer = React.createClass
     isLoaded: MySqlSandboxCredentialsStore.getIsLoaded()
 
   render: ->
-    MySqlCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
+    MySqlCredentials
+      credentials: @state.credentials
+      isCreating: @state.pendingActions.get("create")
+      hideClipboard: true
 
 module.exports = MySqlCredentialsContainer
