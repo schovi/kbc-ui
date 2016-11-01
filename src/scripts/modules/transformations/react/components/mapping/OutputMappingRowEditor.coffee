@@ -38,6 +38,9 @@ module.exports = React.createClass
   getInitialState: ->
     showDetails: @props.initialShowDetails
 
+  componentWillReceiveProps: (newProps) ->
+    @setState({showDetails: @state.showDetails or newProps.initialShowDetails})
+
   _handleToggleShowDetails: (e) ->
     @setState(
       showDetails: e.target.checked
