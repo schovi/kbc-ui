@@ -37,10 +37,10 @@ mssql = [
 
   ]
 impala = [
-  'bigint', 'boolean', 'char', 'decimal',
-  'double', 'float', 'int', 'real',
+  'bigint', 'boolean', 'char': {defaultSize: '255'},
+  'double', 'decimal': {defaultSize: '9,0'}, 'float', 'int', 'real',
   'smallint', 'string', 'timestamp',
-  'tinyint', 'varchar'
+  'tinyint', 'varchar': {defaultSize: '255'}
 ]
 
 module.exports =
