@@ -55,11 +55,11 @@ fields =
 
   'keboola.wr-db-impala': [
     [ 'Host name', 'host']
-    [ 'Port', 'port', 'number', false, '3306']
+    [ 'Port', 'port', 'number', false, '21050']
     [ 'Username', 'user']
     [ 'Password', '#password', 'password', true]
     [ 'Database Name', 'database', 'text']
-    # [ 'Authentication mechanism', 'auth_mech', 'number', false, '3']
+    [ 'Authentication mechanism', 'auth_mech', 'number', false, '3']
   ]
 
   'keboola.wr-redshift-v2': [
