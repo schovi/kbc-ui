@@ -206,7 +206,7 @@ module.exports = React.createClass
                     text: div null,
                       p null, 'Optimizing SLI hashes is partially disabled sice this is an advanced
                       process which might damage your GD project.
-                      We insist on consluting with us before taking any further step. '
+                      We insist on consluting with us before taking any further steps. '
                       p null, 'Please contact us on: support@keboola.com'
                     buttonLabel: 'Optimize'
                     buttonType: 'primary'
