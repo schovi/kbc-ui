@@ -38,7 +38,7 @@ MySqlCredentials = React.createClass
             favourite SQL client (we like '
             a {href: 'http://www.sequelpro.com/download', target: '_blank'},
               'Sequel Pro'
-            '). Or just use Keboola-provided Adminer(click on Connect).'
+            '). You can also use Adminer web application provided by Keboola (click on Connect).'
       div {className: 'row'},
         span {className: 'col-md-3'}, 'Host'
         strong {className: 'col-md-9'},
