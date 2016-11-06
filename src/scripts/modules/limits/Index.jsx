@@ -50,6 +50,9 @@ export default React.createClass({
           <li role="presentation" className="active">
             <a href={this.projectPageUrl('settings-limits')}>Limits</a>
           </li>
+          <li role="presentation">
+            <a href={this.projectPageUrl('settings-project-power')}>Project Power</a>
+          </li>
         </ul>
         {this.state.sections.map((section) => {
           return React.createElement(LimitsSection, {
