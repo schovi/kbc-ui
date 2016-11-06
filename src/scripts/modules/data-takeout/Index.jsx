@@ -64,7 +64,7 @@ export default React.createClass({
               <li>All component configurations</li>
             </ul>
             <p>
-              <a href="http://wiki.keboola.com/home/keboola-connection/user-space/kbc-generic/how-to-backup-project" target="_blank">
+              <a href="https://help.keboola.com/management/project-export/" target="_blank">
                 Read more in Data Takeout documentation
               </a>
             </p>
