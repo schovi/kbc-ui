@@ -5,7 +5,7 @@ ApplicationStore = require '../../stores/ApplicationStore'
 ComponentsStore = require '../components/stores/ComponentsStore'
 
 createUrl = (path) ->
-  "https://connection.keboola.com/v2/storage/#{path}"
+  "#{ApplicationStore.getSapiUrl()}/v2/storage/#{path}"
 
 createRequest = (method, path) ->
   request(method, createUrl(path))
