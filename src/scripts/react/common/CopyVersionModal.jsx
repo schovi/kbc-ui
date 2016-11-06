@@ -30,7 +30,7 @@ export default React.createClass({
           <p>
             This will copy version #{this.props.version.get('version')} created {moment(this.props.version.get('created')).fromNow()} by {this.props.version.getIn(['creatorToken', 'description'], 'unknown')} to a new configuration.
           </p>
-          <form className="form-horizontal">
+          <form className="form-horizontal" onSubmit={this.handleSubmit}>
             <Input
               type="text"
               label="New configuration name"
@@ -45,7 +45,7 @@ export default React.createClass({
         <Modal.Footer>
           <ConfirmButtons
             isSaving={false}
-            isDisabled={this.props.newVersionName === '' || !this.props.newVersionName}
+            isDisabled={!this.isValid()}
             cancelLabel="Cancel"
             saveLabel="Copy"
             saveStyle="success"
@@ -57,5 +57,16 @@ export default React.createClass({
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  isValid() {
+    return !(this.props.newVersionName === '' || !this.props.newVersionName);
+  },
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.isValid()) {
+      this.props.onCopy();
+    }
   }
 });
