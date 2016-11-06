@@ -83,7 +83,7 @@ module.exports = React.createClass
       value: value
 
   _getRedirectUrl: ->
-    origin = 'https://connection.keboola.com'
+    origin = ApplicationStore.getSapiUrl()
     url = @state.router.makeHref(@props.redirectRouterPath, config: @props.configId)
     projectUrl = ApplicationStore.getProjectBaseUrl()
     result = "#{origin}#{url}"

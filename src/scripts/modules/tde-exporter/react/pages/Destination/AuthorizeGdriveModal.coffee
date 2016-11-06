@@ -45,7 +45,7 @@ module.exports = React.createClass
                 'Authorize'
 
   _getReferrer: ->
-    origin = 'https://connection.keboola.com'
+    origin = ApplicationStore.getSapiUrl();
     url = RouterStore.getRouter().makeHref('tde-exporter-gdrive-redirect', config: @props.configId)
     projectUrl = ApplicationStore.getProjectBaseUrl()
     result = "#{origin}#{url}"

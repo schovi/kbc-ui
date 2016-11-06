@@ -98,7 +98,7 @@ export default React.createClass({
   },
 
   getRedirectUrl() {
-    let origin = 'https://connection.keboola.com';
+    let origin = ApplicationStore.getSapiUrl();
     let url = this.state.router.makeHref(this.props.redirectRouterPath, {config: this.props.configId});
     let result = `${origin}${url}`;
 
