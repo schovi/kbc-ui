@@ -42,14 +42,18 @@ impala = [
   'smallint', 'string', 'timestamp',
   'tinyint', 'varchar': {defaultSize: '255'}
 ]
+oracle = [
+  'char', 'nchar', 'varchar2', 'nvarchar',
+  'blob', 'clob', 'nclob', 'bfile', 'number', 'binary_float',
+  'binary_double', 'decimal', 'float', 'integer', 'date', 'timestamp'
+  'raw', 'rowid', 'urowid'
+]
 
 module.exports =
+'keboola.wr-db-oracle': oracle
 'keboola.wr-db-impala': impala
 'keboola.wr-db-mssql-v2': mssql
 'wr-db-mssql': mssql
 'keboola.wr-redshift-v2': redshift
 'wr-db-redshift': redshift
-'wr-db-oracle': ["char","nchar","varchar2","nvarchar",
-"blob","clob","nclob","bfile","number","binary_float",
-"binary_double","decimal","float","integer","date","timestamp",
-"raw","rowid","urowid"]
+'wr-db-oracle': oracle
