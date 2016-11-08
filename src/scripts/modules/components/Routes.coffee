@@ -176,7 +176,7 @@ routes =
       createComponentRoute 'keboola.wr-redshift-v2', [createDbWriterRoutes('keboola.wr-redshift-v2', 'redshift', true)]
       createComponentRoute 'keboola.wr-db-impala', [createDbWriterRoutes('keboola.wr-db-impala', 'impala', false)]
       createComponentRoute 'keboola.wr-db-mysql', [createDbWriterRoutes('keboola.wr-db-mysql', 'mysql', true)]
-      createComponentRoute 'keboola.wr-db-oracle', [createDbWriterRoutes('keboola.wr-db-oracle', 'oracle', true)]
+      createComponentRoute 'keboola.wr-db-oracle', [createDbWriterRoutes('keboola.wr-db-oracle', 'oracle', false)]
     ,
       createComponentRoute 'wr-portal-sas', [wrPortalCreateRouteFn('wr-portal-sas')]
     ,
