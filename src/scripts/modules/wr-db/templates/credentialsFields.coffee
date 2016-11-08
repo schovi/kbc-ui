@@ -75,7 +75,7 @@ fields =
     [ 'Host name', 'host']
     [ 'Port', 'port', 'number', false, '1521']
     [ 'Username', 'user']
-    [ 'Password', 'password', 'password', true]
+    [ 'Password', '#password', 'password', true]
     [ 'Service Name/SID', 'database', 'text']
   ]
 
