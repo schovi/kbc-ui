@@ -49,22 +49,22 @@ oracleold = [
   'raw', 'rowid', 'urowid'
 ]
 oracle = [
-  'char': {defaultSize: '255'},
-  'nchar': {defaultSize: '255'},
-  'varchar2': {defaultSize: '255'},
-  'nvarchar2': {defaultSize: '255'},
-  'blob',
-  'clob',
-  'nclob',
-  'bfile',
-  'number': {defaultSize: '12,2'},
-  'binary_float',
-  'binary_double',
-  'date',
-  'timestamp',
-  'raw': {defaultSize: '255'},
-  'rowid',
+  'bfile'
+  'binary_float'
+  'binary_double'
+  'blob'
+  {'char': defaultSize: '255'}
+  'clob'
+  'date'
+  {'nchar': defaultSize: '255'}
+  'nclob'
+  {'nvarchar2': defaultSize: '255'}
+  {'number': defaultSize: '12,2'}
+  {'raw': defaultSize: '255'}
+  'rowid'
+  'timestamp'
   'urowid'
+  {'varchar2': defaultSize: '255'}
 ]
 
 module.exports =
