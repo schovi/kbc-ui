@@ -45,17 +45,26 @@ impala = [
 oracleold = [
   'char', 'nchar', 'varchar2', 'nvarchar',
   'blob', 'clob', 'nclob', 'bfile', 'number', 'binary_float',
-  'binary_double', 'decimal', 'float', 'integer', 'date', 'timestamp'
+  'binary_double', 'decimal', 'float', 'integer', 'date', 'timestamp',
   'raw', 'rowid', 'urowid'
 ]
 oracle = [
-  'char': {defaultSize: '255'}, 'nchar': {defaultSize: '255'},
-  'varchar2': {defaultSize: '255'}, 'nvarchar2': {defaultSize: '255'},
-  'blob', 'clob', 'nclob', 'bfile',
+  'char': {defaultSize: '255'},
+  'nchar': {defaultSize: '255'},
+  'varchar2': {defaultSize: '255'},
+  'nvarchar2': {defaultSize: '255'},
+  'blob',
+  'clob',
+  'nclob',
+  'bfile',
   'number': {defaultSize: '12,2'},
-  'binary_float', 'binary_double',
-  'date', 'timestamp'
-  'raw': {defaultSize: '255'}, 'rowid', 'urowid'
+  'binary_float',
+  'binary_double',
+  'date',
+  'timestamp',
+  'raw': {defaultSize: '255'},
+  'rowid',
+  'urowid'
 ]
 
 module.exports =
