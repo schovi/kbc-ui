@@ -42,11 +42,20 @@ impala = [
   'smallint', 'string', 'timestamp',
   'tinyint', 'varchar': {defaultSize: '255'}
 ]
-oracle = [
+oracleold = [
   'char', 'nchar', 'varchar2', 'nvarchar',
   'blob', 'clob', 'nclob', 'bfile', 'number', 'binary_float',
   'binary_double', 'decimal', 'float', 'integer', 'date', 'timestamp'
   'raw', 'rowid', 'urowid'
+]
+oracle = [
+  'char': {defaultSize: '255'}, 'nchar': {defaultSize: '255'},
+  'varchar2': {defaultSize: '255'}, 'nvarchar2': {defaultSize: '255'},
+  'blob', 'clob', 'nclob', 'bfile',
+  'number': {defaultSize: '12,2'},
+  'binary_float', 'binary_double',
+  'date', 'timestamp'
+  'raw': {defaultSize: '255'}, 'rowid', 'urowid'
 ]
 
 module.exports =
@@ -56,4 +65,4 @@ module.exports =
 'wr-db-mssql': mssql
 'keboola.wr-redshift-v2': redshift
 'wr-db-redshift': redshift
-'wr-db-oracle': oracle
+'wr-db-oracle': oracleold
