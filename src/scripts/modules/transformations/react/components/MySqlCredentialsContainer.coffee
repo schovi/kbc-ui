@@ -30,6 +30,6 @@ MySqlCredentialsContainer = React.createClass
     MySqlCredentials
       credentials: @state.credentials
       isCreating: @state.pendingActions.get("create")
-      hideClipboard: true
+      hideClipboard: false
 
 module.exports = MySqlCredentialsContainer

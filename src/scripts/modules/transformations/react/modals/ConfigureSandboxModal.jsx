@@ -8,6 +8,7 @@ import SnowflakeCredentialsContainer from '../components/SnowflakeCredentialsCon
 import ConnectToMySqlSandbox from '../components/ConnectToMySqlSandbox';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 
+
 export default React.createClass({
   propTypes: {
     show: PropTypes.bool.isRequired,
@@ -28,7 +29,7 @@ export default React.createClass({
 
   render() {
     return (
-      <Modal show={this.props.show} bsSize="large" onHide={this.props.onHide}>
+      <Modal show={this.props.show} bsSize="large" onHide={this.props.onHide} enforceFocus={false}>
         <Modal.Header closeButton={true}>
           <Modal.Title>Create sandbox</Modal.Title>
         </Modal.Header>

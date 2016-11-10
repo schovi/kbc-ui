@@ -33,6 +33,7 @@ export default React.createClass({
           className="kbc-authorization-modal"
           show={this.props.show}
           onHide={this.props.onHideFn}
+          enforceFocus={false}
         >
           <Modal.Header closeButton>
             <Modal.Title>
