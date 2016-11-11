@@ -74,7 +74,7 @@ module.exports = React.createClass
 
   render: ->
     writer = @state.writer.get 'config'
-    console.log writer?.toJS()
+    # console.log writer?.toJS()
     div className: 'container-fluid',
       div className: 'col-md-9 kbc-main-content',
         div className: 'row',
