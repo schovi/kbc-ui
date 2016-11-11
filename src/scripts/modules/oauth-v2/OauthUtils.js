@@ -130,6 +130,6 @@ export function generateLink(componentId, configId) {
   const externalAppUrl = ComponentsStore.getComponent('keboola.ui-oauth-external').get('uri');
   return StorageApi.createToken(tokenParams)
     .then((token) => {
-      return `${externalAppUrl}?token=${token.token}#/${componentId}/${configId}`;
+      return `${externalAppUrl}?token=${token.token}&sapiUrl=${ApplicationStore.getSapiUrl()}#/${componentId}/${configId}`;
     });
 }
