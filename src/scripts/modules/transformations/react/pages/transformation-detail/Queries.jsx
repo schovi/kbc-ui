@@ -93,7 +93,7 @@ export default React.createClass({
         return (
           <Popover title="Redshift queries" className="popover-wide">
             <ul>
-              <li>Comments after the last query will fail execution.</li>
+              <li>Comments after the last query or comments longer than 8000 characters will fail execution.</li>
               <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
               <li>Redshift does not support functions or stored procedures.</li>
             </ul>
@@ -102,7 +102,7 @@ export default React.createClass({
         return (
           <Popover title="Snowflake queries" className="popover-wide">
             <ul>
-              <li>Comments after the last query will fail execution.</li>
+              <li>Comments after the last query or comments longer than 8000 characters will fail execution.</li>
               <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
             </ul>
           </Popover>);
@@ -110,7 +110,7 @@ export default React.createClass({
         return (
           <Popover title="Mysql queries" className="popover-wide">
             <ul>
-              <li>Comments after the last query will fail execution.</li>
+              <li>Comments after the last query or comments longer than 8000 characters will fail execution.</li>
               <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
               <li>MySQL functions or stored procedures are not officially supported. Use at your own risk.</li>
             </ul>
