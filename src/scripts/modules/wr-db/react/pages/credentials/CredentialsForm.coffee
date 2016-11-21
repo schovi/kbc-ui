@@ -59,10 +59,11 @@ module.exports = React.createClass
   _renderTestCredentials: ->
     if not isDockerBasedWriter(@props.componentId) or @props.componentId == 'wr-db-mssql'
       return null
-    React.createElement TestCredentialsButton,
-      testCredentialsFn: =>
-        # creds = if @props.isProvisioning then @props.savedCredentials else @props.credentials
-        @props.testCredentialsFn(@props.credentials)
+    div style: {'paddingTop': '10px'},
+      React.createElement TestCredentialsButton,
+        testCredentialsFn: =>
+          # creds = if @props.isProvisioning then @props.savedCredentials else @props.credentials
+          @props.testCredentialsFn(@props.credentials)
 
   _renderSshTunnelRow: ->
     if not hasSshTunnel(@props.componentId) or @props.isProvisioning
