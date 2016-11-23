@@ -66,8 +66,39 @@ oracle = [
   'urowid'
   {'varchar2': defaultSize: '255'}
 ]
+snowflake = [
+  {'number': defaultSize: '38,0'}
+  {'decimal': defaultSize: '38,0'}
+  {'numeric': defaultSize: '38,0'}
+  'int'
+  'integer'
+  'bigint'
+  'smallint'
+  'tinyint'
+  'byteint'
+  'float'
+  'float4'
+  'float8'
+  'double'
+  'double precision'
+  'real'
+  'boolean'
+  {'char': defaultSize: '255'}
+  {'character': defaultSize: '255'}
+  {'varchar': defaultSize: '255'}
+  {'string': defaultSize: '255'}
+  {'text': defaultSize: '255'}
+  {'binary': defaultSize: '255'}
+  'date'
+  {'time': defaultSize: '9'}
+  'timestamp'
+  'timestamp_ltz'
+  'timestamp_ntz'
+  'timestamp_tz'
+]
 
 module.exports =
+'keboola.wr-db-snowflake': snowflake
 'keboola.wr-db-oracle': oracle
 'keboola.wr-db-impala': impala
 'keboola.wr-db-mssql-v2': mssql
