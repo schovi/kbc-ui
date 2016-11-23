@@ -79,6 +79,15 @@ fields =
     [ 'Service Name/SID', 'database', 'text']
   ]
 
+  'keboola.wr-db-snowflake': [
+    [ 'Host name', 'host']
+    [ 'Port', 'port', 'number', false, '433']
+    [ 'Username', 'user']
+    [ 'Password', '#password', 'password', true]
+    [ 'Database Name', 'database', 'text']
+    [ 'Schema', 'schema', 'text']
+  ]
+
 
 module.exports = (componentId) ->
   fields[componentId] or defaultFields
