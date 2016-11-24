@@ -233,6 +233,9 @@ templateFn = (componentId, driver, isProvisioning) ->
     if driver == 'redshift'
       return _.str.include(host,'redshift.amazonaws.com') and _.str.include(host, 'sapi')
 
+    if driver == 'snowflake'
+      return _.str.include(host,'keboola.snowflakecomputing.com')
+
     return false
 
   _handleChange: (propName, event) ->
