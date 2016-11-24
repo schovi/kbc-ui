@@ -81,7 +81,7 @@ fields =
 
   'keboola.wr-db-snowflake': [
     [ 'Host name', 'host']
-    [ 'Port', 'port', 'number', false, '433']
+    [ 'Port', 'port', 'number', false, '443']
     [ 'Username', 'user']
     [ 'Password', '#password', 'password', true]
     [ 'Database Name', 'database', 'text']

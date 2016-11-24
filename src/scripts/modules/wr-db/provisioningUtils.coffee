@@ -6,6 +6,7 @@ provisioningActions = require '../provisioning/ActionCreators'
 
 OLD_WR_REDSHIFT_COMPONENT_ID = 'wr-db-redshift'
 NEW_WR_REDSHIFT_COMPONENT_ID = 'keboola.wr-redshift-v2'
+WR_SNOWFLAKE_COMPONENT_ID = 'keboola.wr-db-snowflake'
 
 # load credentials and if they dont exists then create new
 loadCredentials = (permission, token, driver, forceRecreate, componentId) ->
@@ -16,7 +17,9 @@ loadCredentials = (permission, token, driver, forceRecreate, componentId) ->
   if componentId == NEW_WR_REDSHIFT_COMPONENT_ID
     driver = 'redshift-workspace'
     permission = 'writer'
-  #TODO add snowflake provisioning support here
+  if componentId == WR_SNOWFLAKE_COMPONENT_ID
+    driver = 'snowflake'
+    permission = 'writer'
 
   provisioningActions.loadWrDbCredentials(permission, token, driver).then ->
     creds = wrDbProvStore.getCredentials(permission, token)
