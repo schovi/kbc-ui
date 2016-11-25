@@ -30,11 +30,11 @@ loadCredentials = (permission, token, driver, forceRecreate, componentId) ->
         return wrDbProvStore.getCredentials(permission, token)
 
 
-getWrDbToken = (driver) ->
+getWrDbToken = (desc, legacyDesc) ->
   StorageService.loadTokens().then ->
     tokens = SapiStorage.getAll()
     wrDbToken = tokens.find( (token) ->
-      token.get('description') == "wrdb#{driver}"
+      token.get('description') in [desc, legacyDesc]
       )
     return wrDbToken
 
@@ -66,10 +66,11 @@ retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver, componentId) -
 
 
 module.exports =
-  getCredentials: (isReadOnly, driver, componentId) ->
-    desc = "wrdb#{driver}"
+  getCredentials: (isReadOnly, driver, componentId, configId) ->
+    desc = "wrdb#{driver}_#{configId}"
+    legacyDesc = "wrdb#{driver}"
     wrDbToken = null
-    getWrDbToken(driver).then (token) ->
+    getWrDbToken(desc, legacyDesc).then (token) ->
       wrDbToken = token
       if not wrDbToken
         params =
