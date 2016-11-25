@@ -39,30 +39,21 @@ getWrDbToken = (desc, legacyDesc) ->
     return wrDbToken
 
 retrieveProvisioningCredentials = (isReadOnly, wrDbToken, driver, componentId) ->
-  readPromise = null
-  #enforce recreate read credentials for redshift only(permisson for)
-  if driver == 'redshift'
-    readPromise = loadCredentials('write', wrDbToken, driver, false, componentId)
-  else
-    readPromise = loadCredentials('read', wrDbToken, driver, false, componentId)
-  writePromise = null
-  if not isReadOnly
-    if driver == 'redshift'
-      return readPromise.then( (readResult) ->
-        writePromise = loadCredentials('write', wrDbToken, driver, false, componentId)
-        return Promise.props
-          read: readResult
-          write: writePromise
-      )
-    else
-      writePromise = loadCredentials('write', wrDbToken, driver, false, componentId)
+  switch driver
+    when 'redshift'
+      loadPromise = loadCredentials('write', wrDbToken, driver, false, componentId)
       return Promise.props
-        read: readPromise
-        write: writePromise
-  else
-    return Promise.props
-      read: readPromise
-      write: writePromise
+        read: loadPromise
+        write: if isReadOnly then null else loadPromise
+    when 'snowflake'
+      loadPromise = loadCredentials('write', wrDbToken, driver, false, componentId)
+      return Promise.props
+        read: loadPromise
+        write: if isReadOnly then null else loadPromise
+    else
+      return Promise.props
+        read: loadCredentials('read', wrDbToken, driver, false, componentId)
+        write: if not isReadOnly then loadCredentials('write', wrDbToken, driver, false, componentId)
 
 
 module.exports =

@@ -34,7 +34,7 @@ module.exports = React.createClass
 
   render: ->
     provDescription = 'This is readonly credentials to the database provided by Keboola.'
-    if @props.driver == 'redshift'
+    if @props.driver == 'redshift' or @props.driver == 'snowflake'
       provDescription = 'This is write credentials to the database provided by Keboola.'
     fields = fieldsTemplates(@props.componentId)
 
