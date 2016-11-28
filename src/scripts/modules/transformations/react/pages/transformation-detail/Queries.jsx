@@ -104,6 +104,7 @@ export default React.createClass({
             <ul>
               <li>Comments after the last query or comments longer than 8000 characters will fail execution.</li>
               <li>Do not use plain SELECT queries as they do not modify data and may exhaust memory on the cluster or in our component; use appropriate CREATE, UPDATE, INSERT or DELETE.</li>
+              <li>Working with timestamps? Please read the <a href="https://help.keboola.com/manipulation/transformations/snowflake/#timestamp-columns">documentation</a>.</li>
             </ul>
           </Popover>);
       default:
