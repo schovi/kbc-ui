@@ -88,11 +88,11 @@ module.exports =
       path: path
       data: data
 
-  addTableToConfig: (componentId, configId, tableId) ->
+  addTableToConfig: (componentId, configId, tableId, sapiTable) ->
     table =
       id: tableId
-      dbName: tableId
-      name: tableId
+      dbName: sapiTable.get('name')
+      name: sapiTable.get('name')
       export: true
     dispatcher.handleViewAction
       type: constants.ActionTypes.WR_DB_ADD_TABLE_START

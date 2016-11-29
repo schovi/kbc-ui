@@ -120,7 +120,8 @@ templateFn = (componentId) ->
           updateStateFn(['tableId'], tableId)
         configuredTables: inputTables
         onSaveFn: (tableId) =>
-          WrDbActions.addTableToConfig(componentId, @state.configId, tableId).then =>
+          selectedTable = @state.allTables.find((t) -> t.get('id') == tableId)
+          WrDbActions.addTableToConfig(componentId, @state.configId, tableId, selectedTable).then =>
             RoutesStore.getRouter().transitionTo "#{componentId}-table",
               tableId: tableId
               config: @state.configId
