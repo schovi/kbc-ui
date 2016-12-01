@@ -2,7 +2,7 @@ import React from 'react';
 import {fromJS, List} from 'immutable';
 import moment from 'moment';
 import MetricsApi from '../MetricsApi';
-import FileSize from '../../../react/common/FileSize';
+import CreditSize from '../../../react/common/CreditSize';
 import ComponentsStore from '../../components/stores/ComponentsStore';
 import {Panel, Table} from 'react-bootstrap';
 import ComponentName from './../../../react/common/ComponentName';
@@ -99,7 +99,7 @@ export default React.createClass({
         </div>
         <div className="col-sm-4">
           <strong>
-            <FileSize size={componentIoSummary(data.get('components'), 'storage')}/>
+            <CreditSize nanoCredits={componentIoSummary(data.get('components'), 'storage')}/>
           </strong>
         </div>
       </div>
@@ -142,7 +142,7 @@ export default React.createClass({
             </div>
             <div className="col-md-4">
               <span style={{lineHeight: '2em'}}>
-                <FileSize size={
+                <CreditSize nanoCredits={
                   component.get('storage').get('inBytes') + component.get('storage').get('outBytes')
                 }/>
               </span>
