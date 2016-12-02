@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Map} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {Modal} from 'react-bootstrap';
 import {sanitizeTableName, sheetFullName} from '../../common';
@@ -99,7 +99,16 @@ export default React.createClass({
         </div>
 
         <ProcessorControls
-          {...this.props.prepareLocalState(['ProcessorControl'])}
+          headerRowValue={this.headerRowValue()}
+          onChangeHeaderRow={this.onChangeHeaderRow}
+          headerColumnNamesValue={this.headerColumnNamesValue()}
+          onChangeHeaderColumnNames={this.onChangeHeaderColumnNames}
+          transposeHeaderRowValue={this.transposeHeaderRowValue()}
+          onChangeTransposeHeaderRow={this.onChangeTransposeHeaderRow}
+          transposedHeaderColumnNameValue={this.transposedHeaderColumnNameValue()}
+          onChangeTransposedHeaderColumnName={this.onChangeTransposedHeaderColumnName}
+          transposeFromValue={this.transposeFromValue()}
+          onChangeTransposeFrom={this.onChangeTransposeFrom}
         />
 
       </div>
@@ -118,6 +127,7 @@ export default React.createClass({
       .setIn(['processor', 'headerColumnNames'], this.headerColumnNamesValue())
       .setIn(['processor', 'transposeHeaderRow'], this.transposeHeaderRowValue())
       .setIn(['processor', 'transposedHeaderColumnName'], this.transposedHeaderColumnNameValue())
+      .setIn(['processor', 'transposeFrom'], this.transposeFromValue())
     ;
     return this.props.onSaveSheetFn(newSheet).then(this.props.onHideFn);
   },
@@ -130,6 +140,62 @@ export default React.createClass({
   headerRowValue() {
     const defaultValue = this.props.localState.getIn(['sheet', 'header', 'row'], 1);
     return this.props.localState.get('headerRow', defaultValue);
+  },
+
+  onChangeHeaderRow(e) {
+    const newVal = parseInt(e.target.value, 10);
+    this.props.updateLocalState('headerRow', newVal);
+  },
+
+  headerColumnNamesValue() {
+    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'headerColumnNames'], List());
+    const columnNames = this.props.localState.get('headerColumnNames', defaultValue);
+    const columnNamesArr = columnNames.toArray();
+    return columnNamesArr.length > 0 ? columnNamesArr : null;
+  },
+
+  onChangeHeaderColumnNames(strColumnNames) {
+    let columnsArray = [];
+    if (strColumnNames && strColumnNames !== '') {
+      for ( let column of strColumnNames.split(',')) {
+        if (columnsArray.indexOf(column) < 0) {
+          columnsArray.push(column);
+        }
+      }
+    }
+    // const newColumnNames = fromJS(columnsArray.map((m) => {return {name: m};}));
+    this.props.updateLocalState('headerColumnNames', fromJS(columnsArray));
+  },
+
+  transposeHeaderRowValue() {
+    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposeHeaderRow'], 0);
+    return this.props.localState.get('transposeHeaderRow', defaultValue);
+  },
+
+  onChangeTransposeHeaderRow(e) {
+    const maxVal = this.props.localState.get('headerRow', 1);
+    const newVal = (e.target.value > maxVal) ? maxVal : e.target.value;
+    this.props.updateLocalState('transposeHeaderRow', newVal);
+  },
+
+  transposedHeaderColumnNameValue() {
+    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposedHeaderColumnName'], '');
+    return this.props.localState.get('transposedHeaderColumnName', defaultValue).trim();
+  },
+
+  onChangeTransposedHeaderColumnName(e) {
+    const newVal = e.target.value;
+    this.props.updateLocalState('transposedHeaderColumnName', newVal);
+  },
+
+  transposeFromValue() {
+    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposeFrom'], 0);
+    return this.props.localState.get('transposeFrom', defaultValue);
+  },
+
+  onChangeTransposeFrom(e) {
+    const newVal = e.target.value;
+    this.props.updateLocalState('transposeFrom', newVal);
   },
 
   invalidReason() {
