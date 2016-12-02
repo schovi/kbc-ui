@@ -59,8 +59,6 @@ module.exports = React.createClass
       mapping = mapping.set("columns", Immutable.List())
       mapping = mapping.set("sortKey", "")
       mapping = mapping.set("distKey", "")
-      if !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
-        mapping = mapping.set("copyOptions", "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS")
     @props.onChange(immutable)
 
   _handleChangeDestination: (e) ->
@@ -367,25 +365,3 @@ module.exports = React.createClass
               React.DOM.small {},
                 "DISTKEY and DISTSTYLE options used for
                   CREATE TABLE query in Redshift."
-
-      if @state.showDetails && (!@_isSourceTableRedshift()) &&
-          !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
-        React.DOM.div {className: "row col-md-12"},
-          Input
-            bsSize: 'small'
-            type: 'text'
-            label: 'COPY options'
-            value: @props.value.get("copyOptions")
-            disabled: @props.disabled
-            placeholder: "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
-            onChange: @_handleChangeCopyOptions
-            labelClassName: 'col-xs-2'
-            wrapperClassName: 'col-xs-10'
-            help:
-              React.DOM.small {},
-                "Additional options for COPY command, multiple values separated by comma. "
-                React.DOM.a
-                  href: "https://help.keboola.com/manipulation/transformations/redshift/#best-practices"
-                ,
-                  "Default options"
-                "."

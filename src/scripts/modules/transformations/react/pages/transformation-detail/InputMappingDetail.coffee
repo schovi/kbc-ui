@@ -148,18 +148,6 @@ InputMappingDetail = React.createClass(
             else
               'No distribution key set'
 
-      if (@props.transformationBackend == 'redshift' && !@_isSourceTableInRedshift() &&
-          !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace'))
-        ListGroupItem {key: 'copyOptions'},
-          strong {className: "col-md-4"},
-            'COPY options'
-          span {className: "col-md-6"},
-            if @props.inputMapping.get('copyOptions')
-              @props.inputMapping.get('copyOptions')
-            else
-              span {className: 'muted'},
-                "NULL AS 'NULL', ACCEPTANYDATE, TRUNCATECOLUMNS"
-
     ]
     ListGroup {className: "clearfix"}, _.reject(ListGroupItems, (obj) -> obj == undefined)
 )
