@@ -127,10 +127,6 @@ module.exports = React.createClass
     value = @props.value.set("distStyle", string)
     @props.onChange(value)
 
-  _handleChangeCopyOptions: (e) ->
-    value = @props.value.set("copyOptions", e.target.value)
-    @props.onChange(value)
-
   _getTables: ->
     props = @props
     inOutTables = @props.tables.filter((table) ->
