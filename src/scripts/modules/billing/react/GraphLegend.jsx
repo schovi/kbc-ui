@@ -1,5 +1,5 @@
 import React, {PropTypes}  from 'react';
-import {getConversion} from './Graph';
+import CreditSize from '../../../react/common/CreditSize';
 
 export default React.createClass({
 
@@ -9,11 +9,11 @@ export default React.createClass({
   },
 
   render: function() {
-    const conversion = getConversion('bytes');
     return (
       <div className="text-center">
-        <h3>Storage IO</h3>
-        <h4>Consumed {conversion(this.props.value)} GB</h4>
+        <h4>
+          Total <CreditSize nanoCredits={this.props.value}/>
+        </h4>
       </div>
     );
   }

@@ -1,15 +1,25 @@
 import React, {PropTypes}  from 'react';
 import {fromJS} from 'immutable';
-import {getConversion} from './Graph';
 
 function format(unit) {
   switch (unit) {
-    case 'millions':
-      return '#,### M';
-    case 'bytes':
-      return '#,### GB';
+    case 'credits':
+      return '#,### credits';
     default:
       return '#,###';
+  }
+}
+
+function getConversion(unit) {
+  switch (unit) {
+    case 'credits':
+      return function(val) {
+        return Number((val / (1000 * 1000 * 1000)).toFixed(3));
+      };
+    default:
+      return function(val) {
+        return val;
+      };
   }
 }
 
@@ -80,8 +90,8 @@ export default React.createClass({
 
   prepareGraphData() {
     if (!this.props.data.isEmpty()) {
-      var conversion = getConversion('bytes');
-      var converted = [
+      let conversion = getConversion('credits');
+      let converted = [
         [
           'Date',
           'Value',
@@ -106,7 +116,7 @@ export default React.createClass({
   drawGraph() {
     const element = React.findDOMNode(this.refs.lastMonthUsage);
     const chartOptions = createChartOptions({
-      vAxisFormat: format('bytes')
+      vAxisFormat: format('credits')
     });
     const graphData = this.prepareGraphData();
 
