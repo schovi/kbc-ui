@@ -4,19 +4,19 @@ import HeaderColumnsMultiSelect from './HeaderColumnsMultiSelect';
 export default React.createClass({
 
   propTypes: {
-    headerRowValue: PropTypes.object.isRequired,
+    headerRowValue: PropTypes.number.isRequired,
     onChangeHeaderRow: PropTypes.func.isRequired,
 
     headerColumnNamesValue: PropTypes.object.isRequired,
     onChangeHeaderColumnNames: PropTypes.func.isRequired,
 
-    transposeHeaderRowValue: PropTypes.object.isRequired,
+    transposeHeaderRowValue: PropTypes.number.isRequired,
     onChangeTransposeHeaderRow: PropTypes.func.isRequired,
 
-    transposedHeaderColumnNameValue: PropTypes.object.isRequired,
+    transposedHeaderColumnNameValue: PropTypes.string.isRequired,
     onChangeTransposedHeaderColumnName: PropTypes.func.isRequired,
 
-    transposeFromValue: PropTypes.object.isRequired,
+    transposeFromValue: PropTypes.number.isRequired,
     onChangeTransposeFrom: PropTypes.func.isRequired
   },
 

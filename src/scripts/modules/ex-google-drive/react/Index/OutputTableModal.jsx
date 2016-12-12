@@ -115,7 +115,6 @@ export default React.createClass({
     );
   },
 
-
   handleSave() {
     const sanitized = sanitizeTableName(this.outputTableValue());
     const sheet = this.props.localState.get('sheet');
@@ -123,13 +122,16 @@ export default React.createClass({
     const newSheet = sheet
       .set('outputTable', sanitized)
       .setIn(['header', 'row'], this.headerRowValue())
-      .setIn(['processor', 'headerRow'], this.headerRowValue())
-      .setIn(['processor', 'headerColumnNames'], this.headerColumnNamesValue())
-      .setIn(['processor', 'transposeHeaderRow'], this.transposeHeaderRowValue())
-      .setIn(['processor', 'transposedHeaderColumnName'], this.transposedHeaderColumnNameValue())
-      .setIn(['processor', 'transposeFrom'], this.transposeFromValue())
     ;
-    return this.props.onSaveSheetFn(newSheet).then(this.props.onHideFn);
+    const processor = this.props.localState.get('processor');
+    const newProcessor = processor
+      .setIn(['header_rows_count'], this.headerRowValue())
+      .setIn(['header_column_names'], this.headerColumnNamesValue())
+      .setIn(['header_transpose_row'], this.transposeHeaderRowValue())
+      .setIn(['header_transpose_column_name'], this.transposedHeaderColumnNameValue())
+      .setIn(['transpose_from_column'], this.transposeFromValue())
+    ;
+    return this.props.onSaveSheetFn(newSheet, newProcessor).then(this.props.onHideFn);
   },
 
   outputTableValue() {
@@ -148,7 +150,7 @@ export default React.createClass({
   },
 
   headerColumnNamesValue() {
-    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'headerColumnNames'], List());
+    const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'header_column_names'], List());
     const columnNames = this.props.localState.get('headerColumnNames', defaultValue);
     const columnNamesArr = columnNames.toArray();
     return columnNamesArr.length > 0 ? columnNamesArr : null;
@@ -168,7 +170,7 @@ export default React.createClass({
   },
 
   transposeHeaderRowValue() {
-    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposeHeaderRow'], 0);
+    const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'header_transpose_row'], 0);
     return this.props.localState.get('transposeHeaderRow', defaultValue);
   },
 
@@ -179,7 +181,7 @@ export default React.createClass({
   },
 
   transposedHeaderColumnNameValue() {
-    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposedHeaderColumnName'], '');
+    const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'header_transpose_column_name'], '');
     return this.props.localState.get('transposedHeaderColumnName', defaultValue).trim();
   },
 
@@ -189,7 +191,7 @@ export default React.createClass({
   },
 
   transposeFromValue() {
-    const defaultValue = this.props.localState.getIn(['sheet', 'processor', 'transposeFrom'], 0);
+    const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'transpose_from_column'], 0);
     return this.props.localState.get('transposeFrom', defaultValue);
   },
 

@@ -64,22 +64,36 @@ export default function(configId) {
     return newId;
   }
 
-  function saveSheets(newSheets, savingPath, changeDescription) {
-    const msg = changeDescription || 'Update sheets';
-    const data = store.configData.setIn(['parameters', 'sheets'], newSheets);
-    return saveConfigData(data, savingPath, msg);
+  function getFilenameFromSheet(sheet) {
+    return `${sheet.get('fileId')}_${sheet.get('sheetId')}.csv`;
   }
 
-  function createProcessorConfig(sheet) {
-    return (new Map())
+  function updateProcessor(sheet, processor) {
+    const filename = getFilenameFromSheet(sheet);
+    const parameters = (new Map())
+      .set('filename', filename)
+      .set('header_rows_count', processor.get('header_rows_count'))
+      .set('header_column_names', processor.get('header_column_names'))
+      .set('header_transpose_row', processor.get('header_transpose_row'))
+      .set('header_transpose_column_name', processor.get('header_transpose_column_name'))
+      .set('transpose_from_column', processor.get('transpose_from_column'));
+
+    const processorToSave = (new Map())
       .set('definition', 'keboola.processor.transpose')
-      .setIn(['parameters', 'filename'], `${sheet.get('fileId')}_${sheet.get('sheetId')}.csv`)
-      .setIn(['parameters', 'header_rows_count'], sheet.getIn(['processor', 'headerRow']))
-      .setIn(['parameters', 'header_column_names'], sheet.getIn(['processor', 'headerColumnNames']))
-      .setIn(['parameters', 'header_transpose_row'], sheet.getIn(['processor', 'transposeHeaderRow']))
-      .setIn(['parameters', 'header_transpose_column_name'], sheet.getIn(['processor', 'transposedHeaderColumnName']))
-      .setIn(['parameters', 'transpose_from_column'], sheet.getIn(['processor', 'transposeFrom']))
-    ;
+      .set('parameters', parameters);
+
+    // add new processor
+    if (store.processors.toSet().filter(p => p.getIn(['parameters', 'filename']) === filename).isEmpty()) {
+      return store.processors.toSet().add(processorToSave);
+    }
+    // replace existing processor
+    return store.processors.toSet().map(p => p.getIn(['parameters', 'filename']) === filename ? processorToSave : p);
+  }
+
+  function deleteProcessor(sheetId) {
+    const sheet = store.sheets.find(p => p.get('id') === sheetId);
+    const filename = getFilenameFromSheet(sheet);
+    return store.processors.toSet().filter(p => p.getIn(['parameters', 'filename']) !== filename);
   }
 
   return {
@@ -104,27 +118,11 @@ export default function(configId) {
       return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet${plural}`);
     },
 
-    saveEditingSheet(sheet) {
+    saveEditingSheet(sheet, processor) {
       const sheetId = sheet.get('id').toString();
       const msg = `Update ${getFullName(sheet)}`;
-
-      const dirtySheet = (new Map())
-        .set('id', sheet.get('id'))
-        .set('fileId', sheet.get('fileId'))
-        .set('fileTitle', sheet.get('fileTitle'))
-        .set('sheetId', sheet.get('sheetId'))
-        .set('sheetTitle', sheet.get('sheetTitle'))
-        .set('enabled', true)
-        .setIn(['header', 'rows'], 1)
-        .set('outputTable', name)
-      ;
-      const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId ? dirtySheet : q);
-
-      const processor = createProcessorConfig(sheet);
-
-      const processors = store.processors.map(function(p) {
-        return `${sheet.get('fileId')}_${sheet.get('sheetId')}.csv` === p.get('filename') ? processor : p;
-      });
+      const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId ? sheet : q);
+      const processors = updateProcessor(sheet, processor);
 
       const data = store.configData
         .setIn(['parameters', 'sheets'], sheets)
@@ -136,8 +134,13 @@ export default function(configId) {
 
     deleteSheet(sheetId) {
       const newSheets = store.sheets.filter((q) => q.get('id').toString() !== sheetId.toString());
+      const processors = deleteProcessor(sheetId);
       const msg = `Remove ${getFullName(store.getConfigSheet(sheetId))}`;
-      return saveSheets(newSheets, store.getPendingPath(['delete', sheetId]), msg);
+      const data = store.configData
+        .setIn(['parameters', 'sheets'], newSheets)
+        .setIn(['processors', 'after'], processors)
+      ;
+      return saveConfigData(data, store.getPendingPath(['delete', sheetId]), msg);
     },
 
     toggleSheetEnabled(sheetId) {
@@ -145,7 +148,8 @@ export default function(configId) {
       const msg = `${newSheet.get('enabled') ? 'Disable' : 'Enable'} extraction of ${getFullName(newSheet)}`;
       newSheet = newSheet.set('enabled', !newSheet.get('enabled'));
       const newSheets = store.sheets.map((q) => q.get('id').toString() === sheetId.toString() ? newSheet : q);
-      return saveSheets(newSheets, store.getPendingPath(['toggle', sheetId]), msg);
+      const data = store.configData.setIn(['parameters', 'sheets'], newSheets);
+      return saveConfigData(data, store.getPendingPath(['toggle', sheetId]), msg);
     }
   };
 }
