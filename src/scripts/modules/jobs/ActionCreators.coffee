@@ -46,6 +46,7 @@ module.exports =
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.JOBS_LOAD_ERROR
+        exception: e
       throw e
 
   filterJobs: (query) ->

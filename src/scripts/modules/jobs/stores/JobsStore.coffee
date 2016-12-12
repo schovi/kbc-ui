@@ -88,8 +88,10 @@ JobsStore.dispatchToken = Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.JOBS_LOAD_ERROR
       _store = _store.delete 'isLoading'
+      status = action.exception?.response?.status
       errorCount = _store.get('loadJobsErrorCnt', 0)
-      _store = _store.set('loadJobsErrorCnt', errorCount + 1)
+      if status == 401
+        _store = _store.set('loadJobsErrorCnt', errorCount + 1)
       JobsStore.emitChange()
 
     #LOAD MORE JOBS FROM API and merge with current jobs
