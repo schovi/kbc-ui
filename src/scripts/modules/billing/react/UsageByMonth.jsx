@@ -62,7 +62,7 @@ export default React.createClass({
       return (
         <div style={{marginBottom: '10em'}}>
           <h3>
-            {'Consumed Storage IO from '}
+            {'Project Power from '}
             {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
             {' to '}
             {moment(this.state.dates.dateTo).format('MMM D, YYYY')}

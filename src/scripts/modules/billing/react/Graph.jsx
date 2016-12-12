@@ -55,14 +55,17 @@ export default React.createClass({
       return (
         <div>
           <h3>
-            {'Consumed Storage IO from '}
+            {'Project Power for last month '}
+            <small>
+            {'from '}
             {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
             {' to '}
             {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
+            </small>
           </h3>
           <GraphVisualization data={this.state.metricsData}/>
           <GraphLegend
-            title="Storage IO"
+            title="Project Power"
             value={this.state.metricsData.reduce(function(monthSummary, day) {
               return monthSummary + day.get('value');
             }, 0)}

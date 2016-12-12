@@ -11,9 +11,8 @@ export default React.createClass({
   render: function() {
     return (
       <div className="text-center">
-        <h3>Storage IO</h3>
         <h4>
-          Consumed <CreditSize nanoCredits={this.props.value}/>
+          Total <CreditSize nanoCredits={this.props.value}/>
         </h4>
       </div>
     );
