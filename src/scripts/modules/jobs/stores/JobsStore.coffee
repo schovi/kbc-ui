@@ -16,6 +16,7 @@ _store = Map(
   isLoading: false
   isLoaded: false
   isLoadMore: true
+  loadJobsErrorCnt: 0
   limit: 50
   offset: 0
   )
@@ -25,6 +26,9 @@ JobsStore = StoreUtils.createStore
     filter = _store.get 'query'
     if not filter
       return getAll()
+
+  loadJobsErrorCount: ->
+    _store.get('loadJobsErrorCnt', 0)
 
   getAll: ->
     _store
@@ -84,6 +88,8 @@ JobsStore.dispatchToken = Dispatcher.register (payload) ->
 
     when Constants.ActionTypes.JOBS_LOAD_ERROR
       _store = _store.delete 'isLoading'
+      errorCount = _store.get('loadJobsErrorCnt', 0)
+      _store = _store.set('loadJobsErrorCnt', errorCount + 1)
       JobsStore.emitChange()
 
     #LOAD MORE JOBS FROM API and merge with current jobs
@@ -94,6 +100,7 @@ JobsStore.dispatchToken = Dispatcher.register (payload) ->
         _store = _store.set('jobsById', Map())
       _store = _store.withMutations((store) ->
         store
+          .set('loadJobsErrorCnt', 0)
           .set('isLoading', false)
           .set('isLoaded', true)
           .set('offset', action.newOffset)

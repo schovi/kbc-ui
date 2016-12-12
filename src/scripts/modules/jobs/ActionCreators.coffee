@@ -24,7 +24,8 @@ module.exports =
     @loadJobsForce(JobsStore.getOffset(), false, true)
 
   reloadJobs: ->
-    @loadJobsForce(0, false, true)
+    if JobsStore.loadJobsErrorCount() < 10
+      @loadJobsForce(0, false, true)
 
   loadMoreJobs: ->
     offset = JobsStore.getNextOffset()
