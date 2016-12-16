@@ -72,6 +72,7 @@ export default function(configId) {
     const filename = getFilenameFromSheet(sheet);
     const parameters = (new Map())
       .set('filename', filename)
+      .set('transpose', processor.get('transpose'))
       .set('header_rows_count', processor.get('header_rows_count'))
       .set('header_column_names', processor.get('header_column_names'))
       .set('header_transpose_row', processor.get('header_transpose_row'))
@@ -79,7 +80,7 @@ export default function(configId) {
       .set('transpose_from_column', processor.get('transpose_from_column'));
 
     const processorToSave = (new Map())
-      .set('definition', 'keboola.processor.transpose')
+      .setIn(['definition', 'component'], 'keboola.processor.transpose')
       .set('parameters', parameters);
 
     // add new processor

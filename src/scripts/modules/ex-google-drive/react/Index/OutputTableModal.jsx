@@ -4,6 +4,7 @@ import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import {Modal} from 'react-bootstrap';
 import {sanitizeTableName, sheetFullName} from '../../common';
 import ProcessorControls from '../components/ProcessorControls';
+import Tooltip from '../../../../react/common/Tooltip';
 
 export default React.createClass({
 
@@ -97,21 +98,43 @@ export default React.createClass({
             }
           </div>
         </div>
+        <div className="form-group">
 
-        <ProcessorControls
-          headerRowValue={this.headerRowValue()}
-          onChangeHeaderRow={this.onChangeHeaderRow}
-          headerColumnNamesValue={this.headerColumnNamesValue()}
-          onChangeHeaderColumnNames={this.onChangeHeaderColumnNames}
-          transposeHeaderRowValue={this.transposeHeaderRowValue()}
-          onChangeTransposeHeaderRow={this.onChangeTransposeHeaderRow}
-          transposedHeaderColumnNameValue={this.transposedHeaderColumnNameValue()}
-          onChangeTransposedHeaderColumnName={this.onChangeTransposedHeaderColumnName}
-          transposeFromValue={this.transposeFromValue()}
-          onChangeTransposeFrom={this.onChangeTransposeFrom}
-        />
+          <label className="control-label col-sm-4">
+            Enable Output Processor
+          </label>
+          <div className="col-sm-2">
+            <Tooltip
+              tooltip="Show Output Processor settings">
+              <input
+                checked={this.transposeEnabledValue()}
+                type="checkbox"
+                onClick={this.toggleTransposeEnabled}
+                />
+            </Tooltip>
+          </div>
+        </div>
+
+        {this.transposeEnabledValue() ? this.renderProcessorControls() : ''}
 
       </div>
+    );
+  },
+
+  renderProcessorControls() {
+    return (
+      <ProcessorControls
+        headerRowValue={this.headerRowValue()}
+        onChangeHeaderRow={this.onChangeHeaderRow}
+        headerColumnNamesValue={this.headerColumnNamesValue()}
+        onChangeHeaderColumnNames={this.onChangeHeaderColumnNames}
+        transposeHeaderRowValue={this.transposeHeaderRowValue()}
+        onChangeTransposeHeaderRow={this.onChangeTransposeHeaderRow}
+        transposedHeaderColumnNameValue={this.transposedHeaderColumnNameValue()}
+        onChangeTransposedHeaderColumnName={this.onChangeTransposedHeaderColumnName}
+        transposeFromValue={this.transposeFromValue()}
+        onChangeTransposeFrom={this.onChangeTransposeFrom}
+      />
     );
   },
 
@@ -121,10 +144,11 @@ export default React.createClass({
     this.props.updateLocalState('dontValidate', true);
     const newSheet = sheet
       .set('outputTable', sanitized)
-      .setIn(['header', 'row'], this.headerRowValue())
+      .setIn(['header', 'rows'], this.headerRowValue())
     ;
     const processor = this.props.localState.get('processor');
     const newProcessor = processor
+      .setIn(['transpose'], this.transposeEnabledValue())
       .setIn(['header_rows_count'], this.headerRowValue())
       .setIn(['header_column_names'], this.headerColumnNamesValue())
       .setIn(['header_transpose_row'], this.transposeHeaderRowValue())
@@ -140,7 +164,7 @@ export default React.createClass({
   },
 
   headerRowValue() {
-    const defaultValue = this.props.localState.getIn(['sheet', 'header', 'row'], 1);
+    const defaultValue = this.props.localState.getIn(['sheet', 'header', 'rows'], 1);
     return this.props.localState.get('headerRow', defaultValue);
   },
 
@@ -149,10 +173,20 @@ export default React.createClass({
     this.props.updateLocalState('headerRow', newVal);
   },
 
+  transposeEnabledValue() {
+    const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'transpose'], false);
+    return this.props.localState.get('transposeEnabled', defaultValue);
+  },
+
+  toggleTransposeEnabled() {
+    const defaultValue = !!this.props.localState.get('transposeEnabled', false);
+    this.props.updateLocalState('transposeEnabled', !defaultValue);
+  },
+
   headerColumnNamesValue() {
     const defaultValue = this.props.localState.getIn(['processor', 'parameters', 'header_column_names'], List());
     const columnNames = this.props.localState.get('headerColumnNames', defaultValue);
-    const columnNamesArr = columnNames.toArray();
+    const columnNamesArr = (columnNames === null) ? [] : columnNames.toArray();
     return columnNamesArr.length > 0 ? columnNamesArr : null;
   },
 
@@ -165,7 +199,7 @@ export default React.createClass({
         }
       }
     }
-    // const newColumnNames = fromJS(columnsArray.map((m) => {return {name: m};}));
+
     this.props.updateLocalState('headerColumnNames', fromJS(columnsArray));
   },
 

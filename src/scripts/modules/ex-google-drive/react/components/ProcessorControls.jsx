@@ -22,46 +22,46 @@ export default React.createClass({
 
   render() {
     return (
-      <div className="processorControls">
-      {this.renderInput(
-        'number',
-        'Number of header rows',
-        this.props.headerRowValue,
-        this.props.onChangeHeaderRow
-      )}
+      <div className="processorControls col-md-12">
+        {this.renderInput(
+          'number',
+          'Number of header rows',
+          this.props.headerRowValue,
+          this.props.onChangeHeaderRow
+        )}
 
-      <div className="form-group">
-        <label className="control-label col-sm-4">
-          Header column names <br /> (Overrides header)
-        </label>
-        <div className="col-sm-4">
-          <HeaderColumnsMultiSelect
-            value={this.props.headerColumnNamesValue}
-            onChange={this.props.onChangeHeaderColumnNames}
-          />
+        <div className="form-group">
+          <label className="control-label col-sm-4">
+            Header column names <br /> (Overrides header)
+          </label>
+          <div className="col-sm-4">
+            <HeaderColumnsMultiSelect
+              value={this.props.headerColumnNamesValue}
+              onChange={this.props.onChangeHeaderColumnNames}
+            />
+          </div>
         </div>
-      </div>
 
-      {this.renderInput(
-        'number',
-        'Transpose header row number',
-        this.props.transposeHeaderRowValue,
-        this.props.onChangeTransposeHeaderRow
-      )}
+        {this.renderInput(
+          'number',
+          'Transpose header row number',
+          this.props.transposeHeaderRowValue,
+          this.props.onChangeTransposeHeaderRow
+        )}
 
-      {this.renderInput(
-        'text',
-        'Transposed header column name',
-        this.props.transposedHeaderColumnNameValue,
-        this.props.onChangeTransposedHeaderColumnName
-      )}
+        {this.renderInput(
+          'text',
+          'Transposed header column name',
+          this.props.transposedHeaderColumnNameValue,
+          this.props.onChangeTransposedHeaderColumnName
+        )}
 
-      {this.renderInput(
-        'number',
-        'Transpose from column',
-        this.props.transposeFromValue,
-        this.props.onChangeTransposeFrom
-      )}
+        {this.renderInput(
+          'number',
+          'Transpose from column',
+          this.props.transposeFromValue,
+          this.props.onChangeTransposeFrom
+        )}
       </div>
     );
   },
