@@ -99,6 +99,21 @@ export default React.createClass({
           </div>
         </div>
         <div className="form-group">
+          <label className="control-label col-sm-4">
+            Number of header rows
+          </label>
+          <div className="col-sm-2">
+            <div className="input-group">
+              <input
+                onChange={this.onChangeHeaderRow}
+                value={this.headerRowValue()}
+                type="number"
+                className="form-control form-control-sm"
+                />
+            </div>
+          </div>
+        </div>
+        <div className="form-group">
 
           <label className="control-label col-sm-4">
             Enable Output Processor

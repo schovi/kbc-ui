@@ -23,13 +23,6 @@ export default React.createClass({
   render() {
     return (
       <div className="processorControls col-md-12">
-        {this.renderInput(
-          'number',
-          'Number of header rows',
-          this.props.headerRowValue,
-          this.props.onChangeHeaderRow
-        )}
-
         <div className="form-group">
           <label className="control-label col-sm-4">
             Header column names <br /> (Overrides header)
