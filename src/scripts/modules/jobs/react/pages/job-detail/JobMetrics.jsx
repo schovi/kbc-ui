@@ -1,5 +1,5 @@
 import React from 'react';
-import FileSize from '../../../../../react/common/FileSize';
+import CreditSize from '../../../../../react/common/CreditSize';
 
 export default React.createClass({
 
@@ -11,17 +11,22 @@ export default React.createClass({
     if (!this.props.metrics.isEmpty()) {
       return (
         <div>
-          <h4>Storage IO</h4>
-          <dl className="dl-horizontal">
-            <dt>Input</dt>
-            <dd>{this.renderSize(this.props.metrics.get('storage').get('inBytes'))}</dd>
-            <dt>Output</dt>
-            <dd>{this.renderSize(this.props.metrics.get('storage').get('outBytes'))}</dd>
-          </dl>
-          <small>
-            <i className="fa fa-info-circle" /> Input and output show total transferred bytes (compressed and uncompressed).
-            Shown numbers are processed asynchronously and may keep changing until processing is done.
-          </small>
+          <h4>Project Power</h4>
+          <p className="text-center">
+            {
+              this.renderSize(
+                this.props.metrics.get('storage').get('inBytes')
+                + this.props.metrics.get('storage').get('outBytes')
+              )
+            }
+          </p>
+          <p>
+            <small>
+              <i className="fa fa-info-circle" />
+              {' '}
+              Shown number is processed asynchronously and may keep changing until processing is done.
+            </small>
+          </p>
         </div>
       );
     } else {
@@ -29,14 +34,14 @@ export default React.createClass({
     }
   },
 
-  renderSize(sizeInBytes) {
-    if (sizeInBytes !== 0) {
+  renderSize(nanoCredits) {
+    if (nanoCredits !== 0) {
       return (
-        <FileSize size={sizeInBytes}/>
+        <CreditSize nanoCredits={nanoCredits}/>
       );
     } else {
       return (
-        '0 B'
+        '0 credits'
       );
     }
   }

@@ -7,22 +7,6 @@ import MetricsApi from '../MetricsApi';
 import {componentIoSummary} from './Index';
 import Loader from './Loader';
 
-export function getConversion(unit) {
-  switch (unit) {
-    case 'millions':
-      return function(val) {
-        return Number((val / (1000 * 1000)).toFixed(2));
-      };
-    case 'bytes':
-      return function(val) {
-        return Number((val / (1000 * 1000 * 1000)).toFixed(2));
-      };
-    default:
-      return function(val) {
-        return val;
-      };
-  }
-}
 function getDatesForLastMonth() {
   const dateTo = moment().subtract(1, 'day');
   const dateFrom = moment().subtract(1, 'day').subtract(1, 'month');
@@ -71,14 +55,17 @@ export default React.createClass({
       return (
         <div>
           <h3>
-            {'Consumed Storage IO from '}
+            {'Project Power for last month '}
+            <small>
+            {'from '}
             {moment(this.state.dates.dateFrom).format('MMM D, YYYY')}
             {' to '}
             {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
+            </small>
           </h3>
           <GraphVisualization data={this.state.metricsData}/>
           <GraphLegend
-            title="Storage IO"
+            title="Project Power"
             value={this.state.metricsData.reduce(function(monthSummary, day) {
               return monthSummary + day.get('value');
             }, 0)}

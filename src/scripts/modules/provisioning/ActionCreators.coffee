@@ -12,10 +12,7 @@ ApplicationStore = require '../../stores/ApplicationStore'
 module.exports =
 
   getRedshiftBackend: ->
-    backend = 'redshift-workspace'
-    if (!ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace'))
-      backend = 'redshift'
-    backend
+    return 'redshift-workspace'
 
   ###
   Request specified orchestration load from server

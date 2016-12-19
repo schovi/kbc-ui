@@ -24,7 +24,8 @@ module.exports =
     @loadJobsForce(JobsStore.getOffset(), false, true)
 
   reloadJobs: ->
-    @loadJobsForce(0, false, true)
+    if JobsStore.loadJobsErrorCount() < 10
+      @loadJobsForce(0, false, true)
 
   loadMoreJobs: ->
     offset = JobsStore.getNextOffset()
@@ -45,6 +46,7 @@ module.exports =
     .catch (e) ->
       dispatcher.handleViewAction
         type: constants.ActionTypes.JOBS_LOAD_ERROR
+        exception: e
       throw e
 
   filterJobs: (query) ->

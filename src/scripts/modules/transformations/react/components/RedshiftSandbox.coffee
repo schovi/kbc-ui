@@ -71,18 +71,6 @@ RedshiftSandbox = React.createClass
                 sandboxConfiguration = params
           )
         div {},
-          if !ApplicationStore.hasCurrentProjectFeature('transformation-redshift-workspace')
-            if @state.pendingActions.get 'refresh'
-              button {className: "btn btn-link", disabled: true},
-                Loader()
-                " Refresh privileges"
-            else
-              button {className: "btn btn-link", title: 'Refresh privileges', onClick: @_refreshCredentials},
-                span {className: 'fa fa-fw fa-refresh'}
-                " Refresh privileges"
-          else
-            null
-        div {},
           OverlayTrigger
             overlay: Tooltip null, "Information about secure connection"
             key: 'ssl'

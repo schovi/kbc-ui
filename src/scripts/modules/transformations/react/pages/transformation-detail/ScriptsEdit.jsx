@@ -68,7 +68,6 @@ export default React.createClass({
                 />
             </div>
             <CodeMirror {...codeMirrorParams} />
-              />
           </div>
         </div>
       </div>
