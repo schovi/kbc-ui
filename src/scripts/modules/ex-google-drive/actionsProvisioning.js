@@ -1,5 +1,5 @@
 import storeProvisioning from './storeProvisioning';
-// import {Map, fromJS} from 'immutable';
+import {Map} from 'immutable';
 import * as common from './common';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import _ from 'underscore';
@@ -64,10 +64,37 @@ export default function(configId) {
     return newId;
   }
 
-  function saveSheets(newSheets, savingPath, changeDescription) {
-    const msg = changeDescription || 'Update sheets';
-    const data = store.configData.setIn(['parameters', 'sheets'], newSheets);
-    return saveConfigData(data, savingPath, msg);
+  function getFilenameFromSheet(sheet) {
+    return `${sheet.get('fileId')}_${sheet.get('sheetId')}.csv`;
+  }
+
+  function updateProcessor(sheet, processor) {
+    const filename = getFilenameFromSheet(sheet);
+    const parameters = (new Map())
+      .set('filename', filename)
+      .set('transpose', processor.get('transpose'))
+      .set('header_rows_count', processor.get('header_rows_count'))
+      .set('header_column_names', processor.get('header_column_names'))
+      .set('header_transpose_row', processor.get('header_transpose_row'))
+      .set('header_transpose_column_name', processor.get('header_transpose_column_name'))
+      .set('transpose_from_column', processor.get('transpose_from_column'));
+
+    const processorToSave = (new Map())
+      .setIn(['definition', 'component'], 'keboola.processor.transpose')
+      .set('parameters', parameters);
+
+    // add new processor
+    if (store.processors.toSet().filter(p => p.getIn(['parameters', 'filename']) === filename).isEmpty()) {
+      return store.processors.toSet().add(processorToSave);
+    }
+    // replace existing processor
+    return store.processors.toSet().map(p => p.getIn(['parameters', 'filename']) === filename ? processorToSave : p);
+  }
+
+  function deleteProcessor(sheetId) {
+    const sheet = store.sheets.find(p => p.get('id') === sheetId);
+    const filename = getFilenameFromSheet(sheet);
+    return store.processors.toSet().filter(p => p.getIn(['parameters', 'filename']) !== filename);
   }
 
   return {
@@ -76,13 +103,15 @@ export default function(configId) {
     updateLocalState: updateLocalState,
 
     saveNewSheets(newSheets) {
-      const sheetsToAdd = newSheets.map( (s) => {
+      const sheetsToAdd = newSheets.map((s) => {
         const name = common.sanitizeTableName(getFullName(s, '-'));
-        return s.set('enabled', true)
+        return s
           .set('id', generateId())
+          .set('enabled', true)
           .setIn(['header', 'rows'], 1)
           .set('outputTable', name);
       });
+
       const sheetsToSave = store.sheets.toSet().merge(sheetsToAdd);
       const data = store.configData.setIn(['parameters', 'sheets'], sheetsToSave);
       const savingPath = store.getSavingPath(['newSheets']);
@@ -90,21 +119,29 @@ export default function(configId) {
       return saveConfigData(data, savingPath, `Add ${newSheets.count()} sheet${plural}`);
     },
 
-
-    saveEditingSheet(sheet) {
+    saveEditingSheet(sheet, processor) {
       const sheetId = sheet.get('id').toString();
       const msg = `Update ${getFullName(sheet)}`;
       const sheets = store.sheets.map((q) => q.get('id').toString() === sheetId ? sheet : q);
-      const data = store.configData.setIn(['parameters', 'sheets'], sheets);
+      const processors = updateProcessor(sheet, processor);
+
+      const data = store.configData
+        .setIn(['parameters', 'sheets'], sheets)
+        .setIn(['processors', 'after'], processors)
+      ;
       const savingPath = store.getSavingPath(['updatingSheets']);
       return saveConfigData(data, savingPath, msg);
     },
 
-
     deleteSheet(sheetId) {
       const newSheets = store.sheets.filter((q) => q.get('id').toString() !== sheetId.toString());
+      const processors = deleteProcessor(sheetId);
       const msg = `Remove ${getFullName(store.getConfigSheet(sheetId))}`;
-      return saveSheets(newSheets, store.getPendingPath(['delete', sheetId]), msg);
+      const data = store.configData
+        .setIn(['parameters', 'sheets'], newSheets)
+        .setIn(['processors', 'after'], processors)
+      ;
+      return saveConfigData(data, store.getPendingPath(['delete', sheetId]), msg);
     },
 
     toggleSheetEnabled(sheetId) {
@@ -112,7 +149,8 @@ export default function(configId) {
       const msg = `${newSheet.get('enabled') ? 'Disable' : 'Enable'} extraction of ${getFullName(newSheet)}`;
       newSheet = newSheet.set('enabled', !newSheet.get('enabled'));
       const newSheets = store.sheets.map((q) => q.get('id').toString() === sheetId.toString() ? newSheet : q);
-      return saveSheets(newSheets, store.getPendingPath(['toggle', sheetId]), msg);
+      const data = store.configData.setIn(['parameters', 'sheets'], newSheets);
+      return saveConfigData(data, store.getPendingPath(['toggle', sheetId]), msg);
     }
   };
 }

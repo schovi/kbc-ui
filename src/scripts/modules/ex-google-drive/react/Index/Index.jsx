@@ -224,13 +224,19 @@ export default React.createClass({
   },
 
   showEditTableModal(sheet) {
+    const filename = `${sheet.get('fileId')}_${sheet.get('sheetId')}.csv`;
+    const filteredProcessors = this.state.store.processors.filter(p => p.getIn(['parameters', 'filename']) === filename);
+    const processor = filteredProcessors.isEmpty() ? Map() : filteredProcessors.first();
+
+    this.state.actions.updateLocalState(['TableModal', 'processor'], processor);
     this.state.actions.updateLocalState(['TableModal', 'sheet'], sheet);
   },
 
   renderEditTableModal() {
+    const sheet = this.state.localState.getIn(['TableModal', 'sheet'], Map());
     return (
       <OutputTableModal
-        show={this.state.localState.getIn(['TableModal', 'sheet'], false)}
+        show={!sheet.isEmpty()}
         onHideFn={() => this.state.actions.updateLocalState('TableModal', Map())}
         isSaving={this.state.store.isSaving('updatingSheets')}
         outputBucket={this.state.store.outputBucket}

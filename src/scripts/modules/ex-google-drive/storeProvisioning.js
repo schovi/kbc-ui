@@ -15,6 +15,7 @@ export default function(configId) {
 
   const parameters = configData.get('parameters', Map());
   const sheets = parameters.getIn(['sheets'], List()).sortBy((s) => s.get('fileTitle').toLowerCase());
+  const processors = configData.getIn(['processors', 'after'], List());
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
@@ -40,6 +41,7 @@ export default function(configId) {
 
     // config data stuff
     sheets: sheets,
+    processors: processors,
     configData: configData,
     outputBucket: outputBucket,
 
