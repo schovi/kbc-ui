@@ -3,7 +3,7 @@ version: "2"
 services:
 
   node:
-    image: "node:5"
+    image: "node:7"
     ports:
       - "3000:3000"
     volumes:
@@ -11,4 +11,4 @@ services:
     working_dir: /code
     tty: true
     stdin_open: true
-    command: sh -c 'npm install && npm start'
+    command: sh -c 'npm i -g yarn && yarn && yarn start'

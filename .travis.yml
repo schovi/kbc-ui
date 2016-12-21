@@ -1,23 +1,18 @@
 language: node_js
-node_js:
-  - "5"
+node_js: "7"
 branches:
   only:
-  - master
-install:
-- time npm install
-- git --version
-- git describe --tags
-- export KBC_REVISION=`git describe --tags`
+    - master
+before_script:
+  - git --version
+  - git describe --tags
+  - export KBC_REVISION=`git describe --tags`
 script:
- - npm run lint
- - npm run test
- - npm run build
+ - yarn test
+ - yarn build
 sudo: false
 cache:
-  bundler: true
-  directories:
-  - node_modules
+  yarn: true
 deploy:
 - provider: s3
   access_key_id: AKIAJPIXG5FWMBKORQZA

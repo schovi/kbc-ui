@@ -7,8 +7,11 @@ User interface for Keboola Connection
 ## Development
 
 * Clone the repo
-* Install dependencies `npm install`
-* Server, watch and test with live reload `npm start`
+* We highly recommend using [Yarn](https://yarnpkg.com/) instead of NPM. 
+  * It has many [advantages](https://medium.com/@nikjohn/facebooks-yarn-vs-npm-is-yarn-really-better-1890b3ea6515#.7p88qfh2o)
+  * Install with `brew install yarn`, `npm install -g yarn` or choose [installation](https://yarnpkg.com/en/docs/install) for your platform
+* Install dependencies `yarn` (`npm install`)
+* Server, watch and test with live reload `yarn start` (`npm start`)
 * Open this url in your browser `http://localhost:3000/?token=YOUR_STORAGE_API_TOKEN`
 
 Application will be opened in your browser and will be hot reloaded after each change in source files.
@@ -21,7 +24,7 @@ docker-compose run --rm --service-ports node # runs npm install && npm start
 
 ### Build dist package
 
-* `npm run build` (It is executed by Travis after each push)
+* `yarn build` (`npm run build`) (It is executed by Travis after each push)
 
 ##  Application Architecture
 
@@ -56,9 +59,9 @@ docker-compose run --rm --service-ports node # runs npm install && npm start
 We are using popular [Eslint](http://eslint.org/) with custom `.eslintrc` file
 
   * Linting is automatically run before test task
-  * run `npm run lint` (`yarn lint`) - to run linting
-  * run `npm run lint:fix` (`yarn lint:fix`) - to run linting with fixes (when fix is possible)
-  * run `npm run lint[:fix] -- VersionsDropdown` (`yarn lint[:fix] -- VersionsDropdown`) - to run lint only on files with this pattern (it is pretty fuzzy, maybe will match more files then you expect)
+  * run `yarn lint` (`npm run lint`) - to run linting
+  * run `yarn lint:fix` (`npm run lint:fix`) - to run linting with fixes (when fix is possible)
+  * run `yarn lint[:fix] -- VersionsDropdown` (`npm run lint[:fix] -- VersionsDropdown`) - to run lint only on files with this pattern (it is pretty fuzzy, maybe will match more files then you expect)
 
 ## Tests
 
@@ -66,11 +69,11 @@ As runner we are using [Jest](https://facebook.github.io/jest/) library.
 With [component snapshot testing](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) feature.
 Some [story](https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f#.wxikmo1tn) about snapshot testing
 
-  * run `npm run test` (`yarn test`) - it runs eslint and all tests
-  * run `npm run jest` (`yarn jest`) - it runs just tests
-  * run `npm run tdd` (`yarn tdd`) - it runs tests with watch and rerun on change
-  * run `npm run jest:update` (`yarn jest:update`) - Updates snapshots (recommend to run it only with `-- TestName` to prevent overwriting other snapshots)
-  * run `npm run jest[:update] -- VersionsDropdown` (`yarn jest[:update]  -- VersionsDropdown`) - for run tests only for particular files selected by regexp
+  * run `yarn test` (`npm run test`) - it runs eslint and all tests
+  * run `yarn jest` (`npm run jest`) - it runs just tests
+  * run `yarn tdd` (`npm run tdd`) - it runs tests with watch and rerun on change
+  * run `yarn jest:update` (`npm run jest:update`) - Updates snapshots (recommend to run it only with `-- TestName` to prevent overwriting other snapshots)
+  * run `yarn jest[:update] -- VersionsDropdown` (`npm run jest[:update]  -- VersionsDropdown`) - for run tests only for particular files selected by regexp
 
 ## HOW TO
 
