@@ -39,27 +39,30 @@ export default React.createClass({
           'number',
           'Transpose header row number',
           this.props.transposeHeaderRowValue,
-          this.props.onChangeTransposeHeaderRow
+          this.props.onChangeTransposeHeaderRow,
+          'Which row of header will be transposed. 0 = disabled.'
         )}
 
         {this.renderInput(
           'text',
           'Transposed header column name',
           this.props.transposedHeaderColumnNameValue,
-          this.props.onChangeTransposedHeaderColumnName
+          this.props.onChangeTransposedHeaderColumnName,
+          'Column name of the transposed header row.'
         )}
 
         {this.renderInput(
           'number',
           'Transpose from column',
           this.props.transposeFromValue,
-          this.props.onChangeTransposeFrom
+          this.props.onChangeTransposeFrom,
+          'Transposition will occur from this column. 0 = disabled.'
         )}
       </div>
     );
   },
 
-  renderInput(type, name, value, onChangeFn) {
+  renderInput(type, name, value, onChangeFn, hint = '') {
     return (
       <div className="form-group">
         <label className="control-label col-sm-4">
@@ -74,6 +77,9 @@ export default React.createClass({
               className="form-control form-control-sm"
               />
           </div>
+        </div>
+        <div className="col-sm-4">
+          <span className="help-block">{hint}</span>
         </div>
       </div>
     );
