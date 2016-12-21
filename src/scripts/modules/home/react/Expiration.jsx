@@ -15,6 +15,7 @@ export default React.createClass({
   propTypes: {
     expires: React.PropTypes.string.isRequired
   },
+
   render() {
     const {expires} = this.props;
 
@@ -26,7 +27,7 @@ export default React.createClass({
       <div className="row kbc-header kbc-expiration">
         <div className="alert alert-warning">
           <h3>
-            <span className="fa fa-exclamation-triangle"/> This project will expire in {this.days()}.
+            <span className="fa fa-exclamation-triangle"/>This project will expire in {this.days()}.
           </h3>
           <p>Please <a onClick={contactSupport}>contact support</a> for project plan upgrade.</p>
         </div>

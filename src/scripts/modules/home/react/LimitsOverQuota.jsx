@@ -11,9 +11,11 @@ export default React.createClass({
 
   render() {
     const {limits} = this.props;
+
     if (!limits.size) {
       return null;
     }
+
     return (
       <div className="row kbc-header kbc-limits">
         <div className="alert alert-danger">
@@ -33,15 +35,17 @@ export default React.createClass({
     );
   },
 
-  limit(limit) {
-    let values = '';
+  limit(limit, index) {
+    let values;
+
     if (limit.get('unit') === 'bytes') {
       values = `(${bytesToGBFormatted(limit.get('metricValue'))} GB of ${bytesToGBFormatted(limit.get('limitValue'))} GB)`;
     } else {
       values = `(${numericMetricFormatted(limit.get('metricValue'))} of ${numericMetricFormatted(limit.get('limitValue'))})`;
     }
+
     return (
-      <li>
+      <li key={index}>
         <strong>{limit.get('section')} - {limit.get('name')}</strong> {values}
       </li>
     );

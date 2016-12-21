@@ -1,0 +1,43 @@
+exports[`<LimitsOverQuota /> should render limits 1`] = `
+<div
+  className="row kbc-header kbc-limits">
+  <div
+    className="alert alert-danger">
+    <h3>
+      <span
+        className="fa fa-exclamation-triangle" />
+       Project is over quota!
+    </h3>
+    <ul>
+      <li>
+        <strong>
+          Section 1
+           - 
+          My Limit 1
+        </strong>
+         
+        (12.88 GB of 107.37 GB)
+      </li>
+      <li>
+        <strong>
+          Section 2
+           - 
+          My Limit 2
+        </strong>
+         
+        (1,100 of 15,000)
+      </li>
+    </ul>
+    <p>
+      <Link
+        activeClassName="active"
+        className=""
+        to="settings-limits">
+        Limits Settings
+      </Link>
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<LimitsOverQuota /> should render nothing for no limits 1`] = `null`;

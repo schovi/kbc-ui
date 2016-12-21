@@ -1,0 +1,25 @@
+exports[`<Expiration /> should render expiration warning when expiration is close 1`] = `
+<div
+  className="row kbc-header kbc-expiration">
+  <div
+    className="alert alert-warning">
+    <h3>
+      <span
+        className="fa fa-exclamation-triangle" />
+      This project will expire in 
+      1 day
+      .
+    </h3>
+    <p>
+      Please 
+      <a
+        onClick={[Function]}>
+        contact support
+      </a>
+       for project plan upgrade.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<Expiration /> should render nothing when expiration is in long time 1`] = `null`;
