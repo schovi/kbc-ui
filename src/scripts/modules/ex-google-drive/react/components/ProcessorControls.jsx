@@ -40,7 +40,7 @@ export default React.createClass({
           'Transpose header row number',
           this.props.transposeHeaderRowValue,
           this.props.onChangeTransposeHeaderRow,
-          'Which row of header will be transposed. 0 = disabled.'
+          'Which row of the header will be transposed. 0 = disabled.'
         )}
 
         {this.renderInput(
