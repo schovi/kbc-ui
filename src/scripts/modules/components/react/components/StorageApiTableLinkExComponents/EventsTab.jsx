@@ -41,9 +41,9 @@ export default React.createClass({
       }
       const cl = `tr ${info.className}`;
       const agoTime = moment(e.get('created')).fromNow();
-      const incElement = (<p><small><strong>incremental</strong></small></p>);
+      const incElement = <p><small><strong>incremental</strong></small></p>;
       info.message = string.replaceAll(info.message, this.props.tableId, '');
-      const incremental = e.getIn(['params', 'incremental']) ? incElement : (<span></span>);
+      const incremental = e.getIn(['params', 'incremental']) ? incElement : <span />;
       return (
         <tr className={cl}>
           <td className="td">

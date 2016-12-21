@@ -14,7 +14,7 @@ export default React.createClass({
     return (
       <span>
         <Tooltip tooltip={this.props.createdTime} placement={this.props.tooltipPlacement}>
-          <i className="fa fa-fw fa-calendar"> </i>
+          <i className="fa fa-fw fa-calendar" />
         </Tooltip>
         {moment(this.props.createdTime).fromNow()}
       </span>

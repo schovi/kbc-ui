@@ -216,7 +216,7 @@ export default React.createClass({
           </label>
         </div>
       </div>
-      );
+    );
   },
 
   renderTableFiltersModal() {
@@ -389,11 +389,10 @@ export default React.createClass({
                   {info.name}
                 </strong>
               </span>
-            </Tooltip> <i style={{ paddingLeft: 0}}
-                          className="kbc-icon-arrow-right col-sm-1"></i>
+            </Tooltip>
+            <i style={{ paddingLeft: 0}} className="kbc-icon-arrow-right col-sm-1" />
             <SapiTableLinkEx className="col-sm-4" tableId={outTableId}/>
           </span>
-
         </li>
       );
     }).toArray();

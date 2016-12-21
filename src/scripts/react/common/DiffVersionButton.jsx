@@ -92,10 +92,9 @@ export default React.createClass({
 
   renderIcon() {
     if (this.props.isPending) {
-      return (<Loader className="fa-fw"/>);
-    } else {
-      return (<em className="fa fa-fw fa-files-o"> </em>);
+      return <Loader className="fa-fw"/>;
     }
-  }
 
+    return <em className="fa fa-fw fa-files-o" />;
+  }
 });

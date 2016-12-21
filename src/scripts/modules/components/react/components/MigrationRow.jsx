@@ -318,7 +318,7 @@ export default React.createClass({
             <th>
               Config Table
             </th>
-            <th> </th>
+            <th />
             <th>New Configuration</th>
             <th>
               Migration Status

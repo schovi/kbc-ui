@@ -202,7 +202,7 @@ export default React.createClass({
           onClick={this.showProjectsModal}>
           Edit
           {' '}
-          <span className="kbc-icon-pencil"></span>
+          <span className="kbc-icon-pencil" />
         </button>
         <div className="static-modal">
           Billable BigQuery Project: <strong>{this.state.store.google.get('projectId', null)}</strong>
@@ -322,7 +322,7 @@ export default React.createClass({
           to={ROUTE_PREFIX + COMPONENT_ID + '-new-query'}
           params={{config: this.state.configId}}
           className="btn btn-success">
-          <span className="kbc-icon-plus"></span> Add Query
+          <span className="kbc-icon-plus" /> Add Query
         </Link>
       );
     }

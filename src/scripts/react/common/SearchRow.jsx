@@ -42,7 +42,7 @@ export default React.createClass({
   render() {
     return (
       <form className={'kbc-search ' + this.props.className} onSubmit={this.onSubmit}>
-        <span className="kbc-icon-search"></span>
+        <span className="kbc-icon-search" />
         <input
           type="text"
           value={this.state.query}

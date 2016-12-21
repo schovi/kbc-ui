@@ -384,7 +384,6 @@ export default React.createClass({
     } catch (e) {
       return false;
     }
-    return false;
   },
 
   updateLocalState(path, data) {

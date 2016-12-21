@@ -53,7 +53,7 @@ export default React.createClass({
           <div className="pull-left" style={{padding: '6px 12px'}}>
             <span className={'text-' + this.props.progressStatus}>
               {this.renderStatusIcon()} {this.props.progress}
-              <span> </span>
+              <span />
               {this.props.jobId ? <Link to="jobDetail" params={{jobId: this.props.jobId}}>More details</Link> : null}
             </span>
           </div>
@@ -98,18 +98,22 @@ export default React.createClass({
   },
 
   renderCredentials() {
-    if (this.props.backend === 'mysql' || this.props.backend === 'redshift' || this.props.backend === 'snowflake') {
-      return (
-        <div className="clearfix">
-          <h3>Credentials</h3>
-          <div className="col-sm-offset-1 col-sm-10">
-            {this.props.backend === 'redshift' ? this.renderRedshiftCredentials() : null}
-            {this.props.backend === 'mysql' ? this.renderMysqlCredentials() : null}
-            {this.props.backend === 'snowflake' ? this.renderSnowflakeCredentials() : null}
-          </div>
-        </div>
-      );
+    const { backend } = this.props;
+
+    if (!['mysql', 'redshift', 'snowflake'].includes(backend)) {
+      return null;
     }
+
+    return (
+      <div className="clearfix">
+        <h3>Credentials</h3>
+        <div className="col-sm-offset-1 col-sm-10">
+          {backend === 'redshift' ? this.renderRedshiftCredentials() : null}
+          {backend === 'mysql' ? this.renderMysqlCredentials() : null}
+          {backend === 'snowflake' ? this.renderSnowflakeCredentials() : null}
+        </div>
+      </div>
+    );
   },
 
   renderRedshiftCredentials() {

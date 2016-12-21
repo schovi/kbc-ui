@@ -206,9 +206,9 @@ export default React.createClass({
             <tr>
               <th>Dropbox File</th>
               <th>Bucket</th>
-              <th></th>
+              <th />
               <th>Output Table</th>
-              <th></th>
+              <th />
             </tr>
           </thead>
             <tbody>
@@ -223,7 +223,7 @@ export default React.createClass({
                       <td>&gt;</td>
                       <td><SapiTableLinkEx tableId={table.output} /></td>
                       <td className="text-right">
-                      {this.state.isSaving ? <Loader /> : <button className="btn btn-link" onClick={handleDeletingSingleElement}><i className="fa kbc-icon-cup"></i></button>}
+                      {this.state.isSaving ? <Loader /> : <button className="btn btn-link" onClick={handleDeletingSingleElement}><i className="fa kbc-icon-cup" /></button>}
                       <RunButtonModal
                         title="Upload"
                         icon="fa fa-fw fa-play"
@@ -253,7 +253,7 @@ export default React.createClass({
           <div>
             <p>No Dropbox account authorized!</p>
             <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
-              <span className="btn btn-success"><i className="fa fa-fw fa-dropbox"></i>Authorize Dropbox Account</span>
+              <span className="btn btn-success"><i className="fa fa-fw fa-dropbox" />Authorize Dropbox Account</span>
             </ModalTrigger>
           </div>
         </div>
@@ -360,7 +360,7 @@ export default React.createClass({
     } else {
       return (
         <ModalTrigger modal={<AuthorizationModal configId={this.state.configId} />}>
-          <a className="btn btn-link"><i className="fa fa-fw fa-user"></i> Authorize Dropbox Account</a>
+          <a className="btn btn-link"><i className="fa fa-fw fa-user" /> Authorize Dropbox Account</a>
         </ModalTrigger>
       );
     }

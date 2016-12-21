@@ -105,7 +105,7 @@ export default React.createClass({
           <Tooltip
             tooltip={header.desc}
             placement="top">
-            <i className="fa fa-fw fa-question-circle"></i>
+            <i className="fa fa-fw fa-question-circle" />
           </Tooltip>
         </th>
       );
@@ -114,8 +114,8 @@ export default React.createClass({
     return (
       <thead>
         <tr>
-          <th></th>
-          <th></th>
+          <th />
+          <th />
           <td colSpan="4">
             <EnhancedAnalysisRunControl
               enhancedAnalysis={this.props.enhancedAnalysis}

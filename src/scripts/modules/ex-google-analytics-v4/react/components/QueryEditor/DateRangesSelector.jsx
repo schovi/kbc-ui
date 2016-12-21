@@ -30,8 +30,7 @@ export default React.createClass({
                 <div className="th">
                   <strong>Until</strong>
                 </div>
-                <div className="th">
-                </div>
+                <div className="th" />
               </div>
             </div>
             <div className="tbody">
@@ -75,7 +74,7 @@ export default React.createClass({
           {range.get('endDate')}
         </div>
         { (!this.props.isEditing) ?
-          <div className="td"></div>
+          <div className="td" />
           :
           <div className="td">
             <Tooltip tooltip="change" placement="top">

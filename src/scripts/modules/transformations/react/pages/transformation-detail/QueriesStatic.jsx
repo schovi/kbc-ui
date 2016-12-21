@@ -96,7 +96,7 @@ export default React.createClass({
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.startEdit.bind(this, 0)}>
-        <span className="kbc-icon-pencil"></span> Edit Queries
+        <span className="kbc-icon-pencil" /> Edit Queries
       </button>
     );
   },

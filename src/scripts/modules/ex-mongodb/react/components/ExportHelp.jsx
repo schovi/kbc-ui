@@ -11,7 +11,7 @@ export default React.createClass({
     return (
       <small>
         <OverlayTrigger placement="right" overlay={this.renderTooltip()}>
-          <i className="fa fa-fw fa-question-circle"></i>
+          <i className="fa fa-fw fa-question-circle" />
         </OverlayTrigger>
       </small>
     );

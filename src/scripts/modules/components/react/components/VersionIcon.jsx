@@ -11,13 +11,9 @@ export default React.createClass({
 
   render() {
     if (this.props.isLast) {
-      return (
-        <span className="fa fa-check-circle fa-fw kbc-version-icon last"></span>
-      );
-    } else {
-      return (
-        <span className="fa fa-circle-o fa-fw kbc-version-icon"></span>
-      );
+      return <span className="fa fa-check-circle fa-fw kbc-version-icon last" />;
     }
+
+    return <span className="fa fa-circle-o fa-fw kbc-version-icon" />;
   }
 });

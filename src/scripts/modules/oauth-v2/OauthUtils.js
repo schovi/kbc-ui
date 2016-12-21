@@ -89,6 +89,7 @@ export function createRedirectRouteSimple(componentId) {
 export function loadCredentialsFromConfig(componentId, configId) {
   const configuration = installedComponentsStore.getConfigData(componentId, configId);
   const id = configuration.getIn(configOauthPath);
+
   if (id) {
     return OauthActions.loadCredentials(componentId, id);
   }

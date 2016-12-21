@@ -14,11 +14,11 @@ export default React.createClass({
   },
 
   componentType() {
-    if (this.shouldShowType()) {
-      return (
-          <small>{this.props.component.get('type')}</small>
-      );
+    if (!this.shouldShowType()) {
+      return null;
     }
+
+    return <small>{this.props.component.get('type')}</small>;
   },
 
   shouldShowType() {

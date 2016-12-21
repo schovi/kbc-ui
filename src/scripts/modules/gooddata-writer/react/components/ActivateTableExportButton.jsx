@@ -10,12 +10,9 @@ export default React.createClass({
   },
 
   getDefaultProps() {
-    return (
-      {
-        tooltipPlacement: 'top'
-      }
-    );
+    return { tooltipPlacement: 'top' };
   },
+
   render() {
     return (
       <ActivateDeactivateButton

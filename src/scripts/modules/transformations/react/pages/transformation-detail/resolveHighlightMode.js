@@ -19,7 +19,7 @@ export default function(backend, type) {
     if (type === 'openrefine') {
       return 'application/json';
     }
-  } else {
-    return null;
   }
+
+  return null;
 }

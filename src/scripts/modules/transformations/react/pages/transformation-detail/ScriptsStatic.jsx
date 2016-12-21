@@ -46,7 +46,7 @@ export default React.createClass({
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
-        <span className="kbc-icon-pencil"></span>
+        <span className="kbc-icon-pencil" />
           {this.props.transformationType === 'r' ? 'Edit R script' : null}
           {this.props.transformationType === 'python' ? 'Edit Python script' : null}
           {this.props.transformationType === 'openrefine' ? 'Edit OpenRefine configuration' : null}

@@ -18,7 +18,7 @@ export default React.createClass({
           <th>Include Time</th>
           <th>Identifier</th>
           <th>Template</th>
-          <th></th>
+          <th />
         </tr>
        </thead>
        <tbody>

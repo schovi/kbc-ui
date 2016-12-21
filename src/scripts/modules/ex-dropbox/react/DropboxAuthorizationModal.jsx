@@ -77,7 +77,7 @@ export default React.createClass({
                 bsStyle="success"
                 type="submit"
                 disabled={_.isEmpty(this.state.description)}
-              ><span><i className="fa fa-fw fa-dropbox"></i>Authorize</span>
+              ><span><i className="fa fa-fw fa-dropbox" />Authorize</span>
               </Button>
             </ButtonToolbar>
           </Modal.Footer>

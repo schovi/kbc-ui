@@ -43,7 +43,7 @@ export default React.createClass({
       <Modal
         show={this.props.show}
         onHide={this.props.onHide}
-        title={`Rename Phase`}>
+        title={'Rename Phase'}>
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>

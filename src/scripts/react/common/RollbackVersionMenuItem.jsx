@@ -53,7 +53,7 @@ export default React.createClass({
             onSelect={this.openModal}
             disabled={this.props.isDisabled}
           >
-            <em className="fa fa-undo fa-fw"> </em>
+            <em className="fa fa-undo fa-fw" />
             Rollback
             <RollbackVersionModal
               version={this.props.version}

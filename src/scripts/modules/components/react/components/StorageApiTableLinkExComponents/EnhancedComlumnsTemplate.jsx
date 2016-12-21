@@ -21,7 +21,7 @@ export default {
 
   'is_identity': {
     name: 'Identifying Column',
-    desc: `Can the values of this column be used as an identifier for each row?`,
+    desc: 'Can the values of this column be used as an identifier for each row?',
     skip: true
   },
 

@@ -45,7 +45,7 @@ export default React.createClass({
           Queries
           <small>
             <OverlayTrigger trigger="hover" placement="top" overlay={this.hint()}>
-              <i className="fa fa-fw fa-question-circle"></i>
+              <i className="fa fa-fw fa-question-circle" />
             </OverlayTrigger>
             <Clipboard text={this.props.queries}/>
           </small>

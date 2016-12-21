@@ -232,7 +232,7 @@ export default React.createClass({
         </div>
         <p className="help-block">{description}</p>
       </div>
-      );
+    );
   },
 
   renderTableFiltersModal() {

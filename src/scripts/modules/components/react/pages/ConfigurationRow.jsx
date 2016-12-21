@@ -44,9 +44,11 @@ export default React.createClass({
 
   renderRunButton() {
     const flags = this.props.component.get('flags');
+
     if (flags.includes('excludeRun')) {
-      return (<button className="btn btn-link"> </button>);
+      return <button className="btn btn-link" />;
     }
+
     return (
       <RunConfigurationButton
         title="Run component configuration"

@@ -74,7 +74,7 @@ export default React.createClass({
   startEditButton() {
     return (
       <button className="btn btn-link" onClick={this.props.onEditStart}>
-        <span className="kbc-icon-pencil"></span> {this.props.editLabel}
+        <span className="kbc-icon-pencil" /> {this.props.editLabel}
       </button>
     );
   },

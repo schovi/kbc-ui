@@ -16,7 +16,7 @@ export default React.createClass({
     return (
       <ModalTrigger modal={this.modal()}>
         <button className="btn btn-primary" onClick={this.handleClick}>
-          <span className="kbc-icon-plus"></span> Add Input
+          <span className="kbc-icon-plus" /> Add Input
         </button>
       </ModalTrigger>
     );

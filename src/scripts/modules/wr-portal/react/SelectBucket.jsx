@@ -101,19 +101,19 @@ export default React.createClass({
 
         </div>
       );
-    }else {
-      return (
-        <div className={errorClass}>
-          <label className="control-label col-sm-3">
-            {label}
-          </label>
-          <div className="col-sm-9">
-            {element}
-            <span className="help-block">{description}</span>
-          </div>
-        </div>
-      );
     }
+
+    return (
+      <div className={errorClass}>
+        <label className="control-label col-sm-3">
+          {label}
+        </label>
+        <div className="col-sm-9">
+          {element}
+          <span className="help-block">{description}</span>
+        </div>
+      </div>
+    );
   },
 
   onHideModal() {

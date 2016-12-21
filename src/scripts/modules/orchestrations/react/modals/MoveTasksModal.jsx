@@ -36,8 +36,7 @@ export default React.createClass({
         <div className="modal-body">
           <div className="form form-horizontal">
             <div className={formDivClass}>
-              <label htmlFor="title" className="col-sm-1 control-label">
-              </label>
+              <label htmlFor="title" className="col-sm-1 control-label" />
               <div className="col-sm-11">
                 <Select
                   placeholder="Select phase or type new..."

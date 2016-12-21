@@ -131,7 +131,7 @@ export default React.createClass({
       const url = this.state.configData.get('url');
       const disabledClassName = url ? '' : 'disabled';
       const tooltip = url ? 'Visit shiny app' : 'No url specified';
-      const label = (<span className="kbc-sapi-table-link"><i className="fa fa-fw fa-bar-chart"></i> Shiny App</span>);
+      const label = (<span className="kbc-sapi-table-link"><i className="fa fa-fw fa-bar-chart" /> Shiny App</span>);
       return (
         <li className={disabledClassName}>
           <Tooltip tooltip={tooltip} placement="top">

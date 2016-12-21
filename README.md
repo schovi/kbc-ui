@@ -51,6 +51,14 @@ docker-compose run --rm --service-ports node # runs npm install && npm start
    * Render the page when the primary data are available.
    * Some additionally data can be fetched later, loader should be shown when data are not yet loaded.
 
+## Code linting
+
+We are using popular [Eslint](http://eslint.org/) with custom `.eslintrc` file
+
+  * Linting is automatically run before test task
+  * run `npm run lint` (`yarn lint`) - to run linting
+  * run `npm run lint:fix` (`yarn lint:fix`) - to run linting with fixes (when fix is possible)
+  * run `npm run lint[:fix] -- VersionsDropdown` (`yarn lint[:fix] -- VersionsDropdown`) - to run lint only on files with this pattern (it is pretty fuzzy, maybe will match more files then you expect)
 
 ## HOW TO
 

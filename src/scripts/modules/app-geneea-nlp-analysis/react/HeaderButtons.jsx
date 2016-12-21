@@ -29,14 +29,14 @@ export default React.createClass({
   render() {
     return (
       <EditButtons
-         editLabel="Setup"
-         isEditing={this.state.editing}
-         isSaving={this.state.isSaving}
-         isDisabled={!actions.isValid(this.state.configId)}
-         onCancel={ () => actions.cancel(this.state.configId)}
-         onSave={ () => actions.save(this.state.configId, this.state.allTables)}
-         onEditStart={ () => actions.startEditing(this.state.configId)}/>
-      );
+        editLabel="Setup"
+        isEditing={this.state.editing}
+        isSaving={this.state.isSaving}
+        isDisabled={!actions.isValid(this.state.configId)}
+        onCancel={ () => actions.cancel(this.state.configId)}
+        onSave={ () => actions.save(this.state.configId, this.state.allTables)}
+        onEditStart={ () => actions.startEditing(this.state.configId)}/>
+    );
   }
 
 });

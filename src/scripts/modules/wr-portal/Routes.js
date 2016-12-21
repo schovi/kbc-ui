@@ -14,13 +14,14 @@ export default function(componentId) {
     defaultRouteHandler: CreateIndexFn(componentId),
     requireData: [
       (params) => {
-        installedComponentsActions.loadComponentConfigData(componentId, params.config).then(() => {
-          const configData = InstalledComponentStore.getConfigData(componentId, params.config) || Map();
-          const bucketId = configData.get('bucketId');
-          if (bucketId) {
-            return storageActions.loadCredentials(bucketId);
-          }
-        });
+        installedComponentsActions
+          .loadComponentConfigData(componentId, params.config)
+          .then(() => {
+            const configData = InstalledComponentStore.getConfigData(componentId, params.config) || Map();
+            const bucketId = configData.get('bucketId');
+
+            return bucketId && storageActions.loadCredentials(bucketId);
+          });
       },
       () => storageActions.loadTables()
     ]

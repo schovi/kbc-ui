@@ -121,7 +121,7 @@ export default React.createClass({
     return (
       <span key="mainspan">
         {this.renderLink()}
-        {this.state.show ? this.renderModal() : (<span></span>)}
+        {this.state.show ? this.renderModal() : <span />}
       </span>
     );
   },

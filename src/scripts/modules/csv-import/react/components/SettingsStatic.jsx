@@ -39,7 +39,7 @@ export default React.createClass({
           disabled={this.props.isEditDisabled}
           className="btn btn-link"
           onClick={this.onStartChangeSettings}>
-          <span className="kbc-icon-pencil"></span> Change Settings
+          <span className="kbc-icon-pencil" /> Change Settings
         </button>
       </div>
     );

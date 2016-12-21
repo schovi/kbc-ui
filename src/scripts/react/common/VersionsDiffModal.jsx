@@ -204,13 +204,15 @@ export default React.createClass({
     }
     const isChanged = [COLOR_ADD, COLOR_REMOVE].indexOf(color) >= 0;
     if (!isChanged && this.state.showChangedOnly) return null;
-    return (
-      <pre style={{'margin-bottom': '0px',
-                   'border-radius': '0',
-                   'border': 'none',
-                   'background-color': color}}>
-        {val}
-      </pre>);
+
+    const style = {
+      'margin-bottom': '0px',
+      'border-radius': '0',
+      'border': 'none',
+      'background-color': color
+    };
+
+    return <pre style={style}>{val}</pre>;
   },
 
   getDiff() {

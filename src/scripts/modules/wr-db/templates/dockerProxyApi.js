@@ -194,7 +194,7 @@ export default function(componentId) {
       return this.loadConfigData(configId).then(
         (data) => {
           const dataToSave = data.setIn(['parameters', 'db'], fromJS(credentials));
-          const msg = `Update credentials`;
+          const msg = 'Update credentials';
           return this.saveConfigData(configId, dataToSave, msg);
         }
       );

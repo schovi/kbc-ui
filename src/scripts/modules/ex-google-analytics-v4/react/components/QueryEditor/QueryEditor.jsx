@@ -153,7 +153,7 @@ export default React.createClass({
                  onClick={this.openOptionsDialogModal}>
                  {query.get('antisampling') || 'None'}
                  {' '}
-                 <span className="kbc-icon-pencil"></span>
+                 <span className="kbc-icon-pencil" />
                </span>
                :
                <p className="form-control-static">

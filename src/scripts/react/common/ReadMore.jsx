@@ -45,14 +45,13 @@ export default React.createClass({
   },
 
   gradient() {
-    if (!this.state.showExpandButton) {
+    const { expanded, showExpandButton } = this.state;
+
+    if (expanded || !showExpandButton) {
       return null;
     }
-    if (this.state.expanded) {
-      return null;
-    } else {
-      return (<div className="kbc-readmore-fadeout"></div>);
-    }
+
+    return <div className="kbc-readmore-fadeout" />;
   },
 
   button() {

@@ -127,11 +127,11 @@ export default function(componentIdValue, configIdParam = 'config') {
             <thead>
               <tr>
                 <th>#</th>
-                <th></th>
+                <th />
                 <th>Description</th>
                 <th>Changed</th>
                 <th>Created by</th>
-                <th></th>
+                <th />
               </tr>
             </thead>
             <tbody>
