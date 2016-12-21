@@ -2,7 +2,7 @@
   "name": "kbc-ui",
   "version": "0.0.0",
   "description": "Keboola Connection UI",
-  "main": "src/scripts/app",
+  "author": "Martin Halamicek",
   "dependencies": {
     "aws-sdk": "^2.4.7",
     "babel-core": "^6.3.15",
@@ -64,25 +64,23 @@
     "react-sticky": "~2.5.2",
     "react-textarea-autosize": "^2.3.1",
     "remarkable": "^1.6.2",
+    "remove-markdown": "^0.1.0",
     "style-loader": "~0.13.0",
     "superagent": "~0.21.0",
     "underscore": "~1.7.0",
     "underscore.string": "~3.0.3",
     "url-loader": "~0.5.5",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1",
-    "remove-markdown": "^0.1.0"
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack/dev-server.config.js --hot --progress --colors --host 0.0.0.0 --port 3000 --inline",
     "start-projects-list": "webpack-dev-server --config webpack/dev-server-projects-list.config.js --hot --progress --colors --host 0.0.0.0 --port 3000 --inline",
     "build": "webpack --config webpack/production.config.js --profile --colors --bail && node webpack/generate-manifest.js",
-    "test": "cross-env NODE_ENV=test mocha --reporter progress --recursive \"./src/**/*.spec.js\""
-  },
-  "author": "Martin Halamicek",
-  "jest": {
-    "rootDir": "./js"
     "pretest": "npm run lint",
+    "test": "npm run jest",
+    "jest": "node environment/scripts/jest.js",
+    "jest:update": "node environment/scripts/jest.js -u",
     "lint": "node environment/scripts/eslint.js",
     "lint:fix": "node environment/scripts/eslint.js --fix"
   },
@@ -94,6 +92,31 @@
     "eslint": "^3.12.2",
     "eslint-plugin-react": "6.4.1",
     "exports-loader": "^0.6.3",
+    "jest": "^18.0.0",
     "mocha": "^2.4.5"
+  },
+  "jest": {
+    "cacheDirectory": "<rootDir>/node_modules/.cache/jest",
+    "testPathDirs": [
+      "<rootDir>/src/scripts"
+    ],
+    "moduleFileExtensions": [
+      "jsx",
+      "js",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/FileStub.js",
+      "^.+\\.(css|less|scss|sass)$": "<rootDir>/environment/jest/CSSStub.js"
+    },
+    "setupFiles": [
+      "<rootDir>/environment/tests/_setup"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
+    ],
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [],
+    "testRegex": "\\.(test|spec)\\.(js|jsx)$"
   }
 }

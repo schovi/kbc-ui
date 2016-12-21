@@ -60,6 +60,18 @@ We are using popular [Eslint](http://eslint.org/) with custom `.eslintrc` file
   * run `npm run lint:fix` (`yarn lint:fix`) - to run linting with fixes (when fix is possible)
   * run `npm run lint[:fix] -- VersionsDropdown` (`yarn lint[:fix] -- VersionsDropdown`) - to run lint only on files with this pattern (it is pretty fuzzy, maybe will match more files then you expect)
 
+## Tests
+
+As runner we are using [Jest](https://facebook.github.io/jest/) library.
+With [component snapshot testing](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) feature.
+Some [story](https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f#.wxikmo1tn) about snapshot testing
+
+  * run `npm run test` (`yarn test`) - it runs eslint and all tests
+  * run `npm run jest` (`yarn jest`) - it runs just tests
+  * run `npm run tdd` (`yarn tdd`) - it runs tests with watch and rerun on change
+  * run `npm run jest:update` (`yarn jest:update`) - Updates snapshots (recommend to run it only with `-- TestName` to prevent overwriting other snapshots)
+  * run `npm run jest[:update] -- VersionsDropdown` (`yarn jest[:update]  -- VersionsDropdown`) - for run tests only for particular files selected by regexp
+
 ## HOW TO
 
 ### Add assets
