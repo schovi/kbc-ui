@@ -380,23 +380,3 @@ module.exports =
       )
       throw error
     )
-
-  refreshSnowflakeSandboxCredentials: ->
-    dispatcher.handleViewAction(
-      type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH
-    )
-
-    provisioningApi
-    .createCredentials('snowflake', 'sandbox')
-    .then((response) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH_SUCCESS
-        credentials: response.credentials
-      )
-      return
-    ).catch((error) ->
-      dispatcher.handleViewAction(
-        type: constants.ActionTypes.CREDENTIALS_SNOWFLAKE_SANDBOX_REFRESH_ERROR
-      )
-      throw error
-    )
