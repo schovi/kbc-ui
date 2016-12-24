@@ -4,6 +4,7 @@ import provisioningApi from './ProvisioningApi';
 import mySqlSandboxCredentialsStore from './stores/MySqlSandboxCredentialsStore';
 import redshiftSandboxCredentialsStore from './stores/RedshiftSandboxCredentialsStore';
 import snowflakeSandboxCredentialsStore from './stores/SnowflakeSandboxCredentialsStore';
+import rStudioSandboxCredentialsStore from './stores/RStudioSandboxCredentialsStore';
 import WrDbCredentialsStore from './stores/WrDbCredentialsStore';
 import Promise from 'bluebird';
 import HttpError from '../../utils/HttpError';
@@ -356,11 +357,55 @@ module.exports = {
     });
   },
 
+
+  loadRStudioSandboxCredentials: function() {
+    if (rStudioSandboxCredentialsStore.getIsLoaded()) {
+      return Promise.resolve();
+    }
+    return this.loadRStudioSandboxCredentialsForce();
+  },
+
+
+  /*
+  Request specified orchestration load from server
+  @return Promise
+   */
+  loadRStudioSandboxCredentialsForce: function() {
+    dispatcher.handleViewAction({
+      type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_LOAD
+    });
+    return provisioningApi.getCredentials('docker', 'rstudio').then(function(response) {
+      dispatcher.handleViewAction({
+        type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_LOAD_SUCCESS,
+        credentials: response.credentials
+      });
+    }).catch(HttpError, function(error) {
+      if (error.response.status === 404) {
+        return dispatcher.handleViewAction({
+          type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_LOAD_SUCCESS,
+          credentials: {
+            id: null
+          }
+        });
+      } else {
+        dispatcher.handleViewAction({
+          type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_LOAD_ERROR
+        });
+        throw error;
+      }
+    }).catch(function(error) {
+      dispatcher.handleViewAction({
+        type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_LOAD_ERROR
+      });
+      throw error;
+    });
+  },
+
   createRStudioSandboxCredentials: function() {
     dispatcher.handleViewAction({
       type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_CREATE_JOB
     });
-    return provisioningApi.createCredentials('rstudio', 'sandbox').then(function(response) {
+    return provisioningApi.createCredentialsAsync('docker', 'rstudio').then(function(response) {
       dispatcher.handleViewAction({
         type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_CREATE_JOB_SUCCESS,
         credentials: response.credentials
@@ -368,6 +413,22 @@ module.exports = {
     }).catch(function(error) {
       dispatcher.handleViewAction({
         type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_CREATE_JOB_ERROR
+      });
+      throw error;
+    });
+  },
+
+  dropRStudioSandboxCredentials: function() {
+    dispatcher.handleViewAction({
+      type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_DROP_JOB
+    });
+    return provisioningApi.dropCredentialsAsync('docker', rStudioSandboxCredentialsStore.getCredentials().get('id')).then(function() {
+      dispatcher.handleViewAction({
+        type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_DROP_JOB_SUCCESS
+      });
+    }).catch(function(error) {
+      dispatcher.handleViewAction({
+        type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_DROP_JOB_ERROR
       });
       throw error;
     });

@@ -111,6 +111,10 @@ routes =
               ProvisioningActionCreators.loadSnowflakeSandboxCredentials()
         ,
           ->
+            ProvisioningActionCreators.loadRStudioSandboxCredentials()
+
+        ,
+          ->
             StorageActionCreators.loadBuckets()
         ,
           ->

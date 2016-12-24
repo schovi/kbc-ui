@@ -3,6 +3,7 @@ import React from 'react';
 import MySqlSandbox from '../../components/MySqlSandbox';
 import RedshiftSandbox from '../../components/RedshiftSandbox';
 import SnowflakeSandbox from '../../components/SnowflakeSandbox';
+import RStudioSandbox from '../../components/RStudioSandbox';
 import ApplicationStore from '../../../../../stores/ApplicationStore';
 
 export default React.createClass({
@@ -14,6 +15,7 @@ export default React.createClass({
           <MySqlSandbox />
           {ApplicationStore.getSapiToken().getIn(['owner', 'hasRedshift'], false) ? (<RedshiftSandbox />) : null}
           {ApplicationStore.getSapiToken().getIn(['owner', 'hasSnowflake'], false) ? (<SnowflakeSandbox />) : null}
+          <RStudioSandbox />
         </div>
       </div>
     );
