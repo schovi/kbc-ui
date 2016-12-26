@@ -42,6 +42,7 @@ var RStudioSandbox = React.createClass({
               href={connectLink}
               className="btn btn-link"
               target="_blank"
+              disabled={this.state.pendingActions.get('drop')}
             >
               <span className="fa fa-fw fa-database"></span>
               &nbsp;Connect
