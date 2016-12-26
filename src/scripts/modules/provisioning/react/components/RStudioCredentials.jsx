@@ -45,8 +45,8 @@ module.exports = React.createClass({
         <div className="row">
           <span className="col-md-3">Port</span>
           <span className="col-md-9">
-            443
-            <Clipboard text="443"/>
+            {this.props.credentials.get('port')}
+            <Clipboard text={this.props.credentials.get('port')}/>
           </span>
         </div>
         <div className="row">
