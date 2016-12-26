@@ -33,12 +33,13 @@ var RStudioSandbox = React.createClass({
     );
   },
   _renderControlButtons: function() {
+    const connectLink = 'http://' + this.state.credentials.get('hostname') + ':' + this.state.credentials.get('port');
     if (this.state.credentials.get('id')) {
       return (
         <div>
           <div>
             <a
-              href="https://#{this.state.credentials.get('hostname')}"
+              href={connectLink}
               className="btn btn-link"
               target="_blank"
             >
