@@ -14,7 +14,7 @@ module.exports = React.createClass({
         <div>
           <span>
             <Loader />
-            &nbsp;Starting Sandbox
+            &nbsp;Creating sandbox
           </span>
         </div>
       );

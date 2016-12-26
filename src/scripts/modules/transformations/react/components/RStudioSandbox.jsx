@@ -70,7 +70,7 @@ var RStudioSandbox = React.createClass({
           onClick={this._createCredentials}
         >
           <i className="fa fa-fw fa-plus"></i>
-          &nbsp;Start sandbox
+          &nbsp;Create sandbox
         </button>
       );
     }
