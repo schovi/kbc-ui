@@ -8,6 +8,7 @@ import RStudioCredentials from '../../../provisioning/react/components/RStudioCr
 import DeleteButton from '../../../../react/common/DeleteButton';
 import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import StorageTablesStore from '../../../components/stores/StorageTablesStore';
+import RStudioSandboxCreateModal from './RStudioSandboxCreateModal';
 
 var RStudioSandbox = React.createClass({
   mixins: [createStoreMixin(RStudioSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)],
@@ -20,6 +21,11 @@ var RStudioSandbox = React.createClass({
       isLoaded: RStudioSandboxCredentialsStore.getIsLoaded(),
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll()
+    };
+  },
+  getInitialState() {
+    return {
+      showModal: false
     };
   },
   _renderCredentials: function() {
@@ -65,13 +71,21 @@ var RStudioSandbox = React.createClass({
       );
     } else if (!this.state.pendingActions.get('create')) {
       return (
-        <button
-          className="btn btn-link"
-          onClick={this._createCredentials}
-        >
-          <i className="fa fa-fw fa-plus"></i>
-          &nbsp;Create sandbox
-        </button>
+        <span>
+          <RStudioSandboxCreateModal
+            show={this.state.showModal}
+            close={this.closeModal}
+            create={this._createCredentials}
+            tables={this.tablesList()}
+          />
+          <button
+            className="btn btn-link"
+            onClick={this.openModal}
+          >
+            <i className="fa fa-fw fa-plus"></i>
+            &nbsp;Create sandbox
+          </button>
+        </span>
       );
     }
   },
@@ -88,11 +102,35 @@ var RStudioSandbox = React.createClass({
       </div>
     );
   },
-  _createCredentials: function() {
-    return CredentialsActionCreators.createRStudioSandboxCredentials();
+  _createCredentials: function(tables, rows) {
+    const data = tables.map(function(value) {
+      var retVal = {
+        source: value
+      };
+      if (rows !== null && parseInt(rows, 10) > 0) {
+        retVal.limit = rows;
+      }
+      return retVal;
+    });
+    return CredentialsActionCreators.createRStudioSandboxCredentials({
+      input: {
+        tables: data.toList().toJS()
+      }
+    });
   },
   _dropCredentials: function() {
     return CredentialsActionCreators.dropRStudioSandboxCredentials();
+  },
+  closeModal() {
+    this.setState({ showModal: false });
+  },
+  openModal() {
+    this.setState({ showModal: true });
+  },
+  tablesList() {
+    return this.state.tables.map(function(table) {
+      return table.get('id');
+    }).toList();
   }
 });
 

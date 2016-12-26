@@ -401,11 +401,11 @@ module.exports = {
     });
   },
 
-  createRStudioSandboxCredentials: function() {
+  createRStudioSandboxCredentials: function(data) {
     dispatcher.handleViewAction({
       type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_CREATE_JOB
     });
-    return provisioningApi.createCredentialsAsync('docker', 'rstudio').then(function(response) {
+    return provisioningApi.createCredentialsAsync('docker', 'rstudio', data).then(function(response) {
       dispatcher.handleViewAction({
         type: constants.ActionTypes.CREDENTIALS_RSTUDIO_SANDBOX_CREATE_JOB_SUCCESS,
         credentials: response.credentials

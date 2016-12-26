@@ -46,7 +46,7 @@ module.exports = React.createClass({
           <span className="col-md-3">Port</span>
           <span className="col-md-9">
             {this.props.credentials.get('port')}
-            <Clipboard text={this.props.credentials.get('port')}/>
+            <Clipboard text={this.props.credentials.get('port').toString()}/>
           </span>
         </div>
         <div className="row">
