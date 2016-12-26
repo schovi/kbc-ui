@@ -27,7 +27,7 @@ RedshiftCredentials = React.createClass
           @_renderCredentials()
 
         else
-          'Sandbox not found'
+          'Sandbox not running'
 
   _renderCredentials: ->
     jdbcRedshift = 'jdbc:redshift://' + @props.credentials.get("hostname") + ':5439/' + @props.credentials.get("db")

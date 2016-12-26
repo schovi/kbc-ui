@@ -48,6 +48,7 @@ var SnowflakeSandbox = React.createClass({
               runParams={() => {
                 return sandboxConfiguration;
               }}
+              disabled={this.state.pendingActions.get('drop')}
             >
                 <ConfigureSandbox
                   backend="snowflake"
@@ -63,6 +64,7 @@ var SnowflakeSandbox = React.createClass({
               href="https://#{this.state.credentials.get('hostname')}"
               className="btn btn-link"
               target="_blank"
+              disabled={this.state.pendingActions.get('drop')}
             >
               <span className="fa fa-fw fa-database"></span>
               &nbsp;Connect

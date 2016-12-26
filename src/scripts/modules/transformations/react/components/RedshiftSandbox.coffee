@@ -60,6 +60,7 @@ RedshiftSandbox = React.createClass
             method: 'create-sandbox'
             mode: 'button'
             label: "Load data"
+            disabled: @state.pendingActions.get 'drop'
             runParams: ->
               sandboxConfiguration
           ,
@@ -76,7 +77,11 @@ RedshiftSandbox = React.createClass
             key: 'ssl'
             placement: 'top'
           ,
-            button {className: "btn btn-link", onClick: @_showSSLInfoModal},
+            button
+              className: "btn btn-link"
+              onClick: @_showSSLInfoModal
+              disabled: @state.pendingActions.get 'drop'
+            ,
               span {className: 'fa fa-fw fa-lock '}
               " SSL"
           RedshiftSSLInfoModal {show: @state.showSSLInfoModal, onHide: @_hideSSLInfoModal}

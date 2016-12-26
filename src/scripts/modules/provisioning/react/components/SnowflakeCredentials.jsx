@@ -14,7 +14,7 @@ module.exports = React.createClass({
         <div>
           <span>
             <Loader />
-            &nbsp;Creating Sandbox
+            &nbsp;Creating sandbox
           </span>
         </div>
       );
@@ -27,7 +27,7 @@ module.exports = React.createClass({
     } else {
       return (
         <div>
-          Sandbox not found
+          Sandbox not running
         </div>
       );
     }

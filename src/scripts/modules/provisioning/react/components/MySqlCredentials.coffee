@@ -27,7 +27,7 @@ MySqlCredentials = React.createClass
           @_renderCredentials()
 
         else
-          'Sandbox not found'
+          'Sandbox not running'
 
   _renderCredentials: ->
     span {},
