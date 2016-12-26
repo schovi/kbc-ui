@@ -51,6 +51,7 @@ MySqlSandbox = React.createClass
             method: 'create-sandbox'
             mode: 'button'
             label: "Load data"
+            disabled: @state.pendingActions.get 'drop'
             runParams: ->
               sandboxConfiguration
           ,
@@ -63,7 +64,12 @@ MySqlSandbox = React.createClass
           )
         div {},
           ConnectToMySqlSandbox {credentials: @state.credentials},
-            button {className: "btn btn-link", title: 'Connect To Sandbox', type: 'submit'},
+            button
+              className: "btn btn-link"
+              title: 'Connect To Sandbox'
+              type: 'submit'
+              disabled: @state.pendingActions.get 'drop'
+            ,
               span {className: 'fa fa-fw fa-database'}
               " Connect"
         div {},
@@ -72,7 +78,11 @@ MySqlSandbox = React.createClass
             key: 'ssl'
             placement: 'top'
           ,
-            button {className: "btn btn-link", onClick: @_showSSLInfoModal},
+            button
+              className: "btn btn-link"
+              onClick: @_showSSLInfoModal
+              disabled: @state.pendingActions.get 'drop'
+            ,
               span {className: 'fa fa-fw fa-lock '}
               " SSL"
           MySqlSSLInfoModal {show: @state.showSSLInfoModal, onHide: @_hideSSLInfoModal}
