@@ -6,7 +6,6 @@ import SnowflakeSandbox from '../../components/SnowflakeSandbox';
 import RStudioSandbox from '../../components/RStudioSandbox';
 import JupyterSandbox from '../../components/JupyterSandbox';
 import ApplicationStore from '../../../../../stores/ApplicationStore';
-import Immutable from 'immutable';
 
 export default React.createClass({
   displayName: 'Sandbox',
