@@ -2,7 +2,7 @@ import removeMarkdown from 'remove-markdown';
 
 // remove markdown markup and trim to 100 characters
 export default function(description) {
-  if (description === null || description === undefined) {
+  if (description === null || !description) {
     return '';
   }
   var plainText = removeMarkdown(description);
