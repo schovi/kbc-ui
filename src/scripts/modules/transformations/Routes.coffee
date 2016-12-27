@@ -20,6 +20,7 @@ TransformationNameEdit = require './react/components/TransformationNameEditField
 ApplicationsStore = require '../../stores/ApplicationStore'
 JobsActionCreators = require '../jobs/ActionCreators'
 injectProps = require('../components/react/injectProps').default
+Immutable = require('immutable')
 
 routes =
       name: 'transformations'
@@ -111,9 +112,8 @@ routes =
               ProvisioningActionCreators.loadSnowflakeSandboxCredentials()
         ,
           ->
-            if (ApplicationsStore.getSapiToken().getIn(['admin', 'features']).includes('docker-sandbox'))
+            if (ApplicationsStore.getSapiToken().getIn(['admin', 'features'], Immutable.List()).includes('docker-sandbox'))
               ProvisioningActionCreators.loadRStudioSandboxCredentials()
-
         ,
           ->
             StorageActionCreators.loadBuckets()
