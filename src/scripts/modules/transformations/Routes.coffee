@@ -112,15 +112,11 @@ routes =
               ProvisioningActionCreators.loadSnowflakeSandboxCredentials()
         ,
           ->
-            if (ApplicationsStore.getSapiToken()
-            .getIn(['admin', 'features'], Immutable.List())
-            .includes('docker-sandbox'))
+            if (ApplicationsStore.hasCurrentAdminFeature('docker-sandbox'))
               ProvisioningActionCreators.loadRStudioSandboxCredentials()
         ,
           ->
-            if (ApplicationsStore.getSapiToken()
-            .getIn(['admin', 'features'], Immutable.List())
-            .includes('docker-sandbox'))
+            if (ApplicationsStore.hasCurrentAdminFeature('docker-sandbox'))
               ProvisioningActionCreators.loadJupyterSandboxCredentials()
         ,
           ->
