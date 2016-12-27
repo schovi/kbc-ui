@@ -1,22 +1,22 @@
 import React from 'react';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
-import RStudioSandboxCredentialsStore from '../../../provisioning/stores/RStudioSandboxCredentialsStore';
+import JupyterSandboxCredentialsStore from '../../../provisioning/stores/JupyterSandboxCredentialsStore';
 import CredentialsActionCreators from '../../../provisioning/ActionCreators';
-import RStudioCredentials from '../../../provisioning/react/components/RStudioCredentials';
+import JupyterCredentials from '../../../provisioning/react/components/JupyterCredentials';
 import DeleteButton from '../../../../react/common/DeleteButton';
 import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import StorageTablesStore from '../../../components/stores/StorageTablesStore';
 import CreateDockerSandboxModal from '../modals/CreateDockerSandboxModal';
 
-var RStudioSandbox = React.createClass({
-  mixins: [createStoreMixin(RStudioSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)],
-  displayName: 'RStudioSandbox',
+var JupyterSandbox = React.createClass({
+  mixins: [createStoreMixin(JupyterSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)],
+  displayName: 'JupyterSandbox',
   getStateFromStores: function() {
     return {
-      credentials: RStudioSandboxCredentialsStore.getCredentials(),
-      pendingActions: RStudioSandboxCredentialsStore.getPendingActions(),
-      isLoading: RStudioSandboxCredentialsStore.getIsLoading(),
-      isLoaded: RStudioSandboxCredentialsStore.getIsLoaded(),
+      credentials: JupyterSandboxCredentialsStore.getCredentials(),
+      pendingActions: JupyterSandboxCredentialsStore.getPendingActions(),
+      isLoading: JupyterSandboxCredentialsStore.getIsLoading(),
+      isLoaded: JupyterSandboxCredentialsStore.getIsLoaded(),
       tables: StorageTablesStore.getAll(),
       buckets: StorageBucketsStore.getAll()
     };
@@ -30,7 +30,7 @@ var RStudioSandbox = React.createClass({
   _renderCredentials: function() {
     return (
       <span>
-        <RStudioCredentials
+        <JupyterCredentials
           credentials={this.state.credentials}
           isCreating={this.state.pendingActions.get('create')}
         />
@@ -54,13 +54,13 @@ var RStudioSandbox = React.createClass({
             </a>
             <div>
               <DeleteButton
-                tooltip="Delete RStudio Sandbox"
+                tooltip="Delete Jupyter Sandbox"
                 isPending={this.state.pendingActions.get('drop')}
                 label="Drop sandbox"
                 fixedWidth={true}
                 confirm={{
-                  title: 'Delete RStudio Sandbox',
-                  text: 'Do you really want to delete RStudio sandbox?',
+                  title: 'Delete Jupyter Sandbox',
+                  text: 'Do you really want to delete Jupyter sandbox?',
                   onConfirm: this._dropCredentials
                 }}
               />
@@ -76,7 +76,7 @@ var RStudioSandbox = React.createClass({
             close={this.closeModal}
             create={this._createCredentials}
             tables={this.tablesList()}
-            type="RStudio"
+            type="Jupyter"
             onConfigurationChange={this.onConfigurationChange}
           />
           <button
@@ -93,7 +93,7 @@ var RStudioSandbox = React.createClass({
   render: function() {
     return (
       <div className="row">
-        <h4>RStudio</h4>
+        <h4>Jupyter</h4>
         <div className="col-md-9">
           {this._renderCredentials()}
         </div>
@@ -104,10 +104,10 @@ var RStudioSandbox = React.createClass({
     );
   },
   _createCredentials: function() {
-    return CredentialsActionCreators.createRStudioSandboxCredentials(this.state.sandboxConfiguration);
+    return CredentialsActionCreators.createJupyterSandboxCredentials(this.state.sandboxConfiguration);
   },
   _dropCredentials: function() {
-    return CredentialsActionCreators.dropRStudioSandboxCredentials();
+    return CredentialsActionCreators.dropJupyterSandboxCredentials();
   },
   closeModal() {
     this.setState({ showModal: false });
@@ -125,4 +125,4 @@ var RStudioSandbox = React.createClass({
   }
 });
 
-module.exports = RStudioSandbox;
+module.exports = JupyterSandbox;

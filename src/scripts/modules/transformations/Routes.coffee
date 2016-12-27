@@ -119,6 +119,12 @@ routes =
               ProvisioningActionCreators.loadRStudioSandboxCredentials()
         ,
           ->
+            if (ApplicationsStore.getSapiToken()
+            .getIn(['admin', 'features'], Immutable.List())
+            .includes('docker-sandbox'))
+              ProvisioningActionCreators.loadJupyterSandboxCredentials()
+        ,
+          ->
             StorageActionCreators.loadBuckets()
         ,
           ->
