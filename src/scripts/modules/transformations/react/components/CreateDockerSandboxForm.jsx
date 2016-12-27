@@ -16,7 +16,6 @@ module.exports = React.createClass({
       tables: Immutable.List()
     };
   },
-
   render: function() {
     return (
       <form className="form-horizontal">
@@ -55,16 +54,18 @@ module.exports = React.createClass({
     );
   },
   onChangeRows: function(e) {
+    const value = parseInt(e.target.value, 10);
     this.setState({
-      rows: parseInt(e.target.value, 10)
+      rows: value
     });
-    this.onChange();
+    this.onChange(this.state.tables, value);
   },
   onChangeTables: function(valueString, valueArray) {
+    const value = Immutable.fromJS(valueArray);
     this.setState({
-      tables: Immutable.fromJS(valueArray)
+      tables: value
     });
-    this.onChange();
+    this.onChange(value, this.state.rows);
   },
   getTablesOptions: function() {
     return this.props.tables.map(
@@ -78,14 +79,13 @@ module.exports = React.createClass({
       return table.value.toLowerCase();
     });
   },
-  onChange: function() {
-    const state = this.state;
-    const tablesList = this.state.tables.map(function(table) {
+  onChange: function(tables, rows) {
+    const tablesList = tables.map(function(table) {
       var retVal = {
         source: table.get('value')
       };
-      if (state.rows > 0) {
-        retVal.limit = state.rows;
+      if (rows > 0) {
+        retVal.limit = rows;
       }
       return retVal;
     }).toList();
