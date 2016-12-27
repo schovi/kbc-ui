@@ -111,7 +111,8 @@ routes =
               ProvisioningActionCreators.loadSnowflakeSandboxCredentials()
         ,
           ->
-            ProvisioningActionCreators.loadRStudioSandboxCredentials()
+            if (ApplicationsStore.getSapiToken().getIn(['admin', 'features']).includes('docker-sandbox'))
+              ProvisioningActionCreators.loadRStudioSandboxCredentials()
 
         ,
           ->

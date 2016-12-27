@@ -5,6 +5,7 @@ import RedshiftSandbox from '../../components/RedshiftSandbox';
 import SnowflakeSandbox from '../../components/SnowflakeSandbox';
 import RStudioSandbox from '../../components/RStudioSandbox';
 import ApplicationStore from '../../../../../stores/ApplicationStore';
+import Immutable from 'immutable';
 
 export default React.createClass({
   displayName: 'Sandbox',
@@ -15,7 +16,7 @@ export default React.createClass({
           <MySqlSandbox />
           {ApplicationStore.getSapiToken().getIn(['owner', 'hasRedshift'], false) ? (<RedshiftSandbox />) : null}
           {ApplicationStore.getSapiToken().getIn(['owner', 'hasSnowflake'], false) ? (<SnowflakeSandbox />) : null}
-          <RStudioSandbox />
+          {ApplicationStore.getSapiToken().getIn(['admin', 'features'], Immutable.List()).includes('docker-sandbox') ? (<RStudioSandbox />) : null}
         </div>
       </div>
     );
