@@ -79,7 +79,6 @@ module.exports = React.createClass({
     });
   },
   onChange: function() {
-    console.log(this.state);
     const state = this.state;
     const tablesList = this.state.tables.map(function(table) {
       var retVal = {
