@@ -8,7 +8,7 @@ import RStudioCredentials from '../../../provisioning/react/components/RStudioCr
 import DeleteButton from '../../../../react/common/DeleteButton';
 import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import StorageTablesStore from '../../../components/stores/StorageTablesStore';
-import RStudioSandboxCreateModal from './RStudioSandboxCreateModal';
+import CreateDockerSandboxModal from '../modals/CreateDockerSandboxModal';
 
 var RStudioSandbox = React.createClass({
   mixins: [createStoreMixin(RStudioSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)],
@@ -25,7 +25,8 @@ var RStudioSandbox = React.createClass({
   },
   getInitialState() {
     return {
-      showModal: false
+      showModal: false,
+      sandboxConfiguration: {}
     };
   },
   _renderCredentials: function() {
@@ -72,11 +73,13 @@ var RStudioSandbox = React.createClass({
     } else if (!this.state.pendingActions.get('create')) {
       return (
         <span>
-          <RStudioSandboxCreateModal
+          <CreateDockerSandboxModal
             show={this.state.showModal}
             close={this.closeModal}
             create={this._createCredentials}
             tables={this.tablesList()}
+            type="RStudio"
+            onConfigurationChange={this.onConfigurationChange}
           />
           <button
             className="btn btn-link"
@@ -102,21 +105,8 @@ var RStudioSandbox = React.createClass({
       </div>
     );
   },
-  _createCredentials: function(tables, rows) {
-    const data = tables.map(function(value) {
-      var retVal = {
-        source: value
-      };
-      if (rows !== null && parseInt(rows, 10) > 0) {
-        retVal.limit = rows;
-      }
-      return retVal;
-    });
-    return CredentialsActionCreators.createRStudioSandboxCredentials({
-      input: {
-        tables: data.toList().toJS()
-      }
-    });
+  _createCredentials: function() {
+    return CredentialsActionCreators.createRStudioSandboxCredentials(this.state.sandboxConfiguration);
   },
   _dropCredentials: function() {
     return CredentialsActionCreators.dropRStudioSandboxCredentials();
@@ -126,6 +116,9 @@ var RStudioSandbox = React.createClass({
   },
   openModal() {
     this.setState({ showModal: true });
+  },
+  onConfigurationChange(configuration) {
+    this.setState({sandboxConfiguration: configuration});
   },
   tablesList() {
     return this.state.tables.map(function(table) {
