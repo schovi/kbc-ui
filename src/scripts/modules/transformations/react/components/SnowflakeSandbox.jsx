@@ -34,6 +34,7 @@ var SnowflakeSandbox = React.createClass({
   },
   _renderControlButtons: function() {
     var sandboxConfiguration;
+    const connectLink = 'http://' + this.state.credentials.get('hostname');
     if (this.state.credentials.get('id')) {
       sandboxConfiguration = {};
       return (
@@ -61,7 +62,7 @@ var SnowflakeSandbox = React.createClass({
           </div>
           <div>
             <a
-              href="https://#{this.state.credentials.get('hostname')}"
+              href={connectLink}
               className="btn btn-link"
               target="_blank"
               disabled={this.state.pendingActions.get('drop')}
