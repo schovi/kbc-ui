@@ -92,7 +92,7 @@ module.exports = React.createClass
               name: 'add-size'
               value: @props.sizeValue
               disabled: @props.disabled || !@props.showSize
-              placeholder: "Eg. 38,0 or 255"
+              placeholder: "Eg. 38,0"
               onChange: @_handleSizeOnChange
         React.DOM.span {className: "col-xs-1"},
           Button
