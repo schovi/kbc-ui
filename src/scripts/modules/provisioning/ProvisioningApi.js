@@ -9,14 +9,17 @@ const createUrl = function(path) {
   return baseUrl + '/' + path;
 };
 
-const createRequest = function(method, path) {
-  const sapiToken = ApplicationStore.getSapiTokenString();
+const createRequest = function(method, path, token) {
+  var sapiToken = token;
+  if (!sapiToken) {
+    sapiToken = ApplicationStore.getSapiTokenString();
+  }
   return request(method, createUrl(path)).set('X-StorageApi-Token', sapiToken);
 };
 
 const ProvisioningApi = {
-  getCredentials: function(backend, credentialsType) {
-    return createRequest('GET', backend)
+  getCredentials: function(backend, credentialsType, token) {
+    return createRequest('GET', backend, token)
       .query({
         'type': credentialsType
       })
@@ -26,13 +29,11 @@ const ProvisioningApi = {
       });
   },
 
-  createCredentials: function(backend, credentialsType, data) {
-    var requestData = data;
-    if (!requestData) {
-      requestData = {};
-    }
-    requestData.type = credentialsType;
-    return createRequest('POST', backend)
+  createCredentials: function(backend, credentialsType, token) {
+    const requestData = {
+      type: credentialsType
+    };
+    return createRequest('POST', backend, token)
       .send(requestData)
       .promise()
       .then(function(response) {
@@ -40,8 +41,8 @@ const ProvisioningApi = {
       });
   },
 
-  dropCredentials: function(backend, credentialsId) {
-    return createRequest('DELETE', backend + '/' + credentialsId)
+  dropCredentials: function(backend, credentialsId, token) {
+    return createRequest('DELETE', backend + '/' + credentialsId, token)
       .promise()
       .then(function(response) {
         return response.body;
