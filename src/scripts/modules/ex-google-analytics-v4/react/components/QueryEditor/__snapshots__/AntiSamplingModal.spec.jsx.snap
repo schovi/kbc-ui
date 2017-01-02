@@ -1,0 +1,207 @@
+exports[`<AntiSamplingModal /> should render hidden modal 1`] = `
+<Modal
+  bsSize="large"
+  onHide={[Function]}
+  show={false}>
+  <ModalHeader
+    closeButton={true}
+    modalClassName="modal-header">
+    <ModalTitle
+      modalClassName="modal-title">
+      Setup Anti-sampling
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody
+    modalClassName="modal-body">
+    <div
+      className="text-muted">
+      <span>
+        Sampling in Analytics is the practice of selecting a subset of data from your traffic and reporting on the trends available in that sample set. If your API call covers a date range greater than the set session limits, it will return a sampled call. To avoid this and get more precise results, you can use one of the following algorithms.
+      </span>
+    </div>
+    <div
+      className="form-horizontal clearfix">
+      <div
+        className="row">
+        <div
+          className="col-md-12">
+          <div
+            className="form-group">
+            <div
+              className="col-sm-9">
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="Daily Walk algorithm"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value="dailyWalk" />
+                  Daily Walk algorithm
+                  <small
+                    className="help-block">
+                    Will make one request per date in the date range. You will get the most precise results, but it takes a lot of API calls.
+                  </small>
+                </label>
+              </div>
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="Adaptive algorithm"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value="adaptive" />
+                  Adaptive algorithm
+                  <small
+                    className="help-block">
+                    Will divide the date range into multiple smaller date ranges. This is way more faster, but might not be that precise.
+                  </small>
+                </label>
+              </div>
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="None"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value={null} />
+                  None
+                  <small
+                    className="help-block">
+                    No anti-sampling algorithm used.
+                  </small>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ModalBody>
+  <ModalFooter
+    modalClassName="modal-footer">
+    <ConfirmButtons
+      cancelLabel="Cancel"
+      isDisabled={false}
+      isSaving={false}
+      onCancel={[Function]}
+      onSave={[Function]}
+      placement="right"
+      saveLabel="Set"
+      saveStyle="primary"
+      showSave={true} />
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`<AntiSamplingModal /> should render modal 1`] = `
+<Modal
+  bsSize="large"
+  onHide={[Function]}
+  show={true}>
+  <ModalHeader
+    closeButton={true}
+    modalClassName="modal-header">
+    <ModalTitle
+      modalClassName="modal-title">
+      Setup Anti-sampling
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody
+    modalClassName="modal-body">
+    <div
+      className="text-muted">
+      <span>
+        Sampling in Analytics is the practice of selecting a subset of data from your traffic and reporting on the trends available in that sample set. If your API call covers a date range greater than the set session limits, it will return a sampled call. To avoid this and get more precise results, you can use one of the following algorithms.
+      </span>
+    </div>
+    <div
+      className="form-horizontal clearfix">
+      <div
+        className="row">
+        <div
+          className="col-md-12">
+          <div
+            className="form-group">
+            <div
+              className="col-sm-9">
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="Daily Walk algorithm"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value="dailyWalk" />
+                  Daily Walk algorithm
+                  <small
+                    className="help-block">
+                    Will make one request per date in the date range. You will get the most precise results, but it takes a lot of API calls.
+                  </small>
+                </label>
+              </div>
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="Adaptive algorithm"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value="adaptive" />
+                  Adaptive algorithm
+                  <small
+                    className="help-block">
+                    Will divide the date range into multiple smaller date ranges. This is way more faster, but might not be that precise.
+                  </small>
+                </label>
+              </div>
+              <div
+                className="radio">
+                <label>
+                  <input
+                    checked={false}
+                    id="None"
+                    name="antisampling"
+                    onChange={[Function]}
+                    type="radio"
+                    value={null} />
+                  None
+                  <small
+                    className="help-block">
+                    No anti-sampling algorithm used.
+                  </small>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ModalBody>
+  <ModalFooter
+    modalClassName="modal-footer">
+    <ConfirmButtons
+      cancelLabel="Cancel"
+      isDisabled={false}
+      isSaving={false}
+      onCancel={[Function]}
+      onSave={[Function]}
+      placement="right"
+      saveLabel="Set"
+      saveStyle="primary"
+      showSave={true} />
+  </ModalFooter>
+</Modal>
+`;
