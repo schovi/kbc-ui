@@ -236,7 +236,7 @@ templateFn = (componentId) ->
 
   _renderTableRow: (table, tableExists = true) ->
     v2ConfigTable = @state.v2ConfigTables.find((t) -> t.get('tableId') == table.get('id'))
-    console.log v2ConfigTable
+    # console.log v2ConfigTable
     #div null, table.get('id')
     TableRow
       tableExists: tableExists
