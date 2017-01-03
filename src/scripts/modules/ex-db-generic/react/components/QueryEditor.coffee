@@ -108,6 +108,9 @@ module.exports = React.createClass
               value: @props.query.get 'query'
               mode: editorMode(@props.componentId)
               onChange: @_handleQueryChange
+              style: {
+                width: '100%'
+              }
 
   _tableSelectOptions: ->
     @props.tables
