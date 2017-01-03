@@ -53,7 +53,7 @@ module.exports = React.createClass
       if @props.isV2
         span className: 'td',
           React.createElement Check,
-            isChecked: @props.v2ConfigTable.get('incremental')
+            isChecked: @props.v2ConfigTable?.get('incremental')
       span {className: 'td text-right'},
         @_renderDeleteButton()
         React.createElement ActivateDeactivateButton,
