@@ -14,6 +14,7 @@ DeleteConfigurationButton = require '../../../../components/react/components/Del
 DeleteConfigurationButton = React.createFactory DeleteConfigurationButton
 ComponentMetadata = require '../../../../components/react/components/ComponentMetadata'
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
+MigrationRow = require('../../../../components/react/components/MigrationRow').default
 
 ComponentDescription = require '../../../../components/react/components/ComponentDescription'
 ComponentDescription = React.createFactory(ComponentDescription)
@@ -51,6 +52,8 @@ module.exports = React.createClass
   _renderMainContent: ->
     items = @state.configuration.get('items')
     div {className: 'col-md-9 kbc-main-content'},
+      React.createElement MigrationRow,
+        componentId: 'ex-google-drive'
       div className: 'row kbc-header',
         div className: 'col-sm-8',
           ComponentDescription
