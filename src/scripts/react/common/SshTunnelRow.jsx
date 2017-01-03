@@ -59,7 +59,7 @@ export default React.createClass({
     } else {
       return (
         <StaticText
-          label={<span>SSH Tunnel {this.renderHelp()}</span>}
+          label={<span>SSH Tunnel <small>{this.renderHelp()}</small></span>}
           labelClassName="col-xs-4"
           wrapperClassName="col-xs-8">
           <Check isChecked={this.isEnabled()} />
