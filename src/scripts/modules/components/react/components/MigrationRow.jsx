@@ -190,6 +190,8 @@ export default React.createClass({
       return 'Migrate your current configurations to new vendor specific database extractors (MySql, Postgres, Oracle, Microsoft Sql). This extractor will continue to work until August 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.';
     } else if (this.props.componentId === 'ex-google-analytics') {
       return 'Migrate your current configurations to new Google Analytics Extractor, which uses the newest API V4. This extractor will continue to work until November 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.';
+    } else if (this.props.componentId === 'ex-google-drive') {
+      return 'Migrate your current configurations to new Google Drive Extractor. This extractor will continue to work until April 2017. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove them yourself after successful migration.';
     } else {
       return '';
     }
@@ -359,6 +361,8 @@ export default React.createClass({
       return `ex-db-generic-${componentId}`;
     } else if (componentId.indexOf('ex-google-analytics') > -1) {
       return 'keboola.ex-google-analytics-v4';
+    } else if (componentId.indexOf('ex-google-drive') > -1) {
+      return 'keboola.ex-google-drive';
     }
   },
 
