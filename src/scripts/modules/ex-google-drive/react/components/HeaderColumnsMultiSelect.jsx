@@ -25,6 +25,10 @@ export default React.createClass({
     );
   },
 
+  shouldComponentUpdate() {
+    return false;
+  },
+
   renderValue(op) {
     return op.id || op.value;
   },
