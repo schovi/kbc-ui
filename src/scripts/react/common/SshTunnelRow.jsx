@@ -51,7 +51,7 @@ export default React.createClass({
           disabled={!this.props.isEditing}
           type="checkbox"
           label={<span>Enable SSH Tunnel {this.renderHelp()}</span>}
-          wrapperClassName="col-xs-8"
+          wrapperClassName="col-xs-8 col-xs-offset-4"
           checked={this.isEnabled()}
           onChange={() => this.props.onChange(this.props.data.set('enabled', !this.isEnabled()))}
         />
