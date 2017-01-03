@@ -8,9 +8,9 @@ export default React.createClass({
 
   render() {
     return (
-      <strong style={{wordBreak: 'break-all'}}>
+      <span style={{wordBreak: 'break-all'}}>
         {this.props.runId}
-      </strong>
+      </span>
     );
   }
 

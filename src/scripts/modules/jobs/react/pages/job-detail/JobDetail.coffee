@@ -13,6 +13,7 @@ Events = React.createFactory(require '../../../../sapi-events/react/Events')
 ComponentName = React.createFactory(require('../../../../../react/common/ComponentName').default)
 ComponentIcon = React.createFactory(require('../../../../../react/common/ComponentIcon').default)
 Duration = React.createFactory(require('../../../../../react/common/Duration'))
+JobRunId = React.createFactory(require('../../../../../react/common/JobRunId').default)
 JobStatsContainer = require('./JobStatsContainer').default
 GoodDataStatsContainer = require('./GoodDataStatsContainer')
 {PanelGroup, Panel} = require 'react-bootstrap'
@@ -173,7 +174,7 @@ module.exports = React.createClass
             span {className: 'col-md-3'},
               'RunId'
             strong {className: 'col-md-9'},
-              job.get('runId')
+              JobRunId {runId: job.get('runId')}
         div {className: 'td'},
           div {className: 'row'},
             span {className: 'col-md-3'},
