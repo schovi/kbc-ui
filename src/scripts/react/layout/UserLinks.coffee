@@ -22,10 +22,17 @@ module.exports = React.createClass
             href: ''
             onClick: @_openSupportModal
           ,
-            span className: 'kbc-icon kbc-icon-comment'
+            span className: 'fa fa-comment'
             ' Support '
+
+        li null,
+          a
+            href: 'https://help.keboola.com'
+            target: '_blank',
+            span className: 'fa fa-question-circle'
+            ' Help '
+
         li null,
           a href: ApplicationStore.getProjectPageUrl('settings-users'),
-            span className: 'kbc-icon kbc-icon-user'
+            span className: 'fa fa-user'
             ' Users & Settings '
-
