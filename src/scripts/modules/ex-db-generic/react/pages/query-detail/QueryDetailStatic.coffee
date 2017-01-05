@@ -59,6 +59,9 @@ module.exports = React.createClass
                 lineNumbers: false
                 value: @props.query.get 'query'
                 mode: editorMode(@props.componentId)
+                style: {
+                  width: '100%'
+                }
             else
               div className: 'row kbc-header',
                 p className: 'text-muted',
