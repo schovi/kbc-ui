@@ -18,6 +18,58 @@ function authorizeAnal(callbackFn) {
   });
 }
 
+/*
+
+For some reason the second webProperty has no profiles and that makes the UI go wild
+
+ */
+const faultyProfiles = {
+  'kind': 'analytics#accountSummaries',
+  'username': 'onndra@keboola.com',
+  'totalResults': 1,
+  'startIndex': 1,
+  'itemsPerPage': 1000,
+  'items': [
+    {
+      'id': '1',
+      'kind': 'analytics#accountSummary',
+      'name': 'My Account',
+      'webProperties': [
+        {
+          'kind': 'analytics#webPropertySummary',
+          'id': 'UA-1-1',
+          'name': 'http://www.keboola.com',
+          'internalWebPropertyId': '1',
+          'level': 'STANDARD',
+          'websiteUrl': 'http://www.keboola.cz',
+          'profiles': [
+            {
+              'kind': 'analytics#profileSummary',
+              'id': '1',
+              'name': 'Hlavní',
+              'type': 'WEB'
+            },
+            {
+              'kind': 'analytics#profileSummary',
+              'id': '2',
+              'name': 'Vedlejší',
+              'type': 'WEB'
+            }
+          ]
+        },
+        {
+          'kind': 'analytics#webPropertySummary',
+          'id': 'UA-1-2',
+          'name': 'http://www.keboola.com',
+          'internalWebPropertyId': '2',
+          'level': 'STANDARD',
+          'websiteUrl': 'http://www.keboola.com'
+        }
+      ]
+    }
+  ]
+};
+
 function reparseProfiles(profiles) {
   let result = {};
   _.each(profiles.items, (item) => {
@@ -90,7 +142,9 @@ export default React.createClass({
         if (resp.error) {
           return this.props.onProfilesLoadError(resp);
         } else {
-          return this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
+          // FIXME remove
+          // return this.props.onProfilesLoad(reparseProfiles(resp), resp.username);
+          return this.props.onProfilesLoad(reparseProfiles(faultyProfiles), resp.username);
         }
       }
     );
