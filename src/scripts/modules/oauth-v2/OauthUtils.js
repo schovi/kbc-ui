@@ -3,7 +3,6 @@ import OauthActions from './ActionCreators';
 import ApplicationStore from '../../stores/ApplicationStore';
 import OauthStore from './Store';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
-import ComponentsStore from '../components/stores/ComponentsStore';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
 import RouterStore from '../../stores/RoutesStore';
 import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
@@ -127,7 +126,7 @@ export function generateLink(componentId, configId) {
     description: `${description} external oauth link`,
     expiresIn: (48 * 3600) // 48 hours in seconds
   };
-  const externalAppUrl = ComponentsStore.getComponent('keboola.ui-oauth-external').get('uri');
+  const externalAppUrl = 'https://external.keboola.com/oauth/index.html';
   return StorageApi.createToken(tokenParams)
     .then((token) => {
       return `${externalAppUrl}?token=${token.token}&sapiUrl=${ApplicationStore.getSapiUrl()}#/${componentId}/${configId}`;
