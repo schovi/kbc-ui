@@ -2,12 +2,9 @@
 
 import request from '../../utils/request';
 import ApplicationStore from '../../stores/ApplicationStore';
-import ComponentsStore from '../components/stores/ComponentsStore';
-
-const DOCKER_ACTIONS_COMPONENT_ID = 'keboola.docker-actions';
 
 function createUrl(componentId, action) {
-  const dockerActionsUri = ComponentsStore.getComponent(DOCKER_ACTIONS_COMPONENT_ID).get('uri');
+  const dockerActionsUri = ApplicationStore.getKbcVars().get('dockerRunnerUrl');
   return `${dockerActionsUri}/docker/${componentId}/action/${action}`;
 }
 
