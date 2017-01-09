@@ -94,9 +94,10 @@ export default React.createClass({
   },
 
   renderProfilePanel(profile, profileName) {
+    const first = profile.first();
     const header = (
       <span>
-        {profileName} ({profile.first().get('webPropertyId')})
+        {profileName} ({first ? first.get('webPropertyId') : 'Empty'})
       </span>);
     return (
       <Panel
@@ -106,14 +107,16 @@ export default React.createClass({
         collapsible={true}>
         <div className="row">
           <ListGroup>
-            {profile.map((pItem) =>
+            {first ?
+             profile.map((pItem) =>
               <ListGroupItem
                 active={this.isSelected(pItem)}
                 onClick={() => this.onProfileClick(pItem)}>
                 <div className="text-center">
                   {pItem.get('name')} ({pItem.get('id')})
                 </div>
-              </ListGroupItem>).toArray()}
+              </ListGroupItem>).toArray()
+            : <ListGroupItem>No profiles found</ListGroupItem>}
           </ListGroup>
         </div>
       </Panel>
