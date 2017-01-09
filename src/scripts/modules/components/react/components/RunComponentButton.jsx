@@ -1,43 +1,10 @@
 import React from 'react';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
-import {ModalTrigger, Modal, ButtonToolbar, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
+import {ModalTrigger, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
 import RoutesStore from '../../../../stores/RoutesStore';
 import classnames from 'classnames';
-
-var RunModal = React.createClass({
-
-  propTypes: {
-    onRequestHide: React.PropTypes.func.isRequired,
-    onRequestRun: React.PropTypes.func.isRequired,
-    title: React.PropTypes.string.isRequired,
-    body: React.PropTypes.string.isRequired
-  },
-
-  _handleRun: function() {
-    this.props.onRequestHide();
-    return this.props.onRequestRun();
-  },
-
-  render: function() {
-    return (
-      <Modal
-        title={this.props.title}
-        onRequestHide={this.props.onRequestHide}
-      >
-        <div className="modal-body">
-          {this.props.body}
-        </div>
-        <div className="modal-footer">
-          <ButtonToolbar>
-            <Button bsStyle="link" onClick={this.props.onRequestHide}>Close</Button>
-            <Button bsStyle="primary" onClick={this._handleRun}>Run</Button>
-          </ButtonToolbar>
-        </div>
-      </Modal>
-    );
-  }
-});
+import RunModal from './RunComponentButtonModal';
 
 module.exports = React.createClass({
   displayName: 'RunExtraction',
