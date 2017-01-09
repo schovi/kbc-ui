@@ -40,7 +40,7 @@ export default React.createClass({
               <div className="form-horizontal">
                 <Input type="radio" label="Load input tables only" wrapperClassName="col-sm-offset-1 col-sm-8" value="input" />
                 <Input type="radio" label="Prepare transformation" help="Load input tables AND execute required transformations" wrapperClassName="col-sm-offset-1 col-sm-8" value="prepare" />
-                <Input type="radio" label="Execute transformation without writing to Storage API" wrapperClassName="col-sm-offset-1 col-sm-8" value="dry-run" />
+                <Input type="radio" label="Execute transformation without writing to Storage" wrapperClassName="col-sm-offset-1 col-sm-8" value="dry-run" />
               </div>
               <div className="help-block">
                 Note: Disabled transformations will NOT be executed in any of these modes.

@@ -120,7 +120,7 @@ export default React.createClass({
       return (
         <span>
           <span className="kb-sapi-component-icon kbc-icon-storage" style={{fontSize: '32px', verticalAlign: 'middle'}}/>
-          <span>Direct Storage API access</span>
+          <span>Direct Storage access</span>
         </span>
       );
     } else {

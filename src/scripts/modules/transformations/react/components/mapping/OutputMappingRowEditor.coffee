@@ -169,9 +169,9 @@ module.exports = React.createClass
                   disabled: @props.disabled
                   onChange: @_handleChangeIncremental
                   help: React.DOM.small {},
-                    "If the destination table exists in Storage API,
+                    "If the destination table exists in Storage,
                     output mapping does not overwrite the table, it only appends the data to it.
-                    Uses incremental write to Storage API."
+                    Uses incremental write to Storage."
         if @state.showDetails
           React.DOM.div {className: "row col-md-12"},
             React.DOM.div {className: "form-group form-group-sm"},
@@ -190,7 +190,7 @@ module.exports = React.createClass
                   emptyStrings: false
                   noResultsText: 'No matching column found'
                   help: React.DOM.small {},
-                    "Primary key of the table in Storage API. If the table already exists, primary key must match."
+                    "Primary key of the table in Storage. If the table already exists, primary key must match."
                   onChange: @_handleChangePrimaryKey
                   options: @_getColumns().map((option) ->
                     return {

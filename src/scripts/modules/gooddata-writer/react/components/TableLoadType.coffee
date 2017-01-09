@@ -76,7 +76,7 @@ LoadTypeModal = React.createClass
             bsSize: 'small'
             type: 'radio'
             wrapperClassName: 'col-sm-offset-2 col-sm-8'
-            help: 'All data in GoodData dataset will be replaced by current data in source Storage API table.'
+            help: 'All data in GoodData dataset will be replaced by current data in source Storage table.'
             label: 'Full Load'
             checked: !incrementalLoad
             onChange: @_handleModeRadioChange.bind @, 'full'
