@@ -4,7 +4,7 @@ import SnowflakeSandboxCredentialsStore from '../../../provisioning/stores/Snowf
 import CredentialsActionCreators from '../../../provisioning/ActionCreators';
 import SnowflakeCredentials from '../../../provisioning/react/components/SnowflakeCredentials';
 import ConfigureSandbox from '../components/ConfigureSandbox';
-import RunComponentButton from '../../../components/react/components/RunComponentButton';
+import LoadDataIntoWorkspaceButton from '../../../components/react/components/LoadDataIntoWorkspaceButton';
 import DeleteButton from '../../../../react/common/DeleteButton';
 import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import StorageTablesStore from '../../../components/stores/StorageTablesStore';
@@ -40,7 +40,7 @@ var SnowflakeSandbox = React.createClass({
       return (
         <div>
           <div>
-            <RunComponentButton
+            <LoadDataIntoWorkspaceButton
               title="Load tables into Snowflake sandbox"
               component="transformation"
               method="create-sandbox"
@@ -58,7 +58,7 @@ var SnowflakeSandbox = React.createClass({
                   onChange={(params) => {
                     sandboxConfiguration = params;
                   }}/>
-              </RunComponentButton>
+              </LoadDataIntoWorkspaceButton>
           </div>
           <div>
             <a

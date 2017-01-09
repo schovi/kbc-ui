@@ -7,7 +7,8 @@ RedshiftSandboxCredentialsStore = require('../../../provisioning/stores/Redshift
 CredentialsActionCreators = require('../../../provisioning/ActionCreators')
 RedshiftCredentials = React.createFactory(require('../../../provisioning/react/components/RedshiftCredentials'))
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
-RunComponentButton = React.createFactory(require '../../../components/react/components/RunComponentButton')
+LoadDataIntoWorkspaceButton =
+  React.createFactory(require '../../../components/react/components/LoadDataIntoWorkspaceButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
@@ -54,7 +55,7 @@ RedshiftSandbox = React.createClass
       sandboxConfiguration = {}
       div {},
         div {},
-          RunComponentButton(
+          LoadDataIntoWorkspaceButton(
             title: "Load tables into Redshift sandbox"
             component: 'transformation'
             method: 'create-sandbox'
