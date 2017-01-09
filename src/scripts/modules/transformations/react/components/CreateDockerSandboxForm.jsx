@@ -82,7 +82,8 @@ module.exports = React.createClass({
   onChange: function(tables, rows) {
     const tablesList = tables.map(function(table) {
       var retVal = {
-        source: table.get('value')
+        source: table.get('value'),
+        destination: table.get('value') + '.csv'
       };
       if (rows > 0) {
         retVal.limit = rows;
