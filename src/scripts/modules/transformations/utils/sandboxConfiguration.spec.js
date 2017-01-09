@@ -1,17 +1,26 @@
 var assert = require('assert');
-// var Immutable = require('immutable');
 var sandboxConfiguration = require('./sandboxConfiguration');
 
-/**
- *
-     preserve: false
-     backend: @props.backend
-     include: []
-     rows: 0
- *
- */
-
-const tables = [];
+const tables = [
+  {
+    id: 'in.c-main.data',
+    bucket: {
+      id: 'in.c-main'
+    }
+  },
+  {
+    id: 'in.c-main.data2',
+    bucket: {
+      id: 'in.c-main'
+    }
+  },
+  {
+    id: 'in.c-main2.data',
+    bucket: {
+      id: 'in.c-main2'
+    }
+  }
+];
 
 describe('sandboxConfigruration', function() {
   describe('#sandboxConfigruration()', function() {
@@ -33,7 +42,7 @@ describe('sandboxConfigruration', function() {
         },
         preserve: false
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
     it('should propagate rows', function() {
@@ -56,7 +65,7 @@ describe('sandboxConfigruration', function() {
         },
         preserve: false
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
     it('should propagate preserve', function() {
@@ -78,7 +87,7 @@ describe('sandboxConfigruration', function() {
         },
         preserve: true
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
     it('should propagate multiple tables', function() {
@@ -98,12 +107,11 @@ describe('sandboxConfigruration', function() {
             {
               source: 'in.c-main.data2'
             }
-
           ]
         },
         preserve: true
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
     it('should drill down a bucket', function() {
@@ -123,12 +131,11 @@ describe('sandboxConfigruration', function() {
             {
               source: 'in.c-main.data2'
             }
-
           ]
         },
         preserve: true
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
 
@@ -149,14 +156,66 @@ describe('sandboxConfigruration', function() {
             {
               source: 'in.c-main.data2'
             }
-
           ]
         },
         preserve: true
       };
-      assert.equal(expected, sandboxConfiguration(configuration, tables));
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
 
+    it('should exclude table', function() {
+      const configuration = {
+        preserve: false,
+        backend: 'snowflake',
+        include: ['in.c-main'],
+        exclude: ['in.c-main.data2'],
+        rows: 0
+      };
+      const expected = {
+        input: {
+          tables: [
+            {
+              source: 'in.c-main.data'
+            }
+          ]
+        },
+        preserve: false
+      };
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
+    });
 
+    it('should exclude bucket', function() {
+      const configuration = {
+        preserve: false,
+        backend: 'snowflake',
+        include: ['in.c-main', 'in.c-main.data'],
+        exclude: ['in.c-main'],
+        rows: 0
+      };
+      const expected = {
+        input: {
+          tables: []
+        },
+        preserve: false
+      };
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
+    });
+
+    it('should not include nonexisting table', function() {
+      const configuration = {
+        preserve: false,
+        backend: 'snowflake',
+        include: ['in.c-doesnotexist', 'in.c-doesnotexist.table'],
+        exclude: [],
+        rows: 0
+      };
+      const expected = {
+        input: {
+          tables: []
+        },
+        preserve: false
+      };
+      assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
+    });
   });
 });
