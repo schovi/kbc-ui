@@ -18,6 +18,7 @@ function authorizeAnal(callbackFn) {
   });
 }
 
+
 function reparseProfiles(profiles) {
   let result = {};
   _.each(profiles.items, (item) => {
