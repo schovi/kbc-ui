@@ -32,6 +32,6 @@ module.exports = function(configuration, tables) {
 
   return {
     input: inputMappings,
-    preserve: configuration.preserve
+    preserve: configuration.preserve ? '1' : '0'
   };
 };

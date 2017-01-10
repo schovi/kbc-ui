@@ -39,7 +39,7 @@ describe('sandboxConfigruration', function() {
             destination: 'in.c-main.data'
           }
         ],
-        preserve: false
+        preserve: '0'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -61,7 +61,7 @@ describe('sandboxConfigruration', function() {
 
           }
         ],
-        preserve: false
+        preserve: '0'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -81,7 +81,7 @@ describe('sandboxConfigruration', function() {
             destination: 'in.c-main.data'
           }
         ],
-        preserve: true
+        preserve: '1'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -105,7 +105,7 @@ describe('sandboxConfigruration', function() {
             destination: 'in.c-main.data2'
           }
         ],
-        preserve: true
+        preserve: '1'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -129,7 +129,7 @@ describe('sandboxConfigruration', function() {
             destination: 'in.c-main.data2'
           }
         ],
-        preserve: true
+        preserve: '1'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -174,7 +174,7 @@ describe('sandboxConfigruration', function() {
             destination: 'in.c-main.data'
           }
         ],
-        preserve: false
+        preserve: '0'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -189,7 +189,7 @@ describe('sandboxConfigruration', function() {
       };
       const expected = {
         input: [],
-        preserve: false
+        preserve: '0'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
@@ -204,7 +204,7 @@ describe('sandboxConfigruration', function() {
       };
       const expected = {
         input: [],
-        preserve: false
+        preserve: '0'
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
     });
