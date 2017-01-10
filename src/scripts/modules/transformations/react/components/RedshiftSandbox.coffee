@@ -18,6 +18,7 @@ OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 RedshiftSSLInfoModal = React.createFactory(require './RedshiftSSLInfoModal')
 ApplicationStore = require '../../../../stores/ApplicationStore'
+sandboxConfigurationTool = require '../../utils/sandboxConfiguration'
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
@@ -51,17 +52,17 @@ RedshiftSandbox = React.createClass
       RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
+    state = @state
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       div {},
         div {},
           LoadDataIntoWorkspaceButton(
             title: "Load tables into Redshift sandbox"
-            component: 'transformation'
-            method: 'create-sandbox'
             mode: 'button'
             label: "Load data"
             disabled: @state.pendingActions.get 'drop'
+            workspaceId: @state.credentials.get 'workspaceId'
             runParams: ->
               sandboxConfiguration
           ,
@@ -70,7 +71,7 @@ RedshiftSandbox = React.createClass
               tables: @state.tables
               buckets: @state.buckets
               onChange: (params) ->
-                sandboxConfiguration = params
+                sandboxConfiguration = sandboxConfigurationTool(params, state.tables.toList().toJS())
           )
         div {},
           OverlayTrigger

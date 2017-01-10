@@ -8,6 +8,7 @@ import LoadDataIntoWorkspaceButton from '../../../components/react/components/Lo
 import DeleteButton from '../../../../react/common/DeleteButton';
 import StorageBucketsStore from '../../../components/stores/StorageBucketsStore';
 import StorageTablesStore from '../../../components/stores/StorageTablesStore';
+import sandboxConfigurationTool from '../../utils/sandboxConfiguration';
 
 var SnowflakeSandbox = React.createClass({
   mixins: [createStoreMixin(SnowflakeSandboxCredentialsStore, StorageBucketsStore, StorageTablesStore)],
@@ -42,21 +43,20 @@ var SnowflakeSandbox = React.createClass({
           <div>
             <LoadDataIntoWorkspaceButton
               title="Load tables into Snowflake sandbox"
-              component="transformation"
-              method="create-sandbox"
               mode="button"
               label="Load data"
               runParams={() => {
                 return sandboxConfiguration;
               }}
               disabled={this.state.pendingActions.get('drop')}
+              workspaceId={this.state.credentials.get('workspaceId')}
             >
                 <ConfigureSandbox
                   backend="snowflake"
                   tables={this.state.tables}
                   buckets={this.state.buckets}
                   onChange={(params) => {
-                    sandboxConfiguration = params;
+                    sandboxConfiguration = sandboxConfigurationTool(params, this.state.tables.toList().toJS());
                   }}/>
               </LoadDataIntoWorkspaceButton>
           </div>
