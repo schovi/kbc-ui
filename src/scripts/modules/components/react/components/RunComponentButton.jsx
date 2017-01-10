@@ -84,7 +84,7 @@ module.exports = React.createClass({
   render: function() {
     const tooltipDisabled = (
       <Tooltip>
-        {this.props.disabledReason}
+        {this.state.isLoading ? 'Component is running' : this.props.disabledReason}
       </Tooltip>
     );
     const tooltip = (
@@ -103,7 +103,7 @@ module.exports = React.createClass({
       </RunModal>
     );
 
-    if (this.props.disabled) {
+    if (this.props.disabled || this.state.isLoading) {
       return (
         <OverlayTrigger
           overlay={tooltipDisabled}
@@ -136,7 +136,7 @@ module.exports = React.createClass({
     return (
       <Button
         className="btn btn-link"
-        disabled={this.props.disabled}
+        disabled={this.props.disabled || this.state.isLoading}
         onClick={function(e) {
           e.stopPropagation();
           return e.preventDefault();
@@ -151,7 +151,7 @@ module.exports = React.createClass({
     return (
       <a className={
         classnames({
-          'text-muted': this.props.disabled
+          'text-muted': this.props.disabled || this.state.isLoading
         })}
         onClick={function(e) {
           e.stopPropagation();
