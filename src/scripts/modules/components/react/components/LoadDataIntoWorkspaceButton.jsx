@@ -1,10 +1,9 @@
 import React from 'react';
-import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 import {ModalTrigger, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import {Loader} from 'kbc-react-components';
-import RoutesStore from '../../../../stores/RoutesStore';
 import classnames from 'classnames';
 import RunModal from './LoadDataIntoWorkspaceButtonModal';
+import StorageActionCreators from '../../StorageActionCreators';
 
 module.exports = React.createClass({
   displayName: 'LoadDataIntoWorkspace',
@@ -12,12 +11,10 @@ module.exports = React.createClass({
   propTypes: {
     title: React.PropTypes.string.isRequired,
     mode: React.PropTypes.oneOf(['button', 'link']),
-    component: React.PropTypes.string.isRequired,
     runParams: React.PropTypes.func.isRequired,
-    method: React.PropTypes.string.isRequired,
     icon: React.PropTypes.string.isRequired,
+    workspaceId: React.PropTypes.number.isRequired,
     label: React.PropTypes.string,
-    redirect: React.PropTypes.bool,
     tooltip: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     disabledReason: React.PropTypes.string,
@@ -28,9 +25,7 @@ module.exports = React.createClass({
   getDefaultProps: function() {
     return {
       mode: 'button',
-      method: 'run',
       icon: 'fa-play',
-      redirect: false,
       tooltip: 'Run',
       disabled: false,
       disabledReason: '',
@@ -45,38 +40,24 @@ module.exports = React.createClass({
   },
 
   _handleRunStart: function() {
-    var params;
     this.setState({
       isLoading: true
     });
-    params = {
-      method: this.props.method,
-      component: this.props.component,
-      data: this.props.runParams(),
-      notify: !this.props.redirect
-    };
-
-    return InstalledComponentsActionCreators.runComponent(params)
+    return StorageActionCreators.loadDataIntoWorkspace(this.props.workspaceId, this.props.runParams())
       .then(this._handleStarted)
       .catch((function(_this) {
-        return function(error) {
+        return function() {
           _this.setState({
             isLoading: false
           });
-          throw error;
         };
       })(this));
   },
 
-  _handleStarted: function(response) {
+  _handleStarted: function() {
     if (this.isMounted()) {
       this.setState({
         isLoading: false
-      });
-    }
-    if (this.props.redirect) {
-      return RoutesStore.getRouter().transitionTo('jobDetail', {
-        jobId: response.id
       });
     }
   },
@@ -84,7 +65,7 @@ module.exports = React.createClass({
   render: function() {
     const tooltipDisabled = (
       <Tooltip>
-        {this.props.disabledReason}
+        {this.state.isLoading ? 'Data is loading' : this.props.disabledReason}
       </Tooltip>
     );
     const tooltip = (
@@ -103,7 +84,7 @@ module.exports = React.createClass({
       </RunModal>
     );
 
-    if (this.props.disabled) {
+    if (this.props.disabled || this.state.isLoading) {
       return (
         <OverlayTrigger
           overlay={tooltipDisabled}
@@ -136,7 +117,7 @@ module.exports = React.createClass({
     return (
       <Button
         className="btn btn-link"
-        disabled={this.props.disabled}
+        disabled={this.props.disabled || this.state.isLoading}
         onClick={function(e) {
           e.stopPropagation();
           return e.preventDefault();
@@ -151,7 +132,7 @@ module.exports = React.createClass({
     return (
       <a className={
         classnames({
-          'text-muted': this.props.disabled
+          'text-muted': this.props.disabled || this.state.isLoading
         })}
         onClick={function(e) {
           e.stopPropagation();
