@@ -5,7 +5,7 @@ const _pollStatuses = ['processing', 'waiting'];
 module.exports = {
   poll: function(token, url, interval) {
     var timeOutInterval = 5000;
-    if (parseInt(interval) > 0) {
+    if (parseInt(interval, 10) > 0) {
       timeOutInterval = interval;
     }
     return new Promise(function(resolve, reject) {
