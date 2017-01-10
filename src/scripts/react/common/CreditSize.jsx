@@ -1,7 +1,7 @@
 import React from 'react';
 
-function convertToCredits(nanoCredits) {
-  return Number((nanoCredits / (1000 * 1000 * 1000)).toFixed(3));
+function convertToCredits(nanoCredits, precision) {
+  return Number(nanoCredits / (1000 * 1000 * 1000)).toFixed(precision);
 }
 
 export default React.createClass({
@@ -10,15 +10,33 @@ export default React.createClass({
   },
 
   render() {
-    return (
-      <span>
-        {
-          this.props.nanoCredits
-            ? convertToCredits(this.props.nanoCredits) + ' credits'
-            : 'N/A'
-        }
-      </span>
-    );
+    if (this.props.nanoCredits) {
+      if (this.props.nanoCredits < 1000) {
+        return (
+          <span>
+            {convertToCredits(this.props.nanoCredits, 9) + ' credits'}
+          </span>
+        );
+      } else if (this.props.nanoCredits < 1000000) {
+        return (
+          <span>
+            {convertToCredits(this.props.nanoCredits, 6) + ' credits'}
+          </span>
+        );
+      } else {
+        return (
+          <span>
+            {convertToCredits(this.props.nanoCredits, 3) + ' credits'}
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span>
+          N/A
+        </span>
+      );
+    }
   }
 
 });

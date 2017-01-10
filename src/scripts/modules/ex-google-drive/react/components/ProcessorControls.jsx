@@ -25,13 +25,31 @@ export default React.createClass({
       <div className="processorControls col-md-12">
         <div className="form-group">
           <label className="control-label col-sm-4">
-            Header column names <br /> (Overrides header)
+            Number of header rows
+          </label>
+          <div className="col-sm-2">
+            <div className="input-group">
+              <input
+                onChange={this.props.onChangeHeaderRow}
+                value={this.props.headerRowValue}
+                type="number"
+                className="form-control form-control-sm"
+                />
+            </div>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-4">
+            Header column names
           </label>
           <div className="col-sm-4">
             <HeaderColumnsMultiSelect
               value={this.props.headerColumnNamesValue}
               onChange={this.props.onChangeHeaderColumnNames}
             />
+          </div>
+          <div className="col-sm-4">
+            <span className="help-block">Overrides header</span>
           </div>
         </div>
 

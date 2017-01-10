@@ -22,7 +22,8 @@ import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
 const PERNAMENT_MIGRATION_COMPONENTS = [
   'ex-db',
   'ex-gooddata',
-  'ex-google-analytics'
+  'ex-google-analytics',
+  'ex-google-drive'
 ];
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
