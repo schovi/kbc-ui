@@ -6,7 +6,8 @@ module.exports = function(configuration, tables) {
     tables.forEach(function(table) {
       if (table.id === tableOrBucket || table.bucket.id === tableOrBucket) {
         var newInputMapping = {
-          source: table.id
+          source: table.id,
+          destination: table.id
         };
         if (configuration.rows > 0) {
           newInputMapping.rows = configuration.rows;
@@ -30,9 +31,7 @@ module.exports = function(configuration, tables) {
   });
 
   return {
-    input: {
-      tables: inputMappings
-    },
+    input: inputMappings,
     preserve: configuration.preserve
   };
 };

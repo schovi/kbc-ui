@@ -33,13 +33,12 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          }
+        ],
         preserve: false
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -54,15 +53,14 @@ describe('sandboxConfigruration', function() {
         rows: 10
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data',
-              rows: 10
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data',
+            rows: 10
 
-            }
-          ]
-        },
+          }
+        ],
         preserve: false
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -77,14 +75,12 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          }
+        ],
         preserve: true
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -99,16 +95,16 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-            },
-            {
-              source: 'in.c-main.data2'
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          },
+          {
+            source: 'in.c-main.data2',
+            destination: 'in.c-main.data2'
+          }
+        ],
         preserve: true
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -123,16 +119,16 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-            },
-            {
-              source: 'in.c-main.data2'
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          },
+          {
+            source: 'in.c-main.data2',
+            destination: 'in.c-main.data2'
+          }
+        ],
         preserve: true
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -148,16 +144,16 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-            },
-            {
-              source: 'in.c-main.data2'
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          },
+          {
+            source: 'in.c-main.data2',
+            destination: 'in.c-main.data2'
+          }
+        ],
         preserve: true
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -172,13 +168,12 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: [
-            {
-              source: 'in.c-main.data'
-            }
-          ]
-        },
+        input: [
+          {
+            source: 'in.c-main.data',
+            destination: 'in.c-main.data'
+          }
+        ],
         preserve: false
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -193,9 +188,7 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: []
-        },
+        input: [],
         preserve: false
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
@@ -210,9 +203,7 @@ describe('sandboxConfigruration', function() {
         rows: 0
       };
       const expected = {
-        input: {
-          tables: []
-        },
+        input: [],
         preserve: false
       };
       assert.deepEqual(sandboxConfiguration(configuration, tables), expected);
