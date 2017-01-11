@@ -21,7 +21,7 @@ export default React.createClass({
       .then((response) => {
         const client = new Keen({
           readKey: response.keenToken,
-          projectId: '5571e4d559949a32ff02043e'
+          projectId: response.projectId
         });
         this.setState({
           client: client
