@@ -8,6 +8,7 @@ import StorageTokensStore from './stores/StorageTokensStore';
 import StorageFilesStore from './stores/StorageFilesStore';
 import storageApi from './StorageApi';
 import jobPoller from '../../utils/jobPoller';
+import ApplicationActionCreators from '../../actions/ApplicationActionCreators';
 
 module.exports = {
 
@@ -306,6 +307,42 @@ module.exports = {
         errors: error
       });
       throw message;
+    });
+  },
+
+  loadDataIntoWorkspace: function(workspaceId, configuration) {
+    // var self;
+    // self = this;
+    dispatcher.handleViewAction({
+      type: constants.ActionTypes.STORAGE_LOAD_DATA_INTO_WORKSPACE,
+      configuration: configuration,
+      workspaceId: workspaceId
+    });
+    return storageApi.loadDataIntoWorkspace(workspaceId, configuration).then(function(response) {
+      return jobPoller.poll(ApplicationStore.getSapiTokenString(), response.url).then(function(response2) {
+        if (response2.status === 'error') {
+          ApplicationActionCreators.sendNotification({
+            message: response2.error.message,
+            type: 'error',
+            id: response2.error.exceptionId
+          });
+          throw response2.error.message;
+        }
+        dispatcher.handleViewAction({
+          type: constants.ActionTypes.STORAGE_LOAD_DATA_INTO_WORKSPACE_SUCCESS,
+          workspaceId: workspaceId,
+          response: response2
+        });
+        ApplicationActionCreators.sendNotification({
+          message: 'Data successfully loaded into the sandbox'
+        });
+      });
+    }).catch(function(error) {
+      dispatcher.handleViewAction({
+        type: constants.ActionTypes.STORAGE_LOAD_DATA_INTO_WORKSPACE_ERROR,
+        workspaceId: workspaceId
+      });
+      throw error;
     });
   }
 };
