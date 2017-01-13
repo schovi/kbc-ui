@@ -135,7 +135,7 @@ templateFn = (componentId) ->
       table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
       React.createElement MigrationRow,
-        componentId: 'ex-google-drive'
+        componentId: componentId
       div className: 'row',
         div className: 'col-sm-8',
           ComponentDescription
