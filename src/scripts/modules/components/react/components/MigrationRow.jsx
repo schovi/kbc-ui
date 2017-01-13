@@ -196,6 +196,8 @@ export default React.createClass({
       return 'Migrate your current configurations to new Google Analytics Extractor, which uses the newest API V4. This extractor will continue to work until November 2016. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove it yourself after successful migration.';
     } else if (this.props.componentId === 'ex-google-drive') {
       return 'Migrate your current configurations to new Google Drive Extractor. This extractor will continue to work until April 2017. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove them yourself after successful migration.';
+    } else if (['wr-db-mysql', 'wr-db-oracle', 'wr-db-redshift'].includes(this.props.componentId)) {
+      return 'Migrate your current configurations to new Database Writer. This writer will continue to work until May 2017. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new writers. The old configurations will remain intact for now. You can remove them yourself after successful migration.';
     } else {
       return '';
     }
