@@ -34,9 +34,7 @@ export default React.createClass({
     const {limit} = this.props;
     return (
       <div className="td kbc-limit" ref="limit">
-        <div className={classnames('kbc-limit-inner', {
-          'kbc-limit-alarm': limit.get('isAlarm') || limit.get('limitValue', 0) < limit.get('metricValue', 0)
-        })}>
+        <div className={classnames('kbc-limit-inner', {'kbc-limit-alarm': limit.get('isAlarm')})}>
           <div style={{height: `${0.5 * this.state.elWidth}px`, position: 'relative'}}>
             {this.renderVizualization()}
           </div>
@@ -69,7 +67,7 @@ export default React.createClass({
       );
     } else if (limit.get('unit') === 'flag') {
       return limit.get('limitValue') > 0 ? <strong>ENABLED</strong> : <strong>DISABLED</strong>;
-    } else if (!limit.get('limitValue') && limit.get('limitValue') !== 0) {
+    } else if (!limit.get('limitValue')) {
       return (
         <strong>{numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}</strong>
       );
@@ -89,7 +87,7 @@ export default React.createClass({
     if (limit.get('graph')) {
       return this.renderGraph();
     }
-    if ((limit.get('limitValue') || limit.get('limitValue') === 0) && limit.get('metricValue')) {
+    if (limit.get('limitValue') && limit.get('metricValue')) {
       return this.renderProgress();
     }
     if (limit.get('unit') === 'flag') {
@@ -133,7 +131,7 @@ export default React.createClass({
   renderActionButton() {
     const {limit} = this.props;
 
-    if (!limit.get('limitValue') && limit.get('limitValue') !== 0) {
+    if (!limit.get('limitValue')) {
       return <span/>;
     }
 
