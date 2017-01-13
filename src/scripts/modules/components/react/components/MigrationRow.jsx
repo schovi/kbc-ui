@@ -23,7 +23,10 @@ const PERNAMENT_MIGRATION_COMPONENTS = [
   'ex-db',
   'ex-gooddata',
   'ex-google-analytics',
-  'ex-google-drive'
+  'ex-google-drive',
+  'wr-db-mysql',
+  'wr-db-oracle',
+  'wr-db-redshift'
 ];
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
