@@ -131,7 +131,7 @@ export default React.createClass({
   renderActionButton() {
     const {limit} = this.props;
 
-    if (!limit.get('limitValue')) {
+    if (!limit.get('limitValue') && limit.get('limitValue') !== 0) {
       return <span/>;
     }
 
