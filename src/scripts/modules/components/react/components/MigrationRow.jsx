@@ -3,7 +3,7 @@ import Promise from 'bluebird';
 import _ from 'underscore';
 import {Table} from 'react-bootstrap';
 import {RefreshIcon} from 'kbc-react-components';
-import {fromJS, List} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import {Link} from 'react-router';
 import SapiTableLink from './StorageApiTableLink';
 import ApplicationStore from '../../../../stores/ApplicationStore';
@@ -28,8 +28,18 @@ const PERNAMENT_MIGRATION_COMPONENTS = [
   'wr-db-oracle',
   'wr-db-redshift'
 ];
+
 const MIGRATION_COMPONENT_ID = 'keboola.config-migration-tool';
 const MIGRATION_ALLOWED_FEATURE = 'components-migration';
+
+const componentNameMap = Map({
+  'ex-gooddata': 'keboola.ex-gooddata',
+  'ex-google-analytics': 'keboola.ex-google-analytics',
+  'ex-google-drive': 'keboola.ex-google-drive',
+  'wr-db-mysql': 'keboola.wr-db-mysql',
+  'wr-db-oracle': 'keboola.wr-db-oracle',
+  'wr-db-redshift': 'keboola.wr-redshift-v2'
+});
 
 export default React.createClass({
   propTypes: {
@@ -365,10 +375,10 @@ export default React.createClass({
   getNewComponentId(componentId) {
     if (componentId.indexOf('ex-db') > -1) {
       return `ex-db-generic-${componentId}`;
-    } else if (componentId.indexOf('ex-google-analytics') > -1) {
-      return 'keboola.ex-google-analytics-v4';
-    } else if (componentId.indexOf('ex-google-drive') > -1) {
-      return 'keboola.ex-google-drive';
+    } else if (componentNameMap.has(componentId)) {
+      return componentNameMap.get(componentId);
+    } else {
+      return `keboola.${componentId}`;
     }
   },
 
