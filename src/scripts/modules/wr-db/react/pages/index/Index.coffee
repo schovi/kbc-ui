@@ -29,10 +29,8 @@ InstalledComponentsActions = require '../../../../components/InstalledComponents
 StorageTablesStore = require '../../../../components/stores/StorageTablesStore'
 fieldsTemplate = require '../../../templates/credentialsFields'
 AddNewTableModal = require('../../../../../react/common/AddNewTableModal').default
-#componentId = 'wr-db'
-#driver = 'mysql'
+MigrationRow = require('../../../../components/react/components/MigrationRow').default
 {Button} = require 'react-bootstrap'
-
 {p, ul, li, span, button, strong, div, i} = React.DOM
 
 allowedBuckets = ['out', 'in']
@@ -136,6 +134,8 @@ templateFn = (componentId) ->
     configuredIds = configuredTables.map((table) ->
       table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
+      React.createElement MigrationRow,
+        componentId: componentId
       div className: 'row',
         div className: 'col-sm-8',
           ComponentDescription
