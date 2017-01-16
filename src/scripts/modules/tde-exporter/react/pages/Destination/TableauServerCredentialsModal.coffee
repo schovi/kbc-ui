@@ -34,7 +34,8 @@ module.exports = React.createClass
 
       div className: 'form form-horizontal',
         div className: 'modal-body',
-          @_createInput('Server URL', 'server_url')
+          @_createInput('Server URL', 'server_url', 'text', 'use url of your concrete instance, \
+          e.g. https://10az.online.tableau.com')
           @_createInput('Username', 'username')
           @_createInput('Password', 'password', 'password')
           @_createInput('Project Name', 'project_name')
@@ -75,10 +76,11 @@ module.exports = React.createClass
       not _.isEmpty(@state.credentials.get('password'))
 
 
-  _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
+  _createInput: (labelValue, propName, type = 'text', desc = '') ->
     sitePlaceholder = 'default if empty'
     Input
       label: labelValue
+      help: desc
       placeholder: sitePlaceholder if propName == 'site'
       type: type
       value: @state.credentials.get propName
