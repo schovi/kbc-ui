@@ -44,9 +44,12 @@ module.exports = React.createClass
         React.DOM.div className: 'row text-center',
           'No nodes found.'
       else
-        Graph
-          model: @state.model
-          centerNodeId: @props.bucketId + "." + @props.transformationId
-          disabledTransformation: @props.disabled
-          showDisabled: @state.showDisabled
-          showDisabledHandler: @_handleChangeShowDisabled
+        React.DOM.div null,
+          Graph
+            model: @state.model
+            centerNodeId: @props.bucketId + "." + @props.transformationId
+            disabledTransformation: @props.disabled
+            showDisabled: @state.showDisabled
+            showDisabledHandler: @_handleChangeShowDisabled
+          React.DOM.div className: "help-block",
+            "Please note that the graph shows a maximum of 7 levels of nesting."
