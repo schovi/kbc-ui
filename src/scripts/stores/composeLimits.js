@@ -14,6 +14,9 @@ const LIMITS_METADATA = fromJS({
   'kbc.adminsCount': {
     name: 'Users count'
   },
+  'kbc.monthlyProjectPowerLimit': {
+    name: 'Project Power consumption'
+  },
   'storage.dataSizeBytes': {
     name: 'Storage size'
   },
@@ -54,6 +57,13 @@ function prepareConnectionData(limits, metrics, limitsMetadata) {
       limitValue: limits.getIn(['kbc.adminsCount', 'value']),
       metricValue: metrics.getIn(['kbc.adminsCount', 'value']),
       name: limitsMetadata.getIn(['kbc.adminsCount', 'name'])
+    },
+    {
+      id: 'kbc.monthlyProjectPowerLimit',
+      limitValue: limits.getIn(['kbc.monthlyProjectPowerLimit', 'value']),
+      metricValue: metrics.getIn(['kbc.monthlyProjectPowerLimit', 'value']),
+      name: limitsMetadata.getIn(['kbc.monthlyProjectPowerLimit', 'name']),
+      showOnLimitsPage: false
     },
     {
       id: 'orchestrations.count',
