@@ -5,9 +5,6 @@ module.exports =
  addLinksToNodes: (nodes) ->
    router = RoutesStore.getRouter()
    for i of nodes
-     if nodes[i].type == 'transformation' or nodes[i].type == 'remote-transformation'
-       nodes[i].label = nodes[i].label.substring(nodes[i].label.indexOf("] ") + 2)
-
      if nodes[i].object.type == 'transformation'
        nodes[i].link = router.makeHref('transformationDetail', {
          config: nodes[i].object.bucket,
