@@ -3888,11 +3888,6 @@
       "from": "os-locale@>=1.4.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/os-locale/-/os-locale-1.4.0.tgz"
     },
-    "os-shim": {
-      "version": "0.1.3",
-      "from": "os-shim@>=0.1.2 <0.2.0",
-      "resolved": "https://registry.npmjs.org/os-shim/-/os-shim-0.1.3.tgz"
-    },
     "os-tmpdir": {
       "version": "1.0.1",
       "from": "os-tmpdir@>=1.0.1 <2.0.0",
@@ -4272,9 +4267,16 @@
       "resolved": "https://registry.npmjs.org/react-code-mirror/-/react-code-mirror-3.0.6.tgz"
     },
     "react-datepicker": {
-      "version": "0.6.2",
-      "from": "react-datepicker@0.6.2",
-      "resolved": "https://registry.npmjs.org/react-datepicker/-/react-datepicker-0.6.2.tgz"
+      "version": "0.13.0",
+      "from": "react-datepicker@0.13.0",
+      "resolved": "https://registry.npmjs.org/react-datepicker/-/react-datepicker-0.13.0.tgz",
+      "dependencies": {
+        "moment": {
+          "version": "2.17.1",
+          "from": "moment@>=2.10.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/moment/-/moment-2.17.1.tgz"
+        }
+      }
     },
     "react-dnd": {
       "version": "0.9.8",
@@ -4319,9 +4321,9 @@
       "resolved": "https://registry.npmjs.org/react-markdown/-/react-markdown-1.1.1.tgz"
     },
     "react-onclickoutside": {
-      "version": "0.2.2",
-      "from": "react-onclickoutside@0.2.2",
-      "resolved": "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-0.2.2.tgz"
+      "version": "0.3.0",
+      "from": "react-onclickoutside@0.3.0",
+      "resolved": "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-0.3.0.tgz"
     },
     "react-radio-group": {
       "version": "1.1.0",
@@ -4517,6 +4519,11 @@
           "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-2.4.0.tgz"
         }
       }
+    },
+    "remove-markdown": {
+      "version": "0.1.0",
+      "from": "remove-markdown@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/remove-markdown/-/remove-markdown-0.1.0.tgz"
     },
     "repeat-element": {
       "version": "1.1.2",
@@ -4849,9 +4856,9 @@
       "resolved": "https://registry.npmjs.org/tapable/-/tapable-0.1.10.tgz"
     },
     "tether": {
-      "version": "0.6.5",
-      "from": "tether@0.6.5",
-      "resolved": "https://registry.npmjs.org/tether/-/tether-0.6.5.tgz"
+      "version": "1.4.0",
+      "from": "tether@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/tether/-/tether-1.4.0.tgz"
     },
     "text-table": {
       "version": "0.2.0",
@@ -5204,11 +5211,6 @@
       "version": "0.9.9",
       "from": "whet.extend@0.9.9",
       "resolved": "https://registry.npmjs.org/whet.extend/-/whet.extend-0.9.9.tgz"
-    },
-    "which": {
-      "version": "1.1.2",
-      "from": "which@>=1.1.0 <1.2.0",
-      "resolved": "https://registry.npmjs.org/which/-/which-1.1.2.tgz"
     },
     "window-size": {
       "version": "0.1.2",
