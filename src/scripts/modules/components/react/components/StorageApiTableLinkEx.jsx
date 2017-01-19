@@ -292,12 +292,15 @@ export default React.createClass({
     })
     .catch((error) => {
       let dataPreviewError = null;
-      if (error.response.body) {
+      if (error.response && error.response.body) {
         if (error.response.body.code === 'storage.maxNumberOfColumnsExceed') {
           dataPreviewError = 'Data sample cannot be displayed. Too many columns.';
         } else {
           dataPreviewError = error.response.body.message;
         }
+      } else {
+        console.log('dataPreviewError', JSON.stringify(error));
+        throw JSON.stringify(error);
       }
       component.setState({
         loadingPreview: false,
