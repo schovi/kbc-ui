@@ -299,8 +299,7 @@ export default React.createClass({
           dataPreviewError = error.response.body.message;
         }
       } else {
-        console.log('dataPreviewError', JSON.stringify(error));
-        throw JSON.stringify(error);
+        throw new Error(JSON.stringify(error));
       }
       component.setState({
         loadingPreview: false,
