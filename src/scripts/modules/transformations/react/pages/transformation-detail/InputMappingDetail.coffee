@@ -139,14 +139,14 @@ InputMappingDetail = React.createClass(
               'No sort key set'
 
       if (@props.transformationBackend == 'redshift')
-        ListGroupItem {key: 'distKey'},
+        ListGroupItem {key: 'distStyle'},
           strong {className: "col-md-4"},
-            'Dist key'
+            'Distribution'
           span {className: "col-md-6"},
-            if @props.inputMapping.get('distKey')
-              @props.inputMapping.get('distKey').split(',').join(', ')
+            if @props.inputMapping.get('distStyle')
+              @props.inputMapping.get('distStyle') + ' ' + @props.inputMapping.get('distKey')
             else
-              'No distribution key set'
+              'No distribution set'
 
     ]
     ListGroup {className: "clearfix"}, _.reject(ListGroupItems, (obj) -> obj == undefined)

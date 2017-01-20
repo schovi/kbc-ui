@@ -125,6 +125,8 @@ module.exports = React.createClass
 
   _handleChangeDistStyle: (string) ->
     value = @props.value.set("distStyle", string)
+    if string != 'KEY'
+      value = value.set("distKey", "")
     @props.onChange(value)
 
   _getTables: ->
@@ -337,16 +339,8 @@ module.exports = React.createClass
       if @state.showDetails
         React.DOM.div {className: "row col-md-12"},
           React.DOM.div className: 'form-group form-group-sm',
-            React.DOM.label className: 'col-xs-2 control-label', 'Dist key'
-            React.DOM.div className: 'col-xs-7',
-              Select
-                name: 'distKey'
-                value: @props.value.get("distKey")
-                disabled: @props.disabled || !@props.value.get("source")
-                placeholder: "Select column"
-                onChange: @_handleChangeDistKey
-                options: @_getFilteredColumnsOptions()
-            React.DOM.div className: 'col-xs-3',
+            React.DOM.label className: 'col-xs-2 control-label', 'Distribution'
+            React.DOM.div className: 'col-xs-5',
               Select
                 name: 'distStyle'
                 value: @props.value.get("distStyle")
@@ -354,7 +348,19 @@ module.exports = React.createClass
                 placeholder: "Style"
                 onChange: @_handleChangeDistStyle
                 options: @distStyleOptions
-
+            React.DOM.div className: 'col-xs-5',
+              Select
+                name: 'distKey'
+                value: @props.value.get("distKey")
+                disabled: @props.disabled || !@props.value.get("source") || @props.value.get("distStyle") != "KEY"
+                placeholder: (
+                  if @props.value.get("distStyle") == "KEY"
+                    "Select column"
+                  else
+                    "Column selection not available"
+                )
+                onChange: @_handleChangeDistKey
+                options: @_getFilteredColumnsOptions()
             React.DOM.div
               className: "col-xs-offset-2 col-xs-10 help-block"
             ,

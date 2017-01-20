@@ -52,7 +52,7 @@ function redshift(mapping) {
     return true;
   }
 
-  if (mapping.get('distKey')) {
+  if (mapping.get('distStyle')) {
     return true;
   }
 
