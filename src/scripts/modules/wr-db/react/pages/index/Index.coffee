@@ -2,7 +2,7 @@ React = require 'react'
 {fromJS, Map, List} = require('immutable')
 _ = require 'underscore'
 classnames = require 'classnames'
-
+{wontMigrateComponents} = require('../../../templates/migration.js')
 createStoreMixin = require '../../../../../react/mixins/createStoreMixin'
 LatestVersions = React.createFactory(require('../../../../components/react/components/SidebarVersionsWrapper').default)
 LatestJobs = require '../../../../components/react/components/SidebarJobs'
@@ -134,8 +134,9 @@ templateFn = (componentId) ->
     configuredIds = configuredTables.map((table) ->
       table.get 'id')?.toJS()
     div {className: 'col-md-9 kbc-main-content'},
-      React.createElement MigrationRow,
-        componentId: componentId
+      if componentId not in wontMigrateComponents
+        React.createElement MigrationRow,
+          componentId: componentId
       div className: 'row',
         div className: 'col-sm-8',
           ComponentDescription
