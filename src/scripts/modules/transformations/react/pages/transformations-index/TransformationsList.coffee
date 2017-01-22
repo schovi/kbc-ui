@@ -21,6 +21,7 @@ module.exports = React.createClass
           transformation: transformation
           pendingActions: @props.pendingActions.getIn([transformation.get("id")], Immutable.Map())
           key: transformation.get 'id'
+          hideButtons: true
       , @).toArray()
 
       div className: 'row',

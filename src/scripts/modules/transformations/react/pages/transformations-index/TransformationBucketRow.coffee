@@ -49,25 +49,6 @@ TransformationBucketRow = React.createClass(
 
     buttons.push(
       React.createElement OverlayTrigger,
-        overlay: React.createElement(Tooltip, null, 'Create New Transformation')
-        placement: 'top'
-      ,
-        React.createElement ModalTrigger,
-          modal: React.createElement(NewTransformationModal,
-            bucket: @props.bucket
-          )
-          ,
-            button
-              className: 'btn btn-link'
-              onClick: (e) ->
-                e.stopPropagation()
-                e.preventDefault()
-            ,
-              span className: 'fa fa-plus'
-    )
-
-    buttons.push(
-      React.createElement OverlayTrigger,
         overlay: React.createElement(Tooltip, null, 'Go to Bucket Detail')
         placement: 'top'
       ,
