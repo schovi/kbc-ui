@@ -37,7 +37,7 @@ export default React.createClass({
   days() {
     // Math.round is used for compatibility with ranges computed by backend (settings page)
     return new IntlMessageFormat(MESSAGES.DAYS).format({
-      days: Math.max(0, Math.round(moment(new Date(this.props.expires)).diff(moment(), 'days', true)))
+      days: Math.max(0, Math.round(moment(this.props.expires).diff(moment(), 'days', true)))
     });
   }
 });
