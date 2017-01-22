@@ -60,16 +60,16 @@ module.exports = React.createClass
       size: false
     TIMESTAMP:
       name: "TIMESTAMP",
-      size: true
+      size: false
     TIMESTAMP_LTZ:
       name: "TIMESTAMP_LTZ",
-      size: true
+      size: false
     TIMESTAMP_NTZ:
       name: "TIMESTAMP_NTZ",
-      size: true
+      size: false
     TIMESTAMP_TZ:
       name: "TIMESTAMP_TZ",
-      size: true
+      size: false
 
   _getDatatypeOptions: ->
     _.keys(@_datatypesMap)
