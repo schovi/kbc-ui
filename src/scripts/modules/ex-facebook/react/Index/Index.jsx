@@ -68,6 +68,12 @@ export default React.createClass({
           <div className="row">
             {this.renderAuthorizedInfo('col-xs-10')}
           </div>
+          <div className="row">
+            <QueriesTable
+              queries={this.state.store.queries}
+              configId={this.state.configId}
+            />
+          </div>
         </div>
         <div className="col-md-3 kbc-main-sidebar">
           <ComponentMetadata
