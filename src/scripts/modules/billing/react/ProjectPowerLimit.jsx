@@ -150,7 +150,7 @@ export default React.createClass({
   renderActionButton(limit) {
     if (this.state.canEdit) {
       return (
-        <EditLimitButton limit={limit}/>
+        <EditLimitButton limit={limit} redirectTo={'settings-project-power'}/>
       );
     } else {
       return (
