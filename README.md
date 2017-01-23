@@ -16,7 +16,7 @@ Application will be opened in your browser and will be hot reloaded after each c
 ### Running in Docker
 
 ```bash
-docker-compose run --rm --service-ports dev # runs npm install && npm start
+docker-compose run --rm --service-ports node # runs npm install && npm start
 ```
 
 ### Build dist package
