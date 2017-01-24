@@ -38,7 +38,7 @@ var JupyterSandbox = React.createClass({
     );
   },
   _renderControlButtons: function() {
-    const connectLink = 'http://' + this.state.credentials.get('hostname') + ':' + this.state.credentials.get('port');
+    const connectLink = 'http://' + this.state.credentials.get('hostname') + ':' + this.state.credentials.get('port') + '/notebooks/notebook.ipynb';
     if (this.state.credentials.get('id')) {
       return (
         <div>
