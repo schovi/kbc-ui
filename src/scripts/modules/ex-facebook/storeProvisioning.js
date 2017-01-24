@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
 import InstalledComponentStore from '../components/stores/InstalledComponentsStore';
 import _ from 'underscore';
 import OauthStore from '../oauth-v2/Store';
@@ -7,6 +7,7 @@ import OauthStore from '../oauth-v2/Store';
 export const storeMixins = [InstalledComponentStore, OauthStore];
 
 const COMPONENT_ID = 'keboola.ex-facebook';
+const DEFAULT_API_VERSION = 'v2.8';
 
 export default function(configId) {
   const localState = () => InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
@@ -28,10 +29,12 @@ export default function(configId) {
     },
     configData: configData,
     parameters: parameters,
+    queries: parameters.get('queries', List()),
+    version: paremters.get('api-version', DEFAULT_API_VERSION),
+    accounts: parameters.get('accounts'),
     isAuthorized() {
       const creds = this.oauthCredentials;
       return creds && creds.has('id');
     }
-
   };
 }

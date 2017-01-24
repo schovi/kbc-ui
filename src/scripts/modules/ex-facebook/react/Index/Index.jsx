@@ -72,6 +72,7 @@ export default React.createClass({
             <QueriesTable
               queries={this.state.store.queries}
               configId={this.state.configId}
+              accounts={this.state.store.accounts}
             />
           </div>
         </div>

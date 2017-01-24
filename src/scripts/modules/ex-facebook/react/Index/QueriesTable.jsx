@@ -21,9 +21,9 @@ function getDocumentTitle(query) {
 
 export default React.createClass({
   propTypes: {
+    accounts: PropTypes.object.isRequired,
     queries: PropTypes.object.isRequired,
     configId: PropTypes.string.isRequired,
-
     deleteQueryFn: PropTypes.func.isRequired,
     onStartEdit: PropTypes.func.isRequired,
     isPendingFn: PropTypes.func.isRequired,
@@ -38,13 +38,16 @@ export default React.createClass({
         <div className="thead">
           <div className="tr">
             <div className="th">
-              <strong>Document / Query </strong>
+              <strong>Name</strong>
+            </div>
+            <div className="th">
+              <strong>Accounts</strong>
             </div>
             <div className="th">
               {/* right arrow */}
             </div>
             <div className="th">
-              <strong> Output Table </strong>
+              <strong>Tables</strong>
             </div>
             <div className="th">
               {/* action buttons */}
@@ -52,7 +55,7 @@ export default React.createClass({
           </div>
         </div>
         <div className="tbody">
-          {this.props.querys.map((q) => this.renderQueryRow(q))}
+          {this.props.queries.map((q) => this.renderQueryRow(q))}
         </div>
       </div>
     );
@@ -61,7 +64,7 @@ export default React.createClass({
 
   renderQueryRow(query) {
     // const propValue = (propName) => query.getIn([].concat(propName));
-    const documentTitle = query.get('name');
+    const qname = query.get('name');
 
     return (
       <div
@@ -72,13 +75,13 @@ export default React.createClass({
         }}
         className="tr">
         <div className="td">
-          {this.renderGoogleLink(query)}
+          {qname}
+        </div>
+        <div className="td">
+
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />
-        </div>
-        <div className="td">
-      /* TODO*/
         </div>
         <div className="td text-right kbc-no-wrap">
           {this.renderEditButton(query)}
@@ -86,7 +89,7 @@ export default React.createClass({
           <ActivateDeactivateButton
             activateTooltip="Enable Query"
             deactivateTooltip="Disable Query"
-            isActive={query.get('enabled')}
+            isActive={!query.get('disabled')}
             isPending={this.props.isPendingFn(['toggle', query.get('id')])}
             onChange={() => this.props.toggleQueryEnabledFn(query.get('id'))}
           />
@@ -100,12 +103,22 @@ export default React.createClass({
               };
             }}
           >
-            You are about to run extraction of {documentTitle}
+            You are about to run extraction of {qname}
           </RunExtractionButton>
         </div>
       </div>
     );
   },
+
+  renderAccounts(accounts) {
+    if (accounts == null) {
+      return "N/A";
+    }
+    if (!accounts) {
+      return "--all--";
+    }
+    // TODO enum accounts by id
+  }
 
   renderEditButton(query) {
     return (
