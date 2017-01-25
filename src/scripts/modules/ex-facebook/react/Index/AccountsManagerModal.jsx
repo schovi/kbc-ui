@@ -1,7 +1,9 @@
 import React, {PropTypes} from 'react';
-// import {List, Map} from 'immutable';
+import {List} from 'immutable';
 import {Modal} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
+import {Loader} from 'kbc-react-components';
+import {ListGroup, ListGroupItem} from 'react-bootstrap';
 
 // import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
@@ -9,6 +11,7 @@ export default React.createClass({
 
   propTypes: {
     accounts: PropTypes.object.isRequired,
+    syncAccounts: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     onHideFn: PropTypes.func,
@@ -61,14 +64,24 @@ export default React.createClass({
     );
   },
 
-  renderAllAccounts() {
-    return 'TODO';
-  },
-
   renderConfigAccounts() {
-    return 'TODO';
+
   },
 
+  renderAllAccounts() {
+    if (this.props.syncAccounts.get('isLoading')) return (<Loader />);
+    const data = this.props.syncAccounts.get('data', List());
+    console.log('data', data, this.props);
+    return (
+      <ListGroup>
+        {data.map((d) =>
+          <ListGroupItem>
+            {d.get('name')}
+          </ListGroupItem>
+         )}
+      </ListGroup>
+    );
+  },
 
   handleSave() {
     this.props.onSaveAccounts().then(

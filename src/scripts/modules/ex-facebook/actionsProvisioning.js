@@ -1,7 +1,8 @@
 import storeProvisioning from './storeProvisioning';
 import _ from 'underscore';
-// import {Map} from 'immutable';
+import {fromJS} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
+import callDockerAction from '../components/DockerActionsApi';
 
 // PROPTYPES HELPER:
 /*
@@ -67,6 +68,30 @@ export default function(configId) {
     prepareLocalState: prepareLocalState,
     updateLocalState: updateLocalState,
     saveQueries: saveQueries,
-    generateId: generateId
+    generateId: generateId,
+    loadAccounts() {
+      if (!store.isAuthorized()) return null;
+      const path = store.syncAccountsPath;
+      const data = store.configData;
+      const params = {
+        configData: data.toJS()
+      };
+      updateLocalState(path.concat('isLoading'), true);
+      return callDockerAction(COMPONENT_ID, 'accounts', params)
+        .then((accounts) =>
+              updateLocalState(path, fromJS({
+                isLoading: false,
+                isError: false,
+                error: null,
+                data: accounts
+              })))
+        .catch((error) =>
+               updateLocalState(path, fromJS({
+                 isLoading: false,
+                 isError: true,
+                 error: error,
+                 data: []
+               })));
+    }
   };
 }

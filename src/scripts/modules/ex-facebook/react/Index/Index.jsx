@@ -129,6 +129,9 @@ export default React.createClass({
     );
   },
 
+  componentDidMount() {
+    this.state.actions.loadAccounts();
+  },
   isAuthorized() {
     return this.state.store.isAuthorized();
   },
@@ -166,9 +169,10 @@ export default React.createClass({
   renderAccountsManagerModal() {
     return (
       <AccountsManagerModal
-        show={this.state.localState.get('ShowAccountsManagerModal')}
+        show={this.state.localState.get('ShowAccountsManagerModal', false)}
         onHideFn={() => this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false)}
         accounts={this.state.store.accounts}
+        syncAccounts={this.state.store.syncAccounts}
         {...this.state.actions.prepareLocalState('AccountsManagerModal')}
       />
     );

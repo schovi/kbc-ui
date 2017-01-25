@@ -14,6 +14,8 @@ export default function(configId) {
   const configData =  InstalledComponentStore.getConfigData(COMPONENT_ID, configId) || Map();
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
   const parameters = configData.get('parameters', Map());
+  const tempPath = ['_'];
+  const syncAccountsPath = tempPath.concat('SyncAccounts');
 
   // ----ACTUAL STATE OBJECT------
   return {
@@ -27,6 +29,8 @@ export default function(configId) {
       }
       return localState().getIn([].concat(path), Map());
     },
+    syncAccountsPath: syncAccountsPath,
+    syncAccounts: localState().getIn(syncAccountsPath, Map()),
     configData: configData,
     parameters: parameters,
     queries: parameters.get('queries', List()),
