@@ -31,7 +31,9 @@ export default React.createClass({
         </div>
         <div className="table kbc-table-border-vertical kbc-components-overview kbc-layout-table">
           <div className="tbody">
-            {limitsToRows(section.get('limits')).map(this.limitsRow)}
+            {limitsToRows(section.get('limits').filter(function(limit) {
+              return limit.get('showOnLimitsPage', true);
+            })).map(this.limitsRow)}
           </div>
         </div>
       </div>
