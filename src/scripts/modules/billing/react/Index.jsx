@@ -2,7 +2,6 @@ import React from 'react';
 import ApplicationStore from '../../../stores/ApplicationStore';
 import Graph from './Graph';
 import UsageByMonth from './UsageByMonth';
-import ProjectPowerLimit from './ProjectPowerLimit';
 
 export function componentIoSummary(data, metric) {
   return data
@@ -36,7 +35,6 @@ export default React.createClass({
           <div className="row">
             <div className="col-md-6">
               <Graph/>
-              <ProjectPowerLimit/>
             </div>
             <div className="col-md-6">
               <UsageByMonth />

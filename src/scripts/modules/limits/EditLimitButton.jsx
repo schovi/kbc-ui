@@ -4,8 +4,7 @@ import {Button} from 'react-bootstrap';
 
 export default React.createClass({
   propTypes: {
-    limit: PropTypes.object.isRequired,
-    redirectTo: PropTypes.string
+    limit: PropTypes.object.isRequired
   },
 
   getInitialState() {
@@ -22,7 +21,6 @@ export default React.createClass({
           limit={this.props.limit}
           onHide={this.closeModal}
           isOpen={this.state.isOpen}
-          redirectTo={this.props.redirectTo}
           />
       </Button>
     );
