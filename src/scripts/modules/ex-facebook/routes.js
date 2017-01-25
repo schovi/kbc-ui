@@ -1,7 +1,7 @@
 import Index from './react/Index';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 // import HeaderButtons from './react/HeaderButtons';
-// import storageActions from '../components/StorageActionCreators';
+import storageActions from '../components/StorageActionCreators';
 // import jobsActionCreators from '../jobs/ActionCreators';
 import versionsActions from '../components/VersionsActionCreators';
 import * as oauthUtils from '../oauth-v2/OauthUtils';
@@ -17,7 +17,7 @@ export default {
     (params) => installedComponentsActions.loadComponentConfigData(componentId, params.config).then(() => {
       return oauthUtils.loadCredentialsFromConfig(componentId, params.config);
     }),
-    // () => storageActions.loadTables(),
+    () => storageActions.loadTables(),
     (params) => versionsActions.loadVersions(componentId, params.config)
   ]
   // poll: {

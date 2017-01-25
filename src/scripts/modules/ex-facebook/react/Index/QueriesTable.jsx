@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import * as common from '../../common';
 // import {List} from 'immutable';
 // import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
@@ -9,21 +8,19 @@ import RunExtractionButton from '../../../components/react/components/RunCompone
 import Tooltip from '../../../../react/common/Tooltip';
 import {Loader} from 'kbc-react-components';
 import Confirm from '../../../../react/common/Confirm';
+import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
 // import {Link} from 'react-router';
 
-const COMPONENT_ID = 'keboola.ex-google-drive';
-
-function getDocumentTitle(query) {
-  return common.queryFullName(query, ' / ');
-}
-
+const COMPONENT_ID = 'keboola.ex-facebook';
 
 export default React.createClass({
   propTypes: {
     accounts: PropTypes.object.isRequired,
+    allTables: PropTypes.object.isRequired,
     queries: PropTypes.object.isRequired,
     configId: PropTypes.string.isRequired,
+    bucketId: PropTypes.string.isRequired,
     deleteQueryFn: PropTypes.func.isRequired,
     onStartEdit: PropTypes.func.isRequired,
     isPendingFn: PropTypes.func.isRequired,
@@ -78,10 +75,13 @@ export default React.createClass({
           {qname}
         </div>
         <div className="td">
-
+          {this.renderAccounts(query.getIn(['query', 'ids']))}
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />
+        </div>
+        <div className="td">
+            {this.renderTables(qname)}
         </div>
         <div className="td text-right kbc-no-wrap">
           {this.renderEditButton(query)}
@@ -110,15 +110,27 @@ export default React.createClass({
     );
   },
 
-  renderAccounts(accounts) {
-    if (accounts == null) {
-      return "N/A";
+  renderTables(queryName) {
+    const configTables = this.props.allTables.filter((t) =>
+      t.getIn(['bucket', 'id']) === this.props.bucketId &&
+      (t.get('name').startsWith(queryName) || !t.get('name'))
+    );
+    return configTables.map((t) => <div>
+        <StorageTableLink
+          tableId={t.get('id')}
+          linkLabel={t.get('name')}/>
+    </div>).toArray();
+  },
+
+  renderAccounts(ids) {
+    if (ids === null) {
+      return 'N/A';
     }
-    if (!accounts) {
-      return "--all--";
+    if (!ids) {
+      return '--all--';
     }
-    // TODO enum accounts by id
-  }
+    return ids.split(',').map((id) => this.props.accounts.getIn([id, 'name'], id)).join(',');
+  },
 
   renderEditButton(query) {
     return (
@@ -140,7 +152,7 @@ export default React.createClass({
       <Tooltip placement="top" tooltip="Delete query">
         <Confirm
           title="Delete query"
-          text={`Do you really want to delete extraction of query ${getDocumentTitle(query)}?`}
+          text={`Do you really want to delete extraction of query {query.get('name')}?`}
           buttonLabel="Delete"
           onConfirm={() => this.props.deleteQueryFn(query.get('id'))}
         >

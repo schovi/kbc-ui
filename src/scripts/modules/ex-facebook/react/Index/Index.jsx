@@ -7,6 +7,7 @@ import ComponentStore from '../../../components/stores/ComponentsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
 import createStoreMixin from '../../../../react/mixins/createStoreMixin';
+import storageTablesStore from '../../../components/stores/StorageTablesStore';
 
 // actions
 import {deleteCredentialsAndConfigAuth} from '../../../oauth-v2/OauthUtils';
@@ -18,17 +19,19 @@ import ComponentDescription from '../../../components/react/components/Component
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
+import QueriesTable from './QueriesTable';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 // import {Link} from 'react-router';
 import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 
+import getDefaultBucket from '../../../../utils/getDefaultBucket';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-facebook';
 
 export default React.createClass({
-  mixins: [createStoreMixin(...storeMixins, LatestJobsStore)],
+  mixins: [createStoreMixin(...storeMixins, LatestJobsStore, storageTablesStore)],
 
   getStateFromStores() {
     const configId = RoutesStore.getCurrentRouteParam('config');
@@ -37,6 +40,7 @@ export default React.createClass({
     const component = ComponentStore.getComponent(COMPONENT_ID);
 
     return {
+      allTables: storageTablesStore.getAll(),
       latestJobs: LatestJobsStore.getJobs(COMPONENT_ID, configId),
       store: store,
       actions: actions,
@@ -70,9 +74,16 @@ export default React.createClass({
           </div>
           <div className="row">
             <QueriesTable
+              bucketId={getDefaultBucket('in', COMPONENT_ID, this.state.configId)}
+              allTables={this.state.allTables}
               queries={this.state.store.queries}
               configId={this.state.configId}
               accounts={this.state.store.accounts}
+              deleteQueryFn={()=>{}}
+              onStartEdit={()=>{}}
+              isPendingFn={()=>{}}
+              toggleQueryEnabledFn={()=>{}}
+              getRunSingleQueryDataFn={()=>{}}
             />
           </div>
         </div>

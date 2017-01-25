@@ -30,7 +30,7 @@ export default function(configId) {
     configData: configData,
     parameters: parameters,
     queries: parameters.get('queries', List()),
-    version: paremters.get('api-version', DEFAULT_API_VERSION),
+    version: parameters.get('api-version', DEFAULT_API_VERSION),
     accounts: parameters.get('accounts'),
     isAuthorized() {
       const creds = this.oauthCredentials;
