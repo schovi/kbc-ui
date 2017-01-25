@@ -67,10 +67,13 @@ export default React.createClass({
             {' to '}
             {moment(this.state.dates.dateTo).format('MMM D, YYYY')}
           </h3>
-          {this.state.metricsData.map((item) => {
+          {this.state.metricsData.map((item, index) => {
             if (!item.get('components').isEmpty()) {
               return (
-                <Panel collapsible={true} header={this.daySummary(item)} key={item.get('dateFrom') + '-' + item.get('dateTo')}>
+                <Panel collapsible={true}
+                       defaultExpanded={index === 0}
+                       header={this.daySummary(item)}
+                       key={item.get('dateFrom') + '-' + item.get('dateTo')}>
                   <Table fill className="table">
                     {List([item.get('components').sort(sortComponentsByStorageIoDesc).map(this.dayComponents)])}
                   </Table>
