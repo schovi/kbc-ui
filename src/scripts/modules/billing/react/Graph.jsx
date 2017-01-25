@@ -6,6 +6,7 @@ import {fromJS, Map} from 'immutable';
 import MetricsApi from '../MetricsApi';
 import {componentIoSummary} from './Index';
 import Loader from './Loader';
+import Keen from 'keen-js';
 
 function getDatesForLastMonth() {
   const dateTo = moment().subtract(1, 'day');
@@ -28,18 +29,20 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    this.loadMetricsData()
-      .then((response) => {
-        this.setState({
-          metricsData: fromJS(response).map((item) => {
-            return Map({
-              date: item.get('dateFrom'), // same as dateTo
-              value: componentIoSummary(item.get('components'), 'storage')
-            });
-          }),
-          showLoader: false
+    Keen.ready(() => {
+      this.loadMetricsData()
+        .then((response) => {
+          this.setState({
+            metricsData: fromJS(response).map((item) => {
+              return Map({
+                date: item.get('dateFrom'), // same as dateTo
+                value: componentIoSummary(item.get('components'), 'storage')
+              });
+            }),
+            showLoader: false
+          });
         });
-      });
+    });
   },
 
   loadMetricsData: function() {
