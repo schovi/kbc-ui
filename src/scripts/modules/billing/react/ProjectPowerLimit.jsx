@@ -123,7 +123,7 @@ export default React.createClass({
     if (limit.get('limitValue') && limit.get('limitValue', 0) !== 0) {
       return (
         <span>
-        {'consumed '}
+        {'Project consumed '}
           <strong style={{fontSize: '24px'}}>
         {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
         </strong>
@@ -131,17 +131,17 @@ export default React.createClass({
         <strong style={{fontSize: '24px'}}>
         {numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}
         </strong>
-        {' credits'}
+        {' credits this month'}
       </span>
       );
     } else {
       return (
         <span>
-        {'consumed '}
+        {'Project consumed '}
         <strong style={{fontSize: '24px'}}>
         {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
         </strong>
-        {' credits'}
+        {' credits this month'}
       </span>
       );
     }
