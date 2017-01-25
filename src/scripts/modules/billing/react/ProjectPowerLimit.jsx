@@ -73,9 +73,9 @@ export default React.createClass({
         return val.get('id') === 'kbc.monthlyProjectPowerLimit';
       });
 
-      const projectPowerLimitUpdated = projectPowerLimit.set('metricValue', convertToCredits(
-        componentIoSummary(this.state.metricsData.first().get('components'), 'storage'),
-        0
+      const projectPowerLimitUpdated = projectPowerLimit.set('metricValue', parseInt(
+        convertToCredits(componentIoSummary(this.state.metricsData.first().get('components'), 'storage'), 0),
+        10
       ));
 
       if (this.state.canEdit || projectPowerLimitUpdated.get('limitValue')) {
