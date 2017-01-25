@@ -24,6 +24,7 @@ import EmptyState from '../../../components/react/components/ComponentEmptyState
 // import {Link} from 'react-router';
 import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
+import AccountsManagerModal from './AccountsManagerModal.jsx';
 
 import getDefaultBucket from '../../../../utils/getDefaultBucket';
 
@@ -56,7 +57,7 @@ export default React.createClass({
   render() {
     return (
       <div className="container-fluid">
-
+        {this.renderAccountsManagerModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <div className="col-sm-10">
@@ -70,7 +71,8 @@ export default React.createClass({
             </div>
           </div>
           <div className="row">
-            {this.renderAuthorizedInfo('col-xs-10')}
+            {this.renderAuthorizedInfo('col-xs-6')}
+            {this.renderAccountsInfo('col-xs-6')}
           </div>
           <div className="row">
             <QueriesTable
@@ -137,6 +139,39 @@ export default React.createClass({
       return 'No Facebook account authorized';
     }
     return false;
+  },
+
+  renderAccountsInfo(clName) {
+    const {accounts} = this.state.store;
+    return (
+      <div className={clName}>
+        <div className="form-group form-group-sm">
+          <label> Accounts </label>
+          <button
+            className="btn btn-link"
+            onClick={() => this.state.actions.updateLocalState('ShowAccountsManagerModal', true)}>
+            Select
+            </button>
+          <div className="form-control-static">
+            <div>{
+              accounts.map((a, accountId) =>
+                a.get('name', accountId)).toArray().join(',')
+           }</div>
+        </div>
+          </div>
+      </div>
+    );
+  },
+
+  renderAccountsManagerModal() {
+    return (
+      <AccountsManagerModal
+        show={this.state.localState.get('ShowAccountsManagerModal')}
+        onHideFn={() => this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false)}
+        accounts={this.state.store.accounts}
+        {...this.state.actions.prepareLocalState('AccountsManagerModal')}
+      />
+    );
   },
 
   renderAuthorizedInfo(clName) {
