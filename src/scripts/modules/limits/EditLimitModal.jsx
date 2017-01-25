@@ -7,8 +7,7 @@ export default React.createClass({
   propTypes: {
     limit: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    redirectTo: PropTypes.string
+    onHide: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -65,11 +64,6 @@ export default React.createClass({
               name="xsrf"
               value={this.state.xsrf}
               />
-            <input
-              type="hidden"
-              name="redirectTo"
-              value={this.props.redirectTo}
-            />
             </form>
         </Modal.Body>
         <Modal.Footer>
