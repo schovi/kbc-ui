@@ -3,7 +3,7 @@ import ApplicationStore from '../../../stores/ApplicationStore';
 import createStoreMixin from '../../../react/mixins/createStoreMixin';
 import EditLimitButton from './../../limits/EditLimitButton';
 import LimitProgress from './../../limits/LimitProgress';
-import Button from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import contactSupport from '../../../utils/contactSupport';
 import classnames from 'classnames';
 import {numericMetricFormatted} from '../../../utils/numbers';
@@ -123,26 +123,26 @@ export default React.createClass({
     if (limit.get('limitValue') && limit.get('limitValue', 0) !== 0) {
       return (
         <span>
-        {'Project consumed '}
+          {'Project consumed '}
           <strong style={{fontSize: '24px'}}>
-        {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
-        </strong>
-        {' of '}
-        <strong style={{fontSize: '24px'}}>
-        {numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}
-        </strong>
-        {' credits this month'}
-      </span>
+          {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
+          </strong>
+          {' of '}
+          <strong style={{fontSize: '24px'}}>
+          {numericMetricFormatted(limit.get('limitValue'), limit.get('unit'))}
+          </strong>
+          {' credits this month'}
+        </span>
       );
     } else {
       return (
         <span>
-        {'Project consumed '}
-        <strong style={{fontSize: '24px'}}>
-        {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
-        </strong>
-        {' credits this month'}
-      </span>
+          {'Project consumed '}
+          <strong style={{fontSize: '24px'}}>
+          {numericMetricFormatted(limit.get('metricValue'), limit.get('unit'))}
+          </strong>
+          {' credits this month'}
+        </span>
       );
     }
   },
