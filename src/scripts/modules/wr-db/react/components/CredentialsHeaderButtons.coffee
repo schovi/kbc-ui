@@ -10,12 +10,6 @@ InstalledComponentsActions = require '../../../components/InstalledComponentsAct
 Loader = React.createFactory(require('kbc-react-components').Loader)
 {States} = require '../pages/credentials/StateConstants'
 credentialsTemplates = require '../../templates/credentialsFields'
-
-
-#componentId = 'wr-db'
-
-#isProvisioning = true
-
 {button, span} = React.DOM
 
 module.exports = (componentId, driver, isProvisioning) ->
@@ -46,9 +40,7 @@ templateFn = (componentId, driver, isProvisioning) ->
     else
       creds = @state.currentCredentials
       creds = creds?.set 'driver', driver
-      defaultPort = @_getDefaultPort()
-      port = creds?.get 'port', defaultPort
-      creds = creds?.set 'port', port
+      creds = @_getDefaultValues(creds)
       creds = creds.map((value, key) ->
         isHashed = key[0] == '#'
         if isHashed
@@ -133,13 +125,6 @@ templateFn = (componentId, driver, isProvisioning) ->
       memo and (!!credentials.get(propName) or isHashed)
     !!credentials)
     return result
-    # credentials = credentials?.toJS()
-    # not( _.isEmpty(credentials?.host) or
-    # _.isEmpty(credentials?.database) or
-    # _.isEmpty(credentials?.password) or
-    # _.isEmpty(credentials?.port) or
-    # _.isEmpty(credentials?.user) or
-    # credentials?.port == "NaN")
 
   _getDefaultPort: ->
     fields = credentialsTemplates(componentId)
@@ -147,3 +132,11 @@ templateFn = (componentId, driver, isProvisioning) ->
       if field[1] == 'port'
         return field[4]
     return ''
+
+  _getDefaultValues: (credentials) ->
+    fields = credentialsTemplates(componentId)
+    for field in fields
+      if !!field[4]
+        credentials = credentials?.set(field[1], credentials.get(field[1], field[4]))
+
+    return credentials
