@@ -1,6 +1,6 @@
 import React from 'react';
 
-function convertToCredits(nanoCredits, precision) {
+export function convertToCredits(nanoCredits, precision) {
   return Number(nanoCredits / (1000 * 1000 * 1000)).toFixed(precision);
 }
 
