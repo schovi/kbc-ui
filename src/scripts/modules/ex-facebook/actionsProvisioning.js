@@ -57,6 +57,11 @@ export default function(configId) {
     }
     return newId;
   }
+  function saveAccounts(newAccounts) {
+    const msg = 'Update selected pages';
+    const data = store.configData.setIn(['parameters', 'accounts'], newAccounts);
+    return saveConfigData(data, store.accountsSavingPath, msg);
+  }
 
   function saveQueries(newQueries, savingPath, changeDescription) {
     const msg = changeDescription || 'Update queries';
@@ -69,8 +74,10 @@ export default function(configId) {
     updateLocalState: updateLocalState,
     saveQueries: saveQueries,
     generateId: generateId,
+    saveAccounts: saveAccounts,
     loadAccounts() {
       if (!store.isAuthorized()) return null;
+      if ((store.syncAccounts.get('data') && !store.syncAccounts.get('isError')) || store.syncAccounts.get('isLoading')) return null;
       const path = store.syncAccountsPath;
       const data = store.configData;
       const params = {
@@ -83,7 +90,7 @@ export default function(configId) {
                 isLoading: false,
                 isError: false,
                 error: null,
-                data: accounts
+                data: accounts.map((a) => {delete a.perms; return a;})
               })))
         .catch((error) =>
                updateLocalState(path, fromJS({

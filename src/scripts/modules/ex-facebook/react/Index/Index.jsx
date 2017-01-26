@@ -1,5 +1,5 @@
 import React from 'react';
-// import {Map} from 'immutable';
+import {Map} from 'immutable';
 
 // stores
 import storeProvisioning, {storeMixins} from '../../storeProvisioning';
@@ -129,9 +129,6 @@ export default React.createClass({
     );
   },
 
-  componentDidMount() {
-    this.state.actions.loadAccounts();
-  },
   isAuthorized() {
     return this.state.store.isAuthorized();
   },
@@ -149,10 +146,11 @@ export default React.createClass({
     return (
       <div className={clName}>
         <div className="form-group form-group-sm">
-          <label> Accounts </label>
+          <label> Pages </label>
           <button
+            style={{'padding-bottom': 0, 'padding-top': 0}}
             className="btn btn-link"
-            onClick={() => this.state.actions.updateLocalState('ShowAccountsManagerModal', true)}>
+            onClick={this.showAccountsManagerModal}>
             Select
             </button>
           <div className="form-control-static">
@@ -166,14 +164,25 @@ export default React.createClass({
     );
   },
 
+  showAccountsManagerModal() {
+    this.state.actions.loadAccounts();
+    this.state.actions.updateLocalState(['AccountsManagerModal', 'selected'], this.state.store.accounts);
+    this.state.actions.updateLocalState('ShowAccountsManagerModal', true);
+  },
+
   renderAccountsManagerModal() {
     return (
       <AccountsManagerModal
         show={this.state.localState.get('ShowAccountsManagerModal', false)}
-        onHideFn={() => this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false)}
+        onHideFn={() => {
+          this.state.actions.updateLocalState(['AccountsManagerModal'], Map());
+          this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false);
+        }}
         accounts={this.state.store.accounts}
         syncAccounts={this.state.store.syncAccounts}
         {...this.state.actions.prepareLocalState('AccountsManagerModal')}
+        onSaveAccounts={this.state.actions.saveAccounts}
+        isSaving={this.state.store.isSavingAccounts()}
       />
     );
   },

@@ -16,6 +16,7 @@ export default function(configId) {
   const parameters = configData.get('parameters', Map());
   const tempPath = ['_'];
   const syncAccountsPath = tempPath.concat('SyncAccounts');
+  const accountsSavingPath = tempPath.concat('savingaccounts');
 
   // ----ACTUAL STATE OBJECT------
   return {
@@ -36,6 +37,8 @@ export default function(configId) {
     queries: parameters.get('queries', List()),
     version: parameters.get('api-version', DEFAULT_API_VERSION),
     accounts: parameters.get('accounts'),
+    isSavingAccounts: () => localState().getIn(accountsSavingPath),
+    accountsSavingPath,
     isAuthorized() {
       const creds = this.oauthCredentials;
       return creds && creds.has('id');
