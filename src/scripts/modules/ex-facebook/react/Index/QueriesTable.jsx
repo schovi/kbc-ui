@@ -152,9 +152,9 @@ export default React.createClass({
       <Tooltip placement="top" tooltip="Delete query">
         <Confirm
           title="Delete query"
-          text={`Do you really want to delete extraction of query {query.get('name')}?`}
+          text={`Do you really want to delete extraction of query ${query.get('name')}?`}
           buttonLabel="Delete"
-          onConfirm={() => this.props.deleteQueryFn(query.get('id'))}
+          onConfirm={() => this.props.deleteQueryFn(query)}
         >
           <button className="btn btn-link">
             <i className="kbc-icon-cup" />

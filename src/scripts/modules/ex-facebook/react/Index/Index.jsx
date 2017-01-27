@@ -84,11 +84,11 @@ export default React.createClass({
               queries={this.state.store.queries}
               configId={this.state.configId}
               accounts={this.state.store.accounts}
-              deleteQueryFn={()=>{}}
-              onStartEdit={()=>{}}
-              isPendingFn={()=>{}}
-              toggleQueryEnabledFn={()=>{}}
-              getRunSingleQueryDataFn={()=>{}}
+              deleteQueryFn={this.state.actions.deleteQuery}
+              onStartEdit={this.showQueryModal}
+              isPendingFn={this.state.store.isPending}
+              toggleQueryEnabledFn={this.state.actions.toggleQueryEnabledFn}
+              getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
             />
           </div>
         </div>

@@ -84,7 +84,7 @@ export default function(configId) {
     return saveConfigData(data, savingPath, msg);
   }
 
-  function saveQuery(query) {
+  function saveQuery(query, changeDescription, savingPath) {
     const qid = query.get('id');
     let found = false;
     let action = 'Update query';
@@ -99,10 +99,26 @@ export default function(configId) {
       action = 'Add query';
       newQueries = newQueries.push(query);
     }
-    return saveQueries(newQueries, store.getSavingQueryPath(qid), `${action} ${query.get('name')}`);
+    return saveQueries(newQueries, savingPath || store.getSavingQueryPath(qid), changeDescription || `${action} ${query.get('name')}`);
+  }
+
+  function toggleQueryEnabledFn(qid) {
+    const query = store.findQuery(qid);
+    const disabled = query.get('disabled');
+    const action = disabled ? 'Enable query' : 'Disable query';
+    const desc = `${action} ${query.get('name')}`;
+    return saveQuery(query.set('disabled', !disabled), desc, store.getPendingPath(['toggle', qid]));
+  }
+
+  function deleteQuery(query) {
+    const qid = query.get('id');
+    const newQueries = store.queries.filter((q) => q.get('id') !== qid);
+    const desc = `Remove query ${query.get('name')}`;
+    return saveQueries(newQueries, store.getPendingPath(['delete', qid]), desc);
   }
 
   return {
+    deleteQuery: deleteQuery,
     saveQuery: saveQuery,
     prepareLocalState: prepareLocalState,
     updateLocalState: updateLocalState,
@@ -110,6 +126,7 @@ export default function(configId) {
     generateId: generateId,
     saveAccounts: saveAccounts,
     touchQuery: touchQuery,
+    toggleQueryEnabledFn: toggleQueryEnabledFn,
     loadAccounts() {
       if (!store.isAuthorized()) return null;
       if ((store.syncAccounts.get('data') && !store.syncAccounts.get('isError')) || store.syncAccounts.get('isLoading')) return null;
