@@ -329,7 +329,7 @@ export default React.createClass({
             />
             <LatestVersions
               limit={3}
-              componentId="keboola.csv-import"
+              componentId={componentId}
             />
           </li>
         </ul>
