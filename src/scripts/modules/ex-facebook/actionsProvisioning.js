@@ -57,6 +57,21 @@ export default function(configId) {
     }
     return newId;
   }
+
+  function touchQuery() {
+    return fromJS({
+      'id': generateId(),
+      'type': 'nested-query',
+      'name': '',
+      'query': {
+        'path': '',
+        'fields': '',
+        'ids': '',
+        'limit': '25'
+      }
+    });
+  }
+
   function saveAccounts(newAccounts) {
     const msg = 'Update selected pages';
     const data = store.configData.setIn(['parameters', 'accounts'], newAccounts);
@@ -69,12 +84,32 @@ export default function(configId) {
     return saveConfigData(data, savingPath, msg);
   }
 
+  function saveQuery(query) {
+    const qid = query.get('id');
+    let found = false;
+    let action = 'Update query';
+    let newQueries = store.queries.map((q) => {
+      if (q.get('id') === qid) {
+        found = true;
+        return query;
+      } else {
+        return q;
+      }});
+    if (!found) {
+      action = 'Add query';
+      newQueries = newQueries.push(query);
+    }
+    return saveQueries(newQueries, store.getSavingQueryPath(qid), `${action} ${query.get('name')}`);
+  }
+
   return {
+    saveQuery: saveQuery,
     prepareLocalState: prepareLocalState,
     updateLocalState: updateLocalState,
     saveQueries: saveQueries,
     generateId: generateId,
     saveAccounts: saveAccounts,
+    touchQuery: touchQuery,
     loadAccounts() {
       if (!store.isAuthorized()) return null;
       if ((store.syncAccounts.get('data') && !store.syncAccounts.get('isError')) || store.syncAccounts.get('isLoading')) return null;

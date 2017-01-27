@@ -25,8 +25,10 @@ import EmptyState from '../../../components/react/components/ComponentEmptyState
 import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 import AccountsManagerModal from './AccountsManagerModal.jsx';
-
+import QueryModal from './QueryModal.jsx';
 import getDefaultBucket from '../../../../utils/getDefaultBucket';
+
+import QueryTemplates from '../../templates/queryTemplates';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-facebook';
@@ -58,6 +60,7 @@ export default React.createClass({
     return (
       <div className="container-fluid">
         {this.renderAccountsManagerModal()}
+        {this.renderQueryModal()}
         <div className="col-md-9 kbc-main-content">
           <div className="row kbc-header">
             <div className="col-sm-10">
@@ -164,6 +167,33 @@ export default React.createClass({
     );
   },
 
+  showQueryModal(query) {
+    const dirtyQuery = query ? query : this.state.actions.touchQuery();
+    const modalData = Map()
+      .set('query', dirtyQuery)
+      .set('currentQuery', query);
+    this.state.actions.updateLocalState(['QueryModal'], modalData);
+    this.state.actions.updateLocalState('showQueryModal', true);
+  },
+
+  renderQueryModal() {
+    const hideFn = () => {
+      this.state.actions.updateLocalState(['QueryModal'], Map());
+      this.state.actions.updateLocalState('showQueryModal', false);
+    };
+    return (
+      <QueryModal
+        queryTemplates={QueryTemplates.get(COMPONENT_ID)}
+        show={this.state.localState.get('showQueryModal', false)}
+        onHideFn={hideFn}
+        isSavingFn={this.state.store.isSavingQuery}
+        onSaveQuery={this.state.actions.saveQuery}
+        accounts={this.state.store.accounts}
+        {...this.state.actions.prepareLocalState('QueryModal')}
+      />
+    );
+  },
+
   showAccountsManagerModal() {
     this.state.actions.loadAccounts();
     this.state.actions.updateLocalState(['AccountsManagerModal', 'selected'], this.state.store.accounts);
@@ -179,6 +209,7 @@ export default React.createClass({
           this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false);
         }}
         accounts={this.state.store.accounts}
+        authorizedDescription={this.state.oauthCredentials.get('authorizedFor')}
         syncAccounts={this.state.store.syncAccounts}
         {...this.state.actions.prepareLocalState('AccountsManagerModal')}
         onSaveAccounts={this.state.actions.saveAccounts}
@@ -206,7 +237,7 @@ export default React.createClass({
     return (
       <button
         className="btn btn-success"
-        onClick={() => {}}>
+        onClick={this.showQueryModal.bind(this, null)}>
         Add Query
       </button>
     );

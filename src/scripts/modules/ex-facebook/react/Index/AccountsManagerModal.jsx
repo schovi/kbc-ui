@@ -40,8 +40,9 @@ export default React.createClass({
           <div className="row">
             <div className="col-xs-6">
               <div>
-                <h4 className="text-center">All Account Pages</h4>
+                <h4 className="text-center">All Pages of {this.props.authorizedDescription}</h4>
                 <SearchRow
+                  className="small"
                   query={this.localState(['filter'])}
                   onChange={(newVal) => this.updateLocalState(['filter'], newVal)}
                 />
@@ -50,7 +51,7 @@ export default React.createClass({
             </div>
             <div className="col-xs-6">
               <div>
-                <h4 className="text-center">Selected Account Pages</h4>
+                <h4 className="text-center">Selected Pages</h4>
                 {this.renderConfigAccounts()}
               </div>
             </div>

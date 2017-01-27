@@ -17,6 +17,7 @@ export default function(configId) {
   const tempPath = ['_'];
   const syncAccountsPath = tempPath.concat('SyncAccounts');
   const accountsSavingPath = tempPath.concat('savingaccounts');
+  const savingQueriesPath = tempPath.concat('savingQueries');
 
   // ----ACTUAL STATE OBJECT------
   return {
@@ -38,6 +39,8 @@ export default function(configId) {
     version: parameters.get('api-version', DEFAULT_API_VERSION),
     accounts: parameters.get('accounts'),
     isSavingAccounts: () => localState().getIn(accountsSavingPath),
+    isSavingQuery: (qid) => localState().getIn(savingQueriesPath.concat(qid), false),
+    getSavingQueryPath: (qid) => savingQueriesPath.concat(qid),
     accountsSavingPath,
     isAuthorized() {
       const creds = this.oauthCredentials;
