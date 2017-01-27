@@ -52,7 +52,7 @@ module.exports = React.createClass
 
       div className: 'row',
         _.map fields, (field) =>
-          @_createInput(field[0], field[1], field[2], field[3], field[4])
+          @_createInput(field[0], field[1], field[2], field[3], field[4], field[5])
       @_renderSshTunnelRow()
       @_renderTestCredentials()
 
@@ -74,7 +74,13 @@ module.exports = React.createClass
       data: @props.credentials.get('ssh', Map())
       isEditing: @props.isEditing
 
-  _createInput: (labelValue, propName, type = 'text', isProtected = false) ->
+  _createInput: (labelValue, propName, type = 'text', isProtected = false, defaultValue = null,  options = []) ->
+    if type == 'select'
+      allOptions = _.map(options, (label, value) ->
+        option value: value,
+          label
+      )
+
     isHashed = propName[0] == '#'
     if @props.isProvisioning and isHashed
       propName = propName.slice(1, propName.length)
@@ -88,11 +94,14 @@ module.exports = React.createClass
           label: @_getName(propName) or labelValue
           type: type
           disabled: @props.isSaving
-          value: @props.credentials.get propName
+          value: @props.credentials.get(propName) or defaultValue
           labelClassName: 'col-xs-4'
           wrapperClassName: 'col-xs-8'
           onChange: (event) =>
             @props.onChangeFn(propName, event)
+        ,
+          allOptions
+
     else if isProtected
       @_renderProtectedNoHash(labelValue, propName)
     else
@@ -101,7 +110,12 @@ module.exports = React.createClass
         labelClassName: 'col-xs-4'
         wrapperClassName: 'col-xs-8'
       ,
-        @props.credentials.get propName
+        if type == 'select'
+          _.find(options, (item, index) =>
+            index == @props.credentials.get(propName)
+          )
+        else
+          @props.credentials.get propName
         Clipboard text: @props.credentials.get propName
 
   _renderProtectedNoHash: (labelValue, propName) ->

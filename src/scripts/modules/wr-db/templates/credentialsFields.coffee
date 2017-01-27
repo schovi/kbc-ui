@@ -42,6 +42,13 @@ fields =
     [ 'Username', 'user']
     [ 'Password', '#password', 'password', true]
     [ 'Database Name', 'database', 'text']
+    [ 'Server Version', 'tdsVersion', 'select', false, '7.1', {
+      '7.0': 'Microsoft SQL Server 7.0'
+      '7.1': 'Microsoft SQL Server 2000'
+      '7.2': 'Microsoft SQL Server 2005'
+      '7.3': 'Microsoft SQL Server 2008'
+      '7.4': 'Microsoft SQL Server 2012 or newer'
+    }]
   ]
 
   'keboola.wr-db-mysql': [
@@ -50,7 +57,6 @@ fields =
     [ 'Username', 'user']
     [ 'Password', '#password', 'password', true]
     [ 'Database Name', 'database', 'text']
-
   ]
 
   'keboola.wr-db-impala': [
