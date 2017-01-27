@@ -17,7 +17,7 @@ export default function(configId) {
   const oauthCredentialsId = configData.getIn(['authorization', 'oauth_api', 'id'], configId);
 
   const parameters = configData.get('parameters', Map());
-  const queries = parameters.getIn(['queries'], List());
+  const queries = parameters.getIn(['queries'], List()).map((q) => q.has('useLegacySql') ? q : q.set('useLegacySql', true));
 
   const tempPath = ['_'];
   const savingPath = tempPath.concat('saving');
@@ -53,6 +53,7 @@ export default function(configId) {
       outputTable: null,
       enabled: true,
       incremental: false,
+      useLegacySql: true,
       primaryKey: List()
     });
   }
