@@ -10,9 +10,9 @@ import StorageTablesStore from '../../../components/stores/StorageTablesStore';
 import actionsProvisioning from '../../actionsProvisioning';
 
 // ui components
-import QueryEditor from '../../../ex-db-generic/react/components/QueryEditor';
+import QueryEditor from '../components/QueryEditor';
 import QueryNav from './QueryNav';
-import QueryDetailStatic from '../../../ex-db-generic/react/pages/query-detail/QueryDetailStatic';
+import QueryDetailStatic from './QueryDetailStatic';
 import EditButtons from '../../../../react/common/EditButtons';
 
 // CONSTS

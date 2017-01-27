@@ -10,7 +10,7 @@ import StorageTablesStore from '../../../components/stores/StorageTablesStore';
 import actionsProvisioning from '../../actionsProvisioning';
 
 // ui components
-import QueryEditor from '../../../ex-db-generic/react/components/QueryEditor';
+import QueryEditor from '../components/QueryEditor';
 
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-google-bigquery';
