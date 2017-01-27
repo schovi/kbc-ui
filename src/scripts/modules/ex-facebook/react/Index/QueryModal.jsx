@@ -34,7 +34,7 @@ export default React.createClass({
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            New Query
+            {this.localState(['currentQuery', 'name'], false) ? 'Edit' : 'New'} Query
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
