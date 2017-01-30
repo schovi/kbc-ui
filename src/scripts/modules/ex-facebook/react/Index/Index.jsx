@@ -71,30 +71,42 @@ export default React.createClass({
               />
             </div>
             <div className="col-sm-2 kbc-buttons">
-              {this.isAuthorized() ? this.renderAddQueryLink() : null}
+              {this.isAuthorized() && this.state.store.hasQueries ? this.renderAddQueryLink() : null}
             </div>
           </div>
           <div className="row">
             {this.renderAuthorizedInfo('col-xs-6')}
-            {this.renderApiVersionEdit('col-xs-6')}
+            {this.isAuthorized() ? this.renderApiVersionEdit('col-xs-6') : null}
           </div>
-          <div className="row">
-            {this.renderAccountsInfo('col-xs-12')}
-          </div>
-          <div className="row">
-            <QueriesTable
-              bucketId={getDefaultBucket('in', COMPONENT_ID, this.state.configId)}
-              allTables={this.state.allTables}
-              queries={this.state.store.queries}
-              configId={this.state.configId}
-              accounts={this.state.store.accounts}
-              deleteQueryFn={this.state.actions.deleteQuery}
-              onStartEdit={this.showQueryModal}
-              isPendingFn={this.state.store.isPending}
-              toggleQueryEnabledFn={this.state.actions.toggleQueryEnabledFn}
-              getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
-            />
-          </div>
+          {
+            this.isAuthorized() || this.state.store.hasAccounts ?
+            <div className="row">
+              {this.renderAccountsInfo('col-xs-12')}
+            </div>
+            : null
+          }
+          {
+            (this.isAuthorized() && this.state.store.hasAccounts) || this.state.store.hasQueries ?
+            <div className="row">
+              {this.state.store.hasQueries ?
+              <QueriesTable
+                bucketId={getDefaultBucket('in', COMPONENT_ID, this.state.configId)}
+                allTables={this.state.allTables}
+                queries={this.state.store.queries}
+                configId={this.state.configId}
+                accounts={this.state.store.accounts}
+                deleteQueryFn={this.state.actions.deleteQuery}
+                onStartEdit={this.showQueryModal}
+                isPendingFn={this.state.store.isPending}
+                toggleQueryEnabledFn={this.state.actions.toggleQueryEnabledFn}
+                getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
+              />
+               :
+               this.renderEmptyQueries()
+              }
+            </div>
+            : null
+          }
         </div>
         <div className="col-md-3 kbc-main-sidebar">
           <ComponentMetadata
@@ -141,7 +153,7 @@ export default React.createClass({
     const value = isEditing ? this.state.store.editData.get('version') : this.state.store.version;
     return (
       <div className={clName}>
-        <label> Facebook Api Version </label>
+        <span> Facebook Api Version </span>
         <InlineEdit
           onEditStart={() => this.state.actions.startEditing('version', this.state.store.version)}
           onEditCancel={() => this.state.actions.cancelEditing('version')}
@@ -150,7 +162,7 @@ export default React.createClass({
           text={value}
           isSaving={this.state.store.isPending('version')}
           isEditing={isEditing}
-          isValid={true}
+          isValid={value}
         />
       </div>
     );
@@ -172,32 +184,45 @@ export default React.createClass({
     const {accounts} = this.state.store;
     const showTreshold = 10;
     const showMorecount = accounts.count() - showTreshold;
-    return (
-      <div className={clName}>
+    if (this.state.store.hasAccounts) {
+      return (
+        <div className={clName}>
 
-        <label> Selected Facebook Pages </label>
-        <button
-          style={{'padding-bottom': 0, 'padding-top': 0}}
-          className="btn btn-link"
-          onClick={this.showAccountsManagerModal}>
-          Modify
-        </button>
-        <div>
-          {
-            accounts.take(showTreshold).map((a, accountId) =>
-              a.get('name', accountId)).toArray().join(', ')
-          }
-          { showMorecount > 0 ?
-            <span>
-              <a onClick={this.showAccountsManagerModal}>
-                {' '}and {showMorecount} more
-              </a>
-            </span>
-            : null
-          }
+          <label> Selected Facebook Pages </label>
+          <button
+            style={{'padding-bottom': 0, 'padding-top': 0}}
+            className="btn btn-link"
+            onClick={this.showAccountsManagerModal}>
+            Modify
+          </button>
+          <div>
+            {
+              accounts.take(showTreshold).map((a, accountId) =>
+                a.get('name', accountId)).toArray().join(', ')
+            }
+            { showMorecount > 0 ?
+              <span>
+                <a onClick={this.showAccountsManagerModal}>
+                  {' '}and {showMorecount} more
+                </a>
+              </span>
+              : null
+            }
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <EmptyState>
+          <p>No Facebook Pages Selected</p>
+          <button
+            className="btn btn-success"
+            onClick={this.showAccountsManagerModal}>
+            Select Pages
+          </button>
+        </EmptyState>
+      );
+    }
   },
 
   showQueryModal(query) {
