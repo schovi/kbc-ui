@@ -117,7 +117,34 @@ export default function(configId) {
     return saveQueries(newQueries, store.getPendingPath(['delete', qid]), desc);
   }
 
+  function startEditing(what, initValue = null) {
+    const path = store.getEditPath(what);
+    updateLocalState(path, initValue);
+  }
+
+  function updateEditing(what, value) {
+    const path = store.getEditPath(what);
+    updateLocalState(path, value);
+  }
+
+  function cancelEditing(what) {
+    const data = store.editData.delete(what);
+    updateLocalState(store.getEditPath(null), data);
+  }
+
+  function saveEditingVersion() {
+    const newVersion = store.editData.get('version');
+    const msg = 'Update facebook api version';
+    const data = store.configData.setIn(['parameters', 'api-version'], newVersion);
+    const savingPath = store.getPendingPath('version');
+    return saveConfigData(data, savingPath, msg).then(() => cancelEditing('version'));
+  }
+
   return {
+    saveEditingVersion: saveEditingVersion,
+    updateEditing: updateEditing,
+    startEditing: startEditing,
+    cancelEditing: cancelEditing,
     deleteQuery: deleteQuery,
     saveQuery: saveQuery,
     prepareLocalState: prepareLocalState,

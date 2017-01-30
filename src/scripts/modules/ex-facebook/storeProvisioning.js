@@ -22,6 +22,9 @@ export default function(configId) {
   const savingQueriesPath = tempPath.concat('savingQueries');
   const pendingPath = tempPath.concat('pending');
 
+  const editPath = tempPath.concat('editing');
+  const editData = localState().getIn(editPath, Map());
+
   function findQuery(qid) {
     return queries.findLast((q) => q.get('id') === qid);
   }
@@ -45,7 +48,10 @@ export default function(configId) {
     parameters: parameters,
     queries: queries,
     version: parameters.get('api-version', DEFAULT_API_VERSION),
-    accounts: parameters.get('accounts'),
+    accounts: parameters.get('accounts', Map()),
+    getEditPath: (what) => what ? editPath.concat(what) : editPath,
+    isEditing: (what) => editData.hasIn([].concat(what)),
+    editData: editData,
     isSavingAccounts: () => localState().getIn(accountsSavingPath),
     isSavingQuery: (qid) => localState().getIn(savingQueriesPath.concat(qid), false),
     getSavingQueryPath: (qid) => savingQueriesPath.concat(qid),

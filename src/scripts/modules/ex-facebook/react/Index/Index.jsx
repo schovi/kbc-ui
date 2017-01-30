@@ -19,6 +19,7 @@ import ComponentDescription from '../../../components/react/components/Component
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
+import InlineEdit from '../../../../react/common/InlineEditTextInput';
 import QueriesTable from './QueriesTable';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 // import {Link} from 'react-router';
@@ -75,7 +76,10 @@ export default React.createClass({
           </div>
           <div className="row">
             {this.renderAuthorizedInfo('col-xs-6')}
-            {this.renderAccountsInfo('col-xs-6')}
+            {this.renderApiVersionEdit('col-xs-6')}
+          </div>
+          <div className="row">
+            {this.renderAccountsInfo('col-xs-12')}
           </div>
           <div className="row">
             <QueriesTable
@@ -132,6 +136,26 @@ export default React.createClass({
     );
   },
 
+  renderApiVersionEdit(clName) {
+    const isEditing = this.state.store.isEditing('version');
+    const value = isEditing ? this.state.store.editData.get('version') : this.state.store.version;
+    return (
+      <div className={clName}>
+        <label> Facebook Api Version </label>
+        <InlineEdit
+          onEditStart={() => this.state.actions.startEditing('version', this.state.store.version)}
+          onEditCancel={() => this.state.actions.cancelEditing('version')}
+          onEditChange={(val) => this.state.actions.updateEditing('version', val)}
+          onEditSubmit={() => this.state.actions.saveEditingVersion()}
+          text={value}
+          isSaving={this.state.store.isPending('version')}
+          isEditing={isEditing}
+          isValid={true}
+        />
+      </div>
+    );
+  },
+
   isAuthorized() {
     return this.state.store.isAuthorized();
   },
@@ -155,14 +179,14 @@ export default React.createClass({
             className="btn btn-link"
             onClick={this.showAccountsManagerModal}>
             Select
-            </button>
+          </button>
           <div className="form-control-static">
             <div>{
               accounts.map((a, accountId) =>
                 a.get('name', accountId)).toArray().join(',')
-           }</div>
-        </div>
+                 }</div>
           </div>
+        </div>
       </div>
     );
   },
@@ -204,10 +228,12 @@ export default React.createClass({
     return (
       <AccountsManagerModal
         show={this.state.localState.get('ShowAccountsManagerModal', false)}
-        onHideFn={() => {
-          this.state.actions.updateLocalState(['AccountsManagerModal'], Map());
-          this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false);
-        }}
+        onHideFn={
+          () => {
+            this.state.actions.updateLocalState(['AccountsManagerModal'], Map());
+            this.state.actions.updateLocalState(['ShowAccountsManagerModal'], false);
+          }
+                 }
         accounts={this.state.store.accounts}
         authorizedDescription={this.state.oauthCredentials.get('authorizedFor')}
         syncAccounts={this.state.store.syncAccounts}
