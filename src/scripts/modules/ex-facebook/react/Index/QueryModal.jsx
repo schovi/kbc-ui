@@ -53,7 +53,7 @@ export default React.createClass({
             onSave={this.handleSave}
             onCancel={this.props.onHideFn}
             placement="right"
-            saveLabel="Save Changes"
+            saveLabel="Save Query"
             isDisabled={this.query(null, Map()).equals(this.localState('currentQuery'))}
           />
         </Modal.Footer>

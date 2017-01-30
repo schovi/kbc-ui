@@ -170,22 +170,31 @@ export default React.createClass({
 
   renderAccountsInfo(clName) {
     const {accounts} = this.state.store;
+    const showTreshold = 10;
+    const showMorecount = accounts.count() - showTreshold;
     return (
       <div className={clName}>
-        <div className="form-group form-group-sm">
-          <label> Pages </label>
-          <button
-            style={{'padding-bottom': 0, 'padding-top': 0}}
-            className="btn btn-link"
-            onClick={this.showAccountsManagerModal}>
-            Select
-          </button>
-          <div className="form-control-static">
-            <div>{
-              accounts.map((a, accountId) =>
-                a.get('name', accountId)).toArray().join(',')
-                 }</div>
-          </div>
+
+        <label> Selected Facebook Pages </label>
+        <button
+          style={{'padding-bottom': 0, 'padding-top': 0}}
+          className="btn btn-link"
+          onClick={this.showAccountsManagerModal}>
+          Modify
+        </button>
+        <div>
+          {
+            accounts.take(showTreshold).map((a, accountId) =>
+              a.get('name', accountId)).toArray().join(', ')
+          }
+          { showMorecount > 0 ?
+            <span>
+              <a onClick={this.showAccountsManagerModal}>
+                {' '}and {showMorecount} more
+              </a>
+            </span>
+            : null
+          }
         </div>
       </div>
     );

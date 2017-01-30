@@ -35,16 +35,16 @@ export default React.createClass({
         <div className="thead">
           <div className="tr">
             <div className="th">
-              <strong>Name</strong>
+              <strong>Query Name</strong>
             </div>
             <div className="th">
-              <strong>Accounts</strong>
+              <strong>Pages to Extract</strong>
             </div>
             <div className="th">
               {/* right arrow */}
             </div>
             <div className="th">
-              <strong>Tables</strong>
+              <strong>Result Tables</strong>
             </div>
             <div className="th">
               {/* action buttons */}
