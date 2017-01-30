@@ -27,7 +27,7 @@ export default React.createClass({
   render() {
     return (
       <Modal
-        bsSize="large"
+        bsSize="medium"
         show={this.props.show}
         onHide={this.props.onHideFn}
       >
@@ -132,12 +132,14 @@ export default React.createClass({
   },
 
   deselectAccount(accountId) {
-    const accounts = this.localState(['selected'], Map()).remove(accountId);
-    this.updateLocalState(['selected'], accounts);
+    const accounts = this.localState(['selected'], Map()).delete(accountId);
+    this.updateLocalState(['selected'], accounts.count() > 0 ? accounts : Map());
   },
 
   selectAccount(account) {
-    const accounts = this.localState(['selected'], Map());
+    let accounts = this.localState(['selected'], Map());
+    // make sure we have an empty map if no accounts selected
+    accounts = accounts.count() > 0 ? accounts : Map();
     this.updateLocalState(['selected'], accounts.set(account.get('id'), account));
   },
 
