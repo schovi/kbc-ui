@@ -3,11 +3,20 @@ import {Map} from 'immutable';
 import {Modal, Input} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import TemplateSelector from './TemplateSelector';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 // import {Loader} from 'kbc-react-components';
 // import SearchRow from '../../../../react/common/SearchRow';
 // import {ListGroup, ListGroupItem} from 'react-bootstrap';
 
 // import EmptyState from '../../../components/react/components/ComponentEmptyState';
+
+const NAME_HELP = 'Helps describing the query and also used to prefix output tables resulting from the query. Can be empty';
+const ENDPOINT_HELP = 'Url part of Facebook Graph api request specifying node-id and/or edge-name, e.g. feed, me/photos etc. Can be empty.';
+const FIELDS_HELP = 'Parameter of Facebook Graph api nested request specifying fields and/or additional parameters of the endpoint';
+const SINCE_HELP = 'Parameter of Facebook graph api nested request. Applies only if endpoint parameter is given and specifies the date since data of the given endpoint will be retrieved. Can by specified absolutely(yyyy-mm-dd) or relatively(e.g. 15 days ago)';
+const UNTIL_HELP = 'Parameter of Facebook graph api nested request. Applies only if endpoint parameter is given and specifies the date until data of the given endpoint will be retrieved. Can by specified absolutely(yyyy-mm-dd) or relatively(e.g. 15 days ago)';
+const LIMIT_HELP = 'Parameter of Facebook graph api nested request. Specifies size of data returned in one page of the request. Maximum is 100, default 25.';
+
 
 export default React.createClass({
 
@@ -28,7 +37,7 @@ export default React.createClass({
   render() {
     return (
       <Modal
-        bsSize="medium"
+        bsSize="large"
         show={this.props.show}
         onHide={this.props.onHideFn}
       >
@@ -40,8 +49,8 @@ export default React.createClass({
         <Modal.Body>
           <div className="form-horizontal clearfix">
             {this.renderHelpRow()}
-            {this.renderInput('Name', 'name')}
-            {this.renderInput('Endpoint', ['query', 'path'])}
+            {this.renderInput('Name', 'name', NAME_HELP)}
+            {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP)}
             {this.renderFieldsInput()}
             {this.renderAccountSelector()}
             {this.renderAdvancedPart()}
@@ -62,11 +71,14 @@ export default React.createClass({
   },
 
   renderAdvancedPart() {
-    const showAdvanced = this.localState('showAdvanced', false);
+    const firstShow = !this.props.localState.has('showAdvanced') &&
+                          (this.query(['query', 'since']) || this.query(['query', 'until']) || this.query(['query', 'limit']) !== '25');
+
+    const showAdvanced = this.localState(['showAdvanced'], firstShow);
     const clName = 'form-control';
-    const sinceControl = this.renderInputControl(['query', 'since'], clName);
-    const untilControl = this.renderInputControl(['query', 'until'], clName);
-    const limitControl = this.renderInputControl(['query', 'limit'], clName);
+    const sinceControl = this.renderInputControl(['query', 'since'], clName, SINCE_HELP);
+    const untilControl = this.renderInputControl(['query', 'until'], clName, UNTIL_HELP);
+    const limitControl = this.renderInputControl(['query', 'limit'], clName, LIMIT_HELP);
 
     const result = (
       <div className="form-group">
@@ -75,27 +87,30 @@ export default React.createClass({
             <input
               checked={showAdvanced}
               type="checkbox"
-              onChange={() => this.updateLocalState('showAdvanced', !showAdvanced)}/>
+              onChange={() => this.updateLocalState(['showAdvanced'], !showAdvanced)}/>
             Advanced
           </label>
         </div>
         {showAdvanced ?
          <span>
-           <label className="col-xs-offset-2 col-xs-1 control-label">
+           <label className="col-xs-2 control-label">
              Since
+             {this.renderTooltipHelp(SINCE_HELP)}
            </label>
            <div className="col-xs-4">
              {sinceControl}
            </div>
-           <label className="col-xs-1 control-label">
+           <label className="col-xs-2 control-label">
              Until
+             {this.renderTooltipHelp(UNTIL_HELP)}
            </label>
            <div className="col-xs-4">
              {untilControl}
            </div>
            <label style={{'padding-top': '20px'}}
-             className="col-xs-offset-2 col-xs-1 control-label">
+             className="col-xs-2 control-label">
              Limit
+             {this.renderTooltipHelp(LIMIT_HELP)}
            </label>
            <div style={{'padding-top': '10px'}}
              className="col-xs-4">
@@ -123,7 +138,7 @@ export default React.createClass({
                        value={this.query(['query', 'fields'])}
                        onChange={(e) => this.updateLocalState(['query', 'query', 'fields'], e.target.value)}
                        className="form-control" rows="6" required/>);
-    return this.renderFormControl('Parameters', control);
+    return this.renderFormControl('Fields', control, FIELDS_HELP);
   },
 
   renderInputControl(propertyPath, className = 'form-control') {
@@ -137,21 +152,33 @@ export default React.createClass({
     );
   },
 
-  renderInput(caption, propertyPath) {
+  renderInput(caption, propertyPath, helpText) {
     const inputControl = this.renderInputControl(propertyPath);
-    return this.renderFormControl(caption, inputControl);
+    return this.renderFormControl(caption, inputControl, helpText);
   },
 
-  renderFormControl(controlLabel, control) {
+  renderFormControl(controlLabel, control, helpText) {
     return (
       <div className="form-group">
         <label className="col-xs-2 control-label">
           {controlLabel}
+          {this.renderTooltipHelp(helpText)}
         </label>
         <div className="col-xs-10">
           {control}
         </div>
       </div>
+    );
+  },
+
+  renderTooltipHelp(message) {
+    if (!message) return null;
+    return (
+      <small>
+        <OverlayTrigger placement="right" overlay={<Tooltip>{message}</Tooltip>}>
+          <i className="fa fa-fw fa-question-circle"></i>
+        </OverlayTrigger>
+      </small>
     );
   },
 

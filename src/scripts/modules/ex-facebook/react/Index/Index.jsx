@@ -193,7 +193,7 @@ export default React.createClass({
             style={{'padding-bottom': 0, 'padding-top': 0}}
             className="btn btn-link"
             onClick={this.showAccountsManagerModal}>
-            Modify
+            <small>Modify</small>
           </button>
           <div>
             {
