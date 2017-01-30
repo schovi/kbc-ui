@@ -11,10 +11,8 @@ import callDockerAction from '../components/DockerActionsApi';
   prepareLocalState: PropTypes.func.isRequired
 */
 
-const COMPONENT_ID = 'keboola.ex-facebook';
-
-export default function(configId) {
-  const store = storeProvisioning(configId);
+export default function(COMPONENT_ID, configId) {
+  const store = storeProvisioning(COMPONENT_ID, configId);
 
   function updateLocalState(path, data) {
     const ls = store.getLocalState();

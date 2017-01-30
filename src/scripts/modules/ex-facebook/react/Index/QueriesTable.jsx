@@ -12,10 +12,9 @@ import StorageTableLink from '../../../components/react/components/StorageApiTab
 
 // import {Link} from 'react-router';
 
-const COMPONENT_ID = 'keboola.ex-facebook';
-
 export default React.createClass({
   propTypes: {
+    componentId: PropTypes.string.isRequired,
     accounts: PropTypes.object.isRequired,
     allTables: PropTypes.object.isRequired,
     queries: PropTypes.object.isRequired,
@@ -65,11 +64,6 @@ export default React.createClass({
 
     return (
       <div
-        to={COMPONENT_ID + '-query-detail'}
-        params={{
-          config: this.props.configId,
-          queryId: query.get('id')
-        }}
         className="tr">
         <div className="td">
           {qname}
@@ -95,7 +89,7 @@ export default React.createClass({
           />
           <RunExtractionButton
             title="Run Extraction"
-            component={COMPONENT_ID}
+            component={this.props.componentId}
             runParams={ () => {
               return {
                 config: this.props.configId,
