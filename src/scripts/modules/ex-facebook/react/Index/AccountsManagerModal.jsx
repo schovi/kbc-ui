@@ -110,7 +110,9 @@ export default React.createClass({
     if (this.props.syncAccounts.get('isLoading')) return (<Loader />);
     let data = this.props.syncAccounts.get('data', List());
     data = data.filter((a) => !this.localState(['selected'], Map()).has(a.get('id')));
+    let allCaption = '';
     if (!!this.localState(['filter'], '')) {
+      allCaption = 'Filtered';
       data = data.filter((a) => a.get('name')
                                  .toLowerCase()
                                  .includes(this.localState(['filter'], '').toLowerCase()));
@@ -120,6 +122,20 @@ export default React.createClass({
       return (
         <table className="table table-striped table-hover kbc-tasks-list">
           <tbody>
+            <tr>
+              <td>
+                  <a
+                    key="--all--"
+                    onClick={this.selectAllAccounts.bind(this, data)}>
+                    --Select All {allCaption}--
+                  </a>
+              </td>
+              <td>
+                  <span
+                    onClick={this.selectAllAccounts.bind(this, data)}
+                    className="kbc-icon-arrow-right pull-right kbc-cursor-pointer" />
+              </td>
+            </tr>
             {data.map((d) =>
               <tr>
                 <td>
@@ -127,8 +143,12 @@ export default React.createClass({
                     key={d.get('id')}
                     onClick={this.selectAccount.bind(this, d)}>
                     {d.get('name')}
-              <span className="kbc-icon-arrow-right pull-right" />
                   </a>
+                </td>
+                <td>
+                  <span
+                    onClick={this.selectAccount.bind(this, d)}
+                    className="kbc-icon-arrow-right pull-right kbc-cursor-pointer" />
                 </td>
               </tr>
              ).toArray()}
@@ -143,6 +163,12 @@ export default React.createClass({
   deselectAccount(accountId) {
     const accounts = this.localState(['selected'], Map()).delete(accountId);
     this.updateLocalState(['selected'], accounts.count() > 0 ? accounts : Map());
+  },
+
+  selectAllAccounts(accountsList) {
+    const accounts = accountsList.reduce((memo, a) => memo.set(a.get('id'), a),
+                                         Map());
+    this.updateLocalState(['selected'], accounts);
   },
 
   selectAccount(account) {
