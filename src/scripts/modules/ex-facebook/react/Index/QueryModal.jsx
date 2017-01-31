@@ -30,6 +30,7 @@ export default React.createClass({
     authorizedDescription: PropTypes.string,
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
+    accountDescFn: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
     onSaveQuery: PropTypes.func.isRequired
   },
@@ -201,20 +202,20 @@ export default React.createClass({
   renderAccountSelector() {
     const hasIds = this.query('query', Map()).has('ids');
     const ids = this.query(['query', 'ids'], '');
-    const value = hasIds ? ids : '--no-page--';
+    const value = hasIds ? ids : '--non--';
     return (
       <Input
         type="select"
         value={value}
-        label="Pages"
+        label={this.props.accountDescFn('Pages')}
         labelClassName="col-xs-2"
         wrapperClassName="col-xs-10"
         onChange={this.onSelectAccount}>
         <option value="">
-          --all pages--
+          --all {this.props.accountDescFn('pages')}--
         </option>
-        <option value="--no-page--">
-          --no page--
+        <option value="--non--">
+          --non--
         </option>
         {this.renderAccountsOptionsArray()}
       </Input>
@@ -224,7 +225,7 @@ export default React.createClass({
   onSelectAccount(event) {
     const value = event.target.value;
     const query = this.query('query');
-    if (value === '--no-page--') {
+    if (value === '--non--') {
       this.updateLocalState(['query', 'query'], query.delete('ids'));
     } else {
       this.updateLocalState(['query', 'query'], query.set('ids', value));

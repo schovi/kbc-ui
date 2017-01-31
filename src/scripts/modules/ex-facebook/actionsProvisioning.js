@@ -3,6 +3,7 @@ import _ from 'underscore';
 import {fromJS} from 'immutable';
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import callDockerAction from '../components/DockerActionsApi';
+import accountDescriptionTemplate from './templates/accountDescription';
 
 // PROPTYPES HELPER:
 /*
@@ -13,6 +14,7 @@ import callDockerAction from '../components/DockerActionsApi';
 
 export default function(COMPONENT_ID, configId) {
   const store = storeProvisioning(COMPONENT_ID, configId);
+  const getAccountDesc = accountDescriptionTemplate(COMPONENT_ID);
 
   function updateLocalState(path, data) {
     const ls = store.getLocalState();
@@ -71,7 +73,7 @@ export default function(COMPONENT_ID, configId) {
   }
 
   function saveAccounts(newAccounts) {
-    const msg = 'Update selected pages';
+    const msg = 'Update selected ' + getAccountDesc('pages');
     const data = store.configData.setIn(['parameters', 'accounts'], newAccounts);
     return saveConfigData(data, store.accountsSavingPath, msg);
   }

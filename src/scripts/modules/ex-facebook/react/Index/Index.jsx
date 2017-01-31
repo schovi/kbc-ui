@@ -30,8 +30,10 @@ import QueryModal from './QueryModal.jsx';
 import getDefaultBucket from '../../../../utils/getDefaultBucket';
 
 import QueryTemplates from '../../templates/queryTemplates';
+import accountDescriptionTemplate from '../../templates/accountDescription';
 
 export default function(COMPONENT_ID) {
+  const getAccountDesc = accountDescriptionTemplate(COMPONENT_ID);
   return React.createClass({
     mixins: [createStoreMixin(...storeMixins, LatestJobsStore, storageTablesStore)],
 
@@ -186,7 +188,7 @@ export default function(COMPONENT_ID) {
         return (
           <div className={clName}>
 
-            <label> Selected Facebook Pages </label>
+            <label> Selected {getAccountDesc('Facebook Pages')} </label>
             <button
               style={{'padding-bottom': 0, 'padding-top': 0}}
               className="btn btn-link"
@@ -212,11 +214,11 @@ export default function(COMPONENT_ID) {
       } else {
         return (
           <EmptyState>
-            <p>No Facebook Pages Selected</p>
+            <p>No {getAccountDesc('Facebook Pages')} Selected</p>
             <button
               className="btn btn-success"
               onClick={this.showAccountsManagerModal}>
-              Select Pages
+              Select {getAccountDesc('Pages')}
             </button>
           </EmptyState>
         );
@@ -245,6 +247,7 @@ export default function(COMPONENT_ID) {
           isSavingFn={this.state.store.isSavingQuery}
           onSaveQuery={this.state.actions.saveQuery}
           accounts={this.state.store.accounts}
+          accountDescFn={getAccountDesc}
           {...this.state.actions.prepareLocalState('QueryModal')}
         />
       );
@@ -272,6 +275,7 @@ export default function(COMPONENT_ID) {
           {...this.state.actions.prepareLocalState('AccountsManagerModal')}
           onSaveAccounts={this.state.actions.saveAccounts}
           isSaving={this.state.store.isSavingAccounts()}
+          accountDescFn={getAccountDesc}
         />
       );
     },

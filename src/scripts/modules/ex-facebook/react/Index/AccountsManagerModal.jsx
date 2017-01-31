@@ -20,11 +20,12 @@ export default React.createClass({
     localState: PropTypes.object.isRequired,
     updateLocalState: PropTypes.func.isRequired,
     prepareLocalState: PropTypes.func.isRequired,
-    onSaveAccounts: PropTypes.func.isRequired
-
+    onSaveAccounts: PropTypes.func.isRequired,
+    accountDescFn: PropTypes.func.isRequired
   },
 
   render() {
+    const getDesc = this.props.accountDescFn;
     return (
       <Modal
         bsSize="medium"
@@ -33,14 +34,14 @@ export default React.createClass({
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            Setup Pages
+            Setup {getDesc('Pages')}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
             <div className="col-xs-6">
               <div>
-                <h4 className="text-center">All Pages of {this.props.authorizedDescription}</h4>
+                <h4 className="text-center">All {getDesc('Pages')} of {this.props.authorizedDescription}</h4>
                 <SearchRow
                   className="small"
                   query={this.localState(['filter'])}
@@ -51,7 +52,7 @@ export default React.createClass({
             </div>
             <div className="col-xs-6">
               <div>
-                <h4 className="text-center">Selected Pages</h4>
+                <h4 className="text-center">Selected {getDesc('Pages')}</h4>
                 {this.renderConfigAccounts()}
               </div>
             </div>
@@ -73,6 +74,7 @@ export default React.createClass({
   },
 
   renderConfigAccounts() {
+    const getDesc = this.props.accountDescFn;
     const accounts = this.localState(['selected'], Map());
     if (accounts.count() > 0) {
       return (
@@ -93,11 +95,12 @@ export default React.createClass({
         </table>
       );
     } else {
-      return (<EmptyState> No Pages Selected </EmptyState>);
+      return (<EmptyState> No {getDesc('Pages')} Selected </EmptyState>);
     }
   },
 
   renderAllAccounts() {
+    const getDesc = this.props.accountDescFn;
     if (this.props.syncAccounts.get('isLoading')) return (<Loader />);
     let data = this.props.syncAccounts.get('data', List());
     data = data.filter((a) => !this.localState(['selected'], Map()).has(a.get('id')));
@@ -127,7 +130,7 @@ export default React.createClass({
         </table>
       );
     } else {
-      return (<EmptyState>No pages</EmptyState>);
+      return (<EmptyState>No {getDesc('Pages')}</EmptyState>);
     }
   },
 

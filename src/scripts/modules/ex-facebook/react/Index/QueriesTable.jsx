@@ -9,6 +9,7 @@ import Tooltip from '../../../../react/common/Tooltip';
 import {Loader} from 'kbc-react-components';
 import Confirm from '../../../../react/common/Confirm';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
+import accountDescriptionTemplate from '../../templates/accountDescription';
 
 // import {Link} from 'react-router';
 
@@ -28,6 +29,10 @@ export default React.createClass({
 
   },
 
+  getAccountDesc(text) {
+    return accountDescriptionTemplate(this.props.componentId)(text);
+  },
+
   render() {
     return (
       <div className="table table-striped table-hover">
@@ -37,7 +42,7 @@ export default React.createClass({
               <strong>Query Name</strong>
             </div>
             <div className="th">
-              <strong>Pages to Extract</strong>
+              <strong>{this.getAccountDesc('Pages')} to Extract</strong>
             </div>
             <div className="th">
               {/* right arrow */}
