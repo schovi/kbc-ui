@@ -100,6 +100,7 @@ export default function(COMPONENT_ID) {
                  isPendingFn={this.state.store.isPending}
                  toggleQueryEnabledFn={this.state.actions.toggleQueryEnabledFn}
                  getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
+                 accountDescFn={getAccountDesc}
                />
                :
                this.renderEmptyQueries()

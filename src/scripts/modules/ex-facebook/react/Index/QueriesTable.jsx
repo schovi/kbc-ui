@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 // import {List} from 'immutable';
-// import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
 
 import ActivateDeactivateButton from '../../../../react/common/ActivateDeactivateButton';
 import RunExtractionButton from '../../../components/react/components/RunComponentButton';
@@ -9,9 +8,6 @@ import Tooltip from '../../../../react/common/Tooltip';
 import {Loader} from 'kbc-react-components';
 import Confirm from '../../../../react/common/Confirm';
 import StorageTableLink from '../../../components/react/components/StorageApiTableLinkEx';
-import accountDescriptionTemplate from '../../templates/accountDescription';
-
-// import {Link} from 'react-router';
 
 export default React.createClass({
   propTypes: {
@@ -25,12 +21,8 @@ export default React.createClass({
     onStartEdit: PropTypes.func.isRequired,
     isPendingFn: PropTypes.func.isRequired,
     toggleQueryEnabledFn: PropTypes.func.isRequired,
-    getRunSingleQueryDataFn: PropTypes.func.isRequired
-
-  },
-
-  getAccountDesc(text) {
-    return accountDescriptionTemplate(this.props.componentId)(text);
+    getRunSingleQueryDataFn: PropTypes.func.isRequired,
+    accountDescFn: PropTypes.func.isRequired
   },
 
   render() {
@@ -42,7 +34,7 @@ export default React.createClass({
               <strong>Query Name</strong>
             </div>
             <div className="th">
-              <strong>{this.getAccountDesc('Pages')} to Extract</strong>
+              <strong>{this.props.accountDescFn('Pages')} to Extract</strong>
             </div>
             <div className="th">
               {/* right arrow */}
