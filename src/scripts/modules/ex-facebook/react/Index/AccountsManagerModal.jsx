@@ -65,12 +65,18 @@ export default React.createClass({
             onCancel={this.props.onHideFn}
             placement="right"
             saveLabel="Save Changes"
-            isDisabled={this.props.accounts.equals(this.localState(['selected']))}
+            isDisabled={this.isSavingDisabled()}
           />
 
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  isSavingDisabled() {
+    const hasChanged = !this.props.accounts.equals(this.localState(['selected']));
+    const isEmpty = this.localState(['selected'], Map()).count() === 0;
+    return !hasChanged || isEmpty;
   },
 
   renderConfigAccounts() {
