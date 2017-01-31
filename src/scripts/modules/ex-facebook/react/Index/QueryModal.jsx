@@ -10,7 +10,7 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 // import EmptyState from '../../../components/react/components/ComponentEmptyState';
 
-const NAME_HELP = 'Helps describing the query and also used to prefix output tables resulting from the query. Can be empty';
+const NAME_HELP = 'Helps describing the query and also used to prefix output tables name resulting from the query if they differ.';
 const ENDPOINT_HELP = 'Url part of Facebook Graph api request specifying node-id and/or edge-name, e.g. feed, me/photos etc. Can be empty.';
 const FIELDS_HELP = 'Parameter of Facebook Graph api nested request specifying fields and/or additional parameters of the endpoint';
 const SINCE_HELP = 'Parameter of Facebook graph api nested request. Applies only if endpoint parameter is given and specifies the date since data of the given endpoint will be retrieved. Can by specified absolutely(yyyy-mm-dd) or relatively(e.g. 15 days ago)';
@@ -49,7 +49,7 @@ export default React.createClass({
         <Modal.Body>
           <div className="form-horizontal clearfix">
             {this.renderHelpRow()}
-            {this.renderInput('Name', 'name', NAME_HELP)}
+            {this.renderInput('Name', 'name', NAME_HELP, this.nameInvalidReason)}
             {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP)}
             {this.renderFieldsInput()}
             {this.renderAccountSelector()}
@@ -63,11 +63,24 @@ export default React.createClass({
             onCancel={this.props.onHideFn}
             placement="right"
             saveLabel="Save Query"
-            isDisabled={this.query(null, Map()).equals(this.localState('currentQuery'))}
+            isDisabled={this.isSavingDisabled()}
           />
         </Modal.Footer>
       </Modal>
     );
+  },
+
+  nameInvalidReason() {
+    const name = this.query('name');
+    if (name && !(/^[a-zA-Z0-9-_]+$/.test(name))) return 'Can only contain alphanumeric characters, underscore and dot.';
+    return null;
+  },
+
+  isSavingDisabled() {
+    const queryHasChanged = !this.query(null, Map()).equals(this.localState('currentQuery'));
+    const fieldsValid = !!this.query(['query', 'fields']);
+    const nameEmpty = !!this.query(['name']);
+    return !queryHasChanged || !fieldsValid || !nameEmpty || this.nameInvalidReason();
   },
 
   renderAdvancedPart() {
@@ -75,10 +88,9 @@ export default React.createClass({
                           (this.query(['query', 'since']) || this.query(['query', 'until']) || this.query(['query', 'limit']) !== '25');
 
     const showAdvanced = this.localState(['showAdvanced'], firstShow);
-    const clName = 'form-control';
-    const sinceControl = this.renderInputControl(['query', 'since'], clName, SINCE_HELP);
-    const untilControl = this.renderInputControl(['query', 'until'], clName, UNTIL_HELP);
-    const limitControl = this.renderInputControl(['query', 'limit'], clName, LIMIT_HELP);
+    const sinceControl = this.renderInputControl(['query', 'since']);
+    const untilControl = this.renderInputControl(['query', 'until']);
+    const limitControl = this.renderInputControl(['query', 'limit']);
 
     const result = (
       <div className="form-group">
@@ -141,31 +153,35 @@ export default React.createClass({
     return this.renderFormControl('Fields', control, FIELDS_HELP);
   },
 
-  renderInputControl(propertyPath, className = 'form-control') {
+  renderInputControl(propertyPath) {
     return (
       <input
         type="text"
         value={this.query(propertyPath)}
         onChange={(e) => this.updateLocalState(['query'].concat(propertyPath), e.target.value)}
-        className={className}
+        className="form-control"
       />
     );
   },
 
-  renderInput(caption, propertyPath, helpText) {
+  renderInput(caption, propertyPath, helpText, validationFn = () => null) {
+    const validationText = validationFn();
     const inputControl = this.renderInputControl(propertyPath);
-    return this.renderFormControl(caption, inputControl, helpText);
+    return this.renderFormControl(caption, inputControl, helpText, validationText);
   },
 
-  renderFormControl(controlLabel, control, helpText) {
+  renderFormControl(controlLabel, control, helpText, errorMsg) {
     return (
-      <div className="form-group">
+      <div className={errorMsg ? 'form-group has-error' : 'form-group'}>
         <label className="col-xs-2 control-label">
           {controlLabel}
           {this.renderTooltipHelp(helpText)}
         </label>
         <div className="col-xs-10">
           {control}
+          <span className="help-text">
+            {errorMsg}
+          </span>
         </div>
       </div>
     );

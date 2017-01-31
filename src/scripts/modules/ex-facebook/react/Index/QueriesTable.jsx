@@ -43,7 +43,7 @@ export default React.createClass({
               {/* right arrow */}
             </div>
             <div className="th">
-              <strong>Result Tables</strong>
+              <strong>Output Tables</strong>
             </div>
             <div className="th">
               {/* action buttons */}
