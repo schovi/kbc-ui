@@ -106,11 +106,13 @@ export default React.createClass({
       t.getIn(['bucket', 'id']) === this.props.bucketId &&
       (t.get('name').startsWith(queryName) || !t.get('name'))
     );
-    return configTables.map((t) => <div>
+    if (configTables.count() === 0) return 'n/a';
+    return configTables.map((t) =>
+      <div>
         <StorageTableLink
           tableId={t.get('id')}
           linkLabel={t.get('name')}/>
-    </div>).toArray();
+      </div>).toArray();
   },
 
   renderAccounts(ids) {

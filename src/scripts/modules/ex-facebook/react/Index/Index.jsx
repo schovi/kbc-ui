@@ -90,6 +90,7 @@ export default function(COMPONENT_ID) {
             <div className="row">
               {this.state.store.hasQueries ?
                <QueriesTable
+                 componentId={COMPONENT_ID}
                  bucketId={getDefaultBucket('in', COMPONENT_ID, this.state.configId)}
                  allTables={this.state.allTables}
                  queries={this.state.store.queries}
