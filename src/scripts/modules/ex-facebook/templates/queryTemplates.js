@@ -77,7 +77,7 @@ const exfbtemplates = [
     'id': 'postsinsights',
     'name': 'Selected posts insights',
     'template': {
-      'name': 'feed_insights',
+      'name': 'posts_insights',
       'query': {
         'path': 'feed',
         'fields': 'insights.since(now).metric(post_negative_feedback, post_engaged_users, post_consumptions, post_impressions_fan, post_impressions_paid, post_impressions, page_posts_impressions_organic, page_posts_impressions_paid, page_posts_impressions)'
