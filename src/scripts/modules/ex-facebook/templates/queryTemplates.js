@@ -63,12 +63,12 @@ const exfbtemplates = [
 
   {
     'id': 'pageinsights',
-    'name': 'Selected page insights for over last 1500 days',
+    'name': 'Selected page insights for over last 1000 days',
     'template': {
       'name': 'page_insights',
       'query': {
         'path': '',
-        'fields': 'insights.since(1500 days ago).metric(page_views_total, page_fan_removes, page_fan_adds, page_fans, page_negative_feedback, page_consumptions, page_engaged_users, page_impressions_by_story_type, page_impressions_organic, page_impressions_paid, page_impressions, page_stories_by_story_type, page_impressions_by_locale_unique)'
+        'fields': 'insights.since(1000 days ago).metric(page_views_total, page_fan_removes, page_fan_adds, page_fans, page_negative_feedback, page_consumptions, page_engaged_users, page_impressions)'
       }
     }
   },
