@@ -48,7 +48,7 @@ module.exports = React.createClass
         table className: 'table table-striped kbc-table-editor',
           thead null,
             tr null,
-              th null, 'KB Storage Column'
+              th null, 'Column'
               th null, 'Database Column Name'
               th null,
                 'Data Type'
