@@ -161,7 +161,9 @@ export default function(COMPONENT_ID, configId) {
         configData: data.toJS()
       };
       updateLocalState(path.concat('isLoading'), true);
-      return callDockerAction(COMPONENT_ID, 'accounts', params)
+      let actionName = 'accounts';
+      if (COMPONENT_ID === 'keboola.ex-facebook-ads') actionName = 'adaccounts';
+      return callDockerAction(COMPONENT_ID, actionName, params)
         .then((accounts) =>
               updateLocalState(path, fromJS({
                 isLoading: false,
