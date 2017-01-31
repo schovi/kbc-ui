@@ -1,5 +1,6 @@
 React = require 'react'
-{label, input, table, tr, th, tbody, thead, div, td} = React.DOM
+{label, input, table, tr, th, tbody, thead, div, td, code} = React.DOM
+Hint = require('../../../../../react/common/Hint').default
 
 module.exports = React.createClass
 
@@ -61,7 +62,15 @@ module.exports = React.createClass
                       label: 'Hide IGNORED'
                       onChange: this.props.onToggleHideIgnored
                     ' Hide Ignored'
-              th null, 'NULL'
+              th null,
+                'Null'
+                ' '
+                React.createElement Hint,
+                  title: 'Nullable Column'
+                ,
+                  'Empty strings in the source data will be replaced with SQL '
+                  code null, 'NULL'
+                  '.'
               th null, 'Default Value'
               th null
           tbody null,

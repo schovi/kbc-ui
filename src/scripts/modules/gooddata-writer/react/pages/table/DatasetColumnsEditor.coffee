@@ -55,7 +55,7 @@ Immutable = require 'immutable'
 {table, tr, th, tbody, thead, div} = React.DOM
 
 Row = require './DatasetColumnEditorRow'
-Hint = require('./Hint').default
+Hint = require('../../../../../react/common/Hint').default
 pureRendererMixin = require '../../../../../react/mixins/ImmutableRendererMixin'
 
 {ColumnTypes} = require '../../../constants'
