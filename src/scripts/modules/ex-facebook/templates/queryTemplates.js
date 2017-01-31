@@ -87,7 +87,53 @@ const exfbtemplates = [
 
 ];
 
-const exfbAdsTemplates = [];
+const exfbAdsTemplates = [
+  {
+    'id': 'ads',
+    'name': 'Ads',
+    'template': {
+      'name': 'ads',
+      'query': {
+        'path': 'ads',
+        'fields': 'id,name,adset_id'
+      }
+    }
+  },
+
+  {
+    'id': 'campaigns',
+    'name': 'Campaigns',
+    'template': {
+      'name': 'campaigns',
+      'query': {
+        'path': 'campaigns',
+        'fields': 'id,name,account_id'
+      }
+    }
+  },
+  {
+    'id': 'adsinsights',
+    'name': 'Ads Insights For Last Month',
+    'template': {
+      'name': 'ads_insights',
+      'query': {
+        'path': 'ads',
+        'fields': 'insights.action_breakdowns(action_type).date_preset(last_month).time_increment(1){ad_id,impressions,reach,actions,clicks,spend}'
+      }
+    }
+  },
+  {
+    'id': 'adsets',
+    'name': 'Adsets',
+    'template': {
+      'name': 'adsets',
+      'query': {
+        'path': 'adsets',
+        'fields': 'id,name,campaign_id'
+      }
+    }
+  }
+];
 
 export default fromJS({
   'keboola.ex-facebook': exfbtemplates,
