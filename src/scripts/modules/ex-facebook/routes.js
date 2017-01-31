@@ -1,4 +1,4 @@
-import Index from './react/Index';
+import Index from './react/Index/Index';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 // import HeaderButtons from './react/HeaderButtons';
 import storageActions from '../components/StorageActionCreators';
