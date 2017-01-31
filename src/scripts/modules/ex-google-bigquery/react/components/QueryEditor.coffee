@@ -7,7 +7,7 @@ Select = React.createFactory require('../../../../react/common/Select').default
 Autosuggest = React.createFactory(require 'react-autosuggest')
 editorMode = require('../../../ex-db-generic/templates/editorMode').default
 
-{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, i} = React.DOM
+{div, table, tbody, tr, td, ul, li, a, span, h2, p, strong, input, label, i, br} = React.DOM
 
 createGetSuggestions = (getOptions) ->
   (input, callback) ->
@@ -89,7 +89,7 @@ module.exports = React.createClass
                 value: @props.query.get 'outputTable'
                 onChange: @_handleOutputTableChange
             div className: 'help-block',
-              "if empty then default will be used"
+              "If empty then default will be used."
           div className: 'col-md-4 checkbox',
             label null,
               input
@@ -107,7 +107,9 @@ module.exports = React.createClass
                 onChange: @_handleLegacySqlChange
               'Use Legacy SQL'
             div className: 'help-block',
-              "specifies whether to use BigQuery\'s legacy SQL dialect or BigQuery\'s standard SQL"
+              "By default, BigQuery runs queries using legacy SQL. "
+              br null
+              " Uncheck this to run queries using BigQuery\'s updated SQL dialect with improved standards compliance."
         div className: 'form-group',
           label className: 'col-md-12 control-label', 'SQL query'
           if @props.componentId is 'keboola.ex-db-oracle'
