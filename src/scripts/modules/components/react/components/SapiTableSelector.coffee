@@ -36,13 +36,15 @@ module.exports = React.createClass
     setTimeout ->
       storageActionCreators.loadTables()
 
-  shouldComponentUpdate: (nextProps) ->
-    false
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.value != @props.value || nextState.isTablesLoading != @state.isTablesLoading
 
   render: ->
     isTablesLoading = @state.isTablesLoading
     if isTablesLoading
-      return Loader()
+      return React.DOM.div null,
+        Loader()
+        ' Loading tables...'
 
     Select
       name: 'source'
