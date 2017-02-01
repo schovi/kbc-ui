@@ -4,6 +4,8 @@ import {Modal, Input} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import TemplateSelector from './TemplateSelector';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {TabbedArea, TabPane} from 'react-bootstrap';
+
 // import {Loader} from 'kbc-react-components';
 // import SearchRow from '../../../../react/common/SearchRow';
 // import {ListGroup, ListGroupItem} from 'react-bootstrap';
@@ -50,11 +52,21 @@ export default React.createClass({
         <Modal.Body>
           <div className="form-horizontal clearfix">
             {this.renderHelpRow()}
-            {this.renderInput('Name', 'name', NAME_HELP, this.nameInvalidReason)}
-            {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP)}
-            {this.renderFieldsInput()}
-            {this.renderAccountSelector()}
-            {this.renderAdvancedPart()}
+            <TabbedArea defaultActiveEventKey={1} animation={false}>
+              <TabPane tab="General" eventKey={1}>
+                <div className="row">
+                  {this.renderInput('Name', 'name', NAME_HELP, this.nameInvalidReason)}
+                  {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP)}
+                  {this.renderFieldsInput()}
+                  {this.renderAccountSelector()}
+                </div>
+              </TabPane>
+              <TabPane tab="Advanced" eventKey={2}>
+                <div className="row">
+                  {this.renderAdvancedPart()}
+                </div>
+              </TabPane>
+            </TabbedArea>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -85,65 +97,33 @@ export default React.createClass({
   },
 
   renderAdvancedPart() {
-    const firstShow = !this.props.localState.has('showAdvanced') &&
-                          (this.query(['query', 'since']) || this.query(['query', 'until']) || this.query(['query', 'limit']) !== '25');
+    /* const firstShow = !this.props.localState.has('showAdvanced') &&
+     *                   (this.query(['query', 'since']) || this.query(['query', 'until']) || this.query(['query', 'limit']) !== '25');
 
-    const showAdvanced = this.localState(['showAdvanced'], firstShow);
+     * const showAdvanced = this.localState(['showAdvanced'], firstShow);*/
+
     const sinceControl = this.renderInputControl(['query', 'since']);
     const untilControl = this.renderInputControl(['query', 'until']);
     const limitControl = this.renderInputControl(['query', 'limit']);
 
-    const result = (
-      <div className="form-group">
-        <div className="col-xs-12 checkbox" >
-          <label>
-            <input
-              checked={showAdvanced}
-              type="checkbox"
-              onChange={() => this.updateLocalState(['showAdvanced'], !showAdvanced)}/>
-            Advanced
-          </label>
-        </div>
-        {showAdvanced ?
-         <span>
-           <label className="col-xs-2 control-label">
-             Since
-             {this.renderTooltipHelp(SINCE_HELP)}
-           </label>
-           <div className="col-xs-4">
-             {sinceControl}
-           </div>
-           <label className="col-xs-2 control-label">
-             Until
-             {this.renderTooltipHelp(UNTIL_HELP)}
-           </label>
-           <div className="col-xs-4">
-             {untilControl}
-           </div>
-           <label style={{'padding-top': '20px'}}
-             className="col-xs-2 control-label">
-             Limit
-             {this.renderTooltipHelp(LIMIT_HELP)}
-           </label>
-           <div style={{'padding-top': '10px'}}
-             className="col-xs-4">
-             {limitControl}
-           </div>
-         </span>
-         : null}
-      </div>);
+    const result = [
+      this.renderFormControl('Since', sinceControl, SINCE_HELP),
+      this.renderFormControl('Until', untilControl, UNTIL_HELP),
+      this.renderFormControl('Limit', limitControl, LIMIT_HELP)];
     return result;
   },
 
   renderHelpRow() {
     const templateSelector = (
-      <TemplateSelector
-        templates={this.props.queryTemplates}
-        query={this.query()}
-        updateQueryFn={(query) => this.updateLocalState(['query'], query)}
-      />
+      <div className="pull-right">
+        <TemplateSelector
+          templates={this.props.queryTemplates}
+          query={this.query()}
+          updateQueryFn={(query) => this.updateLocalState(['query'], query)}
+        />
+      </div>
     );
-    return this.renderFormControl('', templateSelector);
+    return templateSelector;
   },
 
   renderFieldsInput() {
@@ -174,14 +154,13 @@ export default React.createClass({
   renderFormControl(controlLabel, control, helpText, errorMsg) {
     return (
       <div className={errorMsg ? 'form-group has-error' : 'form-group'}>
-        <label className="col-xs-2 control-label">
+        <label className="col-xs-1 control-label">
           {controlLabel}
-          {this.renderTooltipHelp(helpText)}
         </label>
-        <div className="col-xs-10">
+        <div className="col-xs-11">
           {control}
-          <span className="help-text">
-            {errorMsg}
+          <span className="help-block">
+            {errorMsg || helpText}
           </span>
         </div>
       </div>
@@ -208,8 +187,8 @@ export default React.createClass({
         type="select"
         value={value}
         label={this.props.accountDescFn('Pages')}
-        labelClassName="col-xs-2"
-        wrapperClassName="col-xs-10"
+        labelClassName="col-xs-1"
+        wrapperClassName="col-xs-11"
         onChange={this.onSelectAccount}>
         <option value="">
           All {this.props.accountDescFn('pages')}
