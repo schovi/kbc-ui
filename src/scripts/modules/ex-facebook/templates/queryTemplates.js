@@ -90,7 +90,7 @@ const exfbtemplates = [
 const exfbAdsTemplates = [
   {
     'id': 'ads',
-    'name': 'Ads',
+    'name': 'All Ads',
     'template': {
       'name': 'ads',
       'query': {
@@ -102,7 +102,7 @@ const exfbAdsTemplates = [
 
   {
     'id': 'campaigns',
-    'name': 'Campaigns',
+    'name': 'All Campaigns',
     'template': {
       'name': 'campaigns',
       'query': {
@@ -124,7 +124,7 @@ const exfbAdsTemplates = [
   },
   {
     'id': 'adsets',
-    'name': 'Adsets',
+    'name': 'All Adsets',
     'template': {
       'name': 'adsets',
       'query': {
