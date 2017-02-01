@@ -215,7 +215,7 @@ export default React.createClass({
           --all {this.props.accountDescFn('pages')}--
         </option>
         <option value="--non--">
-          --non--
+          --no {this.props.accountDescFn('page')}--
         </option>
         {this.renderAccountsOptionsArray()}
       </Input>

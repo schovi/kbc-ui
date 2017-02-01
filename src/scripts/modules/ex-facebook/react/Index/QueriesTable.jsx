@@ -68,7 +68,7 @@ export default React.createClass({
           {qname}
         </div>
         <div className="td">
-          {this.renderAccounts(query.getIn(['query', 'ids']))}
+          {this.renderAccounts(query.getIn(['query']))}
         </div>
         <div className="td">
           <i className="kbc-icon-arrow-right" />
@@ -117,14 +117,15 @@ export default React.createClass({
       </div>).toArray();
   },
 
-  renderAccounts(ids) {
-    if (ids === null) {
-      return 'N/A';
+  renderAccounts(query) {
+    if (!query.has('ids') ) {
+      return `--no ${this.props.accountDescFn('page')}--`;
     }
+    const ids = query.get('ids');
     if (!ids) {
       return '--all--';
     }
-    return ids.split(',').map((id) => this.props.accounts.getIn([id, 'name'], id)).join(',');
+    return ids.split(', ').map((id) => this.props.accounts.getIn([id, 'name'], id)).join(',');
   },
 
   renderEditButton(query) {
