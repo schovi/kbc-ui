@@ -28,6 +28,7 @@ import LatestVersions from '../../../components/react/components/SidebarVersions
 import AccountsManagerModal from './AccountsManagerModal.jsx';
 import QueryModal from './QueryModal.jsx';
 import getDefaultBucket from '../../../../utils/getDefaultBucket';
+import AccountLink from './AccountLink';
 
 import QueryTemplates from '../../templates/queryTemplates';
 import accountDescriptionTemplate from '../../templates/accountDescription';
@@ -197,12 +198,17 @@ export default function(COMPONENT_ID) {
             </button>
             <div>
               {
-                accounts.take(showTreshold).map((a, accountId) =>
-                  a.get('name', accountId)).toArray().join(', ')
+                accounts.take(showTreshold).map((a) =>
+                  <span>
+                    <AccountLink account={a} componentId={COMPONENT_ID}/>
+                    {' '}
+                  </span>
+                ).toArray()
               }
               { showMorecount > 0 ?
                 <span>
-                  <a onClick={this.showAccountsManagerModal}>
+                  <a className="btn btn-link"
+                    onClick={this.showAccountsManagerModal}>
                     {' '}and {showMorecount} more
                   </a>
                 </span>
