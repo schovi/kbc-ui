@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {DropdownButton, MenuItem} from 'react-bootstrap';
 // import {Map} from 'immutable';
 
 export default React.createClass({
@@ -8,28 +9,32 @@ export default React.createClass({
     updateQueryFn: PropTypes.func.isRequired
   },
 
+  getInitialState() {
+    return {text: 'Select from a template'};
+  },
+
   render() {
     return (
-      <select
-        onChange={this.selectTemplate}
-        className="form-control">
-        <option value="" disabled={true} selected="selected">
-          Select from a template
-        </option>
+      <DropdownButton
+        onSelect={this.selectTemplate}
+        bsStyle="default"
+        title={this.state.text}>
         {this.props.templates.map((t) =>
-          <option value={t.get('id')} >
-            {t.get('name')}
-          </option>
+          <MenuItem eventKey={t.get('id')}>
+              {t.get('name')}
+          </MenuItem>
          ).toArray()}
-      </select>
+      </DropdownButton>
     );
   },
 
-  selectTemplate(e) {
-    const id = e.target.value;
+  selectTemplate(id) {
+    // const id = e.target.value;
     const optionValue = this.props.templates.findLast((t) => t.get('id') === id);
     const templateQuery = optionValue.get('template');
     const newQuery = this.props.query.mergeDeep(templateQuery);
     this.props.updateQueryFn(newQuery);
+    const newText = optionValue.get('name') + ' template';
+    this.setState({text: newText});
   }
 });
