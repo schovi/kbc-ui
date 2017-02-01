@@ -160,7 +160,7 @@ describe('utils', function() {
       assert.equal('in.c-keboola-ex-s3-123', getDefaultBucket('123'));
     });
   });
-  
+
   describe('#hasWildcard()', function() {
     it('should return false on empty string', function() {
       assert.equal(false, hasWildcard(''));
