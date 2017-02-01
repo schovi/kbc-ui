@@ -150,7 +150,7 @@ export default React.createClass({
     const control = (<textarea
                        value={this.query(['query', 'fields'])}
                        onChange={(e) => this.updateLocalState(['query', 'query', 'fields'], e.target.value)}
-                       className="form-control" rows="6" required/>);
+                       className="form-control" rows="2" required/>);
     return this.renderFormControl('Fields', control, FIELDS_HELP);
   },
 
