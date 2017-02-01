@@ -212,10 +212,10 @@ export default React.createClass({
         wrapperClassName="col-xs-10"
         onChange={this.onSelectAccount}>
         <option value="">
-          --all {this.props.accountDescFn('pages')}--
+          All {this.props.accountDescFn('pages')}
         </option>
         <option value="--non--">
-          --no {this.props.accountDescFn('page')}--
+          None
         </option>
         {this.renderAccountsOptionsArray()}
       </Input>

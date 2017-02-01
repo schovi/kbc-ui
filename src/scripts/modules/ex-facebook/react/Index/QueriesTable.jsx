@@ -119,11 +119,11 @@ export default React.createClass({
 
   renderAccounts(query) {
     if (!query.has('ids') ) {
-      return `--no ${this.props.accountDescFn('page')}--`;
+      return `None`;
     }
     const ids = query.get('ids');
     if (!ids) {
-      return '--all--';
+      return `All ${this.props.accountDescFn('pages')}`;
     }
     return ids.split(', ').map((id) => this.props.accounts.getIn([id, 'name'], id)).join(',');
   },
