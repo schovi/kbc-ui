@@ -35,6 +35,9 @@ import {TabbedArea, TabPane} from 'react-bootstrap';
 import {getDefaultTable} from '../../../utils';
 import {Map, List} from 'immutable';
 
+// css
+import './Index.less';
+
 // CONSTS
 const COMPONENT_ID = 'keboola.ex-s3';
 
@@ -71,28 +74,24 @@ export default React.createClass({
   renderButtons() {
     if (this.state.localState.get('isEditing')) {
       return (
-        <div className="col-sm-12">
-          <div className="text-right">
-            <ConfirmButtons
-              isSaving={this.state.localState.get('isSaving', false)}
-              onSave={this.state.actions.editSave}
-              onCancel={this.state.actions.editCancel}
-              placement="right"
-              saveLabel="Save Settings"
+        <div className="tab-edit-buttons">
+          <ConfirmButtons
+            isSaving={this.state.localState.get('isSaving', false)}
+            onSave={this.state.actions.editSave}
+            onCancel={this.state.actions.editCancel}
+            placement="right"
+            saveLabel="Save Settings"
               />
-          </div>
         </div>
       );
     } else {
       return (
-        <div className="col-sm-12">
-          <div className="text-right">
-            <button
-              className="btn btn-link"
-              onClick={this.state.actions.editStart}>
-              <span className="kbc-icon-pencil"></span> Change Settings
-            </button>
-          </div>
+        <div className="tab-edit-buttons">
+          <button
+            className="btn btn-link"
+            onClick={this.state.actions.editStart}>
+            <span className="kbc-icon-pencil"></span> Change Settings
+          </button>
         </div>
       );
     }
@@ -175,9 +174,7 @@ export default React.createClass({
               />
             </div>
           </div>
-          <div className="kbc-header">
-            {this.renderButtons()}
-          </div>
+          {this.renderButtons()}
           {this.renderSettings()}
         </div>
         <div className="col-md-3 kbc-main-sidebar">
