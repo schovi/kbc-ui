@@ -188,14 +188,13 @@ export default function(COMPONENT_ID) {
       if (this.state.store.hasAccounts) {
         return (
           <div className={clName}>
-
-            <label> Selected {getAccountDesc('Facebook Pages')} </label>
-            <button
+            <span>Selected {getAccountDesc('Facebook Pages')}</span>
+            <a
               style={{'padding-bottom': 0, 'padding-top': 0}}
-              className="btn btn-link"
+              className="btn btn-link btn-sm"
               onClick={this.showAccountsManagerModal}>
-              <small>Modify</small>
-            </button>
+              Modify
+            </a>
             <div>
               {
                 accounts.take(showTreshold).map((a) =>
