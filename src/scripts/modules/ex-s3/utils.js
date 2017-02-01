@@ -14,19 +14,18 @@ const hasWildcard = function(key) {
 
 function createConfiguration(localState, configId) {
   var mapping = {};
-
   var s3Key = localState.get('s3Key', '');
-  if (s3Key !== '') {
-    if (localState.get('wildcard', false)) {
-      mapping.source = 'data.csv';
-    } else {
-      mapping.source = s3Key.substring(s3Key.lastIndexOf('/') + 1);
-    }
-    mapping.destination = localState.get('destination', getDefaultTable(configId));
-    mapping.incremental = localState.get('incremental', false);
-    mapping.primary_key = localState.get('primaryKey', Immutable.List()).toJS();
-    mapping.delimiter = localState.get('delimiter', ',');
-    mapping.enclosure = localState.get('enclosure', '"');
+
+  mapping.source = 'data.csv';
+  mapping.destination = localState.get('destination', getDefaultTable(configId));
+  mapping.incremental = localState.get('incremental', false);
+  mapping.primary_key = localState.get('primaryKey', Immutable.List()).toJS();
+  mapping.delimiter = localState.get('delimiter', ',');
+  mapping.enclosure = localState.get('enclosure', '"');
+  if (localState.get('wildcard')) {
+    mapping.source = 'data.csv';
+  } else if (s3Key !== '') {
+    mapping.source = s3Key.substring(s3Key.lastIndexOf('/') + 1);
   }
 
   var processors = {

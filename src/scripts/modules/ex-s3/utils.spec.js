@@ -43,7 +43,14 @@ const emptyConfigurationWithDefauls = {
   storage: {
     output: {
       tables: [
-        {}
+        {
+          delimiter: ',',
+          destination: 'in.c-keboola-ex-s3-test.data',
+          enclosure: '"',
+          incremental: false,
+          primary_key: [],
+          source: 'data.csv'
+        }
       ]
     }
   }
