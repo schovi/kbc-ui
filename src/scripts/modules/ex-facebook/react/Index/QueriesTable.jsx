@@ -22,7 +22,8 @@ export default React.createClass({
     isPendingFn: PropTypes.func.isRequired,
     toggleQueryEnabledFn: PropTypes.func.isRequired,
     getRunSingleQueryDataFn: PropTypes.func.isRequired,
-    accountDescFn: PropTypes.func.isRequired
+    accountDescFn: PropTypes.func.isRequired,
+    addQueryButton: PropTypes.object.isRequired
   },
 
   render() {
@@ -42,7 +43,8 @@ export default React.createClass({
             <div className="th">
               <strong>Output Tables</strong>
             </div>
-            <div className="th">
+            <div className="th pull-right">
+              {this.props.addQueryButton}
               {/* action buttons */}
             </div>
           </div>

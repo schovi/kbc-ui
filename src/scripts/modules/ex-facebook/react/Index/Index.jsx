@@ -64,14 +64,11 @@ export default function(COMPONENT_ID) {
           {this.renderQueryModal()}
           <div className="col-md-9 kbc-main-content">
             <div className="row kbc-header">
-              <div className="col-sm-10">
+              <div className="col-sm-12">
                 <ComponentDescription
                   componentId={COMPONENT_ID}
                   configId={this.state.configId}
                 />
-              </div>
-              <div className="col-sm-2 kbc-buttons">
-                {this.isAuthorized() && this.state.store.hasQueries ? this.renderAddQueryLink() : null}
               </div>
             </div>
             <div className="row">
@@ -102,6 +99,7 @@ export default function(COMPONENT_ID) {
                  toggleQueryEnabledFn={this.state.actions.toggleQueryEnabledFn}
                  getRunSingleQueryDataFn={this.state.store.getRunSingleQueryData}
                  accountDescFn={getAccountDesc}
+                 addQueryButton={this.renderAddQueryLink()}
                />
                :
                this.renderEmptyQueries()
