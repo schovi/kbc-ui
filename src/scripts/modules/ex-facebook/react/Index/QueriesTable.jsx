@@ -80,14 +80,14 @@ export default React.createClass({
           {this.renderEditButton(query)}
           {this.renderDeleteButton(query)}
           <ActivateDeactivateButton
-            activateTooltip="Enable Query"
-            deactivateTooltip="Disable Query"
+            activateTooltip="Enable"
+            deactivateTooltip="Disable"
             isActive={!query.get('disabled')}
             isPending={this.props.isPendingFn(['toggle', query.get('id')])}
             onChange={() => this.props.toggleQueryEnabledFn(query.get('id'))}
           />
           <RunExtractionButton
-            title="Run Extraction"
+            title="Run"
             component={this.props.componentId}
             runParams={ () => {
               return {
@@ -119,7 +119,7 @@ export default React.createClass({
 
   renderAccounts(query) {
     if (!query.has('ids') ) {
-      return `None`;
+      return 'None';
     }
     const ids = query.get('ids');
     if (!ids) {
@@ -132,7 +132,7 @@ export default React.createClass({
     return (
       <button className="btn btn-link"
         onClick={() => this.props.onStartEdit(query)}>
-        <Tooltip tooltip="Edit query extraction" placement="top">
+        <Tooltip tooltip="Edit" placement="top">
           <i className="kbc-icon-pencil" />
         </Tooltip>
       </button>
@@ -145,7 +145,7 @@ export default React.createClass({
       return <span className="btn btn-link"><Loader/></span>;
     }
     return (
-      <Tooltip placement="top" tooltip="Delete query">
+      <Tooltip placement="top" tooltip="Delete">
         <Confirm
           title="Delete query"
           text={`Do you really want to delete extraction of query ${query.get('name')}?`}
