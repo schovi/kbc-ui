@@ -2,8 +2,6 @@ import React, {PropTypes} from 'react';
 import immutableMixin from '../../../../react/mixins/ImmutableRendererMixin';
 import {Input} from 'react-bootstrap';
 import Select from '../../../../react/common/Select';
-import {List} from 'immutable';
-import AutoSuggestWrapper from '../../../transformations/react/components/mapping/AutoSuggestWrapper';
 
 export default React.createClass({
   mixins: [immutableMixin],
@@ -13,23 +11,21 @@ export default React.createClass({
     s3Key: PropTypes.string.isRequired,
     wildcard: PropTypes.bool.isRequired,
     destination: PropTypes.string.isRequired,
+    destinationDefaultBucket: PropTypes.string.isRequired,
+    destinationDefaultTable: PropTypes.string.isRequired,
     incremental: PropTypes.bool.isRequired,
     primaryKey: PropTypes.object.isRequired,
-
     defaultTable: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     tables: PropTypes.object.isRequired
   },
 
-  onChangeDestination(value) {
-    this.props.onChange('destination', value);
+  getDestinationTableName() {
+    return this.props.destination.substring(this.props.destinationDefaultBucket.length + 1);
+  },
 
-    // set primary key if table exists
-    if (this.props.tables.has(value)) {
-      this.props.onChange('primaryKey', this.props.tables.getIn([value, 'primaryKey']));
-    } else {
-      this.props.onChange('primaryKey', List());
-    }
+  onChangeDestination(e) {
+    this.props.onChange('destination', this.props.destinationDefaultBucket + '.' + e.target.value);
   },
 
   isExistingTable() {
@@ -54,29 +50,6 @@ export default React.createClass({
 
   onChangePrimaryKey(value) {
     this.props.onChange('primaryKey', value);
-  },
-
-  getDestinationSuggestions() {
-    const tables = this.props.tables.map(function(table) {
-      return ({
-        name: table.get('id')
-      });
-    });
-    return function(value, callback) {
-      const inputValue = value.trim().toLowerCase();
-      const inputLength = inputValue.length;
-      if (inputLength === 0) {
-        return callback(null, []);
-      }
-      var suggestions = tables.filter(function(table) {
-        return table.name.toLowerCase().indexOf(inputValue) >= 0;
-      }).sortBy(function(table) {
-        return table.name;
-      }).slice(0, 7).map(function(table) {
-        return table.name;
-      }).toList().toJS();
-      return callback(null, suggestions);
-    };
   },
 
   primaryKeyHelp() {
@@ -154,15 +127,21 @@ export default React.createClass({
           <div className="form-group">
             <div className="col-xs-4 control-label">Destination</div>
             <div className="col-xs-8">
-              <AutoSuggestWrapper
-                suggestions={this.createGetSuggestions()}
-                value={this.props.destination}
-                onChange={this.onChangeDestination}
-                placeholder="Table in Storage"
-                id="destination"
-                name="destination"
-              />
-              <span className="help-block">Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. Default <code>{this.props.defaultTable}</code></span>
+              <div className="input-group">
+                <div className="input-group-addon">
+                  <small>{this.props.destinationDefaultBucket}</small>.
+                </div>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={this.getDestinationTableName()}
+                  placeholder="mytable"
+                  onChange={this.onChangeDestination}
+                />
+              </div>
+              <div className="help-block">
+                Table in Storage, where the CSV file will be imported. If the table or bucket does not exist, it will be created. <br />Default <code>{this.props.destinationDefaultTable}</code>.
+              </div>
             </div>
           </div>
         </div>

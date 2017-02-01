@@ -32,7 +32,7 @@ import ConfirmButtons from '../../../../../react/common/ConfirmButtons';
 import {TabbedArea, TabPane} from 'react-bootstrap';
 
 // utils
-import {getDefaultTable} from '../../../utils';
+import {getDefaultTable, getDefaultBucket} from '../../../utils';
 import {Map, List} from 'immutable';
 
 // css
@@ -107,6 +107,8 @@ export default React.createClass({
               s3Key={this.state.editingState.get('s3Key', '')}
               wildcard={this.state.editingState.get('wildcard', false)}
               destination={this.state.editingState.get('destination', getDefaultTable(this.state.configId))}
+              destinationDefaultBucket={getDefaultBucket(this.state.configId)}
+              destinationDefaultTable={getDefaultTable(this.state.configId)}
               incremental={this.state.editingState.get('incremental', false)}
               primaryKey={this.state.editingState.get('primaryKey', List())}
               onChange={this.state.actions.editChange}

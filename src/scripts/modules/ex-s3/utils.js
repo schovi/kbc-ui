@@ -1,7 +1,11 @@
 var Immutable = require('immutable');
 
+const getDefaultBucket = function(configId) {
+  return 'in.c-keboola-ex-s3-' + configId;
+};
+
 const getDefaultTable = function(configId) {
-  return 'in.c-keboola-ex-s3.' + configId;
+  return getDefaultBucket(configId) + '.data';
 };
 
 const hasWildcard = function(key) {
@@ -85,6 +89,7 @@ function parseConfiguration(configuration, configId) {
 
 module.exports = {
   getDefaultTable: getDefaultTable,
+  getDefaultBucket: getDefaultBucket,
   hasWildcard: hasWildcard,
   createConfiguration: createConfiguration,
   parseConfiguration: parseConfiguration

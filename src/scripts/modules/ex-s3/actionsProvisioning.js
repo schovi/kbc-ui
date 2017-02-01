@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 
 import componentsActions from '../components/InstalledComponentsActionCreators';
 import installedComponentsStore from '../components/stores/InstalledComponentsStore';
+import storageTablesStore from '../components/stores/StorageTablesStore';
 
 // utils
 import {createConfiguration, parseConfiguration} from './utils';
@@ -44,10 +45,20 @@ export default function(configId) {
   }
 
   function editChange(field, newSettings) {
-    const localState = getLocalState();
-    componentsActions.updateLocalState(COMPONENT_ID, configId,
-      localState.setIn(['settings', field], newSettings)
-    );
+    let localState = getLocalState();
+    if (field === 'destination') {
+      const tables = storageTablesStore.getAll();
+      // set primary key if table exists
+      const oldDestination = localState.getIn(['settings', 'destination']);
+      if (tables.has(newSettings) && !tables.has(oldDestination)) {
+        localState = localState.setIn(['settings', 'primaryKey'], tables.getIn([newSettings, 'primaryKey']));
+      }
+      if (!tables.has(newSettings) && tables.has(oldDestination)) {
+        localState = localState.setIn(['settings', 'primaryKey'], Immutable.List());
+      }
+    }
+    localState = localState.setIn(['settings', field], newSettings);
+    componentsActions.updateLocalState(COMPONENT_ID, configId, localState);
   }
 
   function editSave() {

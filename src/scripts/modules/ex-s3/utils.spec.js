@@ -4,6 +4,7 @@ var getDefaultTable = require('./utils').getDefaultTable;
 var hasWildcard = require('./utils').hasWildcard;
 var createConfiguration = require('./utils').createConfiguration;
 var parseConfiguration = require('./utils').parseConfiguration;
+var getDefaultBucket = require('./utils').getDefaultBucket;
 
 const emptyLocalState = {};
 const emptyConfiguration = {};
@@ -14,7 +15,7 @@ const emptyLocalStateWithDefaults = {
   s3Bucket: '',
   s3Key: '',
   wildcard: false,
-  destination: 'in.c-keboola-ex-s3.test',
+  destination: 'in.c-keboola-ex-s3-test.data',
   incremental: false,
   primaryKey: [],
   delimiter: ',',
@@ -58,7 +59,7 @@ const singleFileLocalState = {
   primaryKey: [],
   delimiter: ',',
   enclosure: '"',
-  destination: 'in.c-keboola-ex-s3.test'
+  destination: 'in.c-keboola-ex-s3-test.data'
 };
 const singleFileConfiguration = {
   parameters: {
@@ -84,7 +85,7 @@ const singleFileConfiguration = {
       tables: [
         {
           delimiter: ',',
-          destination: 'in.c-keboola-ex-s3.test',
+          destination: 'in.c-keboola-ex-s3-test.data',
           enclosure: '"',
           incremental: false,
           primary_key: [],
@@ -150,10 +151,16 @@ const wildcardConfiguration = {
 describe('utils', function() {
   describe('#getDefaultTable()', function() {
     it('should return default table', function() {
-      assert.equal('in.c-keboola-ex-s3.123', getDefaultTable('123'));
+      assert.equal('in.c-keboola-ex-s3-123.data', getDefaultTable('123'));
     });
   });
 
+  describe('#getDefaultBucket()', function() {
+    it('should return default bucket', function() {
+      assert.equal('in.c-keboola-ex-s3-123', getDefaultBucket('123'));
+    });
+  });
+  
   describe('#hasWildcard()', function() {
     it('should return false on empty string', function() {
       assert.equal(false, hasWildcard(''));
