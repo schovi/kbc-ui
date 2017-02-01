@@ -7,8 +7,11 @@ import {parseConfiguration} from './utils';
 const COMPONENT_ID = 'keboola.ex-s3';
 
 export default function(configId) {
-  const localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
+  let localState = InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
   const configData =  InstalledComponentStore.getConfigData(COMPONENT_ID, configId) || Map();
+  if (configData.isEmpty()) {
+    localState = localState.set('isEditing', true);
+  }
 
   let retVal = parseConfiguration(configData.toJS(), configId);
   retVal.getLocalState = function(path) {
