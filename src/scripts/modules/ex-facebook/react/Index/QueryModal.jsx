@@ -24,6 +24,7 @@ export default React.createClass({
 
   propTypes: {
     accounts: PropTypes.object.isRequired,
+    placeholders: PropTypes.object.isRequired,
     queryTemplates: PropTypes.object.isRequired,
     syncAccounts: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
@@ -38,6 +39,8 @@ export default React.createClass({
   },
 
   render() {
+    const placeholders = this.props.placeholders || {};
+    const formStyle = {'padding-top': '12px'};
     return (
       <Modal
         bsSize="large"
@@ -50,24 +53,24 @@ export default React.createClass({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="form-horizontal clearfix">
-            {this.renderHelpRow()}
-            <TabbedArea defaultActiveEventKey={1} animation={false}>
-              <TabPane tab="General" eventKey={1}>
-                <div className="row">
-                  {this.renderInput('Name', 'name', NAME_HELP, this.nameInvalidReason)}
-                  {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP)}
-                  {this.renderFieldsInput()}
+          {this.renderTemplateSelect()}
+          <TabbedArea defaultActiveEventKey={1} animation={false}>
+            <TabPane tab="General" eventKey={1}>
+              <div className="form-horizontal clearfix" style={formStyle}>
+                  {this.renderInput('Name', 'name', NAME_HELP, placeholders.name, this.nameInvalidReason)}
+                  {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP, placeholders.path)}
+                  {this.renderFieldsInput(placeholders.fields)}
                   {this.renderAccountSelector()}
-                </div>
-              </TabPane>
-              <TabPane tab="Advanced" eventKey={2}>
-                <div className="row">
-                  {this.renderAdvancedPart()}
-                </div>
-              </TabPane>
-            </TabbedArea>
-          </div>
+              </div>
+            </TabPane>
+            <TabPane tab="Advanced" eventKey={2}>
+              <div className="form-horizontal clearfix" style={formStyle}>
+                {this.renderInput('Since', ['query', 'since'], SINCE_HELP, 'yyyy-mm-dd or 15 days ago')}
+                {this.renderInput('Until', ['query', 'until'], UNTIL_HELP, 'yyyy-mm-dd or 15 days ago')}
+                {this.renderInput('Limit', ['query', 'limit'], LIMIT_HELP, '25')}
+              </div>
+            </TabPane>
+          </TabbedArea>
         </Modal.Body>
         <Modal.Footer>
           <ConfirmButtons
@@ -93,27 +96,11 @@ export default React.createClass({
     const queryHasChanged = !this.query(null, Map()).equals(this.localState('currentQuery'));
     const fieldsValid = !!this.query(['query', 'fields']);
     const nameEmpty = !!this.query(['name']);
-    return !queryHasChanged || !fieldsValid || !nameEmpty || this.nameInvalidReason();
+    const limitEmpty = !!this.query(['query', 'limit']);
+    return !queryHasChanged || !fieldsValid || !nameEmpty || !limitEmpty || this.nameInvalidReason();
   },
 
-  renderAdvancedPart() {
-    /* const firstShow = !this.props.localState.has('showAdvanced') &&
-     *                   (this.query(['query', 'since']) || this.query(['query', 'until']) || this.query(['query', 'limit']) !== '25');
-
-     * const showAdvanced = this.localState(['showAdvanced'], firstShow);*/
-
-    const sinceControl = this.renderInputControl(['query', 'since']);
-    const untilControl = this.renderInputControl(['query', 'until']);
-    const limitControl = this.renderInputControl(['query', 'limit']);
-
-    const result = [
-      this.renderFormControl('Since', sinceControl, SINCE_HELP),
-      this.renderFormControl('Until', untilControl, UNTIL_HELP),
-      this.renderFormControl('Limit', limitControl, LIMIT_HELP)];
-    return result;
-  },
-
-  renderHelpRow() {
+  renderTemplateSelect() {
     const templateSelector = (
       <div className="pull-right">
         <TemplateSelector
@@ -126,17 +113,19 @@ export default React.createClass({
     return templateSelector;
   },
 
-  renderFieldsInput() {
+  renderFieldsInput(placeholder) {
     const control = (<textarea
+                       placeholder={placeholder}
                        value={this.query(['query', 'fields'])}
                        onChange={(e) => this.updateLocalState(['query', 'query', 'fields'], e.target.value)}
                        className="form-control" rows="2" required/>);
     return this.renderFormControl('Fields', control, FIELDS_HELP);
   },
 
-  renderInputControl(propertyPath) {
+  renderInputControl(propertyPath, placeholder) {
     return (
       <input
+        placeholder={placeholder}
         type="text"
         value={this.query(propertyPath)}
         onChange={(e) => this.updateLocalState(['query'].concat(propertyPath), e.target.value)}
@@ -145,9 +134,9 @@ export default React.createClass({
     );
   },
 
-  renderInput(caption, propertyPath, helpText, validationFn = () => null) {
+  renderInput(caption, propertyPath, helpText, placeholder, validationFn = () => null) {
     const validationText = validationFn();
-    const inputControl = this.renderInputControl(propertyPath);
+    const inputControl = this.renderInputControl(propertyPath, placeholder);
     return this.renderFormControl(caption, inputControl, helpText, validationText);
   },
 

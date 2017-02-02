@@ -31,6 +31,7 @@ import getDefaultBucket from '../../../../utils/getDefaultBucket';
 import AccountLink from './AccountLink';
 
 import QueryTemplates from '../../templates/queryTemplates';
+import placeholderTemplates from '../../templates/placeholderTemplates';
 import accountDescriptionTemplate from '../../templates/accountDescription';
 
 export default function(COMPONENT_ID) {
@@ -246,6 +247,7 @@ export default function(COMPONENT_ID) {
       };
       return (
         <QueryModal
+          placeholders={placeholderTemplates[COMPONENT_ID]}
           queryTemplates={QueryTemplates.get(COMPONENT_ID)}
           show={this.state.localState.get('showQueryModal', false)}
           onHideFn={hideFn}
