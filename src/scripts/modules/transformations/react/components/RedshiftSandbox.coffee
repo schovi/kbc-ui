@@ -7,8 +7,8 @@ RedshiftSandboxCredentialsStore = require('../../../provisioning/stores/Redshift
 CredentialsActionCreators = require('../../../provisioning/ActionCreators')
 RedshiftCredentials = React.createFactory(require('../../../provisioning/react/components/RedshiftCredentials'))
 ConfigureSandbox = React.createFactory(require '../components/ConfigureSandbox')
-LoadDataIntoWorkspaceButton =
-  React.createFactory(require '../../../components/react/components/LoadDataIntoWorkspaceButton')
+RunComponentButton =
+  React.createFactory(require '../../../components/react/components/RunComponentButton')
 DeleteButton = React.createFactory(require '../../../../react/common/DeleteButton')
 Loader = React.createFactory(require('kbc-react-components').Loader)
 StorageBucketsStore = require '../../../components/stores/StorageBucketsStore'
@@ -18,7 +18,6 @@ OverlayTrigger = React.createFactory(require('react-bootstrap').OverlayTrigger)
 Tooltip = React.createFactory(require('react-bootstrap').Tooltip)
 RedshiftSSLInfoModal = React.createFactory(require './RedshiftSSLInfoModal')
 ApplicationStore = require '../../../../stores/ApplicationStore'
-sandboxConfigurationTool = require '../../utils/sandboxConfiguration'
 
 {div, span, input, strong, form, button, h3, h4, i, button, small, ul, li, a} = React.DOM
 RedshiftSandbox = React.createClass
@@ -52,17 +51,17 @@ RedshiftSandbox = React.createClass
       RedshiftCredentials {credentials: @state.credentials, isCreating: @state.pendingActions.get("create")}
 
   _renderControlButtons: ->
-    state = @state
     if @state.credentials.get "id"
       sandboxConfiguration = {}
       div {},
         div {},
-          LoadDataIntoWorkspaceButton(
+          RunComponentButton(
+            component: 'transformation'
+            method: 'create-sandbox'
             title: "Load tables into Redshift sandbox"
             mode: 'button'
             label: "Load data"
             disabled: @state.pendingActions.get 'drop'
-            workspaceId: @state.credentials.get 'workspaceId'
             runParams: ->
               sandboxConfiguration
           ,
@@ -71,7 +70,7 @@ RedshiftSandbox = React.createClass
               tables: @state.tables
               buckets: @state.buckets
               onChange: (params) ->
-                sandboxConfiguration = sandboxConfigurationTool(params, state.tables.toList().toJS())
+                sandboxConfiguration = params
           )
         div {},
           OverlayTrigger
