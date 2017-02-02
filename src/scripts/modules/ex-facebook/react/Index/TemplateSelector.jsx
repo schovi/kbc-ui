@@ -16,6 +16,8 @@ export default React.createClass({
   render() {
     return (
       <DropdownButton
+        pullRight={true}
+        style={{'top': '4px'}}
         onSelect={this.selectTemplate}
         bsStyle="default"
         title={this.state.text}>
