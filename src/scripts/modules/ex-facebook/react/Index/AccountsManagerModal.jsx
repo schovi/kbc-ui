@@ -166,8 +166,9 @@ export default React.createClass({
   },
 
   selectAllAccounts(accountsList) {
+    const selected = this.localState(['selected'], Map());
     const accounts = accountsList.reduce((memo, a) => memo.set(a.get('id'), a),
-                                         Map());
+                                         selected);
     this.updateLocalState(['selected'], accounts);
   },
 
