@@ -37,7 +37,7 @@ export default React.createClass({
                   Facebook has its own specific platform {' '}
                   <a
                     href="https://developers.facebook.com/docs/apps/versions"
-                    target="_blank">versioning</a>. To review the api changes see <a href="https://developers.facebook.com/docs/apps/changelog" target="_blank"> changelog </a>. The most recent api version is {this.props.defaultVersion}.
+                    target="_blank">versioning</a>. If you change the api version some api calls specified in queries may not work resulting in error, or no data as well as data with different columns might be retrieved. To review the api changes see <a href="https://developers.facebook.com/docs/apps/changelog" target="_blank"> changelog </a>. The most recent api version is {this.props.defaultVersion}.
                 </p>
                 <p>
                 Api Version <input
