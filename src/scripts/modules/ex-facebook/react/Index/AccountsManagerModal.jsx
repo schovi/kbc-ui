@@ -89,7 +89,8 @@ export default React.createClass({
             {accounts.map((a) =>
               <tr>
                 <td>
-                  {a.get('name') || a.get('id')}
+                  {a.get('name') || 'Unknown'}
+                  <small><div>{a.get('id')}</div></small>
                 </td>
                 <td>
                   <span onClick={this.deselectAccount.bind(this, a.get('id'))}
@@ -113,9 +114,14 @@ export default React.createClass({
     let allCaption = '';
     if (!!this.localState(['filter'], '')) {
       allCaption = 'Filtered';
-      data = data.filter((a) => a.get('name')
-                                 .toLowerCase()
-                                 .includes(this.localState(['filter'], '').toLowerCase()));
+      data = data.filter((a) => {
+        return a.get('name')
+                .toLowerCase()
+                .includes(this.localState(['filter']).toLowerCase()) ||
+               a.get('id')
+                .toLowerCase()
+                .includes(this.localState(['filter']).toLowerCase());
+      });
     }
 
     if (data.count() > 0) {
@@ -143,6 +149,7 @@ export default React.createClass({
                     key={d.get('id')}
                     onClick={this.selectAccount.bind(this, d)}>
                     {d.get('name')}
+                    <small><div>{d.get('id')}</div></small>
                   </a>
                 </td>
                 <td>
