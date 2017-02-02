@@ -137,7 +137,7 @@ export default React.createClass({
     }
     return (
       <div>
-        <a href={'https://' + this.props.snowflakeCredentials.get('hostname')} target="_blank" className="btn btn-link">
+        <a href={'https://' + this.props.snowflakeCredentials.get('hostname') + '/console'} target="_blank" className="btn btn-link">
           <span className="fa fa-fw fa-database" />
           <span> Connect</span>
         </a>
