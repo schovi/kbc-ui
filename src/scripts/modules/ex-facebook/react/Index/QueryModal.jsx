@@ -40,7 +40,6 @@ export default React.createClass({
 
   render() {
     const placeholders = this.props.placeholders || {};
-    const formStyle = {'padding-top': '12px'};
     return (
       <Modal
         bsSize="large"
@@ -56,7 +55,7 @@ export default React.createClass({
           {this.renderTemplateSelect()}
           <TabbedArea defaultActiveEventKey={1} animation={false}>
             <TabPane tab="General" eventKey={1}>
-              <div className="form-horizontal clearfix" style={formStyle}>
+              <div className="row form-horizontal clearfix">
                   {this.renderInput('Name', 'name', NAME_HELP, placeholders.name, this.nameInvalidReason)}
                   {this.renderInput('Endpoint', ['query', 'path'], ENDPOINT_HELP, placeholders.path)}
                   {this.renderFieldsInput(placeholders.fields)}
@@ -64,7 +63,7 @@ export default React.createClass({
               </div>
             </TabPane>
             <TabPane tab="Advanced" eventKey={2}>
-              <div className="form-horizontal clearfix" style={formStyle}>
+              <div className="row form-horizontal clearfix">
                 {this.renderInput('Since', ['query', 'since'], SINCE_HELP, 'yyyy-mm-dd or 15 days ago')}
                 {this.renderInput('Until', ['query', 'until'], UNTIL_HELP, 'yyyy-mm-dd or 15 days ago')}
                 {this.renderInput('Limit', ['query', 'limit'], LIMIT_HELP, '25')}
@@ -143,10 +142,10 @@ export default React.createClass({
   renderFormControl(controlLabel, control, helpText, errorMsg) {
     return (
       <div className={errorMsg ? 'form-group has-error' : 'form-group'}>
-        <label className="col-xs-1 control-label">
+        <label className="col-xs-2 control-label">
           {controlLabel}
         </label>
-        <div className="col-xs-11">
+        <div className="col-xs-10">
           {control}
           <span className="help-block">
             {errorMsg || helpText}
@@ -176,8 +175,8 @@ export default React.createClass({
         type="select"
         value={value}
         label={this.props.accountDescFn('Pages')}
-        labelClassName="col-xs-1"
-        wrapperClassName="col-xs-11"
+        labelClassName="col-xs-2"
+        wrapperClassName="col-xs-10"
         onChange={this.onSelectAccount}>
         <option value="">
           All {this.props.accountDescFn('pages')}
