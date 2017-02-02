@@ -1,16 +1,10 @@
 import React, {PropTypes} from 'react';
 import {Map} from 'immutable';
-import {Modal, Input} from 'react-bootstrap';
 import ConfirmButtons from '../../../../react/common/ConfirmButtons';
 import TemplateSelector from './TemplateSelector';
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
-import {TabbedArea, TabPane} from 'react-bootstrap';
-
-// import {Loader} from 'kbc-react-components';
-// import SearchRow from '../../../../react/common/SearchRow';
-// import {ListGroup, ListGroupItem} from 'react-bootstrap';
-
-// import EmptyState from '../../../components/react/components/ComponentEmptyState';
+import {Modal, OverlayTrigger, Tooltip, TabbedArea, TabPane} from 'react-bootstrap';
+// import Select from 'react-select';
+import Select from '../../../../react/common/Select';
 
 const NAME_HELP = 'Helps describing the query and also used to prefix output tables name resulting from the query if they differ.';
 const ENDPOINT_HELP = 'Url part of Facebook Graph api request specifying node-id and/or edge-name, e.g. feed, me/photos etc. Can be empty.';
@@ -169,42 +163,41 @@ export default React.createClass({
   renderAccountSelector() {
     const hasIds = this.query('query', Map()).has('ids');
     const ids = this.query(['query', 'ids'], '');
-    const value = hasIds ? ids : '--non--';
-    return (
-      <Input
-        type="select"
+    let value = hasIds ? ids : '--non--';
+    if (!value) value = '--all--';
+    const basicOptions = [
+      {value: '--all--', label: `All ${this.props.accountDescFn('Pages')}`},
+      {value: '--non--', label: 'None'}
+    ];
+    const restOptions = this.props.accounts.map((account, accountId) => {
+      return {value: accountId, label: account.get('name')};
+    }).toArray();
+    const selectOptions = basicOptions.concat(restOptions);
+    const selectControl = (
+      <Select
+        name="ids"
+        key="ids"
+        clearable={false}
+        multi={false}
+        allowCreate={false}
+        emptyStrings={false}
+        options={selectOptions}
         value={value}
-        label={this.props.accountDescFn('Pages')}
-        labelClassName="col-xs-2"
-        wrapperClassName="col-xs-10"
-        onChange={this.onSelectAccount}>
-        <option value="">
-          All {this.props.accountDescFn('pages')}
-        </option>
-        <option value="--non--">
-          None
-        </option>
-        {this.renderAccountsOptionsArray()}
-      </Input>
+        onChange={this.onSelectAccount}/>
     );
+    return this.renderFormControl(this.props.accountDescFn('Pages'), selectControl);
   },
 
-  onSelectAccount(event) {
-    const value = event.target.value;
+  onSelectAccount(value) {
     const query = this.query('query');
-    if (value === '--non--') {
-      this.updateLocalState(['query', 'query'], query.delete('ids'));
-    } else {
-      this.updateLocalState(['query', 'query'], query.set('ids', value));
+    switch (value) {
+      case '--non--':
+        return this.updateLocalState(['query', 'query'], query.delete('ids'));
+      case '--all--':
+        return this.updateLocalState(['query', 'query'], query.set('ids', ''));
+      default:
+        return this.updateLocalState(['query', 'query'], query.set('ids', value));
     }
-  },
-
-  renderAccountsOptionsArray() {
-    return this.props.accounts.map((account, accountId) =>
-      <option value={accountId}>
-        {account.get('name')}
-      </option>
-    );
   },
 
   localState(path, defaultVal) {
