@@ -8,11 +8,10 @@ import Select from '../../../../react/common/Select';
 
 const NAME_HELP = 'Helps describing the query and also used to prefix output tables name resulting from the query if they differ.';
 const ENDPOINT_HELP = 'Url part of Facebook Graph api request specifying node-id and/or edge-name, e.g. feed, me/photos etc. Can be empty.';
-const FIELDS_HELP = 'Parameter of Facebook Graph api nested request specifying fields and/or additional parameters of the endpoint';
+const FIELDS_HELP = 'Parameter of Facebook Graph api nested request specifying fields and/or additional parameters of the endpoint.';
 const SINCE_HELP = 'Parameter of Facebook graph api nested request. Applies only if endpoint parameter is given and specifies the date since data of the given endpoint will be retrieved. Can by specified absolutely(yyyy-mm-dd) or relatively(e.g. 15 days ago)';
 const UNTIL_HELP = 'Parameter of Facebook graph api nested request. Applies only if endpoint parameter is given and specifies the date until data of the given endpoint will be retrieved. Can by specified absolutely(yyyy-mm-dd) or relatively(e.g. 15 days ago)';
 const LIMIT_HELP = 'Parameter of Facebook graph api nested request. Specifies size of data returned in one page of the request. Maximum is 100, default 25.';
-
 
 export default React.createClass({
 
@@ -185,7 +184,9 @@ export default React.createClass({
         value={value}
         onChange={this.onSelectAccount}/>
     );
-    return this.renderFormControl(this.props.accountDescFn('Pages'), selectControl);
+    const descFn = this.props.accountDescFn;
+    const accountsHelp = `Specifies ${descFn('page')} that will be applied to the query. It is represented by Facebook Graph api nested request parameter ids. Could be either None, All or one of the selected ${descFn('pages')}.`;
+    return this.renderFormControl(this.props.accountDescFn('Pages'), selectControl, accountsHelp);
   },
 
   onSelectAccount(value) {
