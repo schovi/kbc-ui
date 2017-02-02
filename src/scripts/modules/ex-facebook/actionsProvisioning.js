@@ -132,8 +132,8 @@ export default function(COMPONENT_ID, configId) {
     updateLocalState(store.getEditPath(null), data);
   }
 
-  function saveEditingVersion() {
-    const newVersion = store.editData.get('version');
+  function saveApiVersion(newVersion) {
+    // const newVersion = store.editData.get('version');
     const msg = 'Update facebook api version';
     const data = store.configData.setIn(['parameters', 'api-version'], newVersion);
     const savingPath = store.getPendingPath('version');
@@ -141,7 +141,7 @@ export default function(COMPONENT_ID, configId) {
   }
 
   return {
-    saveEditingVersion: saveEditingVersion,
+    saveApiVersion: saveApiVersion,
     updateEditing: updateEditing,
     startEditing: startEditing,
     cancelEditing: cancelEditing,

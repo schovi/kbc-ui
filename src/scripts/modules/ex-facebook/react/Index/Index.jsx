@@ -2,7 +2,7 @@ import React from 'react';
 import {Map} from 'immutable';
 
 // stores
-import storeProvisioning, {storeMixins} from '../../storeProvisioning';
+import storeProvisioning, {storeMixins, DEFAULT_API_VERSION} from '../../storeProvisioning';
 import ComponentStore from '../../../components/stores/ComponentsStore';
 import RoutesStore from '../../../../stores/RoutesStore';
 import LatestJobsStore from '../../../jobs/stores/LatestJobsStore';
@@ -19,7 +19,6 @@ import ComponentDescription from '../../../components/react/components/Component
 import ComponentMetadata from '../../../components/react/components/ComponentMetadata';
 import RunComponentButton from '../../../components/react/components/RunComponentButton';
 import DeleteConfigurationButton from '../../../components/react/components/DeleteConfigurationButton';
-import InlineEdit from '../../../../react/common/InlineEditTextInput';
 import QueriesTable from './QueriesTable';
 import EmptyState from '../../../components/react/components/ComponentEmptyState';
 // import {Link} from 'react-router';
@@ -27,6 +26,7 @@ import LatestJobs from '../../../components/react/components/SidebarJobs';
 import LatestVersions from '../../../components/react/components/SidebarVersionsWrapper';
 import AccountsManagerModal from './AccountsManagerModal.jsx';
 import QueryModal from './QueryModal.jsx';
+import ApiVersionModal from './ApiVersionModal';
 import getDefaultBucket from '../../../../utils/getDefaultBucket';
 import AccountLink from './AccountLink';
 
@@ -64,6 +64,7 @@ export default function(COMPONENT_ID) {
         <div className="container-fluid">
           {this.renderAccountsManagerModal()}
           {this.renderQueryModal()}
+          {this.renderApiVersionModal()}
           <div className="col-md-9 kbc-main-content">
             <div className="row kbc-header">
               <div className="col-sm-12">
@@ -150,22 +151,41 @@ export default function(COMPONENT_ID) {
       );
     },
 
+    showApiVersionModal() {
+      const initState = Map({version: this.state.store.version});
+      this.state.actions.updateLocalState('ApiVersionModal', initState);
+      this.state.actions.updateLocalState('ShowApiVersionModal', true);
+    },
+
+    renderApiVersionModal() {
+      const hideFn = () => {
+        this.state.actions.updateLocalState('ShowApiVersionModal', false);
+        this.state.actions.updateLocalState('ApiVersionModal', Map());
+      };
+
+      return (
+        <ApiVersionModal
+          show={this.state.localState.get('ShowApiVersionModal', false)}
+          currentVersion={this.state.store.version}
+          defaultVersion={DEFAULT_API_VERSION}
+          onHide={hideFn}
+          isSaving={this.state.store.isPending('version')}
+          onSave={this.state.actions.saveApiVersion}
+          {...this.state.actions.prepareLocalState('ApiVersionModal')}
+        />
+      );
+    },
+
     renderApiVersionEdit(clName) {
-      const isEditing = this.state.store.isEditing('version');
-      const value = isEditing ? this.state.store.editData.get('version') : this.state.store.version;
       return (
         <div className={clName}>
           <span> Facebook Api Version </span>
-          <InlineEdit
-            onEditStart={() => this.state.actions.startEditing('version', this.state.store.version)}
-            onEditCancel={() => this.state.actions.cancelEditing('version')}
-            onEditChange={(val) => this.state.actions.updateEditing('version', val)}
-            onEditSubmit={() => this.state.actions.saveEditingVersion()}
-            text={value}
-            isSaving={this.state.store.isPending('version')}
-            isEditing={isEditing}
-            isValid={value}
-          />
+          <span
+            onClick={this.showApiVersionModal}
+            className="kbc-inline-edit-link">
+            <span>{this.state.store.version}</span>
+            <span className="kbc-icon-pencil" />
+          </span>
         </div>
       );
     },

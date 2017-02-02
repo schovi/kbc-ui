@@ -6,7 +6,7 @@ import OauthStore from '../oauth-v2/Store';
 
 export const storeMixins = [InstalledComponentStore, OauthStore];
 
-const DEFAULT_API_VERSION = 'v2.8';
+export const DEFAULT_API_VERSION = 'v2.8';
 
 export default function(COMPONENT_ID, configId) {
   const localState = () => InstalledComponentStore.getLocalState(COMPONENT_ID, configId) || Map();
