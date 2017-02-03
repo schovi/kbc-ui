@@ -60,7 +60,6 @@ export default React.createClass({
   renderQueryRow(query) {
     // const propValue = (propName) => query.getIn([].concat(propName));
     const qname = query.get('name');
-
     return (
       <div
         className="tr">
@@ -103,10 +102,22 @@ export default React.createClass({
     );
   },
 
+  matchTableToLongestQuery(tableName) {
+    const qs = this.props.queries.filter((q) => this.tableIsFromQuery(tableName, q.get('name')));
+    return qs.max((qa, qb) => qa.get('name').length > qb.get('name').length);
+  },
+
+  tableIsFromQuery(tableName, queryName) {
+    return tableName.startsWith(`${queryName}_`) || tableName === queryName;
+  },
+
   renderTables(queryName) {
-    const configTables = this.props.allTables.filter((t) =>
-      t.getIn(['bucket', 'id']) === this.props.bucketId &&
-      (t.get('name').startsWith(queryName) || !t.get('name'))
+    const configTables = this.props.allTables.filter((t) => {
+      if (t.getIn(['bucket', 'id']) !== this.props.bucketId) return false;
+      const tableName = t.get('name');
+      const bestMatchQuery = this.matchTableToLongestQuery(tableName);
+      return bestMatchQuery && bestMatchQuery.get('name') === queryName;
+    }
     );
     if (configTables.count() === 0) return 'n/a';
     return configTables.map((t) =>
