@@ -1,5 +1,6 @@
 import React from 'react';
 import Remarkable from 'react-remarkable';
+import ReadMore from './ReadMore';
 
 require('./Markdown.less');
 
@@ -17,7 +18,9 @@ export default React.createClass({
   render() {
     return (
       <span className="kbc-markdown">
-        <Remarkable source={this.props.source} />
+        <ReadMore>
+          <Remarkable source={this.props.source} />
+        </ReadMore>
       </span>
     );
   }
