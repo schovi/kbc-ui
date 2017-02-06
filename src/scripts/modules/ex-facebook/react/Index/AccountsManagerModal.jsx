@@ -108,7 +108,7 @@ export default React.createClass({
 
   renderAllAccounts() {
     const getDesc = this.props.accountDescFn;
-    if (this.props.syncAccounts.get('isLoading')) return (<Loader />);
+    if (this.props.syncAccounts.get('isLoading')) return (<span> <Loader /> Fetching {getDesc('pages')} from Facebook...</span>);
     let data = this.props.syncAccounts.get('data', List());
     data = data.filter((a) => !this.localState(['selected'], Map()).has(a.get('id')));
     let allCaption = '';
