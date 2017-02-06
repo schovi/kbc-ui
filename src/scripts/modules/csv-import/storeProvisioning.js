@@ -30,12 +30,15 @@ function isUploaderFileInvalidFormat(localState) {
   if (!localState.get('file')) {
     return false;
   }
-  const fileName = localState.get('file').name || '';
-  if (isUploaderValid(localState) &&
-    fileName.substring(fileName.length - 4, fileName.length) !== '.csv') {
-    return true;
+  if (!isUploaderValid(localState)) {
+    return false;
   }
-  return false;
+  const fileName = localState.get('file').name || '';
+  if (fileName === '') {
+    return false;
+  }
+  const suffix = fileName.substring(fileName.lastIndexOf('.'));
+  return (['.csv', '.gz'].indexOf(suffix) === -1);
 }
 
 export default function(configId) {

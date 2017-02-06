@@ -85,7 +85,7 @@ export default React.createClass({
   fileInputHelp() {
     if (this.props.isFileInvalidFormat) {
       return (
-        <div className="help-block"><small>Only CSV files are supported.</small></div>
+        <div className="help-block"><small>Only <code>.csv</code> and <code>.gz</code> (gzipped CSV) files are supported.</small></div>
       );
     }
     if (this.props.isFileTooBig) {
