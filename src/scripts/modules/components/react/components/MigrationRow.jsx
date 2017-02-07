@@ -18,6 +18,7 @@ import JobStatusLabel from '../../../../react/common/JobStatusLabel';
 import {Check} from 'kbc-react-components';
 import Tooltip from '../../../../react/common/Tooltip';
 import InstalledComponentsStore from '../../stores/InstalledComponentsStore';
+import ComponentConfigurationLink from './ComponentConfigurationLink';
 
 const PERNAMENT_MIGRATION_COMPONENTS = [
   'ex-db',
@@ -392,9 +393,9 @@ export default React.createClass({
 
   renderConfigLink(configId, componentId, label) {
     return (
-      <Link to={componentId} params={{config: configId}}>
+      <ComponentConfigurationLink componentId={componentId} configId={configId}>
         {label ? label : configId}
-      </Link>
+      </ComponentConfigurationLink>
     );
   },
 
