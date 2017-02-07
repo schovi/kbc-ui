@@ -199,7 +199,6 @@ export default React.createClass({
               value={this.props.settings.get('delimiter', ',')}
               onChange={this.onChangeDelimiter}
               help={(<span>Field delimiter used in CSV file. Default value is <code>,</code>. Use <code>\t</code> for tabulator.</span>)}
-              standalone={true}
               />
           </div>
           <div className="row col-md-12">
