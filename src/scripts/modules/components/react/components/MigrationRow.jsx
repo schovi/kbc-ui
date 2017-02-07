@@ -42,6 +42,20 @@ const componentNameMap = Map({
   'wr-db-redshift': 'keboola.wr-redshift-v2'
 });
 
+const GoodDataMigrationDescription = (
+  <span>
+    Migration takes place with the following consequences:
+    <ul>
+      <li><strong>Only GoodData writer reports will be migrated</strong>: Only reports of the GoodData project belonging to a GoodData writer configuration of this project will be migrated. If there are reports from different(non-writer) GoodData project then user has to do the migration manually.</li>
+      <li><strong>Tables will be stored into different bucket</strong>: New GoodData extractor will store extracted tables into new buckets.
+      </li>
+      <li><strong>Orchestrations tasks update:</strong> All orchestration tasks of old GoodData extractor configurations will be replaced with configurations of new GoodData extractor.</li>
+      <li><strong>Column naming convetions:</strong> If a column of GoodData report does not contain alphanumeric character or underscore then it will be replaced by underscore in the corresponding column name of the extracted table. e.g. if there is a column in report with name "Month  Revenue" then its corresponding table column name will be "Month_Revenue".
+      </li>
+    </ul>
+  </span>
+);
+
 export default React.createClass({
   propTypes: {
     componentId: React.PropTypes.string.isRequired
@@ -209,6 +223,8 @@ export default React.createClass({
       return 'Migrate your current configurations to new Google Drive Extractor. This extractor will continue to work until April 2017. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new extractors. The old configurations will remain intact for now. You can remove them yourself after successful migration.';
     } else if (['wr-db-mysql', 'wr-db-oracle', 'wr-db-redshift'].includes(this.props.componentId)) {
       return 'Migrate your current configurations to new Database Writer. This writer will continue to work until May 2017. Then, all your configurations will be migrated automatically. Migration will also alter your orchestrations to use the new writers. The old configurations will remain intact for now. You can remove them yourself after successful migration.';
+    } else if (this.props.componentId === 'ex-gooddata') {
+      return GoodDataMigrationDescription;
     } else {
       return '';
     }
