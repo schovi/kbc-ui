@@ -1,20 +1,15 @@
 import Index from './react/Index/Index';
 import storageActions from '../components/StorageActionCreators';
-import InstalledComponentsStore from '../components/stores/InstalledComponentsStore';
 import installedComponentsActions from '../components/InstalledComponentsActionCreators';
 import versionsActions from '../components/VersionsActionCreators';
 
 const COMPONENT_ID = 'keboola.csv-import';
 
 export default {
-  name: COMPONENT_ID + '-config',
+  name: COMPONENT_ID,
   path: ':config',
   isComponent: true,
   defaultRouteHandler: Index,
-  title: (routerState) => {
-    const configId = routerState.getIn(['params', 'config']);
-    return InstalledComponentsStore.getConfig(COMPONENT_ID, configId).get('name');
-  },
   requireData: [
     (params) => installedComponentsActions.loadComponentConfigData(COMPONENT_ID, params.config),
     (params) => versionsActions.loadVersions(COMPONENT_ID, params.config),
