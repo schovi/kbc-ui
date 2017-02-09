@@ -257,6 +257,9 @@ module.exports = (componentId) ->
               ModalTrigger
                 modal: AuthorizeModal
                   configId: @state.configId
+                  componentId: componentId
+                  redirectRouterPath: 'wr-dropbox-oauth-redirect' + componentId
+
               ,
                 span className: 'btn btn-link',
                   i className: 'fa fa-fw fa-user'
