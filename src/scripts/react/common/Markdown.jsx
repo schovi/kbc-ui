@@ -6,19 +6,21 @@ require('./Markdown.less');
 
 export default React.createClass({
   propTypes: {
-    source: React.PropTypes.string
+    source: React.PropTypes.string,
+    height: React.PropTypes.string
   },
 
   getDefaultProps() {
     return {
-      source: ''
+      source: '',
+      height: 'normal'
     };
   },
 
   render() {
     return (
       <span className="kbc-markdown">
-        <ReadMore>
+        <ReadMore height={this.props.height}>
           <Remarkable source={this.props.source} />
         </ReadMore>
       </span>
