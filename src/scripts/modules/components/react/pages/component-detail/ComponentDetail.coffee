@@ -17,7 +17,6 @@ AddComponentConfigurationButton = React.createFactory(require '../../components/
 FormHeader = require('../new-component-form/FormHeader')
 VendorInfo = require('../component-detail/VendorInfo')
 AppUsageInfo = require('../new-component-form/AppUsageInfo')
-ReadMore = require('../../../../../react/common/ReadMore').default
 ComponentDescription = require '../component-detail/ComponentDescription'
 contactSupport = require('../../../../../utils/contactSupport').default
 MigrationRow = require('../../components/MigrationRow').default
@@ -68,9 +67,8 @@ module.exports = React.createClass
       if (@state.component.get('longDescription'))
         div className: "row",
           div className: "col-md-12",
-            React.createElement ReadMore, null,
-              React.createElement ComponentDescription,
-                component: @state.component
+            React.createElement ComponentDescription,
+              component: @state.component
       @_renderConfigurations()
 
   _isDeprecated: ->

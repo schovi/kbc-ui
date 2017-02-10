@@ -11,7 +11,6 @@ import TemplatesStore from '../../stores/TemplatesStore';
 import InstalledComponentsActionCreators from '../../InstalledComponentsActionCreators';
 
 import Markdown from '../../../../react/common/Markdown';
-import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -172,11 +171,10 @@ export default React.createClass({
       return null;
     }
     return (
-      <ReadMore height="small">
-        <Markdown
-          source={this.state.component.get('configurationDescription')}
-          />
-      </ReadMore>
+      <Markdown
+        source={this.state.component.get('configurationDescription')}
+        height="small"
+        />
     );
   }
 });

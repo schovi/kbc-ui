@@ -3,7 +3,6 @@ import Static from './ConfigurationStatic';
 import Edit from './ConfigurationEdit';
 import Immutable from 'immutable';
 import Markdown from '../../../../react/common/Markdown';
-import ReadMore from '../../../../react/common/ReadMore';
 
 /* global require */
 require('codemirror/mode/javascript/javascript');
@@ -57,11 +56,10 @@ export default React.createClass({
       return null;
     }
     return (
-      <ReadMore height="small">
-        <Markdown
-          source={this.props.editHelp}
-          />
-      </ReadMore>
+      <Markdown
+        source={this.props.editHelp}
+        height="small"
+        />
     );
   },
 
