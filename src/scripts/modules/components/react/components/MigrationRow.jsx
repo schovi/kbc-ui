@@ -50,7 +50,7 @@ const GoodDataMigrationDescription = (
       <li><strong>Tables will be stored into different bucket</strong>: New GoodData extractor will store extracted tables into new buckets.
       </li>
       <li><strong>Orchestrations tasks update:</strong> All orchestration tasks of old GoodData extractor configurations will be replaced with configurations of new GoodData extractor.</li>
-      <li><strong>Column naming convetions:</strong> If a column of GoodData report does not contain alphanumeric character or underscore then it will be replaced by underscore in the corresponding column name of the extracted table. e.g. if there is a column in report with name "Month  Revenue" then its corresponding table column name will be "Month_Revenue".
+      <li><strong>Column naming conventions:</strong> If a column of GoodData report does not contain alphanumeric character or underscore then it will be replaced by underscore in the corresponding column name of the extracted table. e.g. if there is a column in report with name "Month  Revenue" then its corresponding table column name will be "Month_Revenue".
       </li>
     </ul>
   </span>
