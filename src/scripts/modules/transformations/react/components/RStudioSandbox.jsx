@@ -49,7 +49,7 @@ var RStudioSandbox = React.createClass({
               target="_blank"
               disabled={this.state.pendingActions.get('drop')}
             >
-              <span className="fa fa-fw fa-database"></span>
+              <span className="fa fa-fw fa-database"/>
               &nbsp;Connect
             </a>
             <div>
@@ -83,7 +83,7 @@ var RStudioSandbox = React.createClass({
             className="btn btn-link"
             onClick={this.openModal}
           >
-            <i className="fa fa-fw fa-plus"></i>
+            <i className="fa fa-fw fa-plus"/>
             &nbsp;Create sandbox
           </button>
         </span>

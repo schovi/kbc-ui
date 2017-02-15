@@ -94,7 +94,8 @@ export default function(COMPONENT_ID, configId) {
         return query;
       } else {
         return q;
-      }});
+      }
+    });
     if (!found) {
       action = 'Add query';
       newQueries = newQueries.push(query);

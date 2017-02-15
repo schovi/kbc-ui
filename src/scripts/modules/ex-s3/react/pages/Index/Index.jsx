@@ -90,7 +90,7 @@ export default React.createClass({
           <button
             className="btn btn-link"
             onClick={this.state.actions.editStart}>
-            <span className="kbc-icon-pencil"></span> Change Settings
+            <span className="kbc-icon-pencil"/> Change Settings
           </button>
         </div>
       );

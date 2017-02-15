@@ -12,7 +12,7 @@ export default React.createClass({
   renderAWSSecretAccessKey() {
     if (this.props.awsSecretAccessKey !== '') {
       return (
-        <span className="fa fa-fw fa-lock"></span>
+        <span className="fa fa-fw fa-lock"/>
       );
     } else {
       return 'Not set';
