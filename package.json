@@ -80,6 +80,7 @@
     "pretest": "npm run lint",
     "test": "npm run jest",
     "jest": "node environment/scripts/jest.js",
+    "tdd": "node environment/scripts/jest.js --watch",
     "jest:update": "node environment/scripts/jest.js -u",
     "lint": "node environment/scripts/eslint.js",
     "lint:fix": "node environment/scripts/eslint.js --fix"
